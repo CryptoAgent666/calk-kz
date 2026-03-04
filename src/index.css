@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Предотвращение layout shift при загрузке изображений */
+@layer base {
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+  
+  /* Предотвращение горизонтальной прокрутки */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  body {
+    font-variant-numeric: tabular-nums;
+  }
+  
+  /* Улучшение отображения на малых экранах */
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+}
+
+/* Резервирование пространства для асинхронно загружаемого контента */
+@layer utilities {
+  .preserve-layout {
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Улучшение плавности переходов */
+  .smooth-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Адаптивные таблицы */
+  .responsive-table {
+    font-size: 0.875rem;
+  }
+  
+  @media (max-width: 640px) {
+    .responsive-table {
+      font-size: 0.75rem;
+    }
+    
+    .responsive-table th,
+    .responsive-table td {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+}
+
+/* Оптимизация шрифтов для предотвращения FOIT/FOUT */
+@layer base {
+  html {
+    font-display: swap;
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "name": "Calk.kz - Калькуляторы для Казахстана",
+  "short_name": "Calk.kz",
+  "description": "Лучшие онлайн калькуляторы для Казахстана. Налоги, кредиты, зарплаты, коммунальные услуги. Все расчеты по актуальному законодательству РК.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ru-RU",
+  "dir": "ltr",
+  "categories": ["finance", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/calculator-favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Калькулятор ИПН",
+      "short_name": "ИПН",
+      "description": "Расчет подоходного налога",
+      "url": "/calculator/income-tax",
+      "icons": [{ "src": "/calculator-favicon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Зарплатный калькулятор",
+      "short_name": "Зарплата",
+      "description": "Расчет зарплаты на руки",
+      "url": "/calculator/salary",
+      "icons": [{ "src": "/calculator-favicon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Кредитный калькулятор",
+      "short_name": "Кредит",
+      "description": "Расчет кредитных платежей",
+      "url": "/calculator/credit",
+      "icons": [{ "src": "/calculator-favicon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Конвертер валют",
+      "short_name": "Валюта",
+      "description": "Курсы валют НБРК",
+      "url": "/calculator/currency-converter",
+      "icons": [{ "src": "/calculator-favicon.svg", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=calk.kz",
+      "id": "calk.kz"
+    }
+  ],
+  "prefer_related_applications": false
+}
