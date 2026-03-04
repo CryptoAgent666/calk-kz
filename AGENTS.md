@@ -9,6 +9,10 @@
 - **Графики**: recharts
 - **Экспорт**: jsPDF, xlsx, html2canvas
 
+## Репозиторий
+- **GitHub**: [CryptoAgent666/calk-kz](https://github.com/CryptoAgent666/calk-kz) (private)
+- **Ветка**: `main`
+
 ## Хостинг
 
 > ⚠️ Сайт размещён на **shared hosting (Apache, Plesk)**, а **не** на Netlify/Vercel.
