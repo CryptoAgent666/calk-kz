@@ -1,7 +1,7 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useParams, useNavigate } from 'react-router-dom';
+import { calculatorCategories } from '../data/calculators';
 import CalculatorList from './CalculatorList';
+import NotFoundPage from './NotFoundPage';
 
 interface CategoryPageProps {
   onCalculatorClick: (calculatorId: string) => void;
@@ -9,11 +9,13 @@ interface CategoryPageProps {
 }
 
 export default function CategoryPage({ onCalculatorClick, onBackClick }: CategoryPageProps) {
-  const { t } = useTranslation('common');
   const { categoryId } = useParams<{ categoryId: string }>();
+  const navigate = useNavigate();
 
-  if (!categoryId) {
-    return <div>{t('notFound.title')}</div>;
+  const categoryExists = categoryId && calculatorCategories.some(cat => cat.id === categoryId);
+
+  if (!categoryId || !categoryExists) {
+    return <NotFoundPage onNavigateHome={() => navigate('/')} />;
   }
 
   return (
