@@ -10,12 +10,12 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 
 export default function RentOrBuyCalculator() {
   const { t } = useTranslation('calculators');
-  const [propertyPrice, setPropertyPrice] = useState<string>('');
-  const [downPayment, setDownPayment] = useState<string>('');
+  const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
+  const [downPayment, setDownPayment] = useState<string>('5000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
   const [mortgageRate, setMortgageRate] = useState<string>('12');
   const [mortgageTermYears, setMortgageTermYears] = useState<string>('20');
-  const [monthlyRent, setMonthlyRent] = useState<string>('');
+  const [monthlyRent, setMonthlyRent] = useState<string>('150000');
   const [rentIncrease, setRentIncrease] = useState<string>('5');
   const [propertyAppreciation, setPropertyAppreciation] = useState<string>('3');
   const [analysisYears, setAnalysisYears] = useState<string>('10');
@@ -639,7 +639,7 @@ export default function RentOrBuyCalculator() {
             {/* Break-even Point */}
             {results.breakEvenYear > 0 && (
               <div className="mt-6 bg-teal-50 border border-teal-200 rounded-lg p-4">
-                <h3 className="font-semibold text-teal-900 mb-2">{t('rent-vs-buy.recommendation.breakEvenPoint')}:</h3>
+                <h3 className="font-semibold text-teal-900 mb-2">{t('rent-vs-buy.recommendation.breakEvenPoint')}</h3>
                 <div className="text-teal-800">
                   {t('rent-vs-buy.recommendation.breakEvenDescription', { years: results.breakEvenYear })}
                   {results.breakEvenMonth > 0 && <span> {t('rent-vs-buy.recommendation.breakEvenMonths', { months: results.breakEvenMonth })}</span>}
@@ -788,7 +788,7 @@ export default function RentOrBuyCalculator() {
             <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('rent-vs-buy.considerations.title')}</h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('rent-vs-buy.considerations.notIncluded')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('rent-vs-buy.considerations.notIncluded')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('rent-vs-buy.considerations.notIncludedItem1')}</li>
                   <li>{t('rent-vs-buy.considerations.notIncludedItem2')}</li>
@@ -798,7 +798,7 @@ export default function RentOrBuyCalculator() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('rent-vs-buy.considerations.recommendations')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('rent-vs-buy.considerations.recommendations')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('rent-vs-buy.considerations.recommendationItem1')}</li>
                   <li>{t('rent-vs-buy.considerations.recommendationItem2')}</li>

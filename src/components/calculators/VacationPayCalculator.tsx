@@ -10,7 +10,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 export default function VacationPayCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [monthlyIncome, setMonthlyIncome] = useState<string>('');
+  const [monthlyIncome, setMonthlyIncome] = useState<string>('250000');
   const [workMonths, setWorkMonths] = useState<number>(12);
   const [vacationDays, setVacationDays] = useState<number>(24);
   const [isResident, setIsResident] = useState<boolean>(true);

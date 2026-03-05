@@ -26,8 +26,8 @@ interface MortgageProgram {
 
 export default function MortgageCalculator() {
   const { t } = useTranslation('calculators');
-  const [selectedProgram, setSelectedProgram] = useState<string>('');
-  const [propertyValue, setPropertyValue] = useState<string>('');
+  const [selectedProgram, setSelectedProgram] = useState<string>('halyk-standard');
+  const [propertyValue, setPropertyValue] = useState<string>('25000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
   const [loanTermYears, setLoanTermYears] = useState<string>('20');
   const [region, setRegion] = useState<string>('almaty');

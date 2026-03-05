@@ -10,8 +10,8 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function SickLeaveCalculator() {
   const { t } = useTranslation('calculators');
-  const [averageMonthlyIncome, setAverageMonthlyIncome] = useState<string>('');
-  const [sickDays, setSickDays] = useState<string>('');
+  const [averageMonthlyIncome, setAverageMonthlyIncome] = useState<string>('300000');
+  const [sickDays, setSickDays] = useState<string>('5');
   const [monthsWorked, setMonthsWorked] = useState<string>('12');
   const [sickLeaveType, setSickLeaveType] = useState<'regular' | 'occupational'>('regular');
   const [hasLessThanYear, setHasLessThanYear] = useState<boolean>(false);

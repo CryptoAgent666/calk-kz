@@ -172,14 +172,14 @@ ${results.yearlyData.map(data =>
                   style={{ width: `${contributionsWidth}%` }}
                   title={`${t('compound-interest.yourContributions')}: ${formatNumber(yearData.personalContributions)}`}
                 >
-                  {contributionsWidth > 15 && <span>{t('compound-interest.yourContributions')}</span>}
+                  {contributionsWidth > 25 && <span>{t('compound-interest.yourContributions')}</span>}
                 </div>
                 <div
                   className="bg-green-500 flex items-center justify-center text-white text-xs"
                   style={{ width: `${interestWidth}%` }}
                   title={`${t('compound-interest.interest')}: ${formatNumber(yearData.interestEarned)}`}
                 >
-                  {interestWidth > 15 && <span>{t('compound-interest.interest')}</span>}
+                  {interestWidth > 25 && <span>{t('compound-interest.interest')}</span>}
                 </div>
               </div>
             </div>

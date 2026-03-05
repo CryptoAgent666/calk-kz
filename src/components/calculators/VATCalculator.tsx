@@ -30,7 +30,7 @@ interface CalculationHistory {
 export default function VATCalculator() {
   const { t } = useTranslation('calculators');
   const [calculationType, setCalculationType] = useState<'add' | 'extract' | 'bulk'>('add');
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>('100000');
   const [vatRate, setVatRate] = useState<string>('16');
   const [precision, setPrecision] = useState<number>(2);
 
@@ -500,7 +500,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
 
               <div className="space-y-6">
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-4">{t('vat.bulk.addItem')}:</h3>
+                  <h3 className="font-semibold text-gray-900 mb-4">{t('vat.bulk.addItem')}</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                     <div className="md:col-span-2">
                       <input
@@ -556,7 +556,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
                 {items.length > 0 && (
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <h3 className="font-semibold text-gray-900">{t('vat.bulk.itemList')}:</h3>
+                      <h3 className="font-semibold text-gray-900">{t('vat.bulk.itemList')}</h3>
                       <button
                         onClick={() => setItems([])}
                         className="text-sm text-red-500 hover:text-red-700 transition-colors"
@@ -634,14 +634,14 @@ ${t('vat.export.formula')}: ${results.formula}`;
                   </div>
 
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">{t('vat.result.formula')}:</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">{t('vat.result.formula')}</h4>
                     <div className="font-mono text-sm text-gray-900 bg-white p-3 rounded border">
                       {results.formula}
                     </div>
                   </div>
 
                   <div className="bg-blue-50 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-blue-700 mb-3">{t('vat.result.structure')}:</h4>
+                    <h4 className="text-sm font-medium text-blue-700 mb-3">{t('vat.result.structure')}</h4>
                     <div className="space-y-2">
                       <div className="flex items-center">
                         <div className="w-full bg-gray-200 rounded-full h-3 mr-3">
@@ -698,7 +698,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
                   </div>
 
                   <div className="bg-blue-50 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-blue-900 mb-2">{t('vat.bulk.statistics')}:</h4>
+                    <h4 className="text-sm font-medium text-blue-900 mb-2">{t('vat.bulk.statistics')}</h4>
                     <div className="text-sm text-blue-800 space-y-1">
                       <div>{t('vat.bulk.itemCount')}: <strong>{bulkResults.itemCount}</strong></div>
                       <div>{t('vat.bulk.averageRate')}: <strong>{bulkResults.averageVatRate.toFixed(2)}%</strong></div>

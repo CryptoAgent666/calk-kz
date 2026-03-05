@@ -10,7 +10,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function AlimonyCalculator() {
   const { t } = useTranslation('calculators');
-  const [grossSalary, setGrossSalary] = useState<string>('');
+  const [grossSalary, setGrossSalary] = useState<string>('300000');
   const [childrenCount, setChildrenCount] = useState<number>(1);
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
@@ -582,12 +582,12 @@ ${t('alimony.exportAlimonyCalc')}
       />
 
       {/* Диаграмма структуры */}
-      {results && results.monthlyAlimony > 0 && (
+      {results && results.alimonyAmount > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Алименты', value: results.monthlyAlimony },
-              { name: 'Остаток', value: results.income - results.monthlyAlimony },
+              { name: 'Алименты', value: results.alimonyAmount },
+              { name: 'Остаток', value: results.remainingIncome },
             ]}
             title="Распределение дохода"
           />
@@ -595,7 +595,7 @@ ${t('alimony.exportAlimonyCalc')}
       )}
 
       {/* Экспорт результатов */}
-      {results && results.monthlyAlimony > 0 && (
+      {results && results.alimonyAmount > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -605,9 +605,9 @@ ${t('alimony.exportAlimonyCalc')}
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Доход', value: `${results.income.toLocaleString()} ₸` },
-                    { label: 'Процент', value: `${results.percentage}%` },
-                    { label: 'Ежемесячные алименты', value: `${results.monthlyAlimony.toLocaleString()} ₸` },
+                    { label: 'Доход', value: `${results.netIncome.toLocaleString()} ₸` },
+                    { label: 'Процент', value: `${(results.alimonyRate * 100).toFixed(0)}%` },
+                    { label: 'Ежемесячные алименты', value: `${results.alimonyAmount.toLocaleString()} ₸` },
                   ]
                 }
               ],

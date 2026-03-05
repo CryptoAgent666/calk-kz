@@ -9,9 +9,9 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function CustomsClearanceCalculator() {
   const { t } = useTranslation('calculators');
-  const [manufactureYear, setManufactureYear] = useState<string>('');
-  const [engineVolume, setEngineVolume] = useState<string>('');
-  const [customsValue, setCustomsValue] = useState<string>('');
+  const [manufactureYear, setManufactureYear] = useState<string>('2020');
+  const [engineVolume, setEngineVolume] = useState<string>('2000');
+  const [customsValue, setCustomsValue] = useState<string>('15000');
   const [currency, setCurrency] = useState<'USD' | 'KZT'>('USD');
   const [exchangeRate, setExchangeRate] = useState<string>('470');
 

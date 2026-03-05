@@ -9,10 +9,10 @@ import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
 
 export default function SocialAssistanceCalculator() {
   const { t } = useTranslation('calculators');
-  const [quarterlyIncome, setQuarterlyIncome] = useState<string>('');
-  const [familyMembers, setFamilyMembers] = useState<string>('');
+  const [quarterlyIncome, setQuarterlyIncome] = useState<string>('200000');
+  const [familyMembers, setFamilyMembers] = useState<string>('4');
   const [region, setRegion] = useState<string>('almaty');
-  const [childrenAge1to6, setChildrenAge1to6] = useState<string>('');
+  const [childrenAge1to6, setChildrenAge1to6] = useState<string>('1');
 
   const [results, setResults] = useState({
     averageMonthlyIncomePerPerson: 0,

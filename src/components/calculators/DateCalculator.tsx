@@ -26,7 +26,7 @@ interface CalculationHistory {
 
 export default function DateCalculator() {
   const { t } = useTranslation('calculators');
-  const [startDate, setStartDate] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [operation, setOperation] = useState<'add' | 'subtract'>('add');
   const [years, setYears] = useState<string>('');
   const [months, setMonths] = useState<string>('');

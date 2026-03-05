@@ -16,9 +16,9 @@ interface Driver {
 export default function InsuranceCalculator() {
   const { t } = useTranslation('calculators');
   const [currentStep, setCurrentStep] = useState(1);
-  const [region, setRegion] = useState<string>('');
-  const [vehicleType, setVehicleType] = useState<string>('');
-  const [manufactureYear, setManufactureYear] = useState<string>('');
+  const [region, setRegion] = useState<string>('almaty-city');
+  const [vehicleType, setVehicleType] = useState<string>('passenger-car');
+  const [manufactureYear, setManufactureYear] = useState<string>('2020');
   const [drivers, setDrivers] = useState<Driver[]>([{ id: '1', age: 30, experience: 5 }]);
   const [bonusMalusClass, setBonusMalusClass] = useState<string>('3');
 

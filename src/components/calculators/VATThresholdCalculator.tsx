@@ -562,7 +562,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
 
             <div className="space-y-4 text-sm text-gray-700">
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">{t('vat-threshold.includedInTurnover')}:</h4>
+                <h4 className="font-medium text-gray-900 mb-2">{t('vat-threshold.includedInTurnover')}</h4>
                 <ul className="list-disc list-inside space-y-1 ml-4">
                   <li>{t('vat-threshold.included1')}</li>
                   <li>{t('vat-threshold.included2')}</li>
@@ -571,7 +571,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
               </div>
 
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">{t('vat-threshold.notIncludedInTurnover')}:</h4>
+                <h4 className="font-medium text-gray-900 mb-2">{t('vat-threshold.notIncludedInTurnover')}</h4>
                 <ul className="list-disc list-inside space-y-1 ml-4">
                   <li>{t('vat-threshold.notIncluded1')}</li>
                   <li>{t('vat-threshold.notIncluded2')}</li>
@@ -581,7 +581,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
               </div>
 
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">{t('vat-threshold.afterExceedance')}:</h4>
+                <h4 className="font-medium text-gray-900 mb-2">{t('vat-threshold.afterExceedance')}</h4>
                 <ul className="list-disc list-inside space-y-1 ml-4">
                   <li>{t('vat-threshold.after1')}</li>
                   <li>{t('vat-threshold.after2')}</li>
@@ -661,12 +661,12 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
       </div>
 
       {/* Диаграмма */}
-      {results && results.totalTurnover > 0 && (
+      {results && results.currentTotal > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Оборот', value: results.totalTurnover },
-              { name: 'До порога', value: Math.max(0, results.remaining) },
+              { name: 'Оборот', value: results.currentTotal },
+              { name: 'До порога', value: Math.max(0, results.remainingToThreshold) },
             ]}
             title="Прогресс к порогу НДС"
           />
@@ -674,7 +674,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
       )}
 
       {/* Экспорт результатов */}
-      {results && results.totalTurnover > 0 && (
+      {results && results.currentTotal > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -684,9 +684,9 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Общий оборот', value: `${results.totalTurnover.toLocaleString()} ₸` },
-                    { label: 'Порог НДС', value: `${results.threshold.toLocaleString()} ₸` },
-                    { label: 'До порога', value: `${results.remaining.toLocaleString()} ₸` },
+                    { label: 'Общий оборот', value: `${results.currentTotal.toLocaleString()} ₸` },
+                    { label: 'Порог НДС', value: `${results.thresholdAmount.toLocaleString()} ₸` },
+                    { label: 'До порога', value: `${results.remainingToThreshold.toLocaleString()} ₸` },
                   ]
                 }
               ],

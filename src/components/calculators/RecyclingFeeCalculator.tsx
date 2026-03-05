@@ -10,7 +10,7 @@ import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 export default function RecyclingFeeCalculator() {
   const { t } = useTranslation('calculators');
   const [vehicleType, setVehicleType] = useState<'car' | 'truck' | 'bus'>('car');
-  const [engineVolume, setEngineVolume] = useState<string>('');
+  const [engineVolume, setEngineVolume] = useState<string>('1500');
   const [totalMass, setTotalMass] = useState<string>('');
   const [isElectric, setIsElectric] = useState<boolean>(false);
 

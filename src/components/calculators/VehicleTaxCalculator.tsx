@@ -10,10 +10,10 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 export default function VehicleTaxCalculator() {
   const { t } = useTranslation('calculators');
   const [vehicleType, setVehicleType] = useState<'car' | 'truck' | 'bus'>('car');
-  const [engineVolume, setEngineVolume] = useState<string>('');
-  const [cargoCapacity, setCargoCapacity] = useState<string>('');
-  const [seatingCapacity, setSeatingCapacity] = useState<string>('');
-  const [vehicleAge, setVehicleAge] = useState<string>('');
+  const [engineVolume, setEngineVolume] = useState<string>('2000');
+  const [cargoCapacity, setCargoCapacity] = useState<string>('5');
+  const [seatingCapacity, setSeatingCapacity] = useState<string>('30');
+  const [vehicleAge, setVehicleAge] = useState<string>('5');
   const [applyAgeDiscount, setApplyAgeDiscount] = useState<boolean>(false);
 
   const [results, setResults] = useState({

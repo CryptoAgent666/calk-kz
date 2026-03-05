@@ -20,7 +20,7 @@ interface CityGasData {
 export default function GasBillCalculator() {
   const { t } = useTranslation('calculators');
   const [city, setCity] = useState<string>('astana');
-  const [gasConsumption, setGasConsumption] = useState<string>('');
+  const [gasConsumption, setGasConsumption] = useState<string>('30');
   const [propertyType, setPropertyType] = useState<'apartment' | 'house'>('apartment');
 
   const [results, setResults] = useState({

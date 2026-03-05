@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Scale, Calculator, Users, Building, AlertTriangle, Info, FileText, Gavel, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
+import { TaxPieChart } from '../ui/ChartComponents';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
@@ -10,7 +11,7 @@ export default function CourtFeeCalculator() {
   const { t } = useTranslation('calculators');
   const [claimantType, setClaimantType] = useState<'individual' | 'legal'>('individual');
   const [claimType, setClaimType] = useState<'property' | 'non-property'>('property');
-  const [claimAmount, setClaimAmount] = useState<string>('');
+  const [claimAmount, setClaimAmount] = useState<string>('1000000');
   const [nonPropertyClaimType, setNonPropertyClaimType] = useState<string>('divorce');
 
   const [results, setResults] = useState({
@@ -379,11 +380,11 @@ export default function CourtFeeCalculator() {
       />
 
       {/* Диаграмма */}
-      {results && results.totalFee > 0 && (
+      {results && results.feeAmount > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Госпошлина', value: result.totalFee },
+              { name: 'Госпошлина', value: results.feeAmount },
             ]}
             title="Судебная госпошлина"
           />
@@ -391,19 +392,19 @@ export default function CourtFeeCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results && results.totalFee > 0 && (
+      {results && results.feeAmount > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
               title: 'Расчёт госпошлины',
-              subtitle: caseType,
+              subtitle: claimType === 'property' ? 'Имущественный иск' : 'Неимущественный иск',
               sections: [
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Тип дела', value: caseType },
+                    { label: 'Тип дела', value: claimType === 'property' ? 'Имущественный' : 'Неимущественный' },
                     { label: 'Сумма иска', value: `${parseFloat(claimAmount || '0').toLocaleString()} ₸` },
-                    { label: 'Госпошлина', value: `${result.totalFee.toLocaleString()} ₸` },
+                    { label: 'Госпошлина', value: `${results.feeAmount.toLocaleString()} ₸` },
                   ]
                 }
               ],

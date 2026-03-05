@@ -22,7 +22,7 @@ export default function CurrencyConverter() {
   const { t } = useTranslation('calculators');
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('KZT');
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>('1000');
   const [history, setHistory] = useState<ConversionHistory[]>([]);
 
   const { rates, lastUpdated, loading, error, getRate, refreshRates } = useCurrencyRates();

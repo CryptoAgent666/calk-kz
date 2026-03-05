@@ -7,10 +7,10 @@ import { ExportButtons } from '../ui/ExportButtons';
 
 export default function LeapYearCalculator() {
   const { t } = useTranslation('calculators');
-  const [inputYear, setInputYear] = useState<string>('');
+  const [inputYear, setInputYear] = useState<string>(String(new Date().getFullYear()));
   const [currentYear] = useState<number>(new Date().getFullYear());
-  const [rangeStart, setRangeStart] = useState<string>('');
-  const [rangeEnd, setRangeEnd] = useState<string>('');
+  const [rangeStart, setRangeStart] = useState<string>('2020');
+  const [rangeEnd, setRangeEnd] = useState<string>('2030');
   const [showRange, setShowRange] = useState<boolean>(false);
 
   const [results, setResults] = useState({

@@ -26,11 +26,11 @@ interface CalculationResults {
 
 export default function RefinancingCalculator() {
   const { t } = useTranslation('calculators');
-  const [remainingBalance, setRemainingBalance] = useState<string>('');
-  const [currentRate, setCurrentRate] = useState<string>('');
-  const [remainingTerm, setRemainingTerm] = useState<string>('');
-  const [newRate, setNewRate] = useState<string>('');
-  const [newTerm, setNewTerm] = useState<string>('');
+  const [remainingBalance, setRemainingBalance] = useState<string>('5000000');
+  const [currentRate, setCurrentRate] = useState<string>('18');
+  const [remainingTerm, setRemainingTerm] = useState<string>('60');
+  const [newRate, setNewRate] = useState<string>('12');
+  const [newTerm, setNewTerm] = useState<string>('60');
   const [refinancingCosts, setRefinancingCosts] = useState<string>('0');
 
   const [results, setResults] = useState<CalculationResults | null>(null);

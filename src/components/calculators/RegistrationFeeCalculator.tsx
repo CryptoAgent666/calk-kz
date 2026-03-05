@@ -10,7 +10,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 export default function RegistrationFeeCalculator() {
   const { t } = useTranslation('calculators');
   const [vehicleType, setVehicleType] = useState<'car' | 'electric' | 'truck' | 'bus'>('car');
-  const [manufactureYear, setManufactureYear] = useState<string>('');
+  const [manufactureYear, setManufactureYear] = useState<string>('2020');
 
   const [results, setResults] = useState({
     vehicleAge: 0,

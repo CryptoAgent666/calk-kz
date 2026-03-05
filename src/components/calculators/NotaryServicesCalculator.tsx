@@ -13,7 +13,7 @@ export default function NotaryServicesCalculator() {
   const [partyTypes, setPartyTypes] = useState<'both-individuals' | 'mixed' | 'both-legal'>('both-individuals');
   const [areRelated, setAreRelated] = useState<boolean>(false);
   const [location, setLocation] = useState<'city' | 'rural'>('city');
-  const [propertyValue, setPropertyValue] = useState<string>('');
+  const [propertyValue, setPropertyValue] = useState<string>('15000000');
 
   const [results, setResults] = useState({
     stateFee: 0,
@@ -177,7 +177,7 @@ export default function NotaryServicesCalculator() {
             </h3>
             <p className="text-blue-800">
               {t('notary.dualStructureDesc')}
-              {' '}<strong>{t('notary.stateFee')}</strong> {t('common:and')} <strong>{t('notary.technicalServices')}</strong>.
+              {' '}<strong>{t('notary.stateFee')}</strong> и <strong>{t('notary.technicalServices')}</strong>.
               {' '}{t('notary.bothRequired')}
             </p>
           </div>

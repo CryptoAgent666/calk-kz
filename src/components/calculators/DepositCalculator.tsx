@@ -11,11 +11,11 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function DepositCalculator() {
   const { t } = useTranslation('calculators');
-  const [initialAmount, setInitialAmount] = useState<string>('');
+  const [initialAmount, setInitialAmount] = useState<string>('1000000');
   const [monthlyContribution, setMonthlyContribution] = useState<string>('');
-  const [termValue, setTermValue] = useState<string>('');
+  const [termValue, setTermValue] = useState<string>('1');
   const [termUnit, setTermUnit] = useState<'months' | 'years'>('years');
-  const [nominalRate, setNominalRate] = useState<string>('');
+  const [nominalRate, setNominalRate] = useState<string>('14');
   const [capitalizationPeriod, setCapitalizationPeriod] = useState<'monthly' | 'quarterly' | 'yearly'>('monthly');
   const [showCharts, setShowCharts] = useState<boolean>(true);
 

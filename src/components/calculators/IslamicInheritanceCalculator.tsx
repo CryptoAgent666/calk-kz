@@ -29,7 +29,7 @@ interface InheritanceResult {
 export default function IslamicInheritanceCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [totalInheritance, setTotalInheritance] = useState<string>('');
+  const [totalInheritance, setTotalInheritance] = useState<string>('10000000');
   const [hasSpouse, setHasSpouse] = useState<boolean>(false);
   const [spouseGender, setSpouseGender] = useState<'husband' | 'wife'>('wife');
   const [sons, setSons] = useState<string>('0');

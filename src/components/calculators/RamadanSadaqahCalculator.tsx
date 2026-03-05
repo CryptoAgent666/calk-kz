@@ -11,7 +11,7 @@ export default function RamadanSadaqahCalculator() {
   const { t } = useTranslation('calculators');
   const [calculationType, setCalculationType] = useState<'fitr' | 'fidya' | 'both'>('fitr');
   const [familyMembers, setFamilyMembers] = useState<string>('1');
-  const [missedFastingDays, setMissedFastingDays] = useState<string>('');
+  const [missedFastingDays, setMissedFastingDays] = useState<string>('0');
   const [alternativeCalculation, setAlternativeCalculation] = useState<'flour' | 'dates' | 'raisins'>('flour');
 
   const [results, setResults] = useState({

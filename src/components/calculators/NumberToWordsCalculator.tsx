@@ -22,7 +22,7 @@ interface ConversionHistory {
 
 export default function NumberToWordsCalculator() {
   const { t } = useTranslation('calculators');
-  const [inputNumber, setInputNumber] = useState<string>('');
+  const [inputNumber, setInputNumber] = useState<string>('123456');
   const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
   const [format, setFormat] = useState<'number' | 'currency'>('number');
   const [currency, setCurrency] = useState<'kzt' | 'usd' | 'rub' | 'eur'>('kzt');
@@ -942,7 +942,7 @@ export default function NumberToWordsCalculator() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">📊 {t('number-to-words.numberRanges')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">📊 {t('number-to-words.numberRanges')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex justify-between py-1">
                 <span>{t('number-to-words.minNumber')}:</span>
@@ -964,7 +964,7 @@ export default function NumberToWordsCalculator() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">⚠️ {t('number-to-words.importantNotes')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">⚠️ {t('number-to-words.importantNotes')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -1007,7 +1007,7 @@ export default function NumberToWordsCalculator() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">💡 {t('number-to-words.helpfulTips')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">💡 {t('number-to-words.helpfulTips')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -1029,7 +1029,7 @@ export default function NumberToWordsCalculator() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">🎯 {t('number-to-words.inputFormats')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">🎯 {t('number-to-words.inputFormats')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -1058,7 +1058,7 @@ export default function NumberToWordsCalculator() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-green-50 rounded-lg p-4">
-            <h4 className="font-semibold text-green-900 mb-3">✅ {t('number-to-words.requiredFor')}:</h4>
+            <h4 className="font-semibold text-green-900 mb-3">✅ {t('number-to-words.requiredFor')}</h4>
             <div className="space-y-1 text-sm text-green-800">
               <div>• {t('number-to-words.requiredDoc1')}</div>
               <div>• {t('number-to-words.requiredDoc2')}</div>
@@ -1070,7 +1070,7 @@ export default function NumberToWordsCalculator() {
           </div>
 
           <div className="bg-blue-50 rounded-lg p-4">
-            <h4 className="font-semibold text-blue-900 mb-3">📝 {t('number-to-words.standardPhrases')}:</h4>
+            <h4 className="font-semibold text-blue-900 mb-3">📝 {t('number-to-words.standardPhrases')}</h4>
             <div className="space-y-2 text-sm text-blue-800">
               <div className="bg-white p-2 rounded text-xs">
                 <strong>{t('number-to-words.example')}:</strong> {t('number-to-words.phraseExample1')}

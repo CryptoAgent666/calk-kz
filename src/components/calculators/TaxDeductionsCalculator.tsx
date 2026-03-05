@@ -10,12 +10,12 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 
 export default function TaxDeductionsCalculator() {
   const { t } = useTranslation('calculators');
-  const [annualIncome, setAnnualIncome] = useState<string>('');
-  const [educationExpenses, setEducationExpenses] = useState<string>('');
-  const [medicalExpenses, setMedicalExpenses] = useState<string>('');
-  const [mortgageInterest, setMortgageInterest] = useState<string>('');
-  const [pensionContributions, setPensionContributions] = useState<string>('');
-  const [charityDonations, setCharityDonations] = useState<string>('');
+  const [annualIncome, setAnnualIncome] = useState<string>('500000');
+  const [educationExpenses, setEducationExpenses] = useState<string>('200000');
+  const [medicalExpenses, setMedicalExpenses] = useState<string>('0');
+  const [mortgageInterest, setMortgageInterest] = useState<string>('0');
+  const [pensionContributions, setPensionContributions] = useState<string>('0');
+  const [charityDonations, setCharityDonations] = useState<string>('0');
 
   const [results, setResults] = useState({
     allowedEducationDeduction: 0,
@@ -386,7 +386,7 @@ export default function TaxDeductionsCalculator() {
             </div>
 
             <div className="bg-green-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-green-900 mb-2">{t('tax-deductions.limits.title')}:</h3>
+              <h3 className="text-sm font-medium text-green-900 mb-2">{t('tax-deductions.limits.title')}</h3>
               <div className="text-xs text-green-800 space-y-1">
                 <div>• {t('tax-deductions.limits.perType')}: {formatMRP(118)}</div>
                 <div>• {t('tax-deductions.limits.totalLimit')}: {formatMRP(MAX_TOTAL_DEDUCTION_MRP)}</div>
@@ -416,7 +416,7 @@ export default function TaxDeductionsCalculator() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="font-semibold text-gray-900">{t('tax-deductions.results.appliedDeductions')}:</h3>
+                <h3 className="font-semibold text-gray-900">{t('tax-deductions.results.appliedDeductions')}</h3>
 
                 {results.allowedEducationDeduction > 0 && (
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -475,7 +475,7 @@ export default function TaxDeductionsCalculator() {
               </div>
 
               <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3">{t('tax-deductions.results.taxCalculation.title')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-3">{t('tax-deductions.results.taxCalculation.title')}</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t('tax-deductions.results.taxCalculation.annualIncome')}:</span>
@@ -682,7 +682,7 @@ export default function TaxDeductionsCalculator() {
             <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('tax-deductions.procedure.title')}</h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.procedure.documents.title')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.procedure.documents.title')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('tax-deductions.procedure.documents.declaration')}</li>
                   <li>{t('tax-deductions.procedure.documents.incomeStatement')}</li>
@@ -692,7 +692,7 @@ export default function TaxDeductionsCalculator() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.procedure.steps.title')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.procedure.steps.title')}</h4>
                 <ol className="space-y-1 list-decimal list-inside">
                   <li>{t('tax-deductions.procedure.steps.step1')}</li>
                   <li>{t('tax-deductions.procedure.steps.step2')}</li>
@@ -728,7 +728,7 @@ export default function TaxDeductionsCalculator() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-3">{t('tax-deductions.legalBasis.taxCode.title')}:</h3>
+            <h3 className="font-semibold text-blue-900 mb-3">{t('tax-deductions.legalBasis.taxCode.title')}</h3>
             <div className="text-sm text-blue-800 space-y-1">
               <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.article156') }} />
               <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.subparagraph1') }} />
@@ -740,7 +740,7 @@ export default function TaxDeductionsCalculator() {
           </div>
 
           <div className="bg-green-50 rounded-lg p-4">
-            <h3 className="font-semibold text-green-900 mb-3">{t('tax-deductions.legalBasis.conditions.title')}:</h3>
+            <h3 className="font-semibold text-green-900 mb-3">{t('tax-deductions.legalBasis.conditions.title')}</h3>
             <div className="text-sm text-green-800 space-y-1">
               <p>• {t('tax-deductions.legalBasis.conditions.condition1')}</p>
               <p>• {t('tax-deductions.legalBasis.conditions.condition2')}</p>

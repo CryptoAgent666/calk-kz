@@ -10,11 +10,11 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function PensionCalculator() {
   const { t } = useTranslation('calculators');
-  const [birthYear, setBirthYear] = useState<string>('');
-  const [workExperienceBefore1998, setWorkExperienceBefore1998] = useState<string>('');
-  const [workExperienceAfter1998, setWorkExperienceAfter1998] = useState<string>('');
-  const [averageIncomeBefore1998, setAverageIncomeBefore1998] = useState<string>('');
-  const [currentAccumulations, setCurrentAccumulations] = useState<string>('');
+  const [birthYear, setBirthYear] = useState<string>('1965');
+  const [workExperienceBefore1998, setWorkExperienceBefore1998] = useState<string>('15');
+  const [workExperienceAfter1998, setWorkExperienceAfter1998] = useState<string>('20');
+  const [averageIncomeBefore1998, setAverageIncomeBefore1998] = useState<string>('50000');
+  const [currentAccumulations, setCurrentAccumulations] = useState<string>('3000000');
 
   const [results, setResults] = useState({
     age: 0,
@@ -323,7 +323,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
 
               {/* Pension Components */}
               <div className="space-y-4">
-                <h3 className="font-semibold text-gray-900">{t('pension.pensionComponents')}:</h3>
+                <h3 className="font-semibold text-gray-900">{t('pension.pensionComponents')}</h3>
 
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <div className="flex items-center space-x-2">
@@ -436,12 +436,12 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
       />
 
       {/* Диаграмма структуры пенсии */}
-      {results && results.totalPension > 0 && (
+      {results && results.totalMonthlyPension > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Базовая пенсия', value: results.basicPension },
-              { name: 'Солидарная', value: results.solidaryPension },
+              { name: 'Базовая пенсия', value: results.basePension },
+              { name: 'Солидарная', value: results.solidarityPension },
               { name: 'Накопительная', value: results.accumulativePension },
             ].filter(item => item.value > 0)}
             title="Структура пенсии"
@@ -450,20 +450,20 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
       )}
 
       {/* Экспорт результатов */}
-      {results && results.totalPension > 0 && (
+      {results && results.totalMonthlyPension > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
               title: 'Расчёт пенсии',
-              subtitle: `${gender === 'male' ? 'Мужчина' : 'Женщина'}`,
+              subtitle: `Год рождения: ${birthYear}`,
               sections: [
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Базовая пенсия', value: `${results.basicPension.toLocaleString()} ₸` },
-                    { label: 'Солидарная', value: `${results.solidaryPension.toLocaleString()} ₸` },
+                    { label: 'Базовая пенсия', value: `${results.basePension.toLocaleString()} ₸` },
+                    { label: 'Солидарная', value: `${results.solidarityPension.toLocaleString()} ₸` },
                     { label: 'Накопительная', value: `${results.accumulativePension.toLocaleString()} ₸` },
-                    { label: 'Итого', value: `${results.totalPension.toLocaleString()} ₸` },
+                    { label: 'Итого', value: `${results.totalMonthlyPension.toLocaleString()} ₸` },
                   ]
                 }
               ],

@@ -24,7 +24,7 @@ interface CityTariff {
 export default function WaterBillCalculator() {
   const { t } = useTranslation('calculators');
   const [city, setCity] = useState<string>('almaty');
-  const [waterConsumption, setWaterConsumption] = useState<string>('');
+  const [waterConsumption, setWaterConsumption] = useState<string>('5');
   const [residentsCount, setResidentsCount] = useState<string>('1');
 
   const [results, setResults] = useState({

@@ -37,8 +37,8 @@ export default function DiscountCalculator() {
   const [calculationType, setCalculationType] = useState<'single' | 'cascade' | 'reverse' | 'compare'>('single');
   
   // Одиночная скидка
-  const [originalPrice, setOriginalPrice] = useState<string>('');
-  const [discountPercent, setDiscountPercent] = useState<string>('');
+  const [originalPrice, setOriginalPrice] = useState<string>('50000');
+  const [discountPercent, setDiscountPercent] = useState<string>('20');
   
   // Каскадные скидки
   const [cascadeOriginalPrice, setCascadeOriginalPrice] = useState<string>('');

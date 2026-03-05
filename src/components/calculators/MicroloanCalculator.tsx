@@ -55,9 +55,9 @@ const LOAN_TYPES = {
 export default function MicroloanCalculator() {
   const { t } = useTranslation('calculators');
   const [loanType, setLoanType] = useState<LoanType>('online');
-  const [amount, setAmount] = useState<string>('');
-  const [rate, setRate] = useState<string>('');
-  const [term, setTerm] = useState<string>('');
+  const [amount, setAmount] = useState<string>('100000');
+  const [rate, setRate] = useState<string>('0.75');
+  const [term, setTerm] = useState<string>('15');
   const [commission, setCommission] = useState<string>('0');
 
   const [results, setResults] = useState<CalculationResults | null>(null);

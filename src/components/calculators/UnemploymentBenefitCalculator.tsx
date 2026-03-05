@@ -9,8 +9,8 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function UnemploymentBenefitCalculator() {
   const { t, i18n } = useTranslation('calculators');
-  const [workExperienceMonths, setWorkExperienceMonths] = useState<string>('');
-  const [socialContributions, setSocialContributions] = useState<string>('');
+  const [workExperienceMonths, setWorkExperienceMonths] = useState<string>('36');
+  const [socialContributions, setSocialContributions] = useState<string>('500000');
 
   const [results, setResults] = useState({
     averageMonthlyIncome: 0,
@@ -205,7 +205,7 @@ export default function UnemploymentBenefitCalculator() {
             </div>
 
             <div className="bg-blue-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-blue-900 mb-2">{t('unemployment.benefitConditions')}:</h3>
+              <h3 className="text-sm font-medium text-blue-900 mb-2">{t('unemployment.benefitConditions')}</h3>
               <div className="text-xs text-blue-800 space-y-1">
                 <div>• {t('unemployment.minExperience')}</div>
                 <div>• {t('unemployment.dismissalReason')}</div>

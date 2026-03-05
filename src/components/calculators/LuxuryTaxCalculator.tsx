@@ -10,8 +10,8 @@ import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 export default function LuxuryTaxCalculator() {
   const { t } = useTranslation('calculators');
   const [assetType, setAssetType] = useState<'property' | 'vehicle' | 'yacht' | 'aircraft'>('property');
-  const [assetValue, setAssetValue] = useState<string>('');
-  const [totalPropertyValue, setTotalPropertyValue] = useState<string>('');
+  const [assetValue, setAssetValue] = useState<string>('120000000');
+  const [totalPropertyValue, setTotalPropertyValue] = useState<string>('120000000');
 
   const [results, setResults] = useState({
     isSubjectToTax: false,
@@ -626,7 +626,7 @@ export default function LuxuryTaxCalculator() {
             <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('luxury-tax.legal.title')}</h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('luxury-tax.legal.property.title')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('luxury-tax.legal.property.title')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('luxury-tax.legal.property.point1')}</li>
                   <li>{t('luxury-tax.legal.property.point2')}</li>
@@ -635,7 +635,7 @@ export default function LuxuryTaxCalculator() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('luxury-tax.legal.vehicles.title')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('luxury-tax.legal.vehicles.title')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('luxury-tax.legal.vehicles.point1')}</li>
                   <li>{t('luxury-tax.legal.vehicles.point2')}</li>

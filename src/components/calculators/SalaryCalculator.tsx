@@ -10,7 +10,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function SalaryCalculator() {
   const { t } = useTranslation('calculators');
-  const [grossSalary, setGrossSalary] = useState<string>('');
+  const [grossSalary, setGrossSalary] = useState<string>('300000');
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);

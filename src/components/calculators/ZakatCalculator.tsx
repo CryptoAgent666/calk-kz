@@ -9,11 +9,11 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function ZakatCalculator() {
   const { t } = useTranslation('calculators');
-  const [cashSavings, setCashSavings] = useState<string>('');
-  const [goldValue, setGoldValue] = useState<string>('');
-  const [silverValue, setSilverValue] = useState<string>('');
-  const [businessGoods, setBusinessGoods] = useState<string>('');
-  const [debts, setDebts] = useState<string>('');
+  const [cashSavings, setCashSavings] = useState<string>('500000');
+  const [goldValue, setGoldValue] = useState<string>('0');
+  const [silverValue, setSilverValue] = useState<string>('0');
+  const [businessGoods, setBusinessGoods] = useState<string>('0');
+  const [debts, setDebts] = useState<string>('0');
   const [goldPricePerGram, setGoldPricePerGram] = useState<string>('32000');
   const [silverPricePerGram, setSilverPricePerGram] = useState<string>('400');
   const [calculateByWeight, setCalculateByWeight] = useState<boolean>(false);
@@ -431,7 +431,7 @@ export default function ZakatCalculator() {
               </div>
 
               <div className="bg-amber-50 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-amber-900 mb-2">{t('zakat.currentNisabs')}:</h3>
+                <h3 className="text-sm font-medium text-amber-900 mb-2">{t('zakat.currentNisabs')}</h3>
                 <div className="text-sm text-amber-800 space-y-1">
                   <div>• {t('zakat.goldNisab')}: {formatGrams(GOLD_NISAB_GRAMS)} = {formatNumber(results.goldNisab)}</div>
                   <div>• {t('zakat.silverNisab')}: {formatGrams(SILVER_NISAB_GRAMS)} = {formatNumber(results.silverNisab)}</div>
@@ -451,7 +451,7 @@ export default function ZakatCalculator() {
             <div className="space-y-6">
               {/* Assets Breakdown */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.yourAssets')}:</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.yourAssets')}</h3>
                 <div className="space-y-2 text-sm">
                   {results.breakdown.cash > 0 && (
                     <div className="flex justify-between">
@@ -731,7 +731,7 @@ export default function ZakatCalculator() {
             <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('zakat.importantRulesTitle')}</h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('zakat.conditionsTitle')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('zakat.conditionsTitle')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('zakat.condition1')}</li>
                   <li>{t('zakat.condition2')}</li>
@@ -740,7 +740,7 @@ export default function ZakatCalculator() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('zakat.notTaxableTitle')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('zakat.notTaxableTitle')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('zakat.notTaxable1')}</li>
                   <li>{t('zakat.notTaxable2')}</li>
@@ -811,7 +811,7 @@ export default function ZakatCalculator() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.cashAssetsTitle')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.cashAssetsTitle')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -833,7 +833,7 @@ export default function ZakatCalculator() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.tradeGoodsTitle')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.tradeGoodsTitle')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -917,7 +917,7 @@ export default function ZakatCalculator() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.whatToConsiderTitle')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.whatToConsiderTitle')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -939,7 +939,7 @@ export default function ZakatCalculator() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.practicalTipsTitle')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t('zakat.practicalTipsTitle')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>

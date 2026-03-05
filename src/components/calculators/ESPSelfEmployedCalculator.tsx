@@ -25,7 +25,7 @@ export default function ESPSelfEmployedCalculator() {
 
   // State
   const [espCategory, setEspCategory] = useState<'individual' | 'business'>('individual');
-  const [monthlyIncome, setMonthlyIncome] = useState<string>('');
+  const [monthlyIncome, setMonthlyIncome] = useState<string>('150000');
   const [activeMonths, setActiveMonths] = useState<number>(12);
 
   const [results, setResults] = useState({
@@ -84,7 +84,7 @@ export default function ESPSelfEmployedCalculator() {
   }, [espCategory, monthlyIncome, activeMonths]);
 
   const formatNumber = (num: number) => {
-    return num.toLocaleString('ru-KZ') + ' \u20B8';
+    return num.toLocaleString('ru-KZ') + ' ₸';
   };
 
   const savings = results.comparisonIPSimplified - results.espYearly;
@@ -171,7 +171,7 @@ export default function ESPSelfEmployedCalculator() {
                   min={10000}
                   max={500000}
                   step={10000}
-                  formatValue={(v) => `${v.toLocaleString()} \u20B8`}
+                  formatValue={(v) => `${v.toLocaleString()} ₸`}
                   color="#06b6d4"
                 />
                 <div className="relative mt-3">
@@ -184,7 +184,7 @@ export default function ESPSelfEmployedCalculator() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-colors"
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500 text-sm">\u20B8</span>
+                    <span className="text-gray-500 text-sm">₸</span>
                   </div>
                 </div>
               </div>
@@ -459,19 +459,19 @@ export default function ESPSelfEmployedCalculator() {
                   title: t('esp-self-employed.inputParameters'),
                   data: [
                     { label: t('esp-self-employed.categoryLabel'), value: espCategory === 'individual' ? t('esp-self-employed.categoryA') : t('esp-self-employed.categoryB') },
-                    { label: t('esp-self-employed.monthlyIncome'), value: `${(parseFloat(monthlyIncome) || 0).toLocaleString()} \u20B8` },
+                    { label: t('esp-self-employed.monthlyIncome'), value: `${(parseFloat(monthlyIncome) || 0).toLocaleString()} ₸` },
                     { label: t('esp-self-employed.activeMonths'), value: `${activeMonths}` },
                   ]
                 },
                 {
                   title: t('esp-self-employed.resultsTitle'),
                   data: [
-                    { label: t('esp-self-employed.espMonthlyLabel'), value: `${results.espMonthly.toLocaleString()} \u20B8` },
-                    { label: t('esp-self-employed.espYearlyLabel'), value: `${results.espYearly.toLocaleString()} \u20B8` },
-                    { label: t('esp-self-employed.opv'), value: `${results.opvPart.toLocaleString()} \u20B8` },
-                    { label: t('esp-self-employed.vosms'), value: `${results.vosmsPart.toLocaleString()} \u20B8` },
-                    { label: t('esp-self-employed.so'), value: `${results.soPart.toLocaleString()} \u20B8` },
-                    { label: t('esp-self-employed.ipn'), value: `${results.ipnPart.toLocaleString()} \u20B8` },
+                    { label: t('esp-self-employed.espMonthlyLabel'), value: `${results.espMonthly.toLocaleString()} ₸` },
+                    { label: t('esp-self-employed.espYearlyLabel'), value: `${results.espYearly.toLocaleString()} ₸` },
+                    { label: t('esp-self-employed.opv'), value: `${results.opvPart.toLocaleString()} ₸` },
+                    { label: t('esp-self-employed.vosms'), value: `${results.vosmsPart.toLocaleString()} ₸` },
+                    { label: t('esp-self-employed.so'), value: `${results.soPart.toLocaleString()} ₸` },
+                    { label: t('esp-self-employed.ipn'), value: `${results.ipnPart.toLocaleString()} ₸` },
                   ]
                 }
               ],

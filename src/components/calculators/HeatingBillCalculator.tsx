@@ -24,7 +24,7 @@ interface CityHeatingData {
 export default function HeatingBillCalculator() {
   const { t } = useTranslation('calculators');
   const [city, setCity] = useState<string>('astana');
-  const [heatingArea, setHeatingArea] = useState<string>('');
+  const [heatingArea, setHeatingArea] = useState<string>('60');
   const [hasMeter, setHasMeter] = useState<boolean>(false);
   const [actualConsumption, setActualConsumption] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState<string>('january');

@@ -17,7 +17,7 @@ const DEFAULT_USD_RATE = 490;
 export default function ParcelCustomsCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [itemValue, setItemValue] = useState<string>('');
+  const [itemValue, setItemValue] = useState<string>('300');
   const [currency, setCurrency] = useState<'EUR' | 'USD' | 'KZT'>('EUR');
   const [eurRate, setEurRate] = useState<number>(DEFAULT_EUR_RATE);
   const [usdRate, setUsdRate] = useState<number>(DEFAULT_USD_RATE);
@@ -118,11 +118,11 @@ export default function ParcelCustomsCalculator() {
   }, [itemValue, currency, eurRate, usdRate, itemWeight, deliveryCost]);
 
   const formatNumber = (num: number) => {
-    return num.toLocaleString('ru-KZ') + ' \u20B8';
+    return num.toLocaleString('ru-KZ') + ' ₸';
   };
 
   const formatEur = (num: number) => {
-    return '\u20AC' + num.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '€' + num.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const getSliderMax = () => {
@@ -138,15 +138,15 @@ export default function ParcelCustomsCalculator() {
   };
 
   const getSliderFormat = () => {
-    if (currency === 'KZT') return (v: number) => `${v.toLocaleString()} \u20B8`;
+    if (currency === 'KZT') return (v: number) => `${v.toLocaleString()} ₸`;
     if (currency === 'USD') return (v: number) => `$${v.toLocaleString()}`;
-    return (v: number) => `\u20AC${v.toLocaleString()}`;
+    return (v: number) => `€${v.toLocaleString()}`;
   };
 
   const getCurrencySymbol = () => {
-    if (currency === 'KZT') return '\u20B8';
+    if (currency === 'KZT') return '₸';
     if (currency === 'USD') return '$';
-    return '\u20AC';
+    return '€';
   };
 
   const applyQuickExample = (val: number, curr: 'EUR' | 'USD' | 'KZT', w?: number) => {
@@ -213,7 +213,7 @@ export default function ParcelCustomsCalculator() {
                       : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                   } rounded-l-lg`}
                 >
-                  EUR (\u20AC)
+                  EUR (€)
                 </button>
                 <button
                   onClick={() => setCurrency('USD')}
@@ -233,7 +233,7 @@ export default function ParcelCustomsCalculator() {
                       : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                   } rounded-r-lg`}
                 >
-                  KZT (\u20B8)
+                  KZT (₸)
                 </button>
               </div>
             </div>

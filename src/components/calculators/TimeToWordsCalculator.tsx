@@ -23,7 +23,7 @@ interface ConversionHistory {
 
 export default function TimeToWordsCalculator() {
   const { t } = useTranslation('calculators');
-  const [inputTime, setInputTime] = useState<string>('');
+  const [inputTime, setInputTime] = useState<string>('14:30');
   const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
   const [timeFormat, setTimeFormat] = useState<'24h' | '12h'>('24h');
   const [includeSeconds, setIncludeSeconds] = useState<boolean>(false);

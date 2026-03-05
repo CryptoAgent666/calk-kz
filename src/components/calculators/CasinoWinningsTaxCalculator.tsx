@@ -17,10 +17,10 @@ interface WinningEntry {
 
 export default function CasinoWinningsTaxCalculator() {
   const { t } = useTranslation('calculators');
-  const [winningAmount, setWinningAmount] = useState<string>('');
-  const [stakeAmount, setStakeAmount] = useState<string>('');
+  const [winningAmount, setWinningAmount] = useState<string>('500000');
+  const [stakeAmount, setStakeAmount] = useState<string>('50000');
   const [isResident, setIsResident] = useState<boolean>(true);
-  const [winningDate, setWinningDate] = useState<string>('');
+  const [winningDate, setWinningDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [locationInKz, setLocationInKz] = useState<boolean>(true);
   const [multipleMode, setMultipleMode] = useState<boolean>(false);
   const [winningEntries, setWinningEntries] = useState<WinningEntry[]>([
@@ -180,6 +180,7 @@ export default function CasinoWinningsTaxCalculator() {
     setIsResident(true);
     setLocationInKz(true);
     setMultipleMode(false);
+    setWinningDate(new Date().toISOString().split('T')[0]);
   };
 
   const generateExportData = () => {

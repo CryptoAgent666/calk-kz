@@ -347,7 +347,7 @@ export default function PregnancyCalculator() {
             </div>
 
             <div className="bg-pink-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-pink-900 mb-2">{t('pregnancy.naegeleRule')}:</h3>
+              <h3 className="text-sm font-medium text-pink-900 mb-2">{t('pregnancy.naegeleRule')}</h3>
               <p className="text-sm text-pink-800">
                 {t('pregnancy.naegeleRuleText')}
               </p>
@@ -355,7 +355,7 @@ export default function PregnancyCalculator() {
 
             {results.currentWeek > 0 && (
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">{t('pregnancy.yourProgress')}:</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">{t('pregnancy.yourProgress')}</h3>
 
                 <div className="space-y-3">
                   <div>

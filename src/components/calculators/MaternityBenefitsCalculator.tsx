@@ -10,8 +10,8 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 export default function MaternityBenefitsCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [isEmployed, setIsEmployed] = useState<boolean>(true);
-  const [averageIncomeForMaternity, setAverageIncomeForMaternity] = useState<string>('');
-  const [averageIncomeForChildcare, setAverageIncomeForChildcare] = useState<string>('');
+  const [averageIncomeForMaternity, setAverageIncomeForMaternity] = useState<string>('300000');
+  const [averageIncomeForChildcare, setAverageIncomeForChildcare] = useState<string>('300000');
   const [childNumber, setChildNumber] = useState<number>(1);
 
   const [results, setResults] = useState({
@@ -248,7 +248,7 @@ export default function MaternityBenefitsCalculator() {
               </div>
 
               <div className="bg-blue-50 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-900 mb-2">{t('maternity-benefits.calculationFormulas')}:</h3>
+                <h3 className="text-sm font-medium text-blue-900 mb-2">{t('maternity-benefits.calculationFormulas')}</h3>
                 <div className="space-y-1 text-xs text-blue-800">
                   <div>{t('maternity-benefits.lumpSumFormula')}</div>
                   <div>{t('maternity-benefits.monthlyFormula')}</div>
@@ -285,7 +285,7 @@ export default function MaternityBenefitsCalculator() {
               </div>
 
               <div className="bg-teal-50 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-teal-900 mb-2">{t('maternity-benefits.stateBenefits')}:</h3>
+                <h3 className="text-sm font-medium text-teal-900 mb-2">{t('maternity-benefits.stateBenefits')}</h3>
                 <div className="space-y-1 text-xs text-teal-800">
                   <div><strong>{t('maternity-benefits.lumpSumBenefit')}:</strong></div>
                   <div>{t('maternity-benefits.children1to3')}: 38 {t('maternity-benefits.mrp')} ({formatNumber(38 * MRP)})</div>
@@ -432,7 +432,7 @@ export default function MaternityBenefitsCalculator() {
             <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('maternity-benefits.importantInfo')}</h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('maternity-benefits.forEmployed')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('maternity-benefits.forEmployed')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('maternity-benefits.employedInfo1')}</li>
                   <li>{t('maternity-benefits.employedInfo2')}</li>
@@ -442,7 +442,7 @@ export default function MaternityBenefitsCalculator() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('maternity-benefits.forUnemployed')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('maternity-benefits.forUnemployed')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('maternity-benefits.unemployedInfo1')}</li>
                   <li>{t('maternity-benefits.unemployedInfo2')}</li>

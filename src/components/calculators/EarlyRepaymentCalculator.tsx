@@ -10,10 +10,10 @@ import { TaxPieChart } from '../ui/ChartComponents';
 export default function EarlyRepaymentCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [loanBalance, setLoanBalance] = useState<string>('');
-  const [annualRate, setAnnualRate] = useState<string>('');
-  const [remainingMonths, setRemainingMonths] = useState<string>('');
-  const [earlyPaymentAmount, setEarlyPaymentAmount] = useState<string>('');
+  const [loanBalance, setLoanBalance] = useState<string>('5000000');
+  const [annualRate, setAnnualRate] = useState<string>('16');
+  const [remainingMonths, setRemainingMonths] = useState<string>('60');
+  const [earlyPaymentAmount, setEarlyPaymentAmount] = useState<string>('500000');
   const [strategy, setStrategy] = useState<'reduce-term' | 'reduce-payment'>('reduce-term');
 
   const [results, setResults] = useState({
@@ -31,7 +31,7 @@ export default function EarlyRepaymentCalculator() {
   });
 
   const formatNumber = (num: number) => {
-    return Math.round(num).toLocaleString('ru-KZ') + ' \u20B8';
+    return Math.round(num).toLocaleString('ru-KZ') + ' ₸';
   };
 
   const formatMonths = (months: number): string => {

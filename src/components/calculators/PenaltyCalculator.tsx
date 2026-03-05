@@ -8,9 +8,9 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function PenaltyCalculator() {
   const { t } = useTranslation('calculators');
-  const [debtAmount, setDebtAmount] = useState<string>('');
-  const [daysOverdue, setDaysOverdue] = useState<string>('');
-  const [penaltyRate, setPenaltyRate] = useState<string>('');
+  const [debtAmount, setDebtAmount] = useState<string>('100000');
+  const [daysOverdue, setDaysOverdue] = useState<string>('30');
+  const [penaltyRate, setPenaltyRate] = useState<string>('0.1');
   const [penaltyType, setPenaltyType] = useState<string>('custom');
 
   const [results, setResults] = useState({

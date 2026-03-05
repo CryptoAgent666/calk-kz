@@ -10,7 +10,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 export default function SeverancePayCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [monthlyIncome, setMonthlyIncome] = useState<string>('');
+  const [monthlyIncome, setMonthlyIncome] = useState<string>('250000');
   const [workMonths, setWorkMonths] = useState<number>(12);
   const [usedVacationDays, setUsedVacationDays] = useState<number>(0);
   const [dismissalReason, setDismissalReason] = useState<'own-will' | 'employer' | 'reduction' | 'liquidation' | 'agreement'>('own-will');

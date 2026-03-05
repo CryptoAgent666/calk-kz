@@ -9,7 +9,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 
 export default function IPSimplifiedCalculator() {
   const { t } = useTranslation('calculators');
-  const [semiannualIncome, setSemiannualIncome] = useState<string>('');
+  const [semiannualIncome, setSemiannualIncome] = useState<string>('3000000');
   const [hasEmployees, setHasEmployees] = useState<boolean>(false);
   const [numberOfEmployees, setNumberOfEmployees] = useState<string>('');
   const [totalEmployeeSalaries, setTotalEmployeeSalaries] = useState<string>('');
@@ -51,7 +51,7 @@ export default function IPSimplifiedCalculator() {
     if (income <= 0) {
       setResults({
         totalTax: 0, ipnTax: 0, socialTax: 0,
-        opvSelf: 0, opvrSelf: 0, soSelf: 0, vosmsSelf: VOSMS_FIXED,
+        opvSelf: 0, opvrSelf: 0, soSelf: 0, vosmsSelf: 0,
         totalMonthlySelf: 0, totalYearlySelf: 0,
         semiannualTotalTax: 0, yearlyTotalPayments: 0,
         yearlyPensionContributions: 0, effectiveMonthlyBurden: 0

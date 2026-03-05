@@ -39,8 +39,8 @@ export default function PercentageCalculator() {
   const locale = i18n.language === 'kk' ? 'kk-KZ' : 'ru-KZ';
 
   const [calculationType, setCalculationType] = useState<CalculationType>('percentOf');
-  const [percentOfBase, setPercentOfBase] = useState('');
-  const [percentOfRate, setPercentOfRate] = useState('');
+  const [percentOfBase, setPercentOfBase] = useState('1000');
+  const [percentOfRate, setPercentOfRate] = useState('15');
   const [partValue, setPartValue] = useState('');
   const [wholeValue, setWholeValue] = useState('');
   const [changeFrom, setChangeFrom] = useState('');

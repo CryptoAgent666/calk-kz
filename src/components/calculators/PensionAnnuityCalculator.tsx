@@ -11,8 +11,8 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 export default function PensionAnnuityCalculator() {
   const { t } = useTranslation('calculators');
   const [gender, setGender] = useState<'male' | 'female'>('male');
-  const [age, setAge] = useState<string>('');
-  const [currentAccumulations, setCurrentAccumulations] = useState<string>('');
+  const [age, setAge] = useState<string>('55');
+  const [currentAccumulations, setCurrentAccumulations] = useState<string>('5000000');
   const [insuranceCompany, setInsuranceCompany] = useState<string>('halyk-life');
 
   const [results, setResults] = useState({

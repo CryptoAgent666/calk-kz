@@ -11,8 +11,8 @@ export default function PropertyTaxCalculator() {
   const { t } = useTranslation('calculators');
   const [propertyType, setPropertyType] = useState<string>('apartment');
   const [city, setCity] = useState<string>('almaty');
-  const [area, setArea] = useState<string>('');
-  const [buildYear, setBuildYear] = useState<string>('');
+  const [area, setArea] = useState<string>('60');
+  const [buildYear, setBuildYear] = useState<string>('2010');
   const [useCustomCoefficients, setUseCustomCoefficients] = useState<boolean>(false);
   const [baseCost, setBaseCost] = useState<string>('');
   const [zoneCoefficient, setZoneCoefficient] = useState<string>('');

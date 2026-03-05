@@ -24,7 +24,7 @@ interface CityTariff {
 export default function ElectricityBillCalculator() {
   const { t } = useTranslation('calculators');
   const [city, setCity] = useState<string>('astana');
-  const [consumption, setConsumption] = useState<string>('');
+  const [consumption, setConsumption] = useState<string>('150');
   const [stoveType, setStoveType] = useState<'electric' | 'gas'>('electric');
 
   const [results, setResults] = useState({

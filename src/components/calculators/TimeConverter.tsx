@@ -24,7 +24,7 @@ interface ConversionHistory {
 
 export default function TimeConverter() {
   const { t } = useTranslation('calculators');
-  const [inputTime, setInputTime] = useState<string>('');
+  const [inputTime, setInputTime] = useState<string>('14:30');
   const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
   const [timeFormat, setTimeFormat] = useState<'24h' | '12h'>('24h');
   const [includeSeconds, setIncludeSeconds] = useState<boolean>(false);
@@ -668,12 +668,12 @@ export default function TimeConverter() {
                 {style === 'both' && (
                   <div className="grid grid-cols-1 gap-4">
                     <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                      <h4 className="text-sm font-medium text-green-900 mb-2">{t('time-converter.styles.formalStyle')}:</h4>
+                      <h4 className="text-sm font-medium text-green-900 mb-2">{t('time-converter.styles.formalStyle')}</h4>
                       <div className="text-green-800 font-medium">{results.formal}</div>
                     </div>
 
                     <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
-                      <h4 className="text-sm font-medium text-teal-900 mb-2">{t('time-converter.styles.colloquialStyle')}:</h4>
+                      <h4 className="text-sm font-medium text-teal-900 mb-2">{t('time-converter.styles.colloquialStyle')}</h4>
                       <div className="text-teal-800 font-medium">{results.colloquial}</div>
                     </div>
                   </div>

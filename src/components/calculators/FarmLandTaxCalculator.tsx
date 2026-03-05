@@ -12,7 +12,7 @@ export default function FarmLandTaxCalculator() {
   const { t } = useTranslation('calculators');
   const [region, setRegion] = useState<string>('almaty-region');
   const [landArea, setLandArea] = useState<string>('100');
-  const [bonityScoret, setBonityScoret] = useState<string>('');
+  const [bonityScoret, setBonityScoret] = useState<string>('50');
   const [landType, setLandType] = useState<'irrigated' | 'rainfed' | 'pasture' | 'hayfield'>('irrigated');
   const [farmType, setFarmType] = useState<'peasant' | 'farm' | 'individual'>('peasant');
   const [hasPreferences, setHasPreferences] = useState<boolean>(false);
@@ -839,7 +839,7 @@ export default function FarmLandTaxCalculator() {
             <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('farm-land-tax.legal.title')}</h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.taxpayersTitle')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.taxpayersTitle')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('farm-land-tax.legal.taxpayers.item1')}</li>
                   <li>{t('farm-land-tax.legal.taxpayers.item2')}</li>
@@ -848,7 +848,7 @@ export default function FarmLandTaxCalculator() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.replacesTitle')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.replacesTitle')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('farm-land-tax.legal.replaces.item1')}</li>
                   <li>{t('farm-land-tax.legal.replaces.item2')}</li>

@@ -10,9 +10,9 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 
 export default function GONSCalculator() {
   const { t } = useTranslation('calculators');
-  const [initialDeposit, setInitialDeposit] = useState<string>('');
-  const [monthlyContribution, setMonthlyContribution] = useState<string>('');
-  const [savingPeriodYears, setSavingPeriodYears] = useState<string>('');
+  const [initialDeposit, setInitialDeposit] = useState<string>('500000');
+  const [monthlyContribution, setMonthlyContribution] = useState<string>('30000');
+  const [savingPeriodYears, setSavingPeriodYears] = useState<string>('5');
   const [childCategory, setChildCategory] = useState<'regular' | 'priority'>('regular');
   const [bankRate, setBankRate] = useState<string>('5.5');
 
@@ -103,7 +103,7 @@ export default function GONSCalculator() {
       bankReward: Math.round(totalBankReward),
       totalStatePremium: Math.round(totalStatePremium),
       finalAmount: Math.round(finalAmount),
-      statePremiumRate: statePremiumRate * 100,
+      statePremiumRate: Math.round(statePremiumRate * 10000) / 100,
       maxPremiumBase: MAX_PREMIUM_BASE_YEARLY,
       effectiveReturn: Number(effectiveReturn.toFixed(2)),
       isMinimumMet,
@@ -323,7 +323,7 @@ export default function GONSCalculator() {
             </div>
 
             <div className="bg-teal-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-teal-900 mb-2">{t('gons.gonsFeatures')}:</h3>
+              <h3 className="text-sm font-medium text-teal-900 mb-2">{t('gons.gonsFeatures')}</h3>
               <div className="text-xs text-teal-800 space-y-1">
                 <p>• {t('gons.feature1')}</p>
                 <p>• {t('gons.feature2')}</p>
@@ -356,7 +356,7 @@ export default function GONSCalculator() {
 
               {/* Breakdown */}
               <div className="space-y-4">
-                <h3 className="font-semibold text-gray-900">{t('gons.savingsStructure')}:</h3>
+                <h3 className="font-semibold text-gray-900">{t('gons.savingsStructure')}</h3>
 
                 <div className="space-y-3">
                   <div className="flex justify-between items-center py-3 bg-blue-50 rounded-lg px-4">
@@ -389,7 +389,7 @@ export default function GONSCalculator() {
 
               {/* Additional Info */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-2">{t('gons.savingsEfficiency')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('gons.savingsEfficiency')}</h4>
                 <div className="text-sm text-gray-700 space-y-1">
                   <div>{t('gons.totalReturn')}: <strong>{formatPercent(results.effectiveReturn)}</strong></div>
                   <div>{t('gons.incomeFromStateAndBank')}: <strong>{formatNumber(results.bankReward + results.totalStatePremium)}</strong></div>
@@ -616,7 +616,7 @@ export default function GONSCalculator() {
             <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('gons.importantInfo')}</h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('gons.participationConditions')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('gons.participationConditions')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('gons.condition1')}</li>
                   <li>{t('gons.condition2')}</li>
@@ -626,7 +626,7 @@ export default function GONSCalculator() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('gons.fundsUsage')}:</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">{t('gons.fundsUsage')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('gons.usage1')}</li>
                   <li>{t('gons.usage2')}</li>
@@ -702,7 +702,7 @@ export default function GONSCalculator() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('gons.forMaximumBenefit')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t('gons.forMaximumBenefit')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -724,7 +724,7 @@ export default function GONSCalculator() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('gons.importantRestrictions')}:</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t('gons.importantRestrictions')}</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>

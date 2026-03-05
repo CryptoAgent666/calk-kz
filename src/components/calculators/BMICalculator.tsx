@@ -11,9 +11,9 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function BMICalculator() {
   const { t } = useTranslation('calculators');
-  const [height, setHeight] = useState<string>('');
-  const [weight, setWeight] = useState<string>('');
-  const [age, setAge] = useState<string>('');
+  const [height, setHeight] = useState<string>('175');
+  const [weight, setWeight] = useState<string>('75');
+  const [age, setAge] = useState<string>('30');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [heightUnit, setHeightUnit] = useState<'cm' | 'm'>('cm');
   

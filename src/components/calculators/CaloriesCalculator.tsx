@@ -9,10 +9,10 @@ import { TaxPieChart } from '../ui/ChartComponents';
 
 export default function CaloriesCalculator() {
   const { t } = useTranslation('calculators');
-  const [age, setAge] = useState<string>('');
+  const [age, setAge] = useState<string>('30');
   const [gender, setGender] = useState<'male' | 'female'>('male');
-  const [height, setHeight] = useState<string>('');
-  const [weight, setWeight] = useState<string>('');
+  const [height, setHeight] = useState<string>('175');
+  const [weight, setWeight] = useState<string>('75');
   const [activityLevel, setActivityLevel] = useState<string>('moderate');
   const [goal, setGoal] = useState<'maintain' | 'lose' | 'gain'>('maintain');
   const [macroSplit, setMacroSplit] = useState<string>('balanced');
