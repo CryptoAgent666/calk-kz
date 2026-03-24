@@ -5,6 +5,7 @@
 
     <!-- Preconnect to external domains for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
 
@@ -24,8 +25,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
     <!-- Primary Meta Tags -->
-    <title>Calk.kz - Калькуляторы для Казахстана | Онлайн расчеты налогов, кредитов, зарплат</title>
-    <meta name="title" content="Calk.kz - Калькуляторы для Казахстана | Онлайн расчеты налогов, кредитов, зарплат" />
+    <title>Calk.kz — Калькуляторы для Казахстана 2026</title>
+    <meta name="title" content="Calk.kz — Калькуляторы для Казахстана 2026" />
     <meta name="description" content="Лучшие онлайн калькуляторы для Казахстана. Налоги, кредиты, зарплаты, коммунальные услуги. Все расчеты по актуальному законодательству РК 2026 года." />
     <meta name="keywords" content="калькуляторы казахстан, налоги рк, ипн калькулятор, зарплата калькулятор, кредитный калькулятор, онлайн расчеты" />
     <meta name="author" content="Calk.kz" />
@@ -38,12 +39,8 @@
     <link rel="canonical" href="https://calk.kz/" />
 
     <!-- Language and Regional -->
-    <meta name="language" content="Russian">
-    <meta http-equiv="content-language" content="ru-RU">
     <link rel="alternate" hreflang="ru" href="https://calk.kz/" />
-    <link rel="alternate" hreflang="ru-kz" href="https://calk.kz/" />
-    <link rel="alternate" hreflang="kk" href="https://calk.kz/?lang=kk" />
-    <link rel="alternate" hreflang="kk-kz" href="https://calk.kz/?lang=kk" />
+    <link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/" />
     <link rel="alternate" hreflang="x-default" href="https://calk.kz/" />
 
     <!-- Open Graph / Facebook -->
@@ -57,6 +54,7 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Calk.kz - Калькуляторы для Казахстана" />
     <meta property="og:locale" content="ru_RU" />
+    <meta property="og:locale:alternate" content="kk_KZ" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -67,9 +65,9 @@
     <meta name="twitter:image:alt" content="Calk.kz - Калькуляторы для Казахстана" />
 
     <!-- Theme Color -->
-    <meta name="theme-color" content="#1e40af" />
+    <meta name="theme-color" content="#4F46E5" />
 
-    <!-- JSON-LD Structured Data -->
+    <!-- JSON-LD Structured Data (fallback for crawlers; React hydration replaces this) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,6 +79,7 @@
           "name": "Calk.kz - Калькуляторы для Казахстана",
           "description": "Удобные онлайн-калькуляторы для жителей Казахстана",
           "inLanguage": "ru-RU",
+          "publisher": {"@id": "https://calk.kz/#organization"},
           "potentialAction": {
             "@type": "SearchAction",
             "target": {
@@ -88,16 +87,6 @@
               "urlTemplate": "https://calk.kz/?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
-          },
-          "publisher": {
-            "@type": "Organization",
-            "@id": "https://calk.kz/#organization",
-            "name": "Calk.kz",
-            "url": "https://calk.kz/",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://calk.kz/calculator-favicon.svg"
-            }
           }
         },
         {
@@ -107,13 +96,33 @@
           "url": "https://calk.kz/",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://calk.kz/calculator-favicon.svg"
+            "url": "https://calk.kz/calculator-favicon.svg",
+            "width": 512,
+            "height": 512
           },
+          "foundingDate": "2024-01-01",
+          "founder": {"@id": "https://calk.kz/#konstantin-yakovlev"},
           "contactPoint": {
             "@type": "ContactPoint",
-            "contactType": "Customer Service",
+            "contactType": "customer support",
+            "email": "info@calk.kz",
             "availableLanguage": ["Russian", "Kazakh"]
-          }
+          },
+          "sameAs": [
+            "https://play.google.com/store/apps/details?id=calk.kz",
+            "https://zanimaem.kz",
+            "https://profinance.kz"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://calk.kz/#konstantin-yakovlev",
+          "name": "Константин Яковлев",
+          "jobTitle": "Основатель",
+          "description": "Основатель Calk.kz, Zanimaem.kz и Profinance.kz. Более 14 лет в маркетинге, свыше 8 лет в финансовой аналитике.",
+          "image": "https://profinance.kz/img/team/konstantin.jpg",
+          "worksFor": {"@id": "https://calk.kz/#organization"},
+          "sameAs": ["https://zanimaem.kz", "https://profinance.kz"]
         }
       ]
     }
@@ -146,7 +155,7 @@
     <noscript>
       <div style="padding: 20px; font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto;">
         <header style="border-bottom: 2px solid #3b82f6; padding-bottom: 20px; margin-bottom: 30px;">
-          <h1 style="color: #1e3a8a; font-size: 32px; margin-bottom: 10px;">Calk.kz - Калькуляторы для Казахстана</h1>
+          <h2 style="color: #1e3a8a; font-size: 32px; margin-bottom: 10px;">Calk.kz - Калькуляторы для Казахстана</h2>
           <p style="color: #64748b; font-size: 18px;">Лучшие онлайн калькуляторы для жителей Казахстана</p>
         </header>
 
@@ -154,21 +163,21 @@
           <section style="margin-bottom: 30px;">
             <h2 style="color: #1e40af; font-size: 24px; margin-bottom: 15px;">Популярные калькуляторы</h2>
             <ul style="list-style: none; padding: 0;">
-              <li style="margin-bottom: 10px;"><a href="/calculator/income-tax" style="color: #2563eb; text-decoration: none;">Калькулятор ИПН для наемных работников</a></li>
-              <li style="margin-bottom: 10px;"><a href="/calculator/salary" style="color: #2563eb; text-decoration: none;">Зарплатный калькулятор</a></li>
-              <li style="margin-bottom: 10px;"><a href="/calculator/credit" style="color: #2563eb; text-decoration: none;">Кредитный калькулятор</a></li>
-              <li style="margin-bottom: 10px;"><a href="/calculator/currency-converter" style="color: #2563eb; text-decoration: none;">Конвертер валют</a></li>
-              <li style="margin-bottom: 10px;"><a href="/calculator/vehicle-tax" style="color: #2563eb; text-decoration: none;">Калькулятор транспортного налога</a></li>
+              <li style="margin-bottom: 10px;"><a href="/calculator/income-tax/" style="color: #2563eb; text-decoration: none;">Калькулятор ИПН для наемных работников</a></li>
+              <li style="margin-bottom: 10px;"><a href="/calculator/salary/" style="color: #2563eb; text-decoration: none;">Зарплатный калькулятор</a></li>
+              <li style="margin-bottom: 10px;"><a href="/calculator/credit/" style="color: #2563eb; text-decoration: none;">Кредитный калькулятор</a></li>
+              <li style="margin-bottom: 10px;"><a href="/calculator/currency-converter/" style="color: #2563eb; text-decoration: none;">Конвертер валют</a></li>
+              <li style="margin-bottom: 10px;"><a href="/calculator/vehicle-tax/" style="color: #2563eb; text-decoration: none;">Калькулятор транспортного налога</a></li>
             </ul>
           </section>
 
           <section style="margin-bottom: 30px;">
             <h2 style="color: #1e40af; font-size: 24px; margin-bottom: 15px;">Категории</h2>
             <ul style="list-style: none; padding: 0;">
-              <li style="margin-bottom: 10px;"><a href="/category/tax" style="color: #2563eb; text-decoration: none;">Налоговые калькуляторы</a></li>
-              <li style="margin-bottom: 10px;"><a href="/category/finance" style="color: #2563eb; text-decoration: none;">Финансовые калькуляторы</a></li>
-              <li style="margin-bottom: 10px;"><a href="/category/social" style="color: #2563eb; text-decoration: none;">Социальные калькуляторы</a></li>
-              <li style="margin-bottom: 10px;"><a href="/category/utilities" style="color: #2563eb; text-decoration: none;">Коммунальные калькуляторы</a></li>
+              <li style="margin-bottom: 10px;"><a href="/category/tax/" style="color: #2563eb; text-decoration: none;">Налоговые калькуляторы</a></li>
+              <li style="margin-bottom: 10px;"><a href="/category/finance/" style="color: #2563eb; text-decoration: none;">Финансовые калькуляторы</a></li>
+              <li style="margin-bottom: 10px;"><a href="/category/social/" style="color: #2563eb; text-decoration: none;">Социальные калькуляторы</a></li>
+              <li style="margin-bottom: 10px;"><a href="/category/utilities/" style="color: #2563eb; text-decoration: none;">Коммунальные калькуляторы</a></li>
             </ul>
           </section>
 
@@ -185,9 +194,9 @@
         <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #64748b; text-align: center;">
           <p>&copy; 2026 Calk.kz. Все права защищены.</p>
           <p style="font-size: 14px; margin-top: 10px;">
-            <a href="/legal/about" style="color: #2563eb; text-decoration: none; margin: 0 10px;">О проекте</a>
-            <a href="/legal/contact" style="color: #2563eb; text-decoration: none; margin: 0 10px;">Контакты</a>
-            <a href="/legal/privacy" style="color: #2563eb; text-decoration: none; margin: 0 10px;">Политика конфиденциальности</a>
+            <a href="/legal/about/" style="color: #2563eb; text-decoration: none; margin: 0 10px;">О проекте</a>
+            <a href="/legal/contact/" style="color: #2563eb; text-decoration: none; margin: 0 10px;">Контакты</a>
+            <a href="/legal/privacy/" style="color: #2563eb; text-decoration: none; margin: 0 10px;">Политика конфиденциальности</a>
           </p>
         </footer>
       </div>

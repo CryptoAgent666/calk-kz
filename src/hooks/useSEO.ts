@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { localizeUrl } from '../utils/localizedRouting';
 
 interface SEOData {
   title: string;
@@ -8,6 +9,7 @@ interface SEOData {
   image?: string;
   url?: string;
   structuredData?: string;
+  robots?: string;
 }
 
 export function useSEO(seoData: SEOData) {
@@ -19,15 +21,7 @@ export function useSEO(seoData: SEOData) {
         parsed.pathname = `${parsed.pathname}/`;
       }
 
-      if (lang === 'kk') {
-        parsed.searchParams.set('lang', 'kk');
-      } else {
-        parsed.searchParams.delete('lang');
-      }
-
-      const normalizedSearch = parsed.searchParams.toString();
-      parsed.search = normalizedSearch ? `?${normalizedSearch}` : '';
-      return parsed.toString();
+      return localizeUrl(parsed.toString(), lang, window.location.origin);
     };
 
     // Обновляем title
@@ -139,36 +133,23 @@ export function useSEO(seoData: SEOData) {
       hreflangTag.href = href;
     };
 
-    const baseUrl = canonicalUrl.split('?')[0];
-    updateOrCreateHreflangTag('ru', baseUrl);
-    updateOrCreateHreflangTag('ru-kz', baseUrl);
-    updateOrCreateHreflangTag('kk', `${baseUrl}?lang=kk`);
-    updateOrCreateHreflangTag('kk-kz', `${baseUrl}?lang=kk`);
-    updateOrCreateHreflangTag('x-default', baseUrl);
+    const ruAlternateUrl = normalizeCanonicalUrl(canonicalUrl, 'ru');
+    const kkAlternateUrl = normalizeCanonicalUrl(canonicalUrl, 'kk');
+    updateOrCreateHreflangTag('ru', ruAlternateUrl);
+    updateOrCreateHreflangTag('kk', kkAlternateUrl);
+    updateOrCreateHreflangTag('x-default', ruAlternateUrl);
 
-    // Update html lang + language meta
+    // Clean up legacy ru-kz/kk-kz hreflang tags if they exist
+    document.querySelectorAll('link[hreflang="ru-kz"], link[hreflang="kk-kz"]').forEach(el => el.remove());
+
+    // Update html lang attribute
     const isKazakh = i18n.language === 'kk';
     const htmlLang = isKazakh ? 'kk' : 'ru';
-    const contentLanguage = isKazakh ? 'kk-KZ' : 'ru-RU';
-    const languageLabel = isKazakh ? 'Kazakh' : 'Russian';
-
     document.documentElement.lang = htmlLang;
 
-    let languageMeta = document.querySelector('meta[name="language"]') as HTMLMetaElement;
-    if (!languageMeta) {
-      languageMeta = document.createElement('meta');
-      languageMeta.name = 'language';
-      document.head.appendChild(languageMeta);
-    }
-    languageMeta.content = languageLabel;
-
-    let contentLanguageMeta = document.querySelector('meta[http-equiv="content-language"]') as HTMLMetaElement;
-    if (!contentLanguageMeta) {
-      contentLanguageMeta = document.createElement('meta');
-      contentLanguageMeta.setAttribute('http-equiv', 'content-language');
-      document.head.appendChild(contentLanguageMeta);
-    }
-    contentLanguageMeta.content = contentLanguage;
+    // Clean up deprecated meta language tags if they exist
+    document.querySelector('meta[name="language"]')?.remove();
+    document.querySelector('meta[http-equiv="content-language"]')?.remove();
 
     // JSON-LD Structured Data
     if (seoData.structuredData) {
@@ -181,5 +162,14 @@ export function useSEO(seoData: SEOData) {
       document.head.appendChild(script);
     }
 
-  }, [seoData.title, seoData.description, seoData.keywords, seoData.image, seoData.url, seoData.structuredData, i18n.language]);
+    // Robots meta — for noindex pages (search results, etc.)
+    let robotsMeta = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
+    if (!robotsMeta) {
+      robotsMeta = document.createElement('meta');
+      robotsMeta.name = 'robots';
+      document.head.appendChild(robotsMeta);
+    }
+    robotsMeta.content = seoData.robots || 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+  }, [seoData.title, seoData.description, seoData.keywords, seoData.image, seoData.url, seoData.structuredData, seoData.robots, i18n.language]);
 }

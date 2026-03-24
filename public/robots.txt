@@ -1,45 +1,57 @@
 # Robots.txt для Calk.kz - Калькуляторы для Казахстана
-# Оптимизировано для максимальной индексации
 
 # Разрешаем доступ всем поисковым ботам
 User-agent: *
 Allow: /
-
-# Запрещаем доступ к служебным директориям (если они существуют)
 Disallow: /api/
 Disallow: /admin/
 Allow: /__kk/
 
-# Специальные правила для Google
+# Google
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 1
 
-# Специальные правила для Яндекс
+# Яндекс
 User-agent: YandexBot
 Allow: /
 Crawl-delay: 2
 
-# Специальные правила для Bing
+# Bing
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-# Разрешаем доступ к фавиконке и изображениям
-User-agent: *
-Allow: /calculator-favicon.svg
-Allow: /*.ico$
-Allow: /*.png$
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.gif$
-Allow: /*.svg$
-Allow: /*.webp$
+# AI-краулеры — разрешаем индексацию для AI-поиска
+User-agent: GPTBot
+Allow: /
 
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# AI-краулеры — блокируем нежелательных
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+# SEO-боты и скрейперы — блокируем
 User-agent: MJ12bot
 Disallow: /
 
 User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
 Disallow: /
 
 User-agent: DotBot
@@ -51,20 +63,12 @@ Disallow: /
 User-agent: MegaIndex
 Disallow: /
 
-# Разрешаем архивным ботам для истории интернета
+# Разрешаем архивным ботам
 User-agent: ia_archiver
 Allow: /
 
 User-agent: archive.org_bot
 Allow: /
 
-# Указываем местоположение sitemap
+# Sitemap
 Sitemap: https://calk.kz/sitemap.xml
-
-# Дополнительная информация для поисковых систем
-# Сайт содержит полезные онлайн-калькуляторы для жителей Казахстана
-# Все расчеты адаптированы под актуальное законодательство РК
-# Контент обновляется регулярно в соответствии с изменениями в законах
-
-# Последнее обновление: 2026-03-01
-# Контакт для технических вопросов: info@calk.kz

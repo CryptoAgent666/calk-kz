@@ -1,848 +1,1335 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <!-- Главная страница -->
   <url>
     <loc>https://calk.kz/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/" />
   </url>
-
-  <!-- Категории калькуляторов -->
+  <url>
+    <loc>https://calk.kz/__kk/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/" />
+  </url>
   <url>
     <loc>https://calk.kz/category/tax/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/tax/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/tax/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/tax/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/tax/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/tax/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/tax/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/tax/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/tax/" />
   </url>
   <url>
     <loc>https://calk.kz/category/auto/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/auto/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/auto/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/auto/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/auto/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/auto/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/auto/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/auto/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/auto/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/auto/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/auto/" />
   </url>
   <url>
     <loc>https://calk.kz/category/finance/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/finance/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/finance/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/finance/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/finance/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/finance/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/finance/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/finance/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/finance/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/finance/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/finance/" />
   </url>
   <url>
     <loc>https://calk.kz/category/agriculture/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/agriculture/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/agriculture/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/agriculture/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/agriculture/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/agriculture/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/agriculture/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/agriculture/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/agriculture/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/agriculture/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/agriculture/" />
   </url>
   <url>
     <loc>https://calk.kz/category/social/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/social/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/social/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/social/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/social/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/social/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/social/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/social/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/social/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/social/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/social/" />
   </url>
   <url>
     <loc>https://calk.kz/category/legal/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/legal/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/legal/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/legal/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/legal/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/legal/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/legal/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/legal/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/legal/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/legal/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/legal/" />
   </url>
   <url>
     <loc>https://calk.kz/category/utilities/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/utilities/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/utilities/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/utilities/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/utilities/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/utilities/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/utilities/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/utilities/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/utilities/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/utilities/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/utilities/" />
   </url>
   <url>
     <loc>https://calk.kz/category/converters/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/converters/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/converters/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/converters/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/converters/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/converters/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/converters/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/converters/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/converters/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/converters/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/converters/" />
   </url>
   <url>
     <loc>https://calk.kz/category/religious/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/religious/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/religious/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/religious/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/religious/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/religious/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/religious/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/religious/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/religious/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/religious/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/religious/" />
   </url>
   <url>
     <loc>https://calk.kz/category/math/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/math/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/math/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/math/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/math/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/math/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/math/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/category/math/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/math/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/math/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/math/" />
   </url>
   <url>
     <loc>https://calk.kz/category/health/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/health/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/category/health/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/category/health/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/category/health/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/health/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/health/" />
   </url>
-
-  <!-- Популярные калькуляторы (высокий приоритет) -->
+  <url>
+    <loc>https://calk.kz/__kk/category/health/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/category/health/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/category/health/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/category/health/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/income-tax/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/income-tax/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/income-tax/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/income-tax/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/income-tax/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/income-tax/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/income-tax/" />
   </url>
   <url>
-    <loc>https://calk.kz/calculator/salary/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/salary/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/salary/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/salary/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/salary/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/salary/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/credit/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/credit/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/credit/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/credit/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/credit/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/credit/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/currency-converter/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/currency-converter/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/currency-converter/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/currency-converter/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/currency-converter/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/currency-converter/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/bmi/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <loc>https://calk.kz/__kk/calculator/income-tax/</loc>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/bmi/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/bmi/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/bmi/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/bmi/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/bmi/" />
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/income-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/income-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/income-tax/" />
   </url>
-  <url>
-    <loc>https://calk.kz/calculator/percentage/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/percentage/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/percentage/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/percentage/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/percentage/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/percentage/" />
-  </url>
-
-  <!-- Налоговые калькуляторы -->
   <url>
     <loc>https://calk.kz/calculator/vehicle-tax/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vehicle-tax/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/vehicle-tax/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/vehicle-tax/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/vehicle-tax/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vehicle-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vehicle-tax/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/vehicle-tax/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vehicle-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vehicle-tax/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vehicle-tax/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/property-tax/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/property-tax/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/property-tax/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/property-tax/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/property-tax/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/property-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/property-tax/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/property-tax/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/property-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/property-tax/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/property-tax/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/ip-simplified/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/ip-simplified/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/ip-simplified/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/ip-simplified/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/ip-simplified/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/ip-simplified/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/ip-simplified/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/ip-simplified/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/ip-simplified/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/ip-simplified/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/ip-simplified/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/tax-deductions/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/tax-deductions/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/tax-deductions/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/tax-deductions/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/tax-deductions/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/tax-deductions/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/tax-deductions/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/tax-deductions/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/tax-deductions/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/tax-deductions/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/tax-deductions/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/vat/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vat/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/vat/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/vat/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/vat/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vat/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vat/" />
   </url>
   <url>
+    <loc>https://calk.kz/__kk/calculator/vat/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vat/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vat/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vat/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/vat-threshold/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vat-threshold/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vat-threshold/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vat-threshold/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/vat-threshold/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vat-threshold/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vat-threshold/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vat-threshold/" />
+  </url>
+  <url>
     <loc>https://calk.kz/calculator/luxury-tax/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/luxury-tax/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/luxury-tax/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/luxury-tax/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/luxury-tax/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/luxury-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/luxury-tax/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/luxury-tax/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/luxury-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/luxury-tax/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/luxury-tax/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/casino-winnings-tax/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/casino-winnings-tax/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/casino-winnings-tax/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/casino-winnings-tax/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/casino-winnings-tax/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/casino-winnings-tax/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/casino-winnings-tax/" />
   </url>
-
-  <!-- Автомобильные калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/casino-winnings-tax/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/casino-winnings-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/casino-winnings-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/casino-winnings-tax/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/esp-self-employed/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/esp-self-employed/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/esp-self-employed/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/esp-self-employed/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/esp-self-employed/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/esp-self-employed/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/esp-self-employed/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/esp-self-employed/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/customs-clearance/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/customs-clearance/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/customs-clearance/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/customs-clearance/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/customs-clearance/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/customs-clearance/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/customs-clearance/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/customs-clearance/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/customs-clearance/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/customs-clearance/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/customs-clearance/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/recycling-fee/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/recycling-fee/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/recycling-fee/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/recycling-fee/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/recycling-fee/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/recycling-fee/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/recycling-fee/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/recycling-fee/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/recycling-fee/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/recycling-fee/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/recycling-fee/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/registration-fee/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/registration-fee/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/registration-fee/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/registration-fee/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/registration-fee/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/registration-fee/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/registration-fee/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/registration-fee/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/registration-fee/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/registration-fee/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/registration-fee/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/insurance-premium/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/insurance-premium/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/insurance-premium/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/insurance-premium/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/insurance-premium/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/insurance-premium/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/insurance-premium/" />
   </url>
-
-  <!-- Финансовые калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/insurance-premium/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/insurance-premium/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/insurance-premium/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/insurance-premium/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/parcel-customs/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/parcel-customs/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/parcel-customs/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/parcel-customs/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/parcel-customs/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/parcel-customs/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/parcel-customs/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/parcel-customs/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/credit/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/credit/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/credit/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/credit/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/credit/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/credit/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/credit/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/credit/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/deposit/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/deposit/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/deposit/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/deposit/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/deposit/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/deposit/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/deposit/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/deposit/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/deposit/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/deposit/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/deposit/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/mortgage-specialized/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/mortgage-specialized/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/mortgage-specialized/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/mortgage-specialized/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/mortgage-specialized/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/mortgage-specialized/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/mortgage-specialized/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/mortgage-specialized/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/mortgage-specialized/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/mortgage-specialized/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/mortgage-specialized/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/rent-vs-buy/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/rent-vs-buy/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/rent-vs-buy/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/rent-vs-buy/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/rent-vs-buy/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/rent-vs-buy/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/rent-vs-buy/" />
   </url>
   <url>
+    <loc>https://calk.kz/__kk/calculator/rent-vs-buy/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/rent-vs-buy/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/rent-vs-buy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/rent-vs-buy/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/compound-interest/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/compound-interest/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/compound-interest/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/compound-interest/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/compound-interest/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/compound-interest/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/compound-interest/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/compound-interest/" />
+  </url>
+  <url>
     <loc>https://calk.kz/calculator/refinancing/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/refinancing/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/refinancing/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/refinancing/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/refinancing/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/refinancing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/refinancing/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/refinancing/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/refinancing/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/refinancing/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/refinancing/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/microloan/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/microloan/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/microloan/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/microloan/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/microloan/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/microloan/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/microloan/" />
   </url>
-
-  <!-- Сельскохозяйственные калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/microloan/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/microloan/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/microloan/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/microloan/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/early-repayment/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/early-repayment/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/early-repayment/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/early-repayment/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/early-repayment/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/early-repayment/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/early-repayment/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/early-repayment/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/farm-land-tax/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/farm-land-tax/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/farm-land-tax/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/farm-land-tax/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/farm-land-tax/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/farm-land-tax/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/farm-land-tax/" />
   </url>
-
-  <!-- Социальные калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/farm-land-tax/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/farm-land-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/farm-land-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/farm-land-tax/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/salary/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/salary/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/salary/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/salary/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/salary/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/salary/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/salary/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/salary/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/sick-leave/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/sick-leave/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/sick-leave/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/sick-leave/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/sick-leave/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/sick-leave/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/sick-leave/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/sick-leave/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/sick-leave/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/sick-leave/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/sick-leave/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/maternity-benefits/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/maternity-benefits/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/maternity-benefits/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/maternity-benefits/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/maternity-benefits/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/maternity-benefits/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/maternity-benefits/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/maternity-benefits/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/maternity-benefits/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/maternity-benefits/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/maternity-benefits/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/pension/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/pension/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/pension/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/pension/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/pension/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/pension/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/pension/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/pension/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/pension/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/pension/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/pension/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/pension-annuity/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/pension-annuity/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/pension-annuity/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/pension-annuity/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/pension-annuity/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/pension-annuity/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/pension-annuity/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/pension-annuity/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/pension-annuity/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/pension-annuity/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/pension-annuity/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/unemployment/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/unemployment/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/unemployment/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/unemployment/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/unemployment/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/unemployment/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/unemployment/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/unemployment/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/unemployment/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/unemployment/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/unemployment/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/social-assistance/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/social-assistance/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/social-assistance/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/social-assistance/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/social-assistance/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/social-assistance/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/social-assistance/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/social-assistance/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/social-assistance/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/social-assistance/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/social-assistance/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/gons/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/gons/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/gons/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/gons/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/gons/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/gons/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/gons/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/gons/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/gons/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/gons/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/gons/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/alimony/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/alimony/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/alimony/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/alimony/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/alimony/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/alimony/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/alimony/" />
   </url>
-
-  <!-- Юридические калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/alimony/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/alimony/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/alimony/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/alimony/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/vacation-pay/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vacation-pay/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vacation-pay/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vacation-pay/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/vacation-pay/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vacation-pay/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/vacation-pay/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vacation-pay/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/severance-pay/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/severance-pay/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/severance-pay/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/severance-pay/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/severance-pay/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/severance-pay/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/severance-pay/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/severance-pay/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/court-fee/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/court-fee/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/court-fee/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/court-fee/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/court-fee/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/court-fee/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/court-fee/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/court-fee/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/court-fee/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/court-fee/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/court-fee/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/penalty/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/penalty/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/penalty/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/penalty/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/penalty/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/penalty/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/penalty/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/penalty/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/penalty/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/penalty/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/penalty/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/notary/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/notary/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/notary/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/notary/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/notary/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/notary/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/notary/" />
   </url>
-
-  <!-- Коммунальные калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/notary/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/notary/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/notary/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/notary/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/electricity/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/electricity/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/electricity/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/electricity/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/electricity/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/electricity/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/electricity/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/electricity/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/electricity/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/electricity/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/electricity/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/water/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/water/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/water/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/water/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/water/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/water/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/water/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/water/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/water/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/water/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/water/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/heating/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/heating/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/heating/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/heating/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/heating/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/heating/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/heating/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/heating/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/heating/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/heating/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/heating/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/gas/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/gas/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/gas/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/gas/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/gas/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/gas/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/gas/" />
   </url>
-
-  <!-- Конвертеры -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/gas/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/gas/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/gas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/gas/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/currency-converter/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/currency-converter/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/currency-converter/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/currency-converter/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/currency-converter/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/currency-converter/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/currency-converter/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/currency-converter/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/time-converter/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/time-converter/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/time-converter/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/time-converter/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/time-converter/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/time-converter/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/time-converter/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/time-converter/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/time-converter/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/time-converter/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/time-converter/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/number-to-words/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/number-to-words/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/number-to-words/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/number-to-words/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/number-to-words/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/number-to-words/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/number-to-words/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/number-to-words/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/number-to-words/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/number-to-words/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/number-to-words/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/time-to-words/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/time-to-words/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/time-to-words/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/time-to-words/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/time-to-words/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/time-to-words/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/time-to-words/" />
   </url>
-
-  <!-- Религиозные калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/time-to-words/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/time-to-words/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/time-to-words/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/time-to-words/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/zakat/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/zakat/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/zakat/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/zakat/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/zakat/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/zakat/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/zakat/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/zakat/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/zakat/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/zakat/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/zakat/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/kurban-sacrifice/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/kurban-sacrifice/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/kurban-sacrifice/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/kurban-sacrifice/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/kurban-sacrifice/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/kurban-sacrifice/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/kurban-sacrifice/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/kurban-sacrifice/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/kurban-sacrifice/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/kurban-sacrifice/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/kurban-sacrifice/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/ramadan-sadaqah/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/ramadan-sadaqah/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/ramadan-sadaqah/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/ramadan-sadaqah/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/ramadan-sadaqah/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/ramadan-sadaqah/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/ramadan-sadaqah/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/ramadan-sadaqah/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/ramadan-sadaqah/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/ramadan-sadaqah/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/ramadan-sadaqah/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/islamic-inheritance/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/islamic-inheritance/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/islamic-inheritance/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/islamic-inheritance/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/islamic-inheritance/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/islamic-inheritance/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/islamic-inheritance/" />
   </url>
-
-  <!-- Математические калькуляторы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/islamic-inheritance/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/islamic-inheritance/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/islamic-inheritance/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/islamic-inheritance/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/discount/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/discount/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/discount/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/discount/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/discount/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/discount/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/discount/" />
   </url>
   <url>
+    <loc>https://calk.kz/__kk/calculator/discount/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/discount/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/discount/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/discount/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/percentage/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/percentage/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/percentage/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/percentage/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/percentage/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/percentage/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/percentage/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/percentage/" />
+  </url>
+  <url>
     <loc>https://calk.kz/calculator/leap-year/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/leap-year/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/leap-year/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/leap-year/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/leap-year/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/leap-year/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/leap-year/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/leap-year/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/leap-year/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/leap-year/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/leap-year/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/date-calculator/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/date-calculator/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/date-calculator/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/date-calculator/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/date-calculator/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/date-calculator/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/date-calculator/" />
   </url>
-
-  <!-- Здоровье -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/date-calculator/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/date-calculator/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/date-calculator/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/date-calculator/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/bmi/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/bmi/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/bmi/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/bmi/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/bmi/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/bmi/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/bmi/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/bmi/" />
+  </url>
   <url>
     <loc>https://calk.kz/calculator/calories/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/calories/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/calories/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/calories/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/calories/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/calories/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/calories/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/calories/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/calories/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/calories/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/calories/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/pregnancy/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/pregnancy/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/pregnancy/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/pregnancy/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/pregnancy/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/pregnancy/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/pregnancy/" />
   </url>
-
-  <!-- Правовые страницы -->
+  <url>
+    <loc>https://calk.kz/__kk/calculator/pregnancy/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/pregnancy/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/pregnancy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/pregnancy/" />
+  </url>
   <url>
     <loc>https://calk.kz/legal/about/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/about/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/legal/about/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/legal/about/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/legal/about/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/about/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/about/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/legal/about/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/about/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/about/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/about/" />
   </url>
   <url>
     <loc>https://calk.kz/legal/contact/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/contact/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/legal/contact/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/legal/contact/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/legal/contact/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/contact/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/contact/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/legal/contact/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/contact/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/contact/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/contact/" />
   </url>
   <url>
     <loc>https://calk.kz/legal/privacy/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/privacy/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/legal/privacy/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/legal/privacy/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/legal/privacy/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/privacy/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/privacy/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/legal/privacy/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/privacy/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/privacy/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/privacy/" />
   </url>
   <url>
     <loc>https://calk.kz/legal/terms/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/terms/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/legal/terms/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/legal/terms/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/legal/terms/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/terms/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/terms/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/legal/terms/</loc>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/terms/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/terms/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/terms/" />
   </url>
   <url>
     <loc>https://calk.kz/legal/disclaimer/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2026-03-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/disclaimer/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/legal/disclaimer/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/legal/disclaimer/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/legal/disclaimer/?lang=kk" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/disclaimer/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/disclaimer/" />
   </url>
-
-  <!-- Новый калькулятор -->
   <url>
-    <loc>https://calk.kz/calculator/compound-interest/</loc>
-    <lastmod>2026-03-01</lastmod>
+    <loc>https://calk.kz/__kk/legal/disclaimer/</loc>
+    <lastmod>2026-03-24</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/compound-interest/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/compound-interest/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/compound-interest/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/compound-interest/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/compound-interest/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/vat-threshold/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vat-threshold/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/vat-threshold/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/vat-threshold/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/vat-threshold/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vat-threshold/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/vacation-pay/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/vacation-pay/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/vacation-pay/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/vacation-pay/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/vacation-pay/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/vacation-pay/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/early-repayment/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/early-repayment/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/early-repayment/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/early-repayment/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/early-repayment/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/early-repayment/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/severance-pay/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/severance-pay/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/severance-pay/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/severance-pay/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/severance-pay/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/severance-pay/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/esp-self-employed/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/esp-self-employed/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/esp-self-employed/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/esp-self-employed/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/esp-self-employed/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/esp-self-employed/" />
-  </url>
-  <url>
-    <loc>https://calk.kz/calculator/parcel-customs/</loc>
-    <lastmod>2026-03-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/parcel-customs/" />
-    <xhtml:link rel="alternate" hreflang="ru-kz" href="https://calk.kz/calculator/parcel-customs/" />
-    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/calculator/parcel-customs/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="kk-kz" href="https://calk.kz/calculator/parcel-customs/?lang=kk" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/parcel-customs/" />
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/legal/disclaimer/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/legal/disclaimer/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/legal/disclaimer/" />
   </url>
 </urlset>

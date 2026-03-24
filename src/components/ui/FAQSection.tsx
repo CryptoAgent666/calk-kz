@@ -1,45 +1,19 @@
-import React, { Suspense, useState } from 'react';
-import { DeferredRender } from './DeferredRender';
+import React, { useState } from 'react';
+import {
+  FAQSection as FAQSectionImpl,
+  MethodologySection as MethodologySectionImpl
+} from './FAQSectionImpl';
 import type { FAQSectionProps, MethodologySectionProps } from './FAQSectionImpl';
 
-const LazyFAQSection = React.lazy(() =>
-  import('./FAQSectionImpl').then((module) => ({ default: module.FAQSection }))
-);
-const LazyMethodologySection = React.lazy(() =>
-  import('./FAQSectionImpl').then((module) => ({ default: module.MethodologySection }))
-);
-
-function FAQPlaceholder() {
-  return (
-    <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
-      <div className="h-5 w-40 bg-blue-100 rounded mb-6 animate-pulse" />
-      <div className="space-y-3">
-        <div className="h-12 bg-white rounded-xl border border-gray-100 shadow-sm animate-pulse" />
-        <div className="h-12 bg-white rounded-xl border border-gray-100 shadow-sm animate-pulse" />
-        <div className="h-12 bg-white rounded-xl border border-gray-100 shadow-sm animate-pulse" />
-      </div>
-    </div>
-  );
-}
-
+// FAQ и Methodology рендерятся сразу (без DeferredRender) —
+// AI-краулеры (GPTBot, ClaudeBot, PerplexityBot) не скроллят страницу,
+// и IntersectionObserver скрывал бы от них самый цитируемый контент.
 export function FAQSection(props: FAQSectionProps) {
-  return (
-    <DeferredRender minHeight={320} className="print:hidden">
-      <Suspense fallback={<FAQPlaceholder />}>
-        <LazyFAQSection {...props} />
-      </Suspense>
-    </DeferredRender>
-  );
+  return <FAQSectionImpl {...props} />;
 }
 
 export function MethodologySection(props: MethodologySectionProps) {
-  return (
-    <DeferredRender minHeight={160} className="print:hidden">
-      <Suspense fallback={<div className="mt-6" />}>
-        <LazyMethodologySection {...props} />
-      </Suspense>
-    </DeferredRender>
-  );
+  return <MethodologySectionImpl {...props} />;
 }
 
 // Всплывающая подсказка для терминов

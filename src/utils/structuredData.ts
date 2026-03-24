@@ -1,5 +1,6 @@
 import { calculatorCategories } from '../data/calculators';
 import i18n from '../i18n/config';
+import { localizeUrl } from './localizedRouting';
 
 interface BreadcrumbItem {
   name: string;
@@ -17,6 +18,9 @@ interface StructuredDataOptions {
   breadcrumbs?: BreadcrumbItem[];
 }
 
+// Фиксированная дата последнего обновления контента (обновлять при деплое)
+const LAST_CONTENT_UPDATE = '2026-03-24';
+
 export function generateStructuredData(options: StructuredDataOptions): string {
   const baseUrl = 'https://calk.kz';
   const baseUrlWithSlash = `${baseUrl}/`;
@@ -27,9 +31,7 @@ export function generateStructuredData(options: StructuredDataOptions): string {
     const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     return query ? `${normalizedBase}?${query}` : normalizedBase;
   };
-  const appendLangQuery = (url: string) =>
-    currentLang === 'kk' ? `${url}${url.includes('?') ? '&' : '?'}lang=kk` : url;
-  const buildUrl = (path: string) => appendLangQuery(addTrailingSlash(`${baseUrl}${path}`));
+  const buildUrl = (path: string) => localizeUrl(addTrailingSlash(`${baseUrl}${path}`), currentLang, baseUrl);
   const homeUrl = buildUrl('/');
   const homeLabel = currentLang === 'kk' ? 'Басты бет' : 'Главная';
   const siteName = currentLang === 'kk'
@@ -41,35 +43,72 @@ export function generateStructuredData(options: StructuredDataOptions): string {
     defaultValue: 'Удобные онлайн-калькуляторы для жителей Казахстана'
   });
 
+  // Organization + Person (site-wide entity data)
+  const organizationEntity = {
+    '@type': 'Organization',
+    '@id': `${baseUrl}/#organization`,
+    name: 'Calk.kz',
+    url: baseUrlWithSlash,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${baseUrl}/calculator-favicon.svg`,
+      width: 512,
+      height: 512
+    },
+    description: siteDescription,
+    foundingDate: '2024-01-01',
+    founder: { '@id': `${baseUrl}/#konstantin-yakovlev` },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: 'info@calk.kz',
+      availableLanguage: ['Russian', 'Kazakh']
+    },
+    sameAs: [
+      'https://play.google.com/store/apps/details?id=calk.kz',
+      'https://zanimaem.kz',
+      'https://profinance.kz'
+    ]
+  };
+
+  const personEntity = {
+    '@type': 'Person',
+    '@id': `${baseUrl}/#konstantin-yakovlev`,
+    name: 'Константин Яковлев',
+    jobTitle: 'Основатель',
+    description: 'Основатель Calk.kz, Zanimaem.kz и Profinance.kz. Более 14 лет в маркетинге, свыше 8 лет в финансовой аналитике.',
+    image: 'https://profinance.kz/img/team/konstantin.jpg',
+    url: `${baseUrl}/legal/about/`,
+    worksFor: { '@id': `${baseUrl}/#organization` },
+    sameAs: [
+      'https://zanimaem.kz',
+      'https://profinance.kz'
+    ],
+    knowsAbout: ['Finance', 'Taxation in Kazakhstan', 'Banking', 'Fintech']
+  };
+
   if (options.type === 'organization') {
     return JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'Calk.kz',
-      url: baseUrlWithSlash,
-      logo: `${baseUrl}/calculator-favicon.svg`,
-      description: siteDescription,
-      contactPoint: {
-        '@type': 'ContactPoint',
-        contactType: 'Customer Service',
-        availableLanguage: ['Russian', 'Kazakh']
-      },
-      sameAs: []
+      '@graph': [organizationEntity, personEntity]
     });
   }
 
   if (options.type === 'website') {
     const websiteUrl = options.url ? addTrailingSlash(options.url) : buildUrl('/');
     const searchUrl = currentLang === 'kk'
-      ? `${baseUrl}/?lang=kk&q={search_term_string}`
+      ? `${baseUrl}/__kk/?q={search_term_string}`
       : `${baseUrl}/?q={search_term_string}`;
-    return JSON.stringify({
-      '@context': 'https://schema.org',
+
+    // Homepage: WebSite + Organization + Person + ItemList
+    const websiteEntity = {
       '@type': 'WebSite',
+      '@id': `${baseUrl}/#website`,
       name: siteName,
       url: websiteUrl,
       description: options.description || siteDescription,
       inLanguage: language,
+      publisher: { '@id': `${baseUrl}/#organization` },
       potentialAction: {
         '@type': 'SearchAction',
         target: {
@@ -77,18 +116,34 @@ export function generateStructuredData(options: StructuredDataOptions): string {
           urlTemplate: searchUrl
         },
         'query-input': 'required name=search_term_string'
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'Calk.kz',
-        url: baseUrl,
-        logo: {
-          '@type': 'ImageObject',
-          url: `${baseUrl}/calculator-favicon.svg`,
-          width: 512,
-          height: 512
-        }
       }
+    };
+
+    // ItemList of all categories for homepage
+    const categoryItems = calculatorCategories.map((cat, index) => {
+      const catTitle = i18n.t(`${cat.id}.title`, {
+        ns: 'categories',
+        lng: currentLang,
+        defaultValue: cat.title
+      });
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        name: catTitle,
+        url: buildUrl(`/category/${cat.id}`)
+      };
+    });
+
+    const itemListEntity = {
+      '@type': 'ItemList',
+      name: currentLang === 'kk' ? 'Калькулятор санаттары' : 'Категории калькуляторов',
+      numberOfItems: calculatorCategories.length,
+      itemListElement: categoryItems
+    };
+
+    return JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [websiteEntity, organizationEntity, personEntity, itemListEntity]
     });
   }
 
@@ -108,8 +163,6 @@ export function generateStructuredData(options: StructuredDataOptions): string {
     if (!calculator || !category) {
       return '';
     }
-
-    const currentDate = new Date().toISOString();
 
     const calculatorUrl = options.url
       ? addTrailingSlash(options.url)
@@ -217,7 +270,7 @@ export function generateStructuredData(options: StructuredDataOptions): string {
 
     const faqItems = faqItemsFromObject.length > 0 ? faqItemsFromObject : faqItemsFromLegacy;
 
-    const webApplication: any = {
+    const webApplication = {
       '@type': 'WebApplication',
       name: calculatorTitle,
       description: calculatorDescription,
@@ -227,13 +280,9 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       browserRequirements: 'Requires JavaScript. Requires HTML5.',
       softwareVersion: '1.0',
       datePublished: '2026-01-01',
-      dateModified: currentDate,
+      dateModified: LAST_CONTENT_UPDATE,
       inLanguage: language,
-      author: {
-        '@type': 'Organization',
-        name: 'Calk.kz',
-        url: baseUrlWithSlash
-      },
+      author: { '@id': `${baseUrl}/#konstantin-yakovlev` },
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -244,14 +293,13 @@ export function generateStructuredData(options: StructuredDataOptions): string {
 
     const breadcrumbId = `${calculatorUrl}#breadcrumb`;
     const webPage = {
-      '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: calculatorTitle,
       description: calculatorDescription,
       url: calculatorUrl,
       inLanguage: language,
       datePublished: '2026-01-01',
-      dateModified: currentDate,
+      dateModified: LAST_CONTENT_UPDATE,
       primaryImageOfPage: {
         '@type': 'ImageObject',
         url: `${baseUrl}/og-image.png`,
@@ -259,19 +307,11 @@ export function generateStructuredData(options: StructuredDataOptions): string {
         height: 630
       },
       mainEntity: webApplication,
-      isPartOf: {
-        '@type': 'WebSite',
-        name: siteName,
-        url: baseUrlWithSlash
-      },
-      breadcrumb: {
-        '@id': breadcrumbId
-      }
+      isPartOf: { '@id': `${baseUrl}/#website` },
+      breadcrumb: { '@id': breadcrumbId }
     };
 
-    // Add breadcrumb
     const breadcrumbList = {
-      '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       '@id': breadcrumbId,
       itemListElement: [
@@ -290,16 +330,14 @@ export function generateStructuredData(options: StructuredDataOptions): string {
         {
           '@type': 'ListItem',
           position: 3,
-          name: calculatorTitle,
-          item: calculatorUrl
+          name: calculatorTitle
         }
       ]
     };
 
-    const items: any[] = [webPage, breadcrumbList];
+    const graphItems: any[] = [webPage, breadcrumbList];
     if (faqItems.length > 0) {
-      items.push({
-        '@context': 'https://schema.org',
+      graphItems.push({
         '@type': 'FAQPage',
         inLanguage: language,
         url: calculatorUrl,
@@ -307,7 +345,10 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       });
     }
 
-    return JSON.stringify(items);
+    return JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': graphItems
+    });
   }
 
   if (options.type === 'category' && options.categoryId) {
@@ -330,18 +371,31 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       lng: currentLang,
       defaultValue: category.description
     });
-    const structuredData = {
-      '@context': 'https://schema.org',
+
+    // hasPart: list child calculators
+    const hasPart = category.calculators.map(calc => {
+      const calcTitle = i18n.t(`${calc.id}.title`, {
+        ns: 'calculators',
+        lng: currentLang,
+        defaultValue: calc.title
+      });
+      return {
+        '@type': 'WebApplication',
+        name: calcTitle,
+        url: buildUrl(`/calculator/${calc.id}`)
+      };
+    });
+
+    const collectionPage = {
       '@type': 'CollectionPage',
       name: categoryTitle,
       description: categoryDescription,
       url: categoryUrl,
       inLanguage: language,
-      isPartOf: {
-        '@type': 'WebSite',
-        name: 'Calk.kz',
-        url: baseUrlWithSlash
-      },
+      dateModified: LAST_CONTENT_UPDATE,
+      numberOfItems: category.calculators.length,
+      hasPart,
+      isPartOf: { '@id': `${baseUrl}/#website` },
       about: {
         '@type': 'Thing',
         name: categoryTitle,
@@ -349,9 +403,10 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       }
     };
 
+    const breadcrumbId = `${categoryUrl}#breadcrumb`;
     const breadcrumbList = {
-      '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
+      '@id': breadcrumbId,
       itemListElement: [
         {
           '@type': 'ListItem',
@@ -362,30 +417,16 @@ export function generateStructuredData(options: StructuredDataOptions): string {
         {
           '@type': 'ListItem',
           position: 2,
-          name: categoryTitle,
-          item: categoryUrl
+          name: categoryTitle
         }
       ]
     };
 
-    return JSON.stringify([structuredData, breadcrumbList]);
+    return JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [collectionPage, breadcrumbList]
+    });
   }
 
   return '';
-}
-
-export function addStructuredDataToHead(structuredData: string): void {
-  if (!structuredData) return;
-
-  // Remove existing structured data
-  const existing = document.querySelector('script[type="application/ld+json"]');
-  if (existing) {
-    existing.remove();
-  }
-
-  // Add new structured data
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
-  script.text = structuredData;
-  document.head.appendChild(script);
 }

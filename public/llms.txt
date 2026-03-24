@@ -1,0 +1,118 @@
+# Calk.kz
+
+> Бесплатные онлайн-калькуляторы для жителей Казахстана. Все расчёты по актуальному законодательству РК 2026 года.
+
+Calk.kz — платформа с 57+ калькуляторами, охватывающими налоги, финансы, автомобили, социальные выплаты, коммунальные услуги и другие сферы жизни в Казахстане. Все расчёты выполняются локально в браузере — данные пользователей не передаются на сервер.
+
+## Основатель
+
+Константин Яковлев — основатель Calk.kz, Zanimaem.kz и Profinance.kz. Более 14 лет в маркетинге, свыше 8 лет в финансовой аналитике.
+
+## Актуальные данные на 2026 год
+
+- МРП (Месячный расчётный показатель): 4 325 тенге
+- МЗП (Минимальная заработная плата): 85 000 тенге
+- НДС: 16% (с 1 января 2025)
+- ИПН: прогрессивная шкала 10-15% (с 2025)
+- ОПВ: 10%
+- ВОСМС: 2%
+- Базовая ставка НБРК: 15.25%
+
+## Категории калькуляторов
+
+### Налоговые калькуляторы
+- /calculator/income-tax/ — ИПН для наемных работников
+- /calculator/vehicle-tax/ — Налог на транспортные средства
+- /calculator/property-tax/ — Налог на имущество физических лиц
+- /calculator/ip-simplified/ — Налоги ИП на упрощённой системе
+- /calculator/tax-deductions/ — Социальные налоговые вычеты по ИПН
+- /calculator/vat/ — Калькулятор НДС (добавление, выделение)
+- /calculator/vat-threshold/ — Порог по НДС (10 000 МРП)
+- /calculator/luxury-tax/ — Налог на роскошь
+- /calculator/casino-winnings-tax/ — Налог на выигрыш в казино
+- /calculator/esp-self-employed/ — ЕСП для самозанятых
+
+### Автомобильные калькуляторы
+- /calculator/customs-clearance/ — Таможенная очистка автомобилей
+- /calculator/recycling-fee/ — Утилизационный сбор
+- /calculator/registration-fee/ — Сбор за первичную регистрацию
+- /calculator/insurance-premium/ — ОГПО ВТС (страховка)
+- /calculator/parcel-customs/ — Таможенная пошлина на посылки
+
+### Финансовые калькуляторы
+- /calculator/credit/ — Универсальный кредитный калькулятор
+- /calculator/deposit/ — Калькулятор банковских вкладов
+- /calculator/mortgage-specialized/ — Ипотечный калькулятор
+- /calculator/rent-vs-buy/ — Аренда или покупка жилья
+- /calculator/compound-interest/ — Сложный процент
+- /calculator/refinancing/ — Рефинансирование кредита
+- /calculator/microloan/ — Микрокредит от МФО
+- /calculator/early-repayment/ — Досрочное погашение кредита
+
+### Сельское хозяйство
+- /calculator/farm-land-tax/ — Налог КФХ (0,5% от оборота)
+
+### Социальные выплаты и трудовые отношения
+- /calculator/salary/ — Зарплатный калькулятор
+- /calculator/sick-leave/ — Больничный лист
+- /calculator/maternity-benefits/ — Пособия по беременности и родам
+- /calculator/pension/ — Пенсионные выплаты
+- /calculator/pension-annuity/ — Пенсионный аннуитет
+- /calculator/unemployment/ — Пособие по безработице
+- /calculator/social-assistance/ — Адресная социальная помощь (АСП)
+- /calculator/gons/ — Образовательный накопительный вклад (ГОНС)
+- /calculator/alimony/ — Алименты
+- /calculator/vacation-pay/ — Отпускные
+- /calculator/severance-pay/ — Компенсация при увольнении
+
+### Юридические калькуляторы
+- /calculator/court-fee/ — Государственная пошлина в суд
+- /calculator/penalty/ — Калькулятор пени
+- /calculator/notary/ — Стоимость нотариальных услуг
+
+### Коммунальные услуги
+- /calculator/electricity/ — Счёт за электроэнергию
+- /calculator/water/ — Водоснабжение и канализация
+- /calculator/heating/ — Центральное отопление
+- /calculator/gas/ — Природный газ
+
+### Конвертеры
+- /calculator/currency-converter/ — Конвертер валют
+- /calculator/time-converter/ — Конвертация единиц времени
+- /calculator/number-to-words/ — Числа прописью (RU/KK/EN)
+- /calculator/time-to-words/ — Время прописью
+
+### Религиозные калькуляторы
+- /calculator/zakat/ — Закят
+- /calculator/kurban-sacrifice/ — Стоимость жертвоприношения (Курбан-айт)
+- /calculator/ramadan-sadaqah/ — Фитр-садака и Фидия-садака
+- /calculator/islamic-inheritance/ — Исламское наследство (Фараиз)
+
+### Математические калькуляторы
+- /calculator/discount/ — Калькулятор скидок
+- /calculator/percentage/ — Процентный калькулятор
+- /calculator/leap-year/ — Високосный год
+- /calculator/date-calculator/ — Добавление/вычитание дат
+
+### Здоровье и медицина
+- /calculator/bmi/ — Индекс массы тела (ИМТ)
+- /calculator/calories/ — Калькулятор калорий
+- /calculator/pregnancy/ — Калькулятор беременности
+
+## Языки
+
+Сайт доступен на русском (calk.kz) и казахском (calk.kz/__kk/).
+
+## Источники данных
+
+- Налоговый кодекс Республики Казахстан
+- Трудовой кодекс РК
+- Данные Национального банка РК (НБРК)
+- Закон РК «О пенсионном обеспечении»
+- Закон РК «Об обязательном социальном страховании»
+
+## Контакты
+
+- Email: info@calk.kz
+- Сайт: https://calk.kz
+- Связанные проекты: https://zanimaem.kz, https://profinance.kz
