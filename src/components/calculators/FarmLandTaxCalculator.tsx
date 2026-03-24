@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Wheat, Calculator, MapPin, TrendingUp, Info, AlertTriangle, Target, Sprout, TreePine, Building, Tractor, FileText, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
@@ -1031,6 +1032,8 @@ export default function FarmLandTaxCalculator() {
           { title: 'Налоговый кодекс РК — земельный налог', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
         ]}
       />
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Receipt, Calculator, GraduationCap, Heart, Home, DollarSign, Info, AlertTriangle, TrendingUp, FileText, CheckCircle, Target, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -859,6 +860,8 @@ export default function TaxDeductionsCalculator() {
           { title: 'КГД — налоговые вычеты', url: 'https://kgd.gov.kz/' },
         ]}
       />
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

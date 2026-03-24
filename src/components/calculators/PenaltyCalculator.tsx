@@ -5,6 +5,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 
 export default function PenaltyCalculator() {
   const { t } = useTranslation('calculators');
@@ -601,6 +602,8 @@ export default function PenaltyCalculator() {
           />
         </div>
       )}
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

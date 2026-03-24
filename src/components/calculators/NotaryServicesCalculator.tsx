@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FileSignature, Calculator, Users, Building, MapPin, Info, AlertTriangle, DollarSign, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -522,6 +523,8 @@ export default function NotaryServicesCalculator() {
           { title: 'Закон о нотариате', url: 'https://online.zakon.kz/document/?doc_id=1006057' },
         ]}
       />
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

@@ -7,6 +7,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 
 export default function PensionCalculator() {
   const { t } = useTranslation('calculators');
@@ -473,6 +474,8 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
           />
         </div>
       )}
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

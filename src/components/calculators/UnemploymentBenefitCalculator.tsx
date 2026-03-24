@@ -6,6 +6,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 
 export default function UnemploymentBenefitCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -424,6 +425,8 @@ export default function UnemploymentBenefitCalculator() {
           />
         </div>
       )}
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

@@ -3,6 +3,7 @@ import { Recycle, Calculator, Zap, Truck, Car, Info, BarChart3 } from 'lucide-re
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
@@ -432,6 +433,8 @@ export default function RecyclingFeeCalculator() {
           { title: t('recycling-fee.sources.rop'), url: 'https://rop.gov.kz/' },
         ]}
       />
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

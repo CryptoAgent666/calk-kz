@@ -3,6 +3,7 @@ import { Shield, Calculator, Users, DollarSign, TrendingUp, Info, AlertTriangle,
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart, ComparisonBarChart } from '../ui/ChartComponents';
@@ -862,6 +863,8 @@ export default function PensionAnnuityCalculator() {
           { title: 'АРРФР — Страховые компании', url: 'https://finreg.kz/' },
         ]}
       />
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget

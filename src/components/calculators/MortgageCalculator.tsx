@@ -6,6 +6,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { ExpertBlock } from '../ui/ExpertBlock';
 
 interface MortgageProgram {
   id: string;
@@ -1030,6 +1031,8 @@ export default function MortgageCalculator() {
           </div>
         </div>
       </div>
+
+      <ExpertBlock />
 
       {/* Виджет для встраивания */}
       <EmbedWidget
