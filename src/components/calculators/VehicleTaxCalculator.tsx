@@ -66,6 +66,12 @@ export default function VehicleTaxCalculator() {
         category = t(rateInfo.descriptionKey);
         taxRate = rateInfo.rate;
         taxAmount = taxRate * MRP_2026;
+
+        // С 2026: доплата 7 тенге за каждый куб.см свыше 1500
+        if (volume > 1500) {
+          const surcharge = (volume - rateInfo.minVolume + 1) * 7;
+          taxAmount += surcharge;
+        }
       }
     } else if (vehicleType === 'truck' && cargoCapacity) {
       const capacity = parseFloat(cargoCapacity);
@@ -87,15 +93,16 @@ export default function VehicleTaxCalculator() {
       }
     }
 
+    // С 2026: поправочные коэффициенты за возраст авто (0.7 при 10-20 лет, 0.5 свыше 20 лет)
     let ageDiscountPercent = 0;
     let discountAmount = 0;
 
     if (applyAgeDiscount && vehicleAge) {
       const age = parseInt(vehicleAge);
-      if (age >= 20) {
-        ageDiscountPercent = 50;
+      if (age > 20) {
+        ageDiscountPercent = 50; // коэффициент 0.5
       } else if (age >= 10) {
-        ageDiscountPercent = 30;
+        ageDiscountPercent = 30; // коэффициент 0.7
       }
 
       discountAmount = (taxAmount * ageDiscountPercent) / 100;

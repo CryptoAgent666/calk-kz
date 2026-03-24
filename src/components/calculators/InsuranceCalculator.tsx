@@ -14,9 +14,9 @@ interface Driver {
 }
 
 export default function InsuranceCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [currentStep, setCurrentStep] = useState(1);
-  const [region, setRegion] = useState<string>('almaty-city');
+  const [region, setRegion] = useState<string>('astana-city');
   const [vehicleType, setVehicleType] = useState<string>('passenger-car');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
   const [drivers, setDrivers] = useState<Driver[]>([{ id: '1', age: 30, experience: 5 }]);
@@ -39,24 +39,28 @@ export default function InsuranceCalculator() {
   const BASE_PREMIUM_MRP = 1.9;
   const CURRENT_YEAR = 2026;
 
-  // Коэффициенты по территориям
+  // Территориальные коэффициенты ОГПО ВТС — утверждены АРФР с 01.01.2026
   const territoryCoefficients = [
-    { id: 'almaty-city', name: t('insurance-premium.regions.almatyCity'), coefficient: 1.5 },
-    { id: 'astana-city', name: t('insurance-premium.regions.astanaCity'), coefficient: 1.4 },
-    { id: 'shymkent-city', name: t('insurance-premium.regions.shymkentCity'), coefficient: 1.3 },
-    { id: 'almaty-region', name: t('insurance-premium.regions.almatyRegion'), coefficient: 1.37 },
-    { id: 'turkestan-region', name: t('insurance-premium.regions.turkestanRegion'), coefficient: 1.57 },
-    { id: 'karaganda-region', name: t('insurance-premium.regions.karagandaRegion'), coefficient: 1.2 },
-    { id: 'aktobe-region', name: t('insurance-premium.regions.aktobeRegion'), coefficient: 1.1 },
-    { id: 'atyrau-region', name: t('insurance-premium.regions.atyrauRegion'), coefficient: 1.0 },
-    { id: 'west-kazakhstan', name: t('insurance-premium.regions.westKazakhstan'), coefficient: 1.05 },
-    { id: 'east-kazakhstan', name: t('insurance-premium.regions.eastKazakhstan'), coefficient: 1.15 },
-    { id: 'north-kazakhstan', name: t('insurance-premium.regions.northKazakhstan'), coefficient: 1.0 },
-    { id: 'pavlodar-region', name: t('insurance-premium.regions.pavlodarRegion'), coefficient: 1.1 },
-    { id: 'kostanay-region', name: t('insurance-premium.regions.kostanayRegion'), coefficient: 1.05 },
-    { id: 'zhambyl-region', name: t('insurance-premium.regions.zhambylRegion'), coefficient: 1.25 },
-    { id: 'kyzylorda-region', name: t('insurance-premium.regions.kyzylordaRegion'), coefficient: 1.2 },
-    { id: 'mangystau-region', name: t('insurance-premium.regions.mangystauRegion'), coefficient: 1.3 }
+    { id: 'kyzylorda-region', name: t('insurance-premium.regions.kyzylordaRegion'), coefficient: 1.85 },
+    { id: 'zhambyl-region', name: t('insurance-premium.regions.zhambylRegion'), coefficient: 1.74 },
+    { id: 'turkestan-region', name: t('insurance-premium.regions.turkestanRegion'), coefficient: 1.69 },
+    { id: 'shymkent-city', name: t('insurance-premium.regions.shymkentCity'), coefficient: 1.61 },
+    { id: 'astana-city', name: t('insurance-premium.regions.astanaCity'), coefficient: 1.44 },
+    { id: 'almaty-region', name: t('insurance-premium.regions.almatyRegion'), coefficient: 1.44 },
+    { id: 'zhetysu-region', name: t('insurance-premium.regions.zhetysuRegion'), coefficient: 1.20 },
+    { id: 'west-kazakhstan', name: t('insurance-premium.regions.westKazakhstan'), coefficient: 1.19 },
+    { id: 'karaganda-region', name: t('insurance-premium.regions.karagandaRegion'), coefficient: 1.18 },
+    { id: 'kostanay-region', name: t('insurance-premium.regions.kostanayRegion'), coefficient: 1.11 },
+    { id: 'akmola-region', name: t('insurance-premium.regions.akmolaRegion'), coefficient: 1.08 },
+    { id: 'aktobe-region', name: t('insurance-premium.regions.aktobeRegion'), coefficient: 1.02 },
+    { id: 'ulytau-region', name: t('insurance-premium.regions.ulytauRegion'), coefficient: 0.99 },
+    { id: 'pavlodar-region', name: t('insurance-premium.regions.pavlodarRegion'), coefficient: 0.82 },
+    { id: 'abay-region', name: t('insurance-premium.regions.abayRegion'), coefficient: 0.80 },
+    { id: 'mangystau-region', name: t('insurance-premium.regions.mangystauRegion'), coefficient: 0.79 },
+    { id: 'east-kazakhstan', name: t('insurance-premium.regions.eastKazakhstan'), coefficient: 0.72 },
+    { id: 'almaty-city', name: t('insurance-premium.regions.almatyCity'), coefficient: 0.71 },
+    { id: 'north-kazakhstan', name: t('insurance-premium.regions.northKazakhstan'), coefficient: 0.67 },
+    { id: 'atyrau-region', name: t('insurance-premium.regions.atyrauRegion'), coefficient: 0.48 }
   ];
 
   // Коэффициенты по типам ТС
@@ -116,11 +120,11 @@ export default function InsuranceCalculator() {
         let driverCoeff = 1.0;
 
         if (driver.age < 25 && driver.experience < 2) {
-          driverCoeff = 1.8; // Молодой и неопытный
+          driverCoeff = 1.10; // Молодой и неопытный (обновлено с 2026)
         } else if (driver.age < 25 && driver.experience >= 2) {
-          driverCoeff = 1.6; // Молодой но опытный
+          driverCoeff = 1.05; // Молодой но опытный (обновлено с 2026)
         } else if (driver.age >= 25 && driver.experience < 2) {
-          driverCoeff = 1.7; // Взрослый но неопытный
+          driverCoeff = 1.05; // Взрослый но неопытный (обновлено с 2026)
         } else {
           driverCoeff = 1.0; // Взрослый и опытный
         }
@@ -221,6 +225,17 @@ export default function InsuranceCalculator() {
             <h1 className="text-2xl font-bold text-gray-900">{t('insurance-premium.title')}</h1>
             <p className="text-gray-600">{t('insurance-premium.description')}</p>
           </div>
+        </div>
+      </div>
+
+      <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6">
+        <div className="flex items-start space-x-3">
+          <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+          <p className="text-amber-800">
+            {i18n.language === 'kk'
+              ? '2026 аудиті бойынша бұл ОСГПО калькуляторы анықтамалық ретінде қарастырылады: аумақтық және тәуекел коэффициенттерін сақтандырушының ресми тарифімен қолмен салыстырыңыз.'
+              : 'По аудиту 2026 этот калькулятор ОГПО стоит использовать как справочный: территориальные и риск-коэффициенты нужно вручную сверять с официальным тарифом страховщика.'}
+          </p>
         </div>
       </div>
 

@@ -34,61 +34,64 @@ export default function ElectricityBillCalculator() {
     recommendationKey: ''
   });
 
+  // Тарифы обновлены для 2026 года (включая НДС 16%)
+  // Алматы — по данным АО «Алатау Жарық Компаниясы» — «Энергосбыт»
+  // Остальные города — приблизительные значения, сверяйте с вашим поставщиком
   const cityTariffs: CityTariff[] = [
     {
       id: 'astana',
       nameKey: 'calculators:electricity.cityAstana',
       electricStove: [
-        { min: 0, max: 90, rate: 19.75, descriptionKey: 'calculators:electricity.tier1Electric90' },
-        { min: 90, max: 180, rate: 29.38, descriptionKey: 'calculators:electricity.tier2Electric90_180' },
-        { min: 180, max: Infinity, rate: 36.72, descriptionKey: 'calculators:electricity.tier3Electric180' }
+        { min: 0, max: 90, rate: 33.18, descriptionKey: 'calculators:electricity.tier1Electric90' },
+        { min: 90, max: 180, rate: 43.86, descriptionKey: 'calculators:electricity.tier2Electric90_180' },
+        { min: 180, max: Infinity, rate: 54.83, descriptionKey: 'calculators:electricity.tier3Electric180' }
       ],
       gasStove: [
-        { min: 0, max: 70, rate: 19.75, descriptionKey: 'calculators:electricity.tier1Gas70' },
-        { min: 70, max: 140, rate: 29.38, descriptionKey: 'calculators:electricity.tier2Gas70_140' },
-        { min: 140, max: Infinity, rate: 36.72, descriptionKey: 'calculators:electricity.tier3Gas140' }
+        { min: 0, max: 70, rate: 33.18, descriptionKey: 'calculators:electricity.tier1Gas70' },
+        { min: 70, max: 140, rate: 43.86, descriptionKey: 'calculators:electricity.tier2Gas70_140' },
+        { min: 140, max: Infinity, rate: 54.83, descriptionKey: 'calculators:electricity.tier3Gas140' }
       ]
     },
     {
       id: 'almaty',
       nameKey: 'calculators:electricity.cityAlmaty',
       electricStove: [
-        { min: 0, max: 100, rate: 18.92, descriptionKey: 'calculators:electricity.tier1Electric100' },
-        { min: 100, max: 200, rate: 28.15, descriptionKey: 'calculators:electricity.tier2Electric100_200' },
-        { min: 200, max: Infinity, rate: 35.18, descriptionKey: 'calculators:electricity.tier3Electric200' }
+        { min: 0, max: 100, rate: 31.85, descriptionKey: 'calculators:electricity.tier1Electric100' },
+        { min: 100, max: 200, rate: 42.10, descriptionKey: 'calculators:electricity.tier2Electric100_200' },
+        { min: 200, max: Infinity, rate: 52.63, descriptionKey: 'calculators:electricity.tier3Electric200' }
       ],
       gasStove: [
-        { min: 0, max: 80, rate: 18.92, descriptionKey: 'calculators:electricity.tier1Gas80' },
-        { min: 80, max: 160, rate: 28.15, descriptionKey: 'calculators:electricity.tier2Gas80_160' },
-        { min: 160, max: Infinity, rate: 35.18, descriptionKey: 'calculators:electricity.tier3Gas160' }
+        { min: 0, max: 80, rate: 31.85, descriptionKey: 'calculators:electricity.tier1Gas80' },
+        { min: 80, max: 160, rate: 42.10, descriptionKey: 'calculators:electricity.tier2Gas80_160' },
+        { min: 160, max: Infinity, rate: 52.63, descriptionKey: 'calculators:electricity.tier3Gas160' }
       ]
     },
     {
       id: 'shymkent',
       nameKey: 'calculators:electricity.cityShymkent',
       electricStove: [
-        { min: 0, max: 85, rate: 17.64, descriptionKey: 'calculators:electricity.tier1Electric85' },
-        { min: 85, max: 170, rate: 26.46, descriptionKey: 'calculators:electricity.tier2Electric85_170' },
-        { min: 170, max: Infinity, rate: 33.08, descriptionKey: 'calculators:electricity.tier3Electric170' }
+        { min: 0, max: 85, rate: 36.77, descriptionKey: 'calculators:electricity.tier1Electric85' },
+        { min: 85, max: 170, rate: 48.47, descriptionKey: 'calculators:electricity.tier2Electric85_170' },
+        { min: 170, max: Infinity, rate: 60.61, descriptionKey: 'calculators:electricity.tier3Electric170' }
       ],
       gasStove: [
-        { min: 0, max: 65, rate: 17.64, descriptionKey: 'calculators:electricity.tier1Gas65' },
-        { min: 65, max: 130, rate: 26.46, descriptionKey: 'calculators:electricity.tier2Gas65_130' },
-        { min: 130, max: Infinity, rate: 33.08, descriptionKey: 'calculators:electricity.tier3Gas130' }
+        { min: 0, max: 65, rate: 36.77, descriptionKey: 'calculators:electricity.tier1Gas65' },
+        { min: 65, max: 130, rate: 48.47, descriptionKey: 'calculators:electricity.tier2Gas65_130' },
+        { min: 130, max: Infinity, rate: 60.61, descriptionKey: 'calculators:electricity.tier3Gas130' }
       ]
     },
     {
       id: 'other',
       nameKey: 'calculators:electricity.otherRegions',
       electricStove: [
-        { min: 0, max: 75, rate: 16.85, descriptionKey: 'calculators:electricity.tier1Electric75' },
-        { min: 75, max: 150, rate: 25.28, descriptionKey: 'calculators:electricity.tier2Electric75_150' },
-        { min: 150, max: Infinity, rate: 31.60, descriptionKey: 'calculators:electricity.tier3Electric150' }
+        { min: 0, max: 75, rate: 28.31, descriptionKey: 'calculators:electricity.tier1Electric75' },
+        { min: 75, max: 150, rate: 42.47, descriptionKey: 'calculators:electricity.tier2Electric75_150' },
+        { min: 150, max: Infinity, rate: 53.09, descriptionKey: 'calculators:electricity.tier3Electric150' }
       ],
       gasStove: [
-        { min: 0, max: 60, rate: 16.85, descriptionKey: 'calculators:electricity.tier1Gas60' },
-        { min: 60, max: 120, rate: 25.28, descriptionKey: 'calculators:electricity.tier2Gas60_120' },
-        { min: 120, max: Infinity, rate: 31.60, descriptionKey: 'calculators:electricity.tier3Gas120' }
+        { min: 0, max: 60, rate: 28.31, descriptionKey: 'calculators:electricity.tier1Gas60' },
+        { min: 60, max: 120, rate: 42.47, descriptionKey: 'calculators:electricity.tier2Gas60_120' },
+        { min: 120, max: Infinity, rate: 53.09, descriptionKey: 'calculators:electricity.tier3Gas120' }
       ]
     }
   ];
@@ -166,7 +169,7 @@ export default function ElectricityBillCalculator() {
   };
 
   const formatRate = (rate: number) => {
-    return rate.toFixed(2) + ' ₸/кВт·ч';
+    return rate.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) + ' ₸/кВт·ч';
   };
 
   const selectedCityData = cityTariffs.find(c => c.id === city);
