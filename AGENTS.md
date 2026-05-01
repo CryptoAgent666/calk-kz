@@ -18,7 +18,7 @@
 > ⚠️ Сайт на **shared hosting (Plesk, nginx + Apache)**, хостер: `cloud-7.hoster.kz`
 
 - Путь на сервере: `~/calk.kz/`
-- IP: `89.35.125.22`, системный пользователь: `vtaksi_kz`
+- IP сервера и системный пользователь хранятся в `.env.deploy` (вне git)
 - **nginx** проксирует к **Apache** (режим прокси включен)
 - `.htaccess` обрабатывается Apache — именно он обеспечивает SPA-роутинг и 404
 - `error_docs/` — общая на все домены аккаунта, **не менять!**
@@ -42,6 +42,10 @@ npm run build
 - `legal/` — юридические страницы
 - `embed/` — embeddable-версии калькуляторов
 - `__kk/` — казахская версия всех страниц
+- при ошибках пререндера build завершается с ошибкой, отчёт пишется в `dist/prerender-errors.json`
+
+> Для продакшена на shared hosting использовать именно `npm run build:prerender`.
+> `npm run build` оставлять только для локальной проверки и smoke-тестов.
 
 ### Деплой на хостинг
 1. `npm run build:prerender`
@@ -54,12 +58,12 @@ npm run build
 ### Как работает 404
 1. Пользователь заходит на несуществующий URL
 2. nginx проксирует запрос в Apache
-3. Apache через `.htaccess` (`ErrorDocument 404 /404.html`) отдаёт красивую 404 страницу
-4. `404.html` — полностью standalone, с inline CSS, без зависимости от JS-бандлов
+3. Apache через `.htaccess` (`ErrorDocument 404 /index.html`) отдаёт SPA-входную страницу
+4. React Router (catch-all route) рендерит `NotFoundPage` и выставляет `noindex`
 
 ## Обработка 404
 - `.htaccess` содержит `ErrorDocument 404 /index.html` — Apache отдаёт SPA вместо серверной 404
-- `public/404.html` — JS-фоллбэк (редирект на главную с сохранением пути)
+- `public/404.html` — standalone fallback-страница (может использоваться в аварийных сценариях)
 - `src/components/NotFoundPage.tsx` — React-компонент красивой 404 страницы
 - React Router catch-all route `path="*"` в `App.tsx`
 

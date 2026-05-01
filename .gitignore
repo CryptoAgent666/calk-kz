@@ -23,3 +23,26 @@ dist-ssr
 *.sln
 *.sw?
 .env
+.env.*
+!.env.example
+.env.deploy
+
+# Локальные настройки агента
+.claude/
+
+# Большие локальные файлы (не для коммита)
+messages.txt
+*.pdf
+*.zip
+*.tar.gz
+
+# Lighthouse и другие отчёты
+lh-*.json
+lighthouse-*.json
+
+# Сертификаты и приватные ключи
+*.pem
+*.key
+*.crt
+*.ppk
+id_rsa*
