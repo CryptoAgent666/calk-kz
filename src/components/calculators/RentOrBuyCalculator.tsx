@@ -651,7 +651,6 @@ export default function RentOrBuyCalculator() {
                 <h3 className="font-semibold text-teal-900 mb-2">{t('rent-vs-buy.recommendation.breakEvenPoint')}</h3>
                 <div className="text-teal-800">
                   {t('rent-vs-buy.recommendation.breakEvenDescription', { years: results.breakEvenYear })}
-                  {results.breakEvenMonth > 0 && <span> {t('rent-vs-buy.recommendation.breakEvenMonths', { months: results.breakEvenMonth })}</span>}
                 </div>
               </div>
             )}

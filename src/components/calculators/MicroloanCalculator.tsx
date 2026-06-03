@@ -32,19 +32,19 @@ const LOAN_TYPES = {
   online: {
     name: 'microloan.loanTypes.online.name',
     description: 'microloan.loanTypes.online.description',
-    maxAmount: 200000,
-    maxTerm: 30,
+    maxAmount: 194625, // 45 МРП — лимит PDL с 2026
+    maxTerm: 45,
     termUnit: 'days' as TermUnit,
-    typicalRate: { min: 0.5, max: 1.0 },
+    typicalRate: { min: 0.1, max: 0.3 }, // с 2026 не выше 0.3%/день
     rateLabel: 'microloan.loanTypes.online.rateLabel'
   },
   shortterm: {
     name: 'microloan.loanTypes.shortterm.name',
     description: 'microloan.loanTypes.shortterm.description',
-    maxAmount: 500000,
-    maxTerm: 90,
+    maxAmount: 194625,
+    maxTerm: 45,
     termUnit: 'days' as TermUnit,
-    typicalRate: { min: 0.3, max: 0.7 },
+    typicalRate: { min: 0.1, max: 0.3 },
     rateLabel: 'microloan.loanTypes.shortterm.rateLabel'
   },
   installment: {
@@ -53,7 +53,7 @@ const LOAN_TYPES = {
     maxAmount: 3000000,
     maxTerm: 12,
     termUnit: 'months' as TermUnit,
-    typicalRate: { min: 30, max: 56 },
+    typicalRate: { min: 15, max: 46 }, // регулярные МФО — ГЭСВ не выше 46%
     rateLabel: 'microloan.loanTypes.installment.rateLabel'
   }
 };
@@ -62,7 +62,7 @@ export default function MicroloanCalculator() {
   const { t } = useTranslation('calculators');
   const [loanType, setLoanType] = useState<LoanType>('online');
   const [amount, setAmount] = useState<string>('100000');
-  const [rate, setRate] = useState<string>('0.75');
+  const [rate, setRate] = useState<string>('0.25');
   const [term, setTerm] = useState<string>('15');
   const [commission, setCommission] = useState<string>('0');
 

@@ -26,21 +26,27 @@ export default function UnemploymentBenefitCalculator() {
     minRequiredExperience: 12
   });
 
+  // Коэффициент стажа участия (ГФСС, 2026): 6 мес–1 г = 0.7 ... 5–6 лет = 1.0,
+  // свыше 6 лет +0.02 за каждый год (макс. 1.3)
   const getExperienceCoefficient = (months: number) => {
-    if (months < 12) return 0;
-    if (months < 36) return 0.5;
-    if (months < 60) return 0.65;
-    if (months < 120) return 0.8;
-    return 1.0;
+    if (months < 6) return 0;
+    if (months < 12) return 0.7;
+    if (months < 24) return 0.75;
+    if (months < 36) return 0.85;
+    if (months < 48) return 0.9;
+    if (months < 60) return 0.95;
+    if (months < 72) return 1.0;
+    return Math.min(1.3, 1.0 + 0.02 * Math.floor((months - 72) / 12));
   };
 
+  // Срок выплаты (ГФСС, 2026): от 6 мес стажа — 1 месяц ... 5+ лет — 6 месяцев
   const getPaymentPeriod = (months: number) => {
-    if (months < 12) return 0;
-    if (months < 24) return 1;
-    if (months < 36) return 2;
-    if (months < 60) return 3;
-    if (months < 120) return 4;
-    if (months < 180) return 5;
+    if (months < 6) return 0;
+    if (months < 12) return 1;
+    if (months < 24) return 2;
+    if (months < 36) return 3;
+    if (months < 48) return 4;
+    if (months < 60) return 5;
     return 6;
   };
 
@@ -67,27 +73,29 @@ export default function UnemploymentBenefitCalculator() {
 
     if (experienceMonths === 0 || contributions === 0) {
       setResults({
-        averageMonthlyIncome: 0, incomeReplacementCoef: 0.4, experienceCoef: 0,
+        averageMonthlyIncome: 0, incomeReplacementCoef: 0.45, experienceCoef: 0,
         monthlyBenefit: 0, paymentPeriodMonths: 0, totalBenefit: 0,
-        isEligible: false, minRequiredExperience: 12
+        isEligible: false, minRequiredExperience: 6
       });
       return;
     }
 
-    const isEligible = experienceMonths >= 12;
+    const isEligible = experienceMonths >= 6;
 
     if (!isEligible) {
       setResults({
-        averageMonthlyIncome: 0, incomeReplacementCoef: 0.4, experienceCoef: 0,
+        averageMonthlyIncome: 0, incomeReplacementCoef: 0.45, experienceCoef: 0,
         monthlyBenefit: 0, paymentPeriodMonths: 0, totalBenefit: 0,
-        isEligible: false, minRequiredExperience: 12
+        isEligible: false, minRequiredExperience: 6
       });
       return;
     }
 
-    const averageMonthlyIncome = contributions / 24 / 0.095;
+    // Средний доход восстанавливается из соц. отчислений (СО — 3.5% от дохода),
+    // объект исчисления ограничен 7 МЗП (595 000 ₸ в 2026)
+    const averageMonthlyIncome = Math.min(7 * 85000, contributions / 24 / 0.035);
 
-    const incomeReplacementCoef = 0.4;
+    const incomeReplacementCoef = 0.45;
     const experienceCoef = getExperienceCoefficient(experienceMonths);
     const paymentPeriodMonths = getPaymentPeriod(experienceMonths);
 
@@ -103,7 +111,7 @@ export default function UnemploymentBenefitCalculator() {
       paymentPeriodMonths,
       totalBenefit: Math.round(totalBenefit),
       isEligible: true,
-      minRequiredExperience: 12
+      minRequiredExperience: 6
     });
   };
 
@@ -300,26 +308,20 @@ export default function UnemploymentBenefitCalculator() {
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('unemployment.experienceCoefficients')}</h3>
             <div className="space-y-2">
-              <div className="flex justify-between text-sm py-2 px-3 bg-red-50 rounded border border-red-200">
-                <span className="text-red-800">{t('unemployment.lessThanOneYear')}</span>
-                <span className="font-medium text-red-700">{t('unemployment.noRight')}</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.oneToThreeYears')}</span>
-                <span className="font-medium">0.5</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.threeToFiveYears')}</span>
-                <span className="font-medium">0.65</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.fiveToTenYears')}</span>
-                <span className="font-medium">0.8</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-green-50 rounded border border-green-200">
-                <span className="text-green-800">{t('unemployment.tenPlusYears')}</span>
-                <span className="font-medium text-green-700">1.0</span>
-              </div>
+              {[
+                ['sixMonthsToYear', '0.7'],
+                ['oneToTwoYears', '0.75'],
+                ['twoToThreeYears', '0.85'],
+                ['threeToFourYears', '0.9'],
+                ['fourToFiveYears', '0.95'],
+                ['fiveToSixYears', '1.0'],
+                ['sixPlusYears', '1.0–1.3'],
+              ].map(([k, v], i, arr) => (
+                <div key={k} className={`flex justify-between text-sm py-2 px-3 rounded ${i === arr.length - 1 ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
+                  <span className={i === arr.length - 1 ? 'text-green-800' : 'text-gray-700'}>{t(`unemployment.${k}`)}</span>
+                  <span className={`font-medium ${i === arr.length - 1 ? 'text-green-700' : ''}`}>{v}</span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -327,34 +329,19 @@ export default function UnemploymentBenefitCalculator() {
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('unemployment.paymentPeriodTitle')}</h3>
             <div className="space-y-2">
-              <div className="flex justify-between text-sm py-2 px-3 bg-red-50 rounded border border-red-200">
-                <span className="text-red-800">{t('unemployment.lessThanOneYear')}</span>
-                <span className="font-medium text-red-700">{t('unemployment.zeroMonths')}</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.oneToTwoYears')}</span>
-                <span className="font-medium">{t('unemployment.oneMonth')}</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.twoToThreeYears')}</span>
-                <span className="font-medium">{t('unemployment.twoMonths')}</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.threeToFiveYears')}</span>
-                <span className="font-medium">{t('unemployment.threeMonths')}</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.fiveToTenYears')}</span>
-                <span className="font-medium">{t('unemployment.fourMonths')}</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
-                <span className="text-gray-700">{t('unemployment.tenToFifteenYears')}</span>
-                <span className="font-medium">{t('unemployment.fiveMonths')}</span>
-              </div>
-              <div className="flex justify-between text-sm py-2 px-3 bg-green-50 rounded border border-green-200">
-                <span className="text-green-800">{t('unemployment.fifteenPlusYears')}</span>
-                <span className="font-medium text-green-700">{t('unemployment.sixMonths')}</span>
-              </div>
+              {[
+                ['sixMonthsToYear', 'oneMonth'],
+                ['oneToTwoYears', 'twoMonths'],
+                ['twoToThreeYears', 'threeMonths'],
+                ['threeToFourYears', 'fourMonths'],
+                ['fourToFiveYears', 'fiveMonths'],
+                ['fivePlusYears', 'sixMonths'],
+              ].map(([k, v], i, arr) => (
+                <div key={k} className={`flex justify-between text-sm py-2 px-3 rounded ${i === arr.length - 1 ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
+                  <span className={i === arr.length - 1 ? 'text-green-800' : 'text-gray-700'}>{t(`unemployment.${k}`)}</span>
+                  <span className={`font-medium ${i === arr.length - 1 ? 'text-green-700' : ''}`}>{t(`unemployment.${v}`)}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
