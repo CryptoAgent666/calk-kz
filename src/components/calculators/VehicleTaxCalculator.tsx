@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Calculator, Info, Calendar } from 'lucide-react';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function VehicleTaxCalculator() {
   const { t } = useTranslation('calculators');
@@ -146,6 +152,8 @@ export default function VehicleTaxCalculator() {
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="vehicle-tax" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -418,6 +426,8 @@ export default function VehicleTaxCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="vehicle-tax" />
+      <MethodologySection steps={getMethodology('vehicle-tax')} />
       <FAQSection
         items={[
           { question: t('vehicle-tax.faq.q1'), answer: t('vehicle-tax.faq.a1') },
@@ -469,10 +479,13 @@ export default function VehicleTaxCalculator() {
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="vehicle-tax"
         calculatorTitle="Калькулятор налога на транспорт"
       />
+      <LastUpdated calculatorId="vehicle-tax" />
     </div>
   );
 }

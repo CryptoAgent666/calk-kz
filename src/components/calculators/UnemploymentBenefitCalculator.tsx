@@ -7,6 +7,8 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 
 export default function UnemploymentBenefitCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -426,6 +428,7 @@ export default function UnemploymentBenefitCalculator() {
         </div>
       )}
 
+      <LegalDisclaimer type="social" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -433,6 +436,7 @@ export default function UnemploymentBenefitCalculator() {
         calculatorId="unemployment-benefit"
         calculatorTitle="Калькулятор пособия по безработице"
       />
+      <LastUpdated calculatorId="unemployment" />
     </div>
   );
 }

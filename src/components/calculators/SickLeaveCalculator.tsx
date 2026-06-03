@@ -3,10 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { HeartPulse, Calculator, Wallet, AlertTriangle, Info, TrendingDown, FileText, CheckCircle, Clock, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { RangeSlider } from '../ui/RangeSlider';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function SickLeaveCalculator() {
   const { t } = useTranslation('calculators');
@@ -171,6 +177,8 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="sick-leave" />
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
@@ -368,7 +376,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                         <span className="font-medium text-gray-900">{formatNumber(results.ipn)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">{t('sick-leave.vosms')} (2%)</span>
+                        <span className="text-gray-600">{t('sick-leave.vosms')}</span>
                         <span className="font-medium text-gray-900">{formatNumber(results.vosms)}</span>
                       </div>
                       <div className="border-t border-gray-300 pt-2 flex justify-between font-semibold">
@@ -533,6 +541,8 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="sick-leave" />
+      <MethodologySection steps={getMethodology('sick-leave')} />
       <FAQSection
         items={[
           { question: t('sick-leave.faq.q1'), answer: t('sick-leave.faq.a1') },
@@ -584,10 +594,13 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="social" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="sick-leave"
         calculatorTitle={t('sick-leave.title')}
       />
+      <LastUpdated calculatorId="sick-leave" />
     </div>
   );
 }

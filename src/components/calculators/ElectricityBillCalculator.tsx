@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Zap, Calculator, MapPin, Home, Info, AlertTriangle, TrendingUp, Lightbulb, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 interface TariffTier {
   min: number;
@@ -188,6 +193,8 @@ export default function ElectricityBillCalculator() {
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="electricity" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -426,6 +433,8 @@ export default function ElectricityBillCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="electricity" />
+      <MethodologySection steps={getMethodology('electricity')} />
       <FAQSection
         items={[
           { question: t('electricity.faq.q1'), answer: t('electricity.faq.a1') },
@@ -476,10 +485,12 @@ export default function ElectricityBillCalculator() {
       )}
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="electricity"
         calculatorTitle="Калькулятор электроэнергии"
       />
+      <LastUpdated calculatorId="electricity" />
     </div>
   );
 }

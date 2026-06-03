@@ -4,9 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function CustomsClearanceCalculator() {
   const { t } = useTranslation('calculators');
@@ -134,6 +139,8 @@ export default function CustomsClearanceCalculator() {
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="customs-clearance" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
@@ -370,6 +377,8 @@ export default function CustomsClearanceCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="customs-clearance" />
+      <MethodologySection steps={getMethodology('customs-clearance')} />
       <FAQSection
         items={[
           { question: t('customs-clearance.faq.q1'), answer: t('customs-clearance.faq.a1') },
@@ -423,6 +432,7 @@ export default function CustomsClearanceCalculator() {
         </div>
       )}
 
+      <LegalDisclaimer type="tax" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -430,6 +440,7 @@ export default function CustomsClearanceCalculator() {
         calculatorId="customs-clearance"
         calculatorTitle={t('customs-clearance.title')}
       />
+      <LastUpdated calculatorId="customs-clearance" />
     </div>
   );
 }

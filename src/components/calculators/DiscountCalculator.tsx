@@ -3,7 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { ShoppingBag, Calculator, Percent, TrendingDown, Target, Info, AlertTriangle, Copy, Download, RotateCcw, Tag, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -461,6 +466,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
         </div>
       </div>
 
+      <QuickAnswer calculatorId="discount" />
       <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
         {/* Input Section */}
         <div className="lg:col-span-2 space-y-6 lg:space-y-8">
@@ -1261,6 +1267,8 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="discount" />
+      <MethodologySection steps={getMethodology('discount')} />
       <FAQSection
         items={[
           { question: t('discount.faq.q1'), answer: t('discount.faq.a1') },
@@ -1276,10 +1284,12 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="discount"
         calculatorTitle="Калькулятор скидок"
       />
+      <LastUpdated calculatorId="discount" />
     </div>
   );
 }

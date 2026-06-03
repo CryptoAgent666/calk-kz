@@ -31,7 +31,9 @@ export function EmbedWidget({
   const embedBaseUrl = normalizeBaseUrl(baseUrl);
   const embedPath = `/embed/${calculatorId}?theme=${settings.theme}&header=${settings.showHeader}`;
   const embedUrl = `${embedBaseUrl}${embedPath}`;
-  const previewUrl = `${typeof window !== 'undefined' ? window.location.origin : embedBaseUrl}${embedPath}`;
+  // Always use stable URL during SSR/hydration to avoid mismatch.
+  // window.location.origin would differ between prerender (localhost) and client (calk.kz).
+  const previewUrl = `${embedBaseUrl}${embedPath}`;
 
   const iframeCode = `<iframe
   src="${embedUrl}"

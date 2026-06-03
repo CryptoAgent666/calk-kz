@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Crown, Calculator, Home, Car, Plane, DollarSign, Info, AlertTriangle, TrendingUp, Building, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function LuxuryTaxCalculator() {
   const { t } = useTranslation('calculators');
@@ -202,6 +208,7 @@ export default function LuxuryTaxCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="luxury-tax" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
@@ -761,6 +768,8 @@ export default function LuxuryTaxCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="luxury-tax" />
+      <MethodologySection steps={getMethodology('luxury-tax')} />
       <FAQSection
         items={[
           { question: t('luxury-tax.faq.q1'), answer: t('luxury-tax.faq.a1') },
@@ -776,10 +785,13 @@ export default function LuxuryTaxCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="luxury-tax"
         calculatorTitle="Калькулятор налога на роскошь"
       />
+      <LastUpdated calculatorId="luxury-tax" />
     </div>
   );
 }

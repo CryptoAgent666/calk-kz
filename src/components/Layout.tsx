@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import LocalizedLink from './LocalizedLink';
 import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SearchBar from './SearchBar';
 import LanguageSwitcher from './LanguageSwitcher';
+import { OfflineIndicator } from './OfflineIndicator';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
+import { pluralize } from '../utils/pluralize';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -40,12 +43,14 @@ export default function Layout({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Offline indicator (только на native приложениях) */}
+      <OfflineIndicator />
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
             {/* Logo */}
-            <Link
+            <LocalizedLink
               to="/"
               className="flex items-center space-x-3 hover:opacity-80 transition-opacity flex-shrink-0"
               aria-label={`${t('common:navigation.home')} ${t('common:siteName')}`}
@@ -57,7 +62,7 @@ export default function Layout({
                 <div className="text-xl font-bold text-gray-900">{t('common:siteName')}</div>
                 <p className="text-xs text-gray-500">{t('common:siteTagline')}</p>
               </div>
-            </Link>
+            </LocalizedLink>
 
             {/* Search Bar - Desktop */}
             <div className="hidden md:block flex-1 max-w-md mx-8">
@@ -69,7 +74,7 @@ export default function Layout({
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-1 flex-shrink-0">
-              <Link
+              <LocalizedLink
                 to="/"
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                   currentPage === 'home'
@@ -79,7 +84,7 @@ export default function Layout({
               >
                 <Home className="w-4 h-4" />
                 <span>{t('common:navigation.home')}</span>
-              </Link>
+              </LocalizedLink>
               <LanguageSwitcher />
             </nav>
 
@@ -167,7 +172,7 @@ export default function Layout({
                     {t('common:navigation.mainNavigation')}
                   </h3>
 
-                  <Link
+                  <LocalizedLink
                     to="/"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
@@ -179,7 +184,7 @@ export default function Layout({
                     <Home className="w-5 h-5" />
                     <span className="font-medium">{t('common:navigation.homePage')}</span>
                     <ChevronRight className="w-4 h-4 ml-auto" />
-                  </Link>
+                  </LocalizedLink>
                 </div>
 
                 {/* Categories */}
@@ -192,7 +197,7 @@ export default function Layout({
                       {calculatorCategories.map((category) => {
                         const IconComponent = getIcon(category.icon);
                         return (
-                          <Link
+                          <LocalizedLink
                             key={category.id}
                             to={`/category/${category.id}/`}
                             onClick={() => setIsMobileMenuOpen(false)}
@@ -204,11 +209,11 @@ export default function Layout({
                             <div className="flex-1 text-left">
                               <div className="font-medium text-sm">{t(`categories:${category.id}.title`)}</div>
                               <div className="text-xs text-gray-500">
-                                {category.calculators.length} {category.calculators.length === 1 ? t('common:footer.calculators') : t('common:footer.calculatorsPlural')}
+                                {category.calculators.length} {pluralize(i18n.language, category.calculators.length, t('common:footer.calculators'), t('common:footer.calculatorsFew'), t('common:footer.calculatorsPlural'))}
                               </div>
                             </div>
                             <ChevronRight className="w-4 h-4" />
-                          </Link>
+                          </LocalizedLink>
                         );
                       })}
                     </div>
@@ -222,7 +227,7 @@ export default function Layout({
                       {t('common:navigation.information')}
                     </h3>
                     <div className="space-y-1">
-                      <Link
+                      <LocalizedLink
                         to="/legal/about/"
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
@@ -230,9 +235,9 @@ export default function Layout({
                         <Info className="w-5 h-5 text-blue-600" />
                         <span className="font-medium">{t('common:navigation.about')}</span>
                         <ChevronRight className="w-4 h-4 ml-auto" />
-                      </Link>
+                      </LocalizedLink>
 
-                      <Link
+                      <LocalizedLink
                         to="/legal/contact/"
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
@@ -240,9 +245,9 @@ export default function Layout({
                         <Phone className="w-5 h-5 text-green-600" />
                         <span className="font-medium">{t('common:navigation.contact')}</span>
                         <ChevronRight className="w-4 h-4 ml-auto" />
-                      </Link>
+                      </LocalizedLink>
 
-                      <Link
+                      <LocalizedLink
                         to="/legal/privacy/"
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
@@ -250,9 +255,9 @@ export default function Layout({
                         <Shield className="w-5 h-5 text-purple-600" />
                         <span className="font-medium">{t('common:navigation.privacy')}</span>
                         <ChevronRight className="w-4 h-4 ml-auto" />
-                      </Link>
+                      </LocalizedLink>
 
-                      <Link
+                      <LocalizedLink
                         to="/legal/terms/"
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
@@ -260,7 +265,7 @@ export default function Layout({
                         <FileText className="w-5 h-5 text-indigo-600" />
                         <span className="font-medium">{t('common:navigation.userAgreement')}</span>
                         <ChevronRight className="w-4 h-4 ml-auto" />
-                      </Link>
+                      </LocalizedLink>
                     </div>
                   </div>
                 </div>
@@ -303,16 +308,34 @@ export default function Layout({
                 {t('common:footer.tagline')}
               </p>
 
-              {/* Google Play Store Link */}
-              <div className="mb-4">
+              {/* App Store Badges */}
+              <div className="mb-4 flex flex-wrap gap-2">
+                <a
+                  href="https://apps.apple.com/kz/app/calk-kz/id6770814234"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t('common:footer.appStore', 'App Store')}
+                  className="inline-flex items-center space-x-3 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                >
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    <svg className="w-5 h-5" viewBox="0 0 384 512" fill="currentColor" aria-hidden="true">
+                      <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-300">{t('common:footer.availableIn')}</div>
+                    <div className="text-sm font-medium">{t('common:footer.appStore', 'App Store')}</div>
+                  </div>
+                </a>
                 <a
                   href="https://play.google.com/store/apps/details?id=calk.kz"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={t('common:footer.googlePlay')}
                   className="inline-flex items-center space-x-3 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200"
                 >
                   <div className="w-6 h-6 flex items-center justify-center">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
                     </svg>
                   </div>
@@ -361,24 +384,30 @@ export default function Layout({
             <div>
               <h4 className="font-semibold text-gray-900 mb-4">{t('common:navigation.quickLinks')}</h4>
               <nav className="space-y-2">
-                <Link
+                <LocalizedLink
                   to="/"
                   className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   {t('common:navigation.homePage')}
-                </Link>
-                <Link
+                </LocalizedLink>
+                <LocalizedLink
                   to="/legal/about/"
                   className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   {t('common:navigation.about')}
-                </Link>
-                <Link
+                </LocalizedLink>
+                <LocalizedLink
                   to="/legal/contact/"
                   className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   {t('common:navigation.contact')}
-                </Link>
+                </LocalizedLink>
+                <LocalizedLink
+                  to="/legal/updates/"
+                  className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  {t('common:navigation.updates', 'Обновления')}
+                </LocalizedLink>
               </nav>
             </div>
 
@@ -386,24 +415,24 @@ export default function Layout({
             <div>
               <h4 className="font-semibold text-gray-900 mb-4">{t('common:navigation.legalInfo')}</h4>
               <nav className="space-y-2">
-                <Link
+                <LocalizedLink
                   to="/legal/privacy/"
                   className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   {t('common:navigation.privacy')}
-                </Link>
-                <Link
+                </LocalizedLink>
+                <LocalizedLink
                   to="/legal/terms/"
                   className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   {t('common:navigation.userAgreement')}
-                </Link>
-                <Link
+                </LocalizedLink>
+                <LocalizedLink
                   to="/legal/disclaimer/"
                   className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   {t('common:navigation.disclaimer')}
-                </Link>
+                </LocalizedLink>
               </nav>
             </div>
           </div>

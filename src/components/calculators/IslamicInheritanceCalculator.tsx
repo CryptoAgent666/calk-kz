@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Scale, Calculator, Users, Heart, AlertTriangle, Info, BookOpen, Star, Crown, Building, DollarSign, Target, Gavel, BarChart3 } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 
 interface Heir {
   type: string;
@@ -391,6 +397,7 @@ export default function IslamicInheritanceCalculator() {
 
   return (
     <div className="max-w-7xl mx-auto">
+      <QuickAnswer calculatorId="islamic-inheritance" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center">
@@ -778,13 +785,13 @@ export default function IslamicInheritanceCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.sons')}:</div>
-                <div>350,000 ₸ (175,000 ₸ {t('islamic-inheritance.each')})</div>
-                <div className="text-xs text-emerald-700">{t('islamic-inheritance.remainderParts', { parts: '4/7' })}</div>
+                <div>700,000 ₸ (350,000 ₸ {t('islamic-inheritance.each')})</div>
+                <div className="text-xs text-emerald-700">{t('islamic-inheritance.remainderParts', { parts: '4/5' })}</div>
               </div>
               <div>
                 <div className="font-medium text-emerald-700">{t('islamic-inheritance.daughter')}:</div>
-                <div className="text-lg font-bold text-emerald-600">87,500 ₸</div>
-                <div className="text-xs text-emerald-700">{t('islamic-inheritance.remainderParts', { parts: '1/7' })}</div>
+                <div className="text-lg font-bold text-emerald-600">175,000 ₸</div>
+                <div className="text-xs text-emerald-700">{t('islamic-inheritance.remainderParts', { parts: '1/5' })}</div>
               </div>
             </div>
           </div>
@@ -808,7 +815,7 @@ export default function IslamicInheritanceCalculator() {
                 <div className="text-xs text-blue-700">{t('islamic-inheritance.withChildren')}</div>
               </div>
               <div>
-                <div className="font-medium text-blue-700">{t('islamic-inheritance.threeDaughters')}:</div>
+                <div className="font-medium text-blue-700">{t('islamic-inheritance.sons')}:</div>
                 <div className="text-lg font-bold text-blue-600">466,667 ₸</div>
                 <div className="text-xs text-blue-700">{t('islamic-inheritance.remainderEqually')}</div>
               </div>
@@ -1204,6 +1211,8 @@ export default function IslamicInheritanceCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="islamic-inheritance" />
+      <MethodologySection steps={getMethodology('islamic-inheritance')} />
       <FAQSection
         items={[
           { question: t('islamic-inheritance.faq.q1'), answer: t('islamic-inheritance.faq.a1') },
@@ -1219,10 +1228,13 @@ export default function IslamicInheritanceCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="religious" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="islamic-inheritance"
         calculatorTitle="Исламский калькулятор наследства"
       />
+      <LastUpdated calculatorId="islamic-inheritance" />
     </div>
   );
 }

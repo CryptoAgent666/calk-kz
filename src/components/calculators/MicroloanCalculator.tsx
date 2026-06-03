@@ -3,7 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Banknote, AlertTriangle, Calendar, Percent, TrendingUp, Info, UserCheck, Award, BookOpen, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -292,6 +298,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
         </div>
       </div>
 
+      <QuickAnswer calculatorId="microloan" />
       <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('microloan.loanParameters')}</h2>
@@ -752,6 +759,8 @@ ${t('microloan.export.calculator')}: Calk.kz`;
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="microloan" />
+      <MethodologySection steps={getMethodology('microloan')} />
       <FAQSection
         items={[
           { question: t('microloan.faq.q1'), answer: t('microloan.faq.a1') },
@@ -767,10 +776,13 @@ ${t('microloan.export.calculator')}: Calk.kz`;
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="microloan"
         calculatorTitle="Калькулятор микрокредита"
       />
+      <LastUpdated calculatorId="microloan" />
     </div>
   );
 }

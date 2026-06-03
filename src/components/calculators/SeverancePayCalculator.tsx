@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserMinus, Calculator, Info, AlertTriangle, FileText } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function SeverancePayCalculator() {
   const { t } = useTranslation('calculators');
@@ -88,7 +94,7 @@ export default function SeverancePayCalculator() {
     const opvBase = Math.min(grossTotal, 50 * MZP);
     const opv = opvBase * OPV_RATE;
 
-    const vosmsBase = Math.min(grossTotal, 10 * MZP);
+    const vosmsBase = Math.min(grossTotal, 20 * MZP); // 2026: ВОСМС лимит 20 МЗП
     const vosms = vosmsBase * VOSMS_RATE;
 
     const standardDeduction = (isResident && isPrimaryJob) ? Math.min(STANDARD_DEDUCTION, Math.max(0, grossTotal - opv - vosms)) : 0;
@@ -183,6 +189,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="severance-pay" />
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
@@ -603,6 +610,8 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
       )}
 
       {/* FAQSection */}
+      <CalculatorExamples calculatorId="severance-pay" />
+      <MethodologySection steps={getMethodology('severance-pay')} />
       <FAQSection
         items={[
           { question: t('severance-pay.faq.q1'), answer: t('severance-pay.faq.a1') },
@@ -618,10 +627,13 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
       />
 
       {/* EmbedWidget */}
+      <LegalDisclaimer type="social" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="severance-pay"
         calculatorTitle={t('severance-pay.title')}
       />
+      <LastUpdated calculatorId="severance-pay" />
     </div>
   );
 }

@@ -4,10 +4,13 @@ import { Wheat, Calculator, MapPin, TrendingUp, Info, AlertTriangle, Target, Spr
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function FarmLandTaxCalculator() {
   const { t } = useTranslation('calculators');
@@ -310,6 +313,7 @@ export default function FarmLandTaxCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="farm-land-tax" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-lime-500 rounded-lg flex items-center justify-center">
@@ -1033,6 +1037,7 @@ export default function FarmLandTaxCalculator() {
         ]}
       />
 
+      <LegalDisclaimer type="tax" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -1040,6 +1045,7 @@ export default function FarmLandTaxCalculator() {
         calculatorId="farm-land-tax"
         calculatorTitle={t('farm-land-tax.title')}
       />
+      <LastUpdated calculatorId="farm-land-tax" />
     </div>
   );
 }

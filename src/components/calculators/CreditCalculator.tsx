@@ -4,6 +4,11 @@ import { CreditCard, TrendingDown, Calendar, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
 import { TaxPieChart, TrendLineChart, ProgressBar } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -239,6 +244,8 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
         </div>
       </div>
 
+      <QuickAnswer calculatorId="credit" />
+
       <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('credit.parameters')}</h2>
@@ -286,7 +293,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
 
             {/* Точный ввод */}
             <div className="pt-4 border-t border-gray-100">
-              <p className="text-xs text-gray-500 mb-3">Или введите точные значения:</p>
+              <p className="text-xs text-gray-500 mb-3">{t('credit.exactInputLabel', 'Или введите точные значения:')}</p>
               <div className="grid grid-cols-3 gap-2">
                 <input
                   type="number"
@@ -451,6 +458,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
       />
 
       {/* Методология */}
+      <CalculatorExamples calculatorId="credit" />
       <MethodologySection
         title={t('credit.methodology.title')}
         steps={methodologySteps}
@@ -646,10 +654,13 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
       </div>
 
       {/* Встраиваемый виджет */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="credit"
         calculatorTitle="Кредитный калькулятор"
       />
+      <LastUpdated calculatorId="credit" />
     </div>
   );
 }

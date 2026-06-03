@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Shield, FileText, AlertTriangle, Phone, Mail, MapPin, Globe, Calculator, CheckCircle, Info } from 'lucide-react';
+import { ArrowLeft, Shield, FileText, AlertTriangle, Phone, Mail, MapPin, Globe, Calculator, CheckCircle, Info, Sparkles } from 'lucide-react';
 import { generateFAQSchema } from '../utils/faqSchema';
 
 interface LegalPagesProps {
@@ -478,6 +478,53 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
             </div>
           </div>
         );
+
+      case 'updates': {
+        const groups = (t('updates.groups', { returnObjects: true }) as Array<{ year: string; items: Array<{ date: string; title: string; text: string }> }>) || [];
+        return (
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center space-x-3 mb-8">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">{t('updates.title')}</h1>
+                <p className="text-gray-600">{t('updates.subtitle')}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 space-y-8">
+              <p className="text-gray-700 leading-relaxed text-lg">{t('updates.intro')}</p>
+
+              {Array.isArray(groups) && groups.map((group) => (
+                <div key={group.year}>
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
+                    {group.year}
+                  </h2>
+                  <div className="space-y-6">
+                    {group.items.map((item, idx) => (
+                      <div key={idx} className="flex gap-4">
+                        <div className="flex-shrink-0 w-2 h-2 rounded-full bg-emerald-500 mt-2"></div>
+                        <div className="flex-1">
+                          <div className="text-xs text-gray-500 mb-1 font-medium">{item.date}</div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
+                          <p className="text-gray-700 leading-relaxed">{item.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div className="bg-gray-50 rounded-lg p-6 mt-6">
+                <p className="text-sm text-gray-600">
+                  <strong>{t('lastUpdated')}:</strong> {new Date().toLocaleDateString(i18n.language === 'kk' ? 'kk-KZ' : 'ru-RU')}
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      }
 
       default:
         return (

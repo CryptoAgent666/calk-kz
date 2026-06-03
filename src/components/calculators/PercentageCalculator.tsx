@@ -16,7 +16,12 @@ import {
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 type CalculationType = 'percentOf' | 'percentFrom' | 'percentChange' | 'findBase';
@@ -287,6 +292,7 @@ export default function PercentageCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="percentage" />
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -538,6 +544,10 @@ export default function PercentageCalculator() {
         </div>
       )}
 
+      <CalculatorExamples calculatorId="percentage" />
+
+      <MethodologySection steps={getMethodology('percentage')} />
+
       <FAQSection
         items={[
           { question: t('percentage.faq.q1'), answer: t('percentage.faq.a1') },
@@ -551,10 +561,12 @@ export default function PercentageCalculator() {
         ]}
       />
 
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="percentage"
         calculatorTitle={t('percentage.title')}
       />
+      <LastUpdated calculatorId="percentage" />
     </div>
   );
 }

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flame, Calculator, MapPin, Home, Info, AlertTriangle, TrendingUp, Thermometer, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -393,7 +395,7 @@ export default function GasBillCalculator() {
       <div className="mt-8">
         <ComparisonBarChart
           data={cityGasData.filter(c => c.id !== 'other').map(c => ({
-            name: t(c.nameKey).split(' ')[0],
+            name: t(c.nameKey).replace(/^г\.\s*/i, ''),
             tariff: c.tariffPerCubicMeter,
             avgBill: c.tariffPerCubicMeter * c.averageMonthlyConsumption.apartment
           }))}
@@ -535,10 +537,12 @@ export default function GasBillCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="gas-bill"
         calculatorTitle="Калькулятор газа"
       />
+      <LastUpdated calculatorId="gas" />
     </div>
   );
 }

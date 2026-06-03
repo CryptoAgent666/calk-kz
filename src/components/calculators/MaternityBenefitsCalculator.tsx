@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Baby, Calculator, Users, Wallet, Heart, Info, AlertTriangle, CheckCircle, Calendar, FileText, Building2, Clock, Briefcase, BarChart3 } from 'lucide-react';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function MaternityBenefitsCalculator() {
@@ -185,6 +191,7 @@ export default function MaternityBenefitsCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="maternity-benefits" />
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -720,6 +727,8 @@ export default function MaternityBenefitsCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="maternity-benefits" />
+      <MethodologySection steps={getMethodology('maternity-benefits')} />
       <FAQSection
         title={t('maternity-benefits.faqTitle')}
         items={[
@@ -773,10 +782,13 @@ export default function MaternityBenefitsCalculator() {
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="social" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="maternity-benefits"
         calculatorTitle={t('maternity-benefits.embedTitle')}
       />
+      <LastUpdated calculatorId="maternity-benefits" />
     </div>
   );
 }

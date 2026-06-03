@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Calculator, Users, DollarSign, TrendingUp, Info, AlertTriangle, Clock, Target, Heart, CheckCircle, XCircle, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { pluralize } from '../../utils/pluralize';
 
 export default function PensionAnnuityCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [age, setAge] = useState<string>('55');
   const [currentAccumulations, setCurrentAccumulations] = useState<string>('5000000');
@@ -48,12 +54,14 @@ export default function PensionAnnuityCalculator() {
   const SUFFICIENT_AMOUNT_KZT = SUFFICIENT_AMOUNT_MRP * MRP_2026; // 2,583,392 тенге
   const CURRENT_YEAR = 2026;
 
-  // Пенсионный возраст по гендеру (с учетом поэтапного повышения)
-  const getRetirementAge = (birthYear: number, gender: 'male' | 'female') => {
+  // Пенсионный возраст по гендеру (РК 2026)
+  // Мужчины: 63 (с 2023)
+  // Женщины: поэтапное повышение до 63 (в 2026 — 61 год)
+  const getRetirementAge = (_birthYear: number, gender: 'male' | 'female') => {
     if (gender === 'male') {
-      return birthYear <= 1962 ? 63 : Math.min(68, 63 + Math.floor((birthYear - 1962) * 0.5));
+      return 63;
     } else {
-      return birthYear <= 1962 ? 58 : Math.min(63, 58 + Math.floor((birthYear - 1962) * 0.5));
+      return 61; // 2026 год — переходный период
     }
   };
 
@@ -253,6 +261,7 @@ export default function PensionAnnuityCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="pension-annuity" />
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -275,7 +284,7 @@ export default function PensionAnnuityCalculator() {
                 >
                   <Users className="w-5 h-5 mx-auto mb-2" />
                   <div className="font-medium">{t('pension-annuity.inputs.gender.male')}</div>
-                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} {results.retirementAge || 63} {t('pension-annuity.inputs.gender.years')}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} 63 {t('pension-annuity.inputs.gender.years')}</div>
                 </button>
                 <button
                   onClick={() => setGender('female')}
@@ -287,7 +296,7 @@ export default function PensionAnnuityCalculator() {
                 >
                   <Heart className="w-5 h-5 mx-auto mb-2" />
                   <div className="font-medium">{t('pension-annuity.inputs.gender.female')}</div>
-                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} {results.retirementAge || 58} {t('pension-annuity.inputs.gender.years')}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} 61 {t('pension-annuity.inputs.gender.years')}</div>
                 </button>
               </div>
             </div>
@@ -712,8 +721,8 @@ export default function PensionAnnuityCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('pension-annuity.longevityContext.men.title')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
-              <div>{t('pension-annuity.longevityContext.men.avgLife')}: <strong>69.5 {t('pension-annuity.longevityContext.years')}</strong></div>
-              <div className="break-words">{t('pension-annuity.longevityContext.men.retirementAge')}: <strong>63-68 {t('pension-annuity.longevityContext.years')}</strong></div>
+              <div>{t('pension-annuity.longevityContext.men.avgLife')}: <strong>69.5 {pluralize(i18n.language, 69.5, 'год', 'года', 'лет')}</strong></div>
+              <div className="break-words">{t('pension-annuity.longevityContext.men.retirementAge')}: <strong>63 {pluralize(i18n.language, 63, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.men.avgPeriod')}: <strong>6-12 {t('pension-annuity.longevityContext.years')}</strong></div>
             </div>
           </div>
@@ -724,8 +733,8 @@ export default function PensionAnnuityCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('pension-annuity.longevityContext.women.title')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
-              <div>{t('pension-annuity.longevityContext.women.avgLife')}: <strong>77.2 {t('pension-annuity.longevityContext.years')}</strong></div>
-              <div className="break-words">{t('pension-annuity.longevityContext.women.retirementAge')}: <strong>58-63 {t('pension-annuity.longevityContext.years')}</strong></div>
+              <div>{t('pension-annuity.longevityContext.women.avgLife')}: <strong>77.2 {pluralize(i18n.language, 77.2, 'год', 'года', 'лет')}</strong></div>
+              <div className="break-words">{t('pension-annuity.longevityContext.women.retirementAge')}: <strong>61 {pluralize(i18n.language, 61, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.women.avgPeriod')}: <strong>14-19 {t('pension-annuity.longevityContext.years')}</strong></div>
             </div>
           </div>
@@ -850,6 +859,8 @@ export default function PensionAnnuityCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="pension-annuity" />
+      <MethodologySection steps={getMethodology('pension-annuity')} />
       <FAQSection
         items={[
           { question: t('pension-annuity.faq.q1'), answer: t('pension-annuity.faq.a1') },
@@ -864,6 +875,7 @@ export default function PensionAnnuityCalculator() {
         ]}
       />
 
+      <LegalDisclaimer type="social" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -871,6 +883,7 @@ export default function PensionAnnuityCalculator() {
         calculatorId="pension-annuity"
         calculatorTitle="Калькулятор пенсионного аннуитета"
       />
+      <LastUpdated calculatorId="pension-annuity" />
     </div>
   );
 }

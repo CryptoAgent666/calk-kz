@@ -4,9 +4,14 @@ import { Home, Calculator, TrendingDown, MapPin, Percent, DollarSign, Info, Aler
 import { TaxPieChart, TrendLineChart, ProgressBar } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 interface MortgageProgram {
   id: string;
@@ -307,6 +312,8 @@ export default function MortgageCalculator() {
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="mortgage-specialized" />
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
@@ -1010,6 +1017,8 @@ export default function MortgageCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="mortgage-specialized" />
+      <MethodologySection steps={getMethodology('mortgage-specialized')} />
       <FAQSection
         items={faqItems}
         sources={[
@@ -1032,6 +1041,7 @@ export default function MortgageCalculator() {
         </div>
       </div>
 
+      <LegalDisclaimer type="finance" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -1039,6 +1049,7 @@ export default function MortgageCalculator() {
         calculatorId="mortgage"
         calculatorTitle={t('mortgage.title')}
       />
+      <LastUpdated calculatorId="mortgage-specialized" />
     </div>
   );
 }

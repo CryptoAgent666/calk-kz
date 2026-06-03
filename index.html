@@ -133,13 +133,44 @@
     <div id="root"></div>
 
     <!-- Delayed Google AdSense -->
+    <!-- Отключён:
+         - в native iOS-приложении (Apple Guideline 4.3 — AdSense в WebView запрещён)
+         - на health-/medical-калькуляторах (vignette/intrusive ads + Apple 1.4.1 чистый медицинский контент)
+         - на embed-калькуляторах (виджеты на сторонних сайтах не должны рекламировать)
+    -->
     <script>
       window.addEventListener('load', () => {
+        // Capacitor добавляет глобальный объект window.Capacitor на native платформах
+        const isNativeApp = typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+        const isIOSApp = isNativeApp && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios';
+        if (isIOSApp) {
+          return;
+        }
+
+        // Отключаем AdSense на health-калькуляторах и embed-страницах
+        const HEALTH_PATHS = [
+          '/calculator/bmi',
+          '/calculator/calories',
+          '/calculator/pregnancy',
+          '/calculator/body-fat',
+          '/calculator/sleep',
+          '/calculator/water-intake',
+        ];
+        const path = window.location.pathname.replace(/^\/__kk/, '');
+        const isHealthPage = HEALTH_PATHS.some((p) => path === p || path === p + '/');
+        const isEmbedPage = path.startsWith('/embed/');
+        if (isHealthPage || isEmbedPage) {
+          // На медицинских и embed-страницах реклама не показывается
+          return;
+        }
+
         const loadAds = () => {
           const script = document.createElement('script');
           script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4859241862365215';
           script.async = true;
           script.crossOrigin = 'anonymous';
+          // data-anchor-shown="false" + data-overlays="bottom" предотвращают vignette/anchor агрессивные форматы
+          script.dataset.overlays = 'bottom';
           document.head.appendChild(script);
         };
 
@@ -163,7 +194,7 @@
           <section style="margin-bottom: 30px;">
             <h2 style="color: #1e40af; font-size: 24px; margin-bottom: 15px;">Популярные калькуляторы</h2>
             <ul style="list-style: none; padding: 0;">
-              <li style="margin-bottom: 10px;"><a href="/calculator/income-tax/" style="color: #2563eb; text-decoration: none;">Калькулятор ИПН для наемных работников</a></li>
+              <li style="margin-bottom: 10px;"><a href="/calculator/income-tax/" style="color: #2563eb; text-decoration: none;">Калькулятор ИПН для наёмных работников</a></li>
               <li style="margin-bottom: 10px;"><a href="/calculator/salary/" style="color: #2563eb; text-decoration: none;">Зарплатный калькулятор</a></li>
               <li style="margin-bottom: 10px;"><a href="/calculator/credit/" style="color: #2563eb; text-decoration: none;">Кредитный калькулятор</a></li>
               <li style="margin-bottom: 10px;"><a href="/calculator/currency-converter/" style="color: #2563eb; text-decoration: none;">Конвертер валют</a></li>

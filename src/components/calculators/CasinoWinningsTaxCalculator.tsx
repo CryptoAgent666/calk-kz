@@ -2,11 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DollarSign, Calculator, TrendingUp, AlertTriangle, Info, Plus, Trash2, Calendar } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 interface WinningEntry {
   id: string;
@@ -41,7 +47,7 @@ export default function CasinoWinningsTaxCalculator() {
   });
 
   const MRP_2026 = 4325;
-  const TAX_FREE_THRESHOLD = 12 * MRP_2026;
+  const TAX_FREE_THRESHOLD = 100 * MRP_2026;
   const TAX_RATE = 0.10;
 
   const calculateTax = (gross: number, stake: number) => {
@@ -238,6 +244,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="casino-winnings-tax" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
@@ -581,10 +588,10 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
             </h3>
             <div className="space-y-3 text-gray-700">
               <p>
-                {t('casino-winnings-tax.legalBasisText1')} <strong>{t('casino-winnings-tax.legalBasisText2')}</strong>{t('casino-winnings-tax.legalBasisText3')} <strong>{t('casino-winnings-tax.legalBasisText4')}</strong>.
+                {t('casino-winnings-tax.legalBasisText1')}. <strong>{t('casino-winnings-tax.legalBasisText2')}</strong>. {t('casino-winnings-tax.legalBasisText3')}. <strong>{t('casino-winnings-tax.legalBasisText4')}</strong>.
               </p>
               <p>
-                {t('casino-winnings-tax.legalBasisText5')} <strong>{t('casino-winnings-tax.legalBasisText6')}</strong>{t('casino-winnings-tax.legalBasisText7')} ({formatNumber(TAX_FREE_THRESHOLD)} {t('casino-winnings-tax.legalBasisText8')}).
+                {t('casino-winnings-tax.legalBasisText5')}. <strong>{t('casino-winnings-tax.legalBasisText6')}</strong>. {t('casino-winnings-tax.legalBasisText7')}. {t('casino-winnings-tax.legalBasisText8')}.
               </p>
             </div>
           </div>
@@ -747,10 +754,15 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="casino-winnings-tax"
         calculatorTitle="Калькулятор налога на выигрыш"
       />
+      <MethodologySection steps={getMethodology('casino-winnings-tax')} />
+      <CalculatorExamples calculatorId="casino-winnings-tax" />
+      <LastUpdated calculatorId="casino-winnings-tax" />
     </div>
   );
 }

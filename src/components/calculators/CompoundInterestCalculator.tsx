@@ -3,10 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { TrendingUp, Calculator, DollarSign, Target, BarChart3, PieChart, Info, AlertTriangle, Percent, Calendar } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 interface YearlyData {
   year: number;
@@ -218,6 +224,7 @@ ${results.yearlyData.map(data =>
         </div>
       </div>
 
+      <QuickAnswer calculatorId="compound-interest" />
       <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
         <div className="lg:col-span-2 space-y-6 sm:space-y-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
@@ -729,6 +736,8 @@ ${results.yearlyData.map(data =>
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="compound-interest" />
+      <MethodologySection steps={getMethodology('compound-interest')} />
       <FAQSection
         items={[
           { question: t('compound-interest.faq.q1'), answer: t('compound-interest.faq.a1') },
@@ -781,10 +790,13 @@ ${results.yearlyData.map(data =>
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="compound-interest"
         calculatorTitle={t('compound-interest.title')}
       />
+      <LastUpdated calculatorId="compound-interest" />
     </div>
   );
 }

@@ -46,3 +46,16 @@ lighthouse-*.json
 *.crt
 *.ppk
 id_rsa*
+*.mobileprovision
+*.p12
+*.keystore
+
+# Бинарные сборки приложения
+*.apk
+*.aab
+*.ipa
+
+# Локальные конфиги инструментов / временные файлы
+.mcp.json
+.playwright-mcp/
+vite.config.ts.timestamp-*.mjs

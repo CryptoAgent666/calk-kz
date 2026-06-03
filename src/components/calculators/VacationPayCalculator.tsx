@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Palmtree, Calculator, Info, AlertTriangle } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -38,7 +44,7 @@ export default function VacationPayCalculator() {
   const DEFAULT_VACATION_DAYS = 24;
   const WORKING_DAYS_PER_MONTH = 29.3;
   const OPV_MAX_BASE = 50 * MZP;
-  const VOSMS_MAX_BASE = 10 * MZP;
+  const VOSMS_MAX_BASE = 20 * MZP; // С 2026 г. максимальная база ВОСМС повышена с 10 до 20 МЗП
 
   const calculateVacationPay = () => {
     const income = parseFloat(monthlyIncome) || 0;
@@ -118,6 +124,7 @@ export default function VacationPayCalculator() {
       </div>
 
       {/* Main Grid */}
+      <QuickAnswer calculatorId="vacation-pay" />
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Left: Input card */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -225,12 +232,12 @@ export default function VacationPayCalculator() {
             <div className="bg-emerald-50 rounded-lg p-4">
               <h3 className="text-sm font-medium text-emerald-900 mb-2">{t('vacation-pay.currentRates')}</h3>
               <div className="text-xs text-emerald-800 space-y-1">
-                <div>• {t('vacation-pay.opvRate')}: 10% ({t('vacation-pay.maxBase')} 50 MZP)</div>
-                <div>• {t('vacation-pay.vosmsRate')}: 2% ({t('vacation-pay.maxBase')} 10 MZP)</div>
+                <div>• {t('vacation-pay.opvRate')}: 10% ({t('vacation-pay.maxBase')} 50 МЗП)</div>
+                <div>• {t('vacation-pay.vosmsRate')}: 2% ({t('vacation-pay.maxBase')} 20 МЗП)</div>
                 <div>• {t('vacation-pay.ipnRate')}: 10%</div>
-                <div>• {t('vacation-pay.standardDeductionInfo')}: 30 MRP ({formatNumber(STANDARD_DEDUCTION)})</div>
-                <div>• MRP 2026: {formatNumber(MRP)}</div>
-                <div>• MZP 2026: {formatNumber(MZP)}</div>
+                <div>• {t('vacation-pay.standardDeductionInfo')}: 30 МРП ({formatNumber(STANDARD_DEDUCTION)})</div>
+                <div>• МРП 2026: {formatNumber(MRP)}</div>
+                <div>• МЗП 2026: {formatNumber(MZP)}</div>
               </div>
             </div>
           </div>
@@ -442,6 +449,8 @@ export default function VacationPayCalculator() {
       )}
 
       {/* FAQ Section */}
+      <CalculatorExamples calculatorId="vacation-pay" />
+      <MethodologySection steps={getMethodology('vacation-pay')} />
       <FAQSection
         items={[
           { question: t('vacation-pay.faq.q1'), answer: t('vacation-pay.faq.a1') },
@@ -457,10 +466,13 @@ export default function VacationPayCalculator() {
       />
 
       {/* Embed Widget */}
+      <LegalDisclaimer type="social" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="vacation-pay"
         calculatorTitle={t('vacation-pay.title')}
       />
+      <LastUpdated calculatorId="vacation-pay" />
     </div>
   );
 }

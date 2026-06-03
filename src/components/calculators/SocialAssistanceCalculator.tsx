@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HandHeart, Calculator, Users, MapPin, Baby, Info, CheckCircle, XCircle, AlertTriangle, DollarSign, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function SocialAssistanceCalculator() {
   const { t } = useTranslation('calculators');
@@ -139,6 +143,7 @@ export default function SocialAssistanceCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="social-assistance" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
@@ -651,10 +656,13 @@ export default function SocialAssistanceCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="social" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="social-assistance"
         calculatorTitle="Калькулятор АСП"
       />
+      <LastUpdated calculatorId="social-assistance" />
     </div>
   );
 }

@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Receipt, Calculator, GraduationCap, Heart, Home, DollarSign, Info, AlertTriangle, TrendingUp, FileText, CheckCircle, Target, BarChart3 } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function TaxDeductionsCalculator() {
   const { t } = useTranslation('calculators');
@@ -208,6 +213,7 @@ export default function TaxDeductionsCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="tax-deductions" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
@@ -847,6 +853,8 @@ export default function TaxDeductionsCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="tax-deductions" />
+      <MethodologySection steps={getMethodology('tax-deductions')} />
       <FAQSection
         items={[
           { question: t('tax-deductions.faq.q1'), answer: t('tax-deductions.faq.a1') },
@@ -861,6 +869,7 @@ export default function TaxDeductionsCalculator() {
         ]}
       />
 
+      <LegalDisclaimer type="tax" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -868,6 +877,7 @@ export default function TaxDeductionsCalculator() {
         calculatorId="tax-deductions"
         calculatorTitle="Калькулятор налоговых вычетов"
       />
+      <LastUpdated calculatorId="tax-deductions" />
     </div>
   );
 }

@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Scale, Calculator, Users, Building, AlertTriangle, Info, FileText, Gavel, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function CourtFeeCalculator() {
@@ -112,6 +118,7 @@ export default function CourtFeeCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="court-fee" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('court-fee.claimParameters')}</h2>
@@ -365,6 +372,8 @@ export default function CourtFeeCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="court-fee" />
+      <MethodologySection steps={getMethodology('court-fee')} />
       <FAQSection
         items={[
           { question: t('court-fee.faq.q1'), answer: t('court-fee.faq.a1') },
@@ -416,10 +425,13 @@ export default function CourtFeeCalculator() {
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="legal" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="court-fee"
         calculatorTitle="Калькулятор госпошлины"
       />
+      <LastUpdated calculatorId="court-fee" />
     </div>
   );
 }

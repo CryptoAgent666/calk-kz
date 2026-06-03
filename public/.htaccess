@@ -9,6 +9,20 @@ ErrorDocument 404 /index.html
   RewriteEngine On
   RewriteBase /
 
+  # 301 редиректы старых slug-ов на актуальные (SEO-сохранение)
+  RewriteRule ^calculator/mortgage/?$ /calculator/mortgage-specialized/ [R=301,L]
+  RewriteRule ^calculator/notary-services/?$ /calculator/notary/ [R=301,L]
+  RewriteRule ^calculator/gas-bill/?$ /calculator/gas/ [R=301,L]
+  RewriteRule ^calculator/water-bill/?$ /calculator/water/ [R=301,L]
+  RewriteRule ^__kk/calculator/mortgage/?$ /__kk/calculator/mortgage-specialized/ [R=301,L]
+  RewriteRule ^__kk/calculator/notary-services/?$ /__kk/calculator/notary/ [R=301,L]
+  RewriteRule ^__kk/calculator/gas-bill/?$ /__kk/calculator/gas/ [R=301,L]
+  RewriteRule ^__kk/calculator/water-bill/?$ /__kk/calculator/water/ [R=301,L]
+  RewriteRule ^embed/mortgage/?$ /embed/mortgage-specialized/ [R=301,L]
+  RewriteRule ^embed/notary-services/?$ /embed/notary/ [R=301,L]
+  RewriteRule ^embed/gas-bill/?$ /embed/gas/ [R=301,L]
+  RewriteRule ^embed/water-bill/?$ /embed/water/ [R=301,L]
+
   # Не трогаем реально существующие файлы и папки
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f

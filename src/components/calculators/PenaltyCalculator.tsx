@@ -3,9 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Calculator, Clock, DollarSign, Info, Calendar, TrendingUp, FileText, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 
 export default function PenaltyCalculator() {
   const { t } = useTranslation('calculators');
@@ -130,6 +135,7 @@ export default function PenaltyCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="penalty" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('penalty.calculationParameters')}</h2>
@@ -339,10 +345,10 @@ export default function PenaltyCalculator() {
             <div className="text-sm text-gray-700 space-y-2">
               <div><strong>{t('penalty.taxDebtIPNLabel')}</strong> 100,000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 30 {t('penalty.days')}</div>
-              <div><strong>{t('penalty.rateLabel')}</strong> 0.07{t('penalty.perDay')}</div>
+              <div><strong>{t('penalty.rateLabel')}</strong> 0.062{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 100,000 × 0.07% × 30 = 2,100 ₸</div>
-                <div><strong>{t('penalty.toPayLabel')}</strong> 102,100 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 100,000 × 0.062% × 30 = 1,860 ₸</div>
+                <div><strong>{t('penalty.toPayLabel')}</strong> 101,860 ₸</div>
               </div>
             </div>
           </div>
@@ -551,6 +557,8 @@ export default function PenaltyCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="penalty" />
+      <MethodologySection steps={getMethodology('penalty')} />
       <FAQSection
         items={[
           { question: t('penalty.faq.q1'), answer: t('penalty.faq.a1') },
@@ -603,6 +611,7 @@ export default function PenaltyCalculator() {
         </div>
       )}
 
+      <LegalDisclaimer type="legal" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -610,6 +619,7 @@ export default function PenaltyCalculator() {
         calculatorId="penalty"
         calculatorTitle="Калькулятор пеней"
       />
+      <LastUpdated calculatorId="penalty" />
     </div>
   );
 }

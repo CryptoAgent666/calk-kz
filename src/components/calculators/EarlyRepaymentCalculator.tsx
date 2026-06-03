@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TimerOff, Calculator, TrendingDown, Info, AlertTriangle, ArrowRight } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -203,6 +209,7 @@ export default function EarlyRepaymentCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="early-repayment" />
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
@@ -626,6 +633,8 @@ export default function EarlyRepaymentCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="early-repayment" />
+      <MethodologySection steps={getMethodology('early-repayment')} />
       <FAQSection
         items={[
           { question: t('early-repayment.faq.q1'), answer: t('early-repayment.faq.a1') },
@@ -641,10 +650,13 @@ export default function EarlyRepaymentCalculator() {
       />
 
       {/* Embed widget */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="early-repayment"
         calculatorTitle={t('early-repayment.title')}
       />
+      <LastUpdated calculatorId="early-repayment" />
     </div>
   );
 }

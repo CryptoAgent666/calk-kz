@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserCheck, Calculator, Info, AlertTriangle, PieChart } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function ESPSelfEmployedCalculator() {
   const { t } = useTranslation('calculators');
@@ -91,6 +97,7 @@ export default function ESPSelfEmployedCalculator() {
 
   return (
     <div className="max-w-7xl mx-auto">
+      <QuickAnswer calculatorId="esp-self-employed" />
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
@@ -483,6 +490,8 @@ export default function ESPSelfEmployedCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="esp-self-employed" />
+      <MethodologySection steps={getMethodology('esp-self-employed')} />
       <FAQSection
         items={[
           { question: t('esp-self-employed.faq.q1'), answer: t('esp-self-employed.faq.a1') },
@@ -498,10 +507,13 @@ export default function ESPSelfEmployedCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="esp-self-employed"
         calculatorTitle={t('esp-self-employed.title')}
       />
+      <LastUpdated calculatorId="esp-self-employed" />
     </div>
   );
 }

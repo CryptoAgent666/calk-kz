@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Type, Calculator, Languages, Copy, Download, RotateCcw, DollarSign, Info, AlertTriangle, Banknote, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 interface ConversionResult {
   words: string;
@@ -484,6 +487,7 @@ export default function NumberToWordsCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="number-to-words" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
@@ -1138,10 +1142,12 @@ export default function NumberToWordsCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="number-to-words"
         calculatorTitle="Числа прописью"
       />
+      <LastUpdated calculatorId="number-to-words" />
     </div>
   );
 }

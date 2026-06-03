@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Calculator, Plus, Minus, Clock, Info, RotateCcw, Copy, Download, ArrowRight, CalendarDays, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 
@@ -1006,10 +1008,12 @@ export default function DateCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="date-calculator"
         calculatorTitle="Калькулятор дат"
       />
+      <LastUpdated calculatorId="date-calculator" />
     </div>
   );
 }

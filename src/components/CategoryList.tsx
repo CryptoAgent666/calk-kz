@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { CalculatorCategory } from '../types/calculator';
 import CategoryCard from './CategoryCard';
 import RecentCalculators from './RecentCalculators';
-import PopularCalculators from './PopularCalculators';
 import { Search, Calculator as CalculatorIcon } from 'lucide-react';
-import { DeferredRender } from './ui/DeferredRender';
 
 interface CategoryListProps {
   categories: CalculatorCategory[];
@@ -125,8 +123,7 @@ export default function CategoryList({
 
       {/* Features Section (только если не поиск) */}
       {!isSearching && (
-        <DeferredRender minHeight={360}>
-          <div className="mt-12 bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
+        <div className="mt-12 bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 {t('home.whyChoose')}
@@ -162,7 +159,6 @@ export default function CategoryList({
               </div>
             </div>
           </div>
-        </DeferredRender>
       )}
     </div>
   );

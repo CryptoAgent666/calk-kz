@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Droplets, Calculator, MapPin, Users, Info, AlertTriangle, TrendingUp, Waves, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -469,6 +472,7 @@ export default function WaterBillCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="water-bill" />
       <FAQSection
         items={[
           { question: t('water.faq.q1'), answer: t('water.faq.a1') },
@@ -484,10 +488,12 @@ export default function WaterBillCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="water-bill"
         calculatorTitle="Калькулятор воды"
       />
+      <LastUpdated calculatorId="water" />
     </div>
   );
 }

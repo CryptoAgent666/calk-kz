@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { FileCheck, Calculator, AlertTriangle, Info, Calendar, Car, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function RegistrationFeeCalculator() {
   const { t } = useTranslation('calculators');
@@ -125,6 +129,7 @@ export default function RegistrationFeeCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="registration-fee" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
@@ -400,10 +405,13 @@ export default function RegistrationFeeCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="registration-fee"
         calculatorTitle="Калькулятор регистрационного сбора"
       />
+      <LastUpdated calculatorId="registration-fee" />
     </div>
   );
 }

@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Baby, Calendar, Heart, Info, AlertTriangle, Star, Clock, Target, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { ProgressBar } from '../ui/ChartComponents';
@@ -323,6 +329,8 @@ export default function PregnancyCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="pregnancy" />
+
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -547,7 +555,7 @@ export default function PregnancyCalculator() {
 
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <h3 className="font-semibold text-gray-900">{weekNum} {t('pregnancy.weekLabel')}: {info.title}</h3>
+                      <h3 className="font-semibold text-gray-900">{weekNum} {t('pregnancy.weekLabel')}</h3>
                       {isCurrent && <span className="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded">{t('pregnancy.current')}</span>}
                     </div>
                     <p className="text-gray-600 text-sm mb-2">{info.description}</p>
@@ -603,7 +611,40 @@ export default function PregnancyCalculator() {
         </div>
       )}
 
+      {/* Medical sources (Apple App Store Guideline 1.4.1 compliance) */}
+      <MedicalDisclaimer
+        sources={[
+          {
+            title: 'ACOG — Methods for Estimating the Due Date (Committee Opinion No. 700)',
+            url: 'https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date',
+            description: 'American College of Obstetricians and Gynecologists. Официальная методология определения ПДР, включая правило Негеле, на котором основан этот калькулятор.',
+          },
+          {
+            title: 'WHO — Recommendations on antenatal care for a positive pregnancy experience',
+            url: 'https://www.who.int/publications/i/item/9789241549912',
+            description: 'World Health Organization. Глобальные рекомендации по антенатальному наблюдению, использовавшиеся для рекомендаций по триместрам.',
+          },
+          {
+            title: 'NIH NICHD — Pregnancy Information',
+            url: 'https://www.nichd.nih.gov/health/topics/pregnancy',
+            description: 'National Institute of Child Health and Human Development. Информация о развитии плода по неделям и норме изменений в каждом триместре.',
+          },
+          {
+            title: 'Mayo Clinic — Fetal development: The 1st trimester / 2nd trimester / 3rd trimester',
+            url: 'https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045302',
+            description: 'Авторитетный медицинский ресурс. Описание этапов развития плода по неделям, используемое в графике беременности.',
+          },
+          {
+            title: 'Минздрав РК — Клинические протоколы (Физиологическая беременность)',
+            url: 'https://www.rcrz.kz/index.php/ru/2017-03-12-10-50-44/klinicheskie-protokoly',
+            description: 'Республиканский центр развития здравоохранения МЗ РК. Локальные протоколы ведения беременности, применимые в Казахстане.',
+          },
+        ]}
+      />
+
       {/* FAQ */}
+      <CalculatorExamples calculatorId="pregnancy" />
+      <MethodologySection steps={getMethodology('pregnancy')} />
       <FAQSection
         items={[
           { question: t('pregnancy.faq.q1'), answer: t('pregnancy.faq.a1') },
@@ -613,16 +654,20 @@ export default function PregnancyCalculator() {
           { question: t('pregnancy.faq.q5'), answer: t('pregnancy.faq.a5') }
         ]}
         sources={[
-          { title: 'Протокол ведения беременности МЗ РК', url: 'https://diseases.medelement.com/' },
-          { title: 'Родильные дома Казахстана', url: 'https://egov.kz/' },
+          { title: 'ACOG — Estimating the Due Date', url: 'https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date' },
+          { title: 'WHO — Antenatal care', url: 'https://www.who.int/publications/i/item/9789241549912' },
+          { title: 'Mayo Clinic — Fetal development', url: 'https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045302' },
+          { title: 'РЦРЗ МЗ РК — Клинические протоколы', url: 'https://www.rcrz.kz/index.php/ru/2017-03-12-10-50-44/klinicheskie-protokoly' },
         ]}
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="pregnancy"
         calculatorTitle="Калькулятор беременности"
       />
+      <LastUpdated calculatorId="pregnancy" />
     </div>
   );
 }

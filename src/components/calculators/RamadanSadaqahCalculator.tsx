@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Calculator, Users, Calendar, Heart, Star, Info, AlertTriangle, Gift, Clock, Book, Target, BarChart3 } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function RamadanSadaqahCalculator() {
   const { t } = useTranslation('calculators');
@@ -39,8 +45,8 @@ export default function RamadanSadaqahCalculator() {
 
   // Константы на 2026 год
   const CURRENT_YEAR = 2026;
-  const DUMK_FITR_RATE_2026 = 655; // 655 тенге - ставка ДУМК на 2026 год
-  const DUMK_FIDYA_RATE_2026 = 3000; // 3000 тенге в день
+  const DUMK_FITR_RATE_2026 = 735; // 735 тенге — ставка ДУМК на 2026 год
+  const DUMK_FIDYA_RATE_2026 = 4000; // 4000 тенге в день — ставка ДУМК 2026
 
   // Альтернативные расчеты фитр-садака для состоятельных людей
   const alternativeRates = {
@@ -163,6 +169,7 @@ export default function RamadanSadaqahCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="ramadan-sadaqah" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
@@ -1028,6 +1035,8 @@ export default function RamadanSadaqahCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="ramadan-sadaqah" />
+      <MethodologySection steps={getMethodology('ramadan-sadaqah')} />
       <FAQSection
         items={[
           { question: t('ramadan-sadaqah.faq.q1'), answer: t('ramadan-sadaqah.faq.a1') },
@@ -1043,10 +1052,13 @@ export default function RamadanSadaqahCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="religious" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="ramadan-sadaqah"
         calculatorTitle="Калькулятор садаки"
       />
+      <LastUpdated calculatorId="ramadan-sadaqah" />
     </div>
   );
 }

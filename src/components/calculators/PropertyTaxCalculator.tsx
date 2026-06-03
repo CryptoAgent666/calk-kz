@@ -4,9 +4,14 @@ import { Home, Calculator, AlertTriangle, Info, Building, BarChart3 } from 'luci
 import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function PropertyTaxCalculator() {
   const { t } = useTranslation('calculators');
@@ -96,18 +101,12 @@ export default function PropertyTaxCalculator() {
 
     let taxAmount = taxBase * (taxRate / 100);
 
-    let exemptionAmount = 0;
-    if (propertyType === 'apartment' || propertyType === 'house') {
-      if (propertyArea <= 150) {
-        exemptionAmount = taxAmount;
-        taxAmount = 0;
-      } else {
-        const exemptArea = 150;
-        const exemptBase = baseCostPerSqm * exemptArea * (1 - wearPercent / 100) * zoneCoeff * mrpCoeff;
-        exemptionAmount = exemptBase * (taxRate / 100);
-        taxAmount = Math.max(0, taxAmount - exemptionAmount);
-      }
-    }
+    // В НК РК освобождение от налога на имущество физлиц НЕ зависит от площади жилья.
+    // Льготы предоставляются отдельным категориям граждан (пенсионеры по возрасту,
+    // инвалиды I–II групп, участники ВОВ, многодетные матери и др.) в пределах,
+    // установленных кодексом, и здесь автоматически не применяются — калькулятор
+    // показывает полную оценочную сумму налога.
+    const exemptionAmount = 0;
 
     const finalAmount = Math.max(0, taxAmount);
 
@@ -166,6 +165,8 @@ export default function PropertyTaxCalculator() {
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="property-tax" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -435,6 +436,8 @@ export default function PropertyTaxCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="property-tax" />
+      <MethodologySection steps={getMethodology('property-tax')} />
       <FAQSection
         items={[
           { question: t('property-tax.faq.q1'), answer: t('property-tax.faq.a1') },
@@ -486,6 +489,7 @@ export default function PropertyTaxCalculator() {
         </div>
       )}
 
+      <LegalDisclaimer type="tax" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -493,6 +497,7 @@ export default function PropertyTaxCalculator() {
         calculatorId="property-tax"
         calculatorTitle="Калькулятор налога на имущество"
       />
+      <LastUpdated calculatorId="property-tax" />
     </div>
   );
 }

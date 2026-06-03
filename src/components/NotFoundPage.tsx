@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Home, Search, Calculator, ArrowLeft, Sparkles } from 'lucide-react';
+import LocalizedLink from './LocalizedLink';
 import { useSEO } from '../hooks/useSEO';
+import { pluralize } from '../utils/pluralize';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
 
@@ -11,7 +12,7 @@ interface NotFoundPageProps {
 }
 
 export default function NotFoundPage({ onNavigateHome: _onNavigateHome }: NotFoundPageProps) {
-  const { t } = useTranslation(['common', 'categories']);
+  const { t, i18n } = useTranslation(['common', 'categories']);
   const [isVisible, setIsVisible] = useState(false);
 
   useSEO({
@@ -69,13 +70,13 @@ export default function NotFoundPage({ onNavigateHome: _onNavigateHome }: NotFou
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
+          <LocalizedLink
             to="/"
             className="group inline-flex items-center justify-center space-x-2 px-7 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5"
           >
             <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
             <span>{t('common:notFound.backToHome', 'На главную')}</span>
-          </Link>
+          </LocalizedLink>
 
           <button
             onClick={() => window.history.back()}
@@ -100,7 +101,7 @@ export default function NotFoundPage({ onNavigateHome: _onNavigateHome }: NotFou
             {calculatorCategories.slice(0, 6).map((category) => {
               const IconComponent = getIcon(category.icon);
               return (
-                <Link
+                <LocalizedLink
                   key={category.id}
                   to={`/category/${category.id}/`}
                   className="group flex items-center space-x-3 p-3.5 rounded-xl bg-gradient-to-r from-gray-50 to-slate-50 hover:from-blue-50 hover:to-indigo-50 border border-gray-100 hover:border-blue-200 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
@@ -113,10 +114,10 @@ export default function NotFoundPage({ onNavigateHome: _onNavigateHome }: NotFou
                       {t(`categories:${category.id}.title`)}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {category.calculators.length} {t('common:footer.calculatorsPlural', 'калькуляторов')}
+                      {category.calculators.length} {pluralize(i18n.language, category.calculators.length, t('common:footer.calculators'), t('common:footer.calculatorsFew'), t('common:footer.calculatorsPlural'))}
                     </div>
                   </div>
-                </Link>
+                </LocalizedLink>
               );
             })}
           </div>

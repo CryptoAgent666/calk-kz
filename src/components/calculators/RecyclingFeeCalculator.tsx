@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Recycle, Calculator, Zap, Truck, Car, Info, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function RecyclingFeeCalculator() {
   const { t } = useTranslation('calculators');
@@ -123,6 +128,8 @@ export default function RecyclingFeeCalculator() {
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="recycling-fee" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
@@ -420,6 +427,8 @@ export default function RecyclingFeeCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="recycling-fee" />
+      <MethodologySection steps={getMethodology('recycling-fee')} />
       <FAQSection
         items={[
           { question: t('recycling-fee.faq.q1'), answer: t('recycling-fee.faq.a1') },
@@ -434,6 +443,7 @@ export default function RecyclingFeeCalculator() {
         ]}
       />
 
+      <LegalDisclaimer type="tax" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -441,6 +451,7 @@ export default function RecyclingFeeCalculator() {
         calculatorId="recycling-fee"
         calculatorTitle={t('recycling-fee.title')}
       />
+      <LastUpdated calculatorId="recycling-fee" />
     </div>
   );
 }

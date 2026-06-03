@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Receipt, Calculator, AlertTriangle, CheckCircle, Calendar, TrendingUp, Info, Target, Building, FileText, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart, ProgressBar } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 interface MonthlyTurnover {
   month: string;
@@ -222,6 +228,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="vat-threshold" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
@@ -698,6 +705,8 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="vat-threshold" />
+      <MethodologySection steps={getMethodology('vat-threshold')} />
       <FAQSection
         items={[
           { question: t('vat-threshold.faq.q1'), answer: t('vat-threshold.faq.a1') },
@@ -713,10 +722,13 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="vat-threshold"
         calculatorTitle="Калькулятор порога НДС"
       />
+      <LastUpdated calculatorId="vat-threshold" />
     </div>
   );
 }

@@ -32,12 +32,12 @@ export function useCurrencyRates(): CurrencyRatesResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Резервные курсы на случай недоступности API (от НБРК на 11.01.2026)
+  // Резервные курсы на случай недоступности API (от НБРК на 19.04.2026)
   const fallbackRates: Record<string, number> = {
-    USD: 509.94,
-    EUR: 593.88,
-    RUB: 6.43,
-    CNY: 73.02,
+    USD: 469.52,
+    EUR: 553.75,
+    RUB: 6.15,
+    CNY: 68.82,
     GBP: 683.68,
     JPY: 3.23,
     CHF: 637.90,
@@ -86,7 +86,7 @@ export function useCurrencyRates(): CurrencyRatesResult {
         
         setRates(fallbackData);
         setLastUpdated(new Date().toISOString());
-        setError('Используются резервные курсы НБРК от 11.01.2026. Обновите данные для получения актуальных курсов.');
+        setError('Используются резервные курсы НБРК от 19.04.2026. Обновите данные для получения актуальных курсов.');
       }
 
     } catch (err) {

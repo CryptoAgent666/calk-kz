@@ -3,11 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { PiggyBank, Calculator, TrendingUp, Percent, Calendar, DollarSign, Info, Target, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function DepositCalculator() {
   const { t } = useTranslation('calculators');
@@ -219,6 +225,8 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="deposit" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -539,6 +547,8 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="deposit" />
+      <MethodologySection steps={getMethodology('deposit')} />
       <FAQSection
         items={faqItems}
         sources={[
@@ -587,10 +597,13 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="deposit"
         calculatorTitle="Депозитный калькулятор"
       />
+      <LastUpdated calculatorId="deposit" />
     </div>
   );
 }

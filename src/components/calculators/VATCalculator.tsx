@@ -4,10 +4,16 @@ import { Calculator, Plus, Minus, FileText, Copy, Download, Trash2, RotateCcw, I
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 interface VATItem {
   id: string;
@@ -114,9 +120,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
 
   const vatRates = [
     { value: '0', label: t('vat.rates.zero.label'), description: t('vat.rates.zero.description') },
-    { value: '16', label: t('vat.rates.standard.label'), description: t('vat.rates.standard.description') },
-    { value: '20', label: t('vat.rates.russia.label'), description: t('vat.rates.russia.description') },
-    { value: '21', label: t('vat.rates.eu.label'), description: t('vat.rates.eu.description') }
+    { value: '16', label: t('vat.rates.standard.label'), description: t('vat.rates.standard.description') }
   ];
 
   const calculateVAT = () => {
@@ -368,6 +372,8 @@ ${t('vat.export.formula')}: ${results.formula}`;
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="vat" />
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
@@ -895,6 +901,8 @@ ${t('vat.export.formula')}: ${results.formula}`;
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="vat" />
+      <MethodologySection steps={getMethodology('vat')} />
       <FAQSection
         items={[
           { question: t('vat.faq.q1'), answer: t('vat.faq.a1') },
@@ -947,10 +955,13 @@ ${t('vat.export.formula')}: ${results.formula}`;
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="vat"
         calculatorTitle="Калькулятор НДС"
       />
+      <LastUpdated calculatorId="vat" />
     </div>
   );
 }

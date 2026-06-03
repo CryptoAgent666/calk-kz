@@ -1,6 +1,5 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
 import commonRu from './locales/ru/common.json';
 import categoriesRu from './locales/ru/categories.json';
@@ -31,21 +30,28 @@ const resources = {
   },
 };
 
+// Определяем начальный язык СТРОГО из URL (path /__kk/ или ?lang=kk).
+// Это критично для гидратации: SSR-пререндер (puppeteer) и клиент должны
+// получать ОДИНАКОВЫЙ initial lang. navigator.language + localStorage
+// (старый LanguageDetector) давали разные значения для разных пользователей
+// → React hydration errors #418/423/425 (по ~20 на странице).
+function detectInitialLang(): 'ru' | 'kk' {
+  if (typeof window === 'undefined') return 'ru';
+  const path = window.location.pathname;
+  const search = window.location.search;
+  if (path === '/__kk' || path.startsWith('/__kk/')) return 'kk';
+  if (new URLSearchParams(search).get('lang') === 'kk') return 'kk';
+  return 'ru';
+}
+
 i18n
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
+    lng: detectInitialLang(),
     fallbackLng: 'ru',
     defaultNS: 'common',
     ns: ['common', 'categories', 'calculators', 'legal', 'seo'],
-
-    detection: {
-      order: ['querystring', 'localStorage', 'navigator'],
-      caches: ['localStorage'],
-      lookupQuerystring: 'lang',
-      lookupLocalStorage: 'i18nextLng',
-    },
 
     interpolation: {
       escapeValue: false,

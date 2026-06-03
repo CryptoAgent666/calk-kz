@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Clock, TrendingUp, ChevronRight } from 'lucide-react';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
+import LocalizedLink from './LocalizedLink';
 
 interface RecentCalculatorsProps {
   recentCalculators: string[];
@@ -61,10 +62,11 @@ export default function RecentCalculators({
           const IconComponent = getIcon(calculator.icon);
           
           return (
-            <button
+            <LocalizedLink
               key={calculator.id}
+              to={`/calculator/${calculator.id}/`}
               onClick={() => onCalculatorClick(calculator.id)}
-              className="group p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200 text-left"
+              className="group block p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200 text-left"
             >
               <div className="flex items-start space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
@@ -84,7 +86,7 @@ export default function RecentCalculators({
                 </div>
                 <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
               </div>
-            </button>
+            </LocalizedLink>
           );
         })}
       </div>

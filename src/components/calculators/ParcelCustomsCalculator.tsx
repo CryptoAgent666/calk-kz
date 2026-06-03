@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Package, Calculator, Info, AlertTriangle, Scale } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 const VALUE_LIMIT_EUR = 200;
 const WEIGHT_LIMIT_KG = 31;
 const DUTY_RATE_VALUE = 0.15;
 const DUTY_RATE_WEIGHT = 2;
-const DEFAULT_EUR_RATE = 530;
-const DEFAULT_USD_RATE = 490;
+const DEFAULT_EUR_RATE = 553.75;
+const DEFAULT_USD_RATE = 469.52;
 
 export default function ParcelCustomsCalculator() {
   const { t } = useTranslation('calculators');
@@ -157,6 +163,7 @@ export default function ParcelCustomsCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="parcel-customs" />
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
@@ -633,6 +640,8 @@ export default function ParcelCustomsCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="parcel-customs" />
+      <MethodologySection steps={getMethodology('parcel-customs')} />
       <FAQSection
         items={[
           { question: t('parcel-customs.faq.q1'), answer: t('parcel-customs.faq.a1') },
@@ -649,10 +658,13 @@ export default function ParcelCustomsCalculator() {
       />
 
       {/* Embed Widget */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="parcel-customs"
         calculatorTitle={t('parcel-customs.title')}
       />
+      <LastUpdated calculatorId="parcel-customs" />
     </div>
   );
 }

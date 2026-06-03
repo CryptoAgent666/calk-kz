@@ -1,5 +1,6 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { calculatorCategories } from '../data/calculators';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import CalculatorList from './CalculatorList';
 import NotFoundPage from './NotFoundPage';
 
@@ -10,7 +11,7 @@ interface CategoryPageProps {
 
 export default function CategoryPage({ onCalculatorClick, onBackClick }: CategoryPageProps) {
   const { categoryId } = useParams<{ categoryId: string }>();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
 
   const categoryExists = categoryId && calculatorCategories.some(cat => cat.id === categoryId);
 

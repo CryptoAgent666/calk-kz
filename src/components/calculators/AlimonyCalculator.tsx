@@ -3,10 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { Heart, Calculator, Users, DollarSign, Info, AlertTriangle, Baby, TrendingUp, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function AlimonyCalculator() {
   const { t } = useTranslation('calculators');
@@ -42,7 +48,7 @@ export default function AlimonyCalculator() {
   const STANDARD_DEDUCTION = 30 * MRP;
   const NINETY_PERCENT_THRESHOLD = 25 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
-  const VOSMS_MAX_BASE = 10 * MZP;
+  const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
 
   const alimonyRates = {
     1: 0.25,
@@ -175,6 +181,8 @@ ${t('alimony.exportAlimonyCalc')}
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="alimony" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -567,6 +575,8 @@ ${t('alimony.exportAlimonyCalc')}
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="alimony" />
+      <MethodologySection steps={getMethodology('alimony')} />
       <FAQSection
         items={[
           { question: t('alimony.faq.q1'), answer: t('alimony.faq.a1') },
@@ -619,10 +629,13 @@ ${t('alimony.exportAlimonyCalc')}
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="legal" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="alimony"
         calculatorTitle="Калькулятор алиментов"
       />
+      <LastUpdated calculatorId="alimony" />
     </div>
   );
 }

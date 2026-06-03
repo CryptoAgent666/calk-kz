@@ -4,10 +4,16 @@ import { useTranslation } from 'react-i18next';
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
 import { ProgressBar } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function BMICalculator() {
   const { t } = useTranslation('calculators');
@@ -248,6 +254,8 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="bmi" />
 
       <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Input Section */}
@@ -565,7 +573,35 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
         </div>
       </div>
 
+      {/* Medical sources (Apple App Store Guideline 1.4.1 compliance) */}
+      <MedicalDisclaimer
+        sources={[
+          {
+            title: 'WHO — A healthy lifestyle: BMI classification',
+            url: 'https://www.who.int/europe/news-room/fact-sheets/item/a-healthy-lifestyle---who-recommendations',
+            description: 'World Health Organization. Официальные диапазоны ИМТ для классификации недостатка веса, нормы, избыточного веса и ожирения у взрослых.',
+          },
+          {
+            title: 'CDC — About Adult BMI',
+            url: 'https://www.cdc.gov/bmi/adult-calculator/index.html',
+            description: 'Centers for Disease Control and Prevention. Методология расчёта ИМТ и интерпретация результатов для взрослых старше 20 лет.',
+          },
+          {
+            title: 'NIH/NHLBI — Clinical Guidelines on the Identification, Evaluation, and Treatment of Overweight and Obesity in Adults',
+            url: 'https://www.nhlbi.nih.gov/health-topics/managing-overweight-obesity-in-adults',
+            description: 'National Heart, Lung, and Blood Institute. Клинические рекомендации, на которых основаны категории риска и пороги ожирения 1–3 степени.',
+          },
+          {
+            title: 'NIH NLM — Body mass index: Considerations for practitioners',
+            url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10484485/',
+            description: 'Рецензируемая статья о применимости и ограничениях ИМТ как метрики (мышцы vs жир, спортсмены, пожилые, беременные).',
+          },
+        ]}
+      />
+
       {/* FAQ */}
+      <CalculatorExamples calculatorId="bmi" />
+      <MethodologySection steps={getMethodology('bmi')} />
       <FAQSection
         items={[
           { question: t('bmi.faq.q1'), answer: t('bmi.faq.a1') },
@@ -575,7 +611,9 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
           { question: t('bmi.faq.q5'), answer: t('bmi.faq.a5') }
         ]}
         sources={[
-          { title: 'ВОЗ — Индекс массы тела', url: 'https://www.who.int/europe/news-room/fact-sheets/item/a-healthy-lifestyle---who-recommendations' },
+          { title: 'WHO — BMI Classification', url: 'https://www.who.int/europe/news-room/fact-sheets/item/a-healthy-lifestyle---who-recommendations' },
+          { title: 'CDC — About Adult BMI', url: 'https://www.cdc.gov/bmi/adult-calculator/index.html' },
+          { title: 'NIH/NHLBI — Obesity Guidelines', url: 'https://www.nhlbi.nih.gov/health-topics/managing-overweight-obesity-in-adults' },
         ]}
       />
 
@@ -624,10 +662,12 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
       )}
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="bmi"
         calculatorTitle="Калькулятор ИМТ"
       />
+      <LastUpdated calculatorId="bmi" />
     </div>
   );
 }

@@ -1,6 +1,17 @@
-import React, { Suspense } from 'react';
-import { DeferredRender } from './DeferredRender';
+import React, { Suspense, useEffect, useState } from 'react';
 import type { BarChartProps, LineChartProps, PieChartProps } from './ChartComponentsImpl';
+
+/**
+ * Хук "после монтирования". Возвращает false на сервере/первом рендере,
+ * true — после useEffect. Нужен для recharts: ResponsiveContainer измеряет
+ * ширину контейнера, которая отличается в puppeteer (718px) и в реальном
+ * браузере (1087px+). Это вызывало React hydration errors #418/423/425.
+ */
+function useMounted(): boolean {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  return mounted;
+}
 
 // Цветовая палитра
 const COLORS = [
@@ -37,36 +48,41 @@ function ChartPlaceholder({ minHeight }: ChartPlaceholderProps) {
   );
 }
 
+// КРИТИЧНО: чарты НЕ рендерятся на сервере / при первой гидратации.
+// Recharts ResponsiveContainer вычисляет ширину контейнера, которая отличается
+// в puppeteer (718px) и в реальном браузере (1087px+), что вызывает hydration
+// mismatch (~20 ошибок #418 на странице). useMounted гарантирует, что чарт
+// появляется только ПОСЛЕ гидратации — тогда измерения корректны.
 export function TaxPieChart(props: PieChartProps) {
+  const mounted = useMounted();
   const reservedHeight = (props.height ?? 300) + 80;
+  if (!mounted) return <ChartPlaceholder minHeight={reservedHeight} />;
   return (
-    <DeferredRender minHeight={reservedHeight}>
-      <Suspense fallback={<ChartPlaceholder minHeight={reservedHeight} />}>
-        <LazyTaxPieChart {...props} />
-      </Suspense>
-    </DeferredRender>
+    <Suspense fallback={<ChartPlaceholder minHeight={reservedHeight} />}>
+      <LazyTaxPieChart {...props} />
+    </Suspense>
   );
 }
 
 export function ComparisonBarChart(props: BarChartProps) {
+  const mounted = useMounted();
   const reservedHeight = (props.height ?? 300) + 80;
+  if (!mounted) return <ChartPlaceholder minHeight={reservedHeight} />;
   return (
-    <DeferredRender minHeight={reservedHeight}>
-      <Suspense fallback={<ChartPlaceholder minHeight={reservedHeight} />}>
-        <LazyComparisonBarChart {...props} />
-      </Suspense>
-    </DeferredRender>
+    <Suspense fallback={<ChartPlaceholder minHeight={reservedHeight} />}>
+      <LazyComparisonBarChart {...props} />
+    </Suspense>
   );
 }
 
 export function TrendLineChart(props: LineChartProps) {
+  const mounted = useMounted();
   const reservedHeight = (props.height ?? 300) + 80;
+  if (!mounted) return <ChartPlaceholder minHeight={reservedHeight} />;
   return (
-    <DeferredRender minHeight={reservedHeight}>
-      <Suspense fallback={<ChartPlaceholder minHeight={reservedHeight} />}>
-        <LazyTrendLineChart {...props} />
-      </Suspense>
-    </DeferredRender>
+    <Suspense fallback={<ChartPlaceholder minHeight={reservedHeight} />}>
+      <LazyTrendLineChart {...props} />
+    </Suspense>
   );
 }
 

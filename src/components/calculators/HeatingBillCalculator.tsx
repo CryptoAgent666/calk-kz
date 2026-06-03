@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Thermometer, Calculator, MapPin, Home, Info, AlertTriangle, TrendingUp, Calendar, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -44,7 +46,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'astana',
       nameKey: 'calculators:heating.cityAstana',
-      tariffPerGcal: 18450.00,
+      tariffPerGcal: 3930.00, // АО «Астана-Теплотранзит» с 01.04.2026, с НДС 16%
       averageNorm: 0.0185,
       monthlyNorms: [
         { month: 'october', norm: 0.015, descriptionKey: 'calculators:heating.octoberStart' },
@@ -59,7 +61,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'almaty',
       nameKey: 'calculators:heating.cityAlmaty',
-      tariffPerGcal: 16850.00,
+      tariffPerGcal: 8400.00, // ТОО «АлТС» с 01.04.2026, с потерями
       averageNorm: 0.0165,
       monthlyNorms: [
         { month: 'october', norm: 0.012, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -74,7 +76,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'shymkent',
       nameKey: 'calculators:heating.cityShymkent',
-      tariffPerGcal: 15200.00,
+      tariffPerGcal: 4500.00, // 2026 — оценка по региону
       averageNorm: 0.0145,
       monthlyNorms: [
         { month: 'november', norm: 0.013, descriptionKey: 'calculators:heating.novemberStart' },
@@ -87,7 +89,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'karaganda',
       nameKey: 'calculators:heating.cityKaraganda',
-      tariffPerGcal: 17300.00,
+      tariffPerGcal: 5500.00, // 2026 — оценка по региону
       averageNorm: 0.0195,
       monthlyNorms: [
         { month: 'october', norm: 0.016, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -102,7 +104,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'other',
       nameKey: 'calculators:heating.otherRegions',
-      tariffPerGcal: 16000.00,
+      tariffPerGcal: 5000.00, // 2026 — среднее по РК
       averageNorm: 0.017,
       monthlyNorms: [
         { month: 'october', norm: 0.014, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -582,10 +584,12 @@ export default function HeatingBillCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="heating-bill"
         calculatorTitle="Калькулятор отопления"
       />
+      <LastUpdated calculatorId="heating" />
     </div>
   );
 }

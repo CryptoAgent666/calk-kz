@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, TrendingUp, TrendingDown, DollarSign, PieChart, BarChart3, Info, AlertTriangle, Building, Key, Percent } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { pluralize } from '../../utils/pluralize';
 
 export default function RentOrBuyCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
   const [downPayment, setDownPayment] = useState<string>('5000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
@@ -299,6 +306,8 @@ export default function RentOrBuyCalculator() {
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="rent-vs-buy" />
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Input Section */}
@@ -669,7 +678,7 @@ export default function RentOrBuyCalculator() {
                   </div>
                   <div className="flex justify-between">
                     <span>{t('rent-vs-buy.financialSummary.additionalCosts')}:</span>
-                    <span className="font-semibold">{formatNumber((parseFloat(annualPropertyTax) || 0) + (parseFloat(annualInsurance) || 0) + (parseFloat(annualMaintenance) || 0)) * parseInt(analysisYears)}</span>
+                    <span className="font-semibold">{formatNumber(((parseFloat(annualPropertyTax) || 0) + (parseFloat(annualInsurance) || 0) + (parseFloat(annualMaintenance) || 0)) * (parseInt(analysisYears) || 0))}</span>
                   </div>
                   <div className="flex justify-between border-t border-blue-200 pt-2">
                     <span>{t('rent-vs-buy.financialSummary.propertyValueAtEnd')}:</span>
@@ -901,7 +910,7 @@ export default function RentOrBuyCalculator() {
                   data: [
                     { label: 'Стоимость недвижимости', value: `${parseFloat(propertyPrice).toLocaleString()} ₸` },
                     { label: 'Ежемесячная аренда', value: `${parseFloat(monthlyRent).toLocaleString()} ₸` },
-                    { label: 'Период анализа', value: `${analysisYears} лет` },
+                    { label: 'Период анализа', value: `${analysisYears} ${pluralize(i18n.language, parseInt(analysisYears) || 0, 'год', 'года', 'лет')}` },
                   ]
                 },
                 {
@@ -921,6 +930,8 @@ export default function RentOrBuyCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="rent-vs-buy" />
+      <MethodologySection steps={getMethodology('rent-vs-buy')} />
       <FAQSection
         items={[
           { question: t('rent-vs-buy.faq.q1'), answer: t('rent-vs-buy.faq.a1') },
@@ -936,10 +947,13 @@ export default function RentOrBuyCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="rent-or-buy"
         calculatorTitle="Арендовать или покупать"
       />
+      <LastUpdated calculatorId="rent-vs-buy" />
     </div>
   );
 }

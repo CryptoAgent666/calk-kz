@@ -3,19 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { CalculatorCategory } from '../types/calculator';
 import { ChevronRight } from 'lucide-react';
 import { getIcon } from '../utils/iconMap';
+import { pluralize } from '../utils/pluralize';
+import LocalizedLink from './LocalizedLink';
 
 interface CategoryCardProps {
   category: CalculatorCategory;
   onCategoryClick: (categoryId: string) => void;
 }
 
-export default function CategoryCard({ category, onCategoryClick }: CategoryCardProps) {
-  const { t } = useTranslation(['common', 'categories']);
+export default function CategoryCard({ category }: CategoryCardProps) {
+  const { t, i18n } = useTranslation(['common', 'categories']);
   const IconComponent = getIcon(category.icon);
 
   return (
-    <div
-      onClick={() => onCategoryClick(category.id)}
+    <LocalizedLink
+      to={`/category/${category.id}/`}
       className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md hover:border-blue-200 transition-all duration-200 cursor-pointer group transform hover:scale-[1.02] min-h-[140px] flex flex-col"
     >
       <div className="flex items-start justify-between">
@@ -31,12 +33,12 @@ export default function CategoryCard({ category, onCategoryClick }: CategoryCard
               {t(`categories:${category.id}.description`)}
             </p>
             <div className="text-xs text-gray-500">
-              {category.calculators.length} {category.calculators.length === 1 ? t('common:footer.calculators') : t('common:footer.calculatorsPlural')}
+              {category.calculators.length} {pluralize(i18n.language, category.calculators.length, t('common:footer.calculators'), t('common:footer.calculatorsFew'), t('common:footer.calculatorsPlural'))}
             </div>
           </div>
         </div>
         <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0" />
       </div>
-    </div>
+    </LocalizedLink>
   );
 }

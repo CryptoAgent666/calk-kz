@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { localizePath } from '../utils/localizedRouting';
 
 // Флаги стран как SVG компоненты
 const RussiaFlag = () => (
@@ -31,35 +32,37 @@ const KazakhstanFlag = () => (
 
 export default function LanguageSwitcher() {
   const { i18n, t } = useTranslation('common');
-  const navigate = useNavigate();
   const location = useLocation();
-  const withTrailingSlash = (path: string) => (path === '/' ? '/' : path.endsWith('/') ? path : `${path}/`);
 
   const languages = [
     { code: 'ru', name: 'RU', fullName: 'Русский', Flag: RussiaFlag },
     { code: 'kk', name: 'KK', fullName: 'Қазақша', Flag: KazakhstanFlag },
   ];
 
-  const changeLanguage = (langCode: string) => {
-    if (i18n.language === langCode) return;
-    
-    i18n.changeLanguage(langCode);
+  // Реальная ссылка на эквивалентную страницу на другом языке (/__kk/...).
+  // Это краулящийся <a href>, который связывает ru- и kk-дерево (фикс orphan pages).
+  const buildHref = (langCode: string) => {
+    const path = localizePath(location.pathname, langCode);
+    const params = new URLSearchParams(location.search);
+    params.delete('lang'); // убираем legacy-параметр
+    const qs = params.toString();
+    return qs ? `${path}?${qs}` : path;
+  };
 
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set('lang', langCode);
-
-    navigate({
-      pathname: withTrailingSlash(location.pathname),
-      search: searchParams.toString()
-    }, { replace: true });
+  const handleClick = (langCode: string) => {
+    if (i18n.language !== langCode) {
+      i18n.changeLanguage(langCode);
+    }
   };
 
   return (
     <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
       {languages.map((lang) => (
-        <button
+        <Link
           key={lang.code}
-          onClick={() => changeLanguage(lang.code)}
+          to={buildHref(lang.code)}
+          hrefLang={lang.code}
+          onClick={() => handleClick(lang.code)}
           className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md transition-all ${
             i18n.language === lang.code
               ? 'bg-white shadow-sm text-gray-900'
@@ -72,7 +75,7 @@ export default function LanguageSwitcher() {
           <span className="text-xs font-medium hidden sm:inline">
             {lang.name}
           </span>
-        </button>
+        </Link>
       ))}
     </div>
   );

@@ -1,11 +1,10 @@
 import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { calculatorCategories } from '../data/calculators';
+import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
 import { ArrowLeft } from 'lucide-react';
 import RelatedCalculators from './RelatedCalculators';
 import Breadcrumbs from './Breadcrumbs';
-import { DeferredRender } from './ui/DeferredRender';
 import NotFoundPage from './NotFoundPage';
 
 interface CalculatorViewProps {
@@ -16,7 +15,7 @@ interface CalculatorViewProps {
 
 export default function CalculatorView({ calculatorId, onBackClick, onCalculatorClick }: CalculatorViewProps) {
   const { t } = useTranslation(['common', 'categories', 'calculators']);
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
 
   // Найти калькулятор по ID
   let calculator = null;
@@ -75,12 +74,10 @@ export default function CalculatorView({ calculatorId, onBackClick, onCalculator
         <CalculatorComponent />
       </Suspense>
 
-      <DeferredRender minHeight={240}>
-        <RelatedCalculators
-          currentCalculatorId={calculatorId}
-          onCalculatorClick={onCalculatorClick}
-        />
-      </DeferredRender>
+      <RelatedCalculators
+        currentCalculatorId={calculatorId}
+        onCalculatorClick={onCalculatorClick}
+      />
     </div>
   );
 }

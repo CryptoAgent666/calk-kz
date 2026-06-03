@@ -3,10 +3,16 @@ import { Wallet, Calculator, TrendingUp, Users, Info, Building, DollarSign, Perc
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
 import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function SalaryCalculator() {
   const { t } = useTranslation('calculators');
@@ -41,13 +47,13 @@ export default function SalaryCalculator() {
   const IPN_RATE_HIGH = 0.15;
   const IPN_ANNUAL_THRESHOLD = 8500 * MRP; // 36,762,500 тенге/год
   const IPN_MONTHLY_THRESHOLD = IPN_ANNUAL_THRESHOLD / 12; // ~3,063,542 тенге/мес
-  const SO_RATE = 0.035;
+  const SO_RATE = 0.05;
   const OOSMS_RATE = 0.03;
   const OPVR_RATE = 0.035;
   const STANDARD_DEDUCTION = 30 * MRP;
   const NINETY_PERCENT_THRESHOLD = 25 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
-  const VOSMS_MAX_BASE = 10 * MZP;
+  const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
   const SO_MAX_BASE = 7 * MZP;
 
   const calculateSalary = (gross: number) => {
@@ -168,6 +174,8 @@ ${t('salary.effectiveTaxRate')}:
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="salary" />
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -414,6 +422,8 @@ ${t('salary.effectiveTaxRate')}:
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="salary" />
+      <MethodologySection steps={getMethodology('salary')} />
       <FAQSection
         items={[
           { question: t('salary.faq.q1'), answer: t('salary.faq.a1') },
@@ -469,10 +479,13 @@ ${t('salary.effectiveTaxRate')}:
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="social" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="salary"
         calculatorTitle="Калькулятор зарплаты"
       />
+      <LastUpdated calculatorId="salary" />
     </div>
   );
 }

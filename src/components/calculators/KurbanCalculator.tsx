@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Crown, Calculator, MapPin, Users, Scissors, Info, AlertTriangle, Star, Heart, Gift, Calendar, Banknote, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -61,7 +66,7 @@ export default function KurbanCalculator() {
     recommendedBudget: 0
   });
 
-  const KURBAN_2025_DATE = t('kurban-sacrifice.date2025');
+  const KURBAN_DATE = t('kurban-sacrifice.date2025');
   const CURRENT_YEAR = 2026;
 
   const regionalPrices: RegionalPrices[] = [
@@ -316,7 +321,7 @@ export default function KurbanCalculator() {
               <p>{t('kurban-sacrifice.holidayDesc1')}</p>
               <p>{t('kurban-sacrifice.holidayDesc2')}</p>
               <p className="text-sm">
-                <strong>{t('kurban-sacrifice.dateLabel', { year: CURRENT_YEAR })}</strong> {KURBAN_2025_DATE} •
+                <strong>{t('kurban-sacrifice.dateLabel', { year: CURRENT_YEAR })}</strong> {KURBAN_DATE} •
                 <strong>{t('kurban-sacrifice.periodLabel')}</strong> {t('kurban-sacrifice.periodValue')}
               </p>
             </div>
@@ -324,6 +329,7 @@ export default function KurbanCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="kurban-sacrifice" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="space-y-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -1262,6 +1268,7 @@ export default function KurbanCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="kurban" />
       <FAQSection
         items={[
           { question: t('kurban-sacrifice.faq.q1'), answer: t('kurban-sacrifice.faq.a1') },
@@ -1277,10 +1284,13 @@ export default function KurbanCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="religious" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="kurban"
         calculatorTitle="Калькулятор Курбана"
       />
+      <LastUpdated calculatorId="kurban-sacrifice" />
     </div>
   );
 }

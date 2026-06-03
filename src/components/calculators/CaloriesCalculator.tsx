@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Apple, Calculator, Target, TrendingUp, Activity, Users, Heart, Zap, Info, BarChart3 } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
+import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { pluralize } from '../../utils/pluralize';
 
 export default function CaloriesCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [age, setAge] = useState<string>('30');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [height, setHeight] = useState<string>('175');
@@ -154,6 +161,7 @@ export default function CaloriesCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="calories" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-lime-500 rounded-lg flex items-center justify-center">
@@ -581,7 +589,7 @@ export default function CaloriesCalculator() {
                 {
                   title: 'Параметры',
                   data: [
-                    { label: 'Возраст', value: `${age} лет` },
+                    { label: 'Возраст', value: `${age} ${pluralize(i18n.language, parseInt(age) || 0, 'год', 'года', 'лет')}` },
                     { label: 'Вес', value: `${weight} кг` },
                     { label: 'Рост', value: `${height} см` },
                     { label: 'Пол', value: gender === 'male' ? 'Мужской' : 'Женский' },
@@ -605,7 +613,40 @@ export default function CaloriesCalculator() {
         </div>
       )}
 
+      {/* Medical sources (Apple App Store Guideline 1.4.1 compliance) */}
+      <MedicalDisclaimer
+        sources={[
+          {
+            title: 'Mifflin MD, St Jeor ST, et al. "A new predictive equation for resting energy expenditure in healthy individuals" (1990)',
+            url: 'https://pubmed.ncbi.nlm.nih.gov/2305711/',
+            description: 'Am J Clin Nutr. 51(2):241-7. Оригинальная рецензируемая публикация формулы Миффлина-Сан Жеора, которая используется в этом калькуляторе для расчёта базального метаболизма (BMR).',
+          },
+          {
+            title: 'Academy of Nutrition and Dietetics — Position Paper on Energy Estimation',
+            url: 'https://www.jandonline.org/article/S2212-2672(14)01200-6/fulltext',
+            description: 'J Acad Nutr Diet. Рецензируемое подтверждение точности уравнения Миффлина-Сан Жеора для здоровых взрослых нормального и избыточного веса.',
+          },
+          {
+            title: 'USDA — Dietary Guidelines for Americans 2020-2025',
+            url: 'https://www.dietaryguidelines.gov/sites/default/files/2021-03/Dietary_Guidelines_for_Americans-2020-2025.pdf',
+            description: 'Министерство сельского хозяйства США. Рекомендации по суточному потреблению энергии и распределению макронутриентов (белки, жиры, углеводы).',
+          },
+          {
+            title: 'WHO — Healthy diet fact sheet',
+            url: 'https://www.who.int/news-room/fact-sheets/detail/healthy-diet',
+            description: 'World Health Organization. Глобальные рекомендации по здоровому питанию: общее потребление, ограничения сахаров, соли, насыщенных жиров.',
+          },
+          {
+            title: 'Institute of Medicine — Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids (Macronutrients)',
+            url: 'https://nap.nationalacademies.org/catalog/10490/dietary-reference-intakes-for-energy-carbohydrate-fiber-fat-fatty-acids-cholesterol-protein-and-amino-acids',
+            description: 'National Academies Press. Источник коэффициентов активности (PAL 1.2–1.9) и диапазонов AMDR для распределения макронутриентов.',
+          },
+        ]}
+      />
+
       {/* FAQ */}
+      <CalculatorExamples calculatorId="calories" />
+      <MethodologySection steps={getMethodology('calories')} />
       <FAQSection
         items={[
           { question: t('calories.faq.q1'), answer: t('calories.faq.a1') },
@@ -615,16 +656,19 @@ export default function CaloriesCalculator() {
           { question: t('calories.faq.q5'), answer: t('calories.faq.a5') }
         ]}
         sources={[
-          { title: 'WHO — Питание и здоровье', url: 'https://www.who.int/nutrition' },
-          { title: 'Рекомендации по питанию ВОЗ', url: 'https://www.who.int/' },
+          { title: 'Mifflin-St Jeor (1990) PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/2305711/' },
+          { title: 'WHO — Healthy diet', url: 'https://www.who.int/news-room/fact-sheets/detail/healthy-diet' },
+          { title: 'USDA Dietary Guidelines 2020-2025', url: 'https://www.dietaryguidelines.gov/' },
         ]}
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="calories"
         calculatorTitle="Калькулятор калорий"
       />
+      <LastUpdated calculatorId="calories" />
     </div>
   );
 }

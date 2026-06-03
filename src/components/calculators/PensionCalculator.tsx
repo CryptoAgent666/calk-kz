@@ -5,9 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function PensionCalculator() {
   const { t } = useTranslation('calculators');
@@ -55,20 +60,12 @@ export default function PensionCalculator() {
     const age = CURRENT_YEAR - year;
     const totalWorkExperience = experienceBefore + experienceAfter;
 
-    // Определение пенсионного возраста (поэтапное повышение)
-    let retirementAgeMen = 63;
-    let retirementAgeWomen = 58;
-
-    // Поэтапное повышение пенсионного возраста
-    if (year <= 1962) {
-      retirementAgeMen = 63;
-      retirementAgeWomen = 58;
-    } else if (year >= 1963) {
-      // Каждый год рождения добавляет 6 месяцев к пенсионному возрасту
-      const additionalMonths = Math.min((year - 1962) * 6, 60); // максимум 5 лет
-      retirementAgeMen = 63 + Math.floor(additionalMonths / 12);
-      retirementAgeWomen = 58 + Math.floor(additionalMonths / 12);
-    }
+    // Пенсионный возраст в РК (ст. 11 Закона "О пенсионном обеспечении"):
+    // Мужчины — 63 года (стабильно с 2018 г., повышение не планируется).
+    // Женщины — поэтапное повышение с 58 (2018) до 63 (по графику до 2027):
+    //   2024 → 61, 2025 → 61, 2026 → 61, 2027 → 63 (по последним поправкам).
+    const retirementAgeMen = 63;
+    const retirementAgeWomen = 61;
 
     // 1. Базовая государственная пенсия
     let basePension = 0;
@@ -184,6 +181,8 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
           </div>
         </div>
       </div>
+
+      <QuickAnswer calculatorId="pension" />
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
@@ -422,6 +421,8 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
       />
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="pension" />
+      <MethodologySection steps={getMethodology('pension')} />
       <FAQSection
         items={[
           { question: t('pension.faq.q1'), answer: t('pension.faq.a1') },
@@ -475,6 +476,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
         </div>
       )}
 
+      <LegalDisclaimer type="social" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -482,6 +484,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
         calculatorId="pension"
         calculatorTitle="Пенсионный калькулятор"
       />
+      <LastUpdated calculatorId="pension" />
     </div>
   );
 }

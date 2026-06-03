@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Clock, Calculator, Languages, Copy, Download, RotateCcw, Info, AlertTriangle, Target, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -1129,10 +1131,12 @@ export default function TimeConverter() {
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="time-converter"
         calculatorTitle="Конвертер времени в слова"
       />
+      <LastUpdated calculatorId="time-converter" />
     </div>
   );
 }

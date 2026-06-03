@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Share2, Copy, Download, MessageCircle, Send, Facebook, Twitter, Linkedin, Check, Mail, Instagram, Phone } from 'lucide-react';
+import { useNativeFeatures } from '../hooks/useNativeFeatures';
 
 interface SharePrintButtonsProps {
   title: string;
@@ -22,19 +23,18 @@ export default function SharePrintButtons({
   const { t } = useTranslation('common');
   const [copySuccess, setCopySuccess] = useState(false);
   const [urlCopySuccess, setUrlCopySuccess] = useState(false);
+  const native = useNativeFeatures();
 
   // Подготовка контента для шеринга
   const shareText = `${title}\n\n${description}\n\n${results}\n\n${t('buttons.calculatedOn')}`;
   const shortDescription = description.length > 100 ? description.substring(0, 97) + '...' : description;
 
-  // Функция копирования
+  // Функция копирования (native iOS clipboard + haptic feedback)
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(shareText);
+    const ok = await native.copyToClipboard(shareText);
+    if (ok) {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
-    } catch (err) {
-      console.error('Ошибка копирования:', err);
     }
   };
 
@@ -53,23 +53,28 @@ export default function SharePrintButtons({
   };
 
 
-  // Функция копирования URL
+  // Функция «поделиться»: на iOS — native Share Sheet, на вебе — копирование URL
   const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setUrlCopySuccess(true);
-      setTimeout(() => setUrlCopySuccess(false), 2000);
-    } catch (err) {
-      console.error('Ошибка копирования URL:', err);
-      // Fallback - показываем URL для ручного копирования
-      try {
-        const fallbackText = `${title}\n\n${t('buttons.linkToCalculation')}\n${url}\n\n${description}`;
-        await navigator.clipboard.writeText(fallbackText);
+    if (native.isNative) {
+      // iOS/Android: native Share Sheet
+      const shared = await native.share({
+        title,
+        text: `${title}\n${description}`,
+        url,
+        dialogTitle: t('buttons.shareLink'),
+      });
+      if (shared) {
+        await native.haptic('success');
         setUrlCopySuccess(true);
         setTimeout(() => setUrlCopySuccess(false), 2000);
-      } catch (err) {
-        console.error('Fallback также не сработал:', err);
       }
+      return;
+    }
+    // Web: копируем URL в буфер
+    const ok = await native.copyToClipboard(url);
+    if (ok) {
+      setUrlCopySuccess(true);
+      setTimeout(() => setUrlCopySuccess(false), 2000);
     }
   };
 

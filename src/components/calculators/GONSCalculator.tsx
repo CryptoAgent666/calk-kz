@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GraduationCap, Calculator, PiggyBank, TrendingUp, Baby, Users, DollarSign, Info, AlertTriangle, Target, BookOpen, Star, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -36,8 +40,8 @@ export default function GONSCalculator() {
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
-  const MIN_INITIAL_DEPOSIT = 3 * MRP_2026; // 12,738 тенге
-  const MAX_PREMIUM_BASE_YEARLY = 100 * MRP_2026; // 424,600 тенге в год
+  const MIN_INITIAL_DEPOSIT = 3 * MRP_2026; // 12 975 тенге
+  const MAX_PREMIUM_BASE_YEARLY = 100 * MRP_2026; // 432 500 тенге в год
   const REGULAR_PREMIUM_RATE = 0.05; // 5% для обычных категорий
   const PRIORITY_PREMIUM_RATE = 0.07; // 7% для льготных категорий
 
@@ -172,7 +176,7 @@ export default function GONSCalculator() {
               </p>
               <p>
                 <strong>{t('gons.minimumDeposit')}:</strong> {formatMRP(3)} •
-                <strong>{t('gons.statePremium')}:</strong> {REGULAR_PREMIUM_RATE * 100}% {t('gons.or')} {PRIORITY_PREMIUM_RATE * 100}% •
+                <strong>{t('gons.statePremium')}:</strong> {(REGULAR_PREMIUM_RATE * 100).toFixed(0)}% {t('gons.or')} {(PRIORITY_PREMIUM_RATE * 100).toFixed(0)}% •
                 <strong>{t('gons.premiumLimit')}:</strong> {formatMRP(100)} {t('gons.perYear')}
               </p>
             </div>
@@ -180,6 +184,7 @@ export default function GONSCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="gons" />
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -817,10 +822,13 @@ export default function GONSCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="social" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="gons"
         calculatorTitle="Калькулятор ГОНС"
       />
+      <LastUpdated calculatorId="gons" />
     </div>
   );
 }

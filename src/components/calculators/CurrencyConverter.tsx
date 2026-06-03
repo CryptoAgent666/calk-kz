@@ -4,8 +4,14 @@ import { DollarSign, ArrowLeftRight, RefreshCw, TrendingUp, Info, AlertTriangle,
 import { useCurrencyRates } from '../../hooks/useCurrencyRates';
 import SharePrintButtons from '../SharePrintButtons';
 import { ExportButtons } from '../ui/ExportButtons';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 interface ConversionHistory {
@@ -141,6 +147,7 @@ ${t('currency-converter.exportSource')}`;
       <div className="max-w-6xl mx-auto">
         <div className="space-y-6 animate-pulse">
           <div className="h-8 w-64 bg-gray-200 rounded" />
+          <QuickAnswer calculatorId="currency-converter" />
           <div className="grid lg:grid-cols-2 gap-8">
             <div className="h-[520px] bg-white rounded-xl border border-gray-100 shadow-sm" />
             <div className="h-[520px] bg-white rounded-xl border border-gray-100 shadow-sm" />
@@ -547,6 +554,9 @@ ${t('currency-converter.exportSource')}`;
         </div>
       </div>
 
+      <CalculatorExamples calculatorId="currency-converter" />
+      <MethodologySection steps={getMethodology('currency-converter')} />
+
       {/* FAQ */}
       <FAQSection
         items={[
@@ -586,10 +596,13 @@ ${t('currency-converter.exportSource')}`;
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="currency-converter"
         calculatorTitle="Конвертер валют"
       />
+      <LastUpdated calculatorId="currency-converter" />
     </div>
   );
 }

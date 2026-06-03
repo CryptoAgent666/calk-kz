@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Heart, Calculator, DollarSign, Coins, TrendingUp, Info, AlertTriangle, Star, Target, Building, Gift, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function ZakatCalculator() {
@@ -160,6 +166,7 @@ export default function ZakatCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="zakat" />
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
         <div className="space-y-8">
@@ -1010,6 +1017,8 @@ export default function ZakatCalculator() {
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="zakat" />
+      <MethodologySection steps={getMethodology('zakat')} />
       <FAQSection
         items={[
           { question: t('zakat.faq.q1'), answer: t('zakat.faq.a1') },
@@ -1062,10 +1071,13 @@ export default function ZakatCalculator() {
       )}
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="religious" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="zakat"
         calculatorTitle="Калькулятор закята"
       />
+      <LastUpdated calculatorId="zakat" />
     </div>
   );
 }

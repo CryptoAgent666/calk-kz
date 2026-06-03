@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Briefcase, Info, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function IPSimplifiedCalculator() {
   const { t } = useTranslation('calculators');
@@ -40,9 +46,11 @@ export default function IPSimplifiedCalculator() {
 
   // Константы на 2026 год
   const MZP = 85000; // МЗП
+  const MRP = 4325; // МРП 2026
   const OPV_MAX_BASE = 50 * MZP; // 4,250,000 тенге
   const SO_MAX_BASE = 7 * MZP; // 595,000 тенге
   const VOSMS_FIXED = 5950; // Фиксированная сумма
+  const SIMPLIFIED_LIMIT_HALFYEAR = 300_000 * MRP; // 300 000 МРП/полугодие = 600 000 МРП/год (НК РК ст. 715)
 
   const calculateTaxes = () => {
     const income = parseFloat(semiannualIncome) || 0;
@@ -119,6 +127,7 @@ export default function IPSimplifiedCalculator() {
 
   return (
     <div className="max-w-7xl mx-auto">
+      <QuickAnswer calculatorId="ip-simplified" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
@@ -476,6 +485,8 @@ export default function IPSimplifiedCalculator() {
       )}
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="ip-simplified" />
+      <MethodologySection steps={getMethodology('ip-simplified')} />
       <FAQSection
         items={[
           { question: t('ip-simplified.faq.q1'), answer: t('ip-simplified.faq.a1') },
@@ -491,10 +502,13 @@ export default function IPSimplifiedCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="ip-simplified"
         calculatorTitle="Калькулятор ИП на упрощёнке"
       />
+      <LastUpdated calculatorId="ip-simplified" />
     </div>
   );
 }

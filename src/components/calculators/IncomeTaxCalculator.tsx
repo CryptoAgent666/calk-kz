@@ -3,6 +3,11 @@ import { Calculator, TrendingUp, AlertTriangle, Info, BarChart3 } from 'lucide-r
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
 import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -41,7 +46,7 @@ export default function IncomeTaxCalculator() {
   const STANDARD_DEDUCTION = 30 * MRP;
   const NINETY_PERCENT_THRESHOLD = 25 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
-  const VOSMS_MAX_BASE = 10 * MZP;
+  const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
@@ -280,6 +285,8 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
         </div>
       </div>
 
+      <QuickAnswer calculatorId="income-tax" />
+
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('income-tax.parameters')}</h2>
@@ -505,6 +512,7 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
       />
 
       {/* Методология */}
+      <CalculatorExamples calculatorId="income-tax" />
       <MethodologySection
         title={t('income-tax.methodology.title')}
         steps={methodologySteps}
@@ -543,10 +551,13 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
       </div>
 
       {/* Встраиваемый виджет */}
+      <LegalDisclaimer type="tax" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="income-tax"
         calculatorTitle={t('income-tax.title')}
       />
+      <LastUpdated calculatorId="income-tax" />
     </div>
   );
 }

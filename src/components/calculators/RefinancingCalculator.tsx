@@ -3,7 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { RefreshCw, TrendingDown, TrendingUp, AlertCircle, CheckCircle, Calendar, Percent, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getMethodology } from '../../data/calculatorMethodology';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -176,6 +182,7 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
         </div>
       </div>
 
+      <QuickAnswer calculatorId="refinancing" />
       <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center space-x-2">
@@ -615,6 +622,8 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
       </div>
 
       {/* FAQ */}
+      <CalculatorExamples calculatorId="refinancing" />
+      <MethodologySection steps={getMethodology('refinancing')} />
       <FAQSection
         items={[
           { question: t('refinancing.faq.q1'), answer: t('refinancing.faq.a1') },
@@ -630,10 +639,13 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
       />
 
       {/* Виджет для встраивания */}
+      <LegalDisclaimer type="finance" />
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="refinancing"
         calculatorTitle="Калькулятор рефинансирования"
       />
+      <LastUpdated calculatorId="refinancing" />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import { DeferredRender } from './DeferredRender';
 import type { ScenarioComparisonProps } from './ScenarioComparisonImpl';
 
 const LazyScenarioComparison = React.lazy(() =>
@@ -20,11 +19,11 @@ function ScenarioPlaceholder() {
 
 export function ScenarioComparison(props: ScenarioComparisonProps) {
   return (
-    <DeferredRender minHeight={420} className="print:hidden">
+    <div className="print:hidden">
       <Suspense fallback={<ScenarioPlaceholder />}>
         <LazyScenarioComparison {...props} />
       </Suspense>
-    </DeferredRender>
+    </div>
   );
 }
 

@@ -4,6 +4,7 @@ import { calculatorCategories } from '../data/calculators';
 import { CalculatorCategory } from '../types/calculator';
 import { ArrowLeft } from 'lucide-react';
 import { getIcon } from '../utils/iconMap';
+import LocalizedLink from './LocalizedLink';
 
 interface CalculatorListProps {
   categoryId: string;
@@ -48,10 +49,11 @@ export default function CalculatorList({ categoryId, onCalculatorClick, onBackCl
           const CalcIconComponent = getIcon(calculator.icon);
           
           return (
-            <div
+            <LocalizedLink
               key={calculator.id}
+              to={`/calculator/${calculator.id}/`}
               onClick={() => onCalculatorClick(calculator.id)}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md hover:border-blue-200 transition-all duration-200 cursor-pointer group transform hover:scale-[1.02]"
+              className="block bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md hover:border-blue-200 transition-all duration-200 cursor-pointer group transform hover:scale-[1.02]"
             >
               <div className="flex items-start space-x-3 sm:space-x-4">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
@@ -66,7 +68,7 @@ export default function CalculatorList({ categoryId, onCalculatorClick, onBackCl
                   </p>
                 </div>
               </div>
-            </div>
+            </LocalizedLink>
           );
         })}
       </div>

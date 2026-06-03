@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FileSignature, Calculator, Users, Building, MapPin, Info, AlertTriangle, DollarSign, BarChart3 } from 'lucide-react';
+import { FileSignature, Calculator, Users, Building, MapPin, Info, AlertTriangle, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
+import { LegalDisclaimer } from '../ui/LegalDisclaimer';
+import { LastUpdated } from '../ui/LastUpdated';
+import { QuickAnswer } from '../ui/QuickAnswer';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -101,11 +104,17 @@ export default function NotaryServicesCalculator() {
     const service = notaryServices[serviceType as keyof typeof notaryServices];
     if (!service) return;
 
-    let stateFeeRate = service.stateFee[partyTypes];
-    let technicalFeeRate = service.technicalFee[partyTypes];
+    // Map UI party types to data-keys used in rate tables
+    const partyKey: 'individuals' | 'mixed' | 'legal' =
+      partyTypes === 'both-individuals' ? 'individuals'
+      : partyTypes === 'both-legal' ? 'legal'
+      : 'mixed';
 
-    if (areRelated && service.relatedDiscount[partyTypes] > 0) {
-      const discount = service.relatedDiscount[partyTypes] / 100;
+    let stateFeeRate = service.stateFee[partyKey];
+    let technicalFeeRate = service.technicalFee[partyKey];
+
+    if (areRelated && service.relatedDiscount[partyKey] > 0) {
+      const discount = service.relatedDiscount[partyKey] / 100;
       stateFeeRate *= (1 - discount);
       technicalFeeRate *= (1 - discount);
     }
@@ -123,7 +132,7 @@ export default function NotaryServicesCalculator() {
     if (service.percentageFee && propertyValue) {
       const value = parseFloat(propertyValue) || 0;
       if (value > 0 && service.percentageRate) {
-        percentageRate = service.percentageRate[partyTypes];
+        percentageRate = service.percentageRate[partyKey];
         const additionalFee = value * (percentageRate / 100);
         stateFee += additionalFee;
         percentageFee = true;
@@ -185,6 +194,7 @@ export default function NotaryServicesCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="notary" />
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('notary.serviceParameters')}</h2>
@@ -368,7 +378,6 @@ export default function NotaryServicesCalculator() {
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold text-gray-900">{t('notary.totalCost')}</span>
                 <div className="flex items-center space-x-2">
-                  <DollarSign className="w-5 h-5 text-emerald-600" />
                   <span className="text-xl font-bold text-emerald-700">{formatNumber(results.totalCost)}</span>
                 </div>
               </div>
@@ -496,8 +505,8 @@ export default function NotaryServicesCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Нотариальный сбор', value: `${results.notaryFee.toLocaleString()} ₸` },
                     { label: 'Госпошлина', value: `${results.stateFee.toLocaleString()} ₸` },
+                    { label: 'Технические услуги', value: `${results.technicalServiceFee.toLocaleString()} ₸` },
                     { label: 'Итого', value: `${results.totalCost.toLocaleString()} ₸` },
                   ]
                 }
@@ -524,6 +533,7 @@ export default function NotaryServicesCalculator() {
         ]}
       />
 
+      <LegalDisclaimer type="legal" />
       <ExpertBlock />
 
       {/* Виджет для встраивания */}
@@ -531,6 +541,7 @@ export default function NotaryServicesCalculator() {
         calculatorId="notary"
         calculatorTitle="Калькулятор нотариальных услуг"
       />
+      <LastUpdated calculatorId="notary" />
     </div>
   );
 }

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Clock, Calculator, Languages, Copy, Download, RotateCcw, Info, AlertTriangle, Target, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
+import { ExpertBlock } from '../ui/ExpertBlock';
+import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 interface TimeConversionResult {
   words: string;
@@ -434,6 +437,7 @@ export default function TimeToWordsCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="time-to-words" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
@@ -1122,10 +1126,12 @@ export default function TimeToWordsCalculator() {
       />
 
       {/* Виджет для встраивания */}
+      <ExpertBlock />
       <EmbedWidget
         calculatorId="time-to-words"
         calculatorTitle="Время прописью"
       />
+      <LastUpdated calculatorId="time-to-words" />
     </div>
   );
 }
