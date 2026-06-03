@@ -82,7 +82,7 @@ export default function CurrencyConverter() {
 
   const addToHistory = (inputAmount: number, convertedAmount: number, rate: number) => {
     const newEntry: ConversionHistory = {
-      id: Date.now().toString(),
+      id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
       fromCurrency,
       toCurrency,
       amount: inputAmount,

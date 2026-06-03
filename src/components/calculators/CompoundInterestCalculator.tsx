@@ -90,10 +90,10 @@ export default function CompoundInterestCalculator() {
 
       yearlyData.push({
         year,
-        personalContributions: totalContributions,
-        interestEarned: currentAmount - totalContributions,
-        totalAmount: currentAmount,
-        yearlyInterest
+        personalContributions: Math.round(totalContributions),
+        interestEarned: Math.round(currentAmount - totalContributions),
+        totalAmount: Math.round(currentAmount),
+        yearlyInterest: Math.round(yearlyInterest)
       });
     }
 

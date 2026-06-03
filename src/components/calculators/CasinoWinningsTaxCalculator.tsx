@@ -153,7 +153,7 @@ export default function CasinoWinningsTaxCalculator() {
 
   const addWinningEntry = () => {
     const newEntry: WinningEntry = {
-      id: Date.now().toString(),
+      id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
       amount: '',
       stake: '',
       date: ''

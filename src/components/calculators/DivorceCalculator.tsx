@@ -40,11 +40,11 @@ export default function DivorceCalculator() {
 
   const results = useMemo(() => {
     // Госпошлина за развод в ЗАГСе — 2 МРП = 8 650 ₸ (взаимное согласие)
-    // Госпошлина в суде — 3 МРП = 12 975 ₸
+    // Госпошлина за иск о расторжении брака в суде — 0.3 МРП = 1 297,5 ₸ (ст. 610 НК РК)
     // Госпошлина за раздел имущества — 1% от стоимости, мин 0.5 МРП
     // Нотариус (по желанию) — 5-10 МРП
     // Юрист (по желанию) — от 100 000 ₸
-    const divorceFee = mode === 'zags' ? 2 * MRP_2026 : 3 * MRP_2026;
+    const divorceFee = mode === 'zags' ? 2 * MRP_2026 : 0.3 * MRP_2026;
     const propValue = parseFloat(propertyValue) || 0;
     const propertyFee = hasPropertyDispute ? Math.max(propValue * 0.01, 0.5 * MRP_2026) : 0;
     const alimonyPetitionFee = needAlimony ? MRP_2026 : 0; // 1 МРП
@@ -135,7 +135,7 @@ export default function DivorceCalculator() {
 
           <div className="space-y-2 text-sm">
             <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-              <span>{t('divorce.divorceFee')} ({mode === 'zags' ? '2 МРП' : '3 МРП'})</span>
+              <span>{t('divorce.divorceFee')} ({mode === 'zags' ? '2 МРП' : '0,3 МРП'})</span>
               <span className="font-semibold">{formatNumber(results.divorceFee)}</span>
             </div>
             {results.propertyFee > 0 && (

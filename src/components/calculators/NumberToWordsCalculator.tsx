@@ -420,7 +420,7 @@ export default function NumberToWordsCalculator() {
 
   const addToHistory = (number: string, result: string) => {
     const newEntry: ConversionHistory = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       number,
       language,
       format,

@@ -241,7 +241,7 @@ export default function DateCalculator() {
       };
 
       const newEntry: CalculationHistory = {
-        id: Date.now().toString(),
+        id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
         calculation,
         result: results.resultDateFormatted,
         timestamp: new Date()

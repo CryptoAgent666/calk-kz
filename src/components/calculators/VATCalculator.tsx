@@ -193,7 +193,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
   const addToHistory = () => {
     if (results.description && (calculationType === 'add' || calculationType === 'extract')) {
       const newEntry: CalculationHistory = {
-        id: Date.now().toString(),
+        id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
         type: calculationType === 'add' ? t('vat.types.add.name') : t('vat.types.extract.name'),
         amount: parseFloat(amount) || 0,
         vatRate: parseFloat(vatRate) || 0,
@@ -213,7 +213,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
       const totalWithVat = itemAmount + vatAmount;
 
       const newItem: VATItem = {
-        id: Date.now().toString(),
+        id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
         description: newItemDescription,
         amount: itemAmount,
         vatRate: itemVatRate,

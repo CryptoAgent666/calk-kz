@@ -33,7 +33,7 @@ export default function CourtFeeCalculator() {
   const MAX_FEE_LEGAL = 20000 * MRP_2026;
 
   const nonPropertyFees = {
-    divorce: { individual: 4, legal: 0 },
+    divorce: { individual: 0.3, legal: 0 },
     alimony: { individual: 1, legal: 0 },
     labor: { individual: 0.5, legal: 2 },
     administrative: { individual: 2, legal: 5 },

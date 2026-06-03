@@ -340,7 +340,7 @@ export default function TimeToWordsCalculator() {
   const addToHistory = (result: TimeConversionResult) => {
     if (result.words && inputTime) {
       const newEntry: ConversionHistory = {
-        id: Date.now().toString(),
+        id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
         time: inputTime,
         language,
         format: timeFormat,
