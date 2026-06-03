@@ -56,12 +56,25 @@ export default function PropertyTaxCalculator() {
     { id: 'other', nameKey: 'calculators:property-tax.city_other', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 }
   ];
 
+  // Прогрессивная (маржинальная) шкала налога на имущество физлиц — ст. 531 НК РК.
+  // Налог = base (фиксированная сумма в ₸) + rate% с суммы, превышающей min.
   const taxRates = [
-    { min: 0, max: 1000000, rate: 0.05 },
-    { min: 1000001, max: 2000000, rate: 0.1 },
-    { min: 2000001, max: 5000000, rate: 0.2 },
-    { min: 5000001, max: 10000000, rate: 0.3 },
-    { min: 10000001, max: Infinity, rate: 0.5 }
+    { min: 0,         max: 2000000,    base: 0,       rate: 0.05 },
+    { min: 2000000,   max: 4000000,    base: 1000,    rate: 0.08 },
+    { min: 4000000,   max: 6000000,    base: 2600,    rate: 0.1 },
+    { min: 6000000,   max: 8000000,    base: 4600,    rate: 0.15 },
+    { min: 8000000,   max: 10000000,   base: 7600,    rate: 0.2 },
+    { min: 10000000,  max: 12000000,   base: 11600,   rate: 0.25 },
+    { min: 12000000,  max: 14000000,   base: 16600,   rate: 0.3 },
+    { min: 14000000,  max: 16000000,   base: 22600,   rate: 0.35 },
+    { min: 16000000,  max: 18000000,   base: 29600,   rate: 0.4 },
+    { min: 18000000,  max: 20000000,   base: 37600,   rate: 0.45 },
+    { min: 20000000,  max: 75000000,   base: 46600,   rate: 0.5 },
+    { min: 75000000,  max: 100000000,  base: 321600,  rate: 0.6 },
+    { min: 100000000, max: 150000000,  base: 471600,  rate: 0.65 },
+    { min: 150000000, max: 350000000,  base: 796600,  rate: 0.75 },
+    { min: 350000000, max: 450000000,  base: 2296600, rate: 1.0 },
+    { min: 450000000, max: Infinity,   base: 3296600, rate: 1.5 }
   ];
 
   const calculatePropertyTax = () => {
@@ -96,10 +109,11 @@ export default function PropertyTaxCalculator() {
 
     const taxBase = baseCostPerSqm * propertyArea * (1 - wearPercent / 100) * zoneCoeff * mrpCoeff;
 
-    const applicableRate = taxRates.find(rate => taxBase >= rate.min && taxBase <= rate.max);
-    const taxRate = applicableRate ? applicableRate.rate : 0.5;
+    const applicableRate = taxRates.find(rate => taxBase >= rate.min && taxBase <= rate.max) || taxRates[taxRates.length - 1];
+    const taxRate = applicableRate.rate;
 
-    let taxAmount = taxBase * (taxRate / 100);
+    // Маржинальный расчёт: фиксированная сумма + процент с превышения нижней границы ступени.
+    let taxAmount = applicableRate.base + (taxBase - applicableRate.min) * (taxRate / 100);
 
     // В НК РК освобождение от налога на имущество физлиц НЕ зависит от площади жилья.
     // Льготы предоставляются отдельным категориям граждан (пенсионеры по возрасту,
@@ -414,11 +428,12 @@ export default function PropertyTaxCalculator() {
               {taxRates.map((rate, index) => (
                 <tr key={index} className="border-b border-gray-100">
                   <td className="py-3 px-4 text-sm text-gray-900">
-                    {rate.min === 0 ? t('property-tax.upTo') : t('property-tax.over')} {formatNumber(rate.min)}
-                    {rate.max !== Infinity ? ` ${t('property-tax.upTo')} ${formatNumber(rate.max)}` : ''}
+                    {rate.min === 0
+                      ? `${t('property-tax.upTo')} ${formatNumber(rate.max)}`
+                      : `${t('property-tax.over')} ${formatNumber(rate.min)}${rate.max !== Infinity ? ` ${t('property-tax.upTo')} ${formatNumber(rate.max)}` : ''}`}
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-900 text-right font-semibold">
-                    {rate.rate}%
+                    {rate.base > 0 ? `${formatNumber(rate.base)} + ` : ''}{rate.rate}%
                   </td>
                 </tr>
               ))}
