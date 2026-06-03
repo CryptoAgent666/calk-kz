@@ -14,7 +14,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 const MRP = 4_325;
 const MZP = 85_000;
 
-// Единый платёж (упрощёнка) — 4% от дохода (с 2026); базовая ставка 4% (2% ИПН + 2% СН), акимат вправе снизить до 2%
+// Упрощёнка — 4% от дохода (ИПН/КПН) с 2026; социальный налог отменён, акимат вправе изменить ставку ±50% (2–6%)
 // ОУР — ИПН 10%/15% от прибыли; все соцплатежи отдельно
 // ЕСП — фикс 1 МРП/мес (город) или 0.5 МРП/мес (село)
 // Розничный налог — 4% от дохода (отдельные виды розницы)
@@ -57,7 +57,7 @@ export default function TaxRegimeComparisonCalculator() {
     // 1. Упрощёнка (СНР на основе упрощённой декларации)
     const simplifiedLimit = 300_000 * MRP; // 600 000 МРП/год → 300 000 МРП/полугодие = ~1.298 млрд ₸ (НК РК 2026)
     const simplifiedAvailable = semiAnnualRevenue <= simplifiedLimit;
-    const simplifiedTax = Math.round(revenue * 0.04); // 4% от дохода (с 01.01.2026: 2% ИПН + 2% СН)
+    const simplifiedTax = Math.round(revenue * 0.04); // 4% от дохода (ИПН, с 01.01.2026; соцналог отменён)
     const simplifiedSocial = baseSocialMonthly;
     const simplifiedTotal = simplifiedTax + simplifiedSocial;
 

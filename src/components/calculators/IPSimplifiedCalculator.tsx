@@ -67,10 +67,11 @@ export default function IPSimplifiedCalculator() {
       return;
     }
 
-    // 1. Расчет налогов с дохода (раз в полгода)
+    // 1. Расчет налога с дохода (раз в полгода).
+    // С 2026 ставка 4% от дохода — это ИПН; социальный налог на упрощёнке отменён.
     const totalTax = income * 0.04;
-    const ipnTax = totalTax / 2;
-    const socialTax = Math.max(0, ipnTax - socialContributions);
+    const ipnTax = totalTax;
+    const socialTax = 0;
 
     // 2. Расчет социальных платежей "за себя" (ежемесячно)
     const monthlyDeclaredIncome = Math.min(declaredIncome, OPV_MAX_BASE); // Ограничение для ОПВ/ОПВР

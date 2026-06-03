@@ -378,7 +378,7 @@ export default function SocialAssistanceCalculator() {
                 <h4 className="font-semibold text-gray-900 mb-2">{t('social-assistance.referenceInfo')}</h4>
                 <div className="text-sm text-gray-700 space-y-1">
                   <div>{t('social-assistance.totalQuarterlyIncome')}: <strong>{formatNumber(parseFloat(quarterlyIncome) || 0)}</strong></div>
-                  <div>{t('social-assistance.averageMonthlyIncome')}: <strong>{formatNumber((parseFloat(quarterlyIncome) || 0) / 3)}</strong></div>
+                  <div>{t('social-assistance.averageMonthlyIncome')}: <strong>{formatNumber(Math.round((parseFloat(quarterlyIncome) || 0) / 3))}</strong></div>
                   <div>{t('social-assistance.familyMembersCount')}: <strong>{familyMembers}</strong></div>
                   {parseInt(childrenAge1to6) > 0 && (
                     <div>{t('social-assistance.children1to6Count')}: <strong>{childrenAge1to6}</strong></div>
