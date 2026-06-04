@@ -44,6 +44,12 @@ export default function CalculatorList({ categoryId, onCalculatorClick, onBackCl
         </div>
       </div>
 
+      {t(`categories:${category.id}.intro`, { defaultValue: '' }) ? (
+        <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 sm:mb-8 max-w-3xl">
+          {t(`categories:${category.id}.intro`, { defaultValue: '' })}
+        </p>
+      ) : null}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {category.calculators.map((calculator) => {
           const CalcIconComponent = getIcon(calculator.icon);
