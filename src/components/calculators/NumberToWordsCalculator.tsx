@@ -535,7 +535,7 @@ export default function NumberToWordsCalculator() {
                   {languages.map((lang) => (
                     <button
                       key={lang.id}
-                      onClick={() => setLanguage(lang.id as any)}
+                      onClick={() => setLanguage(lang.id as 'ru' | 'kz' | 'en')}
                       className={`p-3 rounded-lg border-2 transition-all ${
                         language === lang.id
                           ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -592,7 +592,7 @@ export default function NumberToWordsCalculator() {
                     {currencyOptions.map((curr) => (
                       <button
                         key={curr.id}
-                        onClick={() => setCurrency(curr.id as any)}
+                        onClick={() => setCurrency(curr.id as 'kzt' | 'usd' | 'rub' | 'eur')}
                         className={`w-full p-3 rounded-lg border-2 transition-all text-left ${
                           currency === curr.id
                             ? 'border-green-500 bg-green-50 text-green-700'
@@ -761,12 +761,12 @@ export default function NumberToWordsCalculator() {
 
                         try {
                           if (format === 'currency') {
-                            otherLangResult = convertCurrency(num, currency, lang.id as any);
+                            otherLangResult = convertCurrency(num, currency, lang.id as 'ru' | 'kz' | 'en');
                           } else {
                             const [integerPart, fractionPart] = inputNumber.split(/[.,]/);
                             const integerNum = parseInt(integerPart) || 0;
-                            const integerWords = numberToWords(integerNum, lang.id as any);
-                            const fractionWords = fractionPart ? convertFraction(fractionPart, lang.id as any) : '';
+                            const integerWords = numberToWords(integerNum, lang.id as 'ru' | 'kz' | 'en');
+                            const fractionWords = fractionPart ? convertFraction(fractionPart, lang.id as 'ru' | 'kz' | 'en') : '';
 
                             if (fractionWords) {
                               const wholeWord = lang.id === 'ru' ? (integerNum === 1 ? 'целая' : 'целых') :

@@ -493,7 +493,7 @@ export default function TimeToWordsCalculator() {
                   {languages.map((lang) => (
                     <button
                       key={lang.id}
-                      onClick={() => setLanguage(lang.id as any)}
+                      onClick={() => setLanguage(lang.id as 'ru' | 'kz' | 'en')}
                       className={`p-3 rounded-lg border-2 transition-all ${
                         language === lang.id
                           ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -516,7 +516,7 @@ export default function TimeToWordsCalculator() {
                   {timeFormats.map((format) => (
                     <button
                       key={format.id}
-                      onClick={() => setTimeFormat(format.id as any)}
+                      onClick={() => setTimeFormat(format.id as '24h' | '12h')}
                       className={`p-3 rounded-lg border-2 transition-all text-left ${
                         timeFormat === format.id
                           ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -543,7 +543,7 @@ export default function TimeToWordsCalculator() {
                         name="style"
                         value={styleOption.id}
                         checked={style === styleOption.id}
-                        onChange={(e) => setStyle(e.target.value as any)}
+                        onChange={(e) => setStyle(e.target.value as 'formal' | 'colloquial' | 'both')}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                       />
                       <div className="ml-3">
@@ -707,7 +707,7 @@ export default function TimeToWordsCalculator() {
                         try {
                           if (lang.id === 'ru') {
                             const hoursWord = dict.hours[hours];
-                            const minutesWord = convertMinutesToWords(minutes, lang.id as any);
+                            const minutesWord = convertMinutesToWords(minutes, lang.id as 'ru' | 'kz' | 'en');
                             const hoursForm = getWordFormRu(hours, dict.forms.hour);
                             const minutesForm = getWordFormRu(minutes, dict.forms.minute);
 
@@ -717,7 +717,7 @@ export default function TimeToWordsCalculator() {
                             }
                           } else if (lang.id === 'kz') {
                             const hoursWord = dict.hours[hours];
-                            const minutesWord = convertMinutesToWords(minutes, lang.id as any);
+                            const minutesWord = convertMinutesToWords(minutes, lang.id as 'ru' | 'kz' | 'en');
 
                             otherLangResult = `${hoursWord} ${dict.forms.hour}`;
                             if (minutes > 0) {
@@ -725,7 +725,7 @@ export default function TimeToWordsCalculator() {
                             }
                           } else {
                             const hoursWord = dict.hours[hours];
-                            const minutesWord = convertMinutesToWords(minutes, lang.id as any);
+                            const minutesWord = convertMinutesToWords(minutes, lang.id as 'ru' | 'kz' | 'en');
                             const hoursForm = getWordFormEn(hours, dict.forms.hour);
                             const minutesForm = getWordFormEn(minutes, dict.forms.minute);
 

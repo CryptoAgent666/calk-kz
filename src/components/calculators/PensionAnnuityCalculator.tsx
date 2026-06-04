@@ -89,9 +89,7 @@ export default function PensionAnnuityCalculator() {
     const discountRate = 0.03 / 12; // Месячная ставка
 
     // Формула приведенной стоимости аннуитета
-    const annuityFactor = (1 - Math.pow(1 + discountRate, -monthsRemaining)) / discountRate;
-
-    return annuityFactor;
+    return (1 - Math.pow(1 + discountRate, -monthsRemaining)) / discountRate;
   };
 
   // Страховые компании-участники
