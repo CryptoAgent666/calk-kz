@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { FileDown, FileSpreadsheet, Printer, Check, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+// Heavy export libs (jsPDF/xlsx/file-saver, ~240 KB gz) are loaded on demand
+// inside the export handlers so they don't bloat the initial calculator bundle.
 
 
 interface ExportData {
@@ -38,8 +36,12 @@ export function ExportButtons({
 
   const exportToPDF = async () => {
     setExportingPDF(true);
-    
+
     try {
+      const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+        import('jspdf'),
+        import('jspdf-autotable'),
+      ]);
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
       
@@ -117,8 +119,12 @@ export function ExportButtons({
 
   const exportToExcel = async () => {
     setExportingExcel(true);
-    
+
     try {
+      const [XLSX, { saveAs }] = await Promise.all([
+        import('xlsx'),
+        import('file-saver'),
+      ]);
       const wb = XLSX.utils.book_new();
       
       // Подготовка данных для Excel

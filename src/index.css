@@ -71,3 +71,20 @@
     font-display: swap;
   }
 }
+
+/* A11y / mobile: довести интерактивные элементы в шапке/подвале/мобильном меню
+   до тач-таргета ≥44px (WCAG 2.5.5). Только coarse-указатели — десктоп не трогаем,
+   inline-ссылки в тексте не затрагиваются (нет риска ломки переносов). */
+@media (pointer: coarse) {
+  header a,
+  header button,
+  footer a,
+  footer button,
+  [role="dialog"] a,
+  [role="dialog"] button,
+  nav[aria-label] a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

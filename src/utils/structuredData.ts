@@ -68,7 +68,27 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       'https://play.google.com/store/apps/details?id=calk.kz',
       'https://zanimaem.kz',
       'https://profinance.kz'
+    ],
+    areaServed: { '@type': 'Country', name: 'Kazakhstan' },
+    knowsAbout: [
+      'Taxation in Kazakhstan',
+      'Personal finance',
+      'Loans and mortgages',
+      'Salary and payroll calculation',
+      'Construction estimates'
     ]
+  };
+
+  // Base WebSite node — inlined into every page graph so cross-page `@id`
+  // references (#website) always resolve (Google evaluates each page in isolation).
+  const websiteEntity = {
+    '@type': 'WebSite',
+    '@id': `${baseUrl}/#website`,
+    name: siteName,
+    url: baseUrlWithSlash,
+    description: siteDescription,
+    inLanguage: language,
+    publisher: { '@id': `${baseUrl}/#organization` }
   };
 
   const personEntity = {
@@ -100,15 +120,11 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       ? `${baseUrl}/__kk/?q={search_term_string}`
       : `${baseUrl}/?q={search_term_string}`;
 
-    // Homepage: WebSite + Organization + Person + ItemList
-    const websiteEntity = {
-      '@type': 'WebSite',
-      '@id': `${baseUrl}/#website`,
-      name: siteName,
+    // Homepage: WebSite (+ SearchAction) + Organization + Person + ItemList
+    const homeWebsiteEntity = {
+      ...websiteEntity,
       url: websiteUrl,
       description: options.description || siteDescription,
-      inLanguage: language,
-      publisher: { '@id': `${baseUrl}/#organization` },
       potentialAction: {
         '@type': 'SearchAction',
         target: {
@@ -143,7 +159,7 @@ export function generateStructuredData(options: StructuredDataOptions): string {
 
     return JSON.stringify({
       '@context': 'https://schema.org',
-      '@graph': [websiteEntity, organizationEntity, personEntity, itemListEntity]
+      '@graph': [homeWebsiteEntity, organizationEntity, personEntity, itemListEntity]
     });
   }
 
@@ -183,7 +199,14 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       defaultValue: category.title
     });
 
-    const calculatorTranslationEntriesRaw = i18n.t(calculator.id, {
+    // A few calculators store their on-page content (incl. FAQ) under an i18n
+    // key that differs from the calculator id; map them so FAQPage schema is
+    // generated from the same Q&A the page renders.
+    const CONTENT_KEY_ALIASES: Record<string, string> = {
+      'tax-regime-comparison': 'tax-regime'
+    };
+    const contentKey = CONTENT_KEY_ALIASES[calculator.id] || calculator.id;
+    const calculatorTranslationEntriesRaw = i18n.t(contentKey, {
       ns: 'calculators',
       lng: currentLang,
       returnObjects: true,
@@ -278,7 +301,6 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       applicationCategory: 'FinanceApplication',
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript. Requires HTML5.',
-      softwareVersion: '1.0',
       datePublished: '2026-01-01',
       dateModified: LAST_CONTENT_UPDATE,
       inLanguage: language,
@@ -330,12 +352,15 @@ export function generateStructuredData(options: StructuredDataOptions): string {
         {
           '@type': 'ListItem',
           position: 3,
-          name: calculatorTitle
+          name: calculatorTitle,
+          item: calculatorUrl
         }
       ]
     };
 
-    const graphItems: any[] = [webPage, breadcrumbList];
+    // Inline the referenced entity nodes so #website / #organization /
+    // #konstantin-yakovlev (author E-E-A-T) resolve on the calculator page itself.
+    const graphItems: any[] = [webPage, breadcrumbList, websiteEntity, organizationEntity, personEntity];
     if (faqItems.length > 0) {
       graphItems.push({
         '@type': 'FAQPage',
@@ -372,19 +397,26 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       defaultValue: category.description
     });
 
-    // hasPart: list child calculators
-    const hasPart = category.calculators.map(calc => {
-      const calcTitle = i18n.t(`${calc.id}.title`, {
-        ns: 'calculators',
-        lng: currentLang,
-        defaultValue: calc.title
-      });
-      return {
-        '@type': 'WebApplication',
-        name: calcTitle,
-        url: buildUrl(`/calculator/${calc.id}`)
-      };
-    });
+    // Positioned ItemList of child calculators (rich-result-eligible + clearer
+    // for AI parsing than a bare hasPart list).
+    const itemListEntity = {
+      '@type': 'ItemList',
+      name: categoryTitle,
+      numberOfItems: category.calculators.length,
+      itemListElement: category.calculators.map((calc, index) => {
+        const calcTitle = i18n.t(`${calc.id}.title`, {
+          ns: 'calculators',
+          lng: currentLang,
+          defaultValue: calc.title
+        });
+        return {
+          '@type': 'ListItem',
+          position: index + 1,
+          name: calcTitle,
+          url: buildUrl(`/calculator/${calc.id}`)
+        };
+      })
+    };
 
     const collectionPage = {
       '@type': 'CollectionPage',
@@ -394,7 +426,7 @@ export function generateStructuredData(options: StructuredDataOptions): string {
       inLanguage: language,
       dateModified: LAST_CONTENT_UPDATE,
       numberOfItems: category.calculators.length,
-      hasPart,
+      mainEntity: itemListEntity,
       isPartOf: { '@id': `${baseUrl}/#website` },
       about: {
         '@type': 'Thing',
@@ -417,14 +449,15 @@ export function generateStructuredData(options: StructuredDataOptions): string {
         {
           '@type': 'ListItem',
           position: 2,
-          name: categoryTitle
+          name: categoryTitle,
+          item: categoryUrl
         }
       ]
     };
 
     return JSON.stringify({
       '@context': 'https://schema.org',
-      '@graph': [collectionPage, breadcrumbList]
+      '@graph': [collectionPage, breadcrumbList, websiteEntity, organizationEntity, personEntity]
     });
   }
 
