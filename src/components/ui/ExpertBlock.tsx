@@ -40,14 +40,25 @@ export function ExpertBlock() {
   return (
     <div className="mt-8 bg-gradient-to-r from-slate-50 to-gray-50 rounded-xl shadow-sm border border-slate-200 p-6">
       <div className="flex items-start space-x-4">
-        <img
-          src="/img/experts/arnur-erkenbaev.jpg"
-          alt={name}
-          className="w-12 h-12 rounded-full object-cover flex-shrink-0"
-          width={48}
-          height={48}
-          loading="lazy"
-        />
+        <picture>
+          <source
+            type="image/avif"
+            srcSet="/img/experts/arnur-erkenbaev-96.avif 2x, /img/experts/arnur-erkenbaev-144.avif 3x"
+          />
+          <source
+            type="image/webp"
+            srcSet="/img/experts/arnur-erkenbaev-96.webp 2x, /img/experts/arnur-erkenbaev-144.webp 3x"
+          />
+          <img
+            src="/img/experts/arnur-erkenbaev-96.jpg"
+            alt={name}
+            className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+            width={48}
+            height={48}
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
         <div>
           <h3 className="text-lg font-semibold text-slate-900 mb-2">{title}</h3>
           <p className="text-slate-700 text-sm leading-relaxed">

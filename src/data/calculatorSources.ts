@@ -21,9 +21,11 @@ export interface CalculatorSource {
 }
 
 // ============ Часто используемые источники (экспорт для переиспользования) ============
-const NK_RK = { title: 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=1013016' };
-const ADILET_NK = { title: 'НК РК (adilet.zan.kz)', url: 'https://adilet.zan.kz/rus/docs/K2500000214' };
-const TK_RK = { title: 'Трудовой кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=38910832' };
+// Первичный официальный источник — adilet.zan.kz (государственная правовая база),
+// новый Налоговый кодекс РК 2026 (K2500000214). E-E-A-T: primary, не агрегатор.
+const NK_RK = { title: 'Налоговый кодекс РК (adilet.zan.kz)', url: 'https://adilet.zan.kz/rus/docs/K2500000214' };
+const ADILET_NK = NK_RK;
+const TK_RK = { title: 'Трудовой кодекс РК (adilet.zan.kz)', url: 'https://adilet.zan.kz/rus/docs/K1500000414' };
 const GK_RK = { title: 'Гражданский кодекс РК', url: 'https://adilet.zan.kz/rus/docs/K940001000_' };
 const FAMILY_CODE = { title: 'Кодекс о браке и семье РК', url: 'https://adilet.zan.kz/rus/docs/K1100000518' };
 const EGOV = { title: 'eGov.kz', url: 'https://egov.kz/' };

@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate:llms": "node scripts/generate-llms.mjs",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "build": "vite build",
-    "build:prerender": "vite build && (npx vite preview --port 4173 &) && (until curl -sf http://localhost:4173/ > /dev/null 2>&1; do sleep 1; done) && node scripts/prerender.mjs && pkill -f 'vite preview'",
+    "build:prerender": "node scripts/generate-llms.mjs && vite build && (npx vite preview --port 4173 &) && (until curl -sf http://localhost:4173/ > /dev/null 2>&1; do sleep 1; done) && node scripts/prerender.mjs && pkill -f 'vite preview'",
     "lint": "eslint .",
     "preview": "vite preview"
   },
