@@ -8,25 +8,31 @@ import { Capacitor } from '@capacitor/core';
  *   нативный плагин даже не загружается).
  * - По политике Google в приложениях используется AdMob, не AdSense.
  *
- * ⚠️ Сейчас стоят ОФИЦИАЛЬНЫЕ ТЕСТОВЫЕ ad unit ID Google (безопасно для ревью).
- *    После создания ad unit'ов в AdMob замени значения в AD_IDS на реальные
- *    (ca-app-pub-4859241862365215/…) и поставь IS_TESTING = false.
- *    App ID задаётся в нативных конфигах (iOS Info.plist GADApplicationIdentifier,
- *    Android AndroidManifest APPLICATION_ID) — там тоже сейчас тестовые, замени.
+ * Статус ID: Android + iOS — БОЕВЫЕ (Calk.kz, pub-4859241862365215).
+ *  App ID: Android → AndroidManifest APPLICATION_ID, iOS → Info.plist GADApplicationIdentifier.
+ *
+ * ⚠️ IS_TESTING оставлен true: при реальных ID НЕЛЬЗЯ тапать собственную рекламу
+ *    на своём устройстве (бан аккаунта AdMob). Перед финальной заливкой в стор
+ *    поставь IS_TESTING = false (или зарегистрируй своё устройство как test device).
  */
 
 const AD_IDS = {
   ios: {
-    banner: 'ca-app-pub-3940256099942544/2934735716',
-    interstitial: 'ca-app-pub-3940256099942544/4411468910',
+    // ✅ Боевые (Calk.kz iOS). appId → Info.plist GADApplicationIdentifier.
+    appId: 'ca-app-pub-4859241862365215~9297974937',
+    banner: 'ca-app-pub-4859241862365215/3230270353',
+    interstitial: 'ca-app-pub-4859241862365215/1375252885',
   },
   android: {
-    banner: 'ca-app-pub-3940256099942544/6300978111',
-    interstitial: 'ca-app-pub-3940256099942544/1033173712',
+    // ✅ Боевые (Calk.kz Android). appId → AndroidManifest APPLICATION_ID.
+    appId: 'ca-app-pub-4859241862365215~1247260374',
+    banner: 'ca-app-pub-4859241862365215/3241878642',
+    interstitial: 'ca-app-pub-4859241862365215/2108760371',
   },
 };
 
-// true = тестовые объявления (Google test ads). Переключи в false с реальными ID.
+// true = тестовые объявления (Google test ads). Переключи в false с реальными ID
+// (тогда же зарегистрируй своё устройство как test device, чтобы не банить аккаунт).
 const IS_TESTING = true;
 
 // Интерстишал не чаще одного раза в этот интервал (UX + требования сторов).
