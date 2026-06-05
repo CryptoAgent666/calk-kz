@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
 import './index.css';
 import './i18n';
+import { initLiveUpdates } from './liveUpdates';
 
 const container = document.getElementById('root');
 
@@ -24,3 +25,6 @@ if (container.hasChildNodes()) {
 } else {
   createRoot(container).render(app);
 }
+
+// OTA-обновление веб-бандла в нативном приложении (no-op на сайте).
+void initLiveUpdates();

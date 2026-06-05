@@ -62,3 +62,6 @@ vite.config.ts.timestamp-*.mjs
 
 # Черновые заметки аудита (рабочие файлы)
 AUDIT-*.md
+
+# Генерируемая версия бандла (создаётся при сборке)
+public/build-version.json
