@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './index.css';
 import './i18n';
 import { initLiveUpdates } from './liveUpdates';
+import { initAds } from './ads';
 
 const container = document.getElementById('root');
 
@@ -28,3 +29,6 @@ if (container.hasChildNodes()) {
 
 // OTA-обновление веб-бандла в нативном приложении (no-op на сайте).
 void initLiveUpdates();
+
+// Нативная реклама AdMob (только в приложении; на сайте — no-op, AdSense отдельно).
+void initAds();

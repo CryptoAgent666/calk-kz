@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { maybeShowInterstitial } from './ads';
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useLocalizedNavigate } from './hooks/useLocalizedNavigate';
@@ -58,6 +59,13 @@ function App() {
   // Прокрутка вверх при смене маршрута
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // Интерстишал AdMob при навигации (native-only, с частотным лимитом; не на embed).
+  useEffect(() => {
+    if (!location.pathname.startsWith('/embed/')) {
+      void maybeShowInterstitial();
+    }
   }, [location.pathname]);
 
   // Автоматическое переключение языка по URL (/__kk/ ИЛИ ?lang=kk → KK, иначе RU)

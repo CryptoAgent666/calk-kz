@@ -142,8 +142,9 @@
       window.addEventListener('load', () => {
         // Capacitor добавляет глобальный объект window.Capacitor на native платформах
         const isNativeApp = typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
-        const isIOSApp = isNativeApp && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios';
-        if (isIOSApp) {
+        // В нативном приложении (iOS И Android) веб-AdSense НЕ грузим — там реклама AdMob (src/ads.ts).
+        // По политике Google в приложениях используется AdMob, а не AdSense. На сайте AdSense остаётся.
+        if (isNativeApp) {
           return;
         }
 
