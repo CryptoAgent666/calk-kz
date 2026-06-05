@@ -65,3 +65,6 @@ AUDIT-*.md
 
 # Генерируемая версия бандла (создаётся при сборке)
 public/build-version.json
+android/keystore.properties
+android/local.properties
+*.jks
