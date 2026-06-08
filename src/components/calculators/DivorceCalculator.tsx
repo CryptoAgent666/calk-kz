@@ -47,7 +47,10 @@ export default function DivorceCalculator() {
     const divorceFee = mode === 'zags' ? 2 * MRP_2026 : 0.3 * MRP_2026;
     const propValue = parseFloat(propertyValue) || 0;
     const propertyFee = hasPropertyDispute ? Math.max(propValue * 0.01, 0.5 * MRP_2026) : 0;
-    const alimonyPetitionFee = needAlimony ? MRP_2026 : 0; // 1 МРП
+    // Истец по иску о взыскании алиментов ОСВОБОЖДЁН от госпошлины (пп.4 ст.616 НК РК);
+    // госпошлина взыскивается с ответчика. Поэтому для истца = 0.
+    const alimonyPetitionFee = 0;
+    void needAlimony;
     const lawyerFee = lawyerServices ? 200000 : 0;
 
     const total = divorceFee + propertyFee + alimonyPetitionFee + lawyerFee;

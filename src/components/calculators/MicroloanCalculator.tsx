@@ -164,8 +164,9 @@ ${t('microloan.export.calculator')}: Calk.kz`;
         dailyRate = loanRate;
         totalInterest = loanAmount * (dailyRate / 100) * loanTerm;
 
+        // Предел переплаты (платежи ≤ сумме займа, ст.4 Закона о МФД РК) — для ВСЕХ PDL-микрозаймов.
         const maxInterest = loanAmount;
-        if (loanType === 'online' && totalInterest > maxInterest) {
+        if ((loanType === 'online' || loanType === 'shortterm') && totalInterest > maxInterest) {
           totalInterest = maxInterest;
         }
 

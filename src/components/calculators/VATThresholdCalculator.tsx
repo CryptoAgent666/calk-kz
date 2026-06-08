@@ -63,7 +63,11 @@ export default function VATThresholdCalculator() {
     2028: 4938
   };
 
-  const VAT_THRESHOLD_MRP = 20000;
+  // Порог обязательной постановки на учёт по НДС, в МРП.
+  // С 2026 (новый НК РК K2500000214) снижен с 20 000 до 10 000 МРП.
+  const VAT_THRESHOLD_MRP_BY_YEAR: Record<number, number> = {
+    2024: 20000, 2025: 20000, 2026: 10000, 2027: 10000, 2028: 10000
+  };
 
   const months = [
     { id: 'january', name: t('vat-threshold.months.january'), shortName: t('vat-threshold.months.januaryShort') },
@@ -82,7 +86,8 @@ export default function VATThresholdCalculator() {
 
   const calculateVATThreshold = () => {
     const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 3876;
-    const thresholdAmount = VAT_THRESHOLD_MRP * mrpValue;
+    const thresholdMrp = VAT_THRESHOLD_MRP_BY_YEAR[calculationYear] ?? 10000;
+    const thresholdAmount = thresholdMrp * mrpValue;
 
     let runningTotal = 0;
     let isExceeded = false;

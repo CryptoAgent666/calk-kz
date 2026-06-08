@@ -968,7 +968,7 @@ export default function DateCalculator() {
       </div>
 
       {/* Экспорт результатов */}
-      {results && results.startDate && (
+      {results && results.resultDate && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -978,10 +978,9 @@ export default function DateCalculator() {
                 {
                   title: t('date-calculator.resultLabel'),
                   data: [
-                    { label: t('date-calculator.startDate'), value: results.startDate ? results.startDate.toLocaleDateString('ru-KZ') : '' },
-                    { label: t('date-calculator.operation'), value: results.operation === 'add' ? t('date-calculator.add') : t('date-calculator.subtract') },
-                    { label: t('date-calculator.result'), value: results.endDate ? results.endDate.toLocaleDateString('ru-KZ') : '' },
-                    { label: t('date-calculator.totalDays'), value: `${results.totalDays || 0}` },
+                    { label: t('date-calculator.operation'), value: operation === 'add' ? t('date-calculator.add') : t('date-calculator.subtract') },
+                    { label: t('date-calculator.result'), value: results.resultDate },
+                    { label: t('date-calculator.totalDays'), value: `${results.totalDaysChanged || 0}` },
                   ]
                 }
               ],

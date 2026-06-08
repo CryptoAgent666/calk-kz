@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Receipt, Calculator, GraduationCap, Heart, Home, DollarSign, Info, AlertTriangle, TrendingUp, FileText, CheckCircle, Target, BarChart3 } from 'lucide-react';
+import { Receipt, Info, AlertTriangle, TrendingUp, FileText, CheckCircle, ShieldCheck, XCircle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
@@ -11,205 +11,106 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
-import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { QuickAnswer } from '../ui/QuickAnswer';
+
+type SocialCategory = 'none' | 'group3' | 'group12';
 
 export default function TaxDeductionsCalculator() {
   const { t } = useTranslation('calculators');
-  const [annualIncome, setAnnualIncome] = useState<string>('500000');
-  const [educationExpenses, setEducationExpenses] = useState<string>('200000');
-  const [medicalExpenses, setMedicalExpenses] = useState<string>('0');
-  const [mortgageInterest, setMortgageInterest] = useState<string>('0');
-  const [pensionContributions, setPensionContributions] = useState<string>('0');
-  const [charityDonations, setCharityDonations] = useState<string>('0');
+
+  const [monthlyIncome, setMonthlyIncome] = useState<number>(500000);
+  const [socialCategory, setSocialCategory] = useState<SocialCategory>('none');
+  const [applyBaseDeduction, setApplyBaseDeduction] = useState<boolean>(true);
 
   const [results, setResults] = useState({
-    allowedEducationDeduction: 0,
-    allowedMedicalDeduction: 0,
-    allowedMortgageDeduction: 0,
-    allowedPensionDeduction: 0,
-    allowedCharityDeduction: 0,
-
-    educationExcess: 0,
-    medicalExcess: 0,
-    mortgageExcess: 0,
-    pensionExcess: 0,
-    charityExcess: 0,
-
+    opv: 0,
+    vosms: 0,
+    baseDeduction: 0,
+    socialDeduction: 0,
     totalDeductions: 0,
-    taxableIncomeReduction: 0,
-    taxRefundAmount: 0,
-    effectiveRefundRate: 0,
-
-    maxTotalDeductionLimit: 0,
-    isProfitable: false,
-    yearlyTaxWithoutDeductions: 0,
-    yearlyTaxWithDeductions: 0
+    taxableBase: 0,
+    ipn: 0,
+    net: 0,
+    ipnNoDeductions: 0,
+    savings: 0,
+    effectiveRate: 0,
   });
 
-  const MRP_2026 = 4325;
+  // Параметры 2026 (НК РК K2500000214)
+  const MRP = 4325;
+  const MZP = 85000;
+  const OPV_RATE = 0.10;
+  const VOSMS_RATE = 0.02;
+  const OPV_MAX_BASE = 50 * MZP; // 4 250 000 ₸/мес
+  const VOSMS_MAX_BASE = 20 * MZP; // 1 700 000 ₸/мес
+  const BASE_DEDUCTION = 30 * MRP; // 129 750 ₸/мес (ст. 403)
+  const BASE_DEDUCTION_ANNUAL = 360 * MRP; // 1 557 000 ₸/год
+  const GROUP3_ANNUAL = 882 * MRP; // 3 814 650 ₸/год (ст. 404)
+  const GROUP12_ANNUAL = 5000 * MRP; // 21 625 000 ₸/год (ст. 404)
   const IPN_RATE_BASE = 0.10;
   const IPN_RATE_HIGH = 0.15;
-  const IPN_ANNUAL_THRESHOLD = 8500 * MRP_2026; // 36,762,500 тенге/год
+  const IPN_ANNUAL_THRESHOLD = 8500 * MRP; // 36 762 500 ₸/год
+  const IPN_MONTHLY_THRESHOLD = IPN_ANNUAL_THRESHOLD / 12; // ~3 063 542 ₸/мес
 
-  const calculateProgressiveIPN = (taxableIncome: number) => {
-    if (taxableIncome <= 0) return 0;
-    if (taxableIncome <= IPN_ANNUAL_THRESHOLD) {
-      return taxableIncome * IPN_RATE_BASE;
-    }
-    return IPN_ANNUAL_THRESHOLD * IPN_RATE_BASE + (taxableIncome - IPN_ANNUAL_THRESHOLD) * IPN_RATE_HIGH;
+  const calcIPN = (base: number) => {
+    if (base <= 0) return 0;
+    if (base <= IPN_MONTHLY_THRESHOLD) return base * IPN_RATE_BASE;
+    return IPN_MONTHLY_THRESHOLD * IPN_RATE_BASE + (base - IPN_MONTHLY_THRESHOLD) * IPN_RATE_HIGH;
   };
 
-  const EDUCATION_LIMIT_MRP = 118;
-  const MEDICAL_LIMIT_MRP = 118;
-  const MORTGAGE_LIMIT_MRP = 118;
-  const PENSION_LIMIT_MRP = 118;
-  const CHARITY_LIMIT_MRP = 118;
-  const MAX_TOTAL_DEDUCTION_MRP = 400;
-
-  const EDUCATION_LIMIT = EDUCATION_LIMIT_MRP * MRP_2026;
-  const MEDICAL_LIMIT = MEDICAL_LIMIT_MRP * MRP_2026;
-  const MORTGAGE_LIMIT = MORTGAGE_LIMIT_MRP * MRP_2026;
-  const PENSION_LIMIT = PENSION_LIMIT_MRP * MRP_2026;
-  const CHARITY_LIMIT = CHARITY_LIMIT_MRP * MRP_2026;
-  const MAX_TOTAL_DEDUCTION = MAX_TOTAL_DEDUCTION_MRP * MRP_2026;
-
-  const calculateTaxDeductions = () => {
-    const income = parseFloat(annualIncome) || 0;
-    const education = parseFloat(educationExpenses) || 0;
-    const medical = parseFloat(medicalExpenses) || 0;
-    const mortgage = parseFloat(mortgageInterest) || 0;
-    const pension = parseFloat(pensionContributions) || 0;
-    const charity = parseFloat(charityDonations) || 0;
-
-    if (income <= 0) {
-      setResults({
-        allowedEducationDeduction: 0, allowedMedicalDeduction: 0, allowedMortgageDeduction: 0,
-        allowedPensionDeduction: 0, allowedCharityDeduction: 0,
-        educationExcess: 0, medicalExcess: 0, mortgageExcess: 0, pensionExcess: 0, charityExcess: 0,
-        totalDeductions: 0, taxableIncomeReduction: 0, taxRefundAmount: 0, effectiveRefundRate: 0,
-        maxTotalDeductionLimit: MAX_TOTAL_DEDUCTION, isProfitable: false,
-        yearlyTaxWithoutDeductions: 0, yearlyTaxWithDeductions: 0
-      });
-      return;
-    }
-
-    const allowedEducationDeduction = Math.min(education, EDUCATION_LIMIT);
-    const allowedMedicalDeduction = Math.min(medical, MEDICAL_LIMIT);
-    const allowedMortgageDeduction = Math.min(mortgage, MORTGAGE_LIMIT);
-    const allowedPensionDeduction = Math.min(pension, PENSION_LIMIT);
-    const allowedCharityDeduction = Math.min(charity, CHARITY_LIMIT);
-
-    const educationExcess = Math.max(0, education - EDUCATION_LIMIT);
-    const medicalExcess = Math.max(0, medical - MEDICAL_LIMIT);
-    const mortgageExcess = Math.max(0, mortgage - MORTGAGE_LIMIT);
-    const pensionExcess = Math.max(0, pension - PENSION_LIMIT);
-    const charityExcess = Math.max(0, charity - CHARITY_LIMIT);
-
-    const totalDeductionsBeforeLimit = allowedEducationDeduction + allowedMedicalDeduction +
-                                      allowedMortgageDeduction + allowedPensionDeduction + allowedCharityDeduction;
-
-    const totalDeductions = Math.min(totalDeductionsBeforeLimit, MAX_TOTAL_DEDUCTION);
-
-    const taxableIncomeReduction = Math.min(totalDeductions, income);
-
-    const yearlyTaxWithoutDeductions = calculateProgressiveIPN(income);
-    const taxableIncomeAfterDeductions = Math.max(0, income - taxableIncomeReduction);
-    const yearlyTaxWithDeductions = calculateProgressiveIPN(taxableIncomeAfterDeductions);
-    const taxRefundAmount = yearlyTaxWithoutDeductions - yearlyTaxWithDeductions;
-
-    const effectiveRefundRate = totalDeductions > 0 ? (taxRefundAmount / totalDeductions) * 100 : 0;
-
-    const isProfitable = taxRefundAmount > 0;
-
-    setResults({
-      allowedEducationDeduction: Math.round(allowedEducationDeduction),
-      allowedMedicalDeduction: Math.round(allowedMedicalDeduction),
-      allowedMortgageDeduction: Math.round(allowedMortgageDeduction),
-      allowedPensionDeduction: Math.round(allowedPensionDeduction),
-      allowedCharityDeduction: Math.round(allowedCharityDeduction),
-
-      educationExcess: Math.round(educationExcess),
-      medicalExcess: Math.round(medicalExcess),
-      mortgageExcess: Math.round(mortgageExcess),
-      pensionExcess: Math.round(pensionExcess),
-      charityExcess: Math.round(charityExcess),
-
-      totalDeductions: Math.round(totalDeductions),
-      taxableIncomeReduction: Math.round(taxableIncomeReduction),
-      taxRefundAmount: Math.round(taxRefundAmount),
-      effectiveRefundRate: Number(effectiveRefundRate.toFixed(2)),
-
-      maxTotalDeductionLimit: MAX_TOTAL_DEDUCTION,
-      isProfitable,
-      yearlyTaxWithoutDeductions: Math.round(yearlyTaxWithoutDeductions),
-      yearlyTaxWithDeductions: Math.round(yearlyTaxWithDeductions)
-    });
-  };
+  const socialDeductionAnnual =
+    socialCategory === 'group3' ? GROUP3_ANNUAL : socialCategory === 'group12' ? GROUP12_ANNUAL : 0;
 
   useEffect(() => {
-    calculateTaxDeductions();
-  }, [annualIncome, educationExpenses, medicalExpenses, mortgageInterest, pensionContributions, charityDonations]);
+    const income = monthlyIncome > 0 ? monthlyIncome : 0;
 
-  const formatNumber = (num: number) => {
-    return num.toLocaleString('ru-KZ') + ' ₸';
-  };
+    const opv = OPV_RATE * Math.min(income, OPV_MAX_BASE);
+    const vosms = VOSMS_RATE * Math.min(income, VOSMS_MAX_BASE);
+    const baseDeduction = applyBaseDeduction ? BASE_DEDUCTION : 0;
+    const socialDeduction = socialDeductionAnnual / 12;
 
-  const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount.toLocaleString()} ${t('tax-deductions.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
-  };
+    const taxableBase = Math.max(0, income - opv - vosms - baseDeduction - socialDeduction);
+    const ipn = calcIPN(taxableBase);
+    const net = income - opv - vosms - ipn;
 
-  const formatPercent = (num: number) => {
-    return num.toFixed(2) + '%';
-  };
+    const baseNoDeductions = Math.max(0, income - opv - vosms);
+    const ipnNoDeductions = calcIPN(baseNoDeductions);
+    const savings = Math.max(0, ipnNoDeductions - ipn);
 
-  const deductionTypes = [
-    {
-      id: 'education',
-      name: t('tax-deductions.deductionTypes.education.name'),
-      description: t('tax-deductions.deductionTypes.education.description'),
-      icon: GraduationCap,
-      limit: EDUCATION_LIMIT,
-      limitMRP: EDUCATION_LIMIT_MRP,
-      examples: t('tax-deductions.deductionTypes.education.examples')
-    },
-    {
-      id: 'medical',
-      name: t('tax-deductions.deductionTypes.medical.name'),
-      description: t('tax-deductions.deductionTypes.medical.description'),
-      icon: Heart,
-      limit: MEDICAL_LIMIT,
-      limitMRP: MEDICAL_LIMIT_MRP,
-      examples: t('tax-deductions.deductionTypes.medical.examples')
-    },
-    {
-      id: 'mortgage',
-      name: t('tax-deductions.deductionTypes.mortgage.name'),
-      description: t('tax-deductions.deductionTypes.mortgage.description'),
-      icon: Home,
-      limit: MORTGAGE_LIMIT,
-      limitMRP: MORTGAGE_LIMIT_MRP,
-      examples: t('tax-deductions.deductionTypes.mortgage.examples')
-    },
-    {
-      id: 'pension',
-      name: t('tax-deductions.deductionTypes.pension.name'),
-      description: t('tax-deductions.deductionTypes.pension.description'),
-      icon: TrendingUp,
-      limit: PENSION_LIMIT,
-      limitMRP: PENSION_LIMIT_MRP,
-      examples: t('tax-deductions.deductionTypes.pension.examples')
-    },
-    {
-      id: 'charity',
-      name: t('tax-deductions.deductionTypes.charity.name'),
-      description: t('tax-deductions.deductionTypes.charity.description'),
-      icon: Heart,
-      limit: CHARITY_LIMIT,
-      limitMRP: CHARITY_LIMIT_MRP,
-      examples: t('tax-deductions.deductionTypes.charity.examples')
-    }
+    const effectiveRate = income > 0 ? (ipn / income) * 100 : 0;
+
+    setResults({
+      opv: Math.round(opv),
+      vosms: Math.round(vosms),
+      baseDeduction: Math.round(baseDeduction),
+      socialDeduction: Math.round(socialDeduction),
+      totalDeductions: Math.round(baseDeduction + socialDeduction),
+      taxableBase: Math.round(taxableBase),
+      ipn: Math.round(ipn),
+      net: Math.round(net),
+      ipnNoDeductions: Math.round(ipnNoDeductions),
+      savings: Math.round(savings),
+      effectiveRate: Number(effectiveRate.toFixed(2)),
+    });
+  }, [monthlyIncome, socialCategory, applyBaseDeduction]);
+
+  const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
+  const formatPercent = (num: number) => num.toFixed(2) + '%';
+
+  const cancelledDeductions: string[] = [
+    t('tax-deductions.cancelled.item1'),
+    t('tax-deductions.cancelled.item2'),
+    t('tax-deductions.cancelled.item3'),
+    t('tax-deductions.cancelled.item4'),
+    t('tax-deductions.cancelled.item5'),
   ];
+
+  const pieChartData = [
+    { name: t('tax-deductions.chart.opv'), value: results.opv, color: '#f97316' },
+    { name: t('tax-deductions.chart.vosms'), value: results.vosms, color: '#eab308' },
+    { name: t('tax-deductions.chart.ipn'), value: results.ipn, color: '#ef4444' },
+    { name: t('tax-deductions.chart.net'), value: results.net, color: '#22c55e' },
+  ].filter((item) => item.value > 0);
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -226,6 +127,28 @@ export default function TaxDeductionsCalculator() {
         </div>
       </div>
 
+      {/* Дисклеймер: что отменено с 2026 */}
+      <div className="mb-8 bg-red-50 border border-red-200 rounded-xl p-6">
+        <div className="flex items-start space-x-3">
+          <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <h2 className="text-lg font-semibold text-red-900 mb-2">
+              {t('tax-deductions.cancelled.title')}
+            </h2>
+            <p className="text-red-800 mb-3 text-sm">{t('tax-deductions.cancelled.intro')}</p>
+            <ul className="space-y-1">
+              {cancelledDeductions.map((item, i) => (
+                <li key={i} className="flex items-start space-x-2 text-sm text-red-800">
+                  <XCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-red-700 mt-3">{t('tax-deductions.cancelled.note')}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="mb-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
         <div className="flex items-start space-x-3">
           <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -233,7 +156,7 @@ export default function TaxDeductionsCalculator() {
             <h3 className="text-lg font-semibold text-blue-900 mb-2">
               {t('tax-deductions.importantInfo.title')}
             </h3>
-            <div className="text-blue-800 space-y-2">
+            <div className="text-blue-800 space-y-2 text-sm">
               <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.importantInfo.description1') }} />
               <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.importantInfo.description2') }} />
             </div>
@@ -242,30 +165,28 @@ export default function TaxDeductionsCalculator() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
+        {/* Ввод */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tax-deductions.inputSection.title')}</h2>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('tax-deductions.inputSection.annualIncome.label')}
-              </label>
               <RangeSlider
-                value={parseFloat(annualIncome) || 0}
-                onChange={(val) => setAnnualIncome(String(val))}
-                min={500000}
-                max={50000000}
-                step={500000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                value={monthlyIncome}
+                onChange={setMonthlyIncome}
+                min={85000}
+                max={5000000}
+                step={5000}
+                label={t('tax-deductions.inputSection.monthlyIncome.label')}
+                formatValue={(v) => `${v.toLocaleString('ru-KZ')} ₸`}
                 color="#3b82f6"
               />
               <div className="relative mt-3">
                 <input
                   type="number"
-                  id="annualIncome"
-                  value={annualIncome}
-                  onChange={(e) => setAnnualIncome(e.target.value)}
-                  placeholder={t('tax-deductions.inputSection.annualIncome.placeholder')}
+                  value={monthlyIncome}
+                  onChange={(e) => setMonthlyIncome(Number(e.target.value) || 0)}
+                  placeholder={t('tax-deductions.inputSection.monthlyIncome.placeholder')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -273,415 +194,244 @@ export default function TaxDeductionsCalculator() {
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                {t('tax-deductions.inputSection.annualIncome.hint')}
+                {t('tax-deductions.inputSection.monthlyIncome.hint')}
               </p>
             </div>
 
             <div>
-              <label htmlFor="educationExpenses" className="block text-sm font-medium text-gray-700 mb-2">
-                <GraduationCap className="w-4 h-4 inline mr-1" />
-                {t('tax-deductions.inputSection.educationExpenses.label')}
+              <label htmlFor="socialCategory" className="block text-sm font-medium text-gray-700 mb-2">
+                {t('tax-deductions.inputSection.socialCategory.label')}
               </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="educationExpenses"
-                  value={educationExpenses}
-                  onChange={(e) => setEducationExpenses(e.target.value)}
-                  placeholder={t('tax-deductions.inputSection.educationExpenses.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">₸</span>
-                </div>
-              </div>
+              <select
+                id="socialCategory"
+                value={socialCategory}
+                onChange={(e) => setSocialCategory(e.target.value as SocialCategory)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white"
+              >
+                <option value="none">{t('tax-deductions.inputSection.socialCategory.none')}</option>
+                <option value="group3">{t('tax-deductions.inputSection.socialCategory.group3')}</option>
+                <option value="group12">{t('tax-deductions.inputSection.socialCategory.group12')}</option>
+              </select>
               <p className="text-xs text-gray-500 mt-1">
-                {t('tax-deductions.inputSection.educationExpenses.hint')}: {formatMRP(EDUCATION_LIMIT_MRP)} {t('tax-deductions.perYear')}
+                {t('tax-deductions.inputSection.socialCategory.hint')}
               </p>
             </div>
 
-            <div>
-              <label htmlFor="medicalExpenses" className="block text-sm font-medium text-gray-700 mb-2">
-                <Heart className="w-4 h-4 inline mr-1" />
-                {t('tax-deductions.inputSection.medicalExpenses.label')}
+            <div className="flex items-start">
+              <input
+                type="checkbox"
+                id="applyBaseDeduction"
+                checked={applyBaseDeduction}
+                onChange={(e) => setApplyBaseDeduction(e.target.checked)}
+                className="h-4 w-4 mt-0.5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="applyBaseDeduction" className="ml-2 block text-sm text-gray-700">
+                {t('tax-deductions.inputSection.applyBaseDeduction.label')}
+                <span className="block text-xs text-gray-500">
+                  {t('tax-deductions.inputSection.applyBaseDeduction.hint')}
+                </span>
               </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="medicalExpenses"
-                  value={medicalExpenses}
-                  onChange={(e) => setMedicalExpenses(e.target.value)}
-                  placeholder={t('tax-deductions.inputSection.medicalExpenses.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">₸</span>
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {t('tax-deductions.inputSection.medicalExpenses.hint')}: {formatMRP(MEDICAL_LIMIT_MRP)} {t('tax-deductions.perYear')}
-              </p>
-            </div>
-
-            <div>
-              <label htmlFor="mortgageInterest" className="block text-sm font-medium text-gray-700 mb-2">
-                <Home className="w-4 h-4 inline mr-1" />
-                {t('tax-deductions.inputSection.mortgageInterest.label')}
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="mortgageInterest"
-                  value={mortgageInterest}
-                  onChange={(e) => setMortgageInterest(e.target.value)}
-                  placeholder={t('tax-deductions.inputSection.mortgageInterest.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">₸</span>
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {t('tax-deductions.inputSection.mortgageInterest.hint')}: {formatMRP(MORTGAGE_LIMIT_MRP)}
-              </p>
-            </div>
-
-            <div>
-              <label htmlFor="pensionContributions" className="block text-sm font-medium text-gray-700 mb-2">
-                <TrendingUp className="w-4 h-4 inline mr-1" />
-                {t('tax-deductions.inputSection.pensionContributions.label')}
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="pensionContributions"
-                  value={pensionContributions}
-                  onChange={(e) => setPensionContributions(e.target.value)}
-                  placeholder={t('tax-deductions.inputSection.pensionContributions.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">₸</span>
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {t('tax-deductions.inputSection.pensionContributions.hint')}: {formatMRP(PENSION_LIMIT_MRP)} {t('tax-deductions.perYear')}
-              </p>
-            </div>
-
-            <div>
-              <label htmlFor="charityDonations" className="block text-sm font-medium text-gray-700 mb-2">
-                <Heart className="w-4 h-4 inline mr-1" />
-                {t('tax-deductions.inputSection.charityDonations.label')}
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="charityDonations"
-                  value={charityDonations}
-                  onChange={(e) => setCharityDonations(e.target.value)}
-                  placeholder={t('tax-deductions.inputSection.charityDonations.placeholder')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">₸</span>
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {t('tax-deductions.inputSection.charityDonations.hint')}: {formatMRP(CHARITY_LIMIT_MRP)} {t('tax-deductions.perYear')}
-              </p>
             </div>
 
             <div className="bg-green-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-green-900 mb-2">{t('tax-deductions.limits.title')}</h3>
+              <h3 className="text-sm font-medium text-green-900 mb-2">{t('tax-deductions.rates.title')}</h3>
               <div className="text-xs text-green-800 space-y-1">
-                <div>• {t('tax-deductions.limits.perType')}: {formatMRP(118)}</div>
-                <div>• {t('tax-deductions.limits.totalLimit')}: {formatMRP(MAX_TOTAL_DEDUCTION_MRP)}</div>
-                <div>• {t('tax-deductions.limits.refund')}: {t('tax-deductions.limits.refundAmount')}</div>
-                <div>• {t('tax-deductions.limits.mrp2026')}: {formatNumber(MRP_2026)}</div>
+                <div>• {t('tax-deductions.rates.base')}: {formatNumber(BASE_DEDUCTION)} ({t('tax-deductions.perMonth')})</div>
+                <div>• {t('tax-deductions.rates.baseAnnual')}: {formatNumber(BASE_DEDUCTION_ANNUAL)}</div>
+                <div>• {t('tax-deductions.rates.group3')}: {formatNumber(GROUP3_ANNUAL)} ({t('tax-deductions.perYear')})</div>
+                <div>• {t('tax-deductions.rates.group12')}: {formatNumber(GROUP12_ANNUAL)} ({t('tax-deductions.perYear')})</div>
+                <div>• {t('tax-deductions.rates.ipn')}</div>
+                <div>• {t('tax-deductions.rates.mrp')}: {formatNumber(MRP)}</div>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Результаты */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tax-deductions.results.title')}</h2>
 
-          {results.isProfitable ? (
+          {monthlyIncome > 0 ? (
             <div className="space-y-6">
+              {/* Положенные вычеты */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <div className="flex items-center space-x-2 mb-3">
+                  <ShieldCheck className="w-5 h-5 text-blue-600" />
+                  <h3 className="font-semibold text-blue-900">{t('tax-deductions.results.allowedDeductions')}</h3>
+                </div>
+                <div className="space-y-2 text-sm">
+                  {applyBaseDeduction && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('tax-deductions.results.baseDeduction')}</span>
+                      <span className="font-medium text-gray-900">
+                        {formatNumber(BASE_DEDUCTION)} / {t('tax-deductions.perMonth')}
+                      </span>
+                    </div>
+                  )}
+                  {applyBaseDeduction && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('tax-deductions.results.baseDeductionAnnual')}</span>
+                      <span className="font-medium text-gray-900">{formatNumber(BASE_DEDUCTION_ANNUAL)}</span>
+                    </div>
+                  )}
+                  {socialDeductionAnnual > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('tax-deductions.results.socialDeductionAnnual')}</span>
+                      <span className="font-medium text-green-700">{formatNumber(socialDeductionAnnual)}</span>
+                    </div>
+                  )}
+                  {!applyBaseDeduction && socialDeductionAnnual === 0 && (
+                    <div className="text-gray-500">{t('tax-deductions.results.noDeductionsSelected')}</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Экономия на ИПН */}
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-lg font-semibold text-gray-900">{t('tax-deductions.results.taxRefund')}</span>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-lg font-semibold text-gray-900">{t('tax-deductions.results.savings')}</span>
                   <div className="flex items-center space-x-2">
-                    <Target className="w-6 h-6 text-green-600" />
-                    <span className="text-2xl font-bold text-green-700">{formatNumber(results.taxRefundAmount)}</span>
+                    <TrendingUp className="w-6 h-6 text-green-600" />
+                    <span className="text-2xl font-bold text-green-700">{formatNumber(results.savings)}</span>
                   </div>
                 </div>
-                <div className="text-sm text-gray-600">
-                  {formatPercent(results.effectiveRefundRate)} {t('tax-deductions.results.ofTotalDeductions')}
-                </div>
+                <div className="text-sm text-gray-600">{t('tax-deductions.results.savingsHint')}</div>
               </div>
 
-              <div className="space-y-4">
-                <h3 className="font-semibold text-gray-900">{t('tax-deductions.results.appliedDeductions')}</h3>
-
-                {results.allowedEducationDeduction > 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <GraduationCap className="w-4 h-4 text-blue-600" />
-                      <span className="text-gray-600">{t('tax-deductions.deductionTypes.education.shortName')}</span>
-                    </div>
-                    <span className="font-semibold text-gray-900">{formatNumber(results.allowedEducationDeduction)}</span>
-                  </div>
-                )}
-
-                {results.allowedMedicalDeduction > 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <Heart className="w-4 h-4 text-red-600" />
-                      <span className="text-gray-600">{t('tax-deductions.deductionTypes.medical.shortName')}</span>
-                    </div>
-                    <span className="font-semibold text-gray-900">{formatNumber(results.allowedMedicalDeduction)}</span>
-                  </div>
-                )}
-
-                {results.allowedMortgageDeduction > 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <Home className="w-4 h-4 text-teal-600" />
-                      <span className="text-gray-600">{t('tax-deductions.deductionTypes.mortgage.shortName')}</span>
-                    </div>
-                    <span className="font-semibold text-gray-900">{formatNumber(results.allowedMortgageDeduction)}</span>
-                  </div>
-                )}
-
-                {results.allowedPensionDeduction > 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <TrendingUp className="w-4 h-4 text-orange-600" />
-                      <span className="text-gray-600">{t('tax-deductions.deductionTypes.pension.shortName')}</span>
-                    </div>
-                    <span className="font-semibold text-gray-900">{formatNumber(results.allowedPensionDeduction)}</span>
-                  </div>
-                )}
-
-                {results.allowedCharityDeduction > 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <Heart className="w-4 h-4 text-pink-600" />
-                      <span className="text-gray-600">{t('tax-deductions.deductionTypes.charity.shortName')}</span>
-                    </div>
-                    <span className="font-semibold text-gray-900">{formatNumber(results.allowedCharityDeduction)}</span>
-                  </div>
-                )}
-
-                <div className="flex justify-between items-center py-3 bg-blue-50 rounded-lg px-3 border-t border-gray-200">
-                  <span className="font-semibold text-blue-900">{t('tax-deductions.results.totalDeductions')}</span>
-                  <span className="text-lg font-bold text-blue-700">{formatNumber(results.totalDeductions)}</span>
-                </div>
-              </div>
-
+              {/* Разбивка зарплаты */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3">{t('tax-deductions.results.taxCalculation.title')}</h4>
+                <h4 className="font-semibold text-gray-900 mb-3">{t('tax-deductions.results.breakdown.title')}</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('tax-deductions.results.taxCalculation.annualIncome')}:</span>
-                    <span className="font-medium">{formatNumber(parseFloat(annualIncome) || 0)}</span>
+                    <span className="text-gray-600">{t('tax-deductions.results.breakdown.gross')}</span>
+                    <span className="font-medium">{formatNumber(monthlyIncome)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('tax-deductions.results.taxCalculation.taxWithoutDeductions')}:</span>
-                    <span className="font-medium">{formatNumber(results.yearlyTaxWithoutDeductions)}</span>
+                    <span className="text-gray-600">{t('tax-deductions.results.breakdown.opv')}</span>
+                    <span className="font-medium text-orange-600">−{formatNumber(results.opv)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('tax-deductions.results.taxCalculation.baseReduction')}:</span>
-                    <span className="font-medium text-green-600">{formatNumber(results.taxableIncomeReduction)}</span>
+                    <span className="text-gray-600">{t('tax-deductions.results.breakdown.vosms')}</span>
+                    <span className="font-medium text-yellow-600">−{formatNumber(results.vosms)}</span>
+                  </div>
+                  {results.baseDeduction > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('tax-deductions.results.breakdown.baseDeduction')}</span>
+                      <span className="font-medium text-green-600">−{formatNumber(results.baseDeduction)}</span>
+                    </div>
+                  )}
+                  {results.socialDeduction > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('tax-deductions.results.breakdown.socialDeduction')}</span>
+                      <span className="font-medium text-green-600">−{formatNumber(results.socialDeduction)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between py-2 border-t border-gray-200">
+                    <span className="text-gray-600">{t('tax-deductions.results.breakdown.taxableBase')}</span>
+                    <span className="font-medium">{formatNumber(results.taxableBase)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('tax-deductions.results.taxCalculation.taxWithDeductions')}:</span>
-                    <span className="font-medium">{formatNumber(results.yearlyTaxWithDeductions)}</span>
+                    <span className="text-gray-600">{t('tax-deductions.results.breakdown.ipn')}</span>
+                    <span className="font-medium text-red-600">−{formatNumber(results.ipn)}</span>
                   </div>
                   <div className="flex justify-between py-2 border-t border-gray-300">
-                    <span className="font-semibold text-gray-900">{t('tax-deductions.results.taxCalculation.refundAmount')}:</span>
-                    <span className="font-bold text-green-600">{formatNumber(results.taxRefundAmount)}</span>
+                    <span className="font-semibold text-gray-900">{t('tax-deductions.results.breakdown.net')}</span>
+                    <span className="font-bold text-green-700">{formatNumber(results.net)}</span>
                   </div>
                 </div>
               </div>
 
-              {(results.educationExcess > 0 || results.medicalExcess > 0 || results.mortgageExcess > 0 ||
-                results.pensionExcess > 0 || results.charityExcess > 0) && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <div className="flex items-start space-x-2">
-                    <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-medium text-amber-900 mb-2">{t('tax-deductions.results.excessWarning.title')}</h3>
-                      <div className="space-y-1 text-sm text-amber-800">
-                        {results.educationExcess > 0 && (
-                          <div>• {t('tax-deductions.deductionTypes.education.shortName')}: {formatNumber(results.educationExcess)} {t('tax-deductions.results.excessWarning.overLimit')}</div>
-                        )}
-                        {results.medicalExcess > 0 && (
-                          <div>• {t('tax-deductions.deductionTypes.medical.shortName')}: {formatNumber(results.medicalExcess)} {t('tax-deductions.results.excessWarning.overLimit')}</div>
-                        )}
-                        {results.mortgageExcess > 0 && (
-                          <div>• {t('tax-deductions.deductionTypes.mortgage.shortName')}: {formatNumber(results.mortgageExcess)} {t('tax-deductions.results.excessWarning.overLimit')}</div>
-                        )}
-                        {results.pensionExcess > 0 && (
-                          <div>• {t('tax-deductions.deductionTypes.pension.shortName')}: {formatNumber(results.pensionExcess)} {t('tax-deductions.results.excessWarning.overLimit')}</div>
-                        )}
-                        {results.charityExcess > 0 && (
-                          <div>• {t('tax-deductions.deductionTypes.charity.shortName')}: {formatNumber(results.charityExcess)} {t('tax-deductions.results.excessWarning.overLimit')}</div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-gray-50 rounded-lg text-center">
+                  <h3 className="text-sm font-medium text-gray-700 mb-1">{t('tax-deductions.results.effectiveRate')}</h3>
+                  <div className="text-xl font-bold text-gray-900">{formatPercent(results.effectiveRate)}</div>
                 </div>
-              )}
+                <div className="p-4 bg-blue-50 rounded-lg text-center">
+                  <h3 className="text-sm font-medium text-blue-700 mb-1">{t('tax-deductions.results.ipnNoDeductions')}</h3>
+                  <div className="text-lg font-semibold text-blue-800">{formatNumber(results.ipnNoDeductions)}</div>
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
-              {annualIncome ?
-                t('tax-deductions.results.noRefund') :
-                t('tax-deductions.results.enterData')
-              }
-            </div>
+            <div className="text-center py-8 text-gray-500">{t('tax-deductions.results.enterData')}</div>
           )}
         </div>
       </div>
 
+      {/* Действующие вычеты 2026 */}
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tax-deductions.reference.title')}</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {deductionTypes.map((deduction) => {
-            const IconComponent = deduction.icon;
-            return (
-              <div key={deduction.id} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <IconComponent className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{deduction.name}</h3>
-                    <div className="text-xs text-gray-500">{t('tax-deductions.reference.upTo')} {formatMRP(deduction.limitMRP)}</div>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600 mb-2">{deduction.description}</p>
-                <div className="text-xs text-gray-500">
-                  <strong>{t('tax-deductions.reference.examples')}:</strong> {deduction.examples}
-                </div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tax-deductions.activeDeductions.title')}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <ShieldCheck className="w-5 h-5 text-blue-600" />
               </div>
-            );
-          })}
+              <div>
+                <h3 className="font-semibold text-gray-900">{t('tax-deductions.activeDeductions.base.name')}</h3>
+                <div className="text-xs text-gray-500">{formatNumber(BASE_DEDUCTION)} / {t('tax-deductions.perMonth')}</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600">{t('tax-deductions.activeDeductions.base.description')}</p>
+          </div>
+
+          <div className="border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <ShieldCheck className="w-5 h-5 text-green-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">{t('tax-deductions.activeDeductions.social.name')}</h3>
+                <div className="text-xs text-gray-500">{formatNumber(GROUP3_ANNUAL)} / {formatNumber(GROUP12_ANNUAL)}</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600">{t('tax-deductions.activeDeductions.social.description')}</p>
+          </div>
+
+          <div className="border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">{t('tax-deductions.activeDeductions.social402.name')}</h3>
+                <div className="text-xs text-gray-500">{t('tax-deductions.activeDeductions.social402.amount')}</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600">{t('tax-deductions.activeDeductions.social402.description')}</p>
+          </div>
+
+          <div className="border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Receipt className="w-5 h-5 text-purple-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">{t('tax-deductions.activeDeductions.progression.name')}</h3>
+                <div className="text-xs text-gray-500">{t('tax-deductions.activeDeductions.progression.amount')}</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600">{t('tax-deductions.activeDeductions.progression.description')}</p>
+          </div>
         </div>
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <div className="flex items-start space-x-2">
             <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-sm font-medium text-blue-900 mb-1">
-                {t('tax-deductions.reference.generalRules.title')}
-              </h3>
+              <h3 className="text-sm font-medium text-blue-900 mb-1">{t('tax-deductions.generalRules.title')}</h3>
               <div className="text-blue-800 text-sm space-y-1">
-                <p>• {t('tax-deductions.reference.generalRules.rule1')}: {formatMRP(MAX_TOTAL_DEDUCTION_MRP)} {t('tax-deductions.perYear')}</p>
-                <p>• {t('tax-deductions.reference.generalRules.rule2')}</p>
-                <p>• {t('tax-deductions.reference.generalRules.rule3')}</p>
-                <p>• {t('tax-deductions.reference.generalRules.rule4')}</p>
-                <p>• {t('tax-deductions.reference.generalRules.rule5')}</p>
+                <p>• {t('tax-deductions.generalRules.rule1')}</p>
+                <p>• {t('tax-deductions.generalRules.rule2')}</p>
+                <p>• {t('tax-deductions.generalRules.rule3')}</p>
+                <p>• {t('tax-deductions.generalRules.rule4')}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tax-deductions.examples.title')}</h2>
-
-        <div className="space-y-6">
-          <div className="border border-green-200 rounded-lg p-4 bg-green-50">
-            <h3 className="font-semibold text-green-900 mb-3">{t('tax-deductions.examples.example1.title')}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example1.sourceData')}:</div>
-                <div>{t('tax-deductions.examples.example1.annualIncome')}: 3,000,000 ₸</div>
-                <div>{t('tax-deductions.examples.example1.childEducation')}: 600,000 ₸</div>
-                <div>{t('tax-deductions.examples.example1.treatment')}: 300,000 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example1.limits')}:</div>
-                <div>{t('tax-deductions.examples.example1.education')}: 464,976 ₸</div>
-                <div>{t('tax-deductions.examples.example1.medicine')}: 300,000 ₸</div>
-                <div>{t('tax-deductions.examples.example1.totalDeductions')}: 764,976 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example1.tax')}:</div>
-                <div>{t('tax-deductions.examples.example1.beforeDeductions')}: 300,000 ₸</div>
-                <div>{t('tax-deductions.examples.example1.afterDeductions')}: 223,502 ₸</div>
-                <div>{t('tax-deductions.examples.example1.savings')}: 76,498 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-green-700">{t('tax-deductions.examples.example1.toRefund')}:</div>
-                <div className="text-lg font-bold text-green-600">76,498 ₸</div>
-                <div className="text-xs text-green-600">{t('tax-deductions.examples.example1.percentOfDeductions')}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
-            <h3 className="font-semibold text-blue-900 mb-3">{t('tax-deductions.examples.example2.title')}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example2.sourceData')}:</div>
-                <div>{t('tax-deductions.examples.example2.annualIncome')}: 5,000,000 ₸</div>
-                <div>{t('tax-deductions.examples.example2.allTypesMax')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example2.calculation')}:</div>
-                <div>{t('tax-deductions.examples.example2.perType')}</div>
-                <div>{t('tax-deductions.examples.example2.totalLimit')}: 400 {t('tax-deductions.mrp')}</div>
-                <div>{t('tax-deductions.examples.example2.deductions')}: 1,572,800 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example2.tax')}:</div>
-                <div>{t('tax-deductions.examples.example2.beforeDeductions')}: 500,000 ₸</div>
-                <div>{t('tax-deductions.examples.example2.afterDeductions')}: 342,720 ₸</div>
-                <div>{t('tax-deductions.examples.example2.savings')}: 157,280 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-blue-700">{t('tax-deductions.examples.example2.toRefund')}:</div>
-                <div className="text-lg font-bold text-blue-600">157,280 ₸</div>
-                <div className="text-xs text-blue-600">{t('tax-deductions.examples.example2.maxRefund')}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="border border-amber-200 rounded-lg p-4 bg-amber-50">
-            <h3 className="font-semibold text-amber-900 mb-3">{t('tax-deductions.examples.example3.title')}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example3.sourceData')}:</div>
-                <div>{t('tax-deductions.examples.example3.annualIncome')}: 800,000 ₸</div>
-                <div>{t('tax-deductions.examples.example3.treatmentCosts')}: 1,000,000 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example3.restrictions')}:</div>
-                <div>{t('tax-deductions.examples.example3.medicineLimit')}: 464,976 ₸</div>
-                <div>{t('tax-deductions.examples.example3.incomeLimit')}: 800,000 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('tax-deductions.examples.example3.tax')}:</div>
-                <div>{t('tax-deductions.examples.example3.beforeDeductions')}: 80,000 ₸</div>
-                <div>{t('tax-deductions.examples.example3.afterDeductions')}: 33,502 ₸</div>
-                <div>{t('tax-deductions.examples.example3.savings')}: 46,498 ₸</div>
-              </div>
-              <div>
-                <div className="font-medium text-amber-700">{t('tax-deductions.examples.example3.toRefund')}:</div>
-                <div className="text-lg font-bold text-amber-600">46,498 ₸</div>
-                <div className="text-xs text-amber-600">{t('tax-deductions.examples.example3.limitedByIncome')}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* Как применить */}
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-start space-x-3 mb-4">
           <FileText className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -691,11 +441,10 @@ export default function TaxDeductionsCalculator() {
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.procedure.documents.title')}</h4>
                 <ul className="space-y-1 list-disc list-inside">
-                  <li>{t('tax-deductions.procedure.documents.declaration')}</li>
-                  <li>{t('tax-deductions.procedure.documents.incomeStatement')}</li>
-                  <li>{t('tax-deductions.procedure.documents.expenseProof')}</li>
-                  <li>{t('tax-deductions.procedure.documents.paymentCertificates')}</li>
-                  <li>{t('tax-deductions.procedure.documents.bankStatement')}</li>
+                  <li>{t('tax-deductions.procedure.documents.item1')}</li>
+                  <li>{t('tax-deductions.procedure.documents.item2')}</li>
+                  <li>{t('tax-deductions.procedure.documents.item3')}</li>
+                  <li>{t('tax-deductions.procedure.documents.item4')}</li>
                 </ul>
               </div>
               <div>
@@ -705,7 +454,6 @@ export default function TaxDeductionsCalculator() {
                   <li>{t('tax-deductions.procedure.steps.step2')}</li>
                   <li>{t('tax-deductions.procedure.steps.step3')}</li>
                   <li>{t('tax-deductions.procedure.steps.step4')}</li>
-                  <li>{t('tax-deductions.procedure.steps.step5')}</li>
                 </ol>
               </div>
             </div>
@@ -716,33 +464,29 @@ export default function TaxDeductionsCalculator() {
           <div className="flex items-start space-x-2">
             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-sm font-medium text-green-900 mb-1">
-                {t('tax-deductions.practicalAdvice.title')}
-              </h3>
+              <h3 className="text-sm font-medium text-green-900 mb-1">{t('tax-deductions.practicalAdvice.title')}</h3>
               <div className="text-green-800 text-sm space-y-1">
                 <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.practicalAdvice.tip1') }} />
                 <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.practicalAdvice.tip2') }} />
                 <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.practicalAdvice.tip3') }} />
-                <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.practicalAdvice.tip4') }} />
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Правовая основа */}
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tax-deductions.legalBasis.title')}</h2>
-
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-blue-50 rounded-lg p-4">
             <h3 className="font-semibold text-blue-900 mb-3">{t('tax-deductions.legalBasis.taxCode.title')}</h3>
             <div className="text-sm text-blue-800 space-y-1">
-              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.article156') }} />
-              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.subparagraph1') }} />
-              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.subparagraph2') }} />
-              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.subparagraph3') }} />
-              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.subparagraph4') }} />
-              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.subparagraph5') }} />
+              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.article401') }} />
+              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.article402') }} />
+              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.article403') }} />
+              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.article404') }} />
+              <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.taxCode.article439') }} />
             </div>
           </div>
 
@@ -753,106 +497,52 @@ export default function TaxDeductionsCalculator() {
               <p>• {t('tax-deductions.legalBasis.conditions.condition2')}</p>
               <p>• {t('tax-deductions.legalBasis.conditions.condition3')}</p>
               <p>• {t('tax-deductions.legalBasis.conditions.condition4')}</p>
-              <p>• {t('tax-deductions.legalBasis.conditions.condition5')}</p>
             </div>
-          </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-amber-50 rounded-lg">
-          <div className="flex items-start space-x-2">
-            <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-medium text-amber-900 mb-1">
-                {t('tax-deductions.legalBasis.restrictions.title')}
-              </h3>
-              <div className="text-amber-800 text-sm space-y-1">
-                <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.restrictions.restriction1') }} />
-                <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.restrictions.restriction2') }} />
-                <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.restrictions.restriction3') }} />
-                <p dangerouslySetInnerHTML={{ __html: t('tax-deductions.legalBasis.restrictions.restriction4') }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('tax-deductions.planningStrategies.title')}</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-teal-50 rounded-lg">
-            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">📅</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.planningStrategies.strategy1.title')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('tax-deductions.planningStrategies.strategy1.description')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-green-50 rounded-lg">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">👨‍👩‍👧‍👦</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.planningStrategies.strategy2.title')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('tax-deductions.planningStrategies.strategy2.description')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-blue-50 rounded-lg">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">📋</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('tax-deductions.planningStrategies.strategy3.title')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('tax-deductions.planningStrategies.strategy3.description')}
-            </p>
           </div>
         </div>
       </div>
 
       {/* Диаграмма и экспорт */}
-      {results.totalDeductions > 0 && (
+      {monthlyIncome > 0 && (
         <div className="mt-8 space-y-6">
-          <TaxPieChart
-            data={[
-              { name: 'Образование', value: results.allowedEducationDeduction },
-              { name: 'Медицина', value: results.allowedMedicalDeduction },
-              { name: 'Ипотека', value: results.allowedMortgageDeduction },
-              { name: 'Пенсия', value: results.allowedPensionDeduction },
-            ].filter(item => item.value > 0)}
-            title="Структура вычетов"
-          />
+          <TaxPieChart data={pieChartData} title={t('tax-deductions.chart.title')} formatValue={formatNumber} />
           <ExportButtons
             data={{
-              title: 'Расчёт налоговых вычетов',
-              subtitle: `Доход: ${parseFloat(annualIncome).toLocaleString()} ₸`,
+              title: t('tax-deductions.export.title'),
+              subtitle: `${t('tax-deductions.export.income')}: ${formatNumber(monthlyIncome)}`,
               sections: [
                 {
-                  title: 'Расходы',
+                  title: t('tax-deductions.export.parameters'),
                   data: [
-                    { label: 'Образование', value: `${parseFloat(educationExpenses || '0').toLocaleString()} ₸` },
-                    { label: 'Медицина', value: `${parseFloat(medicalExpenses || '0').toLocaleString()} ₸` },
-                    { label: 'Ипотека', value: `${parseFloat(mortgageInterest || '0').toLocaleString()} ₸` },
-                  ]
+                    { label: t('tax-deductions.export.income'), value: formatNumber(monthlyIncome) },
+                    {
+                      label: t('tax-deductions.export.baseDeduction'),
+                      value: applyBaseDeduction ? formatNumber(BASE_DEDUCTION) : '—',
+                    },
+                    {
+                      label: t('tax-deductions.export.socialDeduction'),
+                      value: socialDeductionAnnual > 0 ? formatNumber(socialDeductionAnnual) : '—',
+                    },
+                  ],
                 },
                 {
-                  title: 'Результаты',
+                  title: t('tax-deductions.export.results'),
                   data: [
-                    { label: 'Общий вычет', value: `${results.totalDeductions.toLocaleString()} ₸` },
-                    { label: 'Возврат налога', value: `${results.taxRefundAmount.toLocaleString()} ₸` },
-                  ]
-                }
+                    { label: t('tax-deductions.results.breakdown.opv'), value: formatNumber(results.opv) },
+                    { label: t('tax-deductions.results.breakdown.vosms'), value: formatNumber(results.vosms) },
+                    { label: t('tax-deductions.results.breakdown.ipn'), value: formatNumber(results.ipn) },
+                    { label: t('tax-deductions.results.savings'), value: formatNumber(results.savings) },
+                    { label: t('tax-deductions.results.breakdown.net'), value: formatNumber(results.net) },
+                  ],
+                },
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'calk.kz — Калькуляторы Казахстана',
             }}
             filename="tax-deductions-calculation"
           />
         </div>
       )}
 
-      {/* FAQ */}
       <CalculatorExamples calculatorId="tax-deductions" />
       <MethodologySection steps={getMethodology('tax-deductions')} />
       <FAQSection
@@ -861,22 +551,18 @@ export default function TaxDeductionsCalculator() {
           { question: t('tax-deductions.faq.q2'), answer: t('tax-deductions.faq.a2') },
           { question: t('tax-deductions.faq.q3'), answer: t('tax-deductions.faq.a3') },
           { question: t('tax-deductions.faq.q4'), answer: t('tax-deductions.faq.a4') },
-          { question: t('tax-deductions.faq.q5'), answer: t('tax-deductions.faq.a5') }
+          { question: t('tax-deductions.faq.q5'), answer: t('tax-deductions.faq.a5') },
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК — вычеты', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'КГД — налоговые вычеты', url: 'https://kgd.gov.kz/' },
+          { title: 'Налоговый кодекс РК — ст. 401–404, 439', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
+          { title: 'КГД МФ РК', url: 'https://kgd.gov.kz/' },
         ]}
       />
 
       <LegalDisclaimer type="tax" />
       <ExpertBlock />
 
-      {/* Виджет для встраивания */}
-      <EmbedWidget
-        calculatorId="tax-deductions"
-        calculatorTitle="Калькулятор налоговых вычетов"
-      />
+      <EmbedWidget calculatorId="tax-deductions" calculatorTitle={t('tax-deductions.title')} />
       <LastUpdated calculatorId="tax-deductions" />
     </div>
   );

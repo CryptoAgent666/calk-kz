@@ -87,8 +87,10 @@ export default function SickLeaveCalculator() {
     }
 
     const opv = grossBenefit * OPV_RATE;
-    const ipn = grossBenefit * IPN_RATE;
     const vosms = grossBenefit * VOSMS_RATE;
+    // База ИПН: пособие за вычетом ОПВ, ВОСМС и базового вычета 30 МРП (ст. 353 НК РК 2026).
+    const ipnBase = Math.max(0, grossBenefit - opv - vosms - 30 * MRP);
+    const ipn = ipnBase * IPN_RATE;
     const totalDeductions = opv + ipn + vosms;
     const netBenefit = grossBenefit - totalDeductions;
 

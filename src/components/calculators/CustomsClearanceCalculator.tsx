@@ -394,13 +394,12 @@ export default function CustomsClearanceCalculator() {
       />
 
       {/* Диаграмма структуры платежей */}
-      {results && results.totalAmount > 0 && results.customsDuty && (
+      {results && results.totalPayments > 0 && results.customsDuty && (
         <div className="mt-8">
           <TaxPieChart
             data={[
               { name: t('customs-clearance.chart.customsDuty'), value: results.customsDuty },
               { name: t('customs-clearance.chart.vat'), value: results.vat || 0 },
-              { name: t('customs-clearance.chart.excise'), value: results.excise || 0 },
             ].filter(item => item.value > 0)}
             title={t('customs-clearance.chart.title')}
           />
@@ -408,20 +407,19 @@ export default function CustomsClearanceCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results && results.totalAmount > 0 && (
+      {results && results.totalPayments > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
               title: t('customs-clearance.export.title'),
-              subtitle: vehicleType,
+              subtitle: t('customs-clearance.description'),
               sections: [
                 {
                   title: t('customs-clearance.export.results'),
                   data: [
                     { label: t('customs-clearance.chart.customsDuty'), value: `${results.customsDuty?.toLocaleString()} ₸` },
                     { label: t('customs-clearance.chart.vat'), value: `${results.vat?.toLocaleString()} ₸` },
-                    { label: t('customs-clearance.chart.excise'), value: `${results.excise?.toLocaleString()} ₸` },
-                    { label: t('customs-clearance.export.total'), value: `${results.totalAmount.toLocaleString()} ₸` },
+                    { label: t('customs-clearance.export.total'), value: `${results.totalPayments.toLocaleString()} ₸` },
                   ]
                 }
               ],

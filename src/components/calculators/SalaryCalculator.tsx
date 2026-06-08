@@ -51,7 +51,6 @@ export default function SalaryCalculator() {
   const OOSMS_RATE = 0.03;
   const OPVR_RATE = 0.035;
   const STANDARD_DEDUCTION = 30 * MRP;
-  const NINETY_PERCENT_THRESHOLD = 25 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
   const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
   const SO_MAX_BASE = 7 * MZP;
@@ -77,10 +76,8 @@ export default function SalaryCalculator() {
     let taxableIncome = gross - opv - vosms - standardDeduction;
     taxableIncome = Math.max(0, taxableIncome);
 
-    const hasNinetyPercentReduction = gross <= NINETY_PERCENT_THRESHOLD;
-    if (hasNinetyPercentReduction) {
-      taxableIncome = taxableIncome * 0.1;
-    }
+    // 90%-корректировка для доходов ≤25 МРП ОТМЕНЕНА с 2026 (ст. 401 НК РК).
+    const hasNinetyPercentReduction = false;
 
     let incomeTax: number;
     if (taxableIncome <= IPN_MONTHLY_THRESHOLD) {

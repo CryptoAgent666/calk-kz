@@ -44,18 +44,19 @@ export default function VehicleTaxCalculator() {
     { minVolume: 4001, maxVolume: Infinity, rate: 117, descriptionKey: 'calculators:vehicle-tax.rate_car_7' }
   ];
 
+  // Грузовые — по грузоподъёмности, ст. 565 НК РК 2026 (МРП): ≤1т=3, 1–1.5т=5, 1.5–5т=7, >5т=9
   const truckTaxRates = [
-    { minCapacity: 0, maxCapacity: 2, rate: 4, descriptionKey: 'calculators:vehicle-tax.rate_truck_1' },
-    { minCapacity: 2.1, maxCapacity: 5, rate: 8, descriptionKey: 'calculators:vehicle-tax.rate_truck_2' },
-    { minCapacity: 5.1, maxCapacity: 10, rate: 12, descriptionKey: 'calculators:vehicle-tax.rate_truck_3' },
-    { minCapacity: 10.1, maxCapacity: 20, rate: 16, descriptionKey: 'calculators:vehicle-tax.rate_truck_4' },
-    { minCapacity: 20.1, maxCapacity: Infinity, rate: 20, descriptionKey: 'calculators:vehicle-tax.rate_truck_5' }
+    { minCapacity: 0, maxCapacity: 1, rate: 3, descriptionKey: 'calculators:vehicle-tax.rate_truck_1' },
+    { minCapacity: 1, maxCapacity: 1.5, rate: 5, descriptionKey: 'calculators:vehicle-tax.rate_truck_2' },
+    { minCapacity: 1.5, maxCapacity: 5, rate: 7, descriptionKey: 'calculators:vehicle-tax.rate_truck_3' },
+    { minCapacity: 5, maxCapacity: Infinity, rate: 9, descriptionKey: 'calculators:vehicle-tax.rate_truck_4' }
   ];
 
+  // Автобусы — по числу мест, ст. 565 НК РК 2026 (МРП): ≤12=9, 12–25=14, >25=20
   const busTaxRates = [
-    { minSeats: 0, maxSeats: 20, rate: 8, descriptionKey: 'calculators:vehicle-tax.rate_bus_1' },
-    { minSeats: 21, maxSeats: 40, rate: 12, descriptionKey: 'calculators:vehicle-tax.rate_bus_2' },
-    { minSeats: 41, maxSeats: Infinity, rate: 16, descriptionKey: 'calculators:vehicle-tax.rate_bus_3' }
+    { minSeats: 0, maxSeats: 12, rate: 9, descriptionKey: 'calculators:vehicle-tax.rate_bus_1' },
+    { minSeats: 12, maxSeats: 25, rate: 14, descriptionKey: 'calculators:vehicle-tax.rate_bus_2' },
+    { minSeats: 25, maxSeats: Infinity, rate: 20, descriptionKey: 'calculators:vehicle-tax.rate_bus_3' }
   ];
 
   const calculateVehicleTax = () => {

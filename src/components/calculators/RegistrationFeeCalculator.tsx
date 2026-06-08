@@ -33,7 +33,7 @@ export default function RegistrationFeeCalculator() {
 
   // Ставки сбора за регистрацию (в МРП)
   const registrationRates = [
-    { maxAge: 2, rate: 0.25, description: t('registration-fee.upTo2Years') },
+    { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
     { maxAge: 3, rate: 50, description: t('registration-fee.from2To3Years') },
     { maxAge: Infinity, rate: 500, description: t('registration-fee.over3Years') }
   ];

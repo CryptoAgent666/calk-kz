@@ -47,7 +47,9 @@ export default function CasinoWinningsTaxCalculator() {
   });
 
   const MRP_2026 = 4325;
-  const TAX_FREE_THRESHOLD = 100 * MRP_2026;
+  // НК РК 2026: специального необлагаемого минимума по выигрышам нет.
+  // ИПН 10% удерживается у источника с чистого выигрыша (выигрыш − сумма ставки).
+  const TAX_FREE_THRESHOLD = 0;
   const TAX_RATE = 0.10;
 
   const calculateTax = (gross: number, stake: number) => {
@@ -67,21 +69,12 @@ export default function CasinoWinningsTaxCalculator() {
     }
 
     const totalStake = Math.max(0, stake);
-    const isAboveThreshold = gross > TAX_FREE_THRESHOLD;
 
-    let taxableBase = 0;
-    let taxAmount = 0;
-    let isTaxable = false;
-
-    if (isAboveThreshold) {
-      taxableBase = gross - totalStake;
-      taxableBase = Math.max(0, taxableBase);
-
-      if (taxableBase > 0) {
-        isTaxable = true;
-        taxAmount = taxableBase * TAX_RATE;
-      }
-    }
+    // Облагается чистый выигрыш (выигрыш − ставка), без необлагаемого минимума.
+    const taxableBase = Math.max(0, gross - totalStake);
+    const isTaxable = taxableBase > 0;
+    const taxAmount = isTaxable ? taxableBase * TAX_RATE : 0;
+    const isAboveThreshold = isTaxable;
 
     const netAmount = gross - taxAmount;
     const effectiveRate = gross > 0 ? (taxAmount / gross) * 100 : 0;
@@ -114,10 +107,8 @@ export default function CasinoWinningsTaxCalculator() {
       totalGross += gross;
       totalStake += stake;
 
-      if (gross > TAX_FREE_THRESHOLD) {
-        const taxableBase = Math.max(0, gross - stake);
-        totalTax += taxableBase * TAX_RATE;
-      }
+      const taxableBase = Math.max(0, gross - stake);
+      totalTax += taxableBase * TAX_RATE;
     });
 
     const netAmount = totalGross - totalTax;
@@ -131,7 +122,7 @@ export default function CasinoWinningsTaxCalculator() {
       taxAmount: Math.round(totalTax),
       netAmount: Math.round(netAmount),
       effectiveRate: Number(effectiveRate.toFixed(2)),
-      isAboveThreshold: totalGross > TAX_FREE_THRESHOLD,
+      isAboveThreshold: totalTax > 0,
       isTaxable: totalTax > 0,
       requiresSelfDeclaration: !locationInKz
     };
@@ -521,8 +512,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
               <div>
                 <h4 className="font-semibold text-green-900 mb-1">{t('casino-winnings-tax.notTaxable')}</h4>
                 <p className="text-sm text-green-700">
-                  {t('casino-winnings-tax.notTaxableDesc')} {formatNumber(TAX_FREE_THRESHOLD)} (12 МРП).
-                  {' '}{t('casino-winnings-tax.notTaxableDesc2')}
+                  Чистый выигрыш (выигрыш за вычетом суммы ставки) равен нулю — налогооблагаемой базы по ИПН нет.
                 </p>
               </div>
             </div>

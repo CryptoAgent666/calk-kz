@@ -46,7 +46,6 @@ export default function AlimonyCalculator() {
   const IPN_ANNUAL_THRESHOLD = 8500 * MRP; // 36,762,500 тенге/год
   const IPN_MONTHLY_THRESHOLD = IPN_ANNUAL_THRESHOLD / 12; // ~3,063,542 тенге/мес
   const STANDARD_DEDUCTION = 30 * MRP;
-  const NINETY_PERCENT_THRESHOLD = 25 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
   const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
 
@@ -77,10 +76,8 @@ export default function AlimonyCalculator() {
     let taxableIncome = gross - opv - vosms - standardDeduction;
     taxableIncome = Math.max(0, taxableIncome);
 
-    const hasNinetyPercentReduction = gross <= NINETY_PERCENT_THRESHOLD;
-    if (hasNinetyPercentReduction) {
-      taxableIncome = taxableIncome * 0.1;
-    }
+    // 90%-корректировка для доходов ≤25 МРП ОТМЕНЕНА с 2026 (ст. 401 НК РК).
+    const hasNinetyPercentReduction = false;
 
     let incomeTax: number;
     if (taxableIncome <= IPN_MONTHLY_THRESHOLD) {

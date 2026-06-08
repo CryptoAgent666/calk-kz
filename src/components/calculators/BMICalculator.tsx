@@ -618,12 +618,12 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
       />
 
       {/* Диаграмма */}
-      {results && results.bmi > 0 && results.idealWeight && (
+      {results && results.bmi > 0 && results.normalWeightRange.max > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
               { name: 'Текущий вес', value: parseFloat(weight) || 0 },
-              { name: 'Идеальный вес', value: results.idealWeight },
+              { name: 'Норма (макс.)', value: results.normalWeightRange.max },
             ]}
             title="Сравнение веса"
           />
@@ -650,7 +650,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                   data: [
                     { label: 'ИМТ', value: results.bmi.toFixed(1) },
                     { label: 'Категория', value: results.category },
-                    { label: 'Идеальный вес', value: `${results.idealWeight?.toFixed(1)} кг` },
+                    { label: 'Норма веса', value: `${results.normalWeightRange.min} - ${results.normalWeightRange.max} кг` },
                   ]
                 }
               ],

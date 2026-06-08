@@ -44,7 +44,6 @@ export default function IncomeTaxCalculator() {
   const IPN_ANNUAL_THRESHOLD = 8500 * MRP; // 36,762,500 тенге/год
   const IPN_MONTHLY_THRESHOLD = IPN_ANNUAL_THRESHOLD / 12; // ~3,063,542 тенге/мес
   const STANDARD_DEDUCTION = 30 * MRP;
-  const NINETY_PERCENT_THRESHOLD = 25 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
   const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
 
@@ -78,10 +77,8 @@ export default function IncomeTaxCalculator() {
     let taxableIncome = gross - opv - vosms - standardDeduction;
     taxableIncome = Math.max(0, taxableIncome);
 
-    const hasNinetyPercentReduction = gross <= NINETY_PERCENT_THRESHOLD;
-    if (hasNinetyPercentReduction) {
-      taxableIncome = taxableIncome * 0.1;
-    }
+    // 90%-корректировка для доходов ≤25 МРП ОТМЕНЕНА с 2026 (ст. 401 НК РК).
+    const hasNinetyPercentReduction = false;
 
     let incomeTax: number;
     if (taxableIncome <= IPN_MONTHLY_THRESHOLD) {
@@ -93,18 +90,9 @@ export default function IncomeTaxCalculator() {
     const netSalary = gross - totalDeductions;
     const effectiveRate = gross > 0 ? (totalDeductions / gross) * 100 : 0;
 
-    const isNearThreshold = gross >= NINETY_PERCENT_THRESHOLD - 5000 && gross <= NINETY_PERCENT_THRESHOLD + 5000;
-    let thresholdWarning = '';
-
-    if (isNearThreshold) {
-      if (gross <= NINETY_PERCENT_THRESHOLD) {
-        const potentialIncrease = calculateTaxSimple(NINETY_PERCENT_THRESHOLD + 1).totalDeductions - totalDeductions;
-        thresholdWarning = `${t('income-tax.warningNear')} ${formatNumber(NINETY_PERCENT_THRESHOLD)} ${t('income-tax.warningIncrease')} ${formatNumber(potentialIncrease)} ${t('income-tax.warningCancellation')}`;
-      } else {
-        const savingsIfBelow = totalDeductions - calculateTaxSimple(NINETY_PERCENT_THRESHOLD).totalDeductions;
-        thresholdWarning = `${t('income-tax.warningAbove')} ${formatNumber(NINETY_PERCENT_THRESHOLD)}, ${t('income-tax.warningNoBenefit')} ${formatNumber(NINETY_PERCENT_THRESHOLD)} ${t('income-tax.warningLess')} ${formatNumber(savingsIfBelow)}.`;
-      }
-    }
+    // Предупреждение о пороге 25 МРП удалено — 90%-льгота отменена с 2026.
+    const isNearThreshold = false;
+    const thresholdWarning = '';
 
     return {
       opv: Math.round(opv),
@@ -119,26 +107,6 @@ export default function IncomeTaxCalculator() {
       isNearThreshold,
       thresholdWarning
     };
-  };
-
-  const calculateTaxSimple = (gross: number) => {
-    const opvBase = Math.min(gross, OPV_MAX_BASE);
-    const opv = isSpecialCategory ? 0 : opvBase * OPV_RATE;
-    const vosmsBase = Math.min(gross, VOSMS_MAX_BASE);
-    const vosms = isSpecialCategory ? 0 : vosmsBase * VOSMS_RATE;
-    const standardDeduction = (isResident && isPrimaryJob) ? STANDARD_DEDUCTION : 0;
-    let taxableIncome = Math.max(0, gross - opv - vosms - standardDeduction);
-    const hasNinetyPercentReduction = gross <= NINETY_PERCENT_THRESHOLD;
-    if (hasNinetyPercentReduction) {
-      taxableIncome = taxableIncome * 0.1;
-    }
-    let incomeTax: number;
-    if (taxableIncome <= IPN_MONTHLY_THRESHOLD) {
-      incomeTax = taxableIncome * IPN_RATE_BASE;
-    } else {
-      incomeTax = IPN_MONTHLY_THRESHOLD * IPN_RATE_BASE + (taxableIncome - IPN_MONTHLY_THRESHOLD) * IPN_RATE_HIGH;
-    }
-    return { totalDeductions: opv + vosms + incomeTax };
   };
 
   useEffect(() => {

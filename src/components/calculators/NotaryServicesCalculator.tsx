@@ -479,7 +479,7 @@ export default function NotaryServicesCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Нотариальный сбор', value: results.notaryFee },
+              { name: 'Технические услуги', value: results.technicalServiceFee },
               { name: 'Госпошлина', value: results.stateFee },
             ].filter(item => item.value > 0)}
             title="Структура нотариальных услуг"

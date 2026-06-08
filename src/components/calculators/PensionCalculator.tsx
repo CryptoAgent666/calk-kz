@@ -29,7 +29,7 @@ export default function PensionCalculator() {
     solidarityPension: 0,
     accumulativePension: 0,
     totalMonthlyPension: 0,
-    retirementAge: { men: 63, women: 58 },
+    retirementAge: { men: 63, women: 61 },
     yearsToRetirement: 0,
     estimatedAccumulationsAtRetirement: 0
   });
@@ -51,7 +51,7 @@ export default function PensionCalculator() {
     if (year === 0) {
       setResults({
         age: 0, totalWorkExperience: 0, basePension: 0, solidarityPension: 0,
-        accumulativePension: 0, totalMonthlyPension: 0, retirementAge: { men: 63, women: 58 },
+        accumulativePension: 0, totalMonthlyPension: 0, retirementAge: { men: 63, women: 61 },
         yearsToRetirement: 0, estimatedAccumulationsAtRetirement: 0
       });
       return;

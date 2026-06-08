@@ -472,7 +472,7 @@ export default function ElectricityBillCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Потребление', value: `${results.consumption} кВт·ч` },
+                    { label: 'Потребление', value: `${consumption} кВт·ч` },
                     { label: 'К оплате', value: `${results.totalAmount.toLocaleString()} ₸` },
                   ]
                 }

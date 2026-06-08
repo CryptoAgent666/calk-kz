@@ -572,20 +572,20 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
       </div>
 
       {/* Экспорт результатов */}
-      {results && results.finalAmount > 0 && (
+      {results && results.finalAmountWithContributions > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
               title: 'Расчёт депозита',
-              subtitle: `Ставка ${rate}% годовых`,
+              subtitle: `Ставка ${nominalRate}% годовых`,
               sections: [
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Начальная сумма', value: `${parseFloat(amount).toLocaleString()} ₸` },
-                    { label: 'Срок', value: `${term} мес.` },
-                    { label: 'Начисленные проценты', value: `${results.interestEarned.toLocaleString()} ₸` },
-                    { label: 'Итого', value: `${results.finalAmount.toLocaleString()} ₸` },
+                    { label: 'Начальная сумма', value: `${parseFloat(initialAmount).toLocaleString()} ₸` },
+                    { label: 'Срок', value: `${termValue} мес.` },
+                    { label: 'Начисленные проценты', value: `${results.totalEarningsWithContributions.toLocaleString()} ₸` },
+                    { label: 'Итого', value: `${results.finalAmountWithContributions.toLocaleString()} ₸` },
                   ]
                 }
               ],

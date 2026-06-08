@@ -11,6 +11,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { TaxPieChart } from '../ui/ChartComponents';
 
 export default function PenaltyCalculator() {
   const { t } = useTranslation('calculators');
@@ -574,12 +575,12 @@ export default function PenaltyCalculator() {
       />
 
       {/* Диаграмма структуры */}
-      {results && results.penaltyAmount > 0 && (
+      {results && results.totalPenalty > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Основной долг', value: results.debtAmount },
-              { name: 'Пеня', value: results.penaltyAmount },
+              { name: 'Основной долг', value: parseFloat(debtAmount) || 0 },
+              { name: 'Пеня', value: results.totalPenalty },
             ]}
             title="Структура задолженности"
           />
@@ -587,20 +588,20 @@ export default function PenaltyCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results && results.penaltyAmount > 0 && (
+      {results && results.totalPenalty > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
               title: 'Расчёт пени',
-              subtitle: `${results.daysOverdue} дней просрочки`,
+              subtitle: `${daysOverdue} дней просрочки`,
               sections: [
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Сумма долга', value: `${results.debtAmount.toLocaleString()} ₸` },
-                    { label: 'Дней просрочки', value: results.daysOverdue },
-                    { label: 'Пеня', value: `${results.penaltyAmount.toLocaleString()} ₸` },
-                    { label: 'Итого к оплате', value: `${results.totalAmount.toLocaleString()} ₸` },
+                    { label: 'Сумма долга', value: `${(parseFloat(debtAmount) || 0).toLocaleString()} ₸` },
+                    { label: 'Дней просрочки', value: daysOverdue },
+                    { label: 'Пеня', value: `${results.totalPenalty.toLocaleString()} ₸` },
+                    { label: 'Итого к оплате', value: `${results.totalToPay.toLocaleString()} ₸` },
                   ]
                 }
               ],

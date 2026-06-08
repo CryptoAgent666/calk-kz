@@ -991,12 +991,12 @@ export default function RamadanSadaqahCalculator() {
       </div>
 
       {/* Диаграмма */}
-      {results.fitrTotal > 0 && (
+      {results.totalSadaqahAmount > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Фитр-садака', value: results.fitrTotal },
-              { name: 'Фидия', value: results.fidyaTotal },
+              { name: 'Фитр-садака', value: results.fitrSadaqahAmount },
+              { name: 'Фидия', value: results.fidyaSadaqahAmount },
             ].filter(item => item.value > 0)}
             title="Структура выплат Рамадан"
           />
@@ -1004,7 +1004,7 @@ export default function RamadanSadaqahCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results.fitrTotal > 0 && (
+      {results.totalSadaqahAmount > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -1021,9 +1021,9 @@ export default function RamadanSadaqahCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Фитр-садака', value: `${results.fitrTotal.toLocaleString()} ₸` },
-                    { label: 'Фидия', value: `${results.fidyaTotal.toLocaleString()} ₸` },
-                    { label: 'Итого', value: `${results.grandTotal.toLocaleString()} ₸` },
+                    { label: 'Фитр-садака', value: `${results.fitrSadaqahAmount.toLocaleString()} ₸` },
+                    { label: 'Фидия', value: `${results.fidyaSadaqahAmount.toLocaleString()} ₸` },
+                    { label: 'Итого', value: `${results.totalSadaqahAmount.toLocaleString()} ₸` },
                   ]
                 }
               ],

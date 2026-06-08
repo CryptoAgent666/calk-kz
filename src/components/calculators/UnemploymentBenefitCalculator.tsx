@@ -91,11 +91,11 @@ export default function UnemploymentBenefitCalculator() {
       return;
     }
 
-    // Средний доход восстанавливается из соц. отчислений (СО — 3.5% от дохода),
+    // Средний доход восстанавливается из соц. отчислений (СО — 5% от дохода в 2026),
     // объект исчисления ограничен 7 МЗП (595 000 ₸ в 2026)
-    const averageMonthlyIncome = Math.min(7 * 85000, contributions / 24 / 0.035);
+    const averageMonthlyIncome = Math.min(7 * 85000, contributions / 24 / 0.05);
 
-    const incomeReplacementCoef = 0.45;
+    const incomeReplacementCoef = 0.40; // коэффициент замещения дохода ГФСС — 40%
     const experienceCoef = getExperienceCoefficient(experienceMonths);
     const paymentPeriodMonths = getPaymentPeriod(experienceMonths);
 

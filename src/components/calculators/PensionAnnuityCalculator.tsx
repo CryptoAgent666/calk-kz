@@ -813,12 +813,12 @@ export default function PensionAnnuityCalculator() {
       </div>
 
       {/* Диаграмма */}
-      {results.monthlyAnnuity > 0 && (
+      {results.monthlyAnnuityPayment > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Ежемесячная выплата', value: results.monthlyAnnuity },
-              { name: 'Годовая выплата', value: results.yearlyAnnuity },
+              { name: 'Ежемесячная выплата', value: results.monthlyAnnuityPayment },
+              { name: 'Годовая выплата', value: results.monthlyAnnuityPayment * 12 },
             ]}
             title="Пенсионный аннуитет"
           />
@@ -826,7 +826,7 @@ export default function PensionAnnuityCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results.monthlyAnnuity > 0 && (
+      {results.monthlyAnnuityPayment > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -844,8 +844,8 @@ export default function PensionAnnuityCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Ежемесячная выплата', value: `${results.monthlyAnnuity.toLocaleString()} ₸` },
-                    { label: 'Годовая выплата', value: `${results.yearlyAnnuity.toLocaleString()} ₸` },
+                    { label: 'Ежемесячная выплата', value: `${results.monthlyAnnuityPayment.toLocaleString()} ₸` },
+                    { label: 'Годовая выплата', value: `${(results.monthlyAnnuityPayment * 12).toLocaleString()} ₸` },
                   ]
                 }
               ],

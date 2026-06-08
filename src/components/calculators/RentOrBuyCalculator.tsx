@@ -884,12 +884,12 @@ export default function RentOrBuyCalculator() {
       </div>
 
       {/* Диаграмма сравнения */}
-      {results && results.totalBuyCost > 0 && (
+      {results && results.netOwnershipCost > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Покупка', value: results.totalBuyCost },
-              { name: 'Аренда', value: results.totalRentCost },
+              { name: 'Покупка', value: results.netOwnershipCost },
+              { name: 'Аренда', value: results.totalRentingCost },
             ]}
             title="Сравнение расходов"
           />
@@ -897,12 +897,12 @@ export default function RentOrBuyCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results && results.totalBuyCost > 0 && (
+      {results && results.netOwnershipCost > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
               title: 'Аренда или покупка',
-              subtitle: results.recommendation === 'buy' ? 'Рекомендация: Покупка' : 'Рекомендация: Аренда',
+              subtitle: !results.isRentingBetter ? 'Рекомендация: Покупка' : 'Рекомендация: Аренда',
               sections: [
                 {
                   title: 'Параметры',
@@ -915,8 +915,8 @@ export default function RentOrBuyCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Общая стоимость покупки', value: `${results.totalBuyCost.toLocaleString()} ₸` },
-                    { label: 'Общая стоимость аренды', value: `${results.totalRentCost.toLocaleString()} ₸` },
+                    { label: 'Общая стоимость покупки', value: `${results.netOwnershipCost.toLocaleString()} ₸` },
+                    { label: 'Общая стоимость аренды', value: `${results.totalRentingCost.toLocaleString()} ₸` },
                     { label: 'Разница', value: `${results.difference.toLocaleString()} ₸` },
                   ]
                 }

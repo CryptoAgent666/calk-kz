@@ -130,17 +130,9 @@ export const calculatorCategories: CalculatorCategory[] = [
         component: React.lazy(() => import('../components/calculators/UnifiedPaymentCalculator'))
       },
       {
-        id: 'esp-self-employed',
-        title: 'Калькулятор ЕСП для самозанятых',
-        description: 'Расчет единого совокупного платежа для физических лиц, оказывающих услуги',
-        category: 'tax',
-        icon: 'UserCheck',
-        component: React.lazy(() => import('../components/calculators/ESPSelfEmployedCalculator'))
-      },
-      {
         id: 'tax-regime-comparison',
         title: 'Сравнение налоговых режимов ИП',
-        description: 'Упрощёнка / ОУР / ЕСП / Розничный — какой режим выгоднее по НК РК 2026',
+        description: 'Упрощёнка / ОУР / Розничный — какой режим выгоднее по НК РК 2026',
         category: 'tax',
         icon: 'BarChart3',
         component: React.lazy(() => import('../components/calculators/TaxRegimeComparisonCalculator'))

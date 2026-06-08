@@ -9,7 +9,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 
-// Ставки акцизов НК РК 2026 (статья 748)
+// Ставки акцизов НК РК 2026 (статья 537 нового НК K2500000214)
 interface ExciseProduct {
   id: string;
   labelKey: string;
@@ -19,20 +19,21 @@ interface ExciseProduct {
   adValoremRate?: number; // адвалорная составляющая (%)
 }
 
+// Ставки 2026 — ст. 537 НК РК. Сигареты — только специфическая ставка (адвалорной части в 2026 НЕТ).
+// Вейпы/никотиносодержащие жидкости выведены из подакцизных и запрещены к реализации в РК — исключены.
 const products: ExciseProduct[] = [
   // Алкоголь
-  { id: 'vodka', labelKey: 'excise-tax.products.vodka', group: 'alcohol', rate: 2550, unitKey: 'excise-tax.perLiterAlcohol' },
-  { id: 'cognac', labelKey: 'excise-tax.products.cognac', group: 'alcohol', rate: 2550, unitKey: 'excise-tax.perLiterAlcohol' },
-  { id: 'wine', labelKey: 'excise-tax.products.wine', group: 'alcohol', rate: 100, unitKey: 'excise-tax.perLiter' },
-  { id: 'sparklingWine', labelKey: 'excise-tax.products.sparklingWine', group: 'alcohol', rate: 250, unitKey: 'excise-tax.perLiter' },
-  { id: 'beer', labelKey: 'excise-tax.products.beer', group: 'alcohol', rate: 72, unitKey: 'excise-tax.perLiter' },
-  { id: 'beerStrong', labelKey: 'excise-tax.products.beerStrong', group: 'alcohol', rate: 120, unitKey: 'excise-tax.perLiter' },
+  { id: 'vodka', labelKey: 'excise-tax.products.vodka', group: 'alcohol', rate: 2805, unitKey: 'excise-tax.perLiterAlcohol' },
+  { id: 'cognac', labelKey: 'excise-tax.products.cognac', group: 'alcohol', rate: 2805, unitKey: 'excise-tax.perLiterAlcohol' },
+  { id: 'wine', labelKey: 'excise-tax.products.wine', group: 'alcohol', rate: 38, unitKey: 'excise-tax.perLiter' },
+  { id: 'sparklingWine', labelKey: 'excise-tax.products.sparklingWine', group: 'alcohol', rate: 38, unitKey: 'excise-tax.perLiter' },
+  { id: 'beer', labelKey: 'excise-tax.products.beer', group: 'alcohol', rate: 99, unitKey: 'excise-tax.perLiter' },
+  { id: 'beerStrong', labelKey: 'excise-tax.products.beerStrong', group: 'alcohol', rate: 99, unitKey: 'excise-tax.perLiter' },
 
   // Табак
-  { id: 'cigarettes', labelKey: 'excise-tax.products.cigarettes', group: 'tobacco', rate: 14400, unitKey: 'excise-tax.per1000units', adValoremRate: 7 },
-  { id: 'heatedTobacco', labelKey: 'excise-tax.products.heatedTobacco', group: 'tobacco', rate: 9360, unitKey: 'excise-tax.per1000units' },
-  { id: 'vape', labelKey: 'excise-tax.products.vape', group: 'tobacco', rate: 65, unitKey: 'excise-tax.perMl' },
-  { id: 'cigars', labelKey: 'excise-tax.products.cigars', group: 'tobacco', rate: 750, unitKey: 'excise-tax.perUnit' },
+  { id: 'cigarettes', labelKey: 'excise-tax.products.cigarettes', group: 'tobacco', rate: 18051, unitKey: 'excise-tax.per1000units' },
+  { id: 'heatedTobacco', labelKey: 'excise-tax.products.heatedTobacco', group: 'tobacco', rate: 11230, unitKey: 'excise-tax.per1000units' },
+  { id: 'cigars', labelKey: 'excise-tax.products.cigars', group: 'tobacco', rate: 825, unitKey: 'excise-tax.perUnit' },
 ];
 
 export default function ExciseTaxCalculator() {

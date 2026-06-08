@@ -56,7 +56,7 @@ export default function PropertyTaxCalculator() {
     { id: 'other', nameKey: 'calculators:property-tax.city_other', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 }
   ];
 
-  // Прогрессивная (маржинальная) шкала налога на имущество физлиц — ст. 531 НК РК.
+  // Прогрессивная (маржинальная) шкала налога на имущество физлиц — ст. 602 НК РК (новый НК K2500000214, 2026).
   // Налог = base (фиксированная сумма в ₸) + rate% с суммы, превышающей min.
   const taxRates = [
     { min: 0,         max: 2000000,    base: 0,       rate: 0.05 },
@@ -72,9 +72,9 @@ export default function PropertyTaxCalculator() {
     { min: 20000000,  max: 75000000,   base: 46600,   rate: 0.5 },
     { min: 75000000,  max: 100000000,  base: 321600,  rate: 0.6 },
     { min: 100000000, max: 150000000,  base: 471600,  rate: 0.65 },
-    { min: 150000000, max: 350000000,  base: 796600,  rate: 0.75 },
-    { min: 350000000, max: 450000000,  base: 2296600, rate: 1.0 },
-    { min: 450000000, max: Infinity,   base: 3296600, rate: 1.5 }
+    { min: 150000000, max: 350000000,  base: 796600,  rate: 0.7 },
+    { min: 350000000, max: 450000000,  base: 2196600, rate: 0.75 },
+    { min: 450000000, max: Infinity,   base: 2946600, rate: 2.0 }
   ];
 
   const calculatePropertyTax = () => {
@@ -468,20 +468,20 @@ export default function PropertyTaxCalculator() {
       />
 
       {/* Диаграмма структуры */}
-      {results && results.annualTax > 0 && results.assessedValue && (
+      {results && results.finalAmount > 0 && results.taxBase && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Налог', value: results.annualTax },
-              { name: 'Оценочная стоимость', value: results.assessedValue / 100 },
+              { name: 'Налог', value: results.finalAmount },
+              { name: 'Оценочная стоимость', value: results.taxBase / 100 },
             ]}
-            title="Налог на имущество (1% от стоимости)"
+            title="Структура налога на имущество"
           />
         </div>
       )}
 
       {/* Экспорт результатов */}
-      {results && results.annualTax > 0 && (
+      {results && results.finalAmount > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -492,8 +492,8 @@ export default function PropertyTaxCalculator() {
                   title: 'Результаты',
                   data: [
                     { label: 'Тип имущества', value: propertyType },
-                    { label: 'Оценочная стоимость', value: `${results.assessedValue?.toLocaleString()} ₸` },
-                    { label: 'Годовой налог', value: `${results.annualTax.toLocaleString()} ₸` },
+                    { label: 'Оценочная стоимость', value: `${results.taxBase?.toLocaleString()} ₸` },
+                    { label: 'Годовой налог', value: `${results.finalAmount.toLocaleString()} ₸` },
                   ]
                 }
               ],

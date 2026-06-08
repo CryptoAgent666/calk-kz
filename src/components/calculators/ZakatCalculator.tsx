@@ -1034,12 +1034,12 @@ export default function ZakatCalculator() {
       />
 
       {/* Диаграмма */}
-      {results && results.totalZakat > 0 && (
+      {results && results.zakatAmount > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Закят (2.5%)', value: results.totalZakat },
-              { name: 'Остаток', value: results.totalAssets - results.totalZakat },
+              { name: 'Закят (2.5%)', value: results.zakatAmount },
+              { name: 'Остаток', value: results.totalAssets - results.zakatAmount },
             ]}
             title="Распределение активов"
           />
@@ -1047,7 +1047,7 @@ export default function ZakatCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results && results.totalZakat > 0 && (
+      {results && results.zakatAmount > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -1058,8 +1058,8 @@ export default function ZakatCalculator() {
                   title: 'Результаты',
                   data: [
                     { label: 'Общее имущество', value: `${results.totalAssets.toLocaleString()} ₸` },
-                    { label: 'Нисаб (порог)', value: `${results.nisab.toLocaleString()} ₸` },
-                    { label: 'Закят (2.5%)', value: `${results.totalZakat.toLocaleString()} ₸` },
+                    { label: 'Нисаб (порог)', value: `${results.applicableNisab.toLocaleString()} ₸` },
+                    { label: 'Закят (2.5%)', value: `${results.zakatAmount.toLocaleString()} ₸` },
                   ]
                 }
               ],

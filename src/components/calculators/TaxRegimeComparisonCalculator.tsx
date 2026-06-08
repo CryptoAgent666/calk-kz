@@ -16,7 +16,6 @@ const MZP = 85_000;
 
 // Упрощёнка — 4% от дохода (ИПН/КПН) с 2026; социальный налог отменён, акимат вправе изменить ставку ±50% (2–6%)
 // ОУР — ИПН 10%/15% от прибыли; все соцплатежи отдельно
-// ЕСП — фикс 1 МРП/мес (город) или 0.5 МРП/мес (село)
 // Розничный налог — 4% от дохода (отдельные виды розницы)
 
 interface RegimeResult {
@@ -75,12 +74,7 @@ export default function TaxRegimeComparisonCalculator() {
     const ourSocial = baseSocialMonthly;
     const ourTotal = ourIPN + ourSocial;
 
-    // 3. ЕСП (Единый совокупный платёж) — только без наёмных работников
-    const espAvailable = !hasEmployees;
-    const espMonthly = isRural ? Math.round(0.5 * MRP) : MRP;
-    const espTotal = espMonthly;
-
-    // 4. Розничный налог — 4% (для отдельных видов деятельности)
+    // 3. Розничный налог — 4% (для отдельных видов деятельности)
     const retailTax = Math.round(revenue * 0.04);
     const retailSocial = baseSocialMonthly;
     const retailTotal = retailTax + retailSocial;
@@ -102,15 +96,6 @@ export default function TaxRegimeComparisonCalculator() {
         total: ourTotal,
         effectiveRate: revenue > 0 ? (ourTotal / revenue) * 100 : 0,
         available: true,
-      },
-      {
-        regimeKey: 'esp',
-        tax: espMonthly,
-        socialPayments: 0,
-        total: espTotal,
-        effectiveRate: revenue > 0 ? (espTotal / revenue) * 100 : 0,
-        available: espAvailable,
-        limitNote: !espAvailable ? t('tax-regime.limitESP') : undefined,
       },
       {
         regimeKey: 'retail',
@@ -277,7 +262,6 @@ export default function TaxRegimeComparisonCalculator() {
               <ul className="text-xs text-indigo-700 space-y-1">
                 <li>• {t('tax-regime.rateSimplified')}</li>
                 <li>• {t('tax-regime.rateGeneral')}</li>
-                <li>• {t('tax-regime.rateESP')}</li>
                 <li>• {t('tax-regime.rateRetail')}</li>
               </ul>
             </div>

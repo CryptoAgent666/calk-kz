@@ -384,11 +384,11 @@ export default function RecyclingFeeCalculator() {
       </div>
 
       {/* Диаграмма */}
-      {results.totalFee > 0 && (
+      {results.fee > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: t('recycling-fee.chart.recyclingFee'), value: results.totalFee },
+              { name: t('recycling-fee.chart.recyclingFee'), value: results.fee },
             ]}
             title={t('recycling-fee.chart.title')}
           />
@@ -396,7 +396,7 @@ export default function RecyclingFeeCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results.totalFee > 0 && (
+      {results.fee > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -415,7 +415,7 @@ export default function RecyclingFeeCalculator() {
                   title: t('recycling-fee.export.results'),
                   data: [
                     { label: t('recycling-fee.export.coefficient'), value: results.coefficient.toString() },
-                    { label: t('recycling-fee.export.feeAmount'), value: `${results.totalFee.toLocaleString()} ₸` },
+                    { label: t('recycling-fee.export.feeAmount'), value: `${results.fee.toLocaleString()} ₸` },
                   ]
                 }
               ],

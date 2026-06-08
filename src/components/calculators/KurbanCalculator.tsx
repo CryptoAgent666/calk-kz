@@ -1227,11 +1227,11 @@ export default function KurbanCalculator() {
       </div>
 
       {/* Диаграмма */}
-      {results && results.totalCost > 0 && (
+      {results && results.totalCost.max > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Курбан', value: results.totalCost },
+              { name: 'Курбан', value: results.totalCost.max },
             ]}
             title="Стоимость Курбан"
           />
@@ -1239,7 +1239,7 @@ export default function KurbanCalculator() {
       )}
 
       {/* Экспорт результатов */}
-      {results && results.totalCost > 0 && (
+      {results && results.totalCost.max > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
@@ -1250,13 +1250,13 @@ export default function KurbanCalculator() {
                   title: 'Параметры',
                   data: [
                     { label: 'Регион', value: region },
-                    { label: 'Тип животного', value: results.animalType },
+                    { label: 'Тип животного', value: results.animalDescription },
                   ]
                 },
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Стоимость', value: `${results.totalCost.toLocaleString()} ₸` },
+                    { label: 'Стоимость', value: `${results.totalCost.max.toLocaleString()} ₸` },
                   ]
                 }
               ],
