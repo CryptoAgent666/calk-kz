@@ -51,12 +51,6 @@ export default function IncomeTaxCalculator() {
     return num.toLocaleString('ru-KZ') + ' ₸';
   };
 
-  const formatShortNumber = (num: number) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + ' млн';
-    if (num >= 1000) return (num / 1000).toFixed(0) + ' тыс';
-    return num.toString();
-  };
-
   const calculateTax = (gross: number, resident = isResident, primary = isPrimaryJob, special = isSpecialCategory) => {
     if (gross <= 0) {
       return {
@@ -154,7 +148,7 @@ export default function IncomeTaxCalculator() {
   const faqItems = [
     { question: t('income-tax.faq.q1'), answer: t('income-tax.faq.a1') },
     { question: t('income-tax.faq.q2'), answer: t('income-tax.faq.a2') },
-    { question: t('income-tax.faq.q3'), answer: t('income-tax.faq.a3', { threshold: formatNumber(NINETY_PERCENT_THRESHOLD) }) },
+    { question: t('income-tax.faq.q3'), answer: t('income-tax.faq.a3') },
     { question: t('income-tax.faq.q4'), answer: t('income-tax.faq.a4') },
     { question: t('income-tax.faq.q5'), answer: t('income-tax.faq.a5', { deduction: formatNumber(STANDARD_DEDUCTION) }) }
   ];
@@ -182,14 +176,8 @@ export default function IncomeTaxCalculator() {
     {
       step: 4,
       title: t('income-tax.methodology.step4.title'),
-      description: t('income-tax.methodology.step4.description', { threshold: formatNumber(NINETY_PERCENT_THRESHOLD) }),
+      description: t('income-tax.methodology.step4.description'),
       formula: t('income-tax.methodology.step4.formula')
-    },
-    {
-      step: 5,
-      title: t('income-tax.methodology.step5.title'),
-      description: t('income-tax.methodology.step5.description'),
-      formula: t('income-tax.methodology.step5.formula')
     }
   ];
 
@@ -331,7 +319,6 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
                 <li>• {t('income-tax.vosmsRate')} {formatNumber(VOSMS_MAX_BASE)})</li>
                 <li>• {t('income-tax.ipnRate')}</li>
                 <li>• {t('income-tax.standardDeductionLabel')} {formatNumber(STANDARD_DEDUCTION)}</li>
-                <li>• {t('income-tax.ninetyPercentBenefit')} {formatNumber(NINETY_PERCENT_THRESHOLD)}</li>
               </ul>
             </div>
           </div>
@@ -505,7 +492,7 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
                 <strong>{t('income-tax.infoStandardDeduction')}</strong> {t('income-tax.infoStandardDeductionText')}
               </p>
               <p>
-                <strong>{t('income-tax.info90Benefit')}</strong> {t('income-tax.info90BenefitText1')} {formatNumber(NINETY_PERCENT_THRESHOLD)} {t('income-tax.info90BenefitText2')}
+                <strong>{t('income-tax.info90Benefit')}</strong> {t('income-tax.info90BenefitText')}
               </p>
               <p>
                 <strong>{t('income-tax.infoSpecialCategories')}</strong> {t('income-tax.infoSpecialCategoriesText')}

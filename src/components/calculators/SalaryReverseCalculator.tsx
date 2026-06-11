@@ -48,12 +48,13 @@ export default function SalaryReverseCalculator() {
   const STANDARD_DEDUCTION = 30 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
   const VOSMS_MAX_BASE = 20 * MZP;
-  const SN_RATE = 0.06;
+  const SN_RATE = 0.06; // СН с 2026: 6%, взаимозачёт с СО отменён (новый НК РК)
+  const SN_MIN_BASE = 14 * MRP; // минимальный объект СН = 14 МРП
   const SO_RATE = 0.05;
   const SO_MAX_BASE = 7 * MZP;
   const OOSMS_RATE = 0.03;
+  const OOSMS_MAX_BASE = 40 * MZP; // С 2026: макс. база ООСМС = 40 МЗП
   const OPVR_RATE = 0.035;
-  const MIN_SN_BASE = 14 * MRP;
 
   const calculateForwardNet = (gross: number): number => {
     if (gross <= 0) return 0;
@@ -111,13 +112,14 @@ export default function SalaryReverseCalculator() {
     const netSalary = gross - totalEmployeeDeductions;
 
     // Employer costs
-    const snBase = Math.max(gross - opv - vosms, MIN_SN_BASE);
+    // СН 6% (новый НК РК 2026): база = доход − ОПВ − ВОСМС, но не менее 14 МРП
+    const snBase = Math.max(gross - opv - vosms, SN_MIN_BASE);
     const sn = snBase * SN_RATE;
 
     const soBase = Math.min(Math.max(gross - opv, 0), SO_MAX_BASE);
     const so = soBase * SO_RATE;
 
-    const oosmsBase = Math.min(gross, 40 * MZP);
+    const oosmsBase = Math.min(gross, OOSMS_MAX_BASE);
     const oosms = oosmsBase * OOSMS_RATE;
 
     const opvrBase = Math.min(gross, OPV_MAX_BASE);

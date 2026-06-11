@@ -28,6 +28,7 @@ export default function SalaryCalculator() {
     taxableIncome: 0,
     incomeTax: 0,
     totalEmployeeDeductions: 0,
+    sn: 0,
     so: 0,
     oosms: 0,
     opvr: 0,
@@ -49,16 +50,19 @@ export default function SalaryCalculator() {
   const SO_RATE = 0.05;
   const OOSMS_RATE = 0.03;
   const OPVR_RATE = 0.035;
+  const SN_RATE = 0.06; // СН с 2026: 6%, взаимозачёт с СО отменён (новый НК РК)
+  const SN_MIN_BASE = 14 * MRP; // минимальный объект СН = 14 МРП
   const STANDARD_DEDUCTION = 30 * MRP;
   const OPV_MAX_BASE = 50 * MZP;
   const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
   const SO_MAX_BASE = 7 * MZP;
+  const OOSMS_MAX_BASE = 40 * MZP; // С 2026: макс. база ООСМС = 40 МЗП
 
   const calculateSalary = (gross: number) => {
     if (gross <= 0) {
       return {
         opv: 0, vosms: 0, standardDeduction: 0, taxableIncome: 0, incomeTax: 0,
-        totalEmployeeDeductions: 0, so: 0, oosms: 0, opvr: 0, totalEmployerContributions: 0,
+        totalEmployeeDeductions: 0, sn: 0, so: 0, oosms: 0, opvr: 0, totalEmployerContributions: 0,
         netSalary: 0, totalLaborCost: 0,
         effectiveEmployeeTaxRate: 0, effectiveEmployerRate: 0
       };
@@ -86,15 +90,23 @@ export default function SalaryCalculator() {
     }
     const totalEmployeeDeductions = opv + vosms + incomeTax;
 
+    // СН 6% (новый НК РК 2026): база = доход − ОПВ − ВОСМС, но не менее 14 МРП.
+    // Уплачивается в т.ч. за особые категории (пенсионеров, лиц с инвалидностью).
+    const snBase = Math.max(gross - opv - vosms, SN_MIN_BASE);
+    const sn = snBase * SN_RATE;
+
     const soBase = Math.min(gross - opv, SO_MAX_BASE);
     const so = isSpecialCategory ? 0 : soBase * SO_RATE;
 
-    const oosms = gross * OOSMS_RATE;
+    // За пенсионеров и лиц с инвалидностью работодатель ООСМС не платит
+    // (взносы за них уплачивает государство — ст. 26, 27 Закона об ОСМС)
+    const oosmsBase = Math.min(gross, OOSMS_MAX_BASE);
+    const oosms = isSpecialCategory ? 0 : oosmsBase * OOSMS_RATE;
 
     const opvrBase = Math.min(gross, OPV_MAX_BASE);
     const opvr = isSpecialCategory ? 0 : opvrBase * OPVR_RATE;
 
-    const totalEmployerContributions = so + oosms + opvr;
+    const totalEmployerContributions = sn + so + oosms + opvr;
     const netSalary = gross - totalEmployeeDeductions;
     const totalLaborCost = gross + totalEmployerContributions;
 
@@ -108,6 +120,7 @@ export default function SalaryCalculator() {
       taxableIncome: Math.round(taxableIncome),
       incomeTax: Math.round(incomeTax),
       totalEmployeeDeductions: Math.round(totalEmployeeDeductions),
+      sn: Math.round(sn),
       so: Math.round(so),
       oosms: Math.round(oosms),
       opvr: Math.round(opvr),
@@ -145,6 +158,7 @@ ${t('salary.employeeDeductions')}:
 - ${t('salary.netSalary')}: ${formatNumber(results.netSalary)}
 
 ${t('salary.employerContributions')}:
+- ${t('salary.sn')}: ${formatNumber(results.sn)}
 - ${t('salary.so')}: ${formatNumber(results.so)}
 - ${t('salary.oosms')}: ${formatNumber(results.oosms)}
 - ${t('salary.opvr')}: ${formatNumber(results.opvr)}
@@ -307,6 +321,11 @@ ${t('salary.effectiveTaxRate')}:
           </h2>
 
           <div className="space-y-4">
+            <div className="flex justify-between items-center py-2 border-b border-gray-100">
+              <span className="text-gray-600">{t('salary.sn')}</span>
+              <span className="font-semibold text-gray-900">{formatNumber(results.sn)}</span>
+            </div>
+
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-600">{t('salary.so')}</span>
               <span className="font-semibold text-gray-900">{formatNumber(results.so)}</span>

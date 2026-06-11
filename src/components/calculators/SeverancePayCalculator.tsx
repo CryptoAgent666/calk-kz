@@ -43,7 +43,9 @@ export default function SeverancePayCalculator() {
   const MZP = 85000;
   const OPV_RATE = 0.10;
   const VOSMS_RATE = 0.02;
-  const IPN_RATE = 0.10;
+  const IPN_RATE_BASE = 0.10;
+  const IPN_RATE_HIGH = 0.15;
+  const IPN_ANNUAL_THRESHOLD = 8500 * MRP; // 36 762 500 ₸/год (новый НК РК 2026)
   const STANDARD_DEDUCTION = 30 * MRP;
   const ANNUAL_VACATION_DAYS = 24;
   const CALENDAR_DAYS_PER_MONTH = 29.3;
@@ -90,7 +92,11 @@ export default function SeverancePayCalculator() {
 
     const grossTotal = vacationCompensation + severancePay;
 
-    // Deductions (apply to total)
+    // Удержания — с обеих частей выплаты (компенсация отпуска + выходное пособие).
+    // С 01.01.2026 выходное пособие не освобождено от ВОСМС: п. 4 ст. 29 Закона об ОСМС
+    // (ред. закона № 215-VIII) оставляет освобождение только доходам, не признаваемым
+    // доходом физлица (ст. 365-370 НК РК 2026), выходное пособие туда не входит.
+    // ОПВ удерживаются: в перечнях освобождений (ст. 365, 400, 429-436 НК РК) его нет.
     const opvBase = Math.min(grossTotal, 50 * MZP);
     const opv = opvBase * OPV_RATE;
 
@@ -100,7 +106,11 @@ export default function SeverancePayCalculator() {
     const standardDeduction = (isResident && isPrimaryJob) ? Math.min(STANDARD_DEDUCTION, Math.max(0, grossTotal - opv - vosms)) : 0;
 
     const taxableIncome = Math.max(0, grossTotal - opv - vosms - standardDeduction);
-    const ipn = taxableIncome * IPN_RATE;
+    // ИПН 10%, с превышения 8500 МРП/год — 15%. Порог годовой: разовая выплата
+    // сравнивается с ним без учёта прочих доходов за год (оценка снизу).
+    const ipn = taxableIncome <= IPN_ANNUAL_THRESHOLD
+      ? taxableIncome * IPN_RATE_BASE
+      : IPN_ANNUAL_THRESHOLD * IPN_RATE_BASE + (taxableIncome - IPN_ANNUAL_THRESHOLD) * IPN_RATE_HIGH;
 
     const totalDeductions = opv + vosms + ipn;
     const netTotal = grossTotal - totalDeductions;
@@ -129,6 +139,8 @@ export default function SeverancePayCalculator() {
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
   };
+
+  const ipnRateLabel = results.taxableIncome > IPN_ANNUAL_THRESHOLD ? '10-15%' : '10%';
 
   const getDismissalReasonLabel = (reason: string) => {
     switch (reason) {
@@ -168,7 +180,7 @@ ${t('severance-pay.deductionsTitle')}:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • ${t('severance-pay.opv')} (10%): ${formatNumber(results.opv)}
 • ${t('severance-pay.vosms')} (2%): ${formatNumber(results.vosms)}
-• ${t('severance-pay.ipn')} (10%): ${formatNumber(results.ipn)}
+• ${t('severance-pay.ipn')} (${ipnRateLabel}): ${formatNumber(results.ipn)}
 • ${t('severance-pay.totalDeductions')}: ${formatNumber(results.totalDeductions)}
 
 ${t('severance-pay.finalPayment')}:
@@ -389,7 +401,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                     <span className="font-semibold">-{formatNumber(results.vosms)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="opacity-80">{t('severance-pay.ipn')} (10%):</span>
+                    <span className="opacity-80">{t('severance-pay.ipn')} ({ipnRateLabel}):</span>
                     <span className="font-semibold">-{formatNumber(results.ipn)}</span>
                   </div>
                   <div className="flex justify-between text-sm border-t border-white/20 pt-2">
@@ -502,7 +514,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                     <span className="font-medium text-gray-900">{formatNumber(results.taxableIncome)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">{t('severance-pay.ipn')} (10%)</span>
+                    <span className="text-gray-600">{t('severance-pay.ipn')} ({ipnRateLabel})</span>
                     <span className="font-medium text-gray-900">{formatNumber(results.ipn)}</span>
                   </div>
                   <div className="border-t border-gray-300 pt-2 flex justify-between font-semibold">

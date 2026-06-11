@@ -62,7 +62,7 @@ const LAST_UPDATED: Record<string, string> = {
   'franchise-payback': '2026-04-19',
 
   // === СОЦИАЛЬНЫЕ/ТРУДОВЫЕ ===
-  'salary': '2026-01-01',
+  'salary': '2026-06-11',  // +СН 6% и лимит ООСМС 40 МЗП в платежах работодателя
   'sick-leave': '2026-01-01',
   'maternity-benefits': '2026-01-01',
   'pension': '2026-01-01',
@@ -72,8 +72,8 @@ const LAST_UPDATED: Record<string, string> = {
   'gons': '2026-01-01',
   'alimony': '2026-01-01',
   'vacation-pay': '2026-04-19',
-  'severance-pay': '2026-04-19',
-  'salary-reverse': '2026-04-19',
+  'severance-pay': '2026-06-11',  // ИПН 15% свыше 8500 МРП/год; подтверждено: ОПВ+ВОСМС с обеих частей (ОСМС-льгота пособия отменена с 01.01.2026)
+  'salary-reverse': '2026-06-11',  // лейбл СН исправлен: 11% → 6%
   'business-trip': '2026-04-19',
   'average-earnings': '2026-04-19',
   'overtime': '2026-04-19',

@@ -1904,6 +1904,7 @@
    ],
    "status": "clean",
    "used_by": [
+    "SalaryCalculator",
     "SalaryReverseCalculator"
    ]
   },
@@ -1911,7 +1912,7 @@
    "key": "sn_social_tax_rate",
    "value": 6,
    "unit": "percent",
-   "law": "ст.485 НК РК (социальный налог за вычетом СО)",
+   "law": "НК РК 2026 (социальный налог 6%; взаимозачёт с СО отменён с 01.01.2026)",
    "year": "2026",
    "change_frequency": "rare",
    "aliases": [
@@ -1919,6 +1920,7 @@
    ],
    "status": "clean",
    "used_by": [
+    "SalaryCalculator",
     "SalaryReverseCalculator"
    ]
   },
@@ -1934,6 +1936,7 @@
    ],
    "status": "clean",
    "used_by": [
+    "SalaryCalculator",
     "SalaryReverseCalculator"
    ]
   },
