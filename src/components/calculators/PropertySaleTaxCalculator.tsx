@@ -16,7 +16,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 interface PropertyType {
   id: string;
   labelKey: string;
-  minOwnershipYears: number; // срок, после которого продажа освобождается (0 = всегда облагается)
+  minOwnershipYears: number; // срок владения, после которого продажа освобождается от ИПН (0 = всегда облагается). Недвижимость: 2 года с 01.01.2026 (новый НК РК, ст. 331/363 + переходная ст. 842); ТС: 1 год.
   alwaysTaxable: boolean;
 }
 
@@ -24,11 +24,13 @@ export default function PropertySaleTaxCalculator() {
   const { t } = useTranslation('calculators');
 
   const propertyTypes: PropertyType[] = [
-    { id: 'apartment', labelKey: 'property-sale-tax.typeApartment', minOwnershipYears: 1, alwaysTaxable: false },
-    { id: 'house', labelKey: 'property-sale-tax.typeHouse', minOwnershipYears: 1, alwaysTaxable: false },
-    { id: 'land', labelKey: 'property-sale-tax.typeLand', minOwnershipYears: 1, alwaysTaxable: false },
-    { id: 'dacha', labelKey: 'property-sale-tax.typeDacha', minOwnershipYears: 1, alwaysTaxable: false },
-    { id: 'garage', labelKey: 'property-sale-tax.typeGarage', minOwnershipYears: 1, alwaysTaxable: false },
+    // Недвижимость: срок владения для освобождения от ИПН — 2 года с 01.01.2026 (ранее 1 год)
+    { id: 'apartment', labelKey: 'property-sale-tax.typeApartment', minOwnershipYears: 2, alwaysTaxable: false },
+    { id: 'house', labelKey: 'property-sale-tax.typeHouse', minOwnershipYears: 2, alwaysTaxable: false },
+    { id: 'land', labelKey: 'property-sale-tax.typeLand', minOwnershipYears: 2, alwaysTaxable: false },
+    { id: 'dacha', labelKey: 'property-sale-tax.typeDacha', minOwnershipYears: 2, alwaysTaxable: false },
+    { id: 'garage', labelKey: 'property-sale-tax.typeGarage', minOwnershipYears: 2, alwaysTaxable: false },
+    // ТС: срок владения остаётся 1 год (ст. 331 НК РК, изменение 2026 касается только недвижимости)
     { id: 'car', labelKey: 'property-sale-tax.typeCar', minOwnershipYears: 1, alwaysTaxable: false },
     { id: 'commercial', labelKey: 'property-sale-tax.typeCommercial', minOwnershipYears: 0, alwaysTaxable: true },
   ];
@@ -109,15 +111,16 @@ export default function PropertySaleTaxCalculator() {
       isTaxable = true;
       reasonKey = 'property-sale-tax.taxableShortOwnership';
 
-      // Рекомендация: если до 1 года владения осталось меньше 3 месяцев
+      // Рекомендация: если до окончания льготного срока владения осталось меньше 3 месяцев
       const monthsLeft = propertyType.minOwnershipYears * 12 - totalMonths;
       if (monthsLeft > 0 && monthsLeft <= 3) {
         recommendation = 'property-sale-tax.recommendationWait';
       }
     }
 
-    // Наследство: если срок владения > 1 года — освобождается
-    if (isInherited && totalMonths >= 12 && !propertyType.alwaysTaxable) {
+    // Наследство: освобождается, если выдержан льготный срок владения для данного типа имущества
+    // (недвижимость — 2 года с 01.01.2026, ТС — 1 год)
+    if (isInherited && totalMonths >= propertyType.minOwnershipYears * 12 && !propertyType.alwaysTaxable) {
       isTaxable = false;
       reasonKey = 'property-sale-tax.exemptInherited';
     }

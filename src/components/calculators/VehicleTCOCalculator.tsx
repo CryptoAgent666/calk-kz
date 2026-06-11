@@ -177,7 +177,8 @@ export default function VehicleTCOCalculator() {
     const depreciation = price - residualValue;
 
     // Сборы — единоразовые в 1-й год
-    const regFee = 2 * MRP_2026; // ~8 650 ₸
+    // Госпошлина 2026 (НК РК ст. 615): СРТС (техпаспорт) 1,25 МРП + госномера 2,8 МРП = 4,05 МРП (~17 516 ₸)
+    const regFee = (1.25 + 2.8) * MRP_2026; // 4,05 МРП ≈ 17 516 ₸
     const totalFees = regFee;
 
     const totalTCO = totalFuel + totalInsurance + totalTax + totalMaintenance + totalTires + depreciation + totalFees;

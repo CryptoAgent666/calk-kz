@@ -34,7 +34,6 @@ export default function SalaryCalculator() {
     totalEmployerContributions: 0,
     netSalary: 0,
     totalLaborCost: 0,
-    hasNinetyPercentReduction: false,
     effectiveEmployeeTaxRate: 0,
     effectiveEmployerRate: 0
   });
@@ -60,7 +59,7 @@ export default function SalaryCalculator() {
       return {
         opv: 0, vosms: 0, standardDeduction: 0, taxableIncome: 0, incomeTax: 0,
         totalEmployeeDeductions: 0, so: 0, oosms: 0, opvr: 0, totalEmployerContributions: 0,
-        netSalary: 0, totalLaborCost: 0, hasNinetyPercentReduction: false,
+        netSalary: 0, totalLaborCost: 0,
         effectiveEmployeeTaxRate: 0, effectiveEmployerRate: 0
       };
     }
@@ -76,9 +75,9 @@ export default function SalaryCalculator() {
     let taxableIncome = gross - opv - vosms - standardDeduction;
     taxableIncome = Math.max(0, taxableIncome);
 
-    // 90%-корректировка для доходов ≤25 МРП ОТМЕНЕНА с 2026 (ст. 401 НК РК).
-    const hasNinetyPercentReduction = false;
-
+    // С 01.01.2026 90%-корректировка ИПН для дохода ≤25 МРП ОТМЕНЕНА: новый НК РК
+    // (ст. 401 содержит исчерпывающий перечень вычетов и этой нормы не содержит),
+    // вместо неё действует единый базовый вычет 30 МРП (STANDARD_DEDUCTION выше).
     let incomeTax: number;
     if (taxableIncome <= IPN_MONTHLY_THRESHOLD) {
       incomeTax = taxableIncome * IPN_RATE_BASE;
@@ -115,7 +114,6 @@ export default function SalaryCalculator() {
       totalEmployerContributions: Math.round(totalEmployerContributions),
       netSalary: Math.round(netSalary),
       totalLaborCost: Math.round(totalLaborCost),
-      hasNinetyPercentReduction,
       effectiveEmployeeTaxRate: Number(effectiveEmployeeTaxRate.toFixed(2)),
       effectiveEmployerRate: Number(effectiveEmployerRate.toFixed(2))
     };
@@ -142,7 +140,7 @@ export default function SalaryCalculator() {
 ${t('salary.employeeDeductions')}:
 - ${t('salary.opv')}: ${formatNumber(results.opv)}
 - ${t('salary.vosms')}: ${formatNumber(results.vosms)}
-- ${t('salary.ipn')}: ${formatNumber(results.incomeTax)}${results.hasNinetyPercentReduction ? ' (' + t('salary.ninetyPercentBenefit') + ')' : ''}
+- ${t('salary.ipn')}: ${formatNumber(results.incomeTax)}
 - ${t('salary.totalDeducted')}: ${formatNumber(results.totalEmployeeDeductions)}
 - ${t('salary.netSalary')}: ${formatNumber(results.netSalary)}
 
@@ -279,14 +277,7 @@ ${t('salary.effectiveTaxRate')}:
             )}
 
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <div className="flex items-center space-x-2">
-                <span className="text-gray-600">{t('salary.ipn')}</span>
-                {results.hasNinetyPercentReduction && (
-                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                    {t('salary.ninetyPercentBenefit')}
-                  </span>
-                )}
-              </div>
+              <span className="text-gray-600">{t('salary.ipn')}</span>
               <span className="font-semibold text-gray-900">{formatNumber(results.incomeTax)}</span>
             </div>
 

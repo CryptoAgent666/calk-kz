@@ -32,6 +32,14 @@ export default function CustomsClearanceCalculator() {
     additionalRestrictions: ''
   });
 
+  // НК РК / ПП РК от 05.04.2018 № 171 (ред. ПП № 631 от 02.08.2023): таможенный сбор
+  // за таможенное декларирование товаров — ФИКСИРОВАННЫЙ 6 МРП за декларацию,
+  // не зависит от таможенной стоимости. МРП на 2026 = 4325 ₸ (Закон № 239-VIII
+  // от 08.12.2025). Итого 6 × 4325 = 25 950 ₸.
+  // Источник: https://adilet.zan.kz/rus/docs/P1800000171
+  const MRP_2026 = 4325;
+  const CUSTOMS_FEE_MRP = 6;
+
   const calculateCustomsPayments = () => {
     const value = parseFloat(customsValue) || 0;
     const volume = parseInt(engineVolume) || 0;
@@ -53,7 +61,6 @@ export default function CustomsClearanceCalculator() {
     const vehicleAge = Math.max(0, currentYear - year);
     const isOldVehicle = vehicleAge > 7;
 
-    let customsFeeRate = 0.004;
     let customsDutyRate = 0.15;
     let vatRate = 0.16;
 
@@ -65,7 +72,9 @@ export default function CustomsClearanceCalculator() {
       customsDutyRate += 0.05;
     }
 
-    const customsFee = customsValueKZT * customsFeeRate;
+    // Фиксированный таможенный сбор за декларирование: 6 МРП за декларацию
+    // (не процент от стоимости).
+    const customsFee = CUSTOMS_FEE_MRP * MRP_2026;
     const customsDuty = customsValueKZT * customsDutyRate;
 
     const taxBase = customsValueKZT + customsDuty + customsFee;

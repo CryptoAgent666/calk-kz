@@ -15,9 +15,11 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 
 type WorkType = 'weekend' | 'holiday' | 'night' | 'overtime12' | 'overtime3plus';
 
+// ст.109 ТК РК (№414-V, ред. 2026): оплата за работу в праздничные/выходные дни —
+// не ниже чем в ПОЛУТОРНОМ размере (1.5×) дневной/часовой ставки. Прежняя норма 2× отменена.
 const MULTIPLIERS: Record<WorkType, number> = {
-  weekend: 2.0,
-  holiday: 2.0,
+  weekend: 1.5,
+  holiday: 1.5,
   night: 1.5,
   overtime12: 1.5,
   overtime3plus: 2.0,

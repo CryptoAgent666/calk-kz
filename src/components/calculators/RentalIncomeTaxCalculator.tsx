@@ -34,7 +34,12 @@ export default function RentalIncomeTaxCalculator() {
   const VOSMS_FIXED = 5950; // ВОСМС за себя
   const OPV_MAX_BASE = 50 * MZP;
   const SO_MAX_BASE = 7 * MZP;
-  const PATENT_LIMIT_HALFYEAR = 3528 * MRP;
+  // СНР на основе патента УПРАЗДНЁН с 01.01.2026 (из 7 СНР осталось 3).
+  // Преемник — СНР для самозанятых (без регистрации ИП): ИПН 0% + соцплатежи 4% от дохода
+  // (ОПВ 1% + ОПВР 1% + СО 1% + ОСМС 1%), учёт через мобильное приложение.
+  // Лимит дохода — 300 МРП в МЕСЯЦ (≈1 297 500 ₸ при МРП 4325), а не полугодовой лимит патента.
+  const SELF_EMPLOYED_RATE = 0.04; // суммарные соцплатежи самозанятого: 4% от дохода
+  const SELF_EMPLOYED_LIMIT_MONTHLY = 300 * MRP;
   const SIMPLIFIED_LIMIT_HALFYEAR = 300000 * MRP;
 
   const [monthlyRent, setMonthlyRent] = useState<string>('200000');
@@ -69,16 +74,11 @@ export default function RentalIncomeTaxCalculator() {
       incomeTax = taxableIncome * 0.10;
       socialPayments = 0;
     } else if (regime === 'patent') {
-      // Патент: 1% от дохода (50% ИПН + 50% СО)
-      incomeTax = taxableIncome * 0.01;
-      // Соц.платежи за себя (ежемесячно) на основе МЗП как минимум
-      const base = Math.min(MZP, OPV_MAX_BASE);
-      const baseSO = Math.min(MZP, SO_MAX_BASE);
-      const opv = base * 0.10;
-      const opvr = base * 0.035;
-      const so = baseSO * 0.05;
-      const vosms = VOSMS_FIXED;
-      socialPayments = (opv + opvr + so + vosms) * months;
+      // Патентный СНР упразднён с 01.01.2026 → режим для самозанятых.
+      // ИПН 0%; единственный платёж — соцплатежи 4% от дохода
+      // (ОПВ 1% + ОПВР 1% + СО 1% + ОСМС 1%), удерживаемые с фактического дохода.
+      incomeTax = 0;
+      socialPayments = taxableIncome * SELF_EMPLOYED_RATE;
     } else {
       // Упрощёнка: 4% от дохода (ИПН/КПН, НК РК 2026; акимат вправе изменить ±50%)
       incomeTax = taxableIncome * 0.04;
@@ -159,7 +159,8 @@ export default function RentalIncomeTaxCalculator() {
     ? comparison.reduce((a, b) => (a.totalTax < b.totalTax ? a : b))
     : null;
 
-  const patentLimitExceeded = results.yearlyIncome / 2 > PATENT_LIMIT_HALFYEAR;
+  // Самозанятые: лимит проверяется по МЕСЯЧНОМУ доходу (300 МРП/мес), не по полугодию.
+  const patentLimitExceeded = (parseFloat(monthlyRent) || 0) > SELF_EMPLOYED_LIMIT_MONTHLY;
   const simplifiedLimitExceeded = results.yearlyIncome / 2 > SIMPLIFIED_LIMIT_HALFYEAR;
 
   const regimeLabel = (r: TaxRegime) => t(`rental-income-tax.regime.${r}`);

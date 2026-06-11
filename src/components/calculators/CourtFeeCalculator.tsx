@@ -37,7 +37,9 @@ export default function CourtFeeCalculator() {
     alimony: { individual: 1, legal: 0 },
     labor: { individual: 0.5, legal: 2 },
     administrative: { individual: 2, legal: 5 },
-    bankruptcy: { individual: 50, legal: 100 },
+    // НК РК ст.665 (с 01.01.2026): признание банкротом — единая ставка 0,5 МРП,
+    // не зависит от заявителя (физлицо/юрлицо). Прежние 50/100 МРП ошибочны.
+    bankruptcy: { individual: 0.5, legal: 0.5 },
     arbitration: { individual: 10, legal: 20 },
     corporate: { individual: 0, legal: 15 },
     inheritance: { individual: 3, legal: 0 },
@@ -383,7 +385,7 @@ export default function CourtFeeCalculator() {
           { question: t('court-fee.faq.q5'), answer: t('court-fee.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК, глава 78', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: 'Налоговый кодекс РК (ст. 665, с 01.01.2026), ставки госпошлины в судах', url: 'https://egov.kz/cms/ru/articles/court_proceedings/stamp_tax' },
           { title: 'Судебная система РК', url: 'https://sud.gov.kz/' },
         ]}
       />

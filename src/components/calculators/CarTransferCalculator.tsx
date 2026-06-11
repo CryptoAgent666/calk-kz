@@ -12,6 +12,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type Region = 'almaty' | 'astana' | 'other';
+type NotaryParty = 'relatives' | 'others' | 'legal';
 
 export default function CarTransferCalculator() {
   const { t } = useTranslation('calculators');
@@ -21,7 +22,14 @@ export default function CarTransferCalculator() {
   const REGISTRATION_FEE_MRP = 0.25;
   const CERTIFICATE_FEE_MRP = 1.25;
   const PLATES_FEE_MRP = 2.8;
-  const NOTARY_BASE_MRP = 5;
+  // Нотариальный тариф за удостоверение договора отчуждения авто (с 01.01.2026):
+  // ставка зависит от СТОРОН сделки, а не от цены ТС.
+  // Приказ Министра юстиции РК от 27.09.2025 № 957 (adilet.zan.kz V2500036957).
+  const NOTARY_MRP: Record<NotaryParty, number> = {
+    relatives: 4,  // близкие родственники (дети, супруг, родители, братья/сёстры, внуки)
+    others: 10,    // прочие физлица
+    legal: 12,     // одна из сторон — юридическое лицо
+  };
   const OGPO_BASE_MRP = 1.9;
   const INSPECTION_COST = 7000;
 
@@ -40,6 +48,7 @@ export default function CarTransferCalculator() {
   const [keepPlates, setKeepPlates] = useState<boolean>(false);
   const [needInspection, setNeedInspection] = useState<boolean>(false);
   const [region, setRegion] = useState<Region>('almaty');
+  const [notaryParty, setNotaryParty] = useState<NotaryParty>('others');
   const [buyerAge, setBuyerAge] = useState<string>('35');
   const [buyerExperience, setBuyerExperience] = useState<string>('10');
 
@@ -70,10 +79,8 @@ export default function CarTransferCalculator() {
     const certificateFee = Math.round(CERTIFICATE_FEE_MRP * MRP_2026);
     const platesFee = keepPlates ? 0 : Math.round(PLATES_FEE_MRP * MRP_2026);
 
-    // Нотариус — зависит от цены авто
-    let notaryMRP = NOTARY_BASE_MRP;
-    if (sale >= 3000000) notaryMRP = 7;
-    if (sale >= 10000000) notaryMRP = 10;
+    // Нотариус — зависит от сторон сделки (родственники/прочие/юрлицо), не от цены авто
+    const notaryMRP = NOTARY_MRP[notaryParty];
     const notaryFee = Math.round(notaryMRP * MRP_2026);
 
     // ОГПО расчёт: базовая 1.9 МРП × территориальный × возраст × стаж
@@ -128,7 +135,7 @@ export default function CarTransferCalculator() {
       sellerPays,
       buyerPays,
     });
-  }, [salePrice, purchasePrice, ownershipYears, ownershipMonths, keepPlates, needInspection, region, buyerAge, buyerExperience, t]);
+  }, [salePrice, purchasePrice, ownershipYears, ownershipMonths, keepPlates, needInspection, region, notaryParty, buyerAge, buyerExperience, t]);
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 
@@ -250,6 +257,29 @@ export default function CarTransferCalculator() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Notary party (relationship between seller and buyer) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                {t('car-transfer.notaryParty')}
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['relatives', 'others', 'legal'] as NotaryParty[]).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setNotaryParty(p)}
+                    className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
+                      notaryParty === p
+                        ? 'border-amber-500 bg-amber-50 text-amber-700'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                    }`}
+                  >
+                    {t(`car-transfer.notaryParty${p.charAt(0).toUpperCase() + p.slice(1)}`)}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">{t('car-transfer.notaryPartyHint')}</p>
             </div>
 
             {/* Buyer age */}
@@ -426,6 +456,7 @@ export default function CarTransferCalculator() {
                     { label: t('car-transfer.purchasePrice'), value: fmt(parseFloat(purchasePrice) || 0) },
                     { label: t('car-transfer.ownershipYears'), value: `${ownershipYears} / ${ownershipMonths}` },
                     { label: t('car-transfer.region'), value: t(`car-transfer.region${region.charAt(0).toUpperCase() + region.slice(1)}`) },
+                    { label: t('car-transfer.notaryParty'), value: t(`car-transfer.notaryParty${notaryParty.charAt(0).toUpperCase() + notaryParty.slice(1)}`) },
                   ],
                 },
                 {

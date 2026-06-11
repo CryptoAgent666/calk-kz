@@ -17,7 +17,7 @@ export default function UnemploymentBenefitCalculator() {
 
   const [results, setResults] = useState({
     averageMonthlyIncome: 0,
-    incomeReplacementCoef: 0.4,
+    incomeReplacementCoef: 0.45,
     experienceCoef: 0,
     monthlyBenefit: 0,
     paymentPeriodMonths: 0,
@@ -95,7 +95,7 @@ export default function UnemploymentBenefitCalculator() {
     // объект исчисления ограничен 7 МЗП (595 000 ₸ в 2026)
     const averageMonthlyIncome = Math.min(7 * 85000, contributions / 24 / 0.05);
 
-    const incomeReplacementCoef = 0.40; // коэффициент замещения дохода ГФСС — 40%
+    const incomeReplacementCoef = 0.45; // коэффициент замещения дохода ГФСС — 45% (Правила V2300032881, ст.118 Соц. кодекса)
     const experienceCoef = getExperienceCoefficient(experienceMonths);
     const paymentPeriodMonths = getPaymentPeriod(experienceMonths);
 
@@ -256,7 +256,7 @@ export default function UnemploymentBenefitCalculator() {
                   <h3 className="font-semibold text-blue-900 mb-2">{t('unemployment.calculationParameters')}</h3>
                   <div className="text-sm text-blue-800 space-y-1">
                     <div>{t('unemployment.averageMonthlyIncome')}: {formatNumber(results.averageMonthlyIncome)}</div>
-                    <div>{t('unemployment.replacementCoefficient')}: {results.incomeReplacementCoef} (40%)</div>
+                    <div>{t('unemployment.replacementCoefficient')}: {results.incomeReplacementCoef} (45%)</div>
                     <div>{t('unemployment.experienceCoefficient')}: {results.experienceCoef}</div>
                   </div>
                 </div>

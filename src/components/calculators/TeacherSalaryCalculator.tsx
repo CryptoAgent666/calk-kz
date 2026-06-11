@@ -11,8 +11,8 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-// БДО (базовый должностной оклад) 2026 — утверждается правительством
-const BDO_2026 = 23_578;
+// БДО (базовый должностной оклад) 2026 = 17 697 ₸ (Постановление Правительства РК № 1193 от 31.12.2015; не индексировался с 2016)
+const BDO_2026 = 17_697;
 const MRP_2026 = 4_325;
 const MZP_2026 = 85_000;
 

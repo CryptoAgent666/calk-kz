@@ -14,9 +14,11 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 const MRP = 4_325;
 const MZP = 85_000;
 
-// Упрощёнка — 4% от дохода (ИПН/КПН) с 2026; социальный налог отменён, акимат вправе изменить ставку ±50% (2–6%)
+// Упрощёнка — 4% от дохода (ИПН/КПН) с 2026; социальный налог отменён, маслихат вправе изменить ставку ±50% (2–6%)
 // ОУР — ИПН 10%/15% от прибыли; все соцплатежи отдельно
-// Розничный налог — 4% от дохода (отдельные виды розницы)
+// Розничный налог — с 01.01.2026 УПРАЗДНЁН как отдельный СНР (ст. 696-1 утратила силу) и слит с упрощённой декларацией;
+//   ставка 4% сохранена, но уже в составе единого режима упрощёнки, а не самостоятельного «розничного налога»
+//   (новый НК РК — Закон РК № 214-VIII от 18.07.2025, действует с 01.01.2026; число СНР сокращено с 7 до 3)
 
 interface RegimeResult {
   regimeKey: string;
@@ -26,6 +28,7 @@ interface RegimeResult {
   effectiveRate: number;
   available: boolean;
   limitNote?: string;
+  mergedNote?: string;
 }
 
 export default function TaxRegimeComparisonCalculator() {
@@ -74,7 +77,9 @@ export default function TaxRegimeComparisonCalculator() {
     const ourSocial = baseSocialMonthly;
     const ourTotal = ourIPN + ourSocial;
 
-    // 3. Розничный налог — 4% (для отдельных видов деятельности)
+    // 3. Розничный налог — с 01.01.2026 УПРАЗДНЁН как отдельный СНР и слит с упрощённой декларацией.
+    // Ставка 4% сохранена, но теперь это та же упрощёнка. Показываем для справки/совместимости,
+    // помечаем как недоступный отдельный режим (новый НК РК № 214-VIII от 18.07.2025).
     const retailTax = Math.round(revenue * 0.04);
     const retailSocial = baseSocialMonthly;
     const retailTotal = retailTax + retailSocial;
@@ -103,7 +108,8 @@ export default function TaxRegimeComparisonCalculator() {
         socialPayments: retailSocial,
         total: retailTotal,
         effectiveRate: revenue > 0 ? (retailTotal / revenue) * 100 : 0,
-        available: true,
+        available: false,
+        mergedNote: t('tax-regime.retailMerged'),
       },
     ];
   }, [monthlyRevenue, monthlyExpenses, hasEmployees, isRural, t]);
@@ -319,6 +325,12 @@ export default function TaxRegimeComparisonCalculator() {
                         <div className="flex items-center space-x-1 mt-1">
                           <AlertTriangle className="w-3 h-3 text-amber-500" />
                           <span className="text-xs text-amber-600">{r.limitNote}</span>
+                        </div>
+                      )}
+                      {r.mergedNote && (
+                        <div className="flex items-start space-x-1 mt-1">
+                          <Info className="w-3 h-3 text-indigo-500 mt-0.5 shrink-0" />
+                          <span className="text-xs text-indigo-600">{r.mergedNote}</span>
                         </div>
                       )}
                     </div>

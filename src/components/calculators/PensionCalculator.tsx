@@ -72,7 +72,9 @@ export default function PensionCalculator() {
     if (totalWorkExperience >= 10) {
       let baseRate = 70; // 70% от ПМ
       const additionalYears = Math.floor(totalWorkExperience - 10);
-      baseRate = Math.min(baseRate + (additionalYears * 2), 110); // максимум 110%
+      // С 01.01.2026 максимум базовой пенсии повышен со 110% до 118% ПМ (60 005 ₸ при ПМ 50 851 ₸).
+      // При +2%/год сверх 10 лет потолок 118% достигается при стаже 34 года (ранее 110% — при 30 годах).
+      baseRate = Math.min(baseRate + (additionalYears * 2), 118); // максимум 118%
       basePension = (PM * baseRate) / 100;
     }
 

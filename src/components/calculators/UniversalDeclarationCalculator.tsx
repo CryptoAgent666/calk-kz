@@ -55,7 +55,7 @@ export default function UniversalDeclarationCalculator() {
       civilServant: 2021,
       quasiGov: 2023,
       founder: 2024,
-      lawyer: 2024,
+      lawyer: 2025,
       regular: 2025,
     };
 

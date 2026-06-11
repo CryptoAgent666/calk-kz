@@ -31,71 +31,71 @@ export default function NotaryServicesCalculator() {
 
   const MRP_2026 = 4325;
 
+  // С 01.01.2026 (приказ Министра юстиции РК №533 от 27.09.2025, adilet V2500036957)
+  // у частных нотариусов действует ЕДИНЫЙ тариф: прежнее деление на «госпошлину» и
+  // «технические услуги» (УПТХ) упразднено. Ставки даны в МРП по категориям сторон:
+  //   relatedFee  — близкие родственники (дети, супруг(а), родители, родные братья/сёстры, внуки)
+  //   stateFee    — прочие физические лица
+  //   legalFee    — если хотя бы одна сторона юридическое лицо
+  // technicalFee оставлен = 0 для совместимости со структурой результата (двухчастного сбора больше нет).
   const notaryServices = {
     'apartment-sale': {
       name: t('notary.apartmentSale'),
-      stateFee: { individuals: 7, mixed: 10, legal: 15 },
-      technicalFee: { individuals: 5, mixed: 7, legal: 10 },
-      relatedDiscount: { individuals: 50, mixed: 30, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.8 },
+      // Отчуждение недвижимости (городская местность), стоимость свыше 30 МРП.
+      stateFee: { individuals: 12, mixed: 17, legal: 17 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
+      relatedFee: 7,
       hasPropertyValue: false
     },
     'car-sale': {
       name: t('notary.carSale'),
-      stateFee: { individuals: 5, mixed: 7, legal: 10 },
-      technicalFee: { individuals: 5, mixed: 5, legal: 7 },
-      relatedDiscount: { individuals: 30, mixed: 20, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.9 },
+      // Отчуждение транспортных средств.
+      stateFee: { individuals: 10, mixed: 12, legal: 12 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
+      relatedFee: 4,
       hasPropertyValue: false
     },
     'will': {
       name: t('notary.will'),
-      stateFee: { individuals: 1, mixed: 1, legal: 0 },
-      technicalFee: { individuals: 2, mixed: 2, legal: 0 },
-      relatedDiscount: { individuals: 0, mixed: 0, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.8 },
+      // Удостоверение завещания — 3 МРП (единая ставка).
+      stateFee: { individuals: 3, mixed: 3, legal: 3 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       hasPropertyValue: false
     },
     'inheritance': {
       name: t('notary.inheritance'),
-      stateFee: { individuals: 1, mixed: 1, legal: 2 },
-      technicalFee: { individuals: 3, mixed: 4, legal: 5 },
-      relatedDiscount: { individuals: 0, mixed: 0, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.8 },
-      hasPropertyValue: true,
-      percentageFee: true,
-      percentageRate: { individuals: 0.5, mixed: 0.7, legal: 1.0 }
+      // Выдача свидетельства о праве на наследство — фиксированно 4 МРП
+      // (процентной надбавки от стоимости имущества в новой системе нет).
+      stateFee: { individuals: 4, mixed: 4, legal: 4 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
+      hasPropertyValue: false
     },
     'power-of-attorney': {
       name: t('notary.powerOfAttorney'),
-      stateFee: { individuals: 0.5, mixed: 1, legal: 2 },
-      technicalFee: { individuals: 2, mixed: 3, legal: 4 },
-      relatedDiscount: { individuals: 20, mixed: 10, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.8 },
+      // Доверенность: физлица — 1.1 МРП, юрлица — 2.5 МРП.
+      stateFee: { individuals: 1.1, mixed: 2.5, legal: 2.5 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       hasPropertyValue: false
     },
     'copy-certification': {
       name: t('notary.copyCertification'),
-      stateFee: { individuals: 0.05, mixed: 0.05, legal: 0.1 },
-      technicalFee: { individuals: 0.05, mixed: 0.05, legal: 0.1 },
-      relatedDiscount: { individuals: 0, mixed: 0, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.9 },
+      // Свидетельствование верности копий за страницу: физлица — 0.1 МРП, юрлица — 0.17 МРП.
+      stateFee: { individuals: 0.1, mixed: 0.17, legal: 0.17 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       hasPropertyValue: false
     },
     'marriage-contract': {
       name: t('notary.marriageContract'),
-      stateFee: { individuals: 3, mixed: 3, legal: 0 },
-      technicalFee: { individuals: 5, mixed: 5, legal: 0 },
-      relatedDiscount: { individuals: 0, mixed: 0, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.8 },
+      // Брачный контракт — 10 МРП.
+      stateFee: { individuals: 10, mixed: 10, legal: 10 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       hasPropertyValue: false
     },
     'agreement-certification': {
       name: t('notary.agreementCertification'),
-      stateFee: { individuals: 2, mixed: 3, legal: 5 },
-      technicalFee: { individuals: 4, mixed: 5, legal: 7 },
-      relatedDiscount: { individuals: 25, mixed: 15, legal: 0 },
-      locationMultiplier: { city: 1.0, rural: 0.8 },
+      // Договоры аренды, займа, соглашения о разделе имущества, алименты и т.п. — 10 МРП.
+      stateFee: { individuals: 10, mixed: 10, legal: 10 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       hasPropertyValue: false
     }
   };
@@ -110,34 +110,17 @@ export default function NotaryServicesCalculator() {
       : partyTypes === 'both-legal' ? 'legal'
       : 'mixed';
 
-    let stateFeeRate = service.stateFee[partyKey];
-    let technicalFeeRate = service.technicalFee[partyKey];
+    // Единый тариф 2026. Для близких родственников применяется отдельная фиксированная
+    // ставка (если она предусмотрена для данного действия), а не процентная скидка.
+    const relatedFee = (service as { relatedFee?: number }).relatedFee;
+    const stateFeeRate =
+      areRelated && partyTypes === 'both-individuals' && relatedFee !== undefined
+        ? relatedFee
+        : service.stateFee[partyKey];
+    const technicalFeeRate = service.technicalFee[partyKey];
 
-    if (areRelated && service.relatedDiscount[partyKey] > 0) {
-      const discount = service.relatedDiscount[partyKey] / 100;
-      stateFeeRate *= (1 - discount);
-      technicalFeeRate *= (1 - discount);
-    }
-
-    const locationMultiplier = service.locationMultiplier[location];
-    stateFeeRate *= locationMultiplier;
-    technicalFeeRate *= locationMultiplier;
-
-    let stateFee = stateFeeRate * MRP_2026;
-    let technicalServiceFee = technicalFeeRate * MRP_2026;
-
-    let percentageFee = false;
-    let percentageRate = 0;
-
-    if (service.percentageFee && propertyValue) {
-      const value = parseFloat(propertyValue) || 0;
-      if (value > 0 && service.percentageRate) {
-        percentageRate = service.percentageRate[partyKey];
-        const additionalFee = value * (percentageRate / 100);
-        stateFee += additionalFee;
-        percentageFee = true;
-      }
-    }
+    const stateFee = stateFeeRate * MRP_2026;
+    const technicalServiceFee = technicalFeeRate * MRP_2026;
 
     const totalCost = stateFee + technicalServiceFee;
 
@@ -147,14 +130,14 @@ export default function NotaryServicesCalculator() {
       totalCost: Math.round(totalCost),
       description: service.name,
       hasPropertyValue: service.hasPropertyValue || false,
-      percentageFee,
-      percentageRate
+      percentageFee: false,
+      percentageRate: 0
     });
   };
 
   useEffect(() => {
     calculateNotaryCost();
-  }, [serviceType, partyTypes, areRelated, location, propertyValue, t]);
+  }, [serviceType, partyTypes, areRelated, propertyValue, t]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
@@ -365,13 +348,17 @@ export default function NotaryServicesCalculator() {
                 <span className="text-lg font-bold text-blue-700">{formatNumber(results.stateFee)}</span>
               </div>
 
-              <div className="flex justify-between items-center py-3 bg-orange-50 rounded-lg px-4">
-                <div>
-                  <span className="font-medium text-orange-900">{t('notary.technicalServicesLabel')}</span>
-                  <div className="text-xs text-orange-600">{t('notary.technicalServicesDesc')}</div>
+              {/* С 01.01.2026 деление на госпошлину и технические услуги (УПТХ) упразднено —
+                  действует единый тариф. Строка показывается только если плата за УПТХ ненулевая. */}
+              {results.technicalServiceFee > 0 && (
+                <div className="flex justify-between items-center py-3 bg-orange-50 rounded-lg px-4">
+                  <div>
+                    <span className="font-medium text-orange-900">{t('notary.technicalServicesLabel')}</span>
+                    <div className="text-xs text-orange-600">{t('notary.technicalServicesDesc')}</div>
+                  </div>
+                  <span className="text-lg font-bold text-orange-700">{formatNumber(results.technicalServiceFee)}</span>
                 </div>
-                <span className="text-lg font-bold text-orange-700">{formatNumber(results.technicalServiceFee)}</span>
-              </div>
+              )}
             </div>
 
             <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-4">
@@ -420,8 +407,8 @@ export default function NotaryServicesCalculator() {
                   {t('notary.apartmentSaleExample')}<br />
                   <span className="text-xs text-gray-500">{t('notary.cityIndividualsNotRelated')}</span>
                 </td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(7)}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(5)}</td>
+                <td className="py-3 px-4 text-center text-sm">{formatMRP(12)}</td>
+                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(12 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
@@ -429,26 +416,26 @@ export default function NotaryServicesCalculator() {
                   {t('notary.carSaleExample')}<br />
                   <span className="text-xs text-gray-500">{t('notary.individualsNotRelated')}</span>
                 </td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(5)}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(5)}</td>
+                <td className="py-3 px-4 text-center text-sm">{formatMRP(10)}</td>
+                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(10 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.willExample')}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(1)}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(2)}</td>
+                <td className="py-3 px-4 text-center text-sm">{formatMRP(3)}</td>
+                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(3 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.powerOfAttorneyExample')}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(0.5)}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(2)}</td>
-                <td className="py-3 px-4 text-right font-semibold">{formatNumber(2.5 * MRP_2026)}</td>
+                <td className="py-3 px-4 text-center text-sm">{formatMRP(1.1)}</td>
+                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
+                <td className="py-3 px-4 text-right font-semibold">{formatNumber(1.1 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.copyExample')}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(0.05)}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(0.05)}</td>
+                <td className="py-3 px-4 text-center text-sm">{formatMRP(0.1)}</td>
+                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(0.1 * MRP_2026)}</td>
               </tr>
             </tbody>

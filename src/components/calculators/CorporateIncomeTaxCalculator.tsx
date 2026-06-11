@@ -26,8 +26,10 @@ export default function CorporateIncomeTaxCalculator() {
 
   const activities: ActivityOption[] = [
     { id: 'standard', labelKey: 'corporate-income-tax.activityStandard', rate: 20 },
-    { id: 'agricultural', labelKey: 'corporate-income-tax.activityAgricultural', rate: 10 },
-    { id: 'social', labelKey: 'corporate-income-tax.activitySocial', rate: 0 },
+    // С 01.01.2026 (новый НК РК): льготная ставка КПН для сельхозтоваропроизводителей снижена с 10% до 3%.
+    { id: 'agricultural', labelKey: 'corporate-income-tax.activityAgricultural', rate: 3 },
+    // С 01.01.2026 освобождение (0%) для организаций социальной сферы (образование, здравоохранение, фин. лизинг) отменено: 5% в 2026, 10% с 2027.
+    { id: 'social', labelKey: 'corporate-income-tax.activitySocial', rate: 5 },
   ];
 
   const WITHHOLDING_RATE = 15;

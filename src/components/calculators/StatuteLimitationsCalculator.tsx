@@ -29,12 +29,12 @@ const RULES: Record<Category, Rule> = {
   salary:       { years: 1, article: 'ст. 164 ТК РК' },
   damage:       { years: 3, article: 'ст. 178 ГК РК' },
   family:       { years: 3, article: 'ст. 9 КоБС РК' },
-  tax:          { years: 5, article: 'ст. 48 НК РК' },
-  labor:        { years: 0, months: 3, article: 'ст. 160 ТК РК' }, // 3 месяца
-  adminFine:    { years: 1, article: 'ст. 62 КоАП РК' },
+  tax:          { years: 3, article: 'ст. 65 НК РК (5 лет — крупный бизнес/недропользователи)' }, // НК РК 2026 (№214-VIII): по умолч. 3 года
+  labor:        { years: 0, months: 1, article: 'ст. 160 ТК РК (восстановление → согласит. комиссия)' }, // 1 мес в комиссию; 2 мес в суд; иные споры — 1 год
+  adminFine:    { years: 0, months: 2, article: 'ст. 62 КоАП РК (общий срок; 1 год — налоги/таможня для физлиц)' }, // общий срок давности — 2 месяца
   criminal:     { years: 2, article: 'ст. 71 УК РК (небольшая тяжесть)' },
   inheritance:  { years: 0, months: 6, article: 'ст. 1072 ГК РК (принятие)' },
-  property:     { years: 10, article: 'ст. 240 ГК РК' },
+  property:     { years: 7, article: 'ст. 240 ГК РК (недвижимость; иное имущество — 5 лет)' }, // приобретательная давность: 7 лет недвижимость / 5 лет иное
 };
 
 function addYearsAndMonths(date: Date, years: number, months: number, days: number = 0): Date {

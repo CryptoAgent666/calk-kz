@@ -23,7 +23,7 @@ export default function InsuranceCalculator() {
   const [vehicleType, setVehicleType] = useState<string>('passenger-car');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
   const [drivers, setDrivers] = useState<Driver[]>([{ id: '1', age: 30, experience: 5 }]);
-  const [bonusMalusClass, setBonusMalusClass] = useState<string>('3');
+  const [bonusMalusClass, setBonusMalusClass] = useState<string>('A');
 
   const [results, setResults] = useState({
     basePremium: 0,
@@ -66,23 +66,33 @@ export default function InsuranceCalculator() {
     { id: 'atyrau-region', name: t('insurance-premium.regions.atyrauRegion'), coefficient: 0.48 }
   ];
 
-  // Коэффициенты по типам ТС
+  // Коэффициенты по типам ТС — официальные абсолютные значения АРРФР
+  // (Приказ G2500000072, действ. с 01.01.2026): мото/прицеп 1.00, легковой(B) 2.09,
+  // троллейбус/трамвай 2.33, автобус ≤16 мест 3.26, автобус 16+ мест 3.45, грузовой(C) 3.98.
+  // Прежняя относительная нормировка (легковой=1.0, мото=0.7) заменена на абсолютную сетку.
   const vehicleTypeCoefficients = [
-    { id: 'passenger-car', name: t('insurance-premium.vehicleTypes.passengerCar'), coefficient: 1.0 },
-    { id: 'taxi', name: t('insurance-premium.vehicleTypes.taxi'), coefficient: 2.0 },
-    { id: 'truck-up-to-3.5t', name: t('insurance-premium.vehicleTypes.truckUpTo35t'), coefficient: 1.2 },
-    { id: 'truck-3.5-12t', name: t('insurance-premium.vehicleTypes.truck35To12t'), coefficient: 1.5 },
-    { id: 'truck-over-12t', name: t('insurance-premium.vehicleTypes.truckOver12t'), coefficient: 2.0 },
-    { id: 'bus-up-to-20', name: t('insurance-premium.vehicleTypes.busUpTo20'), coefficient: 1.3 },
-    { id: 'bus-20-35', name: t('insurance-premium.vehicleTypes.bus20To35'), coefficient: 1.7 },
-    { id: 'bus-over-35', name: t('insurance-premium.vehicleTypes.busOver35'), coefficient: 2.2 },
-    { id: 'motorcycle', name: t('insurance-premium.vehicleTypes.motorcycle'), coefficient: 0.7 }
+    { id: 'passenger-car', name: t('insurance-premium.vehicleTypes.passengerCar'), coefficient: 2.09 },
+    { id: 'taxi', name: t('insurance-premium.vehicleTypes.taxi'), coefficient: 2.09 },
+    { id: 'truck-up-to-3.5t', name: t('insurance-premium.vehicleTypes.truckUpTo35t'), coefficient: 3.98 },
+    { id: 'truck-3.5-12t', name: t('insurance-premium.vehicleTypes.truck35To12t'), coefficient: 3.98 },
+    { id: 'truck-over-12t', name: t('insurance-premium.vehicleTypes.truckOver12t'), coefficient: 3.98 },
+    { id: 'bus-up-to-20', name: t('insurance-premium.vehicleTypes.busUpTo20'), coefficient: 3.26 },
+    { id: 'bus-20-35', name: t('insurance-premium.vehicleTypes.bus20To35'), coefficient: 3.45 },
+    { id: 'bus-over-35', name: t('insurance-premium.vehicleTypes.busOver35'), coefficient: 3.45 },
+    { id: 'motorcycle', name: t('insurance-premium.vehicleTypes.motorcycle'), coefficient: 1.0 }
   ];
 
-  // Система бонус-малус
+  // Система бонус-малус — пересмотрена с 07.04.2025 (действует и в 2026).
+  // Добавлены 3 новых класса: A (новички, было 0.50→стартовый класс A=1.8),
+  // M1=3.0 и M2=3.5 (верхний малус вместо прежнего M=2.45). Всего 18 классов.
+  // Порядок: от худшего малуса (M2=3.5) к лучшему бонусу (класс 13=0.5).
+  // Источник: приказ АРРФР, разъяснения (Банк. омбудсман, nur.kz, lada.kz).
   const bonusMalusClasses = [
+    { class: 'M2', coefficient: 3.50, description: t('insurance-premium.bonusMalus.classM2') },
+    { class: 'M1', coefficient: 3.00, description: t('insurance-premium.bonusMalus.classM1') },
     { class: 'M', coefficient: 2.45, description: t('insurance-premium.bonusMalus.classM') },
     { class: '0', coefficient: 2.30, description: t('insurance-premium.bonusMalus.class0') },
+    { class: 'A', coefficient: 1.80, description: t('insurance-premium.bonusMalus.classA') },
     { class: '1', coefficient: 1.55, description: t('insurance-premium.bonusMalus.class1') },
     { class: '2', coefficient: 1.40, description: t('insurance-premium.bonusMalus.class2') },
     { class: '3', coefficient: 1.00, description: t('insurance-premium.bonusMalus.class3') },

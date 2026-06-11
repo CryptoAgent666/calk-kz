@@ -63,11 +63,13 @@ export default function MortgageCalculator() {
       nominalRate: 7.0,
       minDownPaymentPercent: 20,
       maxTermYears: 25,
+      // Лимиты повышены с 26.09.2025 (источник: kfu.kz, оператор программы):
+      // Астана/Алматы (+пригороды), Актау, Атырау, Шымкент — 30 млн; Караганда — 25 млн; прочие регионы — 20 млн.
       maxLoanAmount: {
-        'almaty': 25000000,
-        'astana': 25000000,
-        'shymkent': 15000000,
-        'other': 15000000
+        'almaty': 30000000,
+        'astana': 30000000,
+        'shymkent': 30000000,
+        'other': 20000000
       },
       additionalFees: {
         applicationFee: 15000,

@@ -12,7 +12,9 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 
 const MRP_2026 = 4_325;
 
-// НК РК 2026, статья 605 — сбор за присвоение регистрационного номера
+// Прейскурант на госномерные знаки повышенного спроса (пост. Правительства РК,
+// adilet.zan.kz G24C0000516), действует с 2026. Базовый госномер при регистрации — 2,8 МРП
+// (280% МРП по новому НК РК); повышенный спрос — единая сетка 15–285 МРП.
 interface PlateCategory {
   id: string;
   labelKey: string;
@@ -22,21 +24,22 @@ interface PlateCategory {
 }
 
 const plateCategories: PlateCategory[] = [
-  { id: 'triple001', labelKey: 'fancy-plates.cat.triple001', descKey: 'fancy-plates.desc.triple001', mrp: 170, example: '001 AAA' },
-  { id: 'triple007', labelKey: 'fancy-plates.cat.triple007', descKey: 'fancy-plates.desc.triple007', mrp: 170, example: '007 AAA' },
-  { id: 'triple111', labelKey: 'fancy-plates.cat.triple111', descKey: 'fancy-plates.desc.triple111', mrp: 150, example: '111 XXX' },
-  { id: 'triple777', labelKey: 'fancy-plates.cat.triple777', descKey: 'fancy-plates.desc.triple777', mrp: 150, example: '777 XXX' },
-  { id: 'pair100', labelKey: 'fancy-plates.cat.pair100', descKey: 'fancy-plates.desc.pair100', mrp: 100, example: '100 XXX' },
-  { id: 'mirror010', labelKey: 'fancy-plates.cat.mirror010', descKey: 'fancy-plates.desc.mirror010', mrp: 50, example: '010 XXX' },
-  { id: 'tens', labelKey: 'fancy-plates.cat.tens', descKey: 'fancy-plates.desc.tens', mrp: 30, example: '070 XXX' },
-  { id: 'sequential', labelKey: 'fancy-plates.cat.sequential', descKey: 'fancy-plates.desc.sequential', mrp: 20, example: '123 XXX' },
-  { id: 'standard', labelKey: 'fancy-plates.cat.standard', descKey: 'fancy-plates.desc.standard', mrp: 2, example: '548 BCA' },
+  { id: 'premiumLetters', labelKey: 'fancy-plates.cat.premiumLetters', descKey: 'fancy-plates.desc.premiumLetters', mrp: 285, example: '001 AAA' },
+  { id: 'premium', labelKey: 'fancy-plates.cat.premium', descKey: 'fancy-plates.desc.premium', mrp: 228, example: '007 BCA' },
+  { id: 'roundLetters', labelKey: 'fancy-plates.cat.roundLetters', descKey: 'fancy-plates.desc.roundLetters', mrp: 194, example: '100 BBB' },
+  { id: 'round', labelKey: 'fancy-plates.cat.round', descKey: 'fancy-plates.desc.round', mrp: 137, example: '777 XYZ' },
+  { id: 'popularLetters', labelKey: 'fancy-plates.cat.popularLetters', descKey: 'fancy-plates.desc.popularLetters', mrp: 114, example: '070 DDD' },
+  { id: 'mirrorLetters', labelKey: 'fancy-plates.cat.mirrorLetters', descKey: 'fancy-plates.desc.mirrorLetters', mrp: 72, example: '101 AAA' },
+  { id: 'triplet', labelKey: 'fancy-plates.cat.triplet', descKey: 'fancy-plates.desc.triplet', mrp: 57, example: '070 TTT' },
+  { id: 'mirror', labelKey: 'fancy-plates.cat.mirror', descKey: 'fancy-plates.desc.mirror', mrp: 15, example: '121 XYZ' },
+  { id: 'custom', labelKey: 'fancy-plates.cat.custom', descKey: 'fancy-plates.desc.custom', mrp: 10, example: '720 TNO' },
+  { id: 'standard', labelKey: 'fancy-plates.cat.standard', descKey: 'fancy-plates.desc.standard', mrp: 2.8, example: '548 BCA' },
 ];
 
 export default function FancyPlatesCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [selectedCategory, setSelectedCategory] = useState('triple001');
+  const [selectedCategory, setSelectedCategory] = useState('premium');
   const [quantity, setQuantity] = useState<string>('1');
 
   const selected = plateCategories.find((c) => c.id === selectedCategory);

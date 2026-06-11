@@ -18,6 +18,13 @@ interface Violation {
   firstMRP: number;
   repeatMRP: number | null;
   note?: string;
+  // Some violations (DUI, oncoming lane) are no longer punished by a monetary
+  // fine in MRP — the sanction is administrative arrest and/or deprivation of
+  // the driving licence. When set, the UI shows penaltyKey/repeatPenaltyKey
+  // instead of a tenge amount and the 50% discount block.
+  noMonetaryFine?: boolean;
+  penaltyKey?: string;
+  repeatPenaltyKey?: string;
 }
 
 const violations: Violation[] = [
@@ -27,13 +34,13 @@ const violations: Violation[] = [
   { id: 'redLight', labelKey: 'traffic-fines.v.redLight', articleRef: '596', firstMRP: 10, repeatMRP: 20 },
   { id: 'seatbelt', labelKey: 'traffic-fines.v.seatbelt', articleRef: '593 ч.1', firstMRP: 5, repeatMRP: 10 },
   { id: 'phone', labelKey: 'traffic-fines.v.phone', articleRef: '593 ч.2', firstMRP: 5, repeatMRP: 10 },
-  { id: 'dui', labelKey: 'traffic-fines.v.dui', articleRef: '608 ч.1', firstMRP: 40, repeatMRP: null, note: 'traffic-fines.noteLicenseArrest' },
+  { id: 'dui', labelKey: 'traffic-fines.v.dui', articleRef: '608 ч.1', firstMRP: 0, repeatMRP: null, noMonetaryFine: true, penaltyKey: 'traffic-fines.penaltyDui', repeatPenaltyKey: 'traffic-fines.penaltyDuiRepeat', note: 'traffic-fines.noteDui' },
   { id: 'parking', labelKey: 'traffic-fines.v.parking', articleRef: '597 ч.1', firstMRP: 5, repeatMRP: 10 },
   { id: 'pedestrian', labelKey: 'traffic-fines.v.pedestrian', articleRef: '600', firstMRP: 10, repeatMRP: 15 },
-  { id: 'oncoming', labelKey: 'traffic-fines.v.oncoming', articleRef: '596 ч.3', firstMRP: 10, repeatMRP: null, note: 'traffic-fines.noteLicense' },
+  { id: 'oncoming', labelKey: 'traffic-fines.v.oncoming', articleRef: '596 ч.3', firstMRP: 0, repeatMRP: null, noMonetaryFine: true, penaltyKey: 'traffic-fines.penaltyOncoming', note: 'traffic-fines.noteOncoming' },
   { id: 'tint', labelKey: 'traffic-fines.v.tint', articleRef: '590 ч.3', firstMRP: 10, repeatMRP: 15 },
   { id: 'noInsurance', labelKey: 'traffic-fines.v.noInsurance', articleRef: '611', firstMRP: 10, repeatMRP: 20 },
-  { id: 'childSeat', labelKey: 'traffic-fines.v.childSeat', articleRef: '593 ч.3', firstMRP: 10, repeatMRP: 20 },
+  { id: 'childSeat', labelKey: 'traffic-fines.v.childSeat', articleRef: '593 ч.1', firstMRP: 5, repeatMRP: 10, note: 'traffic-fines.noteChildSeat' },
   { id: 'noPlates', labelKey: 'traffic-fines.v.noPlates', articleRef: '590 ч.4', firstMRP: 10, repeatMRP: 20 },
 ];
 
@@ -63,6 +70,15 @@ export default function TrafficFinesCalculator() {
   const fineAmount = fineInMRP * MRP_2026;
   const discountedAmount = Math.round(fineAmount * 0.5);
 
+  // Non-monetary penalty text (arrest / licence deprivation) for the selected
+  // violation, honoring the repeat-offense toggle when a distinct repeat
+  // sanction exists.
+  const penaltyKey = useMemo(() => {
+    if (!selected || !selected.noMonetaryFine) return null;
+    if (isRepeat && selected.repeatPenaltyKey) return selected.repeatPenaltyKey;
+    return selected.penaltyKey ?? null;
+  }, [selected, isRepeat]);
+
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
   const generateExportData = () => {
@@ -80,11 +96,15 @@ export default function TrafficFinesCalculator() {
         },
         {
           title: t('traffic-fines.resultsTitle'),
-          data: [
-            { label: t('traffic-fines.fineInMRP'), value: `${fineInMRP} МРП` },
-            { label: t('traffic-fines.fullAmount'), value: formatCurrency(fineAmount) },
-            { label: t('traffic-fines.discountAmount'), value: formatCurrency(discountedAmount) },
-          ],
+          data: selected.noMonetaryFine
+            ? [
+                { label: t('traffic-fines.penalty'), value: penaltyKey ? t(penaltyKey) : t('traffic-fines.noFineLabel') },
+              ]
+            : [
+                { label: t('traffic-fines.fineInMRP'), value: `${fineInMRP} МРП` },
+                { label: t('traffic-fines.fullAmount'), value: formatCurrency(fineAmount) },
+                { label: t('traffic-fines.discountAmount'), value: formatCurrency(discountedAmount) },
+              ],
         },
       ],
       footer: 'calk.kz',
@@ -153,7 +173,9 @@ export default function TrafficFinesCalculator() {
                   <span className="text-xs text-gray-500 ml-2 flex-shrink-0">ст. {v.articleRef}</span>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {v.firstMRP} МРП{v.repeatMRP !== null && ` / ${v.repeatMRP} МРП`}
+                  {v.noMonetaryFine
+                    ? t('traffic-fines.noFineLabel')
+                    : <>{v.firstMRP} МРП{v.repeatMRP !== null && ` / ${v.repeatMRP} МРП`}</>}
                 </div>
               </button>
             ))}
@@ -194,53 +216,71 @@ export default function TrafficFinesCalculator() {
                 </div>
               </div>
 
-              {/* Fine in MRP */}
-              <div className="bg-orange-50 rounded-lg p-4 flex justify-between items-center">
-                <div>
-                  <div className="text-sm text-orange-600">{t('traffic-fines.fineInMRP')}</div>
-                  <div className="text-xs text-orange-500">1 МРП = {formatCurrency(MRP_2026)}</div>
-                </div>
-                <span className="text-2xl font-bold text-orange-700">{fineInMRP} МРП</span>
-              </div>
-
-              {/* Full amount */}
-              <div className="bg-red-50 rounded-lg p-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-gray-900">{t('traffic-fines.fullAmount')}</span>
-                  <span className="text-2xl font-bold text-red-700">{formatCurrency(fineAmount)}</span>
-                </div>
-                {isRepeat && selected.repeatMRP === null && (
-                  <div className="mt-2 text-sm text-red-600">
-                    {selected.note && t(selected.note)}
+              {selected.noMonetaryFine ? (
+                /* Non-monetary sanction: administrative arrest / licence deprivation.
+                   No tenge amount and no 50% discount apply (ст. 893 КоАП РК
+                   скидка не распространяется на лишение прав). */
+                <div className="bg-red-50 rounded-lg p-6 border border-red-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-lg font-semibold text-gray-900">{t('traffic-fines.penalty')}</span>
+                    <span className="text-sm font-semibold text-red-700 uppercase tracking-wide">{t('traffic-fines.noFineLabel')}</span>
                   </div>
-                )}
-                {!isRepeat && selected.note && (
-                  <div className="mt-2 text-sm text-red-600">{t(selected.note)}</div>
-                )}
-              </div>
-
-              {/* Discount */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
-                <div className="flex justify-between items-center mb-2">
-                  <div>
-                    <span className="text-lg font-semibold text-green-900">{t('traffic-fines.discountAmount')}</span>
-                    <div className="text-xs text-green-600">{t('traffic-fines.discountCondition')}</div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-green-700">{formatCurrency(discountedAmount)}</span>
-                    <div className="text-xs text-green-600">-50%</div>
-                  </div>
+                  {penaltyKey && (
+                    <div className="text-base font-bold text-red-700">{t(penaltyKey)}</div>
+                  )}
+                  <div className="mt-2 text-sm text-red-600">{t('traffic-fines.noDiscountNote')}</div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {/* Fine in MRP */}
+                  <div className="bg-orange-50 rounded-lg p-4 flex justify-between items-center">
+                    <div>
+                      <div className="text-sm text-orange-600">{t('traffic-fines.fineInMRP')}</div>
+                      <div className="text-xs text-orange-500">1 МРП = {formatCurrency(MRP_2026)}</div>
+                    </div>
+                    <span className="text-2xl font-bold text-orange-700">{fineInMRP} МРП</span>
+                  </div>
 
-              {/* Savings */}
-              <div className="bg-blue-50 rounded-lg p-4 flex justify-between items-center">
-                <span className="text-sm text-blue-700">{t('traffic-fines.savings')}</span>
-                <span className="text-lg font-bold text-blue-700">{formatCurrency(fineAmount - discountedAmount)}</span>
-              </div>
+                  {/* Full amount */}
+                  <div className="bg-red-50 rounded-lg p-6">
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-semibold text-gray-900">{t('traffic-fines.fullAmount')}</span>
+                      <span className="text-2xl font-bold text-red-700">{formatCurrency(fineAmount)}</span>
+                    </div>
+                    {isRepeat && selected.repeatMRP === null && (
+                      <div className="mt-2 text-sm text-red-600">
+                        {selected.note && t(selected.note)}
+                      </div>
+                    )}
+                    {!isRepeat && selected.note && (
+                      <div className="mt-2 text-sm text-red-600">{t(selected.note)}</div>
+                    )}
+                  </div>
+
+                  {/* Discount */}
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
+                    <div className="flex justify-between items-center mb-2">
+                      <div>
+                        <span className="text-lg font-semibold text-green-900">{t('traffic-fines.discountAmount')}</span>
+                        <div className="text-xs text-green-600">{t('traffic-fines.discountCondition')}</div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-2xl font-bold text-green-700">{formatCurrency(discountedAmount)}</span>
+                        <div className="text-xs text-green-600">-50%</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Savings */}
+                  <div className="bg-blue-50 rounded-lg p-4 flex justify-between items-center">
+                    <span className="text-sm text-blue-700">{t('traffic-fines.savings')}</span>
+                    <span className="text-lg font-bold text-blue-700">{formatCurrency(fineAmount - discountedAmount)}</span>
+                  </div>
+                </>
+              )}
 
               {/* Note */}
-              {selected.note && (isRepeat ? selected.repeatMRP === null : true) && (
+              {selected.note && (selected.noMonetaryFine || (isRepeat ? selected.repeatMRP === null : true)) && (
                 <div className="bg-amber-50 rounded-lg p-4 text-sm text-amber-800 border border-amber-200">
                   <AlertTriangle className="w-4 h-4 inline mr-1" />
                   {t(selected.note)}
@@ -286,11 +326,15 @@ export default function TrafficFinesCalculator() {
                 >
                   <td className="py-2 px-2">{t(v.labelKey)}</td>
                   <td className="py-2 px-2 text-gray-500">ст. {v.articleRef}</td>
-                  <td className="py-2 px-2 text-right font-medium">{v.firstMRP} МРП</td>
                   <td className="py-2 px-2 text-right font-medium">
-                    {v.repeatMRP !== null ? `${v.repeatMRP} МРП` : '—'}
+                    {v.noMonetaryFine ? t('traffic-fines.noFineLabel') : `${v.firstMRP} МРП`}
                   </td>
-                  <td className="py-2 px-2 text-right text-gray-600">{formatCurrency(v.firstMRP * MRP_2026)}</td>
+                  <td className="py-2 px-2 text-right font-medium">
+                    {v.noMonetaryFine ? '—' : v.repeatMRP !== null ? `${v.repeatMRP} МРП` : '—'}
+                  </td>
+                  <td className="py-2 px-2 text-right text-gray-600">
+                    {v.noMonetaryFine ? '—' : formatCurrency(v.firstMRP * MRP_2026)}
+                  </td>
                 </tr>
               ))}
             </tbody>

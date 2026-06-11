@@ -15,7 +15,7 @@ import { getSources } from '../../data/calculatorSources';
 import { getMethodology } from '../../data/calculatorMethodology';
 import { pluralize } from '../../utils/pluralize';
 
-type TaxRegime = 'simplified' | 'general' | 'patent';
+type TaxRegime = 'simplified' | 'general' | 'self-employed';
 type PeriodYears = 1 | 3 | 5;
 
 interface TaxOption {
@@ -27,8 +27,11 @@ interface TaxOption {
 export default function BusinessROICalculator() {
   const { t, i18n } = useTranslation('calculators');
 
+  // СНР на основе патента (ст. 685 старого НК, ставка 1%) упразднён с 01.01.2026.
+  // Преемник для бывших патентщиков — СНР для самозанятых: ИПН 0% с дохода
+  // (соцплатежи 4% — ОПВ/ОПВР/СО/ОСМС — учитываются отдельно, не как налог).
   const taxOptions: TaxOption[] = [
-    { id: 'patent', labelKey: 'business-roi.taxPatent', rate: 0.01 },
+    { id: 'self-employed', labelKey: 'business-roi.taxSelfEmployed', rate: 0 },
     { id: 'simplified', labelKey: 'business-roi.taxSimplified', rate: 0.04 },
     { id: 'general', labelKey: 'business-roi.taxGeneral', rate: 0.20 },
   ];
@@ -68,7 +71,7 @@ export default function BusinessROICalculator() {
     const monthlyRevenue = check * clients;
     const grossProfit = monthlyRevenue - expenses;
 
-    // Налог: упрощёнка / патент — от выручки, ОУР (КПН 20%) — от прибыли
+    // Налог: упрощёнка — от выручки (4%); самозанятые — ИПН 0%; ОУР (КПН 20%) — от прибыли
     let taxAmount = 0;
     if (taxRegime === 'general') {
       taxAmount = grossProfit > 0 ? grossProfit * taxRate : 0;
@@ -93,7 +96,8 @@ export default function BusinessROICalculator() {
     }
 
     // Точка безубыточности (клиентов/мес): (расходы + налог_на_выручку) / чек
-    // Для упрощённой/патент: break = expenses / (check × (1 − taxRate))
+    // Для упрощённой/самозанятых: break = expenses / (check × (1 − taxRate))
+    //   (у самозанятых taxRate = 0, поэтому break = expenses / check)
     // Для ОУР: break = expenses / check (налог берётся с прибыли)
     let breakEvenClients = 0;
     if (check > 0) {

@@ -50,9 +50,11 @@ export default function BusinessTripCalculator() {
     const total = dailyTotal + accTotal + transTotal + salaryTotal;
     const advance = total * 0.75;
 
-    // Налогообложение сверхнормативных сумм (упрощённо): если accommodation > 12 МРП/день, сверх облагается
-    const accLimit = 12 * MRP_2026; // per day
-    const overLimit = Math.max(0, (parseFloat(accommodation) || 0) - accLimit) * n;
+    // Налогообложение сверхнормативных сумм (НК РК 2026, ст. 366): не облагаются ИПН суточные
+    // в пределах 6 МРП/сутки по РК и 8 МРП/сутки за рубежом. Превышение суточных — доход работника.
+    // Проживание и проезд (ст. 260) возмещаются по факту и НЕ ограничены лимитом в МРП.
+    const dailyTaxFreeLimit = (tripType === 'domestic' ? 6 : 8) * MRP_2026; // per day
+    const overLimit = Math.max(0, dailyPerDay - dailyTaxFreeLimit) * n;
     const taxOnOverLimit = overLimit * 0.10;
 
     return {
