@@ -3,7 +3,7 @@ import { Activity, Calculator, Users, TrendingUp, AlertTriangle, Info, Target, H
 import { useTranslation } from 'react-i18next';
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
-import { ProgressBar } from '../ui/ChartComponents';
+import { TaxPieChart } from '../ui/ChartComponents';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
