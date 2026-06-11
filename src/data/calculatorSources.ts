@@ -57,10 +57,6 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'crypto-tax': [NK_RK, MFCA, KGD],
   'rental-income-tax': [NK_RK, KGD],
   'unified-payment': [NK_RK, KGD],
-  'esp-self-employed': [
-    NK_RK,
-    { title: 'eGov.kz — самозанятые', url: 'https://egov.kz/cms/ru/articles/employment/edinyi-sovokupnyi-platezh-esp' },
-  ],
   'tax-deductions': [NK_RK, KGD],
   'tax-regime-comparison': [NK_RK, KGD, EGOV],
   'universal-declaration': [NK_RK, KGD, EGOV],

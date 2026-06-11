@@ -19,7 +19,6 @@ const LAST_UPDATED: Record<string, string> = {
   'crypto-tax': '2026-01-01',
   'rental-income-tax': '2026-01-01',
   'unified-payment': '2026-01-01',
-  'esp-self-employed': '2026-01-01',
   'tax-deductions': '2026-01-01',
   'tax-regime-comparison': '2026-01-01',
   'universal-declaration': '2026-01-01',
