@@ -1,0 +1,4609 @@
+{
+ "domain": "calk.kz",
+ "generated": "2026-06-10",
+ "method": "full 117-component sweep (8 agents) + missed-15 + thematic canonicalization (11 groups)",
+ "hardcoded_canonical": [
+  {
+   "key": "alimony_share_one_child",
+   "value": 25,
+   "unit": "percent",
+   "law": "Кодекс о браке (супружестве) и семье РК, ст. 139",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "alimony_share_one_child"
+   ],
+   "status": "clean",
+   "conflict": "1 ребёнок = 1/4 дохода = 25%. Structural Code share, current for 2026 (confirmed egov.kz / ст.139).",
+   "used_by": [
+    "AlimonyCalculator"
+   ]
+  },
+  {
+   "key": "alimony_share_two_children",
+   "value": 33.3,
+   "unit": "percent",
+   "law": "Кодекс о браке (супружестве) и семье РК, ст. 139",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "alimony_share_two_children"
+   ],
+   "status": "representation_variants",
+   "conflict": "Raw captured as fraction '1/3'; same constant expressed as percent = 33.3%. 2 детей = 1/3 дохода. No value conflict — only fraction-vs-percent encoding.",
+   "used_by": [
+    "AlimonyCalculator"
+   ]
+  },
+  {
+   "key": "alimony_share_three_children",
+   "value": 50,
+   "unit": "percent",
+   "law": "Кодекс о браке (супружестве) и семье РК, ст. 139",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "alimony_share_three_children"
+   ],
+   "status": "clean",
+   "conflict": "3+ детей = 1/2 дохода = 50%. Distinct constant from 1-child/2-children shares; not merged.",
+   "used_by": [
+    "AlimonyCalculator"
+   ]
+  },
+  {
+   "key": "asp_child_bonus_mrp",
+   "value": 1.5,
+   "unit": "MRP",
+   "law": "Закон РК о государственной адресной социальной помощи (АСП)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "asp_child_bonus_1to6_mrp",
+    "asp_child_bonus_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Two naming variants of the same ASP per-child bonus (children 1–6 yrs) = 1.5 МРП; identical value 1.5, merged. Multiplier is structural; absolute KZT amount tracks МРП annually.",
+   "used_by": [
+    "SocialAssistanceCalculator"
+   ]
+  },
+  {
+   "key": "asp_poverty_threshold_pct_of_living_minimum",
+   "value": 70,
+   "unit": "percent",
+   "law": "Закон РК о государственной адресной социальной помощи (АСП)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "asp_poverty_threshold_pct_of_living_min",
+    "poverty_line_share_of_pm"
+   ],
+   "status": "clean",
+   "conflict": "Two naming variants of the same threshold: черта бедности не ниже 70% ПМ. Both =70%, merged. Distinct from the 35%-of-median threshold (different base — ПМ vs median income), so NOT merged with it.",
+   "used_by": [
+    "SocialAssistanceCalculator"
+   ]
+  },
+  {
+   "key": "asp_poverty_threshold_pct_of_median",
+   "value": 35,
+   "unit": "percent",
+   "law": "Закон РК о государственной адресной социальной помощи (АСП)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "asp_poverty_line_share_of_median",
+    "asp_poverty_threshold_pct_of_median"
+   ],
+   "status": "clean",
+   "conflict": "Two naming variants of the same threshold: черта бедности = 35% медианного дохода. Both =35%, merged. Separate real-world constant from the 70%-of-ПМ threshold (different base).",
+   "used_by": [
+    "SocialAssistanceCalculator"
+   ]
+  },
+  {
+   "key": "birth_lumpsum_benefit_1to3_mrp",
+   "value": 38,
+   "unit": "MRP",
+   "law": "Закон РК о государственных пособиях семьям, имеющим детей",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "birth_lumpsum_benefit_1to3_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Единовременное пособие на рождение 1–3 ребёнка = 38 МРП. Distinct from the 4th+ child amount (63 МРП); not merged. Multiplier structural; KZT tracks МРП.",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ]
+  },
+  {
+   "key": "birth_lumpsum_benefit_4plus_mrp",
+   "value": 63,
+   "unit": "MRP",
+   "law": "Закон РК о государственных пособиях семьям, имеющим детей",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "birth_lumpsum_benefit_4plus_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Единовременное пособие на 4-го и последующего ребёнка = 63 МРП. Distinct from 1–3 child amount (38 МРП).",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ]
+  },
+  {
+   "key": "childcare_benefit_rate",
+   "value": 40,
+   "unit": "percent",
+   "law": "Закон РК об обязательном социальном страховании / ГФСС (пособие по уходу за ребёнком до 1.5 лет)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "childcare_benefit_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Raw captured as factor 0.4 (CHILDCARE_RATE=0.4); canonicalized as rate 40%. Same constant, decimal-vs-percent encoding.",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ]
+  },
+  {
+   "key": "monthly_childcare_benefit_mrp_table",
+   "value": "1 ребёнок:5.76; 2:6.81; 3:7.85; 4+:8.90 (МРП/мес)",
+   "unit": "MRP",
+   "law": "Закон РК о государственных пособиях семьям, имеющим детей (ежемесячное пособие по уходу до 1.5 лет)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "monthly_childcare_benefit_mrp_table"
+   ],
+   "status": "clean",
+   "conflict": "Single table of per-birth-order monthly childcare amounts in МРП; one source, no conflict. Multipliers structural; KZT tracks МРП.",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ]
+  },
+  {
+   "key": "maternity_benefit_coefficient",
+   "value": 4.2,
+   "unit": "factor",
+   "law": "ГФСС РК — единовременная выплата по беременности и родам (126 дней / 30)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "maternity_benefit_coefficient"
+   ],
+   "status": "clean",
+   "conflict": "Lump-sum maternity coefficient 4.2 = 126 calendar days / 30. Structural derivation, single value.",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ]
+  },
+  {
+   "key": "maternity_income_cap_mzp",
+   "value": 7,
+   "unit": "MZP",
+   "law": "Закон РК об обязательном социальном страховании / ГФСС — предел дохода для исчисления выплат",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "maternity_income_cap_mzp"
+   ],
+   "status": "clean",
+   "conflict": "Income cap for maternity benefit calculation = 7 МЗП. The multiplier (7) is structural; the absolute cap (7×85000=595000) changes annually with МЗП. Same 7-МЗП object-cap concept as the СО income cap but kept separate as it is captured for the maternity calculator.",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ]
+  },
+  {
+   "key": "ent_max_score",
+   "value": 140,
+   "unit": "factor",
+   "law": "ЕНТ — НАО «Национальный центр тестирования» (структура 20+10+10+50+50)",
+   "year": "2024",
+   "change_frequency": "occasional",
+   "aliases": [
+    "ent_max_score"
+   ],
+   "status": "clean",
+   "conflict": "Max ЕНТ score = 140. Regulated test parameter set by НАО/МОН (year tagged 2024); changes occasionally by ministry decision. Single value.",
+   "used_by": [
+    "ENTScoreCalculator"
+   ]
+  },
+  {
+   "key": "gons_max_premium_base_yearly_mrp",
+   "value": 100,
+   "unit": "MRP",
+   "law": "Закон РК об образовании — ГОНС (госпремия по образовательному накопительному вкладу), макс. база премирования",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gons_max_premium_base_yearly_mrp"
+   ],
+   "status": "clean",
+   "conflict": "ГОНС max yearly premium base = 100 МРП (≈432 500 ₸/год). Structural program parameter; KZT tracks МРП. Single value.",
+   "used_by": [
+    "GONSCalculator"
+   ]
+  },
+  {
+   "key": "gons_min_initial_deposit_mrp",
+   "value": 3,
+   "unit": "MRP",
+   "law": "Закон РК об образовании — ГОНС, минимальный первоначальный взнос",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gons_min_initial_deposit_mrp"
+   ],
+   "status": "clean",
+   "conflict": "ГОНС min initial deposit = 3 МРП (≈12 975 ₸). Structural; KZT tracks МРП.",
+   "used_by": [
+    "GONSCalculator"
+   ]
+  },
+  {
+   "key": "gons_state_premium_rate_priority",
+   "value": 7,
+   "unit": "percent",
+   "law": "ГОНС — ставка госпремии для льготных категорий",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gons_state_premium_rate_priority"
+   ],
+   "status": "clean",
+   "conflict": "Priority-category ГОНС premium = 7% (льготные категории). Distinct from the regular 5% rate; not merged. Coincidental numeric match with 7-20-25 mortgage rate but different real-world constant.",
+   "used_by": [
+    "GONSCalculator"
+   ]
+  },
+  {
+   "key": "gons_state_premium_rate_regular",
+   "value": 5,
+   "unit": "percent",
+   "law": "ГОНС — ставка госпремии для обычных категорий",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gons_state_premium_rate_regular"
+   ],
+   "status": "clean",
+   "conflict": "Regular-category ГОНС premium = 5%. Distinct from the priority 7% rate; not merged.",
+   "used_by": [
+    "GONSCalculator"
+   ]
+  },
+  {
+   "key": "gov_program_7_20_25_rate",
+   "value": 7,
+   "unit": "percent",
+   "law": "Гос. ипотечная программа «7-20-25» (АО «Казахстанский фонд устойчивости», НБ РК)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "gov_program_7_20_25_rate"
+   ],
+   "status": "clean",
+   "conflict": "Program nominal rate = 7%. Confirmed active in 2026 at 7% (kfu.kz / krisha.kz, new tranche from Jan 2026). Same 7% value appears in MortgageCalculator and OtbasyBankCalculator — consistent, not a conflict. The '20' (down payment) and '25' (term) are separate parameters.",
+   "used_by": [
+    "MortgageCalculator",
+    "OtbasyBankCalculator"
+   ]
+  },
+  {
+   "key": "gov_program_7_20_25_min_down_payment",
+   "value": 20,
+   "unit": "percent",
+   "law": "Гос. ипотечная программа «7-20-25» — минимальный первоначальный взнос",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "gov_program_7_20_25_min_down_payment"
+   ],
+   "status": "clean",
+   "conflict": "Minimum down payment = 20%. Distinct parameter of the same program (not merged with rate or term).",
+   "used_by": [
+    "MortgageCalculator"
+   ]
+  },
+  {
+   "key": "gov_program_7_20_25_max_term_years",
+   "value": 25,
+   "unit": "factor",
+   "law": "Гос. ипотечная программа «7-20-25» — максимальный срок",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "gov_program_7_20_25_max_term_years"
+   ],
+   "status": "clean",
+   "conflict": "Max term = 25 years. Distinct parameter of the program. Numeric coincidence with the 25M loan cap below — different unit/constant.",
+   "used_by": [
+    "MortgageCalculator"
+   ]
+  },
+  {
+   "key": "gov_program_7_20_25_limit_almaty_astana",
+   "value": 25000000,
+   "unit": "KZT",
+   "law": "Гос. ипотечная программа «7-20-25» — лимит займа для Алматы/Астаны",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "gov_program_7_20_25_limit_almaty_astana"
+   ],
+   "status": "clean",
+   "conflict": "Max loan for Almaty/Astana = 25 000 000 ₸ (regions = 15M, per note). Distinct parameter of the program.",
+   "used_by": [
+    "MortgageCalculator"
+   ]
+  },
+  {
+   "key": "otbasy_baspana_hit_rate",
+   "value": 5,
+   "unit": "percent",
+   "law": "АО «Отбасы банк» (hcsbk.kz) — программа «Баспана хит»",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "otbasy_baspana_hit_rate"
+   ],
+   "status": "clean",
+   "conflict": "Баспана хит rate = 5% (term 25y, down 20%, max 30M). Distinct Otbasy product from Баспана жас (2%) and Отау (7%); not merged.",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ]
+  },
+  {
+   "key": "otbasy_baspana_zhas_rate",
+   "value": 2,
+   "unit": "percent",
+   "law": "АО «Отбасы банк» — программа «Баспана жас» (молодёжная)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "otbasy_baspana_zhas_rate"
+   ],
+   "status": "clean",
+   "conflict": "Баспана жас rate = 2% (down 10%, max 18M). Distinct product; not merged.",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ]
+  },
+  {
+   "key": "otbasy_otau_rate",
+   "value": 7,
+   "unit": "percent",
+   "law": "АО «Отбасы банк» — программа «Отау»",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "otbasy_otau_rate"
+   ],
+   "status": "clean",
+   "conflict": "Отау rate = 7% (raised 5%→7% in 2026 per note; down 20%, max 36M Астана/Алматы). Distinct Otbasy product. Numeric match with 7-20-25 and GONS-priority 7% is coincidental — different constants.",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ]
+  },
+  {
+   "key": "mortgage_max_dti_ratio",
+   "value": 50,
+   "unit": "percent",
+   "law": "АРРФР РК — предельный коэффициент долговой нагрузки (ПДН/DTI)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "mortgage_max_dti_ratio"
+   ],
+   "status": "representation_variants",
+   "conflict": "Raw used as factor 0.5 (requiredIncome = payment/0.5); canonicalized as 50% DTI cap. Mirrors the regulatory ПДН ≤50% limit. Decimal-vs-percent encoding of the same constant.",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ]
+  },
+  {
+   "key": "marital_share_equal",
+   "value": 50,
+   "unit": "percent",
+   "law": "Кодекс о браке (супружестве) и семье РК — равные доли супругов",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "marital_share_equal"
+   ],
+   "status": "representation_variants",
+   "conflict": "Raw captured as factor 0.5 (default 50/50 split); canonicalized as 50%. Structural Code share. Distinct from marital_share_with_children (0.55/55%).",
+   "used_by": [
+    "PropertyDivisionCalculator"
+   ]
+  },
+  {
+   "key": "marital_share_with_children",
+   "value": 55,
+   "unit": "percent",
+   "law": "Кодекс о браке (супружестве) и семье РК — отступление от равенства долей в интересах детей",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "marital_share_with_children"
+   ],
+   "status": "representation_variants",
+   "conflict": "Raw captured as factor 0.55 (55/45 when children stay with one parent); canonicalized as 55%. Distinct real-world constant from the equal 50% share — NOT merged. Decimal-vs-percent encoding only.",
+   "used_by": [
+    "PropertyDivisionCalculator"
+   ]
+  },
+  {
+   "key": "unemployment_income_cap_mzp",
+   "value": 7,
+   "unit": "MZP",
+   "law": "Закон РК об обязательном социальном страховании / ГФСС — объект исчисления СО ограничен 7 МЗП",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "unemployment_income_cap_mzp",
+    "unemployment_income_object_cap_mzp"
+   ],
+   "status": "clean",
+   "conflict": "Two naming variants of the same СО income-object cap = 7 МЗП (595 000 ₸) — merged, identical value 7. Multiplier structural; absolute cap tracks МЗП annually.",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ]
+  },
+  {
+   "key": "unemployment_income_replacement_coef",
+   "value": 40,
+   "unit": "percent",
+   "law": "ГФСС РК — коэффициент замещения дохода для пособия по утрате работы",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "unemployment_income_replacement_coef"
+   ],
+   "status": "clean",
+   "conflict": "Income replacement coefficient = 40%. Single value (source lists it twice from one calculator); structural. Same numeric as childcare 40% but a different real-world constant — not merged.",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ]
+  },
+  {
+   "key": "unemployment_min_experience_months",
+   "value": 6,
+   "unit": "factor",
+   "law": "ГФСС РК — минимальный стаж участия для права на пособие по утрате работы",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "unemployment_min_experience_months"
+   ],
+   "status": "clean",
+   "conflict": "Minimum participation period = 6 months. Single value (listed twice from one calculator); structural eligibility threshold.",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ]
+  },
+  {
+   "key": "unemployment_experience_coef_table",
+   "value": "<6m:0; 6-12m:0.7; 1-2y:0.75; 2-3y:0.85; 3-4y:0.9; 4-5y:0.95; 5-6y:1.0; >6y:+0.02/yr (max 1.3)",
+   "unit": "table",
+   "law": "ГФСС РК (2026) — коэффициент стажа участия",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "unemployment_experience_coef_table"
+   ],
+   "status": "representation_variants",
+   "conflict": "Two encodings of the same staj-coefficient table: one omits the explicit '<6m:0' band, the other includes it; otherwise identical (0.7→1.0 by band, +0.02/yr beyond 6y capped at 1.3). Same table, different textual representation — no value conflict.",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ]
+  },
+  {
+   "key": "unemployment_benefit_payment_period_table",
+   "value": "6-12m:1; 1-2y:2; 2-3y:3; 3-4y:4; 4-5y:5; 5y+:6 (months)",
+   "unit": "table",
+   "law": "Социальный кодекс РК, ст. 84 (социальная выплата на случай потери работы); администратор — ГФСС",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "unemployment_payment_period_table"
+   ],
+   "status": "representation_variants",
+   "conflict": "Two encodings of the SAME tiered table differ only in cosmetic notation for the top tier: '5y+' vs '5+y' (both mean 'service of 5 years or more'). After normalization the schedules are byte-for-byte identical (6-12m->1, 1-2y->2, 2-3y->3, 3-4y->4, 4-5y->5, 5+y->6 months). No value disagreement, so not a VALUE_CONFLICT; both variants already encode the correct 2026 schedule.",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ]
+  },
+  {
+   "key": "bankruptcy_extrajudicial_limit_mrp",
+   "value": 1600,
+   "unit": "MRP",
+   "law": "Закон РК О восстановлении платёжеспособности и банкротстве граждан (внесудебное банкротство)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "bankruptcy_extrajudicial_limit_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "BankruptcyCalculator"
+   ]
+  },
+  {
+   "key": "customs_duty_rate_vehicle_base",
+   "value": 15,
+   "unit": "percent",
+   "law": "ЕТТ ЕАЭС (единый таможенный тариф)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_duty_rate_vehicle"
+   ],
+   "status": "clean",
+   "conflict": "Base EAEU customs duty rate for a vehicle (<=7 years). Distinct from the old-vehicle rate (25%) and the large-engine surcharge (5%).",
+   "used_by": [
+    "CustomsClearanceCalculator"
+   ]
+  },
+  {
+   "key": "customs_duty_rate_vehicle_old",
+   "value": 25,
+   "unit": "percent",
+   "law": "ЕТТ ЕАЭС (единый таможенный тариф)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_duty_rate_vehicle_old"
+   ],
+   "status": "clean",
+   "conflict": "Higher customs duty applied when vehicle age > 7 years. Different constant from the 15% base rate.",
+   "used_by": [
+    "CustomsClearanceCalculator"
+   ]
+  },
+  {
+   "key": "customs_duty_surcharge_large_engine",
+   "value": 5,
+   "unit": "percent",
+   "law": "ЕТТ ЕАЭС (единый таможенный тариф)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_duty_surcharge_large_engine"
+   ],
+   "status": "clean",
+   "conflict": "Additive surcharge when engine volume > 3000 cc; not a standalone duty rate.",
+   "used_by": [
+    "CustomsClearanceCalculator"
+   ]
+  },
+  {
+   "key": "customs_vehicle_old_age_threshold_years",
+   "value": 7,
+   "unit": "years",
+   "law": "ЕАЭС таможенные правила (порог возраста ТС)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_vehicle_old_age_threshold_years"
+   ],
+   "status": "clean",
+   "used_by": [
+    "CustomsClearanceCalculator"
+   ]
+  },
+  {
+   "key": "customs_fee_rate",
+   "value": 0.4,
+   "unit": "percent",
+   "law": "ТК ЕАЭС / постановление о таможенных сборах РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_fee_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Captured as 0.4 (percent) which equals the code constant 0.004 (fraction). Same constant, percent encoding chosen as canonical (0.4% of customs value).",
+   "used_by": [
+    "CustomsClearanceCalculator"
+   ]
+  },
+  {
+   "key": "customs_parcel_dutyfree_value_eur",
+   "value": 200,
+   "unit": "factor",
+   "law": "Решение Совета ЕЭК / ТК ЕАЭС (беспошлинный лимит стоимости посылки, EUR)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_parcel_dutyfree_value_eur"
+   ],
+   "status": "clean",
+   "conflict": "Duty-free parcel value threshold in EUR (not KZT/MRP); EAEU Council periodically revises.",
+   "used_by": [
+    "ParcelCustomsCalculator"
+   ]
+  },
+  {
+   "key": "customs_parcel_dutyfree_weight_kg",
+   "value": 31,
+   "unit": "factor",
+   "law": "ТК ЕАЭС (беспошлинный лимит веса посылки, кг)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_parcel_dutyfree_weight_kg"
+   ],
+   "status": "clean",
+   "used_by": [
+    "ParcelCustomsCalculator"
+   ]
+  },
+  {
+   "key": "customs_parcel_excess_duty_value_rate",
+   "value": 15,
+   "unit": "percent",
+   "law": "ТК ЕАЭС (пошлина 15% от стоимости сверх лимита)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_parcel_excess_duty_value_rate"
+   ],
+   "status": "clean",
+   "conflict": "Parcel value-excess duty rate; numerically 15% but a different rule from the vehicle 15% base duty — not merged.",
+   "used_by": [
+    "ParcelCustomsCalculator"
+   ]
+  },
+  {
+   "key": "customs_parcel_excess_duty_weight_eur_per_kg",
+   "value": 2,
+   "unit": "factor",
+   "law": "ТК ЕАЭС (2 EUR за кг сверх лимита веса)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "customs_parcel_excess_duty_weight_eur_per_kg"
+   ],
+   "status": "clean",
+   "conflict": "EUR-per-kg weight-excess duty; higher of value/weight duty is applied.",
+   "used_by": [
+    "ParcelCustomsCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_court_property_individual_rate",
+   "value": 1,
+   "unit": "percent",
+   "law": "ст. 610 НК РК (госпошлина по имущественному иску, физлица)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_court_property_individual_rate",
+    "gov_duty_property_claim_rate",
+    "gov_duty_property_division_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 1% property-claim court duty for individuals, written as 1 (percent) in CourtFee and as 0.01 (fraction) in PropertyDivision/Divorce. Unified to 1%.",
+   "used_by": [
+    "CourtFeeCalculator",
+    "DivorceCalculator",
+    "PropertyDivisionCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_court_property_legal_rate",
+   "value": 3,
+   "unit": "percent",
+   "law": "ст. 610 НК РК (госпошлина по имущественному иску, юрлица)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_court_property_legal_rate"
+   ],
+   "status": "clean",
+   "conflict": "Legal-entity property-claim rate (3%); deliberately NOT merged with the 1% individual rate.",
+   "used_by": [
+    "CourtFeeCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_court_property_claim_min_mrp",
+   "value": 0.5,
+   "unit": "MRP",
+   "law": "ст. 610 НК РК (минимум госпошлины по имущественному иску)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_property_claim_min_mrp",
+    "gov_duty_property_division_min_mrp"
+   ],
+   "status": "representation_variants",
+   "conflict": "Floor of the percentage-based property-claim court fee (0.5 МРП), captured under two snake_case names in PropertyDivision and Divorce. Merged.",
+   "used_by": [
+    "DivorceCalculator",
+    "PropertyDivisionCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_court_nonproperty_claim_individual_mrp",
+   "value": 0.5,
+   "unit": "MRP",
+   "law": "ст. 610 НК РК (госпошлина по неимущественному иску, физлица)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_nonproperty_claim_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Flat non-property claim fee for individuals (0.5 МРП). Shares the value 0.5 МРП with the property-claim minimum but is a different rule — kept separate.",
+   "used_by": [
+    "MoralDamageCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_court_max_individual_mrp",
+   "value": 10000,
+   "unit": "MRP",
+   "law": "ст. 610 НК РК (предельная госпошлина для физлиц)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_court_max_individual_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "CourtFeeCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_court_max_legal_mrp",
+   "value": 20000,
+   "unit": "MRP",
+   "law": "ст. 610 НК РК (предельная госпошлина для юрлиц)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_court_max_legal_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "CourtFeeCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_court_nonproperty_mrp_table",
+   "value": "divorce:0.3/0; alimony:1/0; labor:0.5/2; administrative:2/5; bankruptcy:50/100; arbitration:10/20; corporate:0/15; inheritance:3/0; consumer:1/0; housing:2/5 (МРП individual/legal)",
+   "unit": "MRP",
+   "law": "ст. 610 НК РК (неимущественные иски — таблица госпошлин)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_court_nonproperty_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Full non-property court-fee table (МРП for individual/legal; 0 = exempt). Kept as one table constant.",
+   "used_by": [
+    "CourtFeeCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_divorce_court_mrp",
+   "value": 0.3,
+   "unit": "MRP",
+   "law": "ст. 610 НК РК (иск о расторжении брака в суде)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_divorce_court_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Matches the 'divorce' individual cell (0.3 МРП) of the non-property table; surfaced separately by DivorceCalculator.",
+   "used_by": [
+    "DivorceCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_divorce_zags_mrp",
+   "value": 2,
+   "unit": "MRP",
+   "law": "НК РК (расторжение брака в ЗАГС по взаимному согласию)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_divorce_zags_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Administrative (ZAGS) divorce duty, distinct from the 0.3 МРП court divorce duty.",
+   "used_by": [
+    "DivorceCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_alimony_petition_mrp",
+   "value": 0,
+   "unit": "MRP",
+   "law": "пп.4 ст.616 НК РК (истец по алиментам освобождён от госпошлины)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_alimony_petition_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Statutory exemption (0 МРП), not a missing/zeroed value.",
+   "used_by": [
+    "DivorceCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_property_division_rate",
+   "value": 1,
+   "unit": "percent",
+   "law": "ст. 610 НК РК (раздел имущества — имущественный иск, физлица)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_property_division_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "MERGED INTO gov_duty_court_property_individual_rate (same 1% individual property-claim duty, fraction 0.01 in Divorce). Listed there as alias; not a separate constant.",
+   "used_by": [
+    "DivorceCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_vehicle_certificate_mrp",
+   "value": 1.25,
+   "unit": "MRP",
+   "law": "НК РК (выдача свидетельства о регистрации ТС, СРТС)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_vehicle_certificate_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "CarTransferCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_vehicle_plates_mrp",
+   "value": 2.8,
+   "unit": "MRP",
+   "law": "НК РК (выдача государственных регистрационных номерных знаков)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_vehicle_plates_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "CarTransferCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_vehicle_registration_mrp",
+   "value": 0.25,
+   "unit": "MRP",
+   "law": "ст. 615 НК РК (госпошлина за регистрацию ТС)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_vehicle_registration_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "CarTransferCalculator"
+   ]
+  },
+  {
+   "key": "gov_duty_plate_fee_mrp_table",
+   "value": "triple001/007=170; triple111/777=150; pair100=100; mirror010=50; tens=30; sequential=20; standard=2 (МРП)",
+   "unit": "MRP",
+   "law": "ст. 605 НК РК (сбор за выдачу избранного регистрационного номера)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gov_duty_plate_fee_mrp_table"
+   ],
+   "status": "clean",
+   "used_by": [
+    "FancyPlatesCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_marital_share",
+   "value": 0.5,
+   "unit": "factor",
+   "law": "ГК РК (супружеская доля совместно нажитого имущества)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "inheritance_marital_share"
+   ],
+   "status": "clean",
+   "conflict": "Structural 50% spousal share of joint property; a share factor, not a duty/fee.",
+   "used_by": [
+    "InheritanceCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_notary_cert_per_heir_mrp",
+   "value": 1,
+   "unit": "MRP",
+   "law": "НК РК (госпошлина/нотариальный сбор за свидетельство о праве на наследство)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "inheritance_notary_cert_per_heir_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Note labels it a notary cost estimate, but it maps to the per-heir inheritance-certificate state duty (1 МРП); treated as the regulatory constant.",
+   "used_by": [
+    "InheritanceCalculator"
+   ]
+  },
+  {
+   "key": "installment_loan_max_amount_kzt",
+   "value": 3000000,
+   "unit": "KZT",
+   "law": "Закон РК О микрофинансовой деятельности (лимит регулярного МФО-займа)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "installment_loan_max_amount"
+   ],
+   "status": "clean",
+   "conflict": "Regulatory/product ceiling on a standard MFO installment loan (3,000,000 ₸). Flat KZT cap, not МРП-indexed.",
+   "used_by": [
+    "MicroloanCalculator"
+   ]
+  },
+  {
+   "key": "limitation_admin_fine_years",
+   "value": 1,
+   "unit": "years",
+   "law": "ст. 62 КоАП РК (срок давности по административному взысканию)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "limitation_admin_fine_years",
+    "limitation_admin_fine_years_koap62"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 1-year admin-fine limitation captured twice (unit 'factor' vs 'years', different snake_case). Merged; canonical unit = years.",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_criminal_minor_years",
+   "value": 2,
+   "unit": "years",
+   "law": "ст. 71 УК РК (срок давности, преступления небольшой тяжести)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "limitation_criminal_minor_years",
+    "limitation_criminal_years_uk71"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 2-year criminal (minor offence) limitation captured twice (factor vs years). Merged.",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_family_years",
+   "value": 3,
+   "unit": "years",
+   "law": "ст. 9 КоБС РК (срок исковой давности по семейным спорам)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "limitation_family_years",
+    "limitation_family_years_kobs9"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 3-year family-law limitation captured twice (factor vs years). Merged. Shares value 3 years with the general civil limitation but is a different statute (КоБС ст.9 vs ГК ст.178) — kept separate from it.",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_general_civil_years",
+   "value": 3,
+   "unit": "years",
+   "law": "ст. 178 ГК РК (общий срок исковой давности)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "limitation_general_civil_years",
+    "limitation_general_years_gk178"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 3-year general civil limitation (covers contract/loan/damage) captured twice (factor vs years). Merged. Distinct statute from the 3-year family limitation.",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_inheritance_acceptance_months",
+   "value": 6,
+   "unit": "months",
+   "law": "ст. 1072 ГК РК (срок принятия наследства)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "limitation_inheritance_acceptance_months",
+    "limitation_inheritance_months_gk1072"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 6-month inheritance-acceptance period captured twice (factor vs months). Merged.",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_labor_dispute_months",
+   "value": 3,
+   "unit": "months",
+   "law": "ст. 160 ТК РК (срок обращения по индивидуальному трудовому спору)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "limitation_labor_dispute_months",
+    "limitation_labor_months_tk160"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 3-month labor-dispute limitation captured twice (factor vs months). Merged.",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_property_acquisitive_years",
+   "value": 10,
+   "unit": "years",
+   "law": "ст. 240 ГК РК (приобретательная давность)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "limitation_property_acquisitive_years",
+    "limitation_property_years_gk240"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 10-year acquisitive-prescription period captured twice (factor vs years). Merged.",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_period_salary_disputes",
+   "value": 1,
+   "unit": "years",
+   "law": "ТК РК ст. 164",
+   "year": "2026",
+   "change_frequency": "rare",
+   "status": "representation_variants",
+   "aliases": [
+    "limitation_salary_years",
+    "limitation_salary_years_tk164"
+   ],
+   "conflict": "",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "limitation_period_tax_disputes",
+   "value": 5,
+   "unit": "years",
+   "law": "НК РК ст. 48",
+   "year": "2026",
+   "change_frequency": "rare",
+   "status": "representation_variants",
+   "aliases": [
+    "limitation_tax_years",
+    "limitation_tax_years_nk48"
+   ],
+   "conflict": "",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ]
+  },
+  {
+   "key": "mfo_gesv_max_rate",
+   "value": 46,
+   "unit": "percent",
+   "law": "Закон РК О микрофинансовой деятельности (ГЭСВ ≤ 46% годовых для МФО)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "status": "clean",
+   "aliases": [
+    "mfo_max_gesv_rate"
+   ],
+   "conflict": "",
+   "used_by": [
+    "MicroloanCalculator"
+   ]
+  },
+  {
+   "key": "pdl_max_daily_rate",
+   "value": 0.3,
+   "unit": "percent",
+   "law": "Закон РК О микрофинансовой деятельности (ставка PDL ≤ 0.3%/день с 2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "status": "clean",
+   "aliases": [
+    "pdl_max_daily_rate"
+   ],
+   "conflict": "",
+   "used_by": [
+    "MicroloanCalculator"
+   ]
+  },
+  {
+   "key": "pdl_max_loan_amount",
+   "value": 45,
+   "unit": "MRP",
+   "law": "Закон РК О микрофинансовой деятельности (лимит PDL-займа 45 МРП с 2026)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "pdl_max_loan_mrp"
+   ],
+   "conflict": "MRP-denominated cap: the 45-MRP multiple is structural (2026 reform), but its KZT value (194 625 = 45×4325 at MRP 2026) re-derives each year as МРП is reset in the budget law.",
+   "used_by": [
+    "MicroloanCalculator"
+   ]
+  },
+  {
+   "key": "pdl_overpayment_cap_factor",
+   "value": 1,
+   "unit": "factor",
+   "law": "ст. 4 Закона РК О микрофинансовой деятельности (предел переплаты по PDL = сумме займа)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "status": "clean",
+   "aliases": [
+    "pdl_overpayment_cap_factor"
+   ],
+   "conflict": "",
+   "used_by": [
+    "MicroloanCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_property_division",
+   "value": 10,
+   "unit": "MRP",
+   "law": "нотариальный тариф (Закон РК О нотариате)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_fee_property_division_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "PropertyDivisionCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_agreement_certification",
+   "value": "individuals:2, mixed:3, legal:5",
+   "unit": "MRP",
+   "law": "НК РК / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_agreement_certification_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_apartment_sale",
+   "value": "individuals:7, mixed:10, legal:15",
+   "unit": "MRP",
+   "law": "НК РК ст. 612 / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_apartment_sale_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_car_sale",
+   "value": "individuals:5, mixed:7, legal:10",
+   "unit": "MRP",
+   "law": "НК РК / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_car_sale_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_copy_certification",
+   "value": "individuals:0.05, mixed:0.05, legal:0.1",
+   "unit": "MRP",
+   "law": "НК РК / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_copy_certification_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_inheritance",
+   "value": "individuals:1, mixed:1, legal:2 (fixed) + individuals:0.5%, mixed:0.7%, legal:1.0% of property value",
+   "unit": "MRP",
+   "law": "НК РК / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_inheritance_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_marriage_contract",
+   "value": "individuals:3, mixed:3, legal:0",
+   "unit": "MRP",
+   "law": "НК РК / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_marriage_contract_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_power_of_attorney",
+   "value": "individuals:0.5, mixed:1, legal:2",
+   "unit": "MRP",
+   "law": "НК РК / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_power_of_attorney_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_will",
+   "value": "individuals:1, mixed:1, legal:0",
+   "unit": "MRP",
+   "law": "НК РК / Закон РК О нотариате",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_state_fee_will_mrp"
+   ],
+   "conflict": "",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ]
+  },
+  {
+   "key": "notary_fee_vehicle_base_tiered",
+   "value": "5 base (7 if price≥3M KZT, 10 if price≥10M KZT)",
+   "unit": "MRP",
+   "law": "Закон РК О нотариате / тарифы",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "notary_vehicle_base_mrp"
+   ],
+   "conflict": "Distinct from notary_fee_car_sale: this is a transaction-VALUE-tiered base (CarTransferCalculator) escalating 5→7→10 MRP by price, whereas notary_fee_car_sale is a PARTY-TYPE table (individuals/mixed/legal). Different dimensions and calculators — not merged. Note the individuals-tier coincidence at 5 MRP.",
+   "used_by": [
+    "CarTransferCalculator"
+   ]
+  },
+  {
+   "key": "penalty_disproportionate_warning_threshold",
+   "value": 50,
+   "unit": "percent",
+   "law": "ст. 297 ГК РК (суд вправе уменьшить несоразмерную неустойку)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "status": "clean",
+   "aliases": [
+    "penalty_effective_rate_warning_threshold"
+   ],
+   "conflict": "Soft UI warning threshold (effective penalty rate >50% triggers a 'court may reduce' notice), not a statutory cap. ГК РК ст. 297 gives courts discretion without a fixed percentage.",
+   "used_by": [
+    "PenaltyCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_child_seat",
+   "value": "first 10 / repeat 20",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 593 ч.3",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_child_seat_mrp",
+    "traffic_fine_child_seat_mrp_koap593_3"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_dui",
+   "value": "first 40 / repeat license deprivation + arrest",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 608 ч.1",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_dui_mrp",
+    "traffic_fine_dui_mrp_koap608_1"
+   ],
+   "conflict": "Both agree first offense = 40 MRP. One alias omitted the repeat consequence; canonical adds it (license deprivation + administrative arrest, non-monetary). Completeness variant, not a value conflict.",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_no_insurance",
+   "value": "first 10 / repeat 20",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 611",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_no_insurance_mrp",
+    "traffic_fine_no_insurance_mrp_koap611"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_no_plates",
+   "value": "first 10 / repeat 20",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 590 ч.4",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_no_plates_mrp",
+    "traffic_fine_no_plates_mrp_koap590_4"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_oncoming_lane",
+   "value": "first 10 / repeat license deprivation",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 596 ч.3",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_oncoming_lane_mrp",
+    "traffic_fine_oncoming_mrp_koap596_3"
+   ],
+   "conflict": "Both agree first offense = 10 MRP. One alias omitted the repeat consequence; canonical adds it (license deprivation, non-monetary). Completeness variant, not a value conflict.",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_parking",
+   "value": "first 5 / repeat 10",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 597 ч.1",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_parking_mrp",
+    "traffic_fine_parking_mrp_koap597_1"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_no_yield_pedestrian",
+   "value": "first 10 / repeat 15",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 600",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_pedestrian_mrp",
+    "traffic_fine_pedestrian_mrp_koap600"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_phone_use",
+   "value": "first 5 / repeat 10",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 593 ч.2",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_phone_mrp",
+    "traffic_fine_phone_mrp_koap593_2"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_red_light",
+   "value": "first 10 / repeat 20",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 596",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_red_light_mrp",
+    "traffic_fine_red_light_mrp_koap596"
+   ],
+   "conflict": "Statute is cited as ст. 596 in both aliases; note ст. 596 ч.3 (oncoming) is a separate part of the same article tracked as traffic_fine_oncoming_lane — different parts, kept distinct.",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_seatbelt",
+   "value": "first 5 / repeat 10",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 593 ч.1",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "representation_variants",
+   "aliases": [
+    "traffic_fine_seatbelt_mrp",
+    "traffic_fine_seatbelt_mrp_koap593_1"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_early_payment_discount",
+   "value": 50,
+   "unit": "percent",
+   "law": "КоАП РК (скидка 50% при оплате штрафа в установленный срок)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "status": "clean",
+   "aliases": [
+    "traffic_fine_early_payment_discount"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_speeding_10_20",
+   "value": "first 5 / repeat 10",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 592 ч.1",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "traffic_fine_speed10_20_mrp_koap592_1"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_speeding_20_40",
+   "value": "first 10 / repeat 20",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 592 ч.2",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "traffic_fine_speed20_40_mrp_koap592_2"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_speeding_40_plus",
+   "value": "first 20 / repeat license deprivation",
+   "unit": "MRP",
+   "law": "КоАП РК ст. 592 ч.3",
+   "year": "2026",
+   "change_frequency": "annual",
+   "status": "clean",
+   "aliases": [
+    "traffic_fine_speed40plus_mrp_koap592_3"
+   ],
+   "conflict": "",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_speed_10_20_mrp",
+   "value": "first 5 MRP / repeat 10 MRP",
+   "unit": "MRP",
+   "law": "КоАП РК ст.592 ч.1 (превышение скорости 10-20 км/ч)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "traffic_fine_speed_10_20_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_speed_20_40_mrp",
+   "value": "first 10 MRP / repeat 20 MRP",
+   "unit": "MRP",
+   "law": "КоАП РК ст.592 ч.2 (превышение скорости 20-40 км/ч)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "traffic_fine_speed_20_40_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_speed_40plus_mrp",
+   "value": "first 20 MRP",
+   "unit": "MRP",
+   "law": "КоАП РК ст.592 ч.3 (превышение скорости 40+ км/ч)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "traffic_fine_speed_40plus_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "traffic_fine_tint_mrp",
+   "value": "first 10 MRP / repeat 15 MRP",
+   "unit": "MRP",
+   "law": "КоАП РК ст.590 ч.3 (незаконная тонировка)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "traffic_fine_tint_mrp",
+    "traffic_fine_tint_mrp_koap590_3"
+   ],
+   "status": "representation_variants",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_reg_certificate_fee_mrp",
+   "value": 1.25,
+   "unit": "MRP",
+   "law": "НК РК ст.615 (госпошлина за выдачу свидетельства о регистрации ТС / СРТС)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "vehicle_reg_certificate_fee_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "RegistrationFeeCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_reg_plates_fee_mrp",
+   "value": 2.8,
+   "unit": "MRP",
+   "law": "НК РК ст.615 (госпошлина за выдачу государственных регистрационных номерных знаков)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "vehicle_reg_plates_fee_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "RegistrationFeeCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_reg_fee_by_age_mrp",
+   "value": "0.25 MRP (base registration duty, flat)",
+   "unit": "MRP",
+   "law": "НК РК ст.615 (госпошлина за регистрацию ТС)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "vehicle_reg_fee_by_age_mrp"
+   ],
+   "status": "VALUE_CONFLICT",
+   "conflict": "Raw table 'age<=1yr:0.25 MRP; 2-3yr:50 MRP; >3yr:500 MRP' conflates two distinct levies and cites the wrong article ('ст.553 НК РК'). The vehicle-registration STATE DUTY is a flat 0.25 MRP regardless of age (НК РК ст.615) — confirmed by the parallel constant gov_duty_vehicle_registration_mrp = 0.25 MRP citing ст.615 in duties_fines__1. The 50 MRP / 500 MRP age tiers are NOT the registration duty; they map to the separate first-registration / utilization-fee regime on older imported vehicles, which is a distinct charge with its own base, and ст.553 is not the registration-duty article. CORRECT for 2026: registration state duty = 0.25 MRP (~1,081 ₸ at MRP=4325), flat. The age-graduated 50/500 MRP must not be presented as the ст.553/registration duty.",
+   "used_by": [
+    "RegistrationFeeCalculator"
+   ]
+  },
+  {
+   "key": "mrp_2026",
+   "value": 4325,
+   "unit": "KZT",
+   "law": "Закон РК «О республиканском бюджете на 2026–2028 годы» от 08.12.2025 №239-VIII, ст.7",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "mrp_2026"
+   ],
+   "status": "clean",
+   "used_by": [
+    "AlimonyCalculator",
+    "BankruptcyCalculator",
+    "BusinessTripCalculator",
+    "CarTransferCalculator",
+    "CasinoWinningsTaxCalculator",
+    "CourtFeeCalculator",
+    "DivorceCalculator",
+    "FancyPlatesCalculator",
+    "FarmLandTaxCalculator",
+    "GONSCalculator",
+    "MaternityBenefitsCalculator",
+    "MoralDamageCalculator"
+   ]
+  },
+  {
+   "key": "mzp_min_wage",
+   "value": 85000,
+   "unit": "KZT",
+   "law": "Закон РК «О республиканском бюджете на 2026–2028 годы» от 08.12.2025 №239-VIII, ст.7",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "mzp_min_wage"
+   ],
+   "status": "clean",
+   "used_by": [
+    "AlimonyCalculator",
+    "AverageEarningsCalculator",
+    "IPSimplifiedCalculator",
+    "IncomeTaxCalculator",
+    "MaternityBenefitsCalculator",
+    "OvertimeCalculator",
+    "SecondJobCalculator",
+    "SeverancePayCalculator",
+    "TaxDeductionsCalculator",
+    "TaxRegimeComparisonCalculator",
+    "TeacherSalaryCalculator",
+    "UnemploymentBenefitCalculator"
+   ]
+  },
+  {
+   "key": "opv_rate",
+   "value": 10,
+   "unit": "percent",
+   "law": "Закон РК «О пенсионном обеспечении в РК» ст.25 / НК РК",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "opv_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same constant encoded two ways: 10 (percent) in Alimony/Maternity/Overtime/RentalIncomeTax/Salary/SalaryReverse vs 0.1 (decimal factor) in IPSimplified/IncomeTax. Both are the 10% ОПВ rate. Canonical = 10 (percent).",
+   "used_by": [
+    "AlimonyCalculator",
+    "IPSimplifiedCalculator",
+    "IncomeTaxCalculator",
+    "MaternityBenefitsCalculator",
+    "OvertimeCalculator",
+    "PensionCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "SecondJobCalculator",
+    "SeverancePayCalculator",
+    "SickLeaveCalculator"
+   ]
+  },
+  {
+   "key": "opv_max_base_mzp",
+   "value": 50,
+   "unit": "MZP",
+   "law": "Закон РК «О пенсионном обеспечении в РК» (предельная база ОПВ/ОПВР = 50 МЗП)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "opv_max_base_mzp",
+    "opv_max_base_mzp_multiplier"
+   ],
+   "status": "clean",
+   "used_by": [
+    "AlimonyCalculator",
+    "IPSimplifiedCalculator",
+    "IncomeTaxCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "SecondJobCalculator",
+    "SeverancePayCalculator",
+    "TaxDeductionsCalculator",
+    "TeacherSalaryCalculator",
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "opvr_rate",
+   "value": 3.5,
+   "unit": "percent",
+   "law": "Закон РК «О пенсионном обеспечении в РК» — ОПВР работодателя (с 2024, 3.5% в 2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "opvr_rate",
+    "opvr_employer_pension_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same ОПВР employer rate encoded as 3.5 (percent) in Rental/Salary/SalaryReverse vs 0.035 (decimal factor) in IPSimplified. Canonical = 3.5 (percent). Note: ОПВР is on a statutory ramp (1.5%→5% by 2028); 3.5% is the 2026 value.",
+   "used_by": [
+    "IPSimplifiedCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator"
+   ]
+  },
+  {
+   "key": "so_rate",
+   "value": 5,
+   "unit": "percent",
+   "law": "Закон РК «Об обязательном социальном страховании» (СО = 5%)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "so_rate",
+    "so_social_contribution_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same 5% СО (социальные отчисления) rate encoded as 5 (percent) in Rental/Salary/SalaryReverse/TaxRegimeComparison/Unemployment vs 0.05 (decimal factor) in IPSimplified. Canonical = 5 (percent).",
+   "used_by": [
+    "IPSimplifiedCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "TaxRegimeComparisonCalculator",
+    "UnemploymentBenefitCalculator"
+   ]
+  },
+  {
+   "key": "so_max_base_mzp",
+   "value": 7,
+   "unit": "MZP",
+   "law": "Закон РК «Об обязательном социальном страховании» (предельная база СО = 7 МЗП)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "so_max_base_mzp",
+    "so_max_base_mzp_multiplier"
+   ],
+   "status": "clean",
+   "used_by": [
+    "IPSimplifiedCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator"
+   ]
+  },
+  {
+   "key": "osms_employer_rate",
+   "value": 3,
+   "unit": "percent",
+   "law": "Закон РК «Об обязательном социальном медицинском страховании» (отчисления работодателя ООСМС = 3%)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "osms_employer_rate"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "TaxRegimeComparisonCalculator"
+   ]
+  },
+  {
+   "key": "osms_employer_max_base_mzp",
+   "value": 40,
+   "unit": "MZP",
+   "law": "Закон РК «Об обязательном социальном медицинском страховании» (предельная база отчислений работодателя ООСМС = 40 МЗП, введена с 2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "osms_employer_max_base_mzp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SalaryReverseCalculator"
+   ]
+  },
+  {
+   "key": "sn_social_tax_rate",
+   "value": 6,
+   "unit": "percent",
+   "law": "ст.485 НК РК (социальный налог за вычетом СО)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "sn_social_tax_rate"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SalaryReverseCalculator"
+   ]
+  },
+  {
+   "key": "sn_min_base_mrp",
+   "value": 14,
+   "unit": "MRP",
+   "law": "ст.485 НК РК (минимальная база социального налога = 14 МРП)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "sn_min_base_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SalaryReverseCalculator"
+   ]
+  },
+  {
+   "key": "retirement_age_male",
+   "value": 63,
+   "unit": "years",
+   "law": "Закон РК «О пенсионном обеспечении в РК» ст.11 (пенсионный возраст мужчины 63)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "retirement_age_male"
+   ],
+   "status": "clean",
+   "used_by": [
+    "AgeCalculator",
+    "PensionAnnuityCalculator"
+   ]
+  },
+  {
+   "key": "retirement_age_female",
+   "value": 61,
+   "unit": "years",
+   "law": "Закон РК «О пенсионном обеспечении в РК» ст.11 (переходный график; 2026 — 61 год)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "retirement_age_female",
+    "retirement_age_female_2026"
+   ],
+   "status": "clean",
+   "used_by": [
+    "AgeCalculator",
+    "PensionAnnuityCalculator"
+   ]
+  },
+  {
+   "key": "enpf_standard_payout_period_years",
+   "value": 19,
+   "unit": "years",
+   "law": "Правила осуществления выплат за счёт пенсионных накоплений ЕНПФ (стандартный график ~19 лет)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "enpf_standard_payout_period_years"
+   ],
+   "status": "clean",
+   "used_by": [
+    "PensionAnnuityCalculator"
+   ]
+  },
+  {
+   "key": "pension_annuity_sufficient_amount_mrp",
+   "value": 656,
+   "unit": "MRP",
+   "law": "Постановление АРРФР / Закон РК «О пенсионном обеспечении» — достаточность накоплений для пенсионного аннуитета",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "pension_annuity_sufficient_amount_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "PensionAnnuityCalculator"
+   ]
+  },
+  {
+   "key": "overtime_multiplier_night_overtime",
+   "value": 1.5,
+   "unit": "factor",
+   "law": "Трудовой кодекс РК ст.107–108 (ночные/сверхурочные — не менее ×1.5)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "overtime_multiplier_night_overtime"
+   ],
+   "status": "clean",
+   "used_by": [
+    "OvertimeCalculator"
+   ]
+  },
+  {
+   "key": "overtime_multiplier_weekend_holiday",
+   "value": 2,
+   "unit": "factor",
+   "law": "Трудовой кодекс РК ст.109 (работа в выходные/праздничные — не менее ×2)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "overtime_multiplier_weekend_holiday"
+   ],
+   "status": "clean",
+   "used_by": [
+    "OvertimeCalculator"
+   ]
+  },
+  {
+   "key": "annual_vacation_days",
+   "value": 24,
+   "unit": "days",
+   "law": "Трудовой кодекс РК ст.88 (оплачиваемый ежегодный трудовой отпуск — не менее 24 кал. дней)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "annual_vacation_days"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SeverancePayCalculator"
+   ]
+  },
+  {
+   "key": "avg_calendar_days_per_month",
+   "value": 29.3,
+   "unit": "factor",
+   "law": "Постановление Правительства РК — Единые правила исчисления средней заработной платы (среднемесячное число календарных дней 29.3)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "avg_calendar_days_per_month"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SeverancePayCalculator"
+   ]
+  },
+  {
+   "key": "severance_pay_months_art131",
+   "value": 1,
+   "unit": "months",
+   "law": "Трудовой кодекс РК ст.131 (выходное пособие — 1 средний месячный заработок при сокращении/ликвидации)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "severance_pay_months_art131",
+    "severance_months_reduction_liquidation"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SeverancePayCalculator"
+   ]
+  },
+  {
+   "key": "second_job_weekly_hours_limit",
+   "value": 20,
+   "unit": "hours",
+   "law": "Трудовой кодекс РК — лимит часов работы по совместительству (порог предупреждения)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "second_job_weekly_hours_limit"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SecondJobCalculator"
+   ]
+  },
+  {
+   "key": "sick_leave_max_benefit_mrp",
+   "value": 25,
+   "unit": "MRP",
+   "law": "Постановление Правительства РК — максимальный размер месячного пособия по временной нетрудоспособности = 25 МРП",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "sick_leave_max_benefit_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "SickLeaveCalculator"
+   ]
+  },
+  {
+   "key": "debt_burden_pdn_limit_pct",
+   "value": 50,
+   "unit": "percent",
+   "law": "Постановление Правления НБ РК о коэффициенте долговой нагрузки заёмщика (ПДН, макс. 50%)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "debt_burden_pdn_limit_pct"
+   ],
+   "status": "clean",
+   "used_by": [
+    "DebtBurdenCalculator"
+   ]
+  },
+  {
+   "key": "perdiem_domestic_capital_mrp",
+   "value": 6,
+   "unit": "MRP",
+   "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — столица)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "perdiem_domestic_capital_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "BusinessTripCalculator"
+   ]
+  },
+  {
+   "key": "perdiem_domestic_regional_mrp",
+   "value": 5,
+   "unit": "MRP",
+   "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — областной центр)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "perdiem_domestic_regional_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "BusinessTripCalculator"
+   ]
+  },
+  {
+   "key": "perdiem_domestic_other_mrp",
+   "value": 4,
+   "unit": "MRP",
+   "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — прочие города)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "perdiem_domestic_other_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "BusinessTripCalculator"
+   ]
+  },
+  {
+   "key": "teacher_bdo_base_salary_2026",
+   "value": 23578,
+   "unit": "KZT",
+   "law": "Базовый должностной оклад (БДО) педагога на 2026, утв. Постановлением Правительства РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "teacher_bdo_base_salary_2026"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "teacher_coefficient_grid",
+   "value": "none 4.40–5.34 / moderator 4.84–5.88 / expert 5.28–6.41 / researcher 5.72–6.95 / master 6.16–7.49 (категория × 11 стажевых полос)",
+   "unit": "table",
+   "law": "Приказ МОН РК — коэффициенты (категория × стаж) к БДО педагога",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "teacher_coefficient_grid",
+    "teacher_salary_coefficients_table"
+   ],
+   "status": "representation_variants",
+   "conflict": "Two captures of the SAME category×experience coefficient grid (TeacherSalaryCalculator COEFFICIENTS map), written with slightly different text formatting but identical ranges (none 4.40..5.34 / moderator 4.84..5.88 / expert 5.28..6.41 / researcher 5.72..6.95 / master 6.16..7.49, 11 experience bands). One real-world table.",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "teacher_rural_bonus_rate",
+   "value": 25,
+   "unit": "percent",
+   "law": "Сельская надбавка педагогу (+25% к окладу за работу в сельской местности)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "teacher_rural_bonus_rate"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "teacher_small_school_bonus_rate",
+   "value": 20,
+   "unit": "percent",
+   "law": "Надбавка за работу в малокомплектной школе (+20%)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "teacher_small_school_bonus_rate"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "teacher_bonus_class_teacher_mrp",
+   "value": 5,
+   "unit": "MRP",
+   "law": "Доплата за классное руководство — 5 МРП/мес",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "teacher_bonus_class_teacher_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "teacher_bonus_notebook_check_mrp",
+   "value": 3,
+   "unit": "MRP",
+   "law": "Доплата за проверку тетрадей — 3 МРП/мес",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "teacher_bonus_notebook_check_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "teacher_bonus_methodist_mrp",
+   "value": 2,
+   "unit": "MRP",
+   "law": "Доплата методисту — 2 МРП/мес",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "teacher_bonus_methodist_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "teacher_bonus_cabinet_head_mrp",
+   "value": 1,
+   "unit": "MRP",
+   "law": "Доплата за заведование кабинетом — 1 МРП/мес",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "teacher_bonus_cabinet_head_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "vosms_employee_rate",
+   "value": 2,
+   "unit": "percent",
+   "law": "Закон РК «Об обязательном социальном медицинском страховании» (ст. 28); ставка ВОСМС работника 2% в 2026",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "vosms_employee_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same rate captured as percent number 2 (6 calculators: Alimony/Overtime/Salary/SalaryReverse/SecondJob/Severance) and as factor 0.02 (IncomeTaxCalculator). 2% == 0.02 — one constant, two encodings. Canonical as percent = 2. Verified: ВОСМС employee rate stayed at 2% in 2026 (planned increase not enacted).",
+   "used_by": [
+    "AlimonyCalculator",
+    "IncomeTaxCalculator",
+    "OvertimeCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "SecondJobCalculator",
+    "SeverancePayCalculator",
+    "SickLeaveCalculator",
+    "TaxDeductionsCalculator",
+    "TaxRegimeComparisonCalculator",
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "vosms_max_base_mzp",
+   "value": 20,
+   "unit": "MZP",
+   "law": "Закон РК «Об обязательном социальном медицинском страховании» — предельный объект исчисления ВОСМС повышен с 10 до 20 МЗП с 01.01.2026",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "vosms_max_base_mzp",
+    "vosms_max_base_mzp_multiplier"
+   ],
+   "status": "clean",
+   "conflict": "Two naming variants of the same constant (vosms_max_base_mzp across 6 calcs, vosms_max_base_mzp_multiplier in IncomeTaxCalculator), identical value 20 МЗП. Verified correct for 2026: cap raised from 10 МЗП to 20 МЗП effective 01.01.2026; at МЗП=85,000 monthly cap = 1,700,000 ₸ → max employee ВОСМС 34,000 ₸/mo. The 20× multiplier is a recent structural change but the resulting ₸ cap re-indexes annually with МЗП, so change_frequency=annual.",
+   "used_by": [
+    "AlimonyCalculator",
+    "IncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "SecondJobCalculator",
+    "SeverancePayCalculator",
+    "TaxDeductionsCalculator",
+    "TeacherSalaryCalculator",
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "vosms_self_fixed_monthly",
+   "value": 5950,
+   "unit": "KZT",
+   "law": "Закон РК «Об обязательном социальном медицинском страховании» — взнос ВОСМС ИП/частной практики «за себя» = 5% × 1.4 МЗП",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "vosms_self_fixed_2026",
+    "vosms_self_fixed_monthly"
+   ],
+   "status": "clean",
+   "conflict": "Two naming variants of the same constant (vosms_self_fixed_2026 in RentalIncomeTaxCalculator, vosms_self_fixed_monthly in IPSimplifiedCalculator), identical value 5,950 ₸/mo. Verified correct for 2026: fixed ВОСМС 'за себя' = 5% of 1.4×МЗП = 5% × 119,000 = 5,950 ₸/mo; unchanged vs 2025 because МЗП held at 85,000. Derived from МЗП → recomputed annually, change_frequency=annual.",
+   "used_by": [
+    "IPSimplifiedCalculator",
+    "RentalIncomeTaxCalculator"
+   ]
+  },
+  {
+   "key": "teacher_standard_hours_per_week",
+   "value": 18,
+   "unit": "factor",
+   "law": "Норма учебной нагрузки педагога — 18 часов/неделю (Закон РК «О статусе педагога» / приказ МП РК)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "teacher_standard_hours_per_week"
+   ],
+   "status": "clean",
+   "conflict": "Single value 18 h/week, no duplicate or variant; structural teaching-load norm, not a money figure.",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ]
+  },
+  {
+   "key": "land_tax_base_rate_mrp_per_ha",
+   "value": "irrigated 0.42-0.80; rainfed 0.28-0.60; pasture 0.07-0.30; hayfield 0.13-0.40 (по 14 регионам)",
+   "unit": "MRP",
+   "law": "Земельный кодекс РК / НК РК (земельный налог)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "land_tax_base_rate_mrp_per_ha_table"
+   ],
+   "status": "clean",
+   "used_by": [
+    "FarmLandTaxCalculator"
+   ]
+  },
+  {
+   "key": "land_tax_bonity_quality_coeff",
+   "value": "<=20:0.5; <=40:0.7; <=60:1.0; <=80:1.3; <=100:1.6",
+   "unit": "factor",
+   "law": "НК РК (балл бонитета — коэффициент качества почвы)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "land_tax_bonity_quality_coeff_table"
+   ],
+   "status": "clean",
+   "used_by": [
+    "FarmLandTaxCalculator"
+   ]
+  },
+  {
+   "key": "land_tax_farm_type_coeff",
+   "value": "peasant 0.5; farm 0.7; individual 1.0",
+   "unit": "factor",
+   "law": "НК РК (коэффициент по типу хозяйства)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "land_tax_farm_type_coeff_table"
+   ],
+   "status": "clean",
+   "used_by": [
+    "FarmLandTaxCalculator"
+   ]
+  },
+  {
+   "key": "land_tax_land_type_coeff",
+   "value": "irrigated 1.0; rainfed 0.8; pasture 0.3; hayfield 0.4",
+   "unit": "factor",
+   "law": "НК РК (коэффициент по типу земли)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "land_tax_land_type_coeff_table"
+   ],
+   "status": "clean",
+   "used_by": [
+    "FarmLandTaxCalculator"
+   ]
+  },
+  {
+   "key": "land_tax_preference_discount_pct",
+   "value": 50,
+   "unit": "percent",
+   "law": "НК РК (льготы по земельному налогу)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "land_tax_preference_discount"
+   ],
+   "status": "clean",
+   "used_by": [
+    "FarmLandTaxCalculator"
+   ]
+  },
+  {
+   "key": "property_tax_progressive_brackets",
+   "value": "16 marginal steps (fixed base ₸ + rate% over min): <=2M:0.05%; 2-4M base 1000 @0.08%; 4-6M base 2600 @0.1%; 6-8M base 4600 @0.15%; 8-10M base 7600 @0.2%; 10-12M base 11600 @0.25%; 12-14M base 16600 @0.3%; 14-16M base 22600 @0.35%; 16-18M base 29600 @0.4%; 18-20M base 37600 @0.45%; 20-75M base 46600 @0.5%; 75-100M base 321600 @0.6%; 100-150M base 471600 @0.65%; 150-350M base 796600 @0.7%; 350-450M base 2196600 @0.75%; >450M base 2946600 @2.0%",
+   "unit": "table",
+   "law": "ст. 602 НК РК (новый Налоговый кодекс K2500000214, действ. 2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "property_tax_progressive_brackets",
+    "luxury_tax_property_threshold_kzt",
+    "luxury_tax_property_base_tax_kzt",
+    "luxury_tax_property_excess_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same ст.602 НК РК property-tax scale captured twice. PropertyTaxCalculator holds the full 16-step progressive table; LuxuryTaxCalculator re-encodes ONLY its top tier as three separate constants — threshold 450,000,000 ₸, fixed base 2,946,600 ₸, excess rate 2% — which match the top bracket exactly (>450M: base 2946600 @2.0%). Not a value conflict: identical numbers, just one calculator isolating the highest bracket and relabeling it 'налог на роскошь / недвижимость'.",
+   "used_by": [
+    "LuxuryTaxCalculator",
+    "PropertyTaxCalculator"
+   ]
+  },
+  {
+   "key": "luxury_tax_vehicle_rate_pct",
+   "value": 10,
+   "unit": "percent",
+   "law": "НК РК — налог на роскошь (акциз) на дорогостоящие авто",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "luxury_tax_vehicle_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Captured as factor 0.1; canonicalized to 10 percent (rate). Single value, encoding-only normalization.",
+   "used_by": [
+    "LuxuryTaxCalculator"
+   ]
+  },
+  {
+   "key": "luxury_tax_vehicle_threshold_mrp",
+   "value": 18000,
+   "unit": "MRP",
+   "law": "НК РК — порог налога на роскошь для авто",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "luxury_tax_vehicle_threshold_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "LuxuryTaxCalculator"
+   ]
+  },
+  {
+   "key": "ogpo_base_premium_mrp",
+   "value": 1.9,
+   "unit": "MRP",
+   "law": "Закон РК Об обязательном страховании ГПО владельцев ТС (ОГПО ВТС)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "ogpo_base_mrp",
+    "ogpo_base_premium_mrp"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same base ОГПО premium (1.9 МРП) in CarTransferCalculator (year blank) and InsuranceCalculator (year 2026). Identical value; only name and year-tag differ. Expressed in МРП so the ₸ amount reindexes annually.",
+   "used_by": [
+    "CarTransferCalculator",
+    "InsuranceCalculator"
+   ]
+  },
+  {
+   "key": "ogpo_territory_coeff",
+   "value": "АРФР per-region table eff. 01.01.2026: kyzylorda:1.85; zhambyl:1.74; turkestan:1.69; shymkent:1.61; astana:1.44; almaty-obl:1.44; zhetysu:1.20; zko:1.19; karaganda:1.18; kostanay:1.11; akmola:1.08; aktobe:1.02; ulytau:0.99; pavlodar:0.82; abay:0.80; mangystau:0.79; vko:0.72; almaty-city:0.71; sko:0.67; atyrau:0.48",
+   "unit": "factor",
+   "law": "Закон РК Об ОГПО ВТС; территориальные коэффициенты, утв. АРФР с 01.01.2026",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "ogpo_territory_coeff_table",
+    "ogpo_region_coef_almaty_astana",
+    "ogpo_region_coef_other"
+   ],
+   "status": "VALUE_CONFLICT",
+   "conflict": "Same real-world constant (ОГПО territorial coefficient) at conflicting values. CarTransferCalculator uses an obsolete coarse 2-bucket scheme: Almaty/Astana=2.96, other regions=1.86. InsuranceCalculator uses the detailed АРФР per-region table effective 01.01.2026 where Astana=1.44 and Almaty city=0.71 (split into city vs oblast). The numbers are irreconcilable (2.96/1.86 are pre-reform city-pair values; the 2026 reform lowered and regionalized them). CORRECT FOR 2026: the per-region АРФР table (astana 1.44, almaty-city 0.71, almaty-obl 1.44, atyrau 0.48, ...). The CarTransfer 2.96/1.86 pair is stale and should be retired.",
+   "used_by": [
+    "CarTransferCalculator",
+    "InsuranceCalculator"
+   ]
+  },
+  {
+   "key": "ogpo_bonus_malus_coeff",
+   "value": "M:2.45; 0:2.30; 1:1.55; 2:1.40; 3:1.00; 4:0.95; 5:0.90; 6:0.85; 7:0.80; 8:0.75; 9:0.70; 10:0.65; 11:0.60; 12:0.55; 13:0.50",
+   "unit": "factor",
+   "law": "Закон РК Об ОГПО ВТС — система бонус-малус (классы M..13)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "ogpo_bonus_malus_coeff_table"
+   ],
+   "status": "clean",
+   "used_by": [
+    "InsuranceCalculator"
+   ]
+  },
+  {
+   "key": "ogpo_exploitation_coeff_over7y",
+   "value": 1.1,
+   "unit": "factor",
+   "law": "Закон РК Об ОГПО ВТС — коэффициент срока эксплуатации (>7 лет)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "ogpo_exploitation_coeff_over7y"
+   ],
+   "status": "clean",
+   "used_by": [
+    "InsuranceCalculator"
+   ]
+  },
+  {
+   "key": "ogpo_vehicle_type_coeff",
+   "value": "passenger:1.0; taxi:2.0; truck<=3.5t:1.2; truck3.5-12t:1.5; truck>12t:2.0; bus<=20:1.3; bus20-35:1.7; bus>35:2.2; moto:0.7",
+   "unit": "factor",
+   "law": "Закон РК Об ОГПО ВТС — коэффициенты по типам ТС",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "ogpo_vehicle_type_coeff_table"
+   ],
+   "status": "clean",
+   "used_by": [
+    "InsuranceCalculator"
+   ]
+  },
+  {
+   "key": "property_tax_wear_max_pct",
+   "value": 70,
+   "unit": "percent",
+   "law": "методика оценки НК РК — макс. износ (2% в год; коттедж +10 до 80, гараж +5 до 75)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "property_tax_wear_max_percent"
+   ],
+   "status": "clean",
+   "used_by": [
+    "PropertyTaxCalculator"
+   ]
+  },
+  {
+   "key": "thermal_resistance_R_required_by_zone",
+   "value": "north:4.7; central:4.0; west:3.5; south:3.0 (м²·К/Вт)",
+   "unit": "factor",
+   "law": "СНиП / СН РК — нормируемое сопротивление теплопередаче R по климатическим зонам",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "thermal_resistance_R_required_north",
+    "thermal_resistance_R_required_central",
+    "thermal_resistance_R_required_west",
+    "thermal_resistance_R_required_south"
+   ],
+   "status": "representation_variants",
+   "conflict": "One building-norm parameter (required R-value, СН РК) split across four single-value entries by climate zone. No conflict — each zone is a distinct member of the same zoned table: north 4.7, central 4.0, west 3.5, south 3.0 м²·К/Вт. Merged into one zoned constant.",
+   "used_by": [
+    "InsulationCalculator"
+   ]
+  },
+  {
+   "key": "utilization_fee_base_rate_mrp",
+   "value": 50,
+   "unit": "MRP",
+   "law": "Постановление Правительства РК — утилизационный сбор (базовая ставка)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "utilization_fee_base_rate_mrp"
+   ],
+   "status": "clean",
+   "used_by": [
+    "RecyclingFeeCalculator"
+   ]
+  },
+  {
+   "key": "utilization_fee_car_coeff",
+   "value": "engine cm3: <=1000:1.5; 1001-2000:3.5; 2001-3000:5.0; >3000:11.5",
+   "unit": "factor",
+   "law": "Постановление Правительства РК — утильсбор, коэффициенты для легковых авто",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "utilization_fee_car_coefficients"
+   ],
+   "status": "clean",
+   "used_by": [
+    "RecyclingFeeCalculator"
+   ]
+  },
+  {
+   "key": "utilization_fee_truck_coeff",
+   "value": "mass t: <=2.5:3.5; 2.6-3.5:7.5; 20.1-50:20.5",
+   "unit": "factor",
+   "law": "Постановление Правительства РК — утильсбор, коэффициенты для грузовых ТС",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "utilization_fee_truck_coefficients"
+   ],
+   "status": "clean",
+   "used_by": [
+    "RecyclingFeeCalculator"
+   ]
+  },
+  {
+   "key": "utilization_fee_bus_coeff",
+   "value": "cm3: <=2500:4.0; >10000:13.5",
+   "unit": "factor",
+   "law": "Постановление Правительства РК — утильсбор, коэффициенты для автобусов",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "utilization_fee_bus_coefficients"
+   ],
+   "status": "clean",
+   "used_by": [
+    "RecyclingFeeCalculator"
+   ]
+  },
+  {
+   "key": "utilization_fee_electric_exempt",
+   "value": 0,
+   "unit": "factor",
+   "law": "Постановление Правительства РК — утильсбор, освобождение электромобилей (коэф. 0)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "utilization_fee_electric_exempt"
+   ],
+   "status": "clean",
+   "used_by": [
+    "RecyclingFeeCalculator"
+   ]
+  },
+  {
+   "key": "ipn_base_rate",
+   "value": 10,
+   "unit": "percent",
+   "law": "НК РК ст. 320 (ИПН, базовая ставка)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "ipn_rate",
+    "ipn_rate_individual_rental",
+    "ipn_rate_vehicle_sale"
+   ],
+   "status": "representation_variants",
+   "conflict": "ipn_rate captured both 10 (percent) and 0.1 (decimal factor in IncomeTaxCalculator) for the same 10% rate; ipn_rate_individual_rental (rental income) and ipn_rate_vehicle_sale (gain on vehicle held <1yr) apply the same ст.320 base 10% rate. Canonical = 10%. Kept separate from the 15% high rate.",
+   "used_by": [
+    "AlimonyCalculator",
+    "BusinessTripCalculator",
+    "CarTransferCalculator",
+    "CasinoWinningsTaxCalculator",
+    "CryptoTaxCalculator",
+    "IncomeTaxCalculator",
+    "MarginMarkupCalculator",
+    "OvertimeCalculator",
+    "PropertySaleTaxCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator"
+   ]
+  },
+  {
+   "key": "ipn_high_rate_2026",
+   "value": 15,
+   "unit": "percent",
+   "law": "НК РК ст. 320 (прогрессивная шкала ИПН с 2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "ipn_rate_high"
+   ],
+   "status": "representation_variants",
+   "conflict": "Encoded as 15 (percent) in most calculators and 0.15 (factor) in IncomeTaxCalculator — same constant. This is the 2026 progressive top bracket applied above 8500 MRP/year; a genuinely distinct constant from the 10% base rate, so not merged with it.",
+   "used_by": [
+    "AlimonyCalculator",
+    "IncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "TaxDeductionsCalculator",
+    "TaxRegimeComparisonCalculator"
+   ]
+  },
+  {
+   "key": "ipn_progressive_threshold_annual_mrp",
+   "value": 8500,
+   "unit": "MRP",
+   "law": "НК РК ст. 320 (порог прогрессии ИПН, 8500 МРП/год)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "ipn_high_rate_annual_threshold_mrp",
+    "ipn_high_rate_threshold_mrp",
+    "ipn_progressive_threshold_annual_mrp"
+   ],
+   "status": "clean",
+   "conflict": "All three sources agree on 8500 MRP/year (= 36,762,500 KZT at 2026 MRP; monthly = /12). Threshold above which the 15% rate applies — introduced with the 2026 progressive reform, hence occasional.",
+   "used_by": [
+    "AlimonyCalculator",
+    "IncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "TaxDeductionsCalculator",
+    "TaxRegimeComparisonCalculator"
+   ]
+  },
+  {
+   "key": "ipn_standard_personal_deduction",
+   "value": 360,
+   "unit": "MRP",
+   "law": "НК РК ст. 346/403 (стандартный личный вычет по ИПН)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "ipn_standard_deduction_mrp",
+    "ipn_base_deduction_annual_mrp",
+    "ipn_standard_deduction_annual_mrp"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same deduction expressed two ways: 30 MRP/month (ст.346, older calculators) and 360 MRP/year (ст.403, 2026 calculators). 30*12 = 360, so identical constant in different time bases. Canonical given as 360 MRP/year. KZT value tracks MRP reindexation, so annual.",
+   "used_by": [
+    "AlimonyCalculator",
+    "IncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "SecondJobCalculator",
+    "SeverancePayCalculator",
+    "SickLeaveCalculator",
+    "TaxDeductionsCalculator",
+    "TeacherSalaryCalculator",
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "ipn_social_deduction_group12_annual_mrp",
+   "value": 5000,
+   "unit": "MRP",
+   "law": "НК РК ст. 404 (вычет 5000 МРП/год — инвалиды 1-2 гр. и др.)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "ipn_deduction_group12_annual_mrp",
+    "ipn_social_deduction_group12_annual_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Both sources agree: 5000 MRP/year. KZT value moves with MRP, so annual.",
+   "used_by": [
+    "TaxDeductionsCalculator"
+   ]
+  },
+  {
+   "key": "ipn_social_deduction_group3_annual_mrp",
+   "value": 882,
+   "unit": "MRP",
+   "law": "НК РК ст. 404 (вычет 882 МРП/год — инвалиды 3 гр. и др.)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "ipn_deduction_group3_annual_mrp",
+    "ipn_social_deduction_group3_annual_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Both sources agree: 882 MRP/year. KZT value moves with MRP, so annual.",
+   "used_by": [
+    "TaxDeductionsCalculator"
+   ]
+  },
+  {
+   "key": "kpn_general_rate",
+   "value": 20,
+   "unit": "percent",
+   "law": "НК РК ст. 313 (КПН, общеустановленный режим)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "corporate_general_regime_tax_rate",
+    "kpn_rate"
+   ],
+   "status": "clean",
+   "conflict": "corporate_general_regime_tax_rate (FranchisePayback, written as 0.2 logic) and kpn_rate (BusinessROI, CorporateIncomeTax, CryptoTax, MarginMarkup) are the same general 20% corporate income tax. Both 20%, so clean.",
+   "used_by": [
+    "BusinessROICalculator",
+    "CorporateIncomeTaxCalculator",
+    "CryptoTaxCalculator",
+    "FranchisePaybackCalculator",
+    "MarginMarkupCalculator"
+   ]
+  },
+  {
+   "key": "kpn_rate_agricultural",
+   "value": 10,
+   "unit": "percent",
+   "law": "НК РК (спецрежим сельхозтоваропроизводителей, пониженный КПН)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "kpn_rate_agricultural"
+   ],
+   "status": "clean",
+   "conflict": "Reduced 10% КПН for agricultural producers — a distinct corporate regime, not merged with the 20% general rate or the 10% ИПН base rate.",
+   "used_by": [
+    "CorporateIncomeTaxCalculator"
+   ]
+  },
+  {
+   "key": "kpn_rate_social",
+   "value": 0,
+   "unit": "percent",
+   "law": "НК РК (освобождение организаций социальной сферы по КПН)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "kpn_rate_social"
+   ],
+   "status": "clean",
+   "conflict": "0% КПН for qualifying social-sphere organizations — distinct exemption, kept separate.",
+   "used_by": [
+    "CorporateIncomeTaxCalculator"
+   ]
+  },
+  {
+   "key": "kpn_withholding_rate_nonresident",
+   "value": 15,
+   "unit": "percent",
+   "law": "НК РК ст. 645/646 (КПН у источника — дивиденды/роялти нерезидентам)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "kpn_withholding_rate_nonresident"
+   ],
+   "status": "clean",
+   "conflict": "15% withholding on dividends/royalties to non-residents. Although numerically 15 like the ИПН high rate, it is a different tax (КПН у источника, ст.645/646) and must NOT be merged with ipn_high_rate_2026.",
+   "used_by": [
+    "CorporateIncomeTaxCalculator"
+   ]
+  },
+  {
+   "key": "snr_simplified_rate",
+   "value": 4,
+   "unit": "percent",
+   "law": "НК РК ст. 687 (СНР на основе упрощённой декларации, 4% с оборота с 01.01.2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "ip_simplified_ipn_rate",
+    "ip_simplified_rate",
+    "ip_simplified_tax_rate",
+    "simplified_regime_rate",
+    "simplified_tax_rate_2026"
+   ],
+   "status": "representation_variants",
+   "conflict": "Five entries for the same 2026 simplified regime (упрощёнка): encoded as 0.04 factor (ip_simplified_ipn_rate, IPSimplified) and 4 percent elsewhere. The 2026 reform set the rate to 4% of turnover and abolished the separate social tax on this regime; hence occasional (reform-driven). Distinct from the розничный налог which is also 4%.",
+   "used_by": [
+    "CryptoTaxCalculator",
+    "FranchisePaybackCalculator",
+    "IPSimplifiedCalculator",
+    "RentalIncomeTaxCalculator",
+    "TaxRegimeComparisonCalculator"
+   ]
+  },
+  {
+   "key": "snr_simplified_semiannual_limit_mrp",
+   "value": 300000,
+   "unit": "MRP",
+   "law": "НК РК ст. 683 (лимит дохода СНР упрощёнки, 300 000 МРП/полугодие)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "simplified_income_limit_halfyear_mrp",
+    "simplified_regime_limit_semiannual_mrp",
+    "snr_simplified_semiannual_limit_mrp"
+   ],
+   "status": "clean",
+   "conflict": "All three agree on 300000 MRP per half-year as the upper income limit for the simplified regime. (Source law strings cited ст.715/683 inconsistently; the income limit for упрощёнка sits in the СНР chapter — does not affect the value.) KZT equivalent tracks MRP, so annual.",
+   "used_by": [
+    "IPSimplifiedCalculator",
+    "RentalIncomeTaxCalculator",
+    "TaxRegimeComparisonCalculator"
+   ]
+  },
+  {
+   "key": "snr_retail_tax_rate",
+   "value": 4,
+   "unit": "percent",
+   "law": "НК РК (розничный налог, 4% от дохода)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "retail_tax_rate",
+    "snr_retail_tax_rate"
+   ],
+   "status": "clean",
+   "conflict": "retail_tax_rate and snr_retail_tax_rate are the same розничный налог at 4%. Both 4%, so clean. Kept separate from snr_simplified_rate: same numeric 4% but a genuinely different regime (retail tax vs simplified-declaration tax) with different eligibility and base.",
+   "used_by": [
+    "TaxRegimeComparisonCalculator"
+   ]
+  },
+  {
+   "key": "patent_tax_rate",
+   "value": 1,
+   "unit": "percent",
+   "law": "НК РК ст. 685 (СНР на основе патента, 1% = 50% ИПН + 50% СО)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "patent_tax_rate"
+   ],
+   "status": "clean",
+   "conflict": "Patent regime rate 1% of income (split 50% ИПН / 50% социальные отчисления). Single source, single value.",
+   "used_by": [
+    "RentalIncomeTaxCalculator"
+   ]
+  },
+  {
+   "key": "patent_income_limit_halfyear_mrp",
+   "value": 3528,
+   "unit": "MRP",
+   "law": "НК РК ст. 683 (лимит дохода для патента, 3528 МРП/полугодие)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "patent_income_limit_halfyear_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Patent income ceiling 3528 MRP/half-year. KZT equivalent tracks MRP, so annual.",
+   "used_by": [
+    "RentalIncomeTaxCalculator"
+   ]
+  },
+  {
+   "key": "nds_vat_rate",
+   "value": 16,
+   "unit": "percent",
+   "law": "НК РК ст. 422 (НДС, 16% с 2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "nds_vat_rate"
+   ],
+   "status": "clean",
+   "conflict": "VAT raised to 16% in the 2026 tax reform (used as 0.16 in CustomsClearance/ElectricityBill). Reform-driven change, hence occasional.",
+   "used_by": [
+    "CustomsClearanceCalculator",
+    "ElectricityBillCalculator"
+   ]
+  },
+  {
+   "key": "mzp_min_wage",
+   "value": 85000,
+   "unit": "KZT",
+   "law": "Закон РК о республиканском бюджете на 2026 (МЗП)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "mzp_min_wage_2026"
+   ],
+   "status": "clean",
+   "conflict": "Minimum wage (МЗП) = 85,000 KZT for 2026, set in the annual budget law. Indexed/reset yearly, so annual.",
+   "used_by": [
+    "AlimonyCalculator",
+    "AverageEarningsCalculator",
+    "IPSimplifiedCalculator",
+    "IncomeTaxCalculator",
+    "MaternityBenefitsCalculator",
+    "OvertimeCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
+    "SecondJobCalculator",
+    "SeverancePayCalculator",
+    "TaxDeductionsCalculator"
+   ]
+  },
+  {
+   "key": "businesstrip_accommodation_taxfree_limit_mrp",
+   "value": 12,
+   "unit": "MRP",
+   "law": "НК РК ст. 244 (необлагаемый предел расходов на проживание в командировке, 12 МРП/сутки)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "businesstrip_accommodation_taxfree_limit_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Statutory 12 MRP/day tax-free accommodation limit on business trips (excess is taxable). This is a real legal limit, not a market/example value. KZT equivalent tracks MRP, so annual.",
+   "used_by": [
+    "BusinessTripCalculator"
+   ]
+  },
+  {
+   "key": "excise_alcohol_spirit_per_liter_kzt",
+   "value": 2805,
+   "unit": "KZT",
+   "law": "НК РК ст. 537 (акциз — крепкий алкоголь, ₸ за литр безводного спирта)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "excise_alcohol_spirit_per_liter_kzt"
+   ],
+   "status": "clean",
+   "conflict": "Specific excise 2805 KZT per liter of anhydrous spirit (vodka/cognac). Excise schedules in ст.537 are revised on a multi-year/periodic basis, so occasional.",
+   "used_by": [
+    "ExciseTaxCalculator"
+   ]
+  },
+  {
+   "key": "excise_beer_per_liter_kzt",
+   "value": 99,
+   "unit": "KZT",
+   "law": "НК РК ст. 537 (акциз — пиво, ₸/литр)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "excise_beer_per_liter_kzt"
+   ],
+   "status": "clean",
+   "conflict": "Beer excise 99 KZT/liter. Periodic schedule revision, occasional.",
+   "used_by": [
+    "ExciseTaxCalculator"
+   ]
+  },
+  {
+   "key": "excise_cigarettes_per_1000_kzt",
+   "value": 18051,
+   "unit": "KZT",
+   "law": "НК РК ст. 537 (акциз — сигареты, ₸ за 1000 шт, специфическая ставка)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "excise_cigarettes_per_1000_kzt"
+   ],
+   "status": "clean",
+   "conflict": "Cigarette specific excise 18051 KZT per 1000 sticks. Periodic schedule revision, occasional.",
+   "used_by": [
+    "ExciseTaxCalculator"
+   ]
+  },
+  {
+   "key": "excise_cigars_per_unit_kzt",
+   "value": 825,
+   "unit": "KZT",
+   "law": "НК РК ст. 537 (акциз — сигары, ₸/шт)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "excise_cigars_per_unit_kzt"
+   ],
+   "status": "clean",
+   "conflict": "Cigar excise 825 KZT/unit. Periodic schedule revision, occasional.",
+   "used_by": [
+    "ExciseTaxCalculator"
+   ]
+  },
+  {
+   "key": "excise_heated_tobacco_per_1000_kzt",
+   "value": 11230,
+   "unit": "KZT",
+   "law": "НК РК ст. 537 (акциз — нагреваемый табак, ₸ за 1000 шт)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "excise_heated_tobacco_per_1000_kzt"
+   ],
+   "status": "clean",
+   "conflict": "Heated-tobacco excise 11230 KZT per 1000 units. Periodic schedule revision, occasional.",
+   "used_by": [
+    "ExciseTaxCalculator"
+   ]
+  },
+  {
+   "key": "excise_wine_per_liter_kzt",
+   "value": 38,
+   "unit": "KZT",
+   "law": "НК РК ст. 537 (акциз — вино/игристое, ₸/литр)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "excise_wine_per_liter_kzt"
+   ],
+   "status": "clean",
+   "conflict": "Wine/sparkling excise 38 KZT/liter. Periodic schedule revision, occasional.",
+   "used_by": [
+    "ExciseTaxCalculator"
+   ]
+  },
+  {
+   "key": "gambling_winnings_tax_free_threshold",
+   "value": 0,
+   "unit": "KZT",
+   "law": "НК РК 2026 (специальный необлагаемый минимум по выигрышам не предусмотрен)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "gambling_winnings_tax_free_threshold"
+   ],
+   "status": "clean",
+   "conflict": "Value 0 is a correct legal fact: in 2026 there is no special tax-free minimum for gambling/casino winnings (they are taxed in full as income). Not an estimate — it reflects the absence of a statutory exemption.",
+   "used_by": [
+    "CasinoWinningsTaxCalculator"
+   ]
+  },
+  {
+   "key": "ipn_90pct_reduction_abolished_2026",
+   "value": "false",
+   "unit": "factor",
+   "law": "НК РК ст. 341/401 (отмена 90% уменьшения ИПН для дохода <=25 МРП с 2026)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "ipn_90pct_reduction_abolished_2026"
+   ],
+   "status": "clean",
+   "conflict": "Boolean policy flag (hasNinetyPercentReduction=false): the 90% ИПН reduction for income <=25 MRP was abolished from 2026. Reform-driven, occasional. Value kept as the captured boolean 'false'.",
+   "used_by": [
+    "SalaryCalculator"
+   ]
+  },
+  {
+   "key": "luxury_tax_yacht_aircraft_rate",
+   "value": 10,
+   "unit": "percent",
+   "law": "НК РК (акциз/налог на роскошь — яхты и самолёты, 10% от стоимости)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "luxury_tax_yacht_aircraft_rate"
+   ],
+   "status": "representation_variants",
+   "conflict": "Captured as 0.1 factor; canonical expressed as 10% (rate). 10% of value on yachts/aircraft above the MRP threshold.",
+   "used_by": [
+    "LuxuryTaxCalculator"
+   ]
+  },
+  {
+   "key": "luxury_tax_yacht_aircraft_threshold_mrp",
+   "value": 24000,
+   "unit": "MRP",
+   "law": "НК РК (порог для налога на роскошь — яхты/самолёты, 24000 МРП)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "luxury_tax_yacht_aircraft_threshold_mrp"
+   ],
+   "status": "clean",
+   "conflict": "Threshold 24000 MRP above which the luxury rate applies. KZT equivalent tracks MRP, so annual.",
+   "used_by": [
+    "LuxuryTaxCalculator"
+   ]
+  },
+  {
+   "key": "property_sale_exempt_ownership_years",
+   "value": 1,
+   "unit": "factor",
+   "law": "НК РК ст. 331 (освобождение от ИПН при владении >1 года — жильё/земля/авто)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "property_sale_exempt_ownership_years"
+   ],
+   "status": "clean",
+   "conflict": "Minimum ownership of 1 year for ИПН exemption on sale of residential property/land/vehicle (commercial always taxable). Structural rule, value 1 (year), rare.",
+   "used_by": [
+    "PropertySaleTaxCalculator"
+   ]
+  },
+  {
+   "key": "tax_simplified_rate_snr",
+   "value": 4,
+   "unit": "percent",
+   "law": "НК РК ст. 687 (СНР на основе упрощённой декларации)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [
+    "snr_simplified_tax_rate",
+    "tax_simplified_rate",
+    "usn_simplified_tax_rate"
+   ],
+   "status": "clean",
+   "conflict": "Three naming variants of ONE constant — the simplified-regime (СНР упрощёнка) tax rate, 4% of turnover. All three carry value 4 (percent). usn_simplified_tax_rate's law text describes the pre-2026 composition '3% ИПН + 1% соц = 4%', but for 2026 the social tax on the simplified regime is abolished and the rate is a flat 4% ИПН/КПН on revenue (akimat may vary ±50%); the captured value 4 is correct. tax_simplified_rate has empty year but is the same 2026 constant. No value conflict.",
+   "used_by": [
+    "BreakEvenCalculator",
+    "BusinessROICalculator",
+    "MarginMarkupCalculator",
+    "TaxRegimeComparisonCalculator"
+   ]
+  },
+  {
+   "key": "tax_patent_rate",
+   "value": 1,
+   "unit": "percent",
+   "law": "НК РК ст. 685 (СНР на основе патента)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "tax_patent_rate"
+   ],
+   "status": "clean",
+   "conflict": "Distinct from the simplified-regime 4% constant — this is the patent SNR rate, 1% of revenue (composed 50% ИПН + 50% СО). Captured with empty year but is a long-standing structural regime rate, valid for 2026. Not merged with simplified (genuinely different regime).",
+   "used_by": [
+    "BusinessROICalculator"
+   ]
+  },
+  {
+   "key": "vehicle_sale_taxfree_ownership_months",
+   "value": 12,
+   "unit": "factor",
+   "law": "НК РК ст. 331 (освобождение от ИПН прироста стоимости ТС при владении не менее 1 года)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [
+    "vehicle_sale_tax_free_ownership_months"
+   ],
+   "status": "clean",
+   "conflict": "Distinct constant — ownership holding period (12 months / 1 year) above which a vehicle sale is exempt from ИПН on the value gain. Not a tax rate; kept separate from the rate constants. Structural rule, value 12 valid for 2026.",
+   "used_by": [
+    "CarTransferCalculator"
+   ]
+  },
+  {
+   "key": "mrp_2026",
+   "value": 4325,
+   "unit": "KZT",
+   "law": "Закон РК «О республиканском бюджете на 2026 год» (МРП)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [
+    "mrp",
+    "mrp_by_year_table"
+   ],
+   "status": "representation_variants",
+   "conflict": "Same МРП constant captured two ways: a scalar (mrp = 4325) and a historical year-table (mrp_by_year_table). The 2026 anchor is identical in both (2026 = 4325), so no value conflict. The table additionally carries the prior-year series for InflationCalculator: 2015:1982; 2016:2121; 2017:2269; 2018:2405; 2019:2525; 2020:2651; 2021:2917; 2022:3063 (3180 from 2H); 2023:3450; 2024:3692; 2025:3932; 2026:4325. МРП is reset yearly in the republican budget law (hence annual). Canonical 2026 value = 4325 ₸.",
+   "used_by": [
+    "AlimonyCalculator",
+    "BankruptcyCalculator",
+    "BusinessTripCalculator",
+    "CarTransferCalculator",
+    "CasinoWinningsTaxCalculator",
+    "CourtFeeCalculator",
+    "DivorceCalculator",
+    "FancyPlatesCalculator",
+    "FarmLandTaxCalculator",
+    "GONSCalculator",
+    "IPSimplifiedCalculator",
+    "IncomeTaxCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_astana_per_m3",
+   "value": 49.2,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (Астана)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_astana_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_atyrau_per_m3",
+   "value": 44.6,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (Атырау)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_atyrau_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_karaganda_per_m3",
+   "value": 41.25,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (Караганда)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_karaganda_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_pavlodar_per_m3",
+   "value": 38.9,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (Павлодар)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_pavlodar_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_other_regions_per_m3",
+   "value": 38.5,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (прочие регионы, по умолчанию)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_other_regions_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_aktobe_per_m3",
+   "value": 35.8,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (Актобе)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_aktobe_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_shymkent_per_m3",
+   "value": 32.15,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (Шымкент)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_shymkent_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "gas_tariff_almaty_per_m3",
+   "value": 27.69,
+   "unit": "KZT",
+   "law": "АРЕМ — регулируемые тарифы на природный газ (Алматы)",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "gas_tariff_almaty_per_m3"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "GasBillCalculator"
+   ]
+  },
+  {
+   "key": "heating_tariff_almaty_per_gcal",
+   "value": 8400,
+   "unit": "KZT",
+   "law": "ТОО «АлТС» — тариф на тепловую энергию (Алматы), с 01.04.2026",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "heating_tariff_almaty_per_gcal"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "HeatingBillCalculator"
+   ]
+  },
+  {
+   "key": "heating_tariff_astana_per_gcal",
+   "value": 3930,
+   "unit": "KZT",
+   "law": "АО «Астана-Теплотранзит» — тариф на тепловую энергию (Астана), с 01.04.2026, с НДС 16%",
+   "year": "2026",
+   "change_frequency": "market",
+   "aliases": [
+    "heating_tariff_astana_per_gcal"
+   ],
+   "status": "clean",
+   "conflict": "",
+   "used_by": [
+    "HeatingBillCalculator"
+   ]
+  },
+  {
+   "key": "nds_rate",
+   "value": 16,
+   "unit": "%",
+   "law": "НК РК, Раздел 10 (НДС)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATCalculator"
+   ]
+  },
+  {
+   "key": "nds_rate_zero",
+   "value": 0,
+   "unit": "%",
+   "law": "НК РК, Раздел 10 (НДС)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATCalculator"
+   ]
+  },
+  {
+   "key": "mrp_2024",
+   "value": 3692,
+   "unit": "KZT",
+   "law": "Закон о республиканском бюджете",
+   "year": "2024",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ]
+  },
+  {
+   "key": "mrp_2025",
+   "value": 3932,
+   "unit": "KZT",
+   "law": "Закон о республиканском бюджете",
+   "year": "2025",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ]
+  },
+  {
+   "key": "mrp_2027",
+   "value": 4580,
+   "unit": "KZT",
+   "law": "Закон о республиканском бюджете",
+   "year": "2027",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ]
+  },
+  {
+   "key": "mrp_2028",
+   "value": 4938,
+   "unit": "KZT",
+   "law": "Закон о республиканском бюджете",
+   "year": "2028",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ]
+  },
+  {
+   "key": "nds_threshold_mrp_2024",
+   "value": 20000,
+   "unit": "МРП",
+   "law": "НК РК (старый)",
+   "year": "2024",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ]
+  },
+  {
+   "key": "nds_threshold_mrp_2025",
+   "value": 20000,
+   "unit": "МРП",
+   "law": "НК РК (старый)",
+   "year": "2025",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ]
+  },
+  {
+   "key": "nds_threshold_mrp",
+   "value": 10000,
+   "unit": "МРП",
+   "law": "НК РК K2500000214 (новый)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ]
+  },
+  {
+   "key": "subsistence_minimum_pm",
+   "value": 50851,
+   "unit": "KZT",
+   "law": "Закон о республиканском бюджете (прожиточный минимум)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ]
+  },
+  {
+   "key": "retirement_age_men",
+   "value": 63,
+   "unit": "years",
+   "law": "ст. 11 Закона о пенсионном обеспечении РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ]
+  },
+  {
+   "key": "retirement_age_women",
+   "value": 61,
+   "unit": "years",
+   "law": "ст. 11 Закона о пенсионном обеспечении РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ]
+  },
+  {
+   "key": "base_pension_min_experience_years",
+   "value": 10,
+   "unit": "years",
+   "law": "Закон о пенсионном обеспечении РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ]
+  },
+  {
+   "key": "base_pension_rate_min_pct_of_pm",
+   "value": 70,
+   "unit": "% от ПМ",
+   "law": "Закон о пенсионном обеспечении РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ]
+  },
+  {
+   "key": "base_pension_rate_max_pct_of_pm",
+   "value": 110,
+   "unit": "% от ПМ",
+   "law": "Закон о пенсионном обеспечении РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ]
+  },
+  {
+   "key": "base_pension_increment_per_year_pct",
+   "value": 2,
+   "unit": "% за год",
+   "law": "Закон о пенсионном обеспечении РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ]
+  },
+  {
+   "key": "unified_payment_rate",
+   "value": 24.8,
+   "unit": "%",
+   "law": "НК РК (единый платёж с ФОТ)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnifiedPaymentCalculator"
+   ]
+  },
+  {
+   "key": "unified_payment_share_opv",
+   "value": 40.3,
+   "unit": "% от ЕП",
+   "law": "НК РК (распределение ЕП)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnifiedPaymentCalculator"
+   ]
+  },
+  {
+   "key": "unified_payment_share_vosms",
+   "value": 8.1,
+   "unit": "% от ЕП",
+   "law": "НК РК (распределение ЕП)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnifiedPaymentCalculator"
+   ]
+  },
+  {
+   "key": "unified_payment_share_ipn",
+   "value": 7.3,
+   "unit": "% от ЕП",
+   "law": "НК РК (распределение ЕП)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnifiedPaymentCalculator"
+   ]
+  },
+  {
+   "key": "unified_payment_share_opvr",
+   "value": 14.1,
+   "unit": "% от ЕП",
+   "law": "НК РК (распределение ЕП)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnifiedPaymentCalculator"
+   ]
+  },
+  {
+   "key": "unified_payment_share_oosms",
+   "value": 12.1,
+   "unit": "% от ЕП",
+   "law": "НК РК (распределение ЕП)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnifiedPaymentCalculator"
+   ]
+  },
+  {
+   "key": "unified_payment_share_so",
+   "value": 18.1,
+   "unit": "% от ЕП",
+   "law": "НК РК (распределение ЕП)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnifiedPaymentCalculator"
+   ]
+  },
+  {
+   "key": "universal_declaration_start_year_civil_servant",
+   "value": 2021,
+   "unit": "year",
+   "law": "НК РК (всеобщее декларирование, этапы)",
+   "year": "2021",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UniversalDeclarationCalculator"
+   ]
+  },
+  {
+   "key": "universal_declaration_start_year_quasi_gov",
+   "value": 2023,
+   "unit": "year",
+   "law": "НК РК (всеобщее декларирование, этапы)",
+   "year": "2023",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UniversalDeclarationCalculator"
+   ]
+  },
+  {
+   "key": "universal_declaration_start_year_founder",
+   "value": 2024,
+   "unit": "year",
+   "law": "НК РК (всеобщее декларирование, этапы)",
+   "year": "2024",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UniversalDeclarationCalculator"
+   ]
+  },
+  {
+   "key": "universal_declaration_start_year_lawyer",
+   "value": 2024,
+   "unit": "year",
+   "law": "НК РК (всеобщее декларирование, этапы)",
+   "year": "2024",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UniversalDeclarationCalculator"
+   ]
+  },
+  {
+   "key": "universal_declaration_start_year_regular",
+   "value": 2025,
+   "unit": "year",
+   "law": "НК РК (всеобщее декларирование, этапы)",
+   "year": "2025",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UniversalDeclarationCalculator"
+   ]
+  },
+  {
+   "key": "vosms_rate",
+   "value": 2,
+   "unit": "%",
+   "law": "Закон об ОСМС",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "ipn_rate",
+   "value": 10,
+   "unit": "%",
+   "law": "НК РК (ИПН)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "ipn_standard_deduction_mrp",
+   "value": 30,
+   "unit": "МРП",
+   "law": "НК РК (стандартный вычет по ИПН)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "vacation_avg_working_days_per_month",
+   "value": 29.3,
+   "unit": "days",
+   "law": "ТК РК (расчёт среднедневного заработка)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "vacation_standard_days",
+   "value": 24,
+   "unit": "days",
+   "law": "ст. 88 ТК РК (ежегодный оплачиваемый отпуск)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VacationPayCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_rate_le_1100_mrp",
+   "value": 1,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_rate_1101_1500_mrp",
+   "value": 2,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_rate_1501_2000_mrp",
+   "value": 3,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_rate_2001_2500_mrp",
+   "value": 6,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_rate_2501_3000_mrp",
+   "value": 9,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_rate_3001_4000_mrp",
+   "value": 15,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_rate_gt_4000_mrp",
+   "value": 117,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_car_surcharge_per_cc_over_1500",
+   "value": 7,
+   "unit": "KZT/см³",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_truck_rate_le_1t_mrp",
+   "value": 3,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_truck_rate_1_1_5t_mrp",
+   "value": 5,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_truck_rate_1_5_5t_mrp",
+   "value": 7,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_truck_rate_gt_5t_mrp",
+   "value": 9,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_bus_rate_le_12_mrp",
+   "value": 9,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_bus_rate_12_25_mrp",
+   "value": 14,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_bus_rate_gt_25_mrp",
+   "value": 20,
+   "unit": "МРП",
+   "law": "ст. 565 НК РК",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_age_discount_pct_10_20y",
+   "value": 30,
+   "unit": "%",
+   "law": "НК РК (поправочный коэффициент за возраст)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_tax_age_discount_pct_gt_20y",
+   "value": 50,
+   "unit": "%",
+   "law": "НК РК (поправочный коэффициент за возраст)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTaxCalculator"
+   ]
+  },
+  {
+   "key": "vehicle_registration_fee_mrp",
+   "value": 2,
+   "unit": "МРП",
+   "law": "НК РК (госпошлина за регистрацию ТС)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTCOCalculator"
+   ]
+  },
+  {
+   "key": "zakat_rate",
+   "value": 2.5,
+   "unit": "%",
+   "law": "Шариат (фикх закята)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ZakatCalculator"
+   ]
+  },
+  {
+   "key": "zakat_nisab_gold_grams",
+   "value": 85,
+   "unit": "grams",
+   "law": "Шариат (нисаб золота, 20 динаров)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ZakatCalculator"
+   ]
+  },
+  {
+   "key": "zakat_nisab_silver_grams",
+   "value": 595,
+   "unit": "grams",
+   "law": "Шариат (нисаб серебра, 200 дирхамов)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ZakatCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_almaty_tier1_le_3m3",
+   "value": 103,
+   "unit": "KZT/м³",
+   "law": "Тариф Алматы Су (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_almaty_tier2_3_5m3",
+   "value": 123.6,
+   "unit": "KZT/м³",
+   "law": "Тариф Алматы Су (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_almaty_tier3_5_10m3",
+   "value": 154.49,
+   "unit": "KZT/м³",
+   "law": "Тариф Алматы Су (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_almaty_tier4_gt_10m3",
+   "value": 205.99,
+   "unit": "KZT/м³",
+   "law": "Тариф Алматы Су (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_sewerage_rate_almaty",
+   "value": 51.5,
+   "unit": "KZT/м³",
+   "law": "Тариф Алматы Су (водоотведение)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_astana_tier1_le_3m3",
+   "value": 98.5,
+   "unit": "KZT/м³",
+   "law": "Тариф Астана Су Арнасы (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_astana_tier2_3_5m3",
+   "value": 118.2,
+   "unit": "KZT/м³",
+   "law": "Тариф Астана Су Арнасы (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_astana_tier3_5_10m3",
+   "value": 147.75,
+   "unit": "KZT/м³",
+   "law": "Тариф Астана Су Арнасы (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_astana_tier4_gt_10m3",
+   "value": 197,
+   "unit": "KZT/м³",
+   "law": "Тариф Астана Су Арнасы (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_sewerage_rate_astana",
+   "value": 49.25,
+   "unit": "KZT/м³",
+   "law": "Тариф Астана Су Арнасы (водоотведение)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_shymkent_tier1_le_3m3",
+   "value": 89.4,
+   "unit": "KZT/м³",
+   "law": "Тариф Шымкент (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_shymkent_tier2_3_5m3",
+   "value": 107.28,
+   "unit": "KZT/м³",
+   "law": "Тариф Шымкент (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_shymkent_tier3_5_10m3",
+   "value": 134.1,
+   "unit": "KZT/м³",
+   "law": "Тариф Шымкент (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_shymkent_tier4_gt_10m3",
+   "value": 178.8,
+   "unit": "KZT/м³",
+   "law": "Тариф Шымкент (регулируемый)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_sewerage_rate_shymkent",
+   "value": 44.7,
+   "unit": "KZT/м³",
+   "law": "Тариф Шымкент (водоотведение)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_other_tier1_le_3m3",
+   "value": 85.2,
+   "unit": "KZT/м³",
+   "law": "Тариф прочие регионы (ориентир)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_other_tier2_3_5m3",
+   "value": 102.24,
+   "unit": "KZT/м³",
+   "law": "Тариф прочие регионы (ориентир)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_other_tier3_5_10m3",
+   "value": 127.8,
+   "unit": "KZT/м³",
+   "law": "Тариф прочие регионы (ориентир)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_tariff_other_tier4_gt_10m3",
+   "value": 170.4,
+   "unit": "KZT/м³",
+   "law": "Тариф прочие регионы (ориентир)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "water_sewerage_rate_other",
+   "value": 42.6,
+   "unit": "KZT/м³",
+   "law": "Тариф прочие регионы (водоотведение)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "WaterBillCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_share_wife_with_children",
+   "value": "1/8",
+   "unit": "доля",
+   "law": "Коран 4:12 (фараид)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_share_wife_no_children",
+   "value": "1/4",
+   "unit": "доля",
+   "law": "Коран 4:12 (фараид)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_share_husband_with_children",
+   "value": "1/4",
+   "unit": "доля",
+   "law": "Коран 4:12 (фараид)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_share_husband_no_children",
+   "value": "1/2",
+   "unit": "доля",
+   "law": "Коран 4:12 (фараид)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_share_father",
+   "value": "1/6",
+   "unit": "доля",
+   "law": "Коран 4:11 (фараид)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_share_mother_with_children_or_siblings",
+   "value": "1/6",
+   "unit": "доля",
+   "law": "Коран 4:11 (фараид)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ]
+  },
+  {
+   "key": "inheritance_share_mother_default",
+   "value": "1/3",
+   "unit": "доля",
+   "law": "Коран 4:11 (фараид)",
+   "year": "—",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ]
+  }
+ ],
+ "estimates_excluded": [
+  {
+   "key": "dumk_fidya_rate_2026",
+   "note": "Religious-authority (ДУМК) rate, not an NPA. 2026 fidya = 4000 ₸/day. Set yearly"
+  },
+  {
+   "key": "dumk_fidya_rate_2025",
+   "note": "Historical ДУМК rate (2025=3000; note also lists 2024=2800, 2023=2500, 2022=2200"
+  },
+  {
+   "key": "dumk_fitr_sadaqah_rate_2026",
+   "note": "ДУМК fitr-sadaqah per person, flour basis = 735 ₸ (2026). Religious-authority fi"
+  },
+  {
+   "key": "dumk_fitr_dates_rate_2026",
+   "note": "Alternative fitr basis (dates) = 2200 ₸. Distinct commodity basis from flour (73"
+  },
+  {
+   "key": "dumk_fitr_raisins_rate_2026",
+   "note": "Alternative fitr basis (raisins) = 1800 ₸. Distinct commodity basis; not a confl"
+  },
+  {
+   "key": "dumk_fitr_sadaqah_rate_2025",
+   "note": "Historical ДУМК fitr (2025=655; note also 2024=600, 2023=550, 2022=500). Yearly "
+  },
+  {
+   "key": "living_minimum_pm_2026",
+   "note": "Two naming variants of ПМ 2026, both 50851 ₸ — merged. Source explicitly labels "
+  },
+  {
+   "key": "kurban_cow_shares",
+   "note": "Корова = 7 долей курбана. Religious/shariah norm, explicitly not a KZ statute. F"
+  },
+  {
+   "key": "life_expectancy_years_kz",
+   "note": "Ожидаемая продолжительность жизни ≈73 года, used for percent-of-life-lived. Stat"
+  },
+  {
+   "key": "lawyer_fee_divorce_example_kzt",
+   "note": "Hardcoded example lawyer fee (lawyerFee=200000), a market price with no legal ba"
+  },
+  {
+   "key": "moral_damage_category_ranges",
+   "note": "CATEGORY_RANGES are judicial-practice estimates, not statutory amounts. ГК РК ст"
+  },
+  {
+   "key": "penalty_tax_daily_rate_example",
+   "note": "0.062%/day is a worked example shown only in static JSX, not used in calc logic."
+  },
+  {
+   "key": "vehicle_reg_fee_electric_new_mrp",
+   "note": "0.1 MRP (~432 ₸) for new EVs (<=2yr) is a calculator assumption, not a law-deriv"
+  },
+  {
+   "key": "businesstrip_perdiem_foreign_eu_usd",
+   "note": "Example/illustrative foreign per-diem (EU 120 USD/day) hardcoded in BusinessTrip"
+  },
+  {
+   "key": "businesstrip_perdiem_foreign_uae_usd",
+   "note": "Example/illustrative foreign per-diem (UAE 150 USD/day) hardcoded as an employer"
+  },
+  {
+   "key": "businesstrip_perdiem_foreign_china_usd",
+   "note": "Example/illustrative foreign per-diem (China 80 USD/day) hardcoded as an employe"
+  },
+  {
+   "key": "businesstrip_perdiem_foreign_cis_usd",
+   "note": "Example/illustrative foreign per-diem (CIS 75 USD/day) hardcoded as an employer-"
+  },
+  {
+   "key": "vehicle_inspection_cost_kzt",
+   "note": "~7000 ₸ is a market/example tech-inspection tariff, not a statutory amount (note"
+  },
+  {
+   "key": "tax_general_rate_example",
+   "note": "Value 10 is a BreakEvenCalculator UI preset/example (note: 'общий режим preset 1"
+  },
+  {
+   "key": "code_current_year_2026",
+   "note": "Not a Kazakhstan regulatory constant. This is a hardcoded CURRENT_YEAR sentinel "
+  },
+  {
+   "key": "heating_tariff_karaganda_per_gcal",
+   "note": "Labeled «регион. оценка» (regional estimate) in source, not an АРЕМ-approved tar"
+  },
+  {
+   "key": "heating_tariff_shymkent_per_gcal",
+   "note": "Labeled «регион. оценка» (regional estimate), not an АРЕМ-approved tariff. Treat"
+  },
+  {
+   "key": "heating_tariff_other_regions_per_gcal",
+   "note": "Labeled «среднее по РК» (country average) — a computed default/fallback used whe"
+  }
+ ],
+ "summary": {
+  "hardcoded_canonical": 287,
+  "value_conflicts": 2,
+  "estimates_excluded": 23
+ }
+}
