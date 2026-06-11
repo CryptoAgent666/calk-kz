@@ -23,7 +23,7 @@ export default function UnemploymentBenefitCalculator() {
     paymentPeriodMonths: 0,
     totalBenefit: 0,
     isEligible: false,
-    minRequiredExperience: 12
+    minRequiredExperience: 6
   });
 
   // Коэффициент стажа участия (ГФСС, 2026): 6 мес–1 г = 0.7 ... 5–6 лет = 1.0,

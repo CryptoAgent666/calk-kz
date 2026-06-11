@@ -85,7 +85,7 @@ export default function VATThresholdCalculator() {
   ];
 
   const calculateVATThreshold = () => {
-    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 3876;
+    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 4938 /* последний известный МРП (2028) для будущих лет */;
     const thresholdMrp = VAT_THRESHOLD_MRP_BY_YEAR[calculationYear] ?? 10000;
     const thresholdAmount = thresholdMrp * mrpValue;
 
@@ -164,7 +164,7 @@ export default function VATThresholdCalculator() {
   };
 
   const formatMRP = (mrpAmount: number) => {
-    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 3876;
+    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 4938 /* последний известный МРП (2028) для будущих лет */;
     return t('vat-threshold.mrpFormat', {
       amount: mrpAmount.toLocaleString(),
       tenge: formatNumber(mrpAmount * mrpValue)
@@ -194,7 +194,7 @@ export default function VATThresholdCalculator() {
   };
 
   const getShareData = () => {
-    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 3876;
+    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 4938 /* последний известный МРП (2028) для будущих лет */;
 
     const title = t('vat-threshold.shareTitle', { year: calculationYear });
     const description = t('vat-threshold.shareDescription', { threshold: formatMRP(VAT_THRESHOLD_MRP) });

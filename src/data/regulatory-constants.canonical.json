@@ -329,19 +329,21 @@
   },
   {
    "key": "gov_program_7_20_25_limit_almaty_astana",
-   "value": 25000000,
+   "value": 30000000,
    "unit": "KZT",
-   "law": "Гос. ипотечная программа «7-20-25» — лимит займа для Алматы/Астаны",
+   "law": "Программа 7-20-25, лимиты повышены с 26.09.2025 (оператор КФУ, kfu.kz)",
    "year": "2026",
    "change_frequency": "occasional",
    "aliases": [
-    "gov_program_7_20_25_limit_almaty_astana"
+    "gov_program_7_20_25_limit_almaty_astana",
+    "gov_program_7_20_25_limit_almaty_astana_shym"
    ],
    "status": "clean",
    "conflict": "Max loan for Almaty/Astana = 25 000 000 ₸ (regions = 15M, per note). Distinct parameter of the program.",
    "used_by": [
     "MortgageCalculator"
-   ]
+   ],
+   "note_deep": "operative value per 2nd-pass diff-sweep; STALE LIST: list has gov_program_7_20_25_limit_almaty_astana=25000000, but file maxLoanAmount = 30 "
   },
   {
    "key": "otbasy_baspana_hit_rate",
@@ -458,7 +460,7 @@
   },
   {
    "key": "unemployment_income_replacement_coef",
-   "value": 40,
+   "value": 45,
    "unit": "percent",
    "law": "ГФСС РК — коэффициент замещения дохода для пособия по утрате работы",
    "year": "2026",
@@ -470,7 +472,8 @@
    "conflict": "Income replacement coefficient = 40%. Single value (source lists it twice from one calculator); structural. Same numeric as childcare 40% but a different real-world constant — not merged.",
    "used_by": [
     "UnemploymentBenefitCalculator"
-   ]
+   ],
+   "note_deep": "MISMATCH: file uses 0.45 everywhere (lines 20/76/87/98, UI shows '(45%)' at line 259, comment cites ст.118); list has 40 — the stale pre-202"
   },
   {
    "key": "unemployment_min_experience_months",
@@ -600,19 +603,21 @@
   },
   {
    "key": "customs_fee_rate",
-   "value": 0.4,
+   "value": 6,
    "unit": "percent",
-   "law": "ТК ЕАЭС / постановление о таможенных сборах РК",
+   "law": "ПП РК от 05.04.2018 № 171 (ред. ПП № 631 от 02.08.2023)",
    "year": "2026",
    "change_frequency": "occasional",
    "aliases": [
-    "customs_fee_rate"
+    "customs_fee_rate",
+    "customs_declaration_fee_mrp"
    ],
    "status": "representation_variants",
    "conflict": "Captured as 0.4 (percent) which equals the code constant 0.004 (fraction). Same constant, percent encoding chosen as canonical (0.4% of customs value).",
    "used_by": [
     "CustomsClearanceCalculator"
-   ]
+   ],
+   "note_deep": "operative value per 2nd-pass diff-sweep; STALE EXTRACTION: list has customs_fee_rate=0.4 (% от стоимости), но файл (строки 35-41, 77) считае"
   },
   {
    "key": "customs_parcel_dutyfree_value_eur",
@@ -1069,20 +1074,22 @@
   },
   {
    "key": "limitation_property_acquisitive_years",
-   "value": 10,
+   "value": 7,
    "unit": "years",
-   "law": "ст. 240 ГК РК (приобретательная давность)",
+   "law": "ст. 240 ГК РК (приобретательная давность, недвижимость)",
    "year": "2026",
    "change_frequency": "rare",
    "aliases": [
     "limitation_property_acquisitive_years",
-    "limitation_property_years_gk240"
+    "limitation_property_years_gk240",
+    "limitation_acquisitive_prescription_realesta"
    ],
    "status": "representation_variants",
    "conflict": "Same 10-year acquisitive-prescription period captured twice (factor vs years). Merged.",
    "used_by": [
     "StatuteLimitationsCalculator"
-   ]
+   ],
+   "note_deep": "operative value per 2nd-pass diff-sweep; RULES.property = { years: 7 } (line 37). The list's limitation_property_years_gk240=10 appears NOWH"
   },
   {
    "key": "limitation_period_salary_disputes",
@@ -1703,13 +1710,15 @@
    "key": "mrp_2026",
    "value": 4325,
    "unit": "KZT",
-   "law": "Закон РК «О республиканском бюджете на 2026–2028 годы» от 08.12.2025 №239-VIII, ст.7",
+   "law": "Закон РК «О республиканском бюджете на 2026 год» (МРП)",
    "year": "2026",
    "change_frequency": "annual",
    "aliases": [
-    "mrp_2026"
+    "mrp",
+    "mrp_by_year_table"
    ],
-   "status": "clean",
+   "status": "representation_variants",
+   "conflict": "Same МРП constant captured two ways: a scalar (mrp = 4325) and a historical year-table (mrp_by_year_table). The 2026 anchor is identical in both (2026 = 4325), so no value conflict. The table additionally carries the prior-year series for InflationCalculator: 2015:1982; 2016:2121; 2017:2269; 2018:2405; 2019:2525; 2020:2651; 2021:2917; 2022:3063 (3180 from 2H); 2023:3450; 2024:3692; 2025:3932; 2026:4325. МРП is reset yearly in the republican budget law (hence annual). Canonical 2026 value = 4325 ₸.",
    "used_by": [
     "AlimonyCalculator",
     "BankruptcyCalculator",
@@ -1721,21 +1730,22 @@
     "FancyPlatesCalculator",
     "FarmLandTaxCalculator",
     "GONSCalculator",
-    "MaternityBenefitsCalculator",
-    "MoralDamageCalculator"
+    "IPSimplifiedCalculator",
+    "IncomeTaxCalculator"
    ]
   },
   {
    "key": "mzp_min_wage",
    "value": 85000,
    "unit": "KZT",
-   "law": "Закон РК «О республиканском бюджете на 2026–2028 годы» от 08.12.2025 №239-VIII, ст.7",
+   "law": "Закон РК о республиканском бюджете на 2026 (МЗП)",
    "year": "2026",
    "change_frequency": "annual",
    "aliases": [
-    "mzp_min_wage"
+    "mzp_min_wage_2026"
    ],
    "status": "clean",
+   "conflict": "Minimum wage (МЗП) = 85,000 KZT for 2026, set in the annual budget law. Indexed/reset yearly, so annual.",
    "used_by": [
     "AlimonyCalculator",
     "AverageEarningsCalculator",
@@ -1743,12 +1753,12 @@
     "IncomeTaxCalculator",
     "MaternityBenefitsCalculator",
     "OvertimeCalculator",
+    "RentalIncomeTaxCalculator",
+    "SalaryCalculator",
+    "SalaryReverseCalculator",
     "SecondJobCalculator",
     "SeverancePayCalculator",
-    "TaxDeductionsCalculator",
-    "TaxRegimeComparisonCalculator",
-    "TeacherSalaryCalculator",
-    "UnemploymentBenefitCalculator"
+    "TaxDeductionsCalculator"
    ]
   },
   {
@@ -2837,35 +2847,39 @@
   },
   {
    "key": "kpn_rate_agricultural",
-   "value": 10,
+   "value": 3,
    "unit": "percent",
-   "law": "НК РК (спецрежим сельхозтоваропроизводителей, пониженный КПН)",
+   "law": "новый НК РК с 01.01.2026 — льготная ставка КПН для сельхозтоваропроизводителей",
    "year": "2026",
    "change_frequency": "rare",
    "aliases": [
-    "kpn_rate_agricultural"
+    "kpn_rate_agricultural",
+    "kpn_rate_agricultural_2026"
    ],
    "status": "clean",
    "conflict": "Reduced 10% КПН for agricultural producers — a distinct corporate regime, not merged with the 20% general rate or the 10% ИПН base rate.",
    "used_by": [
     "CorporateIncomeTaxCalculator"
-   ]
+   ],
+   "note_deep": "operative value per 2nd-pass diff-sweep; Line 30: operative rate is 3 (comment: снижена с 10% до 3%). List's kpn_rate_agricultural=10 is STA"
   },
   {
    "key": "kpn_rate_social",
-   "value": 0,
+   "value": 5,
    "unit": "percent",
-   "law": "НК РК (освобождение организаций социальной сферы по КПН)",
+   "law": "новый НК РК с 01.01.2026 — отмена освобождения для организаций соцсферы",
    "year": "2026",
    "change_frequency": "rare",
    "aliases": [
-    "kpn_rate_social"
+    "kpn_rate_social",
+    "kpn_rate_social_2026"
    ],
    "status": "clean",
    "conflict": "0% КПН for qualifying social-sphere organizations — distinct exemption, kept separate.",
    "used_by": [
     "CorporateIncomeTaxCalculator"
-   ]
+   ],
+   "note_deep": "operative value per 2nd-pass diff-sweep; Line 32: operative rate 5% for 2026 (образование/здравоохранение/фин.лизинг); comment: 10% с 2027. "
   },
   {
    "key": "kpn_withholding_rate_nonresident",
@@ -2991,33 +3005,6 @@
    "used_by": [
     "CustomsClearanceCalculator",
     "ElectricityBillCalculator"
-   ]
-  },
-  {
-   "key": "mzp_min_wage",
-   "value": 85000,
-   "unit": "KZT",
-   "law": "Закон РК о республиканском бюджете на 2026 (МЗП)",
-   "year": "2026",
-   "change_frequency": "annual",
-   "aliases": [
-    "mzp_min_wage_2026"
-   ],
-   "status": "clean",
-   "conflict": "Minimum wage (МЗП) = 85,000 KZT for 2026, set in the annual budget law. Indexed/reset yearly, so annual.",
-   "used_by": [
-    "AlimonyCalculator",
-    "AverageEarningsCalculator",
-    "IPSimplifiedCalculator",
-    "IncomeTaxCalculator",
-    "MaternityBenefitsCalculator",
-    "OvertimeCalculator",
-    "RentalIncomeTaxCalculator",
-    "SalaryCalculator",
-    "SalaryReverseCalculator",
-    "SecondJobCalculator",
-    "SeverancePayCalculator",
-    "TaxDeductionsCalculator"
    ]
   },
   {
@@ -3235,19 +3222,21 @@
   },
   {
    "key": "tax_patent_rate",
-   "value": 1,
+   "value": 0,
    "unit": "percent",
-   "law": "НК РК ст. 685 (СНР на основе патента)",
+   "law": "НК РК 2026 — СНР для самозанятых (преемник патента)",
    "year": "2026",
    "change_frequency": "rare",
    "aliases": [
-    "tax_patent_rate"
+    "tax_patent_rate",
+    "snr_self_employed_ipn_rate"
    ],
    "status": "clean",
    "conflict": "Distinct from the simplified-regime 4% constant — this is the patent SNR rate, 1% of revenue (composed 50% ИПН + 50% СО). Captured with empty year but is a long-standing structural regime rate, valid for 2026. Not merged with simplified (genuinely different regime).",
    "used_by": [
     "BusinessROICalculator"
-   ]
+   ],
+   "note_deep": "operative value per 2nd-pass diff-sweep; Line 34: taxOptions self-employed rate: 0 — the operative rate. List's tax_patent_rate=1 is STALE: "
   },
   {
    "key": "vehicle_sale_taxfree_ownership_months",
@@ -3263,34 +3252,6 @@
    "conflict": "Distinct constant — ownership holding period (12 months / 1 year) above which a vehicle sale is exempt from ИПН on the value gain. Not a tax rate; kept separate from the rate constants. Structural rule, value 12 valid for 2026.",
    "used_by": [
     "CarTransferCalculator"
-   ]
-  },
-  {
-   "key": "mrp_2026",
-   "value": 4325,
-   "unit": "KZT",
-   "law": "Закон РК «О республиканском бюджете на 2026 год» (МРП)",
-   "year": "2026",
-   "change_frequency": "annual",
-   "aliases": [
-    "mrp",
-    "mrp_by_year_table"
-   ],
-   "status": "representation_variants",
-   "conflict": "Same МРП constant captured two ways: a scalar (mrp = 4325) and a historical year-table (mrp_by_year_table). The 2026 anchor is identical in both (2026 = 4325), so no value conflict. The table additionally carries the prior-year series for InflationCalculator: 2015:1982; 2016:2121; 2017:2269; 2018:2405; 2019:2525; 2020:2651; 2021:2917; 2022:3063 (3180 from 2H); 2023:3450; 2024:3692; 2025:3932; 2026:4325. МРП is reset yearly in the republican budget law (hence annual). Canonical 2026 value = 4325 ₸.",
-   "used_by": [
-    "AlimonyCalculator",
-    "BankruptcyCalculator",
-    "BusinessTripCalculator",
-    "CarTransferCalculator",
-    "CasinoWinningsTaxCalculator",
-    "CourtFeeCalculator",
-    "DivorceCalculator",
-    "FancyPlatesCalculator",
-    "FarmLandTaxCalculator",
-    "GONSCalculator",
-    "IPSimplifiedCalculator",
-    "IncomeTaxCalculator"
    ]
   },
   {
@@ -3637,7 +3598,7 @@
   },
   {
    "key": "base_pension_rate_max_pct_of_pm",
-   "value": 110,
+   "value": 118,
    "unit": "% от ПМ",
    "law": "Закон о пенсионном обеспечении РК",
    "year": "2026",
@@ -3646,7 +3607,8 @@
    "status": "clean",
    "used_by": [
     "PensionCalculator"
-   ]
+   ],
+   "note_deep": "STALE EXTRACTION: first sweep lists 110, but code (line 77) uses Math.min(..., 118); file comment: потолок 118% достигается при стаже 34 год"
   },
   {
    "key": "base_pension_increment_per_year_pct",
@@ -4516,7 +4478,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "ДУМК fidya rate (4000 KZT/missed day), quasi-official annual religious-charity norm set by the Spiri",
-   "used_by": []
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ]
   },
   {
    "key": "dumk_fidya_rate_2025",
@@ -4528,7 +4492,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "ДУМК fidya rate prior-year (3000 KZT/missed day), same quasi-official ДУМК annual norm as the 2026 v",
-   "used_by": []
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ]
   },
   {
    "key": "dumk_fitr_sadaqah_rate_2026",
@@ -4540,7 +4506,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "ДУМК fitr/zakat al-fitr sadaqah rate (735 KZT/person, flour basis), quasi-official ДУМК annual norm.",
-   "used_by": []
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ]
   },
   {
    "key": "dumk_fitr_dates_rate_2026",
@@ -4552,7 +4520,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "ДУМК fitr rate paid in dates (2200 KZT), quasi-official ДУМК annual norm variant. Same regulatory cl",
-   "used_by": []
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ]
   },
   {
    "key": "dumk_fitr_raisins_rate_2026",
@@ -4564,7 +4534,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "ДУМК fitr rate paid in raisins (1800 KZT), quasi-official ДУМК annual norm variant. Same regulatory ",
-   "used_by": []
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ]
   },
   {
    "key": "dumk_fitr_sadaqah_rate_2025",
@@ -4576,7 +4548,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "ДУМК fitr sadaqah prior-year rate (655 KZT/person), quasi-official ДУМК annual norm. Historical regu",
-   "used_by": []
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ]
   },
   {
    "key": "living_minimum_pm_2026",
@@ -4588,7 +4562,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "Прожиточный минимум (ПМ) for 2026 = 50851 KZT, set by the republican budget law. Matches reference v",
-   "used_by": []
+   "used_by": [
+    "SocialAssistanceCalculator"
+   ]
   },
   {
    "key": "moral_damage_category_ranges",
@@ -4600,7 +4576,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "Moral-damage award ranges keyed to ст.951-952 ГК РК (Civil Code) judicial-practice guidelines (sibli",
-   "used_by": []
+   "used_by": [
+    "MoralDamageCalculator"
+   ]
   },
   {
    "key": "penalty_tax_daily_rate_example",
@@ -4612,7 +4590,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "Tax penalty (пеня) daily rate under НК РК ст.117 (1.25× NBK base rate / 365). Prompt explicitly name",
-   "used_by": []
+   "used_by": [
+    "PenaltyCalculator"
+   ]
   },
   {
    "key": "vehicle_reg_fee_electric_new_mrp",
@@ -4624,7 +4604,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "Vehicle registration state duty (госпошлина) expressed in МРП, set by НК РК; EV preferential rate (0",
-   "used_by": []
+   "used_by": [
+    "RegistrationFeeCalculator"
+   ]
   },
   {
    "key": "heating_tariff_karaganda_per_gcal",
@@ -4636,7 +4618,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "Regional district-heating tariff (₸/Гкал, Karaganda = 5500), a utility tariff regulated by the antim",
-   "used_by": []
+   "used_by": [
+    "HeatingBillCalculator"
+   ]
   },
   {
    "key": "heating_tariff_shymkent_per_gcal",
@@ -4648,7 +4632,9 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "Regional district-heating tariff (₸/Гкал, Shymkent = 4500), regulated utility tariff set by the anti",
-   "used_by": []
+   "used_by": [
+    "HeatingBillCalculator"
+   ]
   },
   {
    "key": "heating_tariff_other_regions_per_gcal",
@@ -4660,7 +4646,1593 @@
    "status": "recovered_from_estimate",
    "aliases": [],
    "recovery_reason": "Regional district-heating tariff (₸/Гкал, other regions = 5000), regulated utility tariff (antimonop",
-   "used_by": []
+   "used_by": [
+    "HeatingBillCalculator"
+   ]
+  },
+  {
+   "key": "perdiem_ipn_free_limit_foreign_mrp",
+   "value": 8,
+   "unit": "МРП/сутки",
+   "law": "ст. 366 НК РК (2026)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "BusinessTripCalculator"
+   ],
+   "note_deep": "Line 56: dailyTaxFreeLimit = (domestic ? 6 : 8) * MRP. Foreign 8 МРП absent from list (domestic 6 coincides by value with perdiem_domestic_c"
+  },
+  {
+   "key": "notary_vehicle_tariff_by_party_mrp",
+   "value": "relatives:4; others:10; legal:12",
+   "unit": "МРП",
+   "law": "Приказ Министра юстиции РК от 27.09.2025 № 957 (adilet.zan.kz V2500036957), с 01",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "CarTransferCalculator"
+   ],
+   "note_deep": "Lines 28-32: NOTARY_MRP table by deal parties is the operative tariff. List's notary_vehicle_base_mrp=5 is STALE — value 5 no longer appears"
+  },
+  {
+   "key": "plate_fee_high_demand_grid_mrp_2026",
+   "value": "premiumLetters(001 AAA) 285; premium(007) 228; roundLetters(100 BBB) 194; round(777) 137; popularLetters(070) 114; mirrorLetters(101 AAA) 72; triplet(TTT) 57; mirror(121) 15; custom 10",
+   "unit": "МРП",
+   "law": "Пост. Правительства РК, adilet.zan.kz G24C0000516 (прейскурант с 2026)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "FancyPlatesCalculator"
+   ],
+   "note_deep": "STALE EXTRACTION: извлечённая таблица gov_duty_plate_fee_mrp_table (170/150/100) НЕ совпадает ни с одним значением файла (строки 26-37) — ак"
+  },
+  {
+   "key": "ogpo_vehicle_type_coeff_table_current",
+   "value": "passenger(B):2.09; taxi:2.09; truck(C, all weights):3.98; bus<=20 seats:3.26; bus>20 seats:3.45; motorcycle:1.00",
+   "unit": "coefficient",
+   "law": "Приказ АРРФР № G2500000072 (действ. с 01.01.2026) — абсолютные коэффициенты по т",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "InsuranceCalculator"
+   ],
+   "note_deep": "Lines 69-83. The provided extracted table contains the OLD relative grid (passenger:1.0; taxi:2.0; truck<=3.5t:1.2 ...) which does NOT match"
+  },
+  {
+   "key": "notary_unified_tariff_real_estate_sale_mrp",
+   "value": "individuals: 12, mixed/legal: 17, close relatives: 7",
+   "unit": "МРП",
+   "law": "Приказ Министра юстиции РК №533 от 27.09.2025 (adilet V2500036957), единый тариф",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: provided list has individuals:7, mixed:10, legal:15 — those are pre-2026 dual-fee values and do NOT match the file. File uses un"
+  },
+  {
+   "key": "notary_unified_tariff_vehicle_sale_mrp",
+   "value": "individuals: 10, mixed/legal: 12, close relatives: 4",
+   "unit": "МРП",
+   "law": "Приказ МЮ РК №533 от 27.09.2025, с 01.01.2026",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: list has individuals:5, mixed:7, legal:10 — does not match file values."
+  },
+  {
+   "key": "notary_unified_tariff_will_mrp",
+   "value": 3,
+   "unit": "МРП",
+   "law": "Приказ МЮ РК №533 от 27.09.2025",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: list has individuals:1 — file has flat 3 МРП for all party types."
+  },
+  {
+   "key": "notary_unified_tariff_inheritance_certificate_mrp",
+   "value": 4,
+   "unit": "МРП",
+   "law": "Приказ МЮ РК №533 от 27.09.2025",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: list has individuals:1 + percentage add-on — file has flat 4 МРП, comment explicitly says процентной надбавки в новой системе не"
+  },
+  {
+   "key": "notary_unified_tariff_power_of_attorney_mrp",
+   "value": "individuals: 1.1, mixed/legal: 2.5",
+   "unit": "МРП",
+   "law": "Приказ МЮ РК №533 от 27.09.2025",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: list has 0.5/1/2 — file has 1.1 (физлица) и 2.5 (юрлица)."
+  },
+  {
+   "key": "notary_unified_tariff_copy_certification_per_page_mrp",
+   "value": "individuals: 0.1, mixed/legal: 0.17",
+   "unit": "МРП за страницу",
+   "law": "Приказ МЮ РК №533 от 27.09.2025",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: list has 0.05/0.05/0.1 — file has 0.1/0.17/0.17."
+  },
+  {
+   "key": "notary_unified_tariff_marriage_contract_mrp",
+   "value": 10,
+   "unit": "МРП",
+   "law": "Приказ МЮ РК №533 от 27.09.2025",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: list has 3 — file has 10 МРП flat."
+  },
+  {
+   "key": "notary_unified_tariff_agreement_certification_mrp",
+   "value": 10,
+   "unit": "МРП",
+   "law": "Приказ МЮ РК №533 от 27.09.2025",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note_deep": "STALE LIST: list has 2/3/5 — file has 10 МРП flat (аренда, займ, раздел имущества, алименты)."
+  },
+  {
+   "key": "gov_program_7_20_25_limit_almaty_astana_shymkent",
+   "value": 30000000,
+   "unit": "KZT",
+   "law": "Программа 7-20-25, лимиты повышены с 26.09.2025 (оператор КФУ, kfu.kz)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MortgageCalculator"
+   ],
+   "note_deep": "STALE LIST: list has gov_program_7_20_25_limit_almaty_astana=25000000, but file maxLoanAmount = 30 млн for almaty/astana/shymkent. Comment a"
+  },
+  {
+   "key": "utilization_fee_car_coefficient_over_3000cc",
+   "value": 11.5,
+   "unit": "x base rate (50 МРП)",
+   "law": "Ставки утилизационного сбора РК (РОП) — легковые >3000 см³",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RecyclingFeeCalculator"
+   ],
+   "note_deep": "Line 40: { minVolume: 3001, coefficient: 11.5 }. First-sweep aggregate for car coefficients was truncated after '2001-3000:5' — the 4th brac"
+  },
+  {
+   "key": "self_employed_social_payments_rate",
+   "value": 4,
+   "unit": "% of income",
+   "law": "НК РК 2026 — СНР для самозанятых (преемник упразднённого патента)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RentalIncomeTaxCalculator"
+   ],
+   "note_deep": "SELF_EMPLOYED_RATE = 0.04 (line 41), the only payment under the 'patent' regime option; comment breaks it down as ОПВ 1% + ОПВР 1% + СО 1% +"
+  },
+  {
+   "key": "self_employed_income_limit_monthly_mrp",
+   "value": 300,
+   "unit": "МРП per MONTH",
+   "law": "НК РК 2026 — лимит дохода СНР для самозанятых",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RentalIncomeTaxCalculator"
+   ],
+   "note_deep": "SELF_EMPLOYED_LIMIT_MONTHLY = 300 * MRP (line 42), enforced at line 163 against MONTHLY rent. Distinct from the list's stale patent_income_l"
+  },
+  {
+   "key": "limitation_labor_reinstatement_months_tk160",
+   "value": 1,
+   "unit": "months",
+   "law": "ст. 160 ТК РК (восстановление на работе → согласительная комиссия)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ],
+   "note_deep": "RULES.labor = { months: 1 } (line 33) is what the calculator actually uses. The list's limitation_labor_months_tk160=3 appears NOWHERE in th"
+  },
+  {
+   "key": "limitation_acquisitive_prescription_realestate_years_gk240",
+   "value": 7,
+   "unit": "years",
+   "law": "ст. 240 ГК РК (приобретательная давность, недвижимость)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ],
+   "note_deep": "RULES.property = { years: 7 } (line 37). The list's limitation_property_years_gk240=10 appears NOWHERE in the file (stale/wrong — KZ acquisi"
+  },
+  {
+   "key": "ipn_standard_deduction_old_14_mrp",
+   "value": 14,
+   "unit": "МРП",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "TeacherSalaryCalculator"
+   ],
+   "note_deep": "Line 110: dead variable `const deduction = 14 * MRP_2026` — never used (logic uses 30 МРП). 14 МРП is the pre-2026 standard deduction; stale"
+  },
+  {
+   "key": "unemployment_min_experience_stale_12",
+   "value": 12,
+   "unit": "months",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ],
+   "note_deep": "Line 26: initial state minRequiredExperience: 12 contradicts the 6 months used in all logic (and in the list). Related: the ineligibility me"
+  },
+  {
+   "key": "mrp_fallback_3876",
+   "value": 3876,
+   "unit": "KZT",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ],
+   "note_deep": "Stale fallback МРП `|| 3876` at lines 88/167/197 — matches no official МРП year (2023=3450, 2024=3692, 2025=3932). Reachable: year 2029 is s"
+  },
+  {
+   "key": "alimony_min_per_child_mrp",
+   "value": 0.5,
+   "unit": "МРП на ребёнка",
+   "law": "КоБС РК (отображается как установленный минимум)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "AlimonyCalculator"
+   ],
+   "note": "Statistics block lines 533-551: MRP*0.5 (1 ребёнок), *2, *3 shown as 'минимальный размер алиментов'. Not in extracted list (list has only sh",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "average_earnings_period_months_by_purpose",
+   "value": "vacation:13; sickLeave:12; businessTrip:12; dismissal:24; maternity:12",
+   "unit": "months",
+   "law": "Единые правила исчисления средней заработной платы (приказ МЗСР РК № 1022 от 30.",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "AverageEarningsCalculator"
+   ],
+   "note": "PURPOSE_MONTHS table lines 18-24, caps the averaging window in the calculation. Entirely absent from list (only МЗП extracted). Values 13 (v",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "standard_working_time_conversion",
+   "value": "8 h/day; 5 days/week; 21 раб.дн./мес",
+   "unit": "",
+   "law": "ТК РК ст. 68-69 (норма 40-часовой рабочей недели)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "AverageEarningsCalculator"
+   ],
+   "note": "Lines 51-52, 62: days = months*21, hours = days*8, avgWeek = avgDay*5 drive per-day/hour/week results in simple mode. 8h/5d derive from the ",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "bankruptcy_extrajudicial_min_overdue_months",
+   "value": 12,
+   "unit": "months",
+   "law": "Закон РК «О восстановлении платежеспособности и банкротстве граждан РК» № 178-VI",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "BankruptcyCalculator"
+   ],
+   "note": "Line 52: overdue >= 12 gates внесудебное банкротство. Absent from list (only 1600 МРП limit extracted). Same line also uses heuristic proxy ",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "bankruptcy_judicial_min_overdue_months",
+   "value": 3,
+   "unit": "months",
+   "law": "не подтверждено — гражданский закон использует 12-мес критерий неплатёжеспособно",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "BankruptcyCalculator"
+   ],
+   "note": "Line 55: overdue >= 3 gates судебное банкротство. 3 months mirrors corporate bankruptcy practice; verify whether it is statutory for citizen",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "bankruptcy_restoration_plan_horizon_months",
+   "value": 60,
+   "unit": "months",
+   "law": "Закон № 178-VII — план восстановления платёжеспособности до 5 лет",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "BankruptcyCalculator"
+   ],
+   "note": "Lines 55-61: debt/60 used in eligibility branching (ability to repay within 5 years → restructuring vs bankruptcy). The 5-year plan limit is",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "bankruptcy_post_credit_ban_years",
+   "value": 5,
+   "unit": "years",
+   "law": "Закон № 178-VII, последствия банкротства",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "BankruptcyCalculator"
+   ],
+   "note": "Comment line 23 ('5 лет нельзя брать кредиты') documenting the law; surfaced to user via cons1-4 i18n strings. Comment-only, not in computat",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "bankruptcy_credit_bureau_record_years",
+   "value": 7,
+   "unit": "years",
+   "law": "Закон № 178-VII / правила КИП",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "BankruptcyCalculator"
+   ],
+   "note": "Comment line 23 ('7 лет запись в КИП'). Comment-only, not in computation.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ogpo_age_coeff_table",
+   "value": "<25:1.1; 25-65:1.0; >65:1.15",
+   "unit": "",
+   "law": "Закон РК об ОГПО владельцев ТС, ст. 19 (коэффициенты)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "CarTransferCalculator"
+   ],
+   "note": "Lines 87-90, multiplies OGPO premium. Absent from list (only base 1.9 and region 2.96/1.86 extracted). Statute defines combined возраст/стаж",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ogpo_experience_coeff_table",
+   "value": "<2y:1.1; 2-7y:1.05; >=7y:1.0",
+   "unit": "",
+   "law": "Закон РК об ОГПО владельцев ТС, ст. 19 (коэффициенты)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "CarTransferCalculator"
+   ],
+   "note": "Lines 92-95, multiplies OGPO premium. Absent from list. Intermediate 1.05 step not in statute's combined age/experience coefficient — verify",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "customs_duty_large_engine_threshold_cc",
+   "value": 3000,
+   "unit": "см³",
+   "law": "ТК ЕАЭС / ставки пошлин на авто",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "CustomsClearanceCalculator"
+   ],
+   "note": "строка 71: volume > 3000 => +5% к пошлине; сама надбавка (5) в списке есть, а порог 3000 см³ — нет",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "customs_eco_restriction_engine_threshold_cc",
+   "value": 2500,
+   "unit": "см³",
+   "law": "экологические требования к ввозу авто старше 7 лет",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "CustomsClearanceCalculator"
+   ],
+   "note": "строка 86: isOldVehicle && volume > 2500 включает предупреждение об эко-сборе/ограничениях (влияет только на UI-текст, не на сумму)",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "tax_declaration_form_too_kpn",
+   "value": "ФНО 100.00",
+   "unit": "",
+   "law": "Приказ МФ РК об утверждении форм налоговой отчётности",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "CryptoTaxCalculator"
+   ],
+   "note": "строка 69: жёстко зашитый номер формы для ТОО (декларация по КПН); регуляторный идентификатор, может устареть",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "tax_declaration_form_individual_ipn",
+   "value": "ФНО 240.00",
+   "unit": "",
+   "law": "Приказ МФ РК об утверждении форм налоговой отчётности",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "CryptoTaxCalculator"
+   ],
+   "note": "строка 69: показывается и физлицу, и ИП на упрощёнке; для ИП на упрощёнке корректная форма обычно 910.00 — стоит проверить логику",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "divorce_timeline_months",
+   "value": "ЗАГС: 1; суд: 2; суд с детьми: 3",
+   "unit": "месяцы",
+   "law": "Кодекс РК «О браке (супружестве) и семье» (месячный срок регистрации в РАГС; при",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "DivorceCalculator"
+   ],
+   "note": "строка 59: timelineMonths = zags?1 : hasChildren?3 : 2. Отображается как оценка (~), но 1 мес (ЗАГС) и 3 мес (примирение) — нормативные срок",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ent_history_kazakhstan_max_score",
+   "value": 20,
+   "unit": "баллы",
+   "law": "Приказ МОН/МНВО РК о проведении ЕНТ (формат теста)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ENTScoreCalculator"
+   ],
+   "note": "в списке только суммарный максимум 140; структура 20+10+10+50+50 зашита в max RangeSlider (строки 102-111) и комментарий (строка 58)",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ent_math_literacy_max_score",
+   "value": 10,
+   "unit": "баллы",
+   "law": "Приказ МОН/МНВО РК о проведении ЕНТ",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ENTScoreCalculator"
+   ],
+   "note": "max слайдера «математическая грамотность» (строка 105)",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ent_reading_literacy_max_score",
+   "value": 10,
+   "unit": "баллы",
+   "law": "Приказ МОН/МНВО РК о проведении ЕНТ",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ENTScoreCalculator"
+   ],
+   "note": "max слайдера «грамотность чтения» (строка 107)",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ent_profile_subject_max_score",
+   "value": 50,
+   "unit": "баллы",
+   "law": "Приказ МОН/МНВО РК о проведении ЕНТ",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ENTScoreCalculator"
+   ],
+   "note": "max каждого из 2 профильных предметов (строки 109, 111); проходные баллы вузов в UNIVERSITIES не репортую — комментарий в файле помечает их ",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "electricity_tariff_astana_2026",
+   "value": "эл.плита: до 90 кВт·ч 33.18; 90-180 43.86; >180 54.83 тг/кВт·ч; газ.плита: те же ставки, пороги 70/140",
+   "unit": "₸/кВт·ч (вкл. НДС 16%); пороги кВт·ч/мес",
+   "law": "Приказы ДКРЕМ (дифференцированные тарифы по объёмам потребления)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ElectricityBillCalculator"
+   ],
+   "note": "первый проход извлёк из файла ТОЛЬКО НДС 16%; вся тарифная сетка cityTariffs (строки 45-102) — регулируемые тарифы — пропущена целиком",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "electricity_tariff_almaty_2026",
+   "value": "эл.плита: до 100 кВт·ч 31.85; 100-200 42.10; >200 52.63 тг/кВт·ч; газ.плита: те же ставки, пороги 80/160",
+   "unit": "₸/кВт·ч (вкл. НДС 16%); пороги кВт·ч/мес",
+   "law": "Приказы ДКРЕМ; по комментарию в файле — данные АО «Алатау Жарық Компаниясы» — «Э",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ElectricityBillCalculator"
+   ],
+   "note": "регулируемый тариф, в списке отсутствует",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "electricity_tariff_shymkent_2026",
+   "value": "эл.плита: до 85 кВт·ч 36.77; 85-170 48.47; >170 60.61 тг/кВт·ч; газ.плита: те же ставки, пороги 65/130",
+   "unit": "₸/кВт·ч (вкл. НДС 16%); пороги кВт·ч/мес",
+   "law": "Приказы ДКРЕМ (дифференцированные тарифы)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ElectricityBillCalculator"
+   ],
+   "note": "регулируемый тариф, в списке отсутствует",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "electricity_tariff_other_regions_2026",
+   "value": "эл.плита: до 75 кВт·ч 28.31; 75-150 42.47; >150 53.09 тг/кВт·ч; газ.плита: те же ставки, пороги 60/120",
+   "unit": "₸/кВт·ч (вкл. НДС 16%); пороги кВт·ч/мес",
+   "law": "Приказы ДКРЕМ по регионам",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "ElectricityBillCalculator"
+   ],
+   "note": "ПОГРАНИЧНО: комментарий в файле (строка 44) сам помечает значения для прочих городов как «приблизительные» — частично оценка, а не НПА",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "plate_standard_registration_fee_mrp",
+   "value": 2.8,
+   "unit": "МРП",
+   "law": "НК РК 2026 (280% МРП за гос. номерной знак при регистрации)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "FancyPlatesCalculator"
+   ],
+   "note": "базовый (стандартный) номер, строка 36 — отдельная позиция вне сетки повышенного спроса, в списке отсутствует",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "land_tax_region_base_rates_full_matrix",
+   "value": "МРП/га (ирриг/богар/пастб/сенокос): Алматинская 0.68/0.45/0.15/0.25; Жамбылская 0.65/0.42/0.12/0.22; Туркестанская 0.70/0.48/0.18/0.28; Кызылординская 0.72/0.50/0.20/0.30; Актюбинская 0.60/0.38/0.10/0.18; ЗКО 0.58/0.35/0.08/0.15; СКО 0.55/0.40/0.12/0.20; Костанайская 0.52/0.38/0.11/0.19; Акмолинская 0.50/0.35/0.10/0.17; Карагандинская 0.48/0.32/0.09/0.16; Павлодарская 0.45/0.30/0.08/0.14; ВКО 0.42/0.28/0.07/0.13; Атырауская 0.75/0.55/0.25/0.35; Мангистауская 0.80/0.60/0.30/0.40",
+   "unit": "МРП/га",
+   "law": "НК РК — земельный налог / ЕЗН",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "FarmLandTaxCalculator"
+   ],
+   "note": "первый проход зафиксировал только МИН-МАКС диапазоны (0.42-0.80 и т.д.) — 56 пер-региональных значений (строки 41-182) не зафиксированы, изм",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "gons_min_saving_period_years",
+   "value": 3,
+   "unit": "years",
+   "law": "Закон РК «О Государственной образовательной накопительной системе»",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "GONSCalculator"
+   ],
+   "note": "Hard validation at line 54 (years < 3 invalidates calculation), input min=3, UI 'от 3 до 20 лет' and condition4 present it as a program part",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "gons_max_saving_period_years",
+   "value": 20,
+   "unit": "years",
+   "law": "Закон РК «О Государственной образовательной накопительной системе»",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "GONSCalculator"
+   ],
+   "note": "Hard validation at line 54 (years > 20 invalidates calculation), input max=20, condition5 presents it as max program term.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "heating_avg_consumption_norm_gcal_per_m2_table",
+   "value": "astana:0.0185; almaty:0.0165; shymkent:0.0145; karaganda:0.0195; other:0.017",
+   "unit": "Гкал/м²/мес",
+   "law": "Нормативы потребления тепловой энергии — утверждаются местными исполнительными о",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "HeatingBillCalculator"
+   ],
+   "note": "averageNorm per city — used directly in billing math for seasonal projection (area * averageNorm * seasonMonths * tariff). First sweep extra",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "heating_monthly_consumption_norms_astana",
+   "value": "oct:0.015; nov:0.0175; dec:0.021; jan:0.023; feb:0.021; mar:0.018; apr:0.013",
+   "unit": "Гкал/м²/мес",
+   "law": "Нормативы потребления тепловой энергии (акимат г. Астана)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "HeatingBillCalculator"
+   ],
+   "note": "Drives no-meter billing: consumption = area * monthly norm (lines 156-158). 7-month heating season.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "heating_monthly_consumption_norms_almaty",
+   "value": "oct:0.012; nov:0.016; dec:0.019; jan:0.021; feb:0.019; mar:0.015; apr:0.010",
+   "unit": "Гкал/м²/мес",
+   "law": "Нормативы потребления тепловой энергии (акимат г. Алматы)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "HeatingBillCalculator"
+   ],
+   "note": "Drives no-meter billing calculation.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "heating_monthly_consumption_norms_shymkent",
+   "value": "nov:0.013; dec:0.016; jan:0.018; feb:0.016; mar:0.012",
+   "unit": "Гкал/м²/мес",
+   "law": "Нормативы потребления тепловой энергии (акимат г. Шымкент)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "HeatingBillCalculator"
+   ],
+   "note": "5-month heating season (table length also feeds heatingSeasonMonths and seasonal projection).",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "heating_monthly_consumption_norms_karaganda",
+   "value": "oct:0.016; nov:0.019; dec:0.022; jan:0.025; feb:0.023; mar:0.019; apr:0.012",
+   "unit": "Гкал/м²/мес",
+   "law": "Нормативы потребления тепловой энергии (акимат Карагандинской обл.)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "HeatingBillCalculator"
+   ],
+   "note": "Drives no-meter billing calculation.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "heating_monthly_consumption_norms_other_regions",
+   "value": "oct:0.014; nov:0.017; dec:0.020; jan:0.022; feb:0.020; mar:0.016; apr:0.012",
+   "unit": "Гкал/м²/мес",
+   "law": "Нормативы потребления тепловой энергии (среднее по РК)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "HeatingBillCalculator"
+   ],
+   "note": "Default norms for 'other regions' option; drives no-meter billing calculation.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "cpi_cumulative_index_by_year_table",
+   "value": "2015:100.0; 2016:114.6; 2017:122.8; 2018:130.8; 2019:137.8; 2020:147.2; 2021:159.5; 2022:185.7; 2023:213.5; 2024:231.7; 2025:252.6; 2026:281.9",
+   "unit": "index (base 2015=100)",
+   "law": "БНС АСПиР РК (stat.gov.kz) — индекс потребительских цен",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "InflationCalculator"
+   ],
+   "note": "CPI_DATA (lines 16-29) is the core engine of the entire calculator (cpiRatio = cpiTarget/cpiSource). First sweep extracted the MRP reference",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "inheritance_notary_flat_fee_other_mrp",
+   "value": 5,
+   "unit": "МРП",
+   "law": "Закон РК «О нотариате» — нотариальные тарифы в МРП",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "InheritanceCalculator"
+   ],
+   "note": "Line 116: notaryCost = 1*MRP*totalHeirs + 5*MRP. The flat 5 МРП component is absent from the list. DISCREPANCY: comment on line 115 says '0.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "inheritance_mandatory_share_fraction",
+   "value": 0.5,
+   "unit": "fraction of legal share",
+   "law": "ст. 1069 ГК РК — обязательная доля не менее 1/2 законной доли",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "InheritanceCalculator"
+   ],
+   "note": "Declared via comment (line 22) and hasMandatoryShare flags on heirTypes (lines 32-38) but NEVER used in the share computation — mandatory-sh",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ogpo_age_experience_coeff_table",
+   "value": "age<25 & exp<2: 1.10; age<25 & exp>=2: 1.05; age>=25 & exp<2: 1.05; age>=25 & exp>=2: 1.00",
+   "unit": "coefficient",
+   "law": "ст. 19 Закона РК № 446-I «Об обязательном страховании ГПО владельцев транспортны",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "InsuranceCalculator"
+   ],
+   "note": "Lines 135-142, commented 'обновлено с 2026'. Statutory age/experience coefficients (incl. thresholds: age 25, experience 2 years) multiply t",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ogpo_bonus_malus_new_classes",
+   "value": "M2:3.50; M1:3.00; A:1.80",
+   "unit": "coefficient",
+   "law": "Приказ АРРФР — система бонус-малус, 18 классов (пересмотр с 07.04.2025)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "InsuranceCalculator"
+   ],
+   "note": "File's bonusMalusClasses array (lines 90-109) starts M2, M1, M, 0, A... The provided extracted table starts at 'M:2.45' — the three new clas",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "notary_real_estate_value_threshold_mrp",
+   "value": 30,
+   "unit": "МРП",
+   "law": "Приказ МЮ РК №533 от 27.09.2025",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "NotaryServicesCalculator"
+   ],
+   "note": "Comment driving the apartment-sale category: tariff applies to отчуждение недвижимости стоимостью свыше 30 МРП (городская местность). Not in",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "gov_program_7_20_25_limit_other_regions",
+   "value": 20000000,
+   "unit": "KZT",
+   "law": "Программа 7-20-25 (лимиты с 26.09.2025)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MortgageCalculator"
+   ],
+   "note": "maxLoanAmount.other = 20 млн — absent from list. Commercial programs in the same file (Halyk 13.5%, partner 9.9%, Kaspi 14.9% and their fees",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "childcare_benefit_duration_months",
+   "value": 18,
+   "unit": "months",
+   "law": "Социальный кодекс РК — выплата по уходу за ребёнком до 1,5 лет",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ],
+   "note": "Hardcoded multiplier ×18 in totalFirstYearBenefits for both employed and unemployed branches (lines 75, 99). Regulatory payment duration, ab",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "maternity_leave_start_week",
+   "value": 30,
+   "unit": "недель беременности",
+   "law": "Трудовой кодекс РК, ст. 99",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ],
+   "note": "Hardcoded '30' in JSX badge (line ~496) — стандартный срок выхода в декрет. Not in list.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "maternity_leave_start_week_ecological_zone",
+   "value": 28,
+   "unit": "недель беременности",
+   "law": "ТК РК — для проживающих в зонах экологического бедствия",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ],
+   "note": "Hardcoded '28' in JSX badge (line ~502). Not in list.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "maternity_leave_days_complicated_birth",
+   "value": 140,
+   "unit": "days",
+   "law": "ТК РК ст. 99 — осложнённые роды / многоплодная беременность",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MaternityBenefitsCalculator"
+   ],
+   "note": "Referenced via i18n keys days140/days140Breakdown in UI; calculator logic only implements the 126-day case (coefficient 4.2 = 126/30), no 4.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "pdl_max_term_days",
+   "value": 45,
+   "unit": "days",
+   "law": "Закон РК о микрофинансовой деятельности — PDL-займы до 45 дней",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MicroloanCalculator"
+   ],
+   "note": "LOAN_TYPES.online.maxTerm = 45 and shortterm.maxTerm = 45 (days), enforced in validateTerm. List has the 45 МРП amount cap but NOT the 45-da",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "moral_damage_ranges_mrp_full_table",
+   "value": "lightInjury:50-200(avg100), mediumInjury:200-500(300), severeInjury:500-2000(1000), death:1000-5000(2500), honor:30-200(80), privacy:20-150(50), consumer:10-100(30), labor:20-200(70), illegalArrest:500-3000(1500)",
+   "unit": "МРП",
+   "law": "ст. 951-952 ГК РК (суммы законом не фиксированы — судебная практика)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "MoralDamageCalculator"
+   ],
+   "note": "DATA REPAIR: the provided list value is truncated mid-string at 'severeIn', so 7 of 9 categories plus all avg values are missing from the pa",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "otbasy_baspana_hit_terms",
+   "value": "maxAmount: 30000000 KZT, minDownPayment: 20%, maxTerm: 25 years",
+   "unit": "",
+   "law": "Программа Баспана Хит, Отбасы банк (hcsbk.kz), данные на апрель 2026",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ],
+   "note": "Only the 5% rate is in the list; the program's amount limit, min down payment and max term are not.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "otbasy_7_20_25_terms",
+   "value": "maxAmount: 25000000 KZT, minDownPayment: 20%, maxTerm: 25 years",
+   "unit": "",
+   "law": "Программа 7-20-25",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ],
+   "note": "Absent from this component's list (present in MortgageCalculator's list by value). CROSS-FILE INCONSISTENCY: this file still uses the 25 млн",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "otbasy_baspana_zhas_terms",
+   "value": "maxAmount: 18000000 KZT, minDownPayment: 10%, maxTerm: 25 years",
+   "unit": "",
+   "law": "Программа Баспана Жас (молодёжная), Отбасы банк",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ],
+   "note": "Only the 2% rate is in the list; limit/down payment/term missing.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "otbasy_otau_terms",
+   "value": "maxAmount: 36000000 KZT (Астана/Алматы; прочие регионы 30 млн по комментарию), minDownPayment: 20%, maxTerm: 20 years",
+   "unit": "",
+   "law": "Программа Отау, Отбасы банк (hcsbk.kz), апрель 2026",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "OtbasyBankCalculator"
+   ],
+   "note": "Only the 7% rate is in the list (comment: ставка повышена с 5% до 7%). The 36 млн limit, regional 30 млн limit, 20% down and 20-year term ar",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "inheritance_asaba_male_female_ratio",
+   "value": "2:1",
+   "unit": "",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ],
+   "note": "The most load-bearing constant in the calculator: sons get 2× a daughter's share (sonsCount * 2, line ~190), brothers 2× sisters (line ~232)",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "inheritance_mother_reduced_share_siblings_threshold",
+   "value": 2,
+   "unit": "siblings",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "IslamicInheritanceCalculator"
+   ],
+   "note": "Mother's share drops 1/3 → 1/6 when deceased has children OR ≥2 siblings (brothersCount + sistersCount >= 2, line ~164). The listed mother e",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "overtime_multiplier_weekend_holiday_night_actual",
+   "value": 1.5,
+   "unit": "x hourly rate",
+   "law": "ст. 109 ТК РК №414-V (ред. 2026)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "OvertimeCalculator"
+   ],
+   "note": "MAPPING ERROR in first sweep, not a new value: list claims weekend/holiday=2, but MULTIPLIERS in code = weekend:1.5, holiday:1.5, night:1.5,",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "penalty_utilities_example_daily_rate",
+   "value": 0.05,
+   "unit": "% per day",
+   "law": "Закон РК «О естественных монополиях» (cited in component table)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PenaltyCalculator"
+   ],
+   "note": "Hardcoded in static example block (~line 362: 25,000 x 0.05% x 45). Matches live i18n utilitiesRate=0.05. NB: the rates actually driving cal",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "pension_annuity_min_purchase_age",
+   "value": 45,
+   "unit": "years",
+   "law": "Социальный кодекс РК — договор пенсионного аннуитета можно заключить с 45 лет",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionAnnuityCalculator"
+   ],
+   "note": "Encoded as min=\"45\" attribute on the age input (~line 314) — a validation bound reflecting the legal minimum age, not a user-input default (",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "solidarity_pension_income_replacement_rate",
+   "value": 0.6,
+   "unit": "fraction of avg income",
+   "law": "Закон РК «О пенсионном обеспечении» — солидарная пенсия 60% среднемесячного дохо",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ],
+   "note": "Line 87: solidarityPension = incomeBefore * experienceCoef * 0.6 * incomeCoef.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "solidarity_pension_max_replacement_coef",
+   "value": 0.75,
+   "unit": "fraction (75%)",
+   "law": "Закон РК «О пенсионном обеспечении» — максимальный коэффициент замещения 75%",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ],
+   "note": "Line 85: Math.min(experienceBefore / 25, 0.75).",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "solidarity_pension_full_experience_years",
+   "value": 25,
+   "unit": "years (до 1998)",
+   "law": "Закон РК «О пенсионном обеспечении» — полный стаж для солидарной пенсии 25 лет (",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ],
+   "note": "Line 85 denominator: experienceBefore / 25.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "enpf_payout_period_years",
+   "value": 19,
+   "unit": "years",
+   "law": "Методика ЕНПФ — стандартный период выплат",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PensionCalculator"
+   ],
+   "note": "Line 108: averagePayoutPeriodMonths = 19 * 12. Present in PensionAnnuityCalculator's list but ABSENT from this component's list.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "property_sale_exempt_ownership_years_realestate",
+   "value": 2,
+   "unit": "years",
+   "law": "Новый НК РК K2500000214, ст. 331/363 + переходная ст. 842 — с 01.01.2026 для нед",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PropertySaleTaxCalculator"
+   ],
+   "note": "MAJOR MISS: minOwnershipYears: 2 for apartment/house/land/dacha/garage (lines 28-32). First sweep captured only value 1, which in the file a",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ipn_declaration_deadline_fno240",
+   "value": "31.03",
+   "unit": "date (DD.MM next year)",
+   "law": "НК РК — срок представления декларации ФНО 240.00 до 31 марта года, следующего за",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PropertySaleTaxCalculator"
+   ],
+   "note": "Hardcoded in getDeclarationDeadline() line 63: `31.03.${nextYear}`.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "property_tax_wear_rate_per_year_pct",
+   "value": 2,
+   "unit": "% per year of building age",
+   "law": "Методика определения стоимости (НК РК / Госкорпорация) — износ 2%/год",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PropertyTaxCalculator"
+   ],
+   "note": "Line 105: wearPercent = Math.min(age * 2, 70). First sweep extracted only the 70% cap, not the 2%/yr rate that drives it. (Cottage +10/garag",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "property_tax_progressive_brackets_full_16_steps",
+   "value": "0-2M:0.05%; 2-4M:1000+0.08%; 4-6M:2600+0.1%; 6-8M:4600+0.15%; 8-10M:7600+0.2%; 10-12M:11600+0.25%; 12-14M:16600+0.3%; 14-16M:22600+0.35%; 16-18M:29600+0.4%; 18-20M:37600+0.45%; 20-75M:46600+0.5%; 75-100M:321600+0.6%; 100-150M:471600+0.65%; 150-350M:796600+0.7%; 350-450M:2196600+0.75%; >450M:2946600+2.0%",
+   "unit": "₸ base + % marginal rate",
+   "law": "ст. 602 НК РК (новый НК K2500000214, 2026)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PropertyTaxCalculator"
+   ],
+   "note": "First-sweep aggregate entry was TRUNCATED after the 2nd of 16 steps ('...+1000@0.08%(2-4M); '). 14 bracket bases/rates (incl. top rate 2.0% ",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "property_tax_city_base_cost_and_zone_coeff_presets",
+   "value": "almaty:120000@1.5; astana:110000@1.4; shymkent:80000@1.2; karaganda:75000@1.1; aktobe:70000@1.0; other:60000@1.0 (mrpCoeff 1.0 all)",
+   "unit": "₸/m² @ zone coefficient",
+   "law": "Базовая стоимость 1 м² — НК РК; зональные коэффициенты — решения местных органов",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "PropertyTaxCalculator"
+   ],
+   "note": "CAUTION: entire table absent from first-sweep list although it directly drives the tax base. Values look like site-calibrated estimates stan",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "dumk_fitr_sadaqah_rate_2024",
+   "value": 600,
+   "unit": "₸ per person",
+   "law": "Ставка фитр-садака ДУМК 2024",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ],
+   "note": "Historical rates table line 512. First sweep captured 2026+2025 but not 2024/2023/2022.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "dumk_fitr_sadaqah_rate_2023",
+   "value": 550,
+   "unit": "₸ per person",
+   "law": "Ставка фитр-садака ДУМК 2023",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ],
+   "note": "Historical rates table line 516.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "dumk_fitr_sadaqah_rate_2022",
+   "value": 500,
+   "unit": "₸ per person",
+   "law": "Ставка фитр-садака ДУМК 2022",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ],
+   "note": "Historical rates table line 520.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "dumk_fidya_rate_2024",
+   "value": 2800,
+   "unit": "₸ per missed day",
+   "law": "Ставка фидия ДУМК 2024",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ],
+   "note": "Historical rates table line 534.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "dumk_fidya_rate_2023",
+   "value": 2500,
+   "unit": "₸ per missed day",
+   "law": "Ставка фидия ДУМК 2023",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ],
+   "note": "Historical rates table line 538.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "dumk_fidya_rate_2022",
+   "value": 2200,
+   "unit": "₸ per missed day",
+   "law": "Ставка фидия ДУМК 2022",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RamadanSadaqahCalculator"
+   ],
+   "note": "Historical rates table line 542. Value coincides with dumk_fitr_dates_rate_2026=2200 already in list, but it is a DISTINCT regulatory datapo",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "self_employed_ipn_rate",
+   "value": 0,
+   "unit": "%",
+   "law": "НК РК 2026 — СНР для самозанятых",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RentalIncomeTaxCalculator"
+   ],
+   "note": "incomeTax = 0 branch (lines 77-80) for the self-employed regime; regulatory 0% ИПН not represented in the list.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "simplified_rate_local_adjustment_range_pct",
+   "value": "±50",
+   "unit": "% of the 4% rate",
+   "law": "НК РК 2026 — право акимата/маслихата корректировать ставку упрощёнки",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "RentalIncomeTaxCalculator"
+   ],
+   "note": "Comment-only (line 83: 'акимат вправе изменить ±50%'); documents legal variability of the extracted 4% rate. Low priority — flagged for comp",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "sick_leave_avg_days_per_month_divisor",
+   "value": 30,
+   "unit": "days/month",
+   "law": "методика расчёта среднедневного заработка / пропорции лимита 25 МРП",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "SickLeaveCalculator"
+   ],
+   "note": "AVERAGE_DAYS_IN_MONTH = 30 (line 46) drives both the average daily income and the proration of the statutory 25 МРП monthly cap (lines 72-78",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "limitation_tax_years_default_nk65",
+   "value": 3,
+   "unit": "years",
+   "law": "ст. 65 НК РК 2026 (№214-VIII)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ],
+   "note": "RULES.tax = { years: 3 } (line 32) is the operative default. The list's limitation_tax_years_nk48=5 references the OLD code article (ст. 48)",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "limitation_admin_general_months_koap62",
+   "value": 2,
+   "unit": "months",
+   "law": "ст. 62 КоАП РК (общий срок давности привлечения)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ],
+   "note": "RULES.adminFine = { months: 2 } (line 34) is the operative general rule. The list's limitation_admin_fine_years_koap62=1 matches only the на",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "limitation_acquisitive_prescription_movable_years_gk240",
+   "value": 5,
+   "unit": "years",
+   "law": "ст. 240 ГК РК (приобретательная давность, иное имущество)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "StatuteLimitationsCalculator"
+   ],
+   "note": "Embedded in the user-facing article string and the line-37 comment ('иное имущество — 5 лет'); displayed in results but absent from the list",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "snr_simplified_maslikhat_rate_adjustment_range",
+   "value": "±50% (2–6%)",
+   "unit": "%",
+   "law": "НК РК 2026 (Закон № 214-VIII от 18.07.2025)",
+   "year": "2026",
+   "change_frequency": "occasional",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "TaxRegimeComparisonCalculator"
+   ],
+   "note": "Line 17 comment documenting the 4% rate logic: maslikhats may adjust the simplified-regime rate ±50% → 2–6%. Comment-only (not used in compu",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "traffic_fine_dui_koap608_1",
+   "value": "0 МРП — noMonetaryFine (лишение прав / арест), first offense too",
+   "unit": "",
+   "law": "КоАП РК ст. 608 ч.1",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ],
+   "note": "MISMATCH: list claims 'first 40 МРП'; file (line 37) encodes firstMRP: 0 with noMonetaryFine: true and penaltyKey/repeatPenaltyKey — no 40 a",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "traffic_fine_oncoming_koap596_3",
+   "value": "0 МРП — noMonetaryFine (лишение прав), first offense too",
+   "unit": "",
+   "law": "КоАП РК ст. 596 ч.3",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "TrafficFinesCalculator"
+   ],
+   "note": "MISMATCH: list claims 'first 10 МРП / repeat license'; file (line 40) encodes firstMRP: 0, repeatMRP: null, noMonetaryFine: true — no 10-МРП",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "unemployment_income_averaging_period_months",
+   "value": 24,
+   "unit": "months",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ],
+   "note": "Line 96: average income reconstructed as contributions / 24 / 0.05 — the 24-month (2-year) СО averaging window per ГФСС rules. Drives the co",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "unemployment_experience_coef_6plus_increment",
+   "value": "+0.02 per year above 6 years, capped at 1.3",
+   "unit": "",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "UnemploymentBenefitCalculator"
+   ],
+   "note": "Line 39: Math.min(1.3, 1.0 + 0.02 * floor((months-72)/12)); UI table shows '1.0–1.3' (line 318). The list's coef-table value is hard-truncat",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "vat_threshold_display_constant_undefined",
+   "value": "VAT_THRESHOLD_MRP — undefined identifier (ReferenceError)",
+   "unit": "",
+   "law": "",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VATThresholdCalculator"
+   ],
+   "note": "Lines 200/258/297 call formatMRP(VAT_THRESHOLD_MRP), but VAT_THRESHOLD_MRP is defined nowhere in the repo (tsc -p tsconfig.app.json: TS2304 ",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "vacation_max_days_clamp",
+   "value": 56,
+   "unit": "calendar days",
+   "law": "Закон РК о статусе педагога (удлинённый отпуск 56 к.д.)",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VacationPayCalculator"
+   ],
+   "note": "Input hard-clamped to 56 days (lines 191/196, min=1 max=56) — matches the longest statutory annual leave (педагоги). Borderline UI bound vs ",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "vehicle_reg_fee_srts_mrp",
+   "value": 1.25,
+   "unit": "МРП",
+   "law": "НК РК ст. 615 (госпошлина за СРТС/техпаспорт)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTCOCalculator"
+   ],
+   "note": "Line 181: regFee = (1.25 + 2.8) * MRP_2026 // 4.05 МРП ≈ 17 516 ₸. The list's vehicle_registration_fee_mrp = 2 matches NEITHER component nor",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "vehicle_reg_fee_plates_mrp",
+   "value": 2.8,
+   "unit": "МРП",
+   "law": "НК РК ст. 615 (госпошлина за гос. номера)",
+   "year": "2026",
+   "change_frequency": "annual",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTCOCalculator"
+   ],
+   "note": "Second component of the one-time 4.05 МРП registration fee at line 181; absent from the list.",
+   "origin": "diff_sweep_2026-06-11"
+  },
+  {
+   "key": "ogpo_territorial_coefficient_almaty",
+   "value": 2.96,
+   "unit": "",
+   "law": "Закон РК об обязательном страховании ГПО владельцев ТС (территориальные коэффици",
+   "year": "2026",
+   "change_frequency": "rare",
+   "aliases": [],
+   "status": "clean",
+   "used_by": [
+    "VehicleTCOCalculator"
+   ],
+   "note": "Lines 73-74: ogpoMultiplier 2.96 applied to BOTH Almaty and Astana; 2.96 is the statutory territorial coefficient for г. Алматы (Астана's of",
+   "origin": "diff_sweep_2026-06-11"
   }
  ],
  "estimates_excluded": [
@@ -4706,10 +6278,12 @@
   }
  ],
  "summary": {
-  "hardcoded_canonical": 300,
+  "hardcoded_canonical": 405,
   "value_conflicts": 2,
   "estimates_excluded": 10,
-  "recovered_from_estimates": 13
+  "recovered_from_estimates": 13,
+  "diff_sweep_added": 86,
+  "diff_sweep_corrected": 8
  },
  "completeness_audit": {
   "date": "2026-06-10",
@@ -4719,5 +6293,12 @@
   "content_files_audited": 3,
   "content_stale_found": 5,
   "note": "Full 117-component sweep confirmed exhaustive (0 missed in re-audit of 44 non-reg files). 13 estimate-keys recovered as law (ДУМК/ПМ/heating tariffs/penalty/EV fee/moral damage). Content files: 97 regulatory mentions, 5 stale (patent regime abolished refs, court-fee tenge recalc, КПН с/х, НБРК rate)."
+ },
+ "deep_completeness_audit": {
+  "date": "2026-06-11",
+  "diff_sweep": "8/8 batches: 91 new + 27 stale-canonical corrections",
+  "i18n_audit": "4/13 chunks done (23 stale findings), 9 blocked by spend limit — resume pending",
+  "meta_audit": "blocked by spend limit — grep-scan fallback applied",
+  "note": "Adversarial 2nd pass over 73 constant-bearing files."
  }
 }

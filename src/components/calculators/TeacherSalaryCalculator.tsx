@@ -107,7 +107,6 @@ export default function TeacherSalaryCalculator() {
     // Удержания
     const opv = Math.round(Math.min(grossSalary, 50 * MZP_2026) * 0.10);
     const vosms = Math.round(Math.min(grossSalary, 20 * MZP_2026) * 0.02);
-    const deduction = 14 * MRP_2026; // стандартный вычет 14 МРП для госслужащих — упрощённо 30 МРП
     const standardDeduction = 30 * MRP_2026;
     const taxableIncome = Math.max(0, grossSalary - opv - vosms - standardDeduction);
     const ipn = Math.round(taxableIncome * 0.10);
