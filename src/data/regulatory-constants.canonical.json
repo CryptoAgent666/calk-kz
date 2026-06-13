@@ -347,7 +347,7 @@
   },
   {
    "key": "otbasy_baspana_hit_rate",
-   "value": 5,
+   "value": 8.5,
    "unit": "percent",
    "law": "АО «Отбасы банк» (hcsbk.kz) — программа «Баспана хит»",
    "year": "2026",
@@ -356,14 +356,14 @@
     "otbasy_baspana_hit_rate"
    ],
    "status": "clean",
-   "conflict": "Баспана хит rate = 5% (term 25y, down 20%, max 30M). Distinct Otbasy product from Баспана жас (2%) and Отау (7%); not merged.",
+   "conflict": "Баспана хит rate = 8.5% (промзаём, стартовая; снижается до 5% после 3 лет; term 25y, down 20%, max 30M). Обновлено 13.06.2026 (было 5%, hcsbk.kz). Distinct Otbasy product from Баспана жас (6%) and Отау (7%); not merged.",
    "used_by": [
     "OtbasyBankCalculator"
    ]
   },
   {
    "key": "otbasy_baspana_zhas_rate",
-   "value": 2,
+   "value": 6,
    "unit": "percent",
    "law": "АО «Отбасы банк» — программа «Баспана жас» (молодёжная)",
    "year": "2026",
@@ -372,7 +372,7 @@
     "otbasy_baspana_zhas_rate"
    ],
    "status": "clean",
-   "conflict": "Баспана жас rate = 2% (down 10%, max 18M). Distinct product; not merged.",
+   "conflict": "Баспана жас rate = 6% (заём «Жас Отбасы», накопление 1г; down 10%, max 18M). Обновлено 13.06.2026 (было 2% — это депозитная ставка, не кредитная). Distinct product; not merged.",
    "used_by": [
     "OtbasyBankCalculator"
    ]

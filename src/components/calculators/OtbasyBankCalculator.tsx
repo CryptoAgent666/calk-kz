@@ -22,12 +22,17 @@ interface Program {
   maxAmount: number;      // макс. сумма кредита
 }
 
-// Программы и ставки Отбасы банк на апрель 2026 (источник: hcsbk.kz)
-// Отау: ставка повышена с 5% до 7% (для городов Астана/Алматы — лимит 36M, остальные регионы — 30M)
+// Программы и ставки Отбасы банк на июнь 2026 (источник: hcsbk.kz)
+// Баспана хит (промежуточный заём): с 04.06.2026 ставка 8.5% годовых (ГЭСВ 9–9.6%),
+//   снижается до 3.5–5% после 3 лет накопления / перевода в жилищный заём (ранее в калькуляторе
+//   стояла пост-ставка 5% — заменена на действующую стартовую 8.5%).
+// Жас Отбасы (промзаём для молодой семьи): 6% годовых, накопление 1 год (ранее ошибочно стояла
+//   депозитная ставка 2%, а не кредитная).
+// Отау: 7% (соц. уязвимые; 9% — прочие); лимит Астана/Алматы — 36M, регионы — 30M.
 const programs: Program[] = [
-  { id: 'baspana-hit', labelKey: 'otbasy-bank.programs.baspanaHit', rate: 5, maxTerm: 25, downPaymentMin: 20, maxAmount: 30_000_000 },
+  { id: 'baspana-hit', labelKey: 'otbasy-bank.programs.baspanaHit', rate: 8.5, maxTerm: 25, downPaymentMin: 20, maxAmount: 30_000_000 },
   { id: '7-20-25', labelKey: 'otbasy-bank.programs.program72025', rate: 7, maxTerm: 25, downPaymentMin: 20, maxAmount: 25_000_000 },
-  { id: 'baspana-zhas', labelKey: 'otbasy-bank.programs.baspanaZhas', rate: 2, maxTerm: 25, downPaymentMin: 10, maxAmount: 18_000_000 },
+  { id: 'baspana-zhas', labelKey: 'otbasy-bank.programs.baspanaZhas', rate: 6, maxTerm: 25, downPaymentMin: 10, maxAmount: 18_000_000 },
   { id: 'otau', labelKey: 'otbasy-bank.programs.otau', rate: 7, maxTerm: 20, downPaymentMin: 20, maxAmount: 36_000_000 },
 ];
 
