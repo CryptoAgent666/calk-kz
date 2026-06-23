@@ -34,17 +34,29 @@ export default function CourtFeeCalculator() {
 
   const nonPropertyFees = {
     divorce: { individual: 0.3, legal: 0 },
-    alimony: { individual: 1, legal: 0 },
-    labor: { individual: 0.5, legal: 2 },
-    administrative: { individual: 2, legal: 5 },
+    // НК РК ст.665/ст.668 (с 01.01.2026): истцы по искам о взыскании алиментов
+    // освобождены от госпошлины.
+    alimony: { individual: 0, legal: 0 },
+    // НК РК ст.668: истцы по искам о взыскании оплаты труда и иным требованиям,
+    // связанным с трудовой деятельностью, освобождены от госпошлины.
+    labor: { individual: 0, legal: 0 },
+    // НК РК ст.665: административные иски (споры с госорганом по АППК) —
+    // фиксированно 0,5 МРП физлица / 5 МРП юрлица. Прежние 2/5 ошибочны.
+    administrative: { individual: 0.5, legal: 5 },
     // НК РК ст.665 (с 01.01.2026): признание банкротом — единая ставка 0,5 МРП,
     // не зависит от заявителя (физлицо/юрлицо). Прежние 50/100 МРП ошибочны.
     bankruptcy: { individual: 0.5, legal: 0.5 },
     arbitration: { individual: 10, legal: 20 },
     corporate: { individual: 0, legal: 15 },
-    inheritance: { individual: 3, legal: 0 },
-    consumer: { individual: 1, legal: 0 },
-    housing: { individual: 2, legal: 5 }
+    // НК РК ст.665: наследственные споры (продление срока принятия наследства
+    // и пр.) — как неимущественный иск, 0,5 МРП. Прежние 3 МРП ошибочны.
+    inheritance: { individual: 0.5, legal: 0.5 },
+    // Закон РК «О защите прав потребителей»: потребители освобождены от госпошлины
+    // по искам, связанным с нарушением их прав.
+    consumer: { individual: 0, legal: 0 },
+    // НК РК ст.665: жилищные споры (изменение/расторжение договора найма жилища
+    // и пр.) — как неимущественный иск, 0,5 МРП. Прежние 2/5 ошибочны.
+    housing: { individual: 0.5, legal: 0.5 }
   };
 
   const calculateCourtFee = () => {

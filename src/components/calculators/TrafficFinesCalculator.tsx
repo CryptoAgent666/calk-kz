@@ -38,7 +38,7 @@ const violations: Violation[] = [
   { id: 'parking', labelKey: 'traffic-fines.v.parking', articleRef: '597 ч.1', firstMRP: 5, repeatMRP: 10 },
   { id: 'pedestrian', labelKey: 'traffic-fines.v.pedestrian', articleRef: '600', firstMRP: 10, repeatMRP: 15 },
   { id: 'oncoming', labelKey: 'traffic-fines.v.oncoming', articleRef: '596 ч.3', firstMRP: 0, repeatMRP: null, noMonetaryFine: true, penaltyKey: 'traffic-fines.penaltyOncoming', note: 'traffic-fines.noteOncoming' },
-  { id: 'tint', labelKey: 'traffic-fines.v.tint', articleRef: '590 ч.3', firstMRP: 10, repeatMRP: 15 },
+  { id: 'tint', labelKey: 'traffic-fines.v.tint', articleRef: '590 ч.5', firstMRP: 5, repeatMRP: null },
   { id: 'noInsurance', labelKey: 'traffic-fines.v.noInsurance', articleRef: '611', firstMRP: 10, repeatMRP: 20 },
   { id: 'childSeat', labelKey: 'traffic-fines.v.childSeat', articleRef: '593 ч.1', firstMRP: 5, repeatMRP: 10, note: 'traffic-fines.noteChildSeat' },
   { id: 'noPlates', labelKey: 'traffic-fines.v.noPlates', articleRef: '590 ч.4', firstMRP: 10, repeatMRP: 20 },

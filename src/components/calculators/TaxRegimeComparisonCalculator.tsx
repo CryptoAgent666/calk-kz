@@ -47,7 +47,6 @@ export default function TaxRegimeComparisonCalculator() {
     if (revenue <= 0) return [];
 
     const annualRevenue = revenue * 12;
-    const semiAnnualRevenue = revenue * 6;
 
     // ИП — социальные платежи за себя (минимальная база)
     const selfOPV = Math.round(MZP * 0.10);       // 8 500
@@ -57,8 +56,8 @@ export default function TaxRegimeComparisonCalculator() {
     const baseSocialMonthly = selfOPV + selfVOSMS + selfSO + selfOOSMS; // 17 000
 
     // 1. Упрощёнка (СНР на основе упрощённой декларации)
-    const simplifiedLimit = 300_000 * MRP; // 600 000 МРП/год → 300 000 МРП/полугодие = ~1.298 млрд ₸ (НК РК 2026)
-    const simplifiedAvailable = semiAnnualRevenue <= simplifiedLimit;
+    const simplifiedLimit = 600_000 * MRP; // 600 000 МРП/год = ~2.595 млрд ₸ — годовой лимит дохода упрощёнки (НК РК 2026, № 214-VIII); налоговый период — полугодие
+    const simplifiedAvailable = annualRevenue <= simplifiedLimit;
     const simplifiedTax = Math.round(revenue * 0.04); // 4% от дохода (ИПН, с 01.01.2026; соцналог отменён)
     const simplifiedSocial = baseSocialMonthly;
     const simplifiedTotal = simplifiedTax + simplifiedSocial;

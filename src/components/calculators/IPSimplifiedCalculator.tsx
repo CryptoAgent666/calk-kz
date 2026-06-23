@@ -50,7 +50,7 @@ export default function IPSimplifiedCalculator() {
   const OPV_MAX_BASE = 50 * MZP; // 4,250,000 тенге
   const SO_MAX_BASE = 7 * MZP; // 595,000 тенге
   const VOSMS_FIXED = 5950; // Фиксированная сумма
-  const SIMPLIFIED_LIMIT_HALFYEAR = 300_000 * MRP; // 300 000 МРП/полугодие = 600 000 МРП/год (НК РК ст. 715)
+  const SIMPLIFIED_LIMIT_YEAR = 600_000 * MRP; // 600 000 МРП/год — годовой лимит дохода упрощёнки (НК РК 2026, № 214-VIII); налоговый период — полугодие
 
   const calculateTaxes = () => {
     const income = parseFloat(semiannualIncome) || 0;
