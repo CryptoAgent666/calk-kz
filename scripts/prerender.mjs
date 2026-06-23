@@ -138,7 +138,7 @@ async function prerenderRoute(page, distPath, lang, route) {
 
   await page.goto(url, {
     waitUntil: 'networkidle2',
-    timeout: 30000
+    timeout: 60000
   });
 
   const expectedLang = lang.code === 'kk' ? 'kk' : 'ru';
