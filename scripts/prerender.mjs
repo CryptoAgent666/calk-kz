@@ -237,19 +237,34 @@ async function prerender() {
         if (currentIndex >= jobs.length) break;
         const { route, lang } = jobs[currentIndex];
 
-        try {
-          const page = pages[lang.code];
-          const filePath = await prerenderRoute(page, distPath, lang, route);
-          completed += 1;
+        // Ретрай транзиентных таймаутов (networkidle2 изредка не доходит до idle на
+        // случайной странице). 3 попытки — иначе частичный dist ломает deploy --delete.
+        const page = pages[lang.code];
+        const MAX_RETRIES = 2; // 1 + 2 ретрая = 3 попытки
+        let ok = false;
+        let lastError = null;
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+          try {
+            await prerenderRoute(page, distPath, lang, route);
+            ok = true;
+            break;
+          } catch (error) {
+            lastError = error;
+            if (attempt < MAX_RETRIES) {
+              console.warn(`  ⟳ retry ${attempt + 1}/${MAX_RETRIES} ${route}${lang.query}: ${error.message}`);
+            }
+          }
+        }
+        completed += 1;
+        if (ok) {
           if (completed % 10 === 0 || completed === total) {
             const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
             const rate = (completed / parseFloat(elapsed)).toFixed(1);
             console.log(`[${completed}/${total}] ${elapsed}s elapsed @ ${rate} pages/s (W${workerId}: ${route}${lang.query})`);
           }
-        } catch (error) {
-          errors.push({ route, lang: lang.code, error: error.message });
-          completed += 1;
-          console.error(`  ✗ Error prerendering ${route}${lang.query}:`, error.message);
+        } else {
+          errors.push({ route, lang: lang.code, error: lastError.message });
+          console.error(`  ✗ Error prerendering ${route}${lang.query} (after ${MAX_RETRIES + 1} attempts):`, lastError.message);
         }
       }
     } finally {
