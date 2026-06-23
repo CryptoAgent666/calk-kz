@@ -50,8 +50,31 @@ export default function PensionAnnuityCalculator() {
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
-  const SUFFICIENT_AMOUNT_MRP = 656; // 656 МРП для аннуитета
-  const SUFFICIENT_AMOUNT_KZT = SUFFICIENT_AMOUNT_MRP * MRP_2026; // 2,583,392 тенге
+  // Порог минимальной достаточности пенсионных накоплений (ПМД) на 2026.
+  // С 04.06.2026 (Постановление Правительства РК №422 от 21.05.2026) порог НЕ единый,
+  // а зависит от ВОЗРАСТА вкладчика (present-value: доходность 9%, индексация выплат 8%,
+  // целевая выплата = max(75% мин.пенсии, 60% МЗП); таблица единая для мужчин и женщин).
+  // Официальные значения ЕНПФ для возрастов 20–62, в тенге (округление до 10 000).
+  // Источник: enpf.kz/ru/services/vyplaty/ (сверено digit-for-digit с inform.kz).
+  // Ранее в калькуляторе стоял устаревший флэт 656 МРП (≈2,84 млн ₸).
+  const SUFFICIENCY_THRESHOLD_BY_AGE: Record<number, number> = {
+    20: 6_670_000, 21: 6_960_000, 22: 7_250_000, 23: 7_540_000, 24: 7_840_000,
+    25: 8_150_000, 26: 8_460_000, 27: 8_770_000, 28: 9_090_000, 29: 9_420_000,
+    30: 9_750_000, 31: 10_090_000, 32: 10_430_000, 33: 10_780_000, 34: 11_130_000,
+    35: 11_490_000, 36: 11_850_000, 37: 12_220_000, 38: 12_600_000, 39: 12_980_000,
+    40: 13_370_000, 41: 13_760_000, 42: 14_160_000, 43: 14_560_000, 44: 14_980_000,
+    45: 15_400_000, 46: 15_820_000, 47: 16_250_000, 48: 16_690_000, 49: 17_140_000,
+    50: 17_590_000, 51: 18_050_000, 52: 18_510_000, 53: 18_980_000, 54: 19_460_000,
+    55: 19_950_000, 56: 20_450_000, 57: 20_950_000, 58: 21_460_000, 59: 21_970_000,
+    60: 22_500_000, 61: 23_030_000, 62: 23_570_000,
+  };
+  // Порог для возраста. Официальная таблица опубликована для 20–62; вне диапазона
+  // берём ближайшее опубликованное значение (20 для младше, 62 для старше) — без экстраполяции.
+  const getSufficiencyThreshold = (currentAge: number): number => {
+    if (currentAge <= 0) return 0;
+    const clamped = Math.min(62, Math.max(20, currentAge));
+    return SUFFICIENCY_THRESHOLD_BY_AGE[clamped] ?? 0;
+  };
   const CURRENT_YEAR = 2026;
 
   // Пенсионный возраст по гендеру (РК 2026)
@@ -135,7 +158,7 @@ export default function PensionAnnuityCalculator() {
 
     if (currentAge === 0 || accumulations === 0) {
       setResults({
-        sufficientAmount: SUFFICIENT_AMOUNT_KZT,
+        sufficientAmount: 0,
         isSufficientForAnnuity: false,
         shortfall: 0,
         monthlyAnnuityPayment: 0,
@@ -157,9 +180,10 @@ export default function PensionAnnuityCalculator() {
     const birthYear = CURRENT_YEAR - currentAge;
     const retirementAge = getRetirementAge(birthYear, gender);
 
-    // Проверка достаточности накоплений
-    const isSufficientForAnnuity = accumulations >= SUFFICIENT_AMOUNT_KZT;
-    const shortfall = Math.max(0, SUFFICIENT_AMOUNT_KZT - accumulations);
+    // Проверка достаточности накоплений (порог зависит от возраста — ЕНПФ 2026)
+    const sufficientAmount = getSufficiencyThreshold(currentAge);
+    const isSufficientForAnnuity = accumulations >= sufficientAmount;
+    const shortfall = Math.max(0, sufficientAmount - accumulations);
 
     // Ожидаемая продолжительность жизни
     const lifeExpectancy = getLifeExpectancy(currentAge, gender);
@@ -194,7 +218,7 @@ export default function PensionAnnuityCalculator() {
     const breakEvenAge = currentAge + enpfPayoutPeriod;
 
     setResults({
-      sufficientAmount: SUFFICIENT_AMOUNT_KZT,
+      sufficientAmount,
       isSufficientForAnnuity,
       shortfall: Math.round(shortfall),
       monthlyAnnuityPayment: Math.round(monthlyAnnuityPayment),
@@ -217,10 +241,6 @@ export default function PensionAnnuityCalculator() {
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
-  };
-
-  const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount.toLocaleString()} ${t('pension-annuity.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
   const selectedCompany = insuranceCompanies.find(c => c.id === insuranceCompany);
@@ -387,10 +407,13 @@ export default function PensionAnnuityCalculator() {
                 {t('pension-annuity.inputs.sufficientAmount.label')}
               </h3>
               <div className="text-blue-800">
-                <strong>{formatMRP(SUFFICIENT_AMOUNT_MRP)}</strong>
+                <strong>{results.sufficientAmount > 0 ? formatNumber(results.sufficientAmount) : '—'}</strong>
               </div>
               <p className="text-xs text-blue-700 mt-1">
                 {t('pension-annuity.inputs.sufficientAmount.hint')}
+              </p>
+              <p className="text-xs text-blue-700 mt-2 border-t border-blue-200 pt-2">
+                {t('pension-annuity.inputs.sufficientAmount.disclaimer2026')}
               </p>
             </div>
           </div>
