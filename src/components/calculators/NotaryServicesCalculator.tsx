@@ -31,6 +31,19 @@ export default function NotaryServicesCalculator() {
 
   const MRP_2026 = 4325;
 
+  // Тариф удостоверения отчуждения НЕДВИЖИМОСТИ (в МРП), Приказ МЮ РК №533, с 01.01.2026.
+  // Порог стоимости — 30 МРП (= 129 750 ₸). В ГОРОДЕ ставка для физлиц зависит от стоимости
+  // (≤30 / >30 МРП); для юрлица — флэт 17. В СЕЛЕ все ставки флэтовые (тиров по стоимости нет):
+  // родственники 1.5, прочие физлица 2.7, юрлицо 3. Сверено по notariat.kz + Нотар. палата Астаны.
+  const REAL_ESTATE_VALUE_THRESHOLD_MRP = 30;
+  const REAL_ESTATE_TARIFF_MRP = {
+    city: {
+      upTo30: { related: 3, individuals: 8, legal: 17 },
+      over30: { related: 7, individuals: 12, legal: 17 },
+    },
+    rural: { related: 1.5, individuals: 2.7, legal: 3 },
+  };
+
   // С 01.01.2026 (приказ Министра юстиции РК №533 от 27.09.2025, adilet V2500036957)
   // у частных нотариусов действует ЕДИНЫЙ тариф: прежнее деление на «госпошлину» и
   // «технические услуги» (УПТХ) упразднено. Ставки даны в МРП по категориям сторон:
@@ -41,11 +54,13 @@ export default function NotaryServicesCalculator() {
   const notaryServices = {
     'apartment-sale': {
       name: t('notary.apartmentSale'),
-      // Отчуждение недвижимости (городская местность), стоимость свыше 30 МРП.
+      // Отчуждение недвижимости — тариф зависит от местности (город/село) и стоимости
+      // (порог 30 МРП); расчёт в calculateNotaryCost через REAL_ESTATE_TARIFF_MRP (Приказ №533).
+      isRealEstate: true,
       stateFee: { individuals: 12, mixed: 17, legal: 17 },
       technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       relatedFee: 7,
-      hasPropertyValue: false
+      hasPropertyValue: true
     },
     'car-sale': {
       name: t('notary.carSale'),
@@ -104,6 +119,38 @@ export default function NotaryServicesCalculator() {
     const service = notaryServices[serviceType as keyof typeof notaryServices];
     if (!service) return;
 
+    // Недвижимость: тариф зависит от местности (город/село) и стоимости (порог 30 МРП).
+    if ((service as { isRealEstate?: boolean }).isRealEstate) {
+      const isLegalInvolved = partyTypes === 'both-legal' || partyTypes === 'mixed';
+      const isRelatedIndividuals = areRelated && partyTypes === 'both-individuals';
+      const pickRate = (tier: { related: number; individuals: number; legal: number }) =>
+        isLegalInvolved ? tier.legal : isRelatedIndividuals ? tier.related : tier.individuals;
+
+      let rateMrp: number;
+      if (location === 'rural') {
+        // В селе ставка флэтовая — не зависит от стоимости.
+        rateMrp = pickRate(REAL_ESTATE_TARIFF_MRP.rural);
+      } else {
+        const value = parseFloat(propertyValue) || 0;
+        const cityTier = value <= REAL_ESTATE_VALUE_THRESHOLD_MRP * MRP_2026
+          ? REAL_ESTATE_TARIFF_MRP.city.upTo30
+          : REAL_ESTATE_TARIFF_MRP.city.over30;
+        rateMrp = pickRate(cityTier);
+      }
+
+      const fee = Math.round(rateMrp * MRP_2026);
+      setResults({
+        stateFee: fee,
+        technicalServiceFee: 0,
+        totalCost: fee,
+        description: service.name,
+        hasPropertyValue: true,
+        percentageFee: false,
+        percentageRate: 0,
+      });
+      return;
+    }
+
     // Map UI party types to data-keys used in rate tables
     const partyKey: 'individuals' | 'mixed' | 'legal' =
       partyTypes === 'both-individuals' ? 'individuals'
@@ -137,7 +184,7 @@ export default function NotaryServicesCalculator() {
 
   useEffect(() => {
     calculateNotaryCost();
-  }, [serviceType, partyTypes, areRelated, propertyValue, t]);
+  }, [serviceType, partyTypes, areRelated, location, propertyValue, t]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
@@ -301,9 +348,9 @@ export default function NotaryServicesCalculator() {
                 <RangeSlider
                   value={parseFloat(propertyValue) || 0}
                   onChange={(val) => setPropertyValue(String(val))}
-                  min={1000000}
+                  min={100000}
                   max={100000000}
-                  step={1000000}
+                  step={100000}
                   formatValue={(v) => `${v.toLocaleString()} ₸`}
                   color="#8b5cf6"
                 />
@@ -325,6 +372,9 @@ export default function NotaryServicesCalculator() {
                     {t('notary.additionalPercentage')} {results.percentageRate}% {t('notary.ofPropertyValue')}
                   </p>
                 )}
+                <p className="text-xs text-gray-500 mt-2">
+                  {t('notary.realEstateHint')}
+                </p>
               </div>
             )}
           </div>
