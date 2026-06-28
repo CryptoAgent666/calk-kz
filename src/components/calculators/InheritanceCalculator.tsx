@@ -111,9 +111,9 @@ export default function InheritanceCalculator() {
         };
       });
 
-    // Нотариальные расходы (примерно)
-    // Свидетельство о праве на наследство: 1 МРП (недвижимость) + 0.5 МРП (прочее)
-    const notaryCost = Math.round(1 * MRP_2026 * totalHeirs + 5 * MRP_2026);
+    // Нотариальные расходы: свидетельство о праве на наследство — фикс. 4 МРП
+    // за каждое свидетельство (Приказ Минюста РК №533, с 01.01.2026; % надбавка отменена).
+    const notaryCost = Math.round(4 * MRP_2026 * totalHeirs);
 
     return { estate, spouseMaritalShare, inheritableEstate, shares, activeQueue, totalHeirs, notaryCost };
   }, [estateValue, isMaritalProperty, heirCounts]);

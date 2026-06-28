@@ -11,7 +11,12 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-type Region = 'almaty' | 'astana' | 'other';
+type Region =
+  | 'kyzylorda-region' | 'zhambyl-region' | 'turkestan-region' | 'shymkent-city'
+  | 'astana-city' | 'almaty-region' | 'zhetysu-region' | 'west-kazakhstan'
+  | 'karaganda-region' | 'kostanay-region' | 'akmola-region' | 'aktobe-region'
+  | 'ulytau-region' | 'pavlodar-region' | 'abay-region' | 'mangystau-region'
+  | 'east-kazakhstan' | 'almaty-city' | 'north-kazakhstan' | 'atyrau-region';
 type NotaryParty = 'relatives' | 'others' | 'legal';
 
 export default function CarTransferCalculator() {
@@ -33,12 +38,34 @@ export default function CarTransferCalculator() {
   const OGPO_BASE_MRP = 1.9;
   const INSPECTION_COST = 7000;
 
-  // Территориальные коэффициенты ОГПО
-  const REGION_COEF: Record<Region, number> = {
-    almaty: 2.96,
-    astana: 2.96,
-    other: 1.86,
-  };
+  // Территориальные коэффициенты ОГПО ВТС — официальная пер-региональная таблица
+  // АРРФР (Пост. Правления Агентства №72 от 13.11.2025), действ. с 01.01.2026.
+  // Тот же справочник регионов, что и в калькуляторе ОГПО (InsuranceCalculator);
+  // прежняя грубая схема (Алматы/Астана 2.96, прочие 1.86) упразднена.
+  const TERRITORY_COEFFICIENTS: { id: Region; labelKey: string; coef: number }[] = [
+    { id: 'kyzylorda-region', labelKey: 'insurance-premium.regions.kyzylordaRegion', coef: 1.85 },
+    { id: 'zhambyl-region', labelKey: 'insurance-premium.regions.zhambylRegion', coef: 1.74 },
+    { id: 'turkestan-region', labelKey: 'insurance-premium.regions.turkestanRegion', coef: 1.69 },
+    { id: 'shymkent-city', labelKey: 'insurance-premium.regions.shymkentCity', coef: 1.61 },
+    { id: 'astana-city', labelKey: 'insurance-premium.regions.astanaCity', coef: 1.44 },
+    { id: 'almaty-region', labelKey: 'insurance-premium.regions.almatyRegion', coef: 1.44 },
+    { id: 'zhetysu-region', labelKey: 'insurance-premium.regions.zhetysuRegion', coef: 1.20 },
+    { id: 'west-kazakhstan', labelKey: 'insurance-premium.regions.westKazakhstan', coef: 1.19 },
+    { id: 'karaganda-region', labelKey: 'insurance-premium.regions.karagandaRegion', coef: 1.18 },
+    { id: 'kostanay-region', labelKey: 'insurance-premium.regions.kostanayRegion', coef: 1.11 },
+    { id: 'akmola-region', labelKey: 'insurance-premium.regions.akmolaRegion', coef: 1.08 },
+    { id: 'aktobe-region', labelKey: 'insurance-premium.regions.aktobeRegion', coef: 1.02 },
+    { id: 'ulytau-region', labelKey: 'insurance-premium.regions.ulytauRegion', coef: 0.99 },
+    { id: 'pavlodar-region', labelKey: 'insurance-premium.regions.pavlodarRegion', coef: 0.82 },
+    { id: 'abay-region', labelKey: 'insurance-premium.regions.abayRegion', coef: 0.80 },
+    { id: 'mangystau-region', labelKey: 'insurance-premium.regions.mangystauRegion', coef: 0.79 },
+    { id: 'east-kazakhstan', labelKey: 'insurance-premium.regions.eastKazakhstan', coef: 0.72 },
+    { id: 'almaty-city', labelKey: 'insurance-premium.regions.almatyCity', coef: 0.71 },
+    { id: 'north-kazakhstan', labelKey: 'insurance-premium.regions.northKazakhstan', coef: 0.67 },
+    { id: 'atyrau-region', labelKey: 'insurance-premium.regions.atyrauRegion', coef: 0.48 },
+  ];
+  const regionCoef = (r: Region) => TERRITORY_COEFFICIENTS.find((x) => x.id === r)?.coef ?? 1;
+  const regionLabelKey = (r: Region) => TERRITORY_COEFFICIENTS.find((x) => x.id === r)?.labelKey ?? '';
 
   // Входные параметры
   const [salePrice, setSalePrice] = useState<string>('5000000');
@@ -47,7 +74,7 @@ export default function CarTransferCalculator() {
   const [ownershipMonths, setOwnershipMonths] = useState<string>('0');
   const [keepPlates, setKeepPlates] = useState<boolean>(false);
   const [needInspection, setNeedInspection] = useState<boolean>(false);
-  const [region, setRegion] = useState<Region>('almaty');
+  const [region, setRegion] = useState<Region>('almaty-city');
   const [notaryParty, setNotaryParty] = useState<NotaryParty>('others');
   const [buyerAge, setBuyerAge] = useState<string>('35');
   const [buyerExperience, setBuyerExperience] = useState<string>('10');
@@ -94,7 +121,7 @@ export default function CarTransferCalculator() {
     if (experience >= 7) expCoef = 1.0;
     if (experience < 2) expCoef = 1.1;
 
-    const ogpoFee = Math.round(OGPO_BASE_MRP * MRP_2026 * REGION_COEF[region] * ageCoef * expCoef);
+    const ogpoFee = Math.round(OGPO_BASE_MRP * MRP_2026 * regionCoef(region) * ageCoef * expCoef);
 
     // Техосмотр
     const inspectionFee = needInspection ? INSPECTION_COST : 0;
@@ -242,21 +269,17 @@ export default function CarTransferCalculator() {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 {t('car-transfer.region')}
               </label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['almaty', 'astana', 'other'] as Region[]).map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => setRegion(r)}
-                    className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
-                      region === r
-                        ? 'border-amber-500 bg-amber-50 text-amber-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                    }`}
-                  >
-                    {t(`car-transfer.region${r.charAt(0).toUpperCase() + r.slice(1)}`)}
-                  </button>
+              <select
+                value={region}
+                onChange={(e) => setRegion(e.target.value as Region)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-colors"
+              >
+                {TERRITORY_COEFFICIENTS.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {t(r.labelKey)}
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
 
             {/* Notary party (relationship between seller and buyer) */}
@@ -455,7 +478,7 @@ export default function CarTransferCalculator() {
                     { label: t('car-transfer.salePrice'), value: fmt(parseFloat(salePrice) || 0) },
                     { label: t('car-transfer.purchasePrice'), value: fmt(parseFloat(purchasePrice) || 0) },
                     { label: t('car-transfer.ownershipYears'), value: `${ownershipYears} / ${ownershipMonths}` },
-                    { label: t('car-transfer.region'), value: t(`car-transfer.region${region.charAt(0).toUpperCase() + region.slice(1)}`) },
+                    { label: t('car-transfer.region'), value: t(regionLabelKey(region)) },
                     { label: t('car-transfer.notaryParty'), value: t(`car-transfer.notaryParty${notaryParty.charAt(0).toUpperCase() + notaryParty.slice(1)}`) },
                   ],
                 },

@@ -217,8 +217,6 @@ export default function NotaryServicesCalculator() {
             </h3>
             <p className="text-blue-800">
               {t('notary.dualStructureDesc')}
-              {' '}<strong>{t('notary.stateFee')}</strong> и <strong>{t('notary.technicalServices')}</strong>.
-              {' '}{t('notary.bothRequired')}
             </p>
           </div>
         </div>
@@ -447,7 +445,6 @@ export default function NotaryServicesCalculator() {
               <tr className="border-b border-gray-200">
                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">{t('notary.serviceColumn')}</th>
                 <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('notary.stateFeeColumn')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('notary.technicalColumn')}</th>
                 <th className="text-right py-3 px-4 text-sm font-medium text-gray-700">{t('notary.totalColumn')}</th>
               </tr>
             </thead>
@@ -458,7 +455,6 @@ export default function NotaryServicesCalculator() {
                   <span className="text-xs text-gray-500">{t('notary.cityIndividualsNotRelated')}</span>
                 </td>
                 <td className="py-3 px-4 text-center text-sm">{formatMRP(12)}</td>
-                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(12 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
@@ -467,25 +463,21 @@ export default function NotaryServicesCalculator() {
                   <span className="text-xs text-gray-500">{t('notary.individualsNotRelated')}</span>
                 </td>
                 <td className="py-3 px-4 text-center text-sm">{formatMRP(10)}</td>
-                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(10 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.willExample')}</td>
                 <td className="py-3 px-4 text-center text-sm">{formatMRP(3)}</td>
-                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(3 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.powerOfAttorneyExample')}</td>
                 <td className="py-3 px-4 text-center text-sm">{formatMRP(1.1)}</td>
-                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(1.1 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.copyExample')}</td>
                 <td className="py-3 px-4 text-center text-sm">{formatMRP(0.1)}</td>
-                <td className="py-3 px-4 text-center text-sm text-gray-400">—</td>
                 <td className="py-3 px-4 text-right font-semibold">{formatNumber(0.1 * MRP_2026)}</td>
               </tr>
             </tbody>
@@ -516,10 +508,9 @@ export default function NotaryServicesCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Технические услуги', value: results.technicalServiceFee },
-              { name: 'Госпошлина', value: results.stateFee },
-            ].filter(item => item.value > 0)}
-            title="Структура нотариальных услуг"
+              { name: t('notary.stateFeeLabel'), value: results.totalCost },
+            ]}
+            title={t('notary.serviceCost')}
           />
         </div>
       )}

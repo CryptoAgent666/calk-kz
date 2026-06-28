@@ -40,7 +40,9 @@ export default function RentalIncomeTaxCalculator() {
   // Лимит дохода — 300 МРП в МЕСЯЦ (≈1 297 500 ₸ при МРП 4325), а не полугодовой лимит патента.
   const SELF_EMPLOYED_RATE = 0.04; // суммарные соцплатежи самозанятого: 4% от дохода
   const SELF_EMPLOYED_LIMIT_MONTHLY = 300 * MRP;
-  const SIMPLIFIED_LIMIT_HALFYEAR = 300000 * MRP;
+  // Лимит дохода упрощёнки — 600 000 МРП в ГОД (новый НК K2500000214, ст.722-723);
+  // налоговый период остаётся полугодие. Прежняя формулировка «300 000 МРП за полугодие» устарела.
+  const SIMPLIFIED_LIMIT_ANNUAL = 600000 * MRP;
 
   const [monthlyRent, setMonthlyRent] = useState<string>('200000');
   const [propertyType, setPropertyType] = useState<PropertyType>('residential');
@@ -161,7 +163,7 @@ export default function RentalIncomeTaxCalculator() {
 
   // Самозанятые: лимит проверяется по МЕСЯЧНОМУ доходу (300 МРП/мес), не по полугодию.
   const patentLimitExceeded = (parseFloat(monthlyRent) || 0) > SELF_EMPLOYED_LIMIT_MONTHLY;
-  const simplifiedLimitExceeded = results.yearlyIncome / 2 > SIMPLIFIED_LIMIT_HALFYEAR;
+  const simplifiedLimitExceeded = results.yearlyIncome > SIMPLIFIED_LIMIT_ANNUAL;
 
   const regimeLabel = (r: TaxRegime) => t(`rental-income-tax.regime.${r}`);
 
