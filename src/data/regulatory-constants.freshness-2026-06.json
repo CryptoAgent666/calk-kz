@@ -364,18 +364,20 @@
   "our_value": 15,
   "official_value": "15% (МПО/личное польз.); 5% — внешняя эл. торговля с 01.07.2026",
   "status": "current",
-  "confidence": "medium",
-  "source": "https://www.kommersant.ru/doc/8339673",
-  "note": "Для традиционных МПО/товаров личного пользования (Реш.107) пошлина 15% со стоимости сверх €200 действует в 2026. ВАЖНО: для НОВОЙ категории 'внешняя электронная торговля' (маркетплейсы) Совет ЕЭК ввёл 5% (не менее €1/кг) с 01.07.2026 — если калькулятор считает покупки с маркетплейсов, перейти на 5%."
+  "confidence": "high",
+  "source": "https://eec.eaeunion.org/news/sovet-eek-ustanovil-porog-besposhlinnogo-vvoza-i-stavki-tamozhennykh-poshlin-dlya-tovarov-vneshney-e/",
+  "note": "Для традиционных МПО/товаров личного пользования (Реш.107) пошлина 15% со стоимости сверх €200 действует в 2026. РЕАЛИЗОВАНО в ParcelCustomsCalculator (переключатель режимов): для категории 'внешняя электронная торговля' (маркетплейсы) Совет ЕЭК ввёл 5% от полной таможенной стоимости сверх €200 (не менее €1/кг) + НДС с 01.07.2026. Подтверждено первоисточником ЕЭК 2026-06-24.",
+  "ecommerce": { "value": 5, "min_eur_per_kg": 1, "effective_from": "2026-07-01", "weight_limit_removed": true, "basis": "5% от полной таможенной стоимости при превышении порога 200 EUR" }
  },
  {
   "key": "customs_parcel_excess_duty_weight_eur_per_kg",
   "our_value": 2,
   "official_value": "€2/кг (МПО); €1/кг — внешняя эл. торговля с 01.07.2026",
   "status": "current",
-  "confidence": "medium",
-  "source": "https://www.kommersant.ru/doc/8339673",
-  "note": "€2/кг — классический минимум для МПО при превышении веса (Реш.107), действует в 2026. Для внешней электронной торговли с 01.07.2026 минимум = €1/кг при ставке 5%. Зависит от того, какой режим моделирует калькулятор."
+  "confidence": "high",
+  "source": "https://eec.eaeunion.org/news/sovet-eek-ustanovil-porog-besposhlinnogo-vvoza-i-stavki-tamozhennykh-poshlin-dlya-tovarov-vneshney-e/",
+  "note": "€2/кг — классический минимум для МПО при превышении веса (Реш.107), действует в 2026. Для внешней электронной торговли с 01.07.2026 минимум = €1/кг при ставке 5%. РЕАЛИЗОВАНО в ParcelCustomsCalculator через переключатель режимов. Подтверждено первоисточником ЕЭК 2026-06-24.",
+  "ecommerce": { "value": 1, "effective_from": "2026-07-01", "note": "минимум 1 EUR/кг как нижняя граница пошлины 5%" }
  },
  {
   "key": "gov_duty_court_property_individual_rate",

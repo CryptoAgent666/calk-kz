@@ -14,15 +14,22 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 const VALUE_LIMIT_EUR = 200;
+// Classic regime (обычные МПО, физлицо → физлицо)
 const WEIGHT_LIMIT_KG = 31;
-const DUTY_RATE_VALUE = 0.15;
-const DUTY_RATE_WEIGHT = 2;
+const DUTY_RATE_VALUE = 0.15; // 15% от суммы превышения стоимости
+const DUTY_RATE_WEIGHT = 2; // не менее 2 EUR/кг превышения веса
+// E-commerce regime (товары внешней электронной торговли, маркетплейсы) — Решение Совета ЕЭК, с 01.07.2026
+const ECOM_DUTY_RATE_VALUE = 0.05; // 5% от полной таможенной стоимости сверх порога
+const ECOM_DUTY_MIN_EUR_PER_KG = 1; // не менее 1 EUR/кг; весовой лимит 31 кг отменён
 const DEFAULT_EUR_RATE = 553.75;
 const DEFAULT_USD_RATE = 469.52;
+
+type ShipmentType = 'standard' | 'ecommerce';
 
 export default function ParcelCustomsCalculator() {
   const { t } = useTranslation('calculators');
 
+  const [shipmentType, setShipmentType] = useState<ShipmentType>('ecommerce');
   const [itemValue, setItemValue] = useState<string>('300');
   const [currency, setCurrency] = useState<'EUR' | 'USD' | 'KZT'>('EUR');
   const [eurRate, setEurRate] = useState<number>(DEFAULT_EUR_RATE);
@@ -85,13 +92,23 @@ export default function ParcelCustomsCalculator() {
     const totalValueEur = valueInEur + deliveryEur;
 
     const isValueExceeded = totalValueEur > VALUE_LIMIT_EUR;
-    const isWeightExceeded = weight > WEIGHT_LIMIT_KG;
+    // Весовой лимит применяется только в классическом режиме; для e-commerce он отменён
+    const isWeightExceeded = shipmentType === 'standard' && weight > WEIGHT_LIMIT_KG;
 
     const valueExcess = Math.max(0, totalValueEur - VALUE_LIMIT_EUR);
-    const weightExcess = Math.max(0, weight - WEIGHT_LIMIT_KG);
+    const weightExcess = shipmentType === 'standard' ? Math.max(0, weight - WEIGHT_LIMIT_KG) : 0;
 
-    const dutyByValue = valueExcess * DUTY_RATE_VALUE;
-    const dutyByWeight = weightExcess * DUTY_RATE_WEIGHT;
+    let dutyByValue: number;
+    let dutyByWeight: number;
+    if (shipmentType === 'ecommerce') {
+      // Сверх 200€ — 5% от ПОЛНОЙ таможенной стоимости, но не менее 1 EUR/кг (без весового лимита)
+      dutyByValue = isValueExceeded ? totalValueEur * ECOM_DUTY_RATE_VALUE : 0;
+      dutyByWeight = isValueExceeded ? weight * ECOM_DUTY_MIN_EUR_PER_KG : 0;
+    } else {
+      // Классика: 15% от суммы превышения стоимости, но не менее 2 EUR/кг превышения веса
+      dutyByValue = valueExcess * DUTY_RATE_VALUE;
+      dutyByWeight = weightExcess * DUTY_RATE_WEIGHT;
+    }
 
     const totalDutyEur = Math.max(dutyByValue, dutyByWeight);
     const totalDutyKzt = totalDutyEur * eurRate;
@@ -121,7 +138,7 @@ export default function ParcelCustomsCalculator() {
 
   useEffect(() => {
     calculateDuty();
-  }, [itemValue, currency, eurRate, usdRate, itemWeight, deliveryCost]);
+  }, [shipmentType, itemValue, currency, eurRate, usdRate, itemWeight, deliveryCost]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
@@ -189,11 +206,19 @@ export default function ParcelCustomsCalculator() {
               <p>
                 {t('parcel-customs.limitsValue', { limit: VALUE_LIMIT_EUR })}
               </p>
+              {shipmentType === 'standard' ? (
+                <p>
+                  {t('parcel-customs.limitsWeight', { limit: WEIGHT_LIMIT_KG })}
+                </p>
+              ) : (
+                <p>
+                  {t('parcel-customs.limitsWeightEcom')}
+                </p>
+              )}
               <p>
-                {t('parcel-customs.limitsWeight', { limit: WEIGHT_LIMIT_KG })}
-              </p>
-              <p>
-                {t('parcel-customs.limitsNote')}
+                {shipmentType === 'ecommerce'
+                  ? t('parcel-customs.limitsNoteEcom')
+                  : t('parcel-customs.limitsNote')}
               </p>
             </div>
           </div>
@@ -206,6 +231,40 @@ export default function ParcelCustomsCalculator() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('parcel-customs.inputTitle')}</h2>
 
           <div className="space-y-6">
+            {/* Shipment Type Toggle */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('parcel-customs.shipmentType')}
+              </label>
+              <div className="flex flex-col sm:flex-row border border-gray-300 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setShipmentType('ecommerce')}
+                  className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                    shipmentType === 'ecommerce'
+                      ? 'bg-amber-500 text-white'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {t('parcel-customs.shipmentEcommerce')}
+                </button>
+                <button
+                  onClick={() => setShipmentType('standard')}
+                  className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                    shipmentType === 'standard'
+                      ? 'bg-amber-500 text-white'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {t('parcel-customs.shipmentStandard')}
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                {shipmentType === 'ecommerce'
+                  ? t('parcel-customs.shipmentEcommerceHint')
+                  : t('parcel-customs.shipmentStandardHint')}
+              </p>
+            </div>
+
             {/* Currency Toggle */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -391,13 +450,23 @@ export default function ParcelCustomsCalculator() {
             {/* Info about limits */}
             <div className="bg-amber-50 rounded-lg p-4">
               <h3 className="text-sm font-medium text-amber-900 mb-2">{t('parcel-customs.currentLimits')}</h3>
-              <ul className="text-sm text-amber-800 space-y-1">
-                <li>{t('parcel-customs.limitValueLine', { limit: VALUE_LIMIT_EUR })}</li>
-                <li>{t('parcel-customs.limitWeightLine', { limit: WEIGHT_LIMIT_KG })}</li>
-                <li>{t('parcel-customs.dutyValueLine')}</li>
-                <li>{t('parcel-customs.dutyWeightLine')}</li>
-                <li>{t('parcel-customs.dutyHigherLine')}</li>
-              </ul>
+              {shipmentType === 'ecommerce' ? (
+                <ul className="text-sm text-amber-800 space-y-1">
+                  <li>{t('parcel-customs.limitValueLine', { limit: VALUE_LIMIT_EUR })}</li>
+                  <li>{t('parcel-customs.ecomNoWeightLimitLine')}</li>
+                  <li>{t('parcel-customs.ecomDutyValueLine')}</li>
+                  <li>{t('parcel-customs.ecomDutyWeightLine')}</li>
+                  <li>{t('parcel-customs.ecomVatLine')}</li>
+                </ul>
+              ) : (
+                <ul className="text-sm text-amber-800 space-y-1">
+                  <li>{t('parcel-customs.limitValueLine', { limit: VALUE_LIMIT_EUR })}</li>
+                  <li>{t('parcel-customs.limitWeightLine', { limit: WEIGHT_LIMIT_KG })}</li>
+                  <li>{t('parcel-customs.dutyValueLine')}</li>
+                  <li>{t('parcel-customs.dutyWeightLine')}</li>
+                  <li>{t('parcel-customs.dutyHigherLine')}</li>
+                </ul>
+              )}
             </div>
           </div>
         </div>
@@ -483,7 +552,9 @@ export default function ParcelCustomsCalculator() {
                 <>
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="text-gray-600">
-                      {t('parcel-customs.dutyByValue')} (15%)
+                      {shipmentType === 'ecommerce'
+                        ? `${t('parcel-customs.dutyByValue')} (5% ${t('parcel-customs.ecomOfFull')})`
+                        : `${t('parcel-customs.dutyByValue')} (15%)`}
                     </span>
                     <span className={`font-semibold ${results.dutyByValue >= results.dutyByWeight ? 'text-red-600' : 'text-gray-500'}`}>
                       {formatEur(results.dutyByValue)}
@@ -492,7 +563,9 @@ export default function ParcelCustomsCalculator() {
 
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="text-gray-600">
-                      {t('parcel-customs.dutyByWeight')} (2 EUR/{t('parcel-customs.kg')})
+                      {shipmentType === 'ecommerce'
+                        ? `${t('parcel-customs.dutyMinByWeight')} (1 EUR/${t('parcel-customs.kg')})`
+                        : `${t('parcel-customs.dutyByWeight')} (2 EUR/${t('parcel-customs.kg')})`}
                     </span>
                     <span className={`font-semibold ${results.dutyByWeight >= results.dutyByValue ? 'text-red-600' : 'text-gray-500'}`}>
                       {formatEur(results.dutyByWeight)}
@@ -503,9 +576,13 @@ export default function ParcelCustomsCalculator() {
                     <div className="flex items-center space-x-2">
                       <Scale className="w-4 h-4 text-yellow-700" />
                       <span className="text-sm font-medium text-yellow-900">
-                        {results.dutyByValue >= results.dutyByWeight
-                          ? t('parcel-customs.dutyByValueApplied')
-                          : t('parcel-customs.dutyByWeightApplied')}
+                        {shipmentType === 'ecommerce'
+                          ? (results.dutyByValue >= results.dutyByWeight
+                            ? t('parcel-customs.dutyFullValueApplied')
+                            : t('parcel-customs.dutyMinWeightApplied'))
+                          : (results.dutyByValue >= results.dutyByWeight
+                            ? t('parcel-customs.dutyByValueApplied')
+                            : t('parcel-customs.dutyByWeightApplied'))}
                       </span>
                     </div>
                   </div>

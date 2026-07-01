@@ -805,7 +805,17 @@
       "source_url": "https://kgd.gov.kz/ru/faq/221/227/54077",
       "official_value": "15",
       "verify_note": "Пошлина 15% от стоимости сверх 200 EUR (но не менее 2 EUR/кг превышения веса) — действует на 2026-06-23. ВНИМАНИЕ: с 01.07.2026 для е-коммерции вводится новая ставка 5% (но не менее 1 EUR/кг) + НДС. Значение верно на текущую дату, но истекает 01.07.2026.",
-      "reverified": "2026-06-23"
+      "reverified": "2026-06-23",
+      "ecommerce": {
+        "value": 5,
+        "unit": "percent",
+        "basis": "full_customs_value_over_threshold",
+        "effective_from": "2026-07-01",
+        "law": "Решение Совета ЕЭК (товары внешней электронной торговли, иностранные маркетплейсы)",
+        "source_url": "https://eec.eaeunion.org/news/sovet-eek-ustanovil-porog-besposhlinnogo-vvoza-i-stavki-tamozhennykh-poshlin-dlya-tovarov-vneshney-e/",
+        "note": "Для товаров внешней электронной торговли (покупки физлиц на иностранных маркетплейсах) с 01.07.2026: 5% от ПОЛНОЙ таможенной стоимости при превышении порога 200 EUR (не от суммы превышения), но не менее 1 EUR/кг, + НДС. Порог 200 EUR сохраняется, весовой лимит 31 кг отменён. Классические 15%/2 EUR·кг для обычных МПО (Реш.107) остаются в силе.",
+        "verified": "2026-06-24"
+      }
     },
     {
       "key": "customs_parcel_excess_duty_weight_eur_per_kg",
@@ -822,7 +832,17 @@
       "used_by": [
         "ParcelCustomsCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "ecommerce": {
+        "value": 1,
+        "unit": "factor",
+        "basis": "eur_per_kg_full_weight_floor",
+        "effective_from": "2026-07-01",
+        "law": "Решение Совета ЕЭК (товары внешней электронной торговли, иностранные маркетплейсы)",
+        "source_url": "https://eec.eaeunion.org/news/sovet-eek-ustanovil-porog-besposhlinnogo-vvoza-i-stavki-tamozhennykh-poshlin-dlya-tovarov-vneshney-e/",
+        "note": "Для товаров внешней электронной торговли с 01.07.2026 минимум = 1 EUR/кг (нижняя граница пошлины 5%). Классические 2 EUR/кг для обычных МПО остаются. Весовой лимит 31 кг для e-commerce отменён.",
+        "verified": "2026-06-24"
+      }
     },
     {
       "key": "gov_duty_court_property_individual_rate",
