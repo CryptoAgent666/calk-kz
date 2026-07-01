@@ -12,41 +12,55 @@ import { getSources } from '../../data/calculatorSources';
 import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-// Проходные баллы ЕНТ 2024 (на грант) — ориентировочные
+// Проходные баллы на ГРАНТ обновлены на конкурсные баллы приёмной кампании 2025 г.
+// (данные приёмных комиссий, агрегированы univision.kz; для КазНУ дополнительно
+// сверено с официальными порогами вуза). Баллы реально меняются каждый год по
+// конкурсу — используйте как ориентир, а не гарантию.
+// Балл "платно" обновлён там, где нашлась официальная 2025-цифра (КазНУ); иначе
+// сохранено прежнее ориентировочное значение.
+// Nazarbayev University и KIMEP НЕ участвуют в конкурсе по шкале ЕНТ (0–140) —
+// см. ownAdmissionNote вместо числовых порогов.
 interface University {
   id: string;
   name: string;
-  programs: { key: string; name: string; grant: number; paid: number }[];
+  ownAdmissionNote?: string;
+  programs: { key: string; name: string; grant?: number; paid?: number }[];
 }
 
 const UNIVERSITIES: University[] = [
   { id: 'kaznu', name: 'КазНУ им. Аль-Фараби', programs: [
-    { key: 'it', name: 'Информатика / IT', grant: 124, paid: 90 },
-    { key: 'law', name: 'Юриспруденция', grant: 118, paid: 85 },
-    { key: 'medicine', name: 'Медицина', grant: 125, paid: 95 },
-    { key: 'economy', name: 'Экономика', grant: 115, paid: 80 },
-    { key: 'philology', name: 'Филология', grant: 105, paid: 70 },
+    { key: 'it', name: 'Информатика / IT', grant: 90, paid: 75 },
+    { key: 'law', name: 'Юриспруденция', grant: 90, paid: 75 },
+    { key: 'medicine', name: 'Медицина', grant: 119, paid: 110 },
+    { key: 'economy', name: 'Экономика', grant: 98, paid: 65 },
+    { key: 'philology', name: 'Филология', grant: 118, paid: 70 },
   ]},
-  { id: 'nazarbayev', name: 'Nazarbayev University', programs: [
-    { key: 'it', name: 'Computer Science', grant: 135, paid: 130 },
-    { key: 'engineering', name: 'Engineering', grant: 130, paid: 125 },
-    { key: 'medicine', name: 'School of Medicine', grant: 135, paid: 130 },
-  ]},
+  { id: 'nazarbayev', name: 'Nazarbayev University',
+    ownAdmissionNote: 'NU не участвует в конкурсе по шкале ЕНТ (0–140): для гранта используется собственный тест NUET (0–240) либо результаты SAT/ACT/A-level/IB/олимпиад. Балл ЕНТ здесь не определяет шанс на грант (шкала «из 140» у NU существует только как порог допуска на платное место).',
+    programs: [
+      { key: 'it', name: 'Computer Science' },
+      { key: 'engineering', name: 'Engineering' },
+      { key: 'medicine', name: 'School of Medicine' },
+    ]},
   { id: 'satbayev', name: 'КазНИТУ им. Сатпаева', programs: [
-    { key: 'it', name: 'IT и программирование', grant: 115, paid: 75 },
-    { key: 'geology', name: 'Геология', grant: 105, paid: 60 },
-    { key: 'oil', name: 'Нефтегазовое дело', grant: 112, paid: 70 },
+    { key: 'it', name: 'IT и программирование', grant: 75, paid: 75 },
+    { key: 'geology', name: 'Геология', grant: 72, paid: 60 },
+    // 2025: узкая специальность «Нефтегазовое дело» грантов на очное обучение не получила;
+    // значение — по ближайшей укрупнённой группе «Горное дело» (мин. балл среди зачисленных).
+    { key: 'oil', name: 'Нефтегазовое дело', grant: 65, paid: 70 },
   ]},
   { id: 'enu', name: 'ЕНУ им. Гумилёва (Астана)', programs: [
-    { key: 'it', name: 'IT', grant: 120, paid: 80 },
-    { key: 'intRelations', name: 'Международные отношения', grant: 120, paid: 85 },
-    { key: 'law', name: 'Юриспруденция', grant: 115, paid: 80 },
+    { key: 'it', name: 'IT', grant: 110, paid: 80 },
+    { key: 'intRelations', name: 'Международные отношения', grant: 108, paid: 85 },
+    { key: 'law', name: 'Юриспруденция', grant: 96, paid: 80 },
   ]},
-  { id: 'kimep', name: 'KIMEP University', programs: [
-    { key: 'business', name: 'Business Administration', grant: 125, paid: 110 },
-    { key: 'law', name: 'Law', grant: 120, paid: 105 },
-    { key: 'it', name: 'IT', grant: 120, paid: 105 },
-  ]},
+  { id: 'kimep', name: 'KIMEP University',
+    ownAdmissionNote: 'KIMEP — частный вуз со своей системой отбора: средний балл аттестата (GPA), сертификат английского языка (IELTS/TOEFL) и внутренние конкурсы. Балл ЕНТ учитывается лишь как один из вспомогательных критериев — единой конкурсной шкалы «балл на грант» здесь нет.',
+    programs: [
+      { key: 'business', name: 'Business Administration' },
+      { key: 'law', name: 'Law' },
+      { key: 'it', name: 'IT' },
+    ]},
 ];
 
 // Максимальный балл ЕНТ = 140
@@ -74,10 +88,10 @@ export default function ENTScoreCalculator() {
     if (!universityData) return null;
     const programs = universityData.programs.map(p => ({
       ...p,
-      grantPass: totalScore >= p.grant,
-      paidPass: totalScore >= p.paid,
-      grantDiff: totalScore - p.grant,
-      paidDiff: totalScore - p.paid,
+      grantPass: p.grant !== undefined && totalScore >= p.grant,
+      paidPass: p.paid !== undefined && totalScore >= p.paid,
+      grantDiff: p.grant !== undefined ? totalScore - p.grant : 0,
+      paidDiff: p.paid !== undefined ? totalScore - p.paid : 0,
     }));
     return { programs, totalScore, maxScore: MAX_SCORE, percent: (totalScore / MAX_SCORE * 100).toFixed(1) };
   }, [universityData, totalScore]);
@@ -130,7 +144,14 @@ export default function ENTScoreCalculator() {
             </select>
           </div>
 
-          {results && (
+          {universityData?.ownAdmissionNote && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+              <div className="font-medium mb-1">Особая система приёма</div>
+              <div>{universityData.ownAdmissionNote}</div>
+            </div>
+          )}
+
+          {results && !universityData?.ownAdmissionNote && (
             <div className="space-y-2">
               <div className="text-sm font-medium">{t('ent-score.programs')}</div>
               {results.programs.map(p => (
