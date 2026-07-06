@@ -12,7 +12,6 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 type OperationType = 'trade' | 'mining' | 'staking' | 'swap';
 type PayerType = 'individual' | 'ip' | 'too';
@@ -343,7 +342,7 @@ export default function CryptoTaxCalculator() {
 
       <CalculatorExamples calculatorId="crypto-tax" />
 
-      <MethodologySection steps={getMethodology('crypto-tax')} />
+      <MethodologySection calculatorId="crypto-tax" />
       <FAQSection
         items={[
           { question: t('crypto-tax.faq.q1'), answer: t('crypto-tax.faq.a1') },

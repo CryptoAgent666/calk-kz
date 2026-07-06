@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Briefcase, Info, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -14,7 +13,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function IPSimplifiedCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [semiannualIncome, setSemiannualIncome] = useState<string>('3000000');
   const [hasEmployees, setHasEmployees] = useState<boolean>(false);
   const [numberOfEmployees, setNumberOfEmployees] = useState<string>('');
@@ -487,7 +486,7 @@ export default function IPSimplifiedCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="ip-simplified" />
-      <MethodologySection steps={getMethodology('ip-simplified')} />
+      <MethodologySection calculatorId="ip-simplified" />
       <FAQSection
         items={[
           { question: t('ip-simplified.faq.q1'), answer: t('ip-simplified.faq.a1') },
@@ -497,8 +496,8 @@ export default function IPSimplifiedCalculator() {
           { question: t('ip-simplified.faq.q5'), answer: t('ip-simplified.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК — СНР', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'Egov.kz — Регистрация ИП', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — АСР' : 'Налоговый кодекс РК — СНР', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'Egov.kz — ЖК тіркеу' : 'Egov.kz — Регистрация ИП', url: 'https://egov.kz/' },
         ]}
       />
 

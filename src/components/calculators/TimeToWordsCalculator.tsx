@@ -25,7 +25,7 @@ interface ConversionHistory {
 }
 
 export default function TimeToWordsCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [inputTime, setInputTime] = useState<string>('14:30');
   const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
   const [timeFormat, setTimeFormat] = useState<'24h' | '12h'>('24h');
@@ -1121,7 +1121,7 @@ export default function TimeToWordsCalculator() {
           { question: t('time-to-words.faq.q5'), answer: t('time-to-words.faq.a5') }
         ]}
         sources={[
-          { title: 'Правила произношения времени', url: 'https://gramota.ru/' },
+          { title: i18n.language === 'kk' ? 'Уақытты айту ережелері' : 'Правила произношения времени', url: 'https://gramota.ru/' },
         ]}
       />
 

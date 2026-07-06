@@ -3,7 +3,6 @@ import { Receipt, Calculator, AlertTriangle, CheckCircle, Calendar, TrendingUp, 
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -24,7 +23,7 @@ interface MonthlyTurnover {
 }
 
 export default function VATThresholdCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [calculationYear, setCalculationYear] = useState<number>(2026);
   const [monthlyTurnovers, setMonthlyTurnovers] = useState<{ [key: string]: string }>({
     january: '',
@@ -682,7 +681,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
               { name: 'Оборот', value: results.currentTotal },
               { name: 'До порога', value: Math.max(0, results.remainingToThreshold) },
             ]}
-            title="Прогресс к порогу НДС"
+            title={i18n.language === 'kk' ? 'ҚҚС шегіне жету барысы' : 'Прогресс к порогу НДС'}
           />
         </div>
       )}
@@ -713,7 +712,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="vat-threshold" />
-      <MethodologySection steps={getMethodology('vat-threshold')} />
+      <MethodologySection calculatorId="vat-threshold" />
       <FAQSection
         items={[
           { question: t('vat-threshold.faq.q1'), answer: t('vat-threshold.faq.a1') },
@@ -723,8 +722,8 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
           { question: t('vat-threshold.faq.q5'), answer: t('vat-threshold.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК — НДС', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'КГД — НДС', url: 'https://kgd.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — ҚҚС' : 'Налоговый кодекс РК — НДС', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'МКД — ҚҚС' : 'КГД — НДС', url: 'https://kgd.gov.kz/' },
         ]}
       />
 

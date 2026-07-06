@@ -11,10 +11,9 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function VehicleTaxCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [vehicleType, setVehicleType] = useState<'car' | 'truck' | 'bus'>('car');
   const [engineVolume, setEngineVolume] = useState<string>('2000');
   const [cargoCapacity, setCargoCapacity] = useState<string>('5');
@@ -428,7 +427,7 @@ export default function VehicleTaxCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="vehicle-tax" />
-      <MethodologySection steps={getMethodology('vehicle-tax')} />
+      <MethodologySection calculatorId="vehicle-tax" />
       <FAQSection
         items={[
           { question: t('vehicle-tax.faq.q1'), answer: t('vehicle-tax.faq.a1') },
@@ -438,8 +437,8 @@ export default function VehicleTaxCalculator() {
           { question: t('vehicle-tax.faq.q5'), answer: t('vehicle-tax.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК, глава 54', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'eGov.kz — Оплата налогов', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 54-тарау' : 'Налоговый кодекс РК, глава 54', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'eGov.kz — салық төлеу' : 'eGov.kz — Оплата налогов', url: 'https://egov.kz/' },
         ]}
       />
 

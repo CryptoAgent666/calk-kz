@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Scale, Calculator, Plus, Trash2, AlertTriangle, CheckCircle, Info, CreditCard } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -462,7 +461,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="debt-burden" />
-      <MethodologySection steps={getMethodology('debt-burden')} />
+      <MethodologySection calculatorId="debt-burden" />
       <FAQSection
         items={[
           { question: t('debt-burden.faq.q1'), answer: t('debt-burden.faq.a1') },

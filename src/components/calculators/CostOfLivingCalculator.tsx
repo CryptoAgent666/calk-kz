@@ -9,7 +9,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ComparisonBarChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 // Средние расходы по городам Казахстана (₸/месяц, 2026 оценка)
@@ -267,7 +266,7 @@ export default function CostOfLivingCalculator() {
       </div>
 
       {/* FAQ */}
-      <MethodologySection steps={getMethodology('cost-of-living')} />
+      <MethodologySection calculatorId="cost-of-living" />
       <FAQSection
         items={[
           { question: t('cost-living.faq.q1'), answer: t('cost-living.faq.a1') },

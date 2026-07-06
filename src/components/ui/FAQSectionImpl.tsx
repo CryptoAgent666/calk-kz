@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, HelpCircle, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { getMethodology } from '../../data/calculatorMethodology';
 
 interface FAQItem {
   question: string;
@@ -102,16 +103,24 @@ interface MethodologyStep {
 
 export interface MethodologySectionProps {
   title?: string;
-  steps: MethodologyStep[];
+  /** Explicit steps (used by calculators that build steps from i18n directly). */
+  steps?: MethodologyStep[];
+  /** Calculator id — resolves localized steps from the methodology registry. */
+  calculatorId?: string;
 }
 
 export function MethodologySection({
   title,
-  steps
+  steps,
+  calculatorId
 }: MethodologySectionProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const [isExpanded, setIsExpanded] = useState(false);
   const displayTitle = title || t('faq.howCalculated');
+  const lang = i18n.language === 'kk' ? 'kk' : 'ru';
+  const resolvedSteps = steps ?? (calculatorId ? getMethodology(calculatorId, lang) : []);
+
+  if (resolvedSteps.length === 0) return null;
 
   return (
     <div className="mt-6 print:hidden">
@@ -126,7 +135,7 @@ export function MethodologySection({
       <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? 'max-h-[1000px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
         <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
           <div className="space-y-4">
-            {steps.map((step) => (
+            {resolvedSteps.map((step) => (
               <div key={step.step} className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
                   {step.step}

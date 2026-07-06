@@ -12,10 +12,9 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function AlimonyCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [grossSalary, setGrossSalary] = useState<string>('300000');
   const [childrenCount, setChildrenCount] = useState<number>(1);
   const [isResident, setIsResident] = useState<boolean>(true);
@@ -573,7 +572,7 @@ ${t('alimony.exportAlimonyCalc')}
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="alimony" />
-      <MethodologySection steps={getMethodology('alimony')} />
+      <MethodologySection calculatorId="alimony" />
       <FAQSection
         items={[
           { question: t('alimony.faq.q1'), answer: t('alimony.faq.a1') },
@@ -583,8 +582,8 @@ ${t('alimony.exportAlimonyCalc')}
           { question: t('alimony.faq.q5'), answer: t('alimony.faq.a5') }
         ]}
         sources={[
-          { title: 'Кодекс о браке и семье РК', url: 'https://online.zakon.kz/document/?doc_id=31102748' },
-          { title: 'Судебная практика по алиментам', url: 'https://sud.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Неке және отбасы туралы кодексі' : 'Кодекс о браке и семье РК', url: 'https://online.zakon.kz/document/?doc_id=31102748' },
+          { title: i18n.language === 'kk' ? 'Алимент бойынша сот тәжірибесі' : 'Судебная практика по алиментам', url: 'https://sud.gov.kz/' },
         ]}
       />
 
@@ -596,7 +595,7 @@ ${t('alimony.exportAlimonyCalc')}
               { name: 'Алименты', value: results.alimonyAmount },
               { name: 'Остаток', value: results.remainingIncome },
             ]}
-            title="Распределение дохода"
+            title={i18n.language === 'kk' ? 'Табысты бөлу' : 'Распределение дохода'}
           />
         </div>
       )}

@@ -9,7 +9,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 // Проходные баллы на ГРАНТ обновлены на конкурсные баллы приёмной кампании 2025 г.
@@ -194,7 +193,7 @@ export default function ENTScoreCalculator() {
 
       <ExpertBlock />
       <CalculatorExamples calculatorId="ent-score" />
-      <MethodologySection steps={getMethodology('ent-score')} />
+      <MethodologySection calculatorId="ent-score" />
       <FAQSection items={[
         { question: t('ent-score.faq.q1'), answer: t('ent-score.faq.a1') },
         { question: t('ent-score.faq.q2'), answer: t('ent-score.faq.a2') },

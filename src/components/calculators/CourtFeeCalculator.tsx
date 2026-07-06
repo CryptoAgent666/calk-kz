@@ -10,11 +10,10 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function CourtFeeCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [claimantType, setClaimantType] = useState<'individual' | 'legal'>('individual');
   const [claimType, setClaimType] = useState<'property' | 'non-property'>('property');
   const [claimAmount, setClaimAmount] = useState<string>('1000000');
@@ -389,7 +388,7 @@ export default function CourtFeeCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="court-fee" />
-      <MethodologySection steps={getMethodology('court-fee')} />
+      <MethodologySection calculatorId="court-fee" />
       <FAQSection
         items={[
           { question: t('court-fee.faq.q1'), answer: t('court-fee.faq.a1') },
@@ -399,8 +398,8 @@ export default function CourtFeeCalculator() {
           { question: t('court-fee.faq.q5'), answer: t('court-fee.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК (ст. 665, с 01.01.2026), ставки госпошлины в судах', url: 'https://egov.kz/cms/ru/articles/court_proceedings/stamp_tax' },
-          { title: 'Судебная система РК', url: 'https://sud.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі (665-бап, 01.01.2026 бастап), соттардағы мемлекеттік баж мөлшерлемелері' : 'Налоговый кодекс РК (ст. 665, с 01.01.2026), ставки госпошлины в судах', url: 'https://egov.kz/cms/ru/articles/court_proceedings/stamp_tax' },
+          { title: i18n.language === 'kk' ? 'ҚР сот жүйесі' : 'Судебная система РК', url: 'https://sud.gov.kz/' },
         ]}
       />
 
@@ -411,7 +410,7 @@ export default function CourtFeeCalculator() {
             data={[
               { name: 'Госпошлина', value: results.feeAmount },
             ]}
-            title="Судебная госпошлина"
+            title={i18n.language === 'kk' ? 'Сот мемлекеттік бажы' : 'Судебная госпошлина'}
           />
         </div>
       )}

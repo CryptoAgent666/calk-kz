@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Baby, Calendar, Heart, Info, AlertTriangle, Star, Clock, Target, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
@@ -13,7 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { ProgressBar } from '../ui/ChartComponents';
 
 export default function PregnancyCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [lastPeriodDate, setLastPeriodDate] = useState<string>('');
 
   const [results, setResults] = useState({
@@ -644,7 +643,7 @@ export default function PregnancyCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="pregnancy" />
-      <MethodologySection steps={getMethodology('pregnancy')} />
+      <MethodologySection calculatorId="pregnancy" />
       <FAQSection
         items={[
           { question: t('pregnancy.faq.q1'), answer: t('pregnancy.faq.a1') },
@@ -657,7 +656,7 @@ export default function PregnancyCalculator() {
           { title: 'ACOG — Estimating the Due Date', url: 'https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date' },
           { title: 'WHO — Antenatal care', url: 'https://www.who.int/publications/i/item/9789241549912' },
           { title: 'Mayo Clinic — Fetal development', url: 'https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045302' },
-          { title: 'РЦРЗ МЗ РК — Клинические протоколы', url: 'https://www.rcrz.kz/index.php/ru/2017-03-12-10-50-44/klinicheskie-protokoly' },
+          { title: i18n.language === 'kk' ? 'РЦРЗ ҚР ДСМ — Клиникалық хаттамалар' : 'РЦРЗ МЗ РК — Клинические протоколы', url: 'https://www.rcrz.kz/index.php/ru/2017-03-12-10-50-44/klinicheskie-protokoly' },
         ]}
       />
 

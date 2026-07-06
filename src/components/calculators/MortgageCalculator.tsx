@@ -11,7 +11,6 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface MortgageProgram {
   id: string;
@@ -31,7 +30,7 @@ interface MortgageProgram {
 }
 
 export default function MortgageCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [selectedProgram, setSelectedProgram] = useState<string>('halyk-standard');
   const [propertyValue, setPropertyValue] = useState<string>('25000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
@@ -1020,12 +1019,12 @@ export default function MortgageCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="mortgage-specialized" />
-      <MethodologySection steps={getMethodology('mortgage-specialized')} />
+      <MethodologySection calculatorId="mortgage-specialized" />
       <FAQSection
         items={faqItems}
         sources={[
-          { title: 'Программа 7-20-25', url: 'https://www.gov.kz/memleket/entities/economy/press/news/details/14659' },
-          { title: 'Закон об ипотеке РК', url: 'https://online.zakon.kz/document/?doc_id=1013060' },
+          { title: i18n.language === 'kk' ? '7-20-25 бағдарламасы' : 'Программа 7-20-25', url: 'https://www.gov.kz/memleket/entities/economy/press/news/details/14659' },
+          { title: i18n.language === 'kk' ? 'ҚР Ипотека туралы заңы' : 'Закон об ипотеке РК', url: 'https://online.zakon.kz/document/?doc_id=1013060' },
         ]}
       />
 

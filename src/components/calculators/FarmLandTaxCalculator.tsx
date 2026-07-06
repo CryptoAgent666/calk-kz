@@ -13,7 +13,7 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function FarmLandTaxCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [region, setRegion] = useState<string>('almaty-region');
   const [landArea, setLandArea] = useState<string>('100');
   const [bonityScoret, setBonityScoret] = useState<string>('50');
@@ -1032,8 +1032,8 @@ export default function FarmLandTaxCalculator() {
           { question: t('farm-land-tax.faq.q5'), answer: t('farm-land-tax.faq.a5') }
         ]}
         sources={[
-          { title: 'Земельный кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=1040583' },
-          { title: 'Налоговый кодекс РК — земельный налог', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Жер кодексі' : 'Земельный кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=1040583' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — жер салығы' : 'Налоговый кодекс РК — земельный налог', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
         ]}
       />
 

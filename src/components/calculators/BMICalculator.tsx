@@ -13,10 +13,9 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function BMICalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [height, setHeight] = useState<string>('175');
   const [weight, setWeight] = useState<string>('75');
   const [age, setAge] = useState<string>('30');
@@ -601,7 +600,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="bmi" />
-      <MethodologySection steps={getMethodology('bmi')} />
+      <MethodologySection calculatorId="bmi" />
       <FAQSection
         items={[
           { question: t('bmi.faq.q1'), answer: t('bmi.faq.a1') },
@@ -625,7 +624,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
               { name: 'Текущий вес', value: parseFloat(weight) || 0 },
               { name: 'Норма (макс.)', value: results.normalWeightRange.max },
             ]}
-            title="Сравнение веса"
+            title={i18n.language === 'kk' ? 'Салмақты салыстыру' : 'Сравнение веса'}
           />
         </div>
       )}

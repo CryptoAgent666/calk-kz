@@ -10,7 +10,6 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { TaxPieChart } from '../ui/ChartComponents';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface TariffTier {
   min: number;
@@ -27,7 +26,7 @@ interface CityTariff {
 }
 
 export default function ElectricityBillCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [city, setCity] = useState<string>('astana');
   const [consumption, setConsumption] = useState<string>('150');
   const [stoveType, setStoveType] = useState<'electric' | 'gas'>('electric');
@@ -434,7 +433,7 @@ export default function ElectricityBillCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="electricity" />
-      <MethodologySection steps={getMethodology('electricity')} />
+      <MethodologySection calculatorId="electricity" />
       <FAQSection
         items={[
           { question: t('electricity.faq.q1'), answer: t('electricity.faq.a1') },
@@ -444,7 +443,7 @@ export default function ElectricityBillCalculator() {
           { question: t('electricity.faq.q5'), answer: t('electricity.faq.a5') }
         ]}
         sources={[
-          { title: 'KEGOC — Энергетика Казахстана', url: 'https://www.kegoc.kz/' },
+          { title: i18n.language === 'kk' ? 'KEGOC — Қазақстан энергетикасы' : 'KEGOC — Энергетика Казахстана', url: 'https://www.kegoc.kz/' },
           { title: 'АО "Самрук-Энерго"', url: 'https://www.samruk-energy.kz/' },
         ]}
       />
@@ -456,7 +455,7 @@ export default function ElectricityBillCalculator() {
             data={[
               { name: 'Электроэнергия', value: results.totalAmount },
             ]}
-            title="Оплата за электроэнергию"
+            title={i18n.language === 'kk' ? 'Электр энергиясы үшін төлем' : 'Оплата за электроэнергию'}
           />
         </div>
       )}

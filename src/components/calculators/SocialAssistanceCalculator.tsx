@@ -12,7 +12,7 @@ import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function SocialAssistanceCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [quarterlyIncome, setQuarterlyIncome] = useState<string>('200000');
   const [familyMembers, setFamilyMembers] = useState<string>('4');
   const [region, setRegion] = useState<string>('almaty');
@@ -605,7 +605,7 @@ export default function SocialAssistanceCalculator() {
             data={[
               { name: 'АСП', value: results.aspAmount },
             ]}
-            title="Адресная социальная помощь"
+            title={i18n.language === 'kk' ? 'Атаулы әлеуметтік көмек' : 'Адресная социальная помощь'}
           />
         </div>
       )}
@@ -650,8 +650,8 @@ export default function SocialAssistanceCalculator() {
           { question: t('social-assistance.faq.q5'), answer: t('social-assistance.faq.a5') }
         ]}
         sources={[
-          { title: 'Закон об АСП', url: 'https://online.zakon.kz/document/?doc_id=1040571' },
-          { title: 'eGov.kz — соцпомощь', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'АӘК туралы заң' : 'Закон об АСП', url: 'https://online.zakon.kz/document/?doc_id=1040571' },
+          { title: i18n.language === 'kk' ? 'eGov.kz — әлеуметтік көмек' : 'eGov.kz — соцпомощь', url: 'https://egov.kz/' },
         ]}
       />
 

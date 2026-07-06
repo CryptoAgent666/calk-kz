@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type WorkType = 'weekend' | 'holiday' | 'night' | 'overtime12' | 'overtime3plus';
@@ -175,7 +174,7 @@ export default function OvertimeCalculator() {
       <LegalDisclaimer type="social" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="overtime" />
-      <MethodologySection steps={getMethodology('overtime')} />
+      <MethodologySection calculatorId="overtime" />
       <FAQSection items={[
         { question: t('overtime.faq.q1'), answer: t('overtime.faq.a1') },
         { question: t('overtime.faq.q2'), answer: t('overtime.faq.a2') },

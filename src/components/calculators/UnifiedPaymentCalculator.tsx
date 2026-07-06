@@ -6,7 +6,6 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -282,7 +281,7 @@ ${t('unified-payment.breakdown')}:
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="unified-payment" />
-      <MethodologySection steps={getMethodology('unified-payment')} />
+      <MethodologySection calculatorId="unified-payment" />
       <FAQSection
         items={[
           { question: t('unified-payment.faq.q1'), answer: t('unified-payment.faq.a1') },
@@ -292,8 +291,8 @@ ${t('unified-payment.breakdown')}:
           { question: t('unified-payment.faq.q5'), answer: t('unified-payment.faq.a5') },
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'Единый платёж — egov.kz', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'Бірыңғай төлем — egov.kz' : 'Единый платёж — egov.kz', url: 'https://egov.kz/' },
         ]}
       />
 

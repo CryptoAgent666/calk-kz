@@ -4,7 +4,6 @@ import { Banknote, AlertTriangle, Calendar, Percent, TrendingUp, Info, UserCheck
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
@@ -59,7 +58,7 @@ const LOAN_TYPES = {
 };
 
 export default function MicroloanCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [loanType, setLoanType] = useState<LoanType>('online');
   const [amount, setAmount] = useState<string>('100000');
   const [rate, setRate] = useState<string>('0.25');
@@ -424,7 +423,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                   { name: 'Основной долг', value: parseFloat(amount) || 0 },
                   { name: 'Переплата', value: results.totalInterest },
                 ]}
-                title="Структура выплат"
+                title={i18n.language === 'kk' ? 'Төлемдер құрылымы' : 'Структура выплат'}
               />
 
               {/* Экспорт результатов */}
@@ -761,7 +760,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="microloan" />
-      <MethodologySection steps={getMethodology('microloan')} />
+      <MethodologySection calculatorId="microloan" />
       <FAQSection
         items={[
           { question: t('microloan.faq.q1'), answer: t('microloan.faq.a1') },
@@ -771,8 +770,8 @@ ${t('microloan.export.calculator')}: Calk.kz`;
           { question: t('microloan.faq.q5'), answer: t('microloan.faq.a5') }
         ]}
         sources={[
-          { title: 'АРРФР — Реестр МФО', url: 'https://finreg.kz/' },
-          { title: 'Закон о микрофинансовой деятельности', url: 'https://online.zakon.kz/document/?doc_id=31106926' },
+          { title: i18n.language === 'kk' ? 'ҚНРДА — МҚҰ тізілімі' : 'АРРФР — Реестр МФО', url: 'https://finreg.kz/' },
+          { title: i18n.language === 'kk' ? 'Микроқаржылық қызмет туралы заң' : 'Закон о микрофинансовой деятельности', url: 'https://online.zakon.kz/document/?doc_id=31106926' },
         ]}
       />
 

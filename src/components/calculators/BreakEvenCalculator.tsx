@@ -20,7 +20,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 type TaxRate = 0 | 4 | 10;
 
@@ -421,7 +420,7 @@ calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="break-even" />
-      <MethodologySection steps={getMethodology('break-even')} />
+      <MethodologySection calculatorId="break-even" />
       <FAQSection
         items={[
           { question: t('break-even.faq.q1'), answer: t('break-even.faq.a1') },

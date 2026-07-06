@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface Card {
   id: string;
@@ -167,7 +166,7 @@ export default function CashbackCalculator() {
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="cashback" />
-      <MethodologySection steps={getMethodology('cashback')} />
+      <MethodologySection calculatorId="cashback" />
       <FAQSection items={[
         { question: t('cashback.faq.q1'), answer: t('cashback.faq.a1') },
         { question: t('cashback.faq.q2'), answer: t('cashback.faq.a2') },

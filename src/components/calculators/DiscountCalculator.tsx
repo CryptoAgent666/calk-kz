@@ -4,7 +4,6 @@ import { ShoppingBag, Calculator, Percent, TrendingDown, Target, Info, AlertTria
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
@@ -1242,7 +1241,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
               { name: 'Скидка', value: results.discountAmount },
               { name: 'К оплате', value: results.finalPrice },
             ]}
-            title="Структура цены"
+            title={i18n.language === 'kk' ? 'Баға құрылымы' : 'Структура цены'}
           />
           <ExportButtons
             data={{
@@ -1268,7 +1267,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="discount" />
-      <MethodologySection steps={getMethodology('discount')} />
+      <MethodologySection calculatorId="discount" />
       <FAQSection
         items={[
           { question: t('discount.faq.q1'), answer: t('discount.faq.a1') },
@@ -1278,8 +1277,8 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
           { question: t('discount.faq.q5'), answer: t('discount.faq.a5') }
         ]}
         sources={[
-          { title: 'Права потребителей РК', url: 'https://adilet.zan.kz/rus/docs/Z010000221_' },
-          { title: 'Kaspi.kz — сравнение цен', url: 'https://kaspi.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР тұтынушылар құқықтары' : 'Права потребителей РК', url: 'https://adilet.zan.kz/rus/docs/Z010000221_' },
+          { title: i18n.language === 'kk' ? 'Kaspi.kz — баға салыстыру' : 'Kaspi.kz — сравнение цен', url: 'https://kaspi.kz/' },
         ]}
       />
 

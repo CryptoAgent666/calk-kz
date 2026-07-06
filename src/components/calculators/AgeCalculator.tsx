@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Cake, Calendar, Clock, Heart, User, Users } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -390,7 +389,7 @@ export default function AgeCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="age" />
-      <MethodologySection steps={getMethodology('age')} />
+      <MethodologySection calculatorId="age" />
       <FAQSection
         items={[
           { question: t('age.faq.q1'), answer: t('age.faq.a1') },
@@ -400,8 +399,8 @@ export default function AgeCalculator() {
           { question: t('age.faq.q5'), answer: t('age.faq.a5') }
         ]}
         sources={[
-          { title: 'Пенсионный возраст РК', url: 'https://www.enbek.gov.kz/' },
-          { title: 'Григорианский календарь', url: 'https://ru.wikipedia.org/wiki/Григорианский_календарь' }
+          { title: i18n.language === 'kk' ? 'ҚР зейнеткерлік жасы' : 'Пенсионный возраст РК', url: 'https://www.enbek.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'Григориан күнтізбесі' : 'Григорианский календарь', url: 'https://ru.wikipedia.org/wiki/Григорианский_календарь' }
         ]}
       />
 

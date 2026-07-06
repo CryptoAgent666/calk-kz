@@ -11,7 +11,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 type Shape = 'slab' | 'column' | 'foundation' | 'stairs';
 
@@ -220,7 +219,7 @@ export default function ConcreteVolumeCalculator() {
       <LegalDisclaimer type="construction" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="concrete-volume" />
-      <MethodologySection steps={getMethodology('concrete-volume')} />
+      <MethodologySection calculatorId="concrete-volume" />
       <FAQSection items={[
         { question: t('concrete.faq.q1'), answer: t('concrete.faq.a1') },
         { question: t('concrete.faq.q2'), answer: t('concrete.faq.a2') },

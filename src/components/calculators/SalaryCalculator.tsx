@@ -12,10 +12,9 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function SalaryCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [grossSalary, setGrossSalary] = useState<string>('300000');
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
@@ -430,7 +429,7 @@ ${t('salary.effectiveTaxRate')}:
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="salary" />
-      <MethodologySection steps={getMethodology('salary')} />
+      <MethodologySection calculatorId="salary" />
       <FAQSection
         items={[
           { question: t('salary.faq.q1'), answer: t('salary.faq.a1') },
@@ -440,8 +439,8 @@ ${t('salary.effectiveTaxRate')}:
           { question: t('salary.faq.q5'), answer: t('salary.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'ЕНПФ — Пенсионные отчисления', url: 'https://enpf.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'БЖЗҚ — Зейнетақы аударымдары' : 'ЕНПФ — Пенсионные отчисления', url: 'https://enpf.kz/' },
         ]}
       />
 

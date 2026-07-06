@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingDown, Calculator, BarChart3, Info, Calendar } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -368,7 +367,7 @@ export default function InflationCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="inflation" />
-      <MethodologySection steps={getMethodology('inflation')} />
+      <MethodologySection calculatorId="inflation" />
       <FAQSection
         items={[
           { question: t('inflation.faq.q1'), answer: t('inflation.faq.a1') },

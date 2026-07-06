@@ -12,7 +12,6 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { pluralize } from '../../utils/pluralize';
 
 export default function RentOrBuyCalculator() {
@@ -891,7 +890,7 @@ export default function RentOrBuyCalculator() {
               { name: 'Покупка', value: results.netOwnershipCost },
               { name: 'Аренда', value: results.totalRentingCost },
             ]}
-            title="Сравнение расходов"
+            title={i18n.language === 'kk' ? 'Шығындарды салыстыру' : 'Сравнение расходов'}
           />
         </div>
       )}
@@ -930,7 +929,7 @@ export default function RentOrBuyCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="rent-vs-buy" />
-      <MethodologySection steps={getMethodology('rent-vs-buy')} />
+      <MethodologySection calculatorId="rent-vs-buy" />
       <FAQSection
         items={[
           { question: t('rent-vs-buy.faq.q1'), answer: t('rent-vs-buy.faq.a1') },
@@ -940,8 +939,8 @@ export default function RentOrBuyCalculator() {
           { question: t('rent-vs-buy.faq.q5'), answer: t('rent-vs-buy.faq.a5') }
         ]}
         sources={[
-          { title: 'Krisha.kz — рынок недвижимости', url: 'https://krisha.kz/' },
-          { title: 'Статистика цен НБ РК', url: 'https://nationalbank.kz/' },
+          { title: i18n.language === 'kk' ? 'Krisha.kz — жылжымайтын мүлік нарығы' : 'Krisha.kz — рынок недвижимости', url: 'https://krisha.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР ҰБ — Баға статистикасы' : 'Статистика цен НБ РК', url: 'https://nationalbank.kz/' },
         ]}
       />
 

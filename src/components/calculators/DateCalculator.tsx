@@ -27,7 +27,7 @@ interface CalculationHistory {
 }
 
 export default function DateCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [operation, setOperation] = useState<'add' | 'subtract'>('add');
   const [years, setYears] = useState<string>('');
@@ -1001,8 +1001,8 @@ export default function DateCalculator() {
           { question: t('date-calculator.faq.q5'), answer: t('date-calculator.faq.a5') }
         ]}
         sources={[
-          { title: 'Производственный календарь РК', url: 'https://egov.kz/' },
-          { title: 'Трудовой кодекс РК — праздники', url: 'https://online.zakon.kz/document/?doc_id=38910832' },
+          { title: i18n.language === 'kk' ? 'ҚР өндірістік күнтізбесі' : 'Производственный календарь РК', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Еңбек кодексі — мереке күндері' : 'Трудовой кодекс РК — праздники', url: 'https://online.zakon.kz/document/?doc_id=38910832' },
         ]}
       />
 

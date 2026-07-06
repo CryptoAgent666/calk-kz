@@ -4,7 +4,6 @@ import { RefreshCw, TrendingDown, TrendingUp, AlertCircle, CheckCircle, Calendar
 import InputField from '../InputField';
 import SharePrintButtons from '../SharePrintButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
@@ -31,7 +30,7 @@ interface CalculationResults {
 }
 
 export default function RefinancingCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [remainingBalance, setRemainingBalance] = useState<string>('5000000');
   const [currentRate, setCurrentRate] = useState<string>('18');
   const [remainingTerm, setRemainingTerm] = useState<string>('60');
@@ -623,7 +622,7 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="refinancing" />
-      <MethodologySection steps={getMethodology('refinancing')} />
+      <MethodologySection calculatorId="refinancing" />
       <FAQSection
         items={[
           { question: t('refinancing.faq.q1'), answer: t('refinancing.faq.a1') },
@@ -633,8 +632,8 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
           { question: t('refinancing.faq.q5'), answer: t('refinancing.faq.a5') }
         ]}
         sources={[
-          { title: 'Нацбанк РК — Базовая ставка', url: 'https://nationalbank.kz/ru/news/bazovaya-stavka' },
-          { title: 'Сравнение условий рефинансирования', url: 'https://finprom.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Ұлттық Банкі — Базалық мөлшерлеме' : 'Нацбанк РК — Базовая ставка', url: 'https://nationalbank.kz/ru/news/bazovaya-stavka' },
+          { title: i18n.language === 'kk' ? 'Қайта қаржыландыру шарттарын салыстыру' : 'Сравнение условий рефинансирования', url: 'https://finprom.kz/' },
         ]}
       />
 

@@ -9,7 +9,6 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 // Базовые цены за м² по городам и зонам (₸, 2026)
@@ -475,7 +474,7 @@ export default function ApartmentValuationCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="apartment-valuation" />
-      <MethodologySection steps={getMethodology('apartment-valuation')} />
+      <MethodologySection calculatorId="apartment-valuation" />
       <FAQSection
         items={[
           { question: t('apartment-valuation.faq.q1'), answer: t('apartment-valuation.faq.a1') },

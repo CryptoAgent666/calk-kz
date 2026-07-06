@@ -11,7 +11,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface FuelType {
   id: string;
@@ -353,7 +352,7 @@ calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="fuel-cost" />
-      <MethodologySection steps={getMethodology('fuel-cost')} />
+      <MethodologySection calculatorId="fuel-cost" />
       <FAQSection
         items={[
           { question: t('fuel-cost.faq.q1'), answer: t('fuel-cost.faq.a1') },

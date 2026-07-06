@@ -13,7 +13,6 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface VATItem {
   id: string;
@@ -34,7 +33,7 @@ interface CalculationHistory {
 }
 
 export default function VATCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [calculationType, setCalculationType] = useState<'add' | 'extract' | 'bulk'>('add');
   const [amount, setAmount] = useState<string>('100000');
   const [vatRate, setVatRate] = useState<string>('16');
@@ -902,7 +901,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="vat" />
-      <MethodologySection steps={getMethodology('vat')} />
+      <MethodologySection calculatorId="vat" />
       <FAQSection
         items={[
           { question: t('vat.faq.q1'), answer: t('vat.faq.a1') },
@@ -912,8 +911,8 @@ ${t('vat.export.formula')}: ${results.formula}`;
           { question: t('vat.faq.q5'), answer: t('vat.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК, Раздел 10', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'Комитет государственных доходов', url: 'https://kgd.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 10-бөлім' : 'Налоговый кодекс РК, Раздел 10', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'Мемлекеттік кірістер комитеті' : 'Комитет государственных доходов', url: 'https://kgd.gov.kz/' },
         ]}
       />
 
@@ -925,7 +924,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
               { name: 'Сумма без НДС', value: results.amountWithoutVat },
               { name: 'НДС', value: results.vatAmount },
             ]}
-            title="Структура суммы с НДС"
+            title={i18n.language === 'kk' ? 'ҚҚС қосылған соманың құрылымы' : 'Структура суммы с НДС'}
           />
         </div>
       )}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Calculator, Users, Calendar, Heart, Star, Info, AlertTriangle, Gift, Clock, Book, Target, BarChart3 } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -14,7 +13,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function RamadanSadaqahCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [calculationType, setCalculationType] = useState<'fitr' | 'fidya' | 'both'>('fitr');
   const [familyMembers, setFamilyMembers] = useState<string>('1');
   const [missedFastingDays, setMissedFastingDays] = useState<string>('0');
@@ -998,7 +997,7 @@ export default function RamadanSadaqahCalculator() {
               { name: 'Фитр-садака', value: results.fitrSadaqahAmount },
               { name: 'Фидия', value: results.fidyaSadaqahAmount },
             ].filter(item => item.value > 0)}
-            title="Структура выплат Рамадан"
+            title={i18n.language === 'kk' ? 'Рамазан төлемдерінің құрылымы' : 'Структура выплат Рамадан'}
           />
         </div>
       )}
@@ -1036,7 +1035,7 @@ export default function RamadanSadaqahCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="ramadan-sadaqah" />
-      <MethodologySection steps={getMethodology('ramadan-sadaqah')} />
+      <MethodologySection calculatorId="ramadan-sadaqah" />
       <FAQSection
         items={[
           { question: t('ramadan-sadaqah.faq.q1'), answer: t('ramadan-sadaqah.faq.a1') },
@@ -1046,8 +1045,8 @@ export default function RamadanSadaqahCalculator() {
           { question: t('ramadan-sadaqah.faq.q5'), answer: t('ramadan-sadaqah.faq.a5') }
         ]}
         sources={[
-          { title: 'ДУМК — Рамадан', url: 'https://muftyat.kz/' },
-          { title: 'IslamQ&A — Садака', url: 'https://islamqa.info/' },
+          { title: i18n.language === 'kk' ? 'ҚМДБ — Рамазан' : 'ДУМК — Рамадан', url: 'https://muftyat.kz/' },
+          { title: i18n.language === 'kk' ? 'IslamQ&A — Садақа' : 'IslamQ&A — Садака', url: 'https://islamqa.info/' },
         ]}
       />
 

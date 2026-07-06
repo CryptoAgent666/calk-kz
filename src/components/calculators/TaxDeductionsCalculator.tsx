@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Receipt, Info, AlertTriangle, TrendingUp, FileText, CheckCircle, ShieldCheck, XCircle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -16,7 +15,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 type SocialCategory = 'none' | 'group3' | 'group12';
 
 export default function TaxDeductionsCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [monthlyIncome, setMonthlyIncome] = useState<number>(500000);
   const [socialCategory, setSocialCategory] = useState<SocialCategory>('none');
@@ -544,7 +543,7 @@ export default function TaxDeductionsCalculator() {
       )}
 
       <CalculatorExamples calculatorId="tax-deductions" />
-      <MethodologySection steps={getMethodology('tax-deductions')} />
+      <MethodologySection calculatorId="tax-deductions" />
       <FAQSection
         items={[
           { question: t('tax-deductions.faq.q1'), answer: t('tax-deductions.faq.a1') },
@@ -554,8 +553,8 @@ export default function TaxDeductionsCalculator() {
           { question: t('tax-deductions.faq.q5'), answer: t('tax-deductions.faq.a5') },
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК — ст. 401–404, 439', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
-          { title: 'КГД МФ РК', url: 'https://kgd.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — 401–404, 439-баптар' : 'Налоговый кодекс РК — ст. 401–404, 439', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
+          { title: i18n.language === 'kk' ? 'ҚР ҚМ МКД' : 'КГД МФ РК', url: 'https://kgd.gov.kz/' },
         ]}
       />
 

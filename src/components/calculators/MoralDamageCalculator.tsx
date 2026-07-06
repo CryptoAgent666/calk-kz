@@ -9,7 +9,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 const MRP_2026 = 4325;
@@ -206,7 +205,7 @@ export default function MoralDamageCalculator() {
 
       <LegalDisclaimer type="legal" />
       <ExpertBlock />
-      <MethodologySection steps={getMethodology('moral-damage')} />
+      <MethodologySection calculatorId="moral-damage" />
       <FAQSection items={[
         { question: t('moral-damage.faq.q1'), answer: t('moral-damage.faq.a1') },
         { question: t('moral-damage.faq.q2'), answer: t('moral-damage.faq.a2') },

@@ -20,7 +20,7 @@ type Region =
 type NotaryParty = 'relatives' | 'others' | 'legal';
 
 export default function CarTransferCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   // Константы 2026
   const MRP_2026 = 4325;
@@ -515,8 +515,8 @@ export default function CarTransferCalculator() {
           { question: t('car-transfer.faq.q5'), answer: t('car-transfer.faq.a5') },
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК — ИПН с продажи ТС', url: 'https://adilet.zan.kz/rus/docs/K1700000120' },
-          { title: 'СпецЦОН — переоформление ТС', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — КӨ сатудан ЖТС' : 'Налоговый кодекс РК — ИПН с продажи ТС', url: 'https://adilet.zan.kz/rus/docs/K1700000120' },
+          { title: i18n.language === 'kk' ? 'СпецЦОН — КӨ қайта ресімдеу' : 'СпецЦОН — переоформление ТС', url: 'https://egov.kz/' },
         ]}
       />
 

@@ -11,7 +11,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface Preset {
   key: string;
@@ -466,7 +465,7 @@ export default function AutoLeasingCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="auto-leasing" />
-      <MethodologySection steps={getMethodology('auto-leasing')} />
+      <MethodologySection calculatorId="auto-leasing" />
       <FAQSection
         items={[
           { question: t('auto-leasing.faq.q1'), answer: t('auto-leasing.faq.a1') },

@@ -12,10 +12,9 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function PensionCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [birthYear, setBirthYear] = useState<string>('1965');
   const [workExperienceBefore1998, setWorkExperienceBefore1998] = useState<string>('15');
   const [workExperienceAfter1998, setWorkExperienceAfter1998] = useState<string>('20');
@@ -424,7 +423,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="pension" />
-      <MethodologySection steps={getMethodology('pension')} />
+      <MethodologySection calculatorId="pension" />
       <FAQSection
         items={[
           { question: t('pension.faq.q1'), answer: t('pension.faq.a1') },
@@ -434,8 +433,8 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
           { question: t('pension.faq.q5'), answer: t('pension.faq.a5') }
         ]}
         sources={[
-          { title: 'ЕНПФ — Пенсионный калькулятор', url: 'https://enpf.kz/' },
-          { title: 'Закон о пенсионном обеспечении', url: 'https://online.zakon.kz/document/?doc_id=1005298' },
+          { title: i18n.language === 'kk' ? 'БЖЗҚ — Зейнетақы калькуляторы' : 'ЕНПФ — Пенсионный калькулятор', url: 'https://enpf.kz/' },
+          { title: i18n.language === 'kk' ? 'Зейнетақымен қамсыздандыру туралы заң' : 'Закон о пенсионном обеспечении', url: 'https://online.zakon.kz/document/?doc_id=1005298' },
         ]}
       />
 
@@ -448,7 +447,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
               { name: 'Солидарная', value: results.solidarityPension },
               { name: 'Накопительная', value: results.accumulativePension },
             ].filter(item => item.value > 0)}
-            title="Структура пенсии"
+            title={i18n.language === 'kk' ? 'Зейнетақы құрылымы' : 'Структура пенсии'}
           />
         </div>
       )}

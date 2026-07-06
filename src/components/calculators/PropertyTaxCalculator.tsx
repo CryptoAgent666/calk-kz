@@ -11,10 +11,9 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function PropertyTaxCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [propertyType, setPropertyType] = useState<string>('apartment');
   const [city, setCity] = useState<string>('almaty');
   const [area, setArea] = useState<string>('60');
@@ -452,7 +451,7 @@ export default function PropertyTaxCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="property-tax" />
-      <MethodologySection steps={getMethodology('property-tax')} />
+      <MethodologySection calculatorId="property-tax" />
       <FAQSection
         items={[
           { question: t('property-tax.faq.q1'), answer: t('property-tax.faq.a1') },
@@ -462,8 +461,8 @@ export default function PropertyTaxCalculator() {
           { question: t('property-tax.faq.q5'), answer: t('property-tax.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК, глава 62', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'eGov.kz — Налог на имущество', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 62-тарау' : 'Налоговый кодекс РК, глава 62', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'eGov.kz — мүлік салығы' : 'eGov.kz — Налог на имущество', url: 'https://egov.kz/' },
         ]}
       />
 
@@ -475,7 +474,7 @@ export default function PropertyTaxCalculator() {
               { name: 'Налог', value: results.finalAmount },
               { name: 'Оценочная стоимость', value: results.taxBase / 100 },
             ]}
-            title="Структура налога на имущество"
+            title={i18n.language === 'kk' ? 'Мүлік салығының құрылымы' : 'Структура налога на имущество'}
           />
         </div>
       )}

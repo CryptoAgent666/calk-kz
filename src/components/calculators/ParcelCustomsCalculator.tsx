@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Package, Calculator, Info, AlertTriangle, Scale } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -718,7 +717,7 @@ export default function ParcelCustomsCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="parcel-customs" />
-      <MethodologySection steps={getMethodology('parcel-customs')} />
+      <MethodologySection calculatorId="parcel-customs" />
       <FAQSection
         items={[
           { question: t('parcel-customs.faq.q1'), answer: t('parcel-customs.faq.a1') },

@@ -11,7 +11,6 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function CustomsClearanceCalculator() {
   const { t } = useTranslation('calculators');
@@ -387,7 +386,7 @@ export default function CustomsClearanceCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="customs-clearance" />
-      <MethodologySection steps={getMethodology('customs-clearance')} />
+      <MethodologySection calculatorId="customs-clearance" />
       <FAQSection
         items={[
           { question: t('customs-clearance.faq.q1'), answer: t('customs-clearance.faq.a1') },

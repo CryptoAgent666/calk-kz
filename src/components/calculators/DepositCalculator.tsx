@@ -13,10 +13,9 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function DepositCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [initialAmount, setInitialAmount] = useState<string>('1000000');
   const [monthlyContribution, setMonthlyContribution] = useState<string>('');
   const [termValue, setTermValue] = useState<string>('1');
@@ -530,7 +529,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
         <div className="mt-8 grid md:grid-cols-2 gap-6">
           <TaxPieChart
             data={pieChartData}
-            title="Структура депозита"
+            title={i18n.language === 'kk' ? 'Депозит құрылымы' : 'Структура депозита'}
             formatValue={formatNumber}
           />
           
@@ -538,7 +537,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
             <TrendLineChart
               data={growthData}
               dataKeys={[{ key: 'amount', name: 'Сумма на счете', color: '#22c55e' }]}
-              title="Рост накоплений по годам"
+              title={i18n.language === 'kk' ? 'Жинақтың жылдар бойынша өсуі' : 'Рост накоплений по годам'}
               formatValue={(v) => formatNumber(v)}
               showArea
             />
@@ -548,7 +547,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="deposit" />
-      <MethodologySection steps={getMethodology('deposit')} />
+      <MethodologySection calculatorId="deposit" />
       <FAQSection
         items={faqItems}
         sources={[

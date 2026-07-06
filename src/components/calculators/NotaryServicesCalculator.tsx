@@ -12,7 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 
 export default function NotaryServicesCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [serviceType, setServiceType] = useState<string>('apartment-sale');
   const [partyTypes, setPartyTypes] = useState<'both-individuals' | 'mixed' | 'both-legal'>('both-individuals');
   const [areRelated, setAreRelated] = useState<boolean>(false);
@@ -556,8 +556,8 @@ export default function NotaryServicesCalculator() {
           { question: t('notary.faq.q5'), answer: t('notary.faq.a5') }
         ]}
         sources={[
-          { title: 'Нотариальная палата РК', url: 'https://notariat.kz/' },
-          { title: 'Закон о нотариате', url: 'https://online.zakon.kz/document/?doc_id=1006057' },
+          { title: i18n.language === 'kk' ? 'ҚР Нотариаттық палатасы' : 'Нотариальная палата РК', url: 'https://notariat.kz/' },
+          { title: i18n.language === 'kk' ? 'Нотариат туралы заң' : 'Закон о нотариате', url: 'https://online.zakon.kz/document/?doc_id=1006057' },
         ]}
       />
 

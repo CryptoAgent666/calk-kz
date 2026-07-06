@@ -374,8 +374,8 @@ export default function UnemploymentBenefitCalculator() {
           { question: t('unemployment.faq.q5'), answer: t('unemployment.faq.a5') }
         ]}
         sources={[
-          { title: 'ГФСС — Пособие по безработице', url: 'https://gfss.kz/' },
-          { title: 'Enbek.kz — Центр занятости', url: 'https://enbek.kz/' },
+          { title: i18n.language === 'kk' ? 'МӘСҚ — Жұмыссыздық бойынша жәрдемақы' : 'ГФСС — Пособие по безработице', url: 'https://gfss.kz/' },
+          { title: i18n.language === 'kk' ? 'Enbek.kz — Жұмыспен қамту орталығы' : 'Enbek.kz — Центр занятости', url: 'https://enbek.kz/' },
         ]}
       />
 
@@ -386,7 +386,7 @@ export default function UnemploymentBenefitCalculator() {
             data={[
               { name: 'Ежемесячное пособие', value: results.monthlyBenefit },
             ]}
-            title="Пособие по безработице"
+            title={i18n.language === 'kk' ? 'Жұмыссыздық бойынша жәрдемақы' : 'Пособие по безработице'}
           />
         </div>
       )}

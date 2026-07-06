@@ -4,7 +4,6 @@ import { AlertTriangle, Calculator, Clock, DollarSign, Info, Calendar, TrendingU
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -14,7 +13,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { TaxPieChart } from '../ui/ChartComponents';
 
 export default function PenaltyCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [debtAmount, setDebtAmount] = useState<string>('100000');
   const [daysOverdue, setDaysOverdue] = useState<string>('30');
   const [penaltyRate, setPenaltyRate] = useState<string>('0.1');
@@ -559,7 +558,7 @@ export default function PenaltyCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="penalty" />
-      <MethodologySection steps={getMethodology('penalty')} />
+      <MethodologySection calculatorId="penalty" />
       <FAQSection
         items={[
           { question: t('penalty.faq.q1'), answer: t('penalty.faq.a1') },
@@ -569,8 +568,8 @@ export default function PenaltyCalculator() {
           { question: t('penalty.faq.q5'), answer: t('penalty.faq.a5') }
         ]}
         sources={[
-          { title: 'Гражданский кодекс РК, ст. 353', url: 'https://online.zakon.kz/document/?doc_id=1006061' },
-          { title: 'Налоговый кодекс РК, ст. 117', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Азаматтық кодексі, 353-бап' : 'Гражданский кодекс РК, ст. 353', url: 'https://online.zakon.kz/document/?doc_id=1006061' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 117-бап' : 'Налоговый кодекс РК, ст. 117', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
         ]}
       />
 
@@ -582,7 +581,7 @@ export default function PenaltyCalculator() {
               { name: 'Основной долг', value: parseFloat(debtAmount) || 0 },
               { name: 'Пеня', value: results.totalPenalty },
             ]}
-            title="Структура задолженности"
+            title={i18n.language === 'kk' ? 'Берешек құрылымы' : 'Структура задолженности'}
           />
         </div>
       )}

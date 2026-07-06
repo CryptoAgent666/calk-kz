@@ -9,7 +9,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 const MRP_2026 = 4325;
@@ -235,7 +234,7 @@ export default function PropertyDivisionCalculator() {
 
       <LegalDisclaimer type="legal" />
       <ExpertBlock />
-      <MethodologySection steps={getMethodology('property-division')} />
+      <MethodologySection calculatorId="property-division" />
       <FAQSection items={[
         { question: t('property-division.faq.q1'), answer: t('property-division.faq.a1') },
         { question: t('property-division.faq.q2'), answer: t('property-division.faq.a2') },

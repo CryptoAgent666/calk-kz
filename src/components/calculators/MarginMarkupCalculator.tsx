@@ -9,7 +9,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type CalcMode = 'markup' | 'margin' | 'price';
@@ -493,7 +492,7 @@ export default function MarginMarkupCalculator() {
         <ExportButtons data={generateExportData()} filename="margin-markup" />
       </div>
 
-      <MethodologySection steps={getMethodology('margin-markup')} />
+      <MethodologySection calculatorId="margin-markup" />
 
       <FAQSection
         items={[

@@ -20,7 +20,7 @@ interface CityGasData {
 }
 
 export default function GasBillCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [city, setCity] = useState<string>('astana');
   const [gasConsumption, setGasConsumption] = useState<string>('30');
   const [propertyType, setPropertyType] = useState<'apartment' | 'house'>('apartment');
@@ -355,7 +355,7 @@ export default function GasBillCalculator() {
                 data={[
                   { name: 'Газ', value: results.monthlyAmount },
                 ]}
-                title="Оплата за газ"
+                title={i18n.language === 'kk' ? 'Газ үшін төлем' : 'Оплата за газ'}
               />
             )}
 
@@ -403,7 +403,7 @@ export default function GasBillCalculator() {
             { key: 'tariff', name: 'Тариф (₸/м³)', color: '#f97316' },
             { key: 'avgBill', name: 'Средний счёт (₸)', color: '#3b82f6' }
           ]}
-          title="Сравнение тарифов по городам"
+          title={i18n.language === 'kk' ? 'Қалалар бойынша тарифтерді салыстыру' : 'Сравнение тарифов по городам'}
           height={300}
         />
       </div>
@@ -532,7 +532,7 @@ export default function GasBillCalculator() {
         ]}
         sources={[
           { title: 'КазТрансГаз', url: 'https://kaztransgas.kz/' },
-          { title: 'АРЕМ — тарифы на газ', url: 'https://www.arem.kz/' },
+          { title: i18n.language === 'kk' ? 'ТМРА — газ тарифтері' : 'АРЕМ — тарифы на газ', url: 'https://www.arem.kz/' },
         ]}
       />
 

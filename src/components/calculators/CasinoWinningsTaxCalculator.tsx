@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { DollarSign, Calculator, TrendingUp, AlertTriangle, Info, Plus, Trash2, Calendar } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -750,7 +749,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
         calculatorId="casino-winnings-tax"
         calculatorTitle="Калькулятор налога на выигрыш"
       />
-      <MethodologySection steps={getMethodology('casino-winnings-tax')} />
+      <MethodologySection calculatorId="casino-winnings-tax" />
       <CalculatorExamples calculatorId="casino-winnings-tax" />
       <LastUpdated calculatorId="casino-winnings-tax" />
     </div>

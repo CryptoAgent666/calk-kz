@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Activity } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -226,7 +225,7 @@ export default function BodyFatCalculator() {
 
       <CalculatorExamples calculatorId="body-fat" />
 
-      <MethodologySection steps={getMethodology('body-fat')} />
+      <MethodologySection calculatorId="body-fat" />
 
       <FAQSection items={[
         { question: t('body-fat.faq.q1'), answer: t('body-fat.faq.a1') },

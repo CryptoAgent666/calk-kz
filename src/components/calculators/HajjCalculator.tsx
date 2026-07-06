@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type TripType = 'hajj' | 'umra';
@@ -215,7 +214,7 @@ export default function HajjCalculator() {
       <LegalDisclaimer type="religious" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="hajj" />
-      <MethodologySection steps={getMethodology('hajj')} />
+      <MethodologySection calculatorId="hajj" />
       <FAQSection items={[
         { question: t('hajj.faq.q1'), answer: t('hajj.faq.a1') },
         { question: t('hajj.faq.q2'), answer: t('hajj.faq.a2') },

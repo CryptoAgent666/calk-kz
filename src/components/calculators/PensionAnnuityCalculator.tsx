@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Shield, Calculator, Users, DollarSign, TrendingUp, Info, AlertTriangle, Clock, Target, Heart, CheckCircle, XCircle, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -843,7 +842,7 @@ export default function PensionAnnuityCalculator() {
               { name: 'Ежемесячная выплата', value: results.monthlyAnnuityPayment },
               { name: 'Годовая выплата', value: results.monthlyAnnuityPayment * 12 },
             ]}
-            title="Пенсионный аннуитет"
+            title={i18n.language === 'kk' ? 'Зейнетақы аннуитеті' : 'Пенсионный аннуитет'}
           />
         </div>
       )}
@@ -881,7 +880,7 @@ export default function PensionAnnuityCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="pension-annuity" />
-      <MethodologySection steps={getMethodology('pension-annuity')} />
+      <MethodologySection calculatorId="pension-annuity" />
       <FAQSection
         items={[
           { question: t('pension-annuity.faq.q1'), answer: t('pension-annuity.faq.a1') },
@@ -891,8 +890,8 @@ export default function PensionAnnuityCalculator() {
           { question: t('pension-annuity.faq.q5'), answer: t('pension-annuity.faq.a5') }
         ]}
         sources={[
-          { title: 'ЕНПФ — Пенсионный аннуитет', url: 'https://enpf.kz/' },
-          { title: 'АРРФР — Страховые компании', url: 'https://finreg.kz/' },
+          { title: i18n.language === 'kk' ? 'БЖЗҚ — Зейнетақы аннуитеті' : 'ЕНПФ — Пенсионный аннуитет', url: 'https://enpf.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚНРДА — Сақтандыру компаниялары' : 'АРРФР — Страховые компании', url: 'https://finreg.kz/' },
         ]}
       />
 

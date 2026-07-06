@@ -12,7 +12,6 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface YearlyData {
   year: number;
@@ -23,7 +22,7 @@ interface YearlyData {
 }
 
 export default function CompoundInterestCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [initialDeposit, setInitialDeposit] = useState<number>(500000);
   const [regularContribution, setRegularContribution] = useState<number>(25000);
   const [contributionFrequency, setContributionFrequency] = useState<'monthly' | 'yearly'>('monthly');
@@ -737,7 +736,7 @@ ${results.yearlyData.map(data =>
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="compound-interest" />
-      <MethodologySection steps={getMethodology('compound-interest')} />
+      <MethodologySection calculatorId="compound-interest" />
       <FAQSection
         items={[
           { question: t('compound-interest.faq.q1'), answer: t('compound-interest.faq.a1') },
@@ -747,8 +746,8 @@ ${results.yearlyData.map(data =>
           { question: t('compound-interest.faq.q5'), answer: t('compound-interest.faq.a5') }
         ]}
         sources={[
-          { title: 'KASE — Доходность инструментов', url: 'https://kase.kz/' },
-          { title: 'Финансовая грамотность НБК', url: 'https://nationalbank.kz/' },
+          { title: i18n.language === 'kk' ? 'KASE — Құралдар табыстылығы' : 'KASE — Доходность инструментов', url: 'https://kase.kz/' },
+          { title: i18n.language === 'kk' ? 'Қаржылық сауаттылық — ҚР ҰБ' : 'Финансовая грамотность НБК', url: 'https://nationalbank.kz/' },
         ]}
       />
 

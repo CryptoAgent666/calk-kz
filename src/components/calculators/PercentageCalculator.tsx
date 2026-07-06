@@ -21,7 +21,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 type CalculationType = 'percentOf' | 'percentFrom' | 'percentChange' | 'findBase';
@@ -546,7 +545,7 @@ export default function PercentageCalculator() {
 
       <CalculatorExamples calculatorId="percentage" />
 
-      <MethodologySection steps={getMethodology('percentage')} />
+      <MethodologySection calculatorId="percentage" />
 
       <FAQSection
         items={[

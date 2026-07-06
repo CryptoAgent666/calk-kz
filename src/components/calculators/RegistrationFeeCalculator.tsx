@@ -12,7 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function RegistrationFeeCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [vehicleType, setVehicleType] = useState<'car' | 'electric' | 'truck' | 'bus'>('car');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
 
@@ -399,8 +399,8 @@ export default function RegistrationFeeCalculator() {
           { question: t('registration-fee.faq.q5'), answer: t('registration-fee.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК — сборы', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'СпецЦОН — регистрация ТС', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — алымдар' : 'Налоговый кодекс РК — сборы', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'СпецЦОН — КӨ тіркеу' : 'СпецЦОН — регистрация ТС', url: 'https://egov.kz/' },
         ]}
       />
 

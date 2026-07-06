@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Palmtree, Calculator, Info, AlertTriangle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
@@ -450,7 +449,7 @@ export default function VacationPayCalculator() {
 
       {/* FAQ Section */}
       <CalculatorExamples calculatorId="vacation-pay" />
-      <MethodologySection steps={getMethodology('vacation-pay')} />
+      <MethodologySection calculatorId="vacation-pay" />
       <FAQSection
         items={[
           { question: t('vacation-pay.faq.q1'), answer: t('vacation-pay.faq.a1') },

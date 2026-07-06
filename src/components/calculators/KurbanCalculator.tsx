@@ -38,7 +38,7 @@ interface AnimalRequirements {
 }
 
 export default function KurbanCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [region, setRegion] = useState<string>('almaty');
   const [animalType, setAnimalType] = useState<'ram-small' | 'ram-medium' | 'ram-large' | 'cow-share'>('ram-medium');
@@ -1233,7 +1233,7 @@ export default function KurbanCalculator() {
             data={[
               { name: 'Курбан', value: results.totalCost.max },
             ]}
-            title="Стоимость Курбан"
+            title={i18n.language === 'kk' ? 'Құрбандық құны' : 'Стоимость Курбан'}
           />
         </div>
       )}
@@ -1278,8 +1278,8 @@ export default function KurbanCalculator() {
           { question: t('kurban-sacrifice.faq.q5'), answer: t('kurban-sacrifice.faq.a5') }
         ]}
         sources={[
-          { title: 'ДУМК — Курбан-айт', url: 'https://muftyat.kz/' },
-          { title: 'Islamic Relief — Курбан', url: 'https://islamic-relief.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚМДБ — Құрбан айт' : 'ДУМК — Курбан-айт', url: 'https://muftyat.kz/' },
+          { title: i18n.language === 'kk' ? 'Islamic Relief — Құрбандық' : 'Islamic Relief — Курбан', url: 'https://islamic-relief.kz/' },
         ]}
       />
 

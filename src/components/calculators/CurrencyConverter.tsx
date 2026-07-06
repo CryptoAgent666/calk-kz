@@ -11,7 +11,6 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 interface ConversionHistory {
@@ -25,7 +24,7 @@ interface ConversionHistory {
 }
 
 export default function CurrencyConverter() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('KZT');
   const [amount, setAmount] = useState<string>('1000');
@@ -555,7 +554,7 @@ ${t('currency-converter.exportSource')}`;
       </div>
 
       <CalculatorExamples calculatorId="currency-converter" />
-      <MethodologySection steps={getMethodology('currency-converter')} />
+      <MethodologySection calculatorId="currency-converter" />
 
       {/* FAQ */}
       <FAQSection
@@ -567,8 +566,8 @@ ${t('currency-converter.exportSource')}`;
           { question: t('currency-converter.faq.q5'), answer: t('currency-converter.faq.a5') }
         ]}
         sources={[
-          { title: 'Национальный Банк РК — Курсы валют', url: 'https://nationalbank.kz/ru/exchangerates' },
-          { title: 'KASE — Казахстанская фондовая биржа', url: 'https://kase.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Ұлттық Банкі — Валюта бағамдары' : 'Национальный Банк РК — Курсы валют', url: 'https://nationalbank.kz/ru/exchangerates' },
+          { title: i18n.language === 'kk' ? 'KASE — Қазақстан қор биржасы' : 'KASE — Казахстанская фондовая биржа', url: 'https://kase.kz/' },
         ]}
       />
 

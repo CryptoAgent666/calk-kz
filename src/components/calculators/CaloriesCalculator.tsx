@@ -10,7 +10,6 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
 
@@ -646,7 +645,7 @@ export default function CaloriesCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="calories" />
-      <MethodologySection steps={getMethodology('calories')} />
+      <MethodologySection calculatorId="calories" />
       <FAQSection
         items={[
           { question: t('calories.faq.q1'), answer: t('calories.faq.a1') },

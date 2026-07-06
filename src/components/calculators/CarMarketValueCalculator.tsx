@@ -9,7 +9,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 interface CarPreset { id: string; labelKey: string; price: number; }
@@ -335,7 +334,7 @@ calk.kz`;
         <ExportButtons data={generateExportData()} filename={t('car-market-value.exportFilename')} />
       </div>
 
-      <MethodologySection steps={getMethodology('car-market-value')} />
+      <MethodologySection calculatorId="car-market-value" />
 
       <FAQSection
         items={[

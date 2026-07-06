@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Calculator, TrendingUp, Fuel, Shield, Wrench, DollarSign, Info, MapPin, Calendar, Settings } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { LastUpdated } from '../ui/LastUpdated';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -602,7 +601,7 @@ calk.kz`;
       </div>
 
       {/* FAQ */}
-      <MethodologySection steps={getMethodology('vehicle-tco')} />
+      <MethodologySection calculatorId="vehicle-tco" />
       <FAQSection
         items={[
           { question: t('vehicle-tco.faq.q1'), answer: t('vehicle-tco.faq.a1') },

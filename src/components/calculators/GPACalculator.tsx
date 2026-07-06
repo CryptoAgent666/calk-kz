@@ -9,7 +9,6 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 interface Subject {
   id: number;
@@ -224,7 +223,7 @@ export default function GPACalculator() {
 
       <ExpertBlock />
       <CalculatorExamples calculatorId="gpa" />
-      <MethodologySection steps={getMethodology('gpa')} />
+      <MethodologySection calculatorId="gpa" />
       <FAQSection items={[
         { question: t('gpa.faq.q1'), answer: t('gpa.faq.a1') },
         { question: t('gpa.faq.q2'), answer: t('gpa.faq.a2') },

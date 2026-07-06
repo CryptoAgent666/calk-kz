@@ -9,7 +9,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function LeapYearCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [inputYear, setInputYear] = useState<string>(String(new Date().getFullYear()));
   const [currentYear] = useState<number>(new Date().getFullYear());
   const [rangeStart, setRangeStart] = useState<string>('2020');
@@ -798,7 +798,7 @@ export default function LeapYearCalculator() {
           { question: t('leap-year.faq.q5'), answer: t('leap-year.faq.a5') }
         ]}
         sources={[
-          { title: 'Григорианский календарь', url: 'https://ru.wikipedia.org/wiki/Григорианский_календарь' },
+          { title: i18n.language === 'kk' ? 'Григориан күнтізбесі' : 'Григорианский календарь', url: 'https://ru.wikipedia.org/wiki/Григорианский_календарь' },
         ]}
       />
 

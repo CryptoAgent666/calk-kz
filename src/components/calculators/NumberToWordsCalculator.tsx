@@ -24,7 +24,7 @@ interface ConversionHistory {
 }
 
 export default function NumberToWordsCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [inputNumber, setInputNumber] = useState<string>('123456');
   const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
   const [format, setFormat] = useState<'number' | 'currency'>('number');
@@ -1136,8 +1136,8 @@ export default function NumberToWordsCalculator() {
           { question: t('number-to-words.faq.q5'), answer: t('number-to-words.faq.a5') }
         ]}
         sources={[
-          { title: 'ГОСТ делопроизводства', url: 'https://online.zakon.kz/' },
-          { title: 'Правила оформления документов', url: 'https://adilet.zan.kz/' },
+          { title: i18n.language === 'kk' ? 'Іс жүргізу ГОСТ-ы' : 'ГОСТ делопроизводства', url: 'https://online.zakon.kz/' },
+          { title: i18n.language === 'kk' ? 'Құжаттарды рәсімдеу ережелері' : 'Правила оформления документов', url: 'https://adilet.zan.kz/' },
         ]}
       />
 

@@ -9,7 +9,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type BrickType = 'single' | 'oneAndHalf' | 'double' | 'block' | 'gasBlock';
@@ -213,7 +212,7 @@ export default function BrickCalculator() {
 
       <LegalDisclaimer type="construction" />
       <ExpertBlock />
-      <MethodologySection steps={getMethodology('brick')} />
+      <MethodologySection calculatorId="brick" />
       <FAQSection items={[
         { question: t('brick.faq.q1'), answer: t('brick.faq.a1') },
         { question: t('brick.faq.q2'), answer: t('brick.faq.a2') },

@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type PropertyType = 'residential' | 'commercial';
@@ -501,7 +500,7 @@ calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="rental-income-tax" />
-      <MethodologySection steps={getMethodology('rental-income-tax')} />
+      <MethodologySection calculatorId="rental-income-tax" />
       <FAQSection
         items={[
           { question: t('rental-income-tax.faq.q1'), answer: t('rental-income-tax.faq.a1') },

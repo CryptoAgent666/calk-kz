@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 interface PropertyType {
@@ -474,7 +473,7 @@ calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="property-sale-tax" />
-      <MethodologySection steps={getMethodology('property-sale-tax')} />
+      <MethodologySection calculatorId="property-sale-tax" />
       <FAQSection
         items={[
           { question: t('property-sale-tax.faq.q1'), answer: t('property-sale-tax.faq.a1') },

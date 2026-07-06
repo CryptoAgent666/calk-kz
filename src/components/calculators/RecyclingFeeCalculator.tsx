@@ -11,7 +11,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function RecyclingFeeCalculator() {
   const { t } = useTranslation('calculators');
@@ -428,7 +427,7 @@ export default function RecyclingFeeCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="recycling-fee" />
-      <MethodologySection steps={getMethodology('recycling-fee')} />
+      <MethodologySection calculatorId="recycling-fee" />
       <FAQSection
         items={[
           { question: t('recycling-fee.faq.q1'), answer: t('recycling-fee.faq.a1') },

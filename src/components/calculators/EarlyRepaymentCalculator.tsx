@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TimerOff, Calculator, TrendingDown, Info, AlertTriangle, ArrowRight } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -634,7 +633,7 @@ export default function EarlyRepaymentCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="early-repayment" />
-      <MethodologySection steps={getMethodology('early-repayment')} />
+      <MethodologySection calculatorId="early-repayment" />
       <FAQSection
         items={[
           { question: t('early-repayment.faq.q1'), answer: t('early-repayment.faq.a1') },

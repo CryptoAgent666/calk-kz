@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type Purpose = 'vacation' | 'sickLeave' | 'businessTrip' | 'dismissal' | 'maternity';
@@ -223,7 +222,7 @@ export default function AverageEarningsCalculator() {
 
       <CalculatorExamples calculatorId="average-earnings" />
 
-      <MethodologySection steps={getMethodology('average-earnings')} />
+      <MethodologySection calculatorId="average-earnings" />
 
       <FAQSection
         items={[

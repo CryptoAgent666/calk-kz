@@ -12,7 +12,6 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 export default function SickLeaveCalculator() {
   const { t } = useTranslation('calculators');
@@ -544,7 +543,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="sick-leave" />
-      <MethodologySection steps={getMethodology('sick-leave')} />
+      <MethodologySection calculatorId="sick-leave" />
       <FAQSection
         items={[
           { question: t('sick-leave.faq.q1'), answer: t('sick-leave.faq.a1') },

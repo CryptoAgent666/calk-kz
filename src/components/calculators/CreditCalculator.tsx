@@ -16,7 +16,7 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function CreditCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [loanAmount, setLoanAmount] = useState<number>(1000000);
   const [interestRate, setInterestRate] = useState<number>(20);
   const [loanTerm, setLoanTerm] = useState<number>(24);
@@ -543,8 +543,8 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
       <FAQSection
         items={faqItems}
         sources={[
-          { title: 'Закон о банках РК', url: 'https://online.zakon.kz/document/?doc_id=31547359' },
-          { title: 'ПКБ — Кредитная история', url: 'https://www.pkb.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Банктер туралы заңы' : 'Закон о банках РК', url: 'https://online.zakon.kz/document/?doc_id=31547359' },
+          { title: i18n.language === 'kk' ? 'ПКБ — Несиелік тарих' : 'ПКБ — Кредитная история', url: 'https://www.pkb.kz/' },
         ]}
       />
 

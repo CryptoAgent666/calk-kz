@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Sun, AlarmClock } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -204,7 +203,7 @@ export default function SleepCalculator() {
 
       <CalculatorExamples calculatorId="sleep" />
 
-      <MethodologySection steps={getMethodology('sleep')} />
+      <MethodologySection calculatorId="sleep" />
 
       <FAQSection items={[
         { question: t('sleep.faq.q1'), answer: t('sleep.faq.a1') },

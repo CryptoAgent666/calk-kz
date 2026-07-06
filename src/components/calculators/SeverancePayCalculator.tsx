@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserMinus, Calculator, Info, AlertTriangle, FileText } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -623,7 +622,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
 
       {/* FAQSection */}
       <CalculatorExamples calculatorId="severance-pay" />
-      <MethodologySection steps={getMethodology('severance-pay')} />
+      <MethodologySection calculatorId="severance-pay" />
       <FAQSection
         items={[
           { question: t('severance-pay.faq.q1'), answer: t('severance-pay.faq.a1') },

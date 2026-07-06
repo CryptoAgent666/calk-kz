@@ -12,7 +12,6 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { pluralize } from '../../utils/pluralize';
 
 type TaxRegime = 'simplified' | 'general' | 'self-employed';
@@ -498,7 +497,7 @@ calk.kz`;
 
       <CalculatorExamples calculatorId="business-roi" />
 
-      <MethodologySection steps={getMethodology('business-roi')} />
+      <MethodologySection calculatorId="business-roi" />
       <FAQSection
         items={[
           { question: t('business-roi.faq.q1'), answer: t('business-roi.faq.a1') },

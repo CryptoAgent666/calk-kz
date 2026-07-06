@@ -11,7 +11,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 const MRP_2026 = 4325;
 
@@ -197,7 +196,7 @@ export default function DivorceCalculator() {
       <LegalDisclaimer type="legal" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="divorce" />
-      <MethodologySection steps={getMethodology('divorce')} />
+      <MethodologySection calculatorId="divorce" />
       <FAQSection items={[
         { question: t('divorce.faq.q1'), answer: t('divorce.faq.a1') },
         { question: t('divorce.faq.q2'), answer: t('divorce.faq.a2') },

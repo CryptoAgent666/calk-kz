@@ -10,7 +10,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function MaternityBenefitsCalculator() {
@@ -728,7 +727,7 @@ export default function MaternityBenefitsCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="maternity-benefits" />
-      <MethodologySection steps={getMethodology('maternity-benefits')} />
+      <MethodologySection calculatorId="maternity-benefits" />
       <FAQSection
         title={t('maternity-benefits.faqTitle')}
         items={[

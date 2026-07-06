@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Droplets } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -206,7 +205,7 @@ export default function WaterIntakeCalculator() {
 
       <CalculatorExamples calculatorId="water-intake" />
 
-      <MethodologySection steps={getMethodology('water-intake')} />
+      <MethodologySection calculatorId="water-intake" />
 
       <FAQSection items={[
         { question: t('water-intake.faq.q1'), answer: t('water-intake.faq.a1') },

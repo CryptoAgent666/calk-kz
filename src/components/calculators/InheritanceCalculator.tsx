@@ -11,7 +11,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 const MRP_2026 = 4_325;
 
@@ -338,7 +337,7 @@ export default function InheritanceCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="inheritance" />
-      <MethodologySection steps={getMethodology('inheritance')} />
+      <MethodologySection calculatorId="inheritance" />
       <FAQSection
         items={[
           { question: t('inheritance.faq.q1'), answer: t('inheritance.faq.a1') },

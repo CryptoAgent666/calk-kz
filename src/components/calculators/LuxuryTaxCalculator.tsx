@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Crown, Calculator, Home, Car, Plane, DollarSign, Info, AlertTriangle, TrendingUp, Building, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
@@ -14,7 +13,7 @@ import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function LuxuryTaxCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [assetType, setAssetType] = useState<'property' | 'vehicle' | 'yacht' | 'aircraft'>('property');
   const [assetValue, setAssetValue] = useState<string>('120000000');
   const [totalPropertyValue, setTotalPropertyValue] = useState<string>('120000000');
@@ -769,7 +768,7 @@ export default function LuxuryTaxCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="luxury-tax" />
-      <MethodologySection steps={getMethodology('luxury-tax')} />
+      <MethodologySection calculatorId="luxury-tax" />
       <FAQSection
         items={[
           { question: t('luxury-tax.faq.q1'), answer: t('luxury-tax.faq.a1') },
@@ -779,8 +778,8 @@ export default function LuxuryTaxCalculator() {
           { question: t('luxury-tax.faq.q5'), answer: t('luxury-tax.faq.a5') }
         ]}
         sources={[
-          { title: 'Налоговый кодекс РК — налог на роскошь', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: 'КГД — имущественные налоги', url: 'https://kgd.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — сәнді салық' : 'Налоговый кодекс РК — налог на роскошь', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'МКД — мүлік салықтары' : 'КГД — имущественные налоги', url: 'https://kgd.gov.kz/' },
         ]}
       />
 

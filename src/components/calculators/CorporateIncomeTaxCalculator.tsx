@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type ActivityType = 'standard' | 'agricultural' | 'social';
@@ -404,7 +403,7 @@ calk.kz`;
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="corporate-income-tax" />
-      <MethodologySection steps={getMethodology('corporate-income-tax')} />
+      <MethodologySection calculatorId="corporate-income-tax" />
       <FAQSection
         items={[
           { question: t('corporate-income-tax.faq.q1'), answer: t('corporate-income-tax.faq.a1') },

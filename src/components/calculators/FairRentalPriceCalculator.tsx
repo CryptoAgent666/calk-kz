@@ -8,7 +8,6 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 // Базовая аренда за м² (2026) — источники: krisha.kz, olx.kz, 2gis
@@ -409,7 +408,7 @@ export default function FairRentalPriceCalculator() {
       </div>
 
       {/* FAQ */}
-      <MethodologySection steps={getMethodology('fair-rental-price')} />
+      <MethodologySection calculatorId="fair-rental-price" />
       <FAQSection
         items={[
           { question: t('fair-rental-price.faq.q1'), answer: t('fair-rental-price.faq.a1') },

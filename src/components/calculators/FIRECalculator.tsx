@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flame, Target } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { LastUpdated } from '../ui/LastUpdated';
@@ -206,7 +205,7 @@ export default function FIRECalculator() {
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="fire" />
-      <MethodologySection steps={getMethodology('fire')} />
+      <MethodologySection calculatorId="fire" />
       <FAQSection items={[
         { question: t('fire.faq.q1'), answer: t('fire.faq.a1') },
         { question: t('fire.faq.q2'), answer: t('fire.faq.a2') },

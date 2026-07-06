@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 const MRP_2026 = 4325;
@@ -207,7 +206,7 @@ export default function BankruptcyCalculator() {
       <LegalDisclaimer type="legal" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="bankruptcy" />
-      <MethodologySection steps={getMethodology('bankruptcy')} />
+      <MethodologySection calculatorId="bankruptcy" />
       <FAQSection items={[
         { question: t('bankruptcy.faq.q1'), answer: t('bankruptcy.faq.a1') },
         { question: t('bankruptcy.faq.q2'), answer: t('bankruptcy.faq.a2') },

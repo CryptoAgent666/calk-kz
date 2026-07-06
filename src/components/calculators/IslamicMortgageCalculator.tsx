@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
 
@@ -209,7 +208,7 @@ export default function IslamicMortgageCalculator() {
       <LegalDisclaimer type="religious" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="islamic-mortgage" />
-      <MethodologySection steps={getMethodology('islamic-mortgage')} />
+      <MethodologySection calculatorId="islamic-mortgage" />
       <FAQSection items={[
         { question: t('islamic-mortgage.faq.q1'), answer: t('islamic-mortgage.faq.a1') },
         { question: t('islamic-mortgage.faq.q2'), answer: t('islamic-mortgage.faq.a2') },

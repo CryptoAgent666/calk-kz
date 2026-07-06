@@ -10,11 +10,10 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function ZakatCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [cashSavings, setCashSavings] = useState<string>('500000');
   const [goldValue, setGoldValue] = useState<string>('0');
   const [silverValue, setSilverValue] = useState<string>('0');
@@ -1018,7 +1017,7 @@ export default function ZakatCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="zakat" />
-      <MethodologySection steps={getMethodology('zakat')} />
+      <MethodologySection calculatorId="zakat" />
       <FAQSection
         items={[
           { question: t('zakat.faq.q1'), answer: t('zakat.faq.a1') },
@@ -1028,8 +1027,8 @@ export default function ZakatCalculator() {
           { question: t('zakat.faq.q5'), answer: t('zakat.faq.a5') }
         ]}
         sources={[
-          { title: 'ДУМК — Духовное управление мусульман Казахстана', url: 'https://muftyat.kz/' },
-          { title: 'IslamQ&A — Вопросы о закяте', url: 'https://islamqa.info/' },
+          { title: i18n.language === 'kk' ? 'ҚМДБ — Қазақстан мұсылмандары діни басқармасы' : 'ДУМК — Духовное управление мусульман Казахстана', url: 'https://muftyat.kz/' },
+          { title: i18n.language === 'kk' ? 'IslamQ&A — Зекет туралы сұрақтар' : 'IslamQ&A — Вопросы о закяте', url: 'https://islamqa.info/' },
         ]}
       />
 
@@ -1041,7 +1040,7 @@ export default function ZakatCalculator() {
               { name: 'Закят (2.5%)', value: results.zakatAmount },
               { name: 'Остаток', value: results.totalAssets - results.zakatAmount },
             ]}
-            title="Распределение активов"
+            title={i18n.language === 'kk' ? 'Активтерді бөлу' : 'Распределение активов'}
           />
         </div>
       )}

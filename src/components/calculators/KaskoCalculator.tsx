@@ -23,7 +23,6 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 
 type Region = 'almaty-astana' | 'shymkent-karaganda' | 'other';
 type Coverage = 'full' | 'partial' | 'theft-only';
@@ -584,7 +583,7 @@ export default function KaskoCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="kasko" />
-      <MethodologySection steps={getMethodology('kasko')} />
+      <MethodologySection calculatorId="kasko" />
       <FAQSection
         items={[
           { question: t('kasko.faq.q1'), answer: t('kasko.faq.a1') },

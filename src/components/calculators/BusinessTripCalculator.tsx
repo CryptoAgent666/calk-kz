@@ -10,7 +10,6 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type TripType = 'domestic' | 'foreign';
@@ -204,7 +203,7 @@ export default function BusinessTripCalculator() {
       <LegalDisclaimer type="social" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="business-trip" />
-      <MethodologySection steps={getMethodology('business-trip')} />
+      <MethodologySection calculatorId="business-trip" />
       <FAQSection items={[
         { question: t('business-trip.faq.q1'), answer: t('business-trip.faq.a1') },
         { question: t('business-trip.faq.q2'), answer: t('business-trip.faq.a2') },

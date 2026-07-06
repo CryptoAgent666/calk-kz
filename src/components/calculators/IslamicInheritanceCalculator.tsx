@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Scale, Calculator, Users, Heart, AlertTriangle, Info, BookOpen, Star, Crown, Building, DollarSign, Target, Gavel, BarChart3 } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
-import { getMethodology } from '../../data/calculatorMethodology';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
@@ -33,7 +32,7 @@ interface InheritanceResult {
 }
 
 export default function IslamicInheritanceCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [totalInheritance, setTotalInheritance] = useState<string>('10000000');
   const [hasSpouse, setHasSpouse] = useState<boolean>(false);
@@ -1182,7 +1181,7 @@ export default function IslamicInheritanceCalculator() {
               name: heir.name,
               value: heir.amount
             }))}
-            title="Распределение наследства по долям"
+            title={i18n.language === 'kk' ? 'Мұраны үлестерге бөлу' : 'Распределение наследства по долям'}
           />
         </div>
       )}
@@ -1212,7 +1211,7 @@ export default function IslamicInheritanceCalculator() {
 
       {/* FAQ */}
       <CalculatorExamples calculatorId="islamic-inheritance" />
-      <MethodologySection steps={getMethodology('islamic-inheritance')} />
+      <MethodologySection calculatorId="islamic-inheritance" />
       <FAQSection
         items={[
           { question: t('islamic-inheritance.faq.q1'), answer: t('islamic-inheritance.faq.a1') },
@@ -1222,8 +1221,8 @@ export default function IslamicInheritanceCalculator() {
           { question: t('islamic-inheritance.faq.q5'), answer: t('islamic-inheritance.faq.a5') }
         ]}
         sources={[
-          { title: 'ДУМК — Духовное управление мусульман', url: 'https://muftyat.kz/' },
-          { title: 'IslamQ&A — Наследство', url: 'https://islamqa.info/' },
+          { title: i18n.language === 'kk' ? 'ҚМДБ — Мұсылмандар діни басқармасы' : 'ДУМК — Духовное управление мусульман', url: 'https://muftyat.kz/' },
+          { title: i18n.language === 'kk' ? 'IslamQ&A — Мұра' : 'IslamQ&A — Наследство', url: 'https://islamqa.info/' },
         ]}
       />
 
