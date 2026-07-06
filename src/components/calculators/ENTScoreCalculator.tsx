@@ -19,11 +19,11 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 // Балл "платно" обновлён там, где нашлась официальная 2025-цифра (КазНУ); иначе
 // сохранено прежнее ориентировочное значение.
 // Nazarbayev University и KIMEP НЕ участвуют в конкурсе по шкале ЕНТ (0–140) —
-// см. ownAdmissionNote вместо числовых порогов.
+// вместо числовых порогов показывается пояснение (i18n: ent-score.ownAdmission.<id>).
 interface University {
   id: string;
   name: string;
-  ownAdmissionNote?: string;
+  hasOwnAdmission?: boolean;
   programs: { key: string; name: string; grant?: number; paid?: number }[];
 }
 
@@ -36,7 +36,7 @@ const UNIVERSITIES: University[] = [
     { key: 'philology', name: 'Филология', grant: 118, paid: 70 },
   ]},
   { id: 'nazarbayev', name: 'Nazarbayev University',
-    ownAdmissionNote: 'NU не участвует в конкурсе по шкале ЕНТ (0–140): для гранта используется собственный тест NUET (0–240) либо результаты SAT/ACT/A-level/IB/олимпиад. Балл ЕНТ здесь не определяет шанс на грант (шкала «из 140» у NU существует только как порог допуска на платное место).',
+    hasOwnAdmission: true,
     programs: [
       { key: 'it', name: 'Computer Science' },
       { key: 'engineering', name: 'Engineering' },
@@ -55,7 +55,7 @@ const UNIVERSITIES: University[] = [
     { key: 'law', name: 'Юриспруденция', grant: 96, paid: 80 },
   ]},
   { id: 'kimep', name: 'KIMEP University',
-    ownAdmissionNote: 'KIMEP — частный вуз со своей системой отбора: средний балл аттестата (GPA), сертификат английского языка (IELTS/TOEFL) и внутренние конкурсы. Балл ЕНТ учитывается лишь как один из вспомогательных критериев — единой конкурсной шкалы «балл на грант» здесь нет.',
+    hasOwnAdmission: true,
     programs: [
       { key: 'business', name: 'Business Administration' },
       { key: 'law', name: 'Law' },
@@ -144,14 +144,14 @@ export default function ENTScoreCalculator() {
             </select>
           </div>
 
-          {universityData?.ownAdmissionNote && (
+          {universityData?.hasOwnAdmission && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
-              <div className="font-medium mb-1">Особая система приёма</div>
-              <div>{universityData.ownAdmissionNote}</div>
+              <div className="font-medium mb-1">{t('ent-score.ownAdmission.title')}</div>
+              <div>{t(`ent-score.ownAdmission.${universityData.id}`)}</div>
             </div>
           )}
 
-          {results && !universityData?.ownAdmissionNote && (
+          {results && !universityData?.hasOwnAdmission && (
             <div className="space-y-2">
               <div className="text-sm font-medium">{t('ent-score.programs')}</div>
               {results.programs.map(p => (
