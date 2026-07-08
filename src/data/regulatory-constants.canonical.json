@@ -5480,13 +5480,17 @@
       "law": "ДУМК",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
-      "recovery_reason": "ДУМК fidya rate (4000 KZT/missed day), quasi-official annual religious-charity norm set by the Spiri",
+      "recovery_reason": "ДУМК fidya rate (4000 KZT/missed day), quasi-official annual religious-charity norm set by the Spiritual Administration.",
       "used_by": [
         "RamadanSadaqahCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "clean",
+      "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
+      "official_value": "4000",
+      "verify_note": "ДУМК фидия-садака на Рамадан 2026 = 4 000 ₸/день (стоимость двухразового питания). Подтверждено muftyat.kz. Версия «3520» — неверна.",
+      "reverified": "2026-07-06"
     },
     {
       "key": "dumk_fidya_rate_2025",
@@ -5510,43 +5514,55 @@
       "law": "ДУМК (Духовное управление мусульман Казахстана)",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
       "recovery_reason": "ДУМК fitr/zakat al-fitr sadaqah rate (735 KZT/person, flour basis), quasi-official ДУМК annual norm.",
       "used_by": [
         "RamadanSadaqahCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "clean",
+      "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
+      "official_value": "735",
+      "verify_note": "ДУМК фитр-садака минимум (2 кг муки) на Рамадан 2026 = 735 ₸/чел. Подтверждено muftyat.kz.",
+      "reverified": "2026-07-06"
     },
     {
       "key": "dumk_fitr_dates_rate_2026",
-      "value": 2200,
+      "value": 12400,
       "unit": "KZT",
       "law": "ДУМК",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
-      "recovery_reason": "ДУМК fitr rate paid in dates (2200 KZT), quasi-official ДУМК annual norm variant. Same regulatory cl",
+      "recovery_reason": "ДУМК fitr rate paid in dates (финики, 4 кг), quasi-official ДУМК annual norm variant.",
       "used_by": [
         "RamadanSadaqahCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "clean",
+      "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
+      "official_value": "12400",
+      "verify_note": "ДУМК фитр-садака по финикам (4 кг) на Рамадан 2026 = 12 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 2200.",
+      "reverified": "2026-07-06"
     },
     {
       "key": "dumk_fitr_raisins_rate_2026",
-      "value": 1800,
+      "value": 6400,
       "unit": "KZT",
       "law": "ДУМК",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
-      "recovery_reason": "ДУМК fitr rate paid in raisins (1800 KZT), quasi-official ДУМК annual norm variant. Same regulatory ",
+      "recovery_reason": "ДУМК fitr rate paid in raisins (изюм, 2 кг), quasi-official ДУМК annual norm variant.",
       "used_by": [
         "RamadanSadaqahCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "clean",
+      "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
+      "official_value": "6400",
+      "verify_note": "ДУМК фитр-садака по изюму (2 кг) на Рамадан 2026 = 6 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 1800.",
+      "reverified": "2026-07-06"
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2025",
@@ -6023,21 +6039,21 @@
     },
     {
       "key": "mrp_fallback_3876",
-      "value": 3876,
+      "value": 4325,
       "unit": "KZT",
-      "law": "",
+      "law": "Закон РК о республиканском бюджете Z2500000239 (МРП 2026 = 4325 ₸)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "VATThresholdCalculator"
       ],
-      "note_deep": "Stale fallback МРП `|| 3876` at lines 88/167/197 — matches no official МРП year (2023=3450, 2024=3692, 2025=3932). Reachable: year 2029 is s",
+      "note_deep": "RESOLVED 2026-07: устаревший fallback `|| 3876` устранён (grep '3876' по src — 0 совпадений в коде; год 2029 из селектора тоже убран ранее). Актуальный МРП 2026 = 4325.",
       "audit_status": "clean",
       "source_url": "https://prg.kz/document/?doc_id=1026672",
-      "verify_note": "Значение 3876 не соответствует ни одному реальному МРП (2024=3692, 2025=3932, 2026=4325); закон не указан. Это технический fallback/placeholder, а не действующая регулируемая величина. Рекомендуется заменить на актуальный МРП 2026 = 4325 либо удалить.",
-      "reverified": "2026-06-23"
+      "verify_note": "Баг-fallback 3876 (не соответствовал ни одному реального МРП) устранён из кода; актуальный МРП 2026 = 4325 ₸. Проверено grep по репозиторию.",
+      "reverified": "2026-07-06"
     },
     {
       "key": "alimony_min_per_child_mrp",
@@ -7137,22 +7153,22 @@
     },
     {
       "key": "property_tax_city_base_cost_and_zone_coeff_presets",
-      "value": "almaty:120000@1.5; astana:110000@1.4; shymkent:80000@1.2; karaganda:75000@1.1; aktobe:70000@1.0; other:60000@1.0 (mrpCoeff 1.0 all)",
-      "unit": "₸/m² @ zone coefficient",
-      "law": "Базовая стоимость 1 м² — НК РК; зональные коэффициенты — решения местных органов",
+      "value": "almaty/astana/shymkent:60000; karaganda/aktobe/other:36000 (all zoneCoeff 1.0 нейтральный, mrpCoeff 1.0)",
+      "unit": "₸/m² базовая стоимость",
+      "law": "НК РК K2500000214, ст. 600 (базовая стоимость 1 м² жилища); зональный коэффициент — акиматы (местные исполнительные органы)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "PropertyTaxCalculator"
       ],
-      "note": "CAUTION: entire table absent from first-sweep list although it directly drives the tax base. Values look like site-calibrated estimates stan",
+      "note": "FIXED 2026-07: прежние пресеты (almaty 120000@1.5 и т.д.) смешивали базовую стоимость с зон.коэфф и превышали норму. Приведено к ст.600 НК РК: города респ. значения (Алматы/Астана/Шымкент)=60000, областные центры=36000 ₸/м². Кзон снят с флэт-пресетов → нейтральный 1.0 (реальное значение локально задаёт акимат, вводится вручную).",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
-      "verify_note": "Базовая стоимость 1 м² варьируется (от ~2700 ₸ в сёлах до 60 000 ₸ в Алматы/Астане/Шымкенте по методике НК) — входные пресеты (almaty 120000, astana 110000 и т.д.) ВЫШЕ официальной базовой стоимости м² и, по-видимому, смешивают базовую стоимость с зональными коэффициентами. Зональные коэффициенты — решения местных органов. Конкретные пресеты официально не подтверждены; вероятно требуют пересмотра.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Базовая стоимость 1 м² по ст.600 нового НК РК (ред. 2026): Алматы/Астана/Шымкент = 60 000 ₸/м²; областные центры = 36 000 ₸/м² (далее по шкале: прочие города 12000, районные 6000, посёлки 4200, сёла 2700). Подтверждено по казахскоязычному тексту ст.600 (adilet.zan.kz K2500000214) двумя независимыми верификациями. Зональный коэффициент утверждают акиматы по единой методике — не флэт-число по стране.",
+      "reverified": "2026-07-06"
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2024",
@@ -7453,21 +7469,21 @@
     },
     {
       "key": "vat_threshold_display_constant_undefined",
-      "value": "VAT_THRESHOLD_MRP — undefined identifier (ReferenceError)",
+      "value": "FIXED — VAT_THRESHOLD_MRP_BY_YEAR[year] ?? 10000 (2026: 10000 МРП)",
       "unit": "",
-      "law": "",
+      "law": "НК РК K2500000214, ст. 82 (порог обязательной постановки на учёт по НДС)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "VATThresholdCalculator"
       ],
-      "note": "Lines 200/258/297 call formatMRP(VAT_THRESHOLD_MRP), but VAT_THRESHOLD_MRP is defined nowhere in the repo (tsc -p tsconfig.app.json: TS2304 ",
+      "note": "RESOLVED 2026-07: undefined VAT_THRESHOLD_MRP заменён на VAT_THRESHOLD_MRP_BY_YEAR (2024/25: 20000, 2026+: 10000) + thresholdMrpForYear ?? 10000. tsc -p tsconfig.app.json: 0×TS2304.",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "verify_note": "Not a tax constant: this entry flags a code-level bug (undefined identifier VAT_THRESHOLD_MRP / ReferenceError). Out of scope for legal verification; the correct underlying value is 10000 MRP (see nds_threshold_mrp). Fix in code, not a stale tax figure.",
-      "reverified": "2026-06-23"
+      "verify_note": "Баг устранён в коде: порог НДС 2026 = 10000 МРП = 43 250 000 ₸ (снижен с 20000). Проверено tsc (нет TS2304) и вживую на calk.kz/calculator/vat-threshold.",
+      "reverified": "2026-07-06"
     },
     {
       "key": "vacation_max_days_clamp",

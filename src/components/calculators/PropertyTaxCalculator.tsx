@@ -46,13 +46,17 @@ export default function PropertyTaxCalculator() {
     { id: 'commercial', nameKey: 'calculators:property-tax.propertyType_commercial', icon: '🏢' }
   ];
 
+  // Базовая стоимость 1 м² жилища — ст. 600 НК РК (новый НК K2500000214, ред. 2026):
+  // города респ. значения (Алматы/Астана/Шымкент) = 60 000 ₸/м²; областные центры = 36 000 ₸/м².
+  // Коэффициент зонирования (Кзон) утверждается местными исполнительными органами (акиматами)
+  // и различается по районам — здесь нейтральный дефолт 1.0, точное значение задаётся вручную.
   const cities = [
-    { id: 'almaty', nameKey: 'calculators:property-tax.city_almaty', baseCost: 120000, zoneCoeff: 1.5, mrpCoeff: 1.0 },
-    { id: 'astana', nameKey: 'calculators:property-tax.city_astana', baseCost: 110000, zoneCoeff: 1.4, mrpCoeff: 1.0 },
-    { id: 'shymkent', nameKey: 'calculators:property-tax.city_shymkent', baseCost: 80000, zoneCoeff: 1.2, mrpCoeff: 1.0 },
-    { id: 'karaganda', nameKey: 'calculators:property-tax.city_karaganda', baseCost: 75000, zoneCoeff: 1.1, mrpCoeff: 1.0 },
-    { id: 'aktobe', nameKey: 'calculators:property-tax.city_aktobe', baseCost: 70000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
-    { id: 'other', nameKey: 'calculators:property-tax.city_other', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 }
+    { id: 'almaty', nameKey: 'calculators:property-tax.city_almaty', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
+    { id: 'astana', nameKey: 'calculators:property-tax.city_astana', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
+    { id: 'shymkent', nameKey: 'calculators:property-tax.city_shymkent', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
+    { id: 'karaganda', nameKey: 'calculators:property-tax.city_karaganda', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
+    { id: 'aktobe', nameKey: 'calculators:property-tax.city_aktobe', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
+    { id: 'other', nameKey: 'calculators:property-tax.city_other', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: 1.0 }
   ];
 
   // Прогрессивная (маржинальная) шкала налога на имущество физлиц — ст. 602 НК РК (новый НК K2500000214, 2026).

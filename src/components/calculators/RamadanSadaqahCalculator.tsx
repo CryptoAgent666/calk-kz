@@ -56,13 +56,13 @@ export default function RamadanSadaqahCalculator() {
       category: t('ramadan-sadaqah.minimumLevel')
     },
     dates: {
-      rate: 2200,
+      rate: 12400,
       name: t('ramadan-sadaqah.dates'),
       description: t('ramadan-sadaqah.datesDescription'),
       category: t('ramadan-sadaqah.mediumLevel')
     },
     raisins: {
-      rate: 1800,
+      rate: 6400,
       name: t('ramadan-sadaqah.raisins'),
       description: t('ramadan-sadaqah.raisinsDescription'),
       category: t('ramadan-sadaqah.alternativeCalculation')
@@ -568,12 +568,12 @@ export default function RamadanSadaqahCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('ramadan-sadaqah.calculation')}</div>
-                <div>7 × 655 ₸ = 4,585 ₸</div>
+                <div>5 × 735 ₸ = 3,675 ₸</div>
                 <div>{t('ramadan-sadaqah.example1Basis')}</div>
               </div>
               <div>
                 <div className="font-medium text-blue-700">{t('ramadan-sadaqah.toPay')}</div>
-                <div className="text-lg font-bold text-blue-600">4,585 ₸</div>
+                <div className="text-lg font-bold text-blue-600">3,675 ₸</div>
                 <div className="text-xs text-blue-600">{t('ramadan-sadaqah.fitrSadaqah')}</div>
               </div>
             </div>
