@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './index.css';
 import './i18n';
 import { initLiveUpdates } from './liveUpdates';
+import { initPurchases } from './purchases';
 import { initAds } from './ads';
 
 const container = document.getElementById('root');
@@ -29,6 +30,10 @@ if (container.hasChildNodes()) {
 
 // OTA-обновление веб-бандла в нативном приложении (no-op на сайте).
 void initLiveUpdates();
+
+// Покупки RevenueCat (entitlement ad_free). Инициализируем ДО рекламы, чтобы
+// у купивших баннер не мелькал (isAdFree() читает кэш синхронно).
+void initPurchases();
 
 // Нативная реклама AdMob (только в приложении; на сайте — no-op, AdSense отдельно).
 void initAds();

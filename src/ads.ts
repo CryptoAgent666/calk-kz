@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { isAdFree, onAdFreeChange } from './purchases';
 
 /**
  * Нативная реклама AdMob для приложения (баннер снизу + интерстишал).
@@ -59,9 +60,23 @@ async function prepareInterstitial(): Promise<void> {
   }
 }
 
+/** Скрыть и убрать баннер (напр. сразу после покупки «Убрать рекламу»). */
+export async function hideAds(): Promise<void> {
+  if (!Capacitor.isNativePlatform()) return;
+  try {
+    const { AdMob } = await import('@capacitor-community/admob');
+    await AdMob.hideBanner();
+    await AdMob.removeBanner();
+  } catch {
+    /* ignore */
+  }
+}
+
 /** Инициализация рекламы при старте приложения. No-op на вебе. */
 export async function initAds(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
+  // Пользователь купил «Убрать рекламу» → не грузим и не показываем ничего.
+  if (isAdFree()) return;
 
   let mod: typeof import('@capacitor-community/admob');
   try {
@@ -104,6 +119,9 @@ export async function initAds(): Promise<void> {
 
     // Подготовить первый интерстишал заранее.
     void prepareInterstitial();
+
+    // Если пользователь купит «Убрать рекламу» во время сессии — убрать баннер сразу.
+    onAdFreeChange((adFree) => { if (adFree) void hideAds(); });
   } catch {
     // Реклама не критична — приложение работает и без неё.
   }
@@ -115,6 +133,7 @@ export async function initAds(): Promise<void> {
  */
 export async function maybeShowInterstitial(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
+  if (isAdFree()) return;
   navCount += 1;
   if (navCount < INTERSTITIAL_MIN_NAVIGATIONS || !interstitialReady) return;
 
