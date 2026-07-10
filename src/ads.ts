@@ -61,6 +61,19 @@ async function prepareInterstitial(): Promise<void> {
   }
 }
 
+/**
+ * Реальная высота нативного AdMob-баннера → CSS-переменная. RemoveAdsBar
+ * позиционируется по ней, а не по хардкоду (адаптивный баннер 50–90px
+ * в зависимости от устройства).
+ */
+function setBannerHeightVar(px: number): void {
+  try {
+    document.documentElement.style.setProperty('--admob-banner-height', `${Math.max(0, Math.round(px))}px`);
+  } catch {
+    /* ignore */
+  }
+}
+
 /** Скрыть и убрать баннер (напр. сразу после покупки «Убрать рекламу»). */
 export async function hideAds(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
@@ -70,6 +83,8 @@ export async function hideAds(): Promise<void> {
     await AdMob.removeBanner();
   } catch {
     /* ignore */
+  } finally {
+    setBannerHeightVar(0);
   }
 }
 
@@ -85,7 +100,7 @@ export async function initAds(): Promise<void> {
   } catch {
     return;
   }
-  const { AdMob, BannerAdPosition, BannerAdSize } = mod;
+  const { AdMob, BannerAdPosition, BannerAdSize, BannerAdPluginEvents } = mod;
 
   try {
     await AdMob.initialize({ initializeForTesting: IS_TESTING });
@@ -108,6 +123,11 @@ export async function initAds(): Promise<void> {
     } catch {
       /* ignore */
     }
+
+    // Фактическая высота баннера (приходит после загрузки и при поворотах).
+    await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (info) => {
+      setBannerHeightVar(info.height);
+    });
 
     // Баннер снизу (адаптивный).
     await AdMob.showBanner({
