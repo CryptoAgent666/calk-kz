@@ -1037,8 +1037,8 @@ export default function ZakatCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Закят (2.5%)', value: results.zakatAmount },
-              { name: 'Остаток', value: results.totalAssets - results.zakatAmount },
+              { name: i18n.language === 'kk' ? 'Зекет (2.5%)' : 'Закят (2.5%)', value: results.zakatAmount },
+              { name: i18n.language === 'kk' ? 'Қалдық' : 'Остаток', value: results.totalAssets - results.zakatAmount },
             ]}
             title={i18n.language === 'kk' ? 'Активтерді бөлу' : 'Распределение активов'}
           />

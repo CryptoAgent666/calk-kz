@@ -384,7 +384,7 @@ export default function UnemploymentBenefitCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Ежемесячное пособие', value: results.monthlyBenefit },
+              { name: i18n.language === 'kk' ? 'Ай сайынғы жәрдемақы' : 'Ежемесячное пособие', value: results.monthlyBenefit },
             ]}
             title={i18n.language === 'kk' ? 'Жұмыссыздық бойынша жәрдемақы' : 'Пособие по безработице'}
           />

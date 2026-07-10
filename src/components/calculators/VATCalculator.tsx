@@ -921,8 +921,8 @@ ${t('vat.export.formula')}: ${results.formula}`;
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Сумма без НДС', value: results.amountWithoutVat },
-              { name: 'НДС', value: results.vatAmount },
+              { name: i18n.language === 'kk' ? 'ҚҚС-сыз сома' : 'Сумма без НДС', value: results.amountWithoutVat },
+              { name: i18n.language === 'kk' ? 'ҚҚС' : 'НДС', value: results.vatAmount },
             ]}
             title={i18n.language === 'kk' ? 'ҚҚС қосылған соманың құрылымы' : 'Структура суммы с НДС'}
           />

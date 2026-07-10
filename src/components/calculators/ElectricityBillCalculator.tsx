@@ -453,7 +453,7 @@ export default function ElectricityBillCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Электроэнергия', value: results.totalAmount },
+              { name: i18n.language === 'kk' ? 'Электр энергиясы' : 'Электроэнергия', value: results.totalAmount },
             ]}
             title={i18n.language === 'kk' ? 'Электр энергиясы үшін төлем' : 'Оплата за электроэнергию'}
           />

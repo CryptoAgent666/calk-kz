@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   isAdFree,
   onAdFreeChange,
   buyRemoveAds,
   restorePurchases,
   getRemoveAdsPrice,
+  REMOVE_ADS_FALLBACK_PRICE,
 } from '../../purchases';
 
 /**
- * Кнопка «Убрать рекламу навсегда» + «Восстановить покупку».
+ * Кнопка «Убрать рекламу навсегда» + «Восстановить покупку» (место 1 из 3).
+ * Подключена в Layout → мобильное slide-out меню (native-only секция).
  * Рендерится ТОЛЬКО в нативном приложении (на сайте — null). Скрывается, когда
  * реклама уже отключена. Восстановление обязательно для Apple (Guideline 3.1.1).
- *
- * Разместить в меню/настройках или над нижним баннером, напр.:
- *   import { RemoveAdsButton } from './components/ui/RemoveAdsButton';
- *   <RemoveAdsButton />
  */
 export function RemoveAdsButton() {
+  const { t } = useTranslation('common');
   const [adFree, setAdFree] = useState(isAdFree());
   const [price, setPrice] = useState<string | null>(null);
   const [busy, setBusy] = useState<'buy' | 'restore' | null>(null);
@@ -31,7 +31,7 @@ export function RemoveAdsButton() {
   if (adFree) {
     return (
       <div className="flex items-center justify-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-2 text-sm font-medium text-green-700">
-        ✓ Реклама отключена
+        {t('removeAds.disabled')}
       </div>
     );
   }
@@ -54,15 +54,16 @@ export function RemoveAdsButton() {
       >
         <Sparkles className="h-4 w-4" />
         {busy === 'buy'
-          ? 'Обработка…'
-          : `Убрать рекламу навсегда${price ? ` — ${price}` : ''}`}
+          ? t('removeAds.processing')
+          : `${t('removeAds.removeForever')} — ${price ?? REMOVE_ADS_FALLBACK_PRICE}`}
       </button>
+      <p className="mt-2 text-center text-xs text-gray-500">{t('removeAds.oneTime')}</p>
       <button
         onClick={restore}
         disabled={busy !== null}
         className="mt-2 w-full text-center text-xs text-blue-700 underline disabled:opacity-60"
       >
-        {busy === 'restore' ? 'Восстановление…' : 'Восстановить покупку'}
+        {busy === 'restore' ? t('removeAds.restoring') : t('removeAds.restore')}
       </button>
     </div>
   );

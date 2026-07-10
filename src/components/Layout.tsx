@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import LocalizedLink from './LocalizedLink';
 import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SearchBar from './SearchBar';
 import LanguageSwitcher from './LanguageSwitcher';
 import { OfflineIndicator } from './OfflineIndicator';
+import { RemoveAdsButton } from './ui/RemoveAdsButton';
+import { RemoveAdsBar } from './ui/RemoveAdsBar';
+import { RemoveAdsToast } from './ui/RemoveAdsToast';
+import { RateAppToast } from './ui/RateAppToast';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
 import { pluralize } from '../utils/pluralize';
@@ -45,6 +50,12 @@ export default function Layout({
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Offline indicator (только на native приложениях) */}
       <OfflineIndicator />
+      {/* «Убрать рекламу» (native-only, сами скрываются на вебе и после покупки):
+          место 2 — плашка над AdMob-баннером, место 3 — тост после интерстишелов */}
+      <RemoveAdsBar />
+      <RemoveAdsToast />
+      {/* Ненавязчивое «оцените приложение» (native-only, in-app review iOS/Android) */}
+      <RateAppToast />
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -166,6 +177,13 @@ export default function Layout({
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto">
+                {/* «Убрать рекламу» в меню (native-only; место 1 из 3).
+                    Обёртка под Capacitor-гейтом, чтобы на вебе не оставалась пустая секция. */}
+                {Capacitor.isNativePlatform() && (
+                  <div className="p-4 border-b border-gray-100">
+                    <RemoveAdsButton />
+                  </div>
+                )}
                 {/* Main Navigation */}
                 <div className="p-4 space-y-2">
                   <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">

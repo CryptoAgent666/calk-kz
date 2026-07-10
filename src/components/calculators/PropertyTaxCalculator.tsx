@@ -475,8 +475,8 @@ export default function PropertyTaxCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Налог', value: results.finalAmount },
-              { name: 'Оценочная стоимость', value: results.taxBase / 100 },
+              { name: i18n.language === 'kk' ? 'Салық' : 'Налог', value: results.finalAmount },
+              { name: i18n.language === 'kk' ? 'Бағалау құны' : 'Оценочная стоимость', value: results.taxBase / 100 },
             ]}
             title={i18n.language === 'kk' ? 'Мүлік салығының құрылымы' : 'Структура налога на имущество'}
           />

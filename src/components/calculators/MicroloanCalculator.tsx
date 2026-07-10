@@ -420,8 +420,8 @@ ${t('microloan.export.calculator')}: Calk.kz`;
               {/* Диаграмма структуры платежа */}
               <TaxPieChart
                 data={[
-                  { name: 'Основной долг', value: parseFloat(amount) || 0 },
-                  { name: 'Переплата', value: results.totalInterest },
+                  { name: i18n.language === 'kk' ? 'Негізгі борыш' : 'Основной долг', value: parseFloat(amount) || 0 },
+                  { name: i18n.language === 'kk' ? 'Артық төлем' : 'Переплата', value: results.totalInterest },
                 ]}
                 title={i18n.language === 'kk' ? 'Төлемдер құрылымы' : 'Структура выплат'}
               />

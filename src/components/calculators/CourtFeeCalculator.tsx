@@ -408,7 +408,7 @@ export default function CourtFeeCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Госпошлина', value: results.feeAmount },
+              { name: i18n.language === 'kk' ? 'Мемлекеттік баж' : 'Госпошлина', value: results.feeAmount },
             ]}
             title={i18n.language === 'kk' ? 'Сот мемлекеттік бажы' : 'Судебная госпошлина'}
           />

@@ -44,6 +44,7 @@ const INTERSTITIAL_MIN_NAVIGATIONS = 3;
 
 let interstitialReady = false;
 let navCount = 0;
+let interstitialShownCount = 0;
 
 function platformIds() {
   const p = Capacitor.getPlatform();
@@ -145,6 +146,14 @@ export async function maybeShowInterstitial(): Promise<void> {
     await AdMob.showInterstitial();
     localStorage.setItem('ads_last_interstitial', String(Date.now()));
     interstitialReady = false;
+
+    // После каждого 3-го полноэкранного интерстишела — ненавязчиво предложить
+    // убрать рекламу (в момент, когда она только что помешала). RemoveAdsToast слушает.
+    interstitialShownCount += 1;
+    if (interstitialShownCount % 3 === 0) {
+      window.dispatchEvent(new CustomEvent('calk:suggest-remove-ads'));
+    }
+
     void prepareInterstitial(); // подготовить следующий
   } catch {
     /* ignore */

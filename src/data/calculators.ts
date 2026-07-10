@@ -136,6 +136,30 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'tax',
         icon: 'BarChart3',
         component: React.lazy(() => import('../components/calculators/TaxRegimeComparisonCalculator'))
+      },
+      {
+        id: 'dividend-tax',
+        title: 'Налог на дивиденды',
+        description: 'ИПН с дивидендов ТОО 2026: 5% до 230 000 МРП, 15% сверх',
+        category: 'tax',
+        icon: 'TrendingUp',
+        component: React.lazy(() => import('../components/calculators/DividendTaxCalculator'))
+      },
+      {
+        id: 'self-employed',
+        title: 'Калькулятор самозанятого',
+        description: 'СНР 2026: 4% соцплатежей, без ИП — такси, курьеры, аренда',
+        category: 'tax',
+        icon: 'Briefcase',
+        component: React.lazy(() => import('../components/calculators/SelfEmployedCalculator'))
+      },
+      {
+        id: 'mobile-transfers',
+        title: 'Проверка мобильных переводов',
+        description: 'Критерии КГД 2026: 100 отправителей / 3 месяца / 12 МЗП',
+        category: 'tax',
+        icon: 'Smartphone',
+        component: React.lazy(() => import('../components/calculators/MobileTransfersCalculator'))
       }
     ]
   },

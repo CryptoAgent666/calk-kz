@@ -621,7 +621,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Текущий вес', value: parseFloat(weight) || 0 },
+              { name: i18n.language === 'kk' ? 'Ағымдағы салмақ' : 'Текущий вес', value: parseFloat(weight) || 0 },
               { name: 'Норма (макс.)', value: results.normalWeightRange.max },
             ]}
             title={i18n.language === 'kk' ? 'Салмақты салыстыру' : 'Сравнение веса'}

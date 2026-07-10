@@ -839,8 +839,8 @@ export default function PensionAnnuityCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Ежемесячная выплата', value: results.monthlyAnnuityPayment },
-              { name: 'Годовая выплата', value: results.monthlyAnnuityPayment * 12 },
+              { name: i18n.language === 'kk' ? 'Ай сайынғы төлем' : 'Ежемесячная выплата', value: results.monthlyAnnuityPayment },
+              { name: i18n.language === 'kk' ? 'Жылдық төлем' : 'Годовая выплата', value: results.monthlyAnnuityPayment * 12 },
             ]}
             title={i18n.language === 'kk' ? 'Зейнетақы аннуитеті' : 'Пенсионный аннуитет'}
           />

@@ -20,6 +20,9 @@ const ENTITLEMENT_ID = 'ad_free';
 const REMOVE_ADS_PRODUCT_ID = 'removeads';
 const CACHE_KEY = 'calk_ad_free';
 
+/** Запасная цена для UI, пока RevenueCat не вернул локализованную (getRemoveAdsPrice). */
+export const REMOVE_ADS_FALLBACK_PRICE = '2 490 ₸';
+
 // Публичные SDK-ключи RevenueCat (Project Settings → API keys, по одному на
 // платформу). Их МОЖНО держать в клиенте — это НЕ секретные `sk_`-ключи.
 // Задать через .env (VITE_RC_*) или вписать напрямую вместо плейсхолдеров.

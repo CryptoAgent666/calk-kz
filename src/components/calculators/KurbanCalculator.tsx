@@ -1231,7 +1231,7 @@ export default function KurbanCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Курбан', value: results.totalCost.max },
+              { name: i18n.language === 'kk' ? 'Құрбандық' : 'Курбан', value: results.totalCost.max },
             ]}
             title={i18n.language === 'kk' ? 'Құрбандық құны' : 'Стоимость Курбан'}
           />

@@ -887,8 +887,8 @@ export default function RentOrBuyCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Покупка', value: results.netOwnershipCost },
-              { name: 'Аренда', value: results.totalRentingCost },
+              { name: i18n.language === 'kk' ? 'Сатып алу' : 'Покупка', value: results.netOwnershipCost },
+              { name: i18n.language === 'kk' ? 'Жалдау' : 'Аренда', value: results.totalRentingCost },
             ]}
             title={i18n.language === 'kk' ? 'Шығындарды салыстыру' : 'Сравнение расходов'}
           />

@@ -1238,8 +1238,8 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
         <div className="mt-8 space-y-6">
           <TaxPieChart
             data={[
-              { name: 'Скидка', value: results.discountAmount },
-              { name: 'К оплате', value: results.finalPrice },
+              { name: i18n.language === 'kk' ? 'Жеңілдік' : 'Скидка', value: results.discountAmount },
+              { name: i18n.language === 'kk' ? 'Төлеуге' : 'К оплате', value: results.finalPrice },
             ]}
             title={i18n.language === 'kk' ? 'Баға құрылымы' : 'Структура цены'}
           />

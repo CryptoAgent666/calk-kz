@@ -578,8 +578,8 @@ export default function PenaltyCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Основной долг', value: parseFloat(debtAmount) || 0 },
-              { name: 'Пеня', value: results.totalPenalty },
+              { name: i18n.language === 'kk' ? 'Негізгі борыш' : 'Основной долг', value: parseFloat(debtAmount) || 0 },
+              { name: i18n.language === 'kk' ? 'Өсімпұл' : 'Пеня', value: results.totalPenalty },
             ]}
             title={i18n.language === 'kk' ? 'Берешек құрылымы' : 'Структура задолженности'}
           />

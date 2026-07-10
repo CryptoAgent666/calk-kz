@@ -592,8 +592,8 @@ ${t('alimony.exportAlimonyCalc')}
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Алименты', value: results.alimonyAmount },
-              { name: 'Остаток', value: results.remainingIncome },
+              { name: i18n.language === 'kk' ? 'Алимент' : 'Алименты', value: results.alimonyAmount },
+              { name: i18n.language === 'kk' ? 'Қалдық' : 'Остаток', value: results.remainingIncome },
             ]}
             title={i18n.language === 'kk' ? 'Табысты бөлу' : 'Распределение дохода'}
           />

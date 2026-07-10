@@ -354,7 +354,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
                 <ProgressBar
                   value={results.totalInterest}
                   max={results.totalPayment}
-                  label="Доля переплаты в общей сумме"
+                  label={i18n.language === 'kk' ? 'Жалпы сомадағы артық төлем үлесі' : 'Доля переплаты в общей сумме'}
                   color="#ef4444"
                 />
               </div>

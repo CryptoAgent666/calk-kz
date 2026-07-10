@@ -603,7 +603,7 @@ export default function SocialAssistanceCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'АСП', value: results.aspAmount },
+              { name: i18n.language === 'kk' ? 'АӘК' : 'АСП', value: results.aspAmount },
             ]}
             title={i18n.language === 'kk' ? 'Атаулы әлеуметтік көмек' : 'Адресная социальная помощь'}
           />

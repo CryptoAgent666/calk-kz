@@ -443,9 +443,9 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Базовая пенсия', value: results.basePension },
-              { name: 'Солидарная', value: results.solidarityPension },
-              { name: 'Накопительная', value: results.accumulativePension },
+              { name: i18n.language === 'kk' ? 'Базалық зейнетақы' : 'Базовая пенсия', value: results.basePension },
+              { name: i18n.language === 'kk' ? 'Ынтымақты' : 'Солидарная', value: results.solidarityPension },
+              { name: i18n.language === 'kk' ? 'Жинақтаушы' : 'Накопительная', value: results.accumulativePension },
             ].filter(item => item.value > 0)}
             title={i18n.language === 'kk' ? 'Зейнетақы құрылымы' : 'Структура пенсии'}
           />

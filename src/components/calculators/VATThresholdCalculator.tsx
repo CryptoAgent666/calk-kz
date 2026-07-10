@@ -678,8 +678,8 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Оборот', value: results.currentTotal },
-              { name: 'До порога', value: Math.max(0, results.remainingToThreshold) },
+              { name: i18n.language === 'kk' ? 'Айналым' : 'Оборот', value: results.currentTotal },
+              { name: i18n.language === 'kk' ? 'Шекке дейін' : 'До порога', value: Math.max(0, results.remainingToThreshold) },
             ]}
             title={i18n.language === 'kk' ? 'ҚҚС шегіне жету барысы' : 'Прогресс к порогу НДС'}
           />

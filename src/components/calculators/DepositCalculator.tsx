@@ -146,9 +146,9 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
 
   // Данные для круговой диаграммы
   const pieChartData = results.finalAmountWithContributions > 0 ? [
-    { name: 'Начальный вклад', value: parseFloat(initialAmount) || 0, color: '#0ea5e9' },
-    { name: 'Пополнения', value: results.totalContributions, color: '#22c55e' },
-    { name: 'Начисленные проценты', value: results.totalEarningsWithContributions, color: '#f97316' },
+    { name: i18n.language === 'kk' ? 'Бастапқы салым' : 'Начальный вклад', value: parseFloat(initialAmount) || 0, color: '#0ea5e9' },
+    { name: i18n.language === 'kk' ? 'Толықтырулар' : 'Пополнения', value: results.totalContributions, color: '#22c55e' },
+    { name: i18n.language === 'kk' ? 'Есептелген пайыздар' : 'Начисленные проценты', value: results.totalEarningsWithContributions, color: '#f97316' },
   ].filter(item => item.value > 0) : [];
 
   // Данные для графика роста

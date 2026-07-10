@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { maybeShowInterstitial } from './ads';
+import { trackCalculatorVisitForReview } from './appReview';
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useLocalizedNavigate } from './hooks/useLocalizedNavigate';
@@ -65,6 +66,10 @@ function App() {
   useEffect(() => {
     if (!location.pathname.startsWith('/embed/')) {
       void maybeShowInterstitial();
+      // Счётчик для ненавязчивого предложения оценить приложение (native-only no-op на вебе).
+      if (stripLocalePrefix(normalizePathname(location.pathname)).startsWith('/calculator/')) {
+        trackCalculatorVisitForReview();
+      }
     }
   }, [location.pathname]);
 

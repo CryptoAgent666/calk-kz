@@ -80,6 +80,25 @@
     "source": "Источник:",
     "linkToCalculation": "Ссылка на расчет:"
   },
+  "removeAds": {
+    "title": "Без рекламы",
+    "removeForever": "Убрать рекламу навсегда",
+    "remove": "Убрать рекламу",
+    "removeForPrice": "Убрать навсегда за {{price}}",
+    "tired": "Надоела реклама?",
+    "oneTime": "Разовая покупка — навсегда, на всех ваших устройствах",
+    "processing": "Обработка…",
+    "restore": "Восстановить покупку",
+    "restoring": "Восстановление…",
+    "disabled": "✓ Реклама отключена",
+    "hide": "Скрыть",
+    "close": "Закрыть"
+  },
+  "rateApp": {
+    "title": "Нравится Calk.kz?",
+    "cta": "Оценить приложение — это займёт секунду",
+    "close": "Закрыть"
+  },
   "units": {
     "tenge": "₸",
     "percent": "%",
@@ -152,7 +171,9 @@
   "export": {
     "downloadPDF": "Скачать PDF",
     "downloadExcel": "Скачать Excel",
-    "print": "Печать"
+    "print": "Печать",
+    "copyForExcel": "Копировать в Excel",
+    "copiedForExcel": "Скопировано — вставьте в Excel"
   },
   "embed": {
     "embedOnSite": "Встроить на свой сайт",

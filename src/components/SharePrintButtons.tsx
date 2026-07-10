@@ -39,8 +39,14 @@ export default function SharePrintButtons({
   };
 
   // Функция скачивания
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const content = `${shareText}\n\n${t('buttons.calculationTime')} ${new Date().toLocaleString('ru-RU')}\n${t('buttons.source')} ${url}`;
+    if (native.isNative) {
+      // Blob-скачивание в WKWebView не работает → отдаём текст через share sheet
+      // (оттуда можно сохранить в «Файлы» или отправить в мессенджер).
+      await native.share({ title, text: content, dialogTitle: t('buttons.downloadResults') });
+      return;
+    }
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const downloadUrl = URL.createObjectURL(blob);
     const link = document.createElement('a');

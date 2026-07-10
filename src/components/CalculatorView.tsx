@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import RelatedCalculators from './RelatedCalculators';
 import Breadcrumbs from './Breadcrumbs';
 import NotFoundPage from './NotFoundPage';
+import { DataFreshnessBadge } from './ui/DataFreshnessBadge';
 
 interface CalculatorViewProps {
   calculatorId: string;
@@ -69,6 +70,9 @@ export default function CalculatorView({ calculatorId, onBackClick, onCalculator
         )}
 
       </div>
+
+      {/* Бейдж актуальности данных (E-E-A-T) — на всех калькуляторах разом */}
+      <DataFreshnessBadge categoryId={category?.id} />
 
       <Suspense fallback={<CalculatorSkeleton />}>
         <CalculatorComponent />

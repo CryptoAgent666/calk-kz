@@ -994,8 +994,8 @@ export default function RamadanSadaqahCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: 'Фитр-садака', value: results.fitrSadaqahAmount },
-              { name: 'Фидия', value: results.fidyaSadaqahAmount },
+              { name: i18n.language === 'kk' ? 'Пітір садақа' : 'Фитр-садака', value: results.fitrSadaqahAmount },
+              { name: i18n.language === 'kk' ? 'Пидия' : 'Фидия', value: results.fidyaSadaqahAmount },
             ].filter(item => item.value > 0)}
             title={i18n.language === 'kk' ? 'Рамазан төлемдерінің құрылымы' : 'Структура выплат Рамадан'}
           />

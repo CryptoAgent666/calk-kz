@@ -80,6 +80,25 @@
     "source": "Дереккөз:",
     "linkToCalculation": "Есептеу сілтемесі:"
   },
+  "removeAds": {
+    "title": "Жарнамасыз",
+    "removeForever": "Жарнаманы біржола алып тастау",
+    "remove": "Жарнаманы алып тастау",
+    "removeForPrice": "Біржола алып тастау — {{price}}",
+    "tired": "Жарнама жалықтырды ма?",
+    "oneTime": "Бір реттік сатып алу — біржола, барлық құрылғыларыңызда",
+    "processing": "Өңделуде…",
+    "restore": "Сатып алуды қалпына келтіру",
+    "restoring": "Қалпына келтірілуде…",
+    "disabled": "✓ Жарнама өшірілді",
+    "hide": "Жасыру",
+    "close": "Жабу"
+  },
+  "rateApp": {
+    "title": "Calk.kz ұнай ма?",
+    "cta": "Қолданбаны бағалау — бір секунд қана",
+    "close": "Жабу"
+  },
   "units": {
     "tenge": "₸",
     "percent": "%",
@@ -152,7 +171,9 @@
   "export": {
     "downloadPDF": "PDF жүктеу",
     "downloadExcel": "Excel жүктеу",
-    "print": "Басып шығару"
+    "print": "Басып шығару",
+    "copyForExcel": "Excel-ге көшіру",
+    "copiedForExcel": "Көшірілді — Excel-ге қойыңыз"
   },
   "embed": {
     "embedOnSite": "Сайтқа ендіру",
