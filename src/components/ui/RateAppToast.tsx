@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Capacitor } from '@capacitor/core';
 import { X, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { OFFER_REVIEW_EVENT, requestAppReview, snoozeReviewOffer } from '../../appReview';
+import { OFFER_REVIEW_EVENT, requestAppReview, reviewAvailable, snoozeReviewOffer } from '../../appReview';
 
 /** Пауза после события: даём человеку досчитать, не выскакиваем в момент навигации. */
 const SHOW_DELAY_MS = 12000;
@@ -20,7 +19,7 @@ export function RateAppToast() {
   const timers = useRef<{ show?: ReturnType<typeof setTimeout>; hide?: ReturnType<typeof setTimeout> }>({});
 
   useEffect(() => {
-    if (!Capacitor.isNativePlatform()) return;
+    if (!reviewAvailable()) return;
     const onOffer = () => {
       clearTimeout(timers.current.show);
       timers.current.show = setTimeout(() => {
@@ -40,7 +39,7 @@ export function RateAppToast() {
     };
   }, []);
 
-  if (!Capacitor.isNativePlatform() || !visible) return null;
+  if (!reviewAvailable() || !visible) return null;
 
   const rate = () => {
     clearTimeout(timers.current.hide);

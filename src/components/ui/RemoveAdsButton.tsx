@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Capacitor } from '@capacitor/core';
 import { Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,6 +7,7 @@ import {
   buyRemoveAds,
   restorePurchases,
   getRemoveAdsPrice,
+  purchasesAvailable,
   REMOVE_ADS_FALLBACK_PRICE,
 } from '../../purchases';
 
@@ -26,8 +26,8 @@ export function RemoveAdsButton() {
   useEffect(() => onAdFreeChange(setAdFree), []);
   useEffect(() => { void getRemoveAdsPrice().then(setPrice); }, []);
 
-  // Только в приложении и только пока реклама не отключена.
-  if (!Capacitor.isNativePlatform()) return null;
+  // Только в приложении С нативным модулем покупок (не в старых бинарях после OTA).
+  if (!purchasesAvailable()) return null;
   if (adFree) {
     return (
       <div className="flex items-center justify-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-2 text-sm font-medium text-green-700">

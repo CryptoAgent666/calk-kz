@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Capacitor } from '@capacitor/core';
 import LocalizedLink from './LocalizedLink';
 import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ import { RemoveAdsButton } from './ui/RemoveAdsButton';
 import { RemoveAdsBar } from './ui/RemoveAdsBar';
 import { RemoveAdsToast } from './ui/RemoveAdsToast';
 import { RateAppToast } from './ui/RateAppToast';
+import { purchasesAvailable } from '../purchases';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
 import { pluralize } from '../utils/pluralize';
@@ -177,9 +177,9 @@ export default function Layout({
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto">
-                {/* «Убрать рекламу» в меню (native-only; место 1 из 3).
-                    Обёртка под Capacitor-гейтом, чтобы на вебе не оставалась пустая секция. */}
-                {Capacitor.isNativePlatform() && (
+                {/* «Убрать рекламу» в меню (место 1 из 3). Гейт по доступности нативного
+                    модуля покупок: скрыто на вебе И в старых бинарях без RevenueCat (OTA). */}
+                {purchasesAvailable() && (
                   <div className="p-4 border-b border-gray-100">
                     <RemoveAdsButton />
                   </div>

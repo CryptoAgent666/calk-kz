@@ -11,7 +11,10 @@ import { Capacitor } from '@capacitor/core';
  * Возвращает false на вебе — вызывающий код делает обычный browser-download.
  */
 export async function shareFileNative(fileName: string, base64Data: string): Promise<boolean> {
-  if (!Capacitor.isNativePlatform()) return false;
+  // Гейт по модулям в бинаре: в старых сборках после OTA Filesystem отсутствует.
+  if (!Capacitor.isNativePlatform() || !Capacitor.isPluginAvailable('Filesystem') || !Capacitor.isPluginAvailable('Share')) {
+    return false;
+  }
   const [{ Filesystem, Directory }, { Share }] = await Promise.all([
     import('@capacitor/filesystem'),
     import('@capacitor/share'),

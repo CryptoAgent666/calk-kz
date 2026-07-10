@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Capacitor } from '@capacitor/core';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,6 +6,7 @@ import {
   onAdFreeChange,
   buyRemoveAds,
   getRemoveAdsPrice,
+  purchasesAvailable,
   REMOVE_ADS_FALLBACK_PRICE,
 } from '../../purchases';
 
@@ -32,7 +32,7 @@ export function RemoveAdsBar() {
   useEffect(() => onAdFreeChange(setAdFree), []);
   useEffect(() => { void getRemoveAdsPrice().then(setPrice); }, []);
 
-  if (!Capacitor.isNativePlatform() || adFree || dismissed) return null;
+  if (!purchasesAvailable() || adFree || dismissed) return null;
 
   const dismiss = () => {
     try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* ignore */ }

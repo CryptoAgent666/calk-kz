@@ -19,6 +19,11 @@ import { Capacitor } from '@capacitor/core';
 
 export const OFFER_REVIEW_EVENT = 'calk:offer-review';
 
+/** Нативный модуль in-app review есть в бинаре? (Старые сборки после OTA — нет.) */
+export function reviewAvailable(): boolean {
+  return Capacitor.isNativePlatform() && Capacitor.isPluginAvailable('InAppReview');
+}
+
 const KEY_VISITS = 'calk_review_visits';
 const KEY_FIRST_TS = 'calk_review_first_ts';
 const KEY_SNOOZE_TS = 'calk_review_snooze_ts';
@@ -37,7 +42,7 @@ function write(key: string, value: number): void {
 
 /** Зовётся при заходе на страницу калькулятора; сам решает, предлагать ли оценку. */
 export function trackCalculatorVisitForReview(): void {
-  if (!Capacitor.isNativePlatform()) return;
+  if (!reviewAvailable()) return;
   if (!readNum(KEY_FIRST_TS)) write(KEY_FIRST_TS, Date.now());
   const visits = readNum(KEY_VISITS) + 1;
   write(KEY_VISITS, visits);

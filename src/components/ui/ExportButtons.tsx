@@ -189,10 +189,11 @@ export function ExportButtons({
         { url: SITE_URL }
       );
 
-      if (Capacitor.isNativePlatform()) {
-        // В приложении doc.save() молча не работает (WKWebView) → Filesystem + share sheet.
-        await shareFileNative(`${filename}.pdf`, doc.output('datauristring').split(',')[1]);
-      } else {
+      // В приложении doc.save() молча не работает (WKWebView) → Filesystem + share sheet.
+      // Если нативные модули недоступны (веб или старый бинарь) — обычный save.
+      const pdfShared = Capacitor.isNativePlatform()
+        && await shareFileNative(`${filename}.pdf`, doc.output('datauristring').split(',')[1]);
+      if (!pdfShared) {
         doc.save(`${filename}.pdf`);
       }
       setExported('pdf');
@@ -246,12 +247,11 @@ export function ExportButtons({
       
       XLSX.utils.book_append_sheet(wb, ws, 'Расчет');
       
-      // Сохранение файла
-      if (Capacitor.isNativePlatform()) {
-        // В приложении saveAs() молча не работает (WKWebView) → Filesystem + share sheet.
-        const base64 = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
-        await shareFileNative(`${filename}.xlsx`, base64);
-      } else {
+      // Сохранение файла: в приложении saveAs() молча не работает (WKWebView) →
+      // Filesystem + share sheet; на вебе/в старых бинарях — обычный saveAs.
+      const xlsxShared = Capacitor.isNativePlatform()
+        && await shareFileNative(`${filename}.xlsx`, XLSX.write(wb, { bookType: 'xlsx', type: 'base64' }));
+      if (!xlsxShared) {
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         saveAs(blob, `${filename}.xlsx`);

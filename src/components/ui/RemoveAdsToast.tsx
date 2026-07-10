@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Capacitor } from '@capacitor/core';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,6 +6,7 @@ import {
   onAdFreeChange,
   buyRemoveAds,
   getRemoveAdsPrice,
+  purchasesAvailable,
   REMOVE_ADS_FALLBACK_PRICE,
 } from '../../purchases';
 
@@ -32,7 +32,7 @@ export function RemoveAdsToast() {
   useEffect(() => { void getRemoveAdsPrice().then(setPrice); }, []);
 
   useEffect(() => {
-    if (!Capacitor.isNativePlatform()) return;
+    if (!purchasesAvailable()) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const onSuggest = () => {
       if (isAdFree()) return;
@@ -47,7 +47,7 @@ export function RemoveAdsToast() {
     };
   }, []);
 
-  if (!Capacitor.isNativePlatform() || adFree || !visible) return null;
+  if (!purchasesAvailable() || adFree || !visible) return null;
 
   const buy = async () => {
     setBusy(true);

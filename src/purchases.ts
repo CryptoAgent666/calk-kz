@@ -20,6 +20,16 @@ const ENTITLEMENT_ID = 'ad_free';
 const REMOVE_ADS_PRODUCT_ID = 'removeads';
 const CACHE_KEY = 'calk_ad_free';
 
+/**
+ * Покупки доступны только когда в БИНАРЕ зарегистрирован нативный модуль
+ * RevenueCat. Критично для OTA: JS-бандл прилетает и в старые сборки
+ * (v1.2 без RevenueCat) — без этого гейта там показывались бы мёртвые
+ * кнопки «Убрать рекламу» (native bridge отсутствует, покупка невозможна).
+ */
+export function purchasesAvailable(): boolean {
+  return Capacitor.isNativePlatform() && Capacitor.isPluginAvailable('Purchases');
+}
+
 /** Запасная цена для UI, пока RevenueCat не вернул локализованную (getRemoveAdsPrice). */
 export const REMOVE_ADS_FALLBACK_PRICE = '2 490 ₸';
 
@@ -68,9 +78,9 @@ function hasEntitlement(customerInfo: any): boolean {
   return !!customerInfo?.entitlements?.active?.[ENTITLEMENT_ID];
 }
 
-/** Инициализация RevenueCat при старте приложения. No-op на вебе. */
+/** Инициализация RevenueCat при старте приложения. No-op на вебе и в бинарях без модуля. */
 export async function initPurchases(): Promise<void> {
-  if (!Capacitor.isNativePlatform()) return;
+  if (!purchasesAvailable()) return;
 
   let Purchases: typeof import('@revenuecat/purchases-capacitor').Purchases;
   try {
@@ -103,7 +113,7 @@ export async function initPurchases(): Promise<void> {
 
 /** Локализованная цена продукта (напр. «990 ₸») для кнопки, или null. */
 export async function getRemoveAdsPrice(): Promise<string | null> {
-  if (!Capacitor.isNativePlatform()) return null;
+  if (!purchasesAvailable()) return null;
   try {
     const { Purchases } = await loadSdk();
     const { products } = await Purchases.getProducts({ productIdentifiers: [REMOVE_ADS_PRODUCT_ID] });
@@ -115,7 +125,7 @@ export async function getRemoveAdsPrice(): Promise<string | null> {
 
 /** Купить «Убрать рекламу». true — успех (или уже куплено). */
 export async function buyRemoveAds(): Promise<boolean> {
-  if (!Capacitor.isNativePlatform()) return false;
+  if (!purchasesAvailable()) return false;
   try {
     const { Purchases } = await loadSdk();
     const { products } = await Purchases.getProducts({ productIdentifiers: [REMOVE_ADS_PRODUCT_ID] });
@@ -132,7 +142,7 @@ export async function buyRemoveAds(): Promise<boolean> {
 
 /** Восстановить покупку — ОБЯЗАТЕЛЬНАЯ кнопка для Apple (Guideline 3.1.1). */
 export async function restorePurchases(): Promise<boolean> {
-  if (!Capacitor.isNativePlatform()) return false;
+  if (!purchasesAvailable()) return false;
   try {
     const { Purchases } = await loadSdk();
     const { customerInfo } = await Purchases.restorePurchases();
