@@ -239,17 +239,27 @@ async function prerender() {
 
         // Ретрай транзиентных таймаутов (networkidle2 изредка не доходит до idle на
         // случайной странице). 3 попытки — иначе частичный dist ломает deploy --delete.
-        const page = pages[lang.code];
         const MAX_RETRIES = 2; // 1 + 2 ретрая = 3 попытки
         let ok = false;
         let lastError = null;
         for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
           try {
-            await prerenderRoute(page, distPath, lang, route);
+            await prerenderRoute(pages[lang.code], distPath, lang, route);
             ok = true;
             break;
           } catch (error) {
             lastError = error;
+            // Detached page/frame (краш вкладки Chrome): переиспользуемая page
+            // мертва навсегда — без пересоздания каскадом падают ВСЕ оставшиеся
+            // роуты воркера (2026-07-10: 484 роута после смерти на /calculator/vat).
+            if (/detached|Target closed|Session closed|disconnected/i.test(error.message)) {
+              await pages[lang.code].close().catch(() => {});
+              try {
+                pages[lang.code] = await setupPage(context, lang.code);
+              } catch (recreateErr) {
+                console.warn(`  ⚠ W${workerId}: не удалось пересоздать страницу: ${recreateErr.message}`);
+              }
+            }
             if (attempt < MAX_RETRIES) {
               console.warn(`  ⟳ retry ${attempt + 1}/${MAX_RETRIES} ${route}${lang.query}: ${error.message}`);
             }
