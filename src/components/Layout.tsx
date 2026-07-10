@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import LocalizedLink from './LocalizedLink';
-import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info } from 'lucide-react';
+import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info, History } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SearchBar from './SearchBar';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -201,6 +201,16 @@ export default function Layout({
                   >
                     <Home className="w-5 h-5" />
                     <span className="font-medium">{t('common:navigation.homePage')}</span>
+                    <ChevronRight className="w-4 h-4 ml-auto" />
+                  </LocalizedLink>
+
+                  <LocalizedLink
+                    to="/history/"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                  >
+                    <History className="w-5 h-5" />
+                    <span className="font-medium">{t('common:history.title')}</span>
                     <ChevronRight className="w-4 h-4 ml-auto" />
                   </LocalizedLink>
                 </div>

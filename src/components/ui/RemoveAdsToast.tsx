@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { isScreenshotMode } from '../../utils/screenshotMode';
 import {
   isAdFree,
   onAdFreeChange,
@@ -47,7 +48,7 @@ export function RemoveAdsToast() {
     };
   }, []);
 
-  if (!purchasesAvailable() || adFree || !visible) return null;
+  if (isScreenshotMode() || !purchasesAvailable() || adFree || !visible) return null;
 
   const buy = async () => {
     setBusy(true);

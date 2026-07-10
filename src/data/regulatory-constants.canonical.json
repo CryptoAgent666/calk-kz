@@ -2109,7 +2109,8 @@
         "IncomeTaxCalculator",
         "DividendTaxCalculator",
         "SelfEmployedCalculator",
-        "DataFreshnessBadge"
+        "DataFreshnessBadge",
+        "GphTaxCalculator"
       ],
       "audit_status": "representation_variants",
       "source_url": "https://mybuh.kz/news/mrp-mzp-na-2026-god-v-kazakhstane/",
@@ -2142,7 +2143,9 @@
         "SeverancePayCalculator",
         "TaxDeductionsCalculator",
         "MobileTransfersCalculator",
-        "DataFreshnessBadge"
+        "DataFreshnessBadge",
+        "GphTaxCalculator",
+        "IpPaymentsCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://mybuh.kz/news/mrp-mzp-na-2026-god-v-kazakhstane/",
@@ -2227,7 +2230,8 @@
         "IPSimplifiedCalculator",
         "RentalIncomeTaxCalculator",
         "SalaryCalculator",
-        "SalaryReverseCalculator"
+        "SalaryReverseCalculator",
+        "IpPaymentsCalculator"
       ],
       "audit_status": "representation_variants",
       "source_url": "https://uchet.kz/news/stavka-opvr-uvelichena-s-1-yanvarya-2026-goda/",
@@ -7688,6 +7692,115 @@
       "official_value": "12",
       "verify_note": "12 МЗП = 1 020 000 ₸ (2026, МЗП 85 000) суммарно за 3 месяца. ⚠️ uchet.kz публиковал ошибочные 1 105 000 ₸ — верно 1 020 000 (tengrinews, mybuh, арифметика).",
       "reverified": "2026-07-10"
+    },
+    {
+      "key": "enpf_pmd_methodology_revision",
+      "value": 2026,
+      "unit": "year",
+      "law": "ПП РК № 521 от 30.06.2023 в ред. ПП № 422 от 21.05.2026",
+      "year": "2026",
+      "change_frequency": "annual",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "EnpfThresholdCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://www.enpf.kz/ru/services/vyplaty/57499/",
+      "official_value": "2026",
+      "verify_note": "ПМД без учёта будущих взносов (пороги +79%+). Таблица 20–62 лет захардкожена в EnpfThresholdCalculator (PMD_2026); обновляется ЕЖЕГОДНО после закона о бюджете (декабрь) — rollover-точка! Контроль: 35 лет = 11 490 000 ₸, 62 = 23 570 000 ₸.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "gph_so_withheld_from_income",
+      "value": 5,
+      "unit": "percent",
+      "law": "Соцкодекс РК; письмо ГФСС от 23.04.2026 № ЖТ-2026-01464407",
+      "year": "2026",
+      "change_frequency": "occasional",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "GphTaxCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://prg.kz/document/?doc_id=36911155",
+      "official_value": "5",
+      "verify_note": "С 01.01.2026 СО по ГПХ (5% × (доход − ОПВ), база ≤7 МЗП) УДЕРЖИВАЮТСЯ из дохода исполнителя (в 2025 платил агент за свой счёт). Влияет на «на руки».",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "vosms_income_cap_mzp",
+      "value": 20,
+      "unit": "MZP",
+      "law": "Закон об ОСМС № 405-V, п. 5-1/5-2 ст. 28 (в ред. закона № 206-VIII от 14.07.2025)",
+      "year": "2026",
+      "change_frequency": "occasional",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "GphTaxCalculator",
+        "SalaryCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/Z1500000405",
+      "official_value": "20",
+      "verify_note": "Предел базы ВОСМС повышен с 10 до 20 МЗП с 01.01.2026 (= 1 700 000 ₸). Проверить и в зарплатном калькуляторе.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "gph_ipn_deduction_mrp",
+      "value": 30,
+      "unit": "MRP",
+      "law": "НК РК ст. 403 (базовый вычет)",
+      "year": "2026",
+      "change_frequency": "occasional",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "GphTaxCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_value": "30",
+      "verify_note": "Базовый вычет 30 МРП (129 750 ₸/мес в 2026) применим к ГПХ у одного налогового агента.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "ip_self_vosms_fixed_monthly",
+      "value": 5950,
+      "unit": "KZT",
+      "law": "Закон об ОСМС ст. 28: 5% × 1,4 МЗП",
+      "year": "2026",
+      "change_frequency": "annual",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "IpPaymentsCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/Z1500000405",
+      "official_value": "5950",
+      "verify_note": "ВОСМС ИП за себя 2026 = 0,05 × 1,4 × 85 000 = 5 950 ₸/мес. Меняется с МЗП (annual).",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "ip_self_min_package_monthly",
+      "value": 21675,
+      "unit": "KZT",
+      "law": "Соцкодекс ст. 245–251 + Закон об ОСМС (при базе 1 МЗП)",
+      "year": "2026",
+      "change_frequency": "annual",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "IpPaymentsCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/platezhi-za-individualnogo-predprinimatelya-ip-za-sebya-kakie-vznosy-i-otchisleniya-nado-platit-kako/",
+      "official_value": "21675",
+      "verify_note": "Мин. пакет ИП за себя 2026: ОПВ 8 500 + ОПВР 2 975 + СО 4 250 + ВОСМС 5 950 = 21 675 ₸/мес (без ОПВР, рожд. до 1975 — 18 700). Производная от МЗП и ставки ОПВР — пересчитывать при rollover.",
+      "reverified": "2026-07-11"
     }
   ],
   "estimates_excluded": [
@@ -7733,7 +7846,7 @@
     }
   ],
   "summary": {
-    "hardcoded_canonical": 412,
+    "hardcoded_canonical": 418,
     "value_conflicts": 2,
     "estimates_excluded": 10,
     "recovered_from_estimates": 13,

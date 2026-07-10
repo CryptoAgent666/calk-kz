@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { FileDown, FileSpreadsheet, Printer, Check, Loader2, ClipboardCopy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { shareFileNative } from '../../utils/nativeFile';
+import { saveCalcSnapshot } from '../../utils/calcHistory';
 // Heavy export libs (jsPDF/xlsx/file-saver, ~240 KB gz) are loaded on demand
 // inside the export handlers so they don't bloat the initial calculator bundle.
 
@@ -59,6 +60,15 @@ export function ExportButtons({
 }: ExportButtonsProps) {
   const { t } = useTranslation('common');
   const [exportingPDF, setExportingPDF] = useState(false);
+
+  // История расчётов: ExportButtons рендерится только при готовом результате и
+  // уже держит его в структурированном виде — снапшотим отсюда централизованно
+  // (дебаунс и дедуп внутри saveCalcSnapshot), не трогая 120 калькуляторов.
+  const dataFingerprint = JSON.stringify(data.sections);
+  React.useEffect(() => {
+    saveCalcSnapshot(filename, data.title, data.sections);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filename, dataFingerprint]);
   const [exportingExcel, setExportingExcel] = useState(false);
   const [exported, setExported] = useState<'pdf' | 'excel' | 'tsv' | null>(null);
 

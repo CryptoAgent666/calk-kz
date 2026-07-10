@@ -7,6 +7,7 @@ import './i18n';
 import { initLiveUpdates } from './liveUpdates';
 import { initPurchases } from './purchases';
 import { initAds } from './ads';
+import { isScreenshotMode } from './utils/screenshotMode';
 
 const container = document.getElementById('root');
 
@@ -36,4 +37,7 @@ void initLiveUpdates();
 void initPurchases();
 
 // Нативная реклама AdMob (только в приложении; на сайте — no-op, AdSense отдельно).
-void initAds();
+// В режиме сторовых скриншотов не инициализируем (ни рекламы, ни ATT-диалога).
+if (!isScreenshotMode()) {
+  void initAds();
+}

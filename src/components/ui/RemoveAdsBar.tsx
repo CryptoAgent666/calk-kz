@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { isScreenshotMode } from '../../utils/screenshotMode';
 import {
   isAdFree,
   onAdFreeChange,
@@ -53,7 +54,7 @@ export function RemoveAdsBar() {
   useEffect(() => onAdFreeChange(setAdFree), []);
   useEffect(() => { void getRemoveAdsPrice().then(setPrice); }, []);
 
-  if (!purchasesAvailable() || adFree || dismissed) return null;
+  if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return null;
 
   const dismiss = () => {
     try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* ignore */ }

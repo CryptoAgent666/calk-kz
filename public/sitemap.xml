@@ -613,6 +613,24 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/mobile-transfers/" />
   </url>
   <url>
+    <loc>https://calk.kz/calculator/ip-payments/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/ip-payments/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/ip-payments/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/ip-payments/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/ip-payments/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/ip-payments/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/ip-payments/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/ip-payments/" />
+  </url>
+  <url>
     <loc>https://calk.kz/calculator/customs-clearance/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
@@ -1511,6 +1529,42 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/teacher-salary/" />
     <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/teacher-salary/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/teacher-salary/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/enpf-threshold/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/enpf-threshold/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/enpf-threshold/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/enpf-threshold/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/enpf-threshold/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/enpf-threshold/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/enpf-threshold/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/enpf-threshold/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/calculator/gph-tax/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/gph-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/gph-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/gph-tax/" />
+  </url>
+  <url>
+    <loc>https://calk.kz/__kk/calculator/gph-tax/</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://calk.kz/calculator/gph-tax/" />
+    <xhtml:link rel="alternate" hreflang="kk" href="https://calk.kz/__kk/calculator/gph-tax/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://calk.kz/calculator/gph-tax/" />
   </url>
   <url>
     <loc>https://calk.kz/calculator/court-fee/</loc>

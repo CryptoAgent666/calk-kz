@@ -160,6 +160,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'tax',
         icon: 'Smartphone',
         component: React.lazy(() => import('../components/calculators/MobileTransfersCalculator'))
+      },
+      {
+        id: 'ip-payments',
+        title: 'Платежи ИП «за себя»',
+        description: 'ОПВ, ОПВР 3,5%, СО, ВОСМС и налог 4% — весь пакет ИП 2026',
+        category: 'tax',
+        icon: 'Banknote',
+        component: React.lazy(() => import('../components/calculators/IpPaymentsCalculator'))
       }
     ]
   },
@@ -602,6 +610,22 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'social',
         icon: 'GraduationCap',
         component: React.lazy(() => import('../components/calculators/TeacherSalaryCalculator'))
+      },
+      {
+        id: 'enpf-threshold',
+        title: 'Порог достаточности ЕНПФ',
+        description: 'Сколько можно снять на жильё или лечение: ПМД 2026 и ваш излишек',
+        category: 'social',
+        icon: 'Wallet',
+        component: React.lazy(() => import('../components/calculators/EnpfThresholdCalculator'))
+      },
+      {
+        id: 'gph-tax',
+        title: 'Налоги по договору ГПХ',
+        description: 'ОПВ, ВОСМС, СО и ИПН с договора ГПХ 2026 — на руки',
+        category: 'social',
+        icon: 'FileSignature',
+        component: React.lazy(() => import('../components/calculators/GphTaxCalculator'))
       }
     ]
   },

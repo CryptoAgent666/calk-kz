@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { isScreenshotMode } from '../../utils/screenshotMode';
 import { OFFER_REVIEW_EVENT, requestAppReview, reviewAvailable, snoozeReviewOffer } from '../../appReview';
 
 /** Пауза после события: даём человеку досчитать, не выскакиваем в момент навигации. */
@@ -39,7 +40,7 @@ export function RateAppToast() {
     };
   }, []);
 
-  if (!reviewAvailable() || !visible) return null;
+  if (isScreenshotMode() || !reviewAvailable() || !visible) return null;
 
   const rate = () => {
     clearTimeout(timers.current.hide);

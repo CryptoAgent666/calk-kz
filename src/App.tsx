@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { maybeShowInterstitial } from './ads';
 import { trackCalculatorVisitForReview } from './appReview';
+const HistoryPage = lazy(() => import('./components/HistoryPage'));
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useLocalizedNavigate } from './hooks/useLocalizedNavigate';
@@ -143,6 +144,12 @@ function App() {
         <Route path="/search/" element={<Navigate to={`/?${location.search.slice(1) || ''}`} replace />} />
         <Route path="/__kk/search" element={<Navigate to={`/__kk/?${location.search.slice(1) || ''}`} replace />} />
         <Route path="/__kk/search/" element={<Navigate to={`/__kk/?${location.search.slice(1) || ''}`} replace />} />
+
+        {/* История расчётов (клиентская страница, без пререндера) */}
+        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/history/" element={<HistoryPage />} />
+        <Route path="/__kk/history" element={<HistoryPage />} />
+        <Route path="/__kk/history/" element={<HistoryPage />} />
 
         {/* RU routes (default) */}
         <Route
