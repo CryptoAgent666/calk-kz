@@ -10,6 +10,7 @@
     "build": "node scripts/generate-build-version.mjs && vite build",
     "build:prerender": "node scripts/generate-build-version.mjs && node scripts/generate-llms.mjs && vite build && (npx vite preview --port 4173 &) && (until curl -sf http://localhost:4173/ > /dev/null 2>&1; do sleep 1; done) && node scripts/prerender.mjs && pkill -f 'vite preview'",
     "publish:app": "node scripts/publish-app-bundle.mjs",
+    "check:ota": "node scripts/check-ota-health.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
