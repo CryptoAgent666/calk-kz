@@ -47,6 +47,9 @@ export function RemoveAdsButton() {
 
   return (
     <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4">
+      <p className="mb-3 text-center text-sm font-semibold leading-snug text-blue-900">
+        {t('removeAds.pitch')}
+      </p>
       <button
         onClick={buy}
         disabled={busy !== null}
