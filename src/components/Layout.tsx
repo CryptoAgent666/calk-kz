@@ -136,8 +136,12 @@ export default function Layout({
             isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}>
             <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              {/* Header — фикс-панель, поэтому сами добавляем верхний safe-area
+                  инсет (iOS contentInset не трогает position:fixed). */}
+              <div
+                className="flex items-center justify-between p-4 border-b border-gray-100"
+                style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
+              >
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                     <Calculator className="w-4 h-4 text-white" />

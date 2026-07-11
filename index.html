@@ -19,7 +19,12 @@
     <link rel="manifest" href="/manifest.json" />
 
     <!-- Mobile Optimization -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover: активирует env(safe-area-inset-*) в WebView.
+         Без него инсеты = 0 → плашка «Убрать рекламу» уезжала под нативный
+         AdMob-баннер (на Android edge-to-edge между вебвью и баннером стоит
+         нав-бар). На iOS contentInset:'always' удерживает поточный контент,
+         фиксированные оверлеи получают корректные инсеты. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
