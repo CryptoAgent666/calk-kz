@@ -382,7 +382,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'otbasy-bank',
         title: 'Программы Отбасы Банк',
-        description: 'Баспана Хит, 7-20-25, Отау, Баспана Жас — ставки и платежи',
+        description: '7-20-25, Наурыз и Отау — действующие госпрограммы, платёж и переплата',
         category: 'finance',
         icon: 'Home',
         component: React.lazy(() => import('../components/calculators/OtbasyBankCalculator'))

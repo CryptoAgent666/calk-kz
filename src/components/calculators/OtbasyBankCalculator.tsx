@@ -22,17 +22,18 @@ interface Program {
   maxAmount: number;      // макс. сумма кредита
 }
 
-// Программы и ставки Отбасы банк на июнь 2026 (источник: hcsbk.kz)
-// Баспана хит (промежуточный заём): с 04.06.2026 ставка 8.5% годовых (ГЭСВ 9–9.6%),
-//   снижается до 3.5–5% после 3 лет накопления / перевода в жилищный заём (ранее в калькуляторе
-//   стояла пост-ставка 5% — заменена на действующую стартовую 8.5%).
-// Жас Отбасы (промзаём для молодой семьи): 6% годовых, накопление 1 год (ранее ошибочно стояла
-//   депозитная ставка 2%, а не кредитная).
-// Отау: 7% (соц. уязвимые; 9% — прочие); лимит Астана/Алматы — 36M, регионы — 30M.
+// Действующие государственные программы Отбасы банк на июль 2026 (источник: hcsbk.kz).
+// «Баспана хит» и «Баспана/Жас Отбасы» как отдельные ипотечные продукты с низким взносом
+//   закрыты для новых займов (промежуточный заём теперь требует накопления ~50%) — убраны,
+//   чтобы не показывать неактуальные условия.
+// 7-20-25 (КФУ/Нацбанк): 7%, взнос от 20%, до 25 лет, только первичка; лимит жилья 30М
+//   (Астана/Алматы/Актау/Атырау/Шымкент), 25М (Караганда), 20М (прочие).
+// Наурыз (Отбасы): 9% (соц. уязвимые очередники — 7%); взнос от 20% (10% на первичку в чистовой
+//   отделке); лимит займа 36М (Астана/Алматы), 30М (регионы); до 19 лет; заявки — кампаниями.
+// Отау (Отбасы): 9% через систему жилстройсбережений; взнос от 20%; лимит 36М/30М; до 19 лет.
 const programs: Program[] = [
-  { id: 'baspana-hit', labelKey: 'otbasy-bank.programs.baspanaHit', rate: 8.5, maxTerm: 25, downPaymentMin: 20, maxAmount: 30_000_000 },
   { id: '7-20-25', labelKey: 'otbasy-bank.programs.program72025', rate: 7, maxTerm: 25, downPaymentMin: 20, maxAmount: 30_000_000 },
-  { id: 'baspana-zhas', labelKey: 'otbasy-bank.programs.baspanaZhas', rate: 6, maxTerm: 25, downPaymentMin: 10, maxAmount: 18_000_000 },
+  { id: 'nauryz', labelKey: 'otbasy-bank.programs.nauryz', rate: 9, maxTerm: 19, downPaymentMin: 20, maxAmount: 36_000_000 },
   { id: 'otau', labelKey: 'otbasy-bank.programs.otau', rate: 9, maxTerm: 19, downPaymentMin: 20, maxAmount: 36_000_000 },
 ];
 
@@ -46,7 +47,7 @@ function calcAnnuity(principal: number, annualRate: number, termYears: number): 
 export default function OtbasyBankCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [selectedProgram, setSelectedProgram] = useState('baspana-hit');
+  const [selectedProgram, setSelectedProgram] = useState('7-20-25');
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
   const [term, setTerm] = useState<string>('20');
