@@ -30,7 +30,7 @@ export default function IslamicMortgageCalculator() {
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
   const [downPayment, setDownPayment] = useState<string>('30'); // %
   const [termYears, setTermYears] = useState<string>('15');
-  const [markup, setMarkup] = useState<string>('10'); // % годовых
+  const [markup, setMarkup] = useState<string>('7'); // % годовых (плоская наценка Al Hilal ~7%)
 
   const results = useMemo(() => {
     const price = parseFloat(propertyPrice) || 0;
@@ -65,15 +65,38 @@ export default function IslamicMortgageCalculator() {
       overpayment = totalToPay - financedAmount;
     }
 
-    // Сравнение с обычной ипотекой (ставка ~18% в КЗ 2026)
-    const conventionalRate = 18;
+    // Сравнение с обычной ипотекой: рынок вторички 2026 ~20-22% номинал
+    // (сверено 07.2026, см. mortgage-specialized). Берём 21%.
+    const conventionalRate = 21;
     const convMonthlyRate = conventionalRate / 100 / 12;
     const convN = years * 12;
     const convMonthly = financedAmount * convMonthlyRate / (1 - Math.pow(1 + convMonthlyRate, -convN));
     const convTotal = convMonthly * convN;
     const convOverpayment = convTotal - financedAmount;
 
-    const effectiveRate = (Math.pow(totalToPay / financedAmount, 1 / years) - 1) * 100;
+    // Коэффициент удорожания — как это подают сами исламские банки РК
+    // (Al Hilal, Заман Банк): общая наценка в % от финансируемой суммы.
+    // ~104-106% за 15 лет при плоской наценке ~7%/год.
+    const markupCoefficient = financedAmount > 0 ? (overpayment / financedAmount) * 100 : 0;
+
+    // «Эффективная ставка ДЛЯ СРАВНЕНИЯ» — НЕ ГЭСВ (исламские банки по закону
+    // от ГЭСВ освобождены и её не публикуют, adilet V1200007663). Считаем IRR
+    // равных ежемесячных платежей: для мурабахи (плоская наценка) эффективная
+    // ставка ~1,7× плоской (7% плоских ≈ 12% эффективных); прежняя формула
+    // (totalToPay/financed)^(1/срок) занижала её ниже самой наценки.
+    const nPay = years * 12;
+    const npvAt = (i: number): number => {
+      let v = financedAmount;
+      for (let k = 1; k <= nPay; k++) v -= monthlyPayment / Math.pow(1 + i, k);
+      return v;
+    };
+    let lo = 0, hi = 1;
+    for (let it = 0; it < 60; it++) {
+      const mid = (lo + hi) / 2;
+      if (npvAt(mid) < 0) lo = mid; else hi = mid;
+    }
+    const monthlyIrr = (lo + hi) / 2;
+    const effectiveRate = (Math.pow(1 + monthlyIrr, 12) - 1) * 100;
 
     return {
       downAmount: Math.round(downAmount),
@@ -81,8 +104,10 @@ export default function IslamicMortgageCalculator() {
       monthlyPayment: Math.round(monthlyPayment),
       totalToPay: Math.round(totalToPay + downAmount),
       overpayment: Math.round(overpayment),
+      markupCoefficient: markupCoefficient.toFixed(0),
       totalWithDown: Math.round(totalToPay + downAmount),
       effectiveRate: effectiveRate.toFixed(2),
+      conventionalRate,
       convMonthly: Math.round(convMonthly),
       convOverpayment: Math.round(convOverpayment),
       savingsVsConv: Math.round(convOverpayment - overpayment),
@@ -129,7 +154,7 @@ export default function IslamicMortgageCalculator() {
           <RangeSlider label={t('islamic-mortgage.downPayment')} value={parseFloat(downPayment) || 0}
             onChange={v => setDownPayment(String(v))} min={20} max={70} step={5} formatValue={v => `${v}%`} />
           <RangeSlider label={t('islamic-mortgage.term')} value={parseFloat(termYears) || 0}
-            onChange={v => setTermYears(String(v))} min={3} max={25} step={1} formatValue={v => `${v} ${pluralize(i18n.language, v, 'год', 'года', 'лет')}`} />
+            onChange={v => setTermYears(String(v))} min={3} max={15} step={1} formatValue={v => `${v} ${pluralize(i18n.language, v, 'год', 'года', 'лет')}`} />
           <RangeSlider label={t('islamic-mortgage.markup')} value={parseFloat(markup) || 0}
             onChange={v => setMarkup(String(v))} min={5} max={18} step={0.5} formatValue={v => `${v}%`} />
 
@@ -146,7 +171,10 @@ export default function IslamicMortgageCalculator() {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border-2 border-green-300">
                 <div className="text-sm text-gray-600">{t('islamic-mortgage.monthlyPayment')}</div>
                 <div className="text-4xl font-bold text-green-700">{formatNumber(results.monthlyPayment)}</div>
-                <div className="text-xs text-gray-500 mt-1">{t('islamic-mortgage.effectiveRate')}: ~{results.effectiveRate}%</div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {t('islamic-mortgage.effectiveRate')}: ~{results.effectiveRate}%
+                  <span className="block text-gray-400">{t('islamic-mortgage.effectiveRateNote')}</span>
+                </div>
               </div>
 
               <div className="space-y-2 text-sm">
@@ -162,6 +190,10 @@ export default function IslamicMortgageCalculator() {
                   <span>{t('islamic-mortgage.markupTotal')}</span>
                   <span className="font-semibold text-amber-700">{formatNumber(results.overpayment)}</span>
                 </div>
+                <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
+                  <span>{t('islamic-mortgage.markupCoefficient')}</span>
+                  <span className="font-semibold text-amber-700">{results.markupCoefficient}%</span>
+                </div>
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex justify-between">
                   <span>{t('islamic-mortgage.totalWithDown')}</span>
                   <span className="font-bold">{formatNumber(results.totalWithDown)}</span>
@@ -171,7 +203,7 @@ export default function IslamicMortgageCalculator() {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="text-sm font-medium text-blue-900 mb-2">{t('islamic-mortgage.comparison')}</div>
                 <div className="text-xs space-y-1 text-blue-800">
-                  <div>{t('islamic-mortgage.conventional')} (18%): {formatNumber(results.convMonthly)}/мес</div>
+                  <div>{t('islamic-mortgage.conventional')} ({results.conventionalRate}%): {formatNumber(results.convMonthly)}/{t('islamic-mortgage.perMonthShort')}</div>
                   <div>{t('islamic-mortgage.convOverpayment')}: {formatNumber(results.convOverpayment)}</div>
                   <div className={`font-semibold ${results.savingsVsConv > 0 ? 'text-green-700' : 'text-red-700'}`}>
                     {results.savingsVsConv > 0 ? t('islamic-mortgage.savings') : t('islamic-mortgage.extra')}: {formatNumber(Math.abs(results.savingsVsConv))}

@@ -11279,7 +11279,10 @@
     "totalPayment": "Жалпы төлем сомасы",
     "murabahaProfit": "Мурабаха пайдасы",
     "ijaraRent": "Иджара жалдау ақысы",
-    "totalOverpayment": "Жалпы артық төлем"
+    "totalOverpayment": "Жалпы артық төлем",
+    "effectiveRateNote": "салыстыру үшін; банк ГЭСВ жарияламайды",
+    "markupCoefficient": "Бүкіл мерзімдегі қымбаттау",
+    "perMonthShort": "ай"
   },
   "tire-size": {
     "title": "Шина өлшемі",
