@@ -35,7 +35,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'ip-simplified',
         title: 'Налоги ИП на упрощенке',
-        description: 'Расчет налогов и соцплатежей для индивидуальных предпринимателей',
+        description: 'Полный расчёт налога 4% и платежей ИП на упрощёнке, в т.ч. с работниками',
         category: 'tax',
         icon: 'Briefcase',
         component: React.lazy(() => import('../components/calculators/IPSimplifiedCalculator'))
@@ -164,7 +164,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'ip-payments',
         title: 'Платежи ИП «за себя»',
-        description: 'ОПВ, ОПВР 3,5%, СО, ВОСМС и налог 4% — весь пакет ИП 2026',
+        description: 'Сколько ИП платит за себя в месяц — ОПВ, ОПВР 3,5%, СО, ВОСМС и налог 4%',
         category: 'tax',
         icon: 'Banknote',
         component: React.lazy(() => import('../components/calculators/IpPaymentsCalculator'))

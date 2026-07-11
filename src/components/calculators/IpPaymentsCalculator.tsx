@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Banknote, Calculator, Info } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
+import LocalizedLink from '../LocalizedLink';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
@@ -110,6 +111,15 @@ ${t('ip-payments.results')}:
       </div>
 
       <QuickAnswer calculatorId="ip-payments" />
+
+      {/* Кросс-ссылка на полный калькулятор (с работниками), чтобы не конкурировать за один запрос */}
+      <div className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-blue-100 bg-blue-50 px-4 py-2 text-sm text-blue-800">
+        <span>{t('ip-payments.crossLinkText')}</span>
+        <LocalizedLink to="/calculator/ip-simplified/" className="font-medium underline hover:text-blue-900">
+          {t('ip-payments.crossLinkLabel')} →
+        </LocalizedLink>
+      </div>
+
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('ip-payments.parameters')}</h2>

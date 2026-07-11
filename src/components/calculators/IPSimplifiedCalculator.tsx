@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Briefcase, Info, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import LocalizedLink from '../LocalizedLink';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -128,6 +129,15 @@ export default function IPSimplifiedCalculator() {
   return (
     <div className="max-w-7xl mx-auto">
       <QuickAnswer calculatorId="ip-simplified" />
+
+      {/* Кросс-ссылка на быстрый калькулятор «платежи за себя» (без работников) */}
+      <div className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-blue-100 bg-blue-50 px-4 py-2 text-sm text-blue-800">
+        <span>{t('ip-simplified.crossLinkText')}</span>
+        <LocalizedLink to="/calculator/ip-payments/" className="font-medium underline hover:text-blue-900">
+          {t('ip-simplified.crossLinkLabel')} →
+        </LocalizedLink>
+      </div>
+
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
