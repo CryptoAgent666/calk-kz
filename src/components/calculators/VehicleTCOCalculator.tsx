@@ -59,6 +59,7 @@ export default function VehicleTCOCalculator() {
     { id: 'ai98', labelKey: 'vehicle-tco.fuelAI98', price: 340 },
     { id: 'dt', labelKey: 'vehicle-tco.fuelDT', price: 295 },
     { id: 'lpg', labelKey: 'vehicle-tco.fuelLPG', price: 100 },
+    { id: 'electric', labelKey: 'vehicle-tco.fuelElectric', price: 35 }, // ₸/кВт·ч (расход в кВт·ч/100км)
   ];
 
   const periods: PeriodOption[] = [
@@ -88,6 +89,8 @@ export default function VehicleTCOCalculator() {
   useEffect(() => {
     const fuel = fuelTypes.find((f) => f.id === selectedFuel);
     if (fuel) setFuelPrice(String(fuel.price));
+    // У EV расход в кВт·ч/100км — подставим типовые 18 при переключении.
+    if (selectedFuel === 'electric') setConsumption('18');
   }, [selectedFuel]);
 
   // Основной расчёт TCO
@@ -99,26 +102,33 @@ export default function VehicleTCOCalculator() {
     const cons = parseFloat(consumption) || 0;
     const mileage = parseFloat(yearlyMileage) || 0;
 
-    if (price <= 0 || volume <= 0 || mileage <= 0) {
+    const isElectric = selectedFuel === 'electric';
+
+    // EV: объём двигателя не нужен (нет двигателя внутреннего сгорания).
+    if (price <= 0 || (!isElectric && volume <= 0) || mileage <= 0) {
       return null;
     }
 
-    // 1. Годовой налог на ТС
-    const rateInfo = CAR_TAX_RATES.find(r => volume >= r.min && volume <= r.max);
-    let yearlyTax = rateInfo ? rateInfo.rate * MRP_2026 : 0;
-    if (rateInfo && volume > 1500) {
-      yearlyTax += (volume - rateInfo.min + 1) * 7;
+    // 1. Годовой налог на ТС. Электромобили освобождены от транспортного налога.
+    let yearlyTax = 0;
+    if (!isElectric) {
+      const rateInfo = CAR_TAX_RATES.find(r => volume >= r.min && volume <= r.max);
+      yearlyTax = rateInfo ? rateInfo.rate * MRP_2026 : 0;
+      if (rateInfo && volume > 1500) {
+        yearlyTax += (volume - rateInfo.min + 1) * 7;
+      }
+      if (age > 20) yearlyTax *= 0.5;
+      else if (age >= 10) yearlyTax *= 0.7;
     }
-    // Скидка за возраст
-    if (age > 20) yearlyTax *= 0.5;
-    else if (age >= 10) yearlyTax *= 0.7;
 
-    // 2. ОГПО — базовая ставка зависит от объёма и региона
+    // 2. ОГПО — базовая ставка зависит от объёма и региона (EV — по базовой).
     const regionData = regions.find(r => r.id === region) ?? regions[0];
     let ogpoBase = 30000;
-    if (volume > 1500) ogpoBase = 42000;
-    if (volume > 2000) ogpoBase = 58000;
-    if (volume > 3000) ogpoBase = 78000;
+    if (!isElectric) {
+      if (volume > 1500) ogpoBase = 42000;
+      if (volume > 2000) ogpoBase = 58000;
+      if (volume > 3000) ogpoBase = 78000;
+    }
     const yearlyOgpo = Math.round(ogpoBase * regionData.ogpoMultiplier / 2.5);
 
     // 3. КАСКО (~5% от стоимости, падает вместе с амортизацией)

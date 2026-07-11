@@ -22,6 +22,8 @@ const LAST_UPDATED: Record<string, string> = {
   'tax-deductions': '2026-01-01',
   'enpf-threshold': '2026-07-11',
   'gph-tax': '2026-07-11',
+  'production-calendar': '2026-07-11',
+  'house-heating': '2026-07-11',
   'ip-payments': '2026-07-11',
   'dividend-tax': '2026-07-10',
   'self-employed': '2026-07-10',

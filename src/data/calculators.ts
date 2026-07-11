@@ -626,6 +626,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'social',
         icon: 'FileSignature',
         component: React.lazy(() => import('../components/calculators/GphTaxCalculator'))
+      },
+      {
+        id: 'production-calendar',
+        title: 'Производственный календарь 2026',
+        description: 'Рабочие дни и часы между датами, норма времени и праздники РК',
+        category: 'social',
+        icon: 'CalendarDays',
+        component: React.lazy(() => import('../components/calculators/ProductionCalendarCalculator'))
       }
     ]
   },
@@ -786,6 +794,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'utilities',
         icon: 'Thermometer',
         component: React.lazy(() => import('../components/calculators/HeatingBillCalculator'))
+      },
+      {
+        id: 'house-heating',
+        title: 'Отопление частного дома',
+        description: 'Сравнение стоимости отопления: уголь, газ, электрокотёл, тепловой насос',
+        category: 'utilities',
+        icon: 'Flame',
+        component: React.lazy(() => import('../components/calculators/HouseHeatingCalculator'))
       },
       {
         id: 'gas',

@@ -19,6 +19,7 @@ export default function CustomsClearanceCalculator() {
   const [customsValue, setCustomsValue] = useState<string>('15000');
   const [currency, setCurrency] = useState<'USD' | 'KZT'>('USD');
   const [exchangeRate, setExchangeRate] = useState<string>('470');
+  const [isElectric, setIsElectric] = useState<boolean>(false); // электромобиль (растаможка ВТО 0%)
 
   const [results, setResults] = useState({
     customsValueKZT: 0,
@@ -61,14 +62,19 @@ export default function CustomsClearanceCalculator() {
     const isOldVehicle = vehicleAge > 7;
 
     let customsDutyRate = 0.15;
-    let vatRate = 0.16;
+    const vatRate = 0.16;
 
-    if (isOldVehicle) {
-      customsDutyRate = 0.25;
-    }
-
-    if (volume > 3000) {
-      customsDutyRate += 0.05;
+    // Электромобиль: ввоз по ставкам ВТО — пошлина 0%, НДС 16% (с 01.01.2026),
+    // утильсбор и транспортный налог не платятся. Объём двигателя не влияет.
+    if (isElectric) {
+      customsDutyRate = 0;
+    } else {
+      if (isOldVehicle) {
+        customsDutyRate = 0.25;
+      }
+      if (volume > 3000) {
+        customsDutyRate += 0.05;
+      }
     }
 
     // Фиксированный таможенный сбор за декларирование: 6 МРП за декларацию
@@ -82,7 +88,9 @@ export default function CustomsClearanceCalculator() {
     const totalPayments = customsFee + customsDuty + vat;
 
     let additionalRestrictions = '';
-    if (isOldVehicle && volume > 2500) {
+    if (isElectric) {
+      additionalRestrictions = t('customs-clearance.electricNote');
+    } else if (isOldVehicle && volume > 2500) {
       additionalRestrictions = t('customs-clearance.oldVehicleEcoFee');
     } else if (isOldVehicle) {
       additionalRestrictions = t('customs-clearance.oldVehicleHigherRates');
@@ -102,7 +110,7 @@ export default function CustomsClearanceCalculator() {
 
   useEffect(() => {
     calculateCustomsPayments();
-  }, [manufactureYear, engineVolume, customsValue, currency, exchangeRate]);
+  }, [manufactureYear, engineVolume, customsValue, currency, exchangeRate, isElectric]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
@@ -156,6 +164,16 @@ export default function CustomsClearanceCalculator() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('customs-clearance.vehicleParameters')}</h2>
 
           <div className="space-y-6">
+            <label className="flex items-center gap-3 cursor-pointer rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3">
+              <input
+                type="checkbox"
+                checked={isElectric}
+                onChange={(e) => setIsElectric(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+              />
+              <span className="text-sm font-medium text-emerald-800">{t('customs-clearance.electricLabel')}</span>
+            </label>
+
             <div>
               <label htmlFor="manufactureYear" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('customs-clearance.manufactureYear')}
@@ -172,33 +190,35 @@ export default function CustomsClearanceCalculator() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('customs-clearance.engineVolume')}
-              </label>
-              <RangeSlider
-                value={parseFloat(engineVolume) || 0}
-                onChange={(val) => setEngineVolume(String(val))}
-                min={500}
-                max={7000}
-                step={100}
-                formatValue={(v) => `${v} см³`}
-                color="#6366f1"
-              />
-              <div className="relative mt-3">
-                <input
-                  type="number"
-                  id="engineVolume"
-                  value={engineVolume}
-                  onChange={(e) => setEngineVolume(e.target.value)}
-                  placeholder={t('customs-clearance.enterVolume')}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+            {!isElectric && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('customs-clearance.engineVolume')}
+                </label>
+                <RangeSlider
+                  value={parseFloat(engineVolume) || 0}
+                  onChange={(val) => setEngineVolume(String(val))}
+                  min={500}
+                  max={7000}
+                  step={100}
+                  formatValue={(v) => `${v} см³`}
+                  color="#6366f1"
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">{t('customs-clearance.cubicCm')}</span>
+                <div className="relative mt-3">
+                  <input
+                    type="number"
+                    id="engineVolume"
+                    value={engineVolume}
+                    onChange={(e) => setEngineVolume(e.target.value)}
+                    placeholder={t('customs-clearance.enterVolume')}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <span className="text-gray-500 text-sm">{t('customs-clearance.cubicCm')}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div>
               <label htmlFor="customsValue" className="block text-sm font-medium text-gray-700 mb-2">

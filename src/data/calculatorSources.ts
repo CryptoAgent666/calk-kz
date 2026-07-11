@@ -66,6 +66,8 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'ip-payments': [NK_RK, KGD, ENPF],
   'enpf-threshold': [ENPF, EGOV],
   'gph-tax': [NK_RK, KGD],
+  'production-calendar': [EGOV, TK_RK],
+  'house-heating': [],
   'tax-regime-comparison': [NK_RK, KGD, EGOV],
   'universal-declaration': [NK_RK, KGD, EGOV],
   'ip-simplified': [NK_RK, KGD],
