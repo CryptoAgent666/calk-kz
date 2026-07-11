@@ -715,28 +715,29 @@ export default function MortgageCalculator() {
           <div className="border border-blue-200 rounded-lg p-6 bg-blue-50">
             <h3 className="font-semibold text-blue-900 mb-4 flex items-center space-x-2">
               <span className="text-xl">🏘️</span>
-              <span>{t('mortgage.baspanaHitProgram')}</span>
+              <span>{t('mortgage.nauryzProgram')}</span>
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-medium text-blue-900 mb-2">{t('mortgage.programFeatures')}</h4>
+                <h4 className="font-medium text-blue-900 mb-2">{t('mortgage.programConditions')}</h4>
                 <div className="space-y-1 text-sm text-blue-800">
-                  <div>• <strong>{t('mortgage.affordableHousing')}</strong></div>
-                  <div>• <strong>{t('mortgage.mortgageThrough')}</strong></div>
-                  <div>• <strong>{t('mortgage.downPayment_10_15')}</strong></div>
-                  <div>• <strong>{t('mortgage.location')}</strong></div>
+                  <div>• <strong>{t('mortgage.nauryzRate')}</strong></div>
+                  <div>• <strong>{t('mortgage.nauryzDownPayment')}</strong></div>
+                  <div>• <strong>{t('mortgage.nauryzTerm')}</strong></div>
+                  <div>• <strong>{t('mortgage.nauryzLimits')}</strong></div>
                 </div>
               </div>
               <div>
                 <h4 className="font-medium text-blue-900 mb-2">{t('mortgage.targetAudience')}</h4>
                 <div className="space-y-1 text-sm text-blue-800">
-                  <div>• {t('mortgage.youngFamilies')}</div>
-                  <div>• {t('mortgage.largeFamilies')}</div>
-                  <div>• {t('mortgage.budgetWorkers')}</div>
-                  <div>• {t('mortgage.lowIncomeFamilies')}</div>
+                  <div>• {t('mortgage.nauryzAudience1')}</div>
+                  <div>• {t('mortgage.nauryzAudience2')}</div>
+                  <div>• {t('mortgage.nauryzAudience3')}</div>
+                  <div>• {t('mortgage.nauryzAudience4')}</div>
                 </div>
               </div>
             </div>
+            <p className="mt-4 text-xs text-blue-700">{t('mortgage.nauryzNote')}</p>
           </div>
         </div>
       </div>
