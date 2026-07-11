@@ -78,12 +78,15 @@ export default function MortgageCalculator() {
       restrictionsKey: 'calculators:mortgage.program_7_20_25_restrictions'
     },
     {
+      // Стандартная ипотека на вторичку 07.2026: номинал ~21% (Halyk «от 20,5%»
+      // с комиссией / «от 22%» без), ГЭСВ 23–24,4%, взнос от 20%, до 20 лет.
+      // Источники: krisha.kz «ипотека на вторичку 2026», kn.kz 31.05.2026.
       id: 'halyk-standard',
       nameKey: 'calculators:mortgage.program_halyk_name',
       descriptionKey: 'calculators:mortgage.program_halyk_desc',
-      nominalRate: 13.5,
-      minDownPaymentPercent: 30,
-      maxTermYears: 25,
+      nominalRate: 21.0,
+      minDownPaymentPercent: 20,
+      maxTermYears: 20,
       maxLoanAmount: {
         'almaty': 50000000,
         'astana': 50000000,
@@ -97,11 +100,15 @@ export default function MortgageCalculator() {
       }
     },
     {
+      // Застройщик-субсидированная (BI Group/BAZIS-A и др.): плоские 9–10%
+      // ушли; для обычного покупателя (взнос 20%) реальный номинал ~18%
+      // (ультранизкие 0,1–5% требуют 50–70% взноса на 1–3 года). Источник:
+      // krisha.kz «ипотека на новостройки 2026», kursiv.media 10.07.2026.
       id: 'partner-program',
       nameKey: 'calculators:mortgage.program_partner_name',
       descriptionKey: 'calculators:mortgage.program_partner_desc',
-      nominalRate: 9.9,
-      minDownPaymentPercent: 15,
+      nominalRate: 18.0,
+      minDownPaymentPercent: 20,
       maxTermYears: 20,
       maxLoanAmount: {
         'almaty': 35000000,
@@ -117,29 +124,34 @@ export default function MortgageCalculator() {
       restrictionsKey: 'calculators:mortgage.program_partner_restrictions'
     },
     {
-      id: 'kaspi-express',
-      nameKey: 'calculators:mortgage.program_kaspi_name',
-      descriptionKey: 'calculators:mortgage.program_kaspi_desc',
-      nominalRate: 14.9,
-      minDownPaymentPercent: 40,
+      // Kaspi в 2026 НЕ выдаёт ипотеку на вторичку — продукт заменён на
+      // реальный БЦК (Center Credit): номинал ~20,55%, ГЭСВ 23,6%, взнос 20%,
+      // до 15 лет. Источник: krisha.kz roundup, prodengi.kz/ipoteki.
+      id: 'bcc-standard',
+      nameKey: 'calculators:mortgage.program_bcc_name',
+      descriptionKey: 'calculators:mortgage.program_bcc_desc',
+      nominalRate: 20.5,
+      minDownPaymentPercent: 20,
       maxTermYears: 15,
       maxLoanAmount: {
-        'almaty': 30000000,
-        'astana': 30000000,
-        'shymkent': 20000000,
-        'other': 15000000
+        'almaty': 100000000,
+        'astana': 100000000,
+        'shymkent': 50000000,
+        'other': 40000000
       },
       additionalFees: {
-        applicationFee: 35000,
-        evaluationFee: 35000,
-        monthlyInsurance: 0.1
+        applicationFee: 25000,
+        evaluationFee: 30000,
+        monthlyInsurance: 0.08
       }
     },
     {
+      // Дефолт «частных условий» = ориентир рынка вторички 2026 (~21% номинал,
+      // ГЭСВ ~24%). Пользователь может задать свою ставку.
       id: 'custom',
       nameKey: 'calculators:mortgage.program_custom_name',
       descriptionKey: 'calculators:mortgage.program_custom_desc',
-      nominalRate: 12.0,
+      nominalRate: 21.0,
       minDownPaymentPercent: 20,
       maxTermYears: 25,
       maxLoanAmount: {
@@ -224,7 +236,36 @@ export default function MortgageCalculator() {
     }
 
     const totalCostOfCredit = totalPayment + totalAdditionalCosts - loanAmount;
-    const effectiveRate = (totalCostOfCredit / loanAmount / termYears) * 100;
+
+    // ГЭСВ (годовая эффективная ставка вознаграждения) — по методике НБРК это
+    // эффективная годовая ставка ВНУТРЕННЕЙ доходности денежного потока с учётом
+    // разовых комиссий и страховки, а НЕ «переплата / срок» (та всегда выходит
+    // НИЖЕ номинала и математически неверна как ГЭСВ). Считаем IRR помесячно
+    // (банк выдаёт заём, заёмщик платит разовые комиссии сразу + аннуитет и
+    // страховку) и капитализируем в годовую: ГЭСВ ≥ номинальной по определению.
+    const upfrontFees = (program.additionalFees.applicationFee || 0) +
+                        (program.additionalFees.evaluationFee || 0) + additionalComm;
+    const monthlyInsAmt = program.additionalFees.monthlyInsurance
+      ? loanAmount * program.additionalFees.monthlyInsurance / 100 : 0;
+    const yearlyInsAmt = (program.additionalFees.yearlyInsurance
+      ? loanAmount * program.additionalFees.yearlyInsurance / 100 : 0) + yearlyIns;
+    const npvAt = (i: number): number => {
+      let v = loanAmount - upfrontFees; // t0: получен заём за вычетом разовых комиссий
+      for (let k = 1; k <= numberOfPayments; k++) {
+        let out = monthlyPayment + monthlyInsAmt;
+        if (k % 12 === 0) out += yearlyInsAmt;
+        v -= out / Math.pow(1 + i, k);
+      }
+      return v;
+    };
+    // Бисекция по месячной ставке: npvAt возрастает по i, ищем корень npv=0.
+    let lo = 0, hi = 1;
+    for (let iter = 0; iter < 60; iter++) {
+      const mid = (lo + hi) / 2;
+      if (npvAt(mid) < 0) lo = mid; else hi = mid;
+    }
+    const monthlyEff = (lo + hi) / 2;
+    const effectiveRate = (Math.pow(1 + monthlyEff, 12) - 1) * 100;
 
     setResults({
       loanAmount: Math.round(loanAmount),
