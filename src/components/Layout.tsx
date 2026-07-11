@@ -10,6 +10,7 @@ import { RemoveAdsButton } from './ui/RemoveAdsButton';
 import { RemoveAdsBar } from './ui/RemoveAdsBar';
 import { RemoveAdsToast } from './ui/RemoveAdsToast';
 import { RateAppToast } from './ui/RateAppToast';
+import { AppInstallPrompt } from './ui/AppInstallPrompt';
 import { purchasesAvailable } from '../purchases';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
@@ -56,6 +57,8 @@ export default function Layout({
       <RemoveAdsToast />
       {/* Ненавязчивое «оцените приложение» (native-only, in-app review iOS/Android) */}
       <RateAppToast />
+      {/* Предложение скачать приложение (web-only, мобильный браузер iOS/Android) */}
+      <AppInstallPrompt />
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
