@@ -48,12 +48,24 @@ lighthouse-*.json
 id_rsa*
 *.mobileprovision
 *.p12
+*.p8
 *.keystore
+# Ключи API/сервис-аккаунтов (Apple ASC, Google service account)
+AuthKey_*.p8
+SubscriptionKey_*.p8
+gen-lang-client-*.json
+*-service-account*.json
 
 # Бинарные сборки приложения
 *.apk
 *.aab
 *.ipa
+
+# Нативные build-артефакты (не для коммита)
+ios/App/build/
+ios/App/build-admob/
+ios/App/Pods/
+ios/DerivedData/
 
 # Локальные конфиги инструментов / временные файлы
 .mcp.json
