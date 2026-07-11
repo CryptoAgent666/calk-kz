@@ -19,7 +19,7 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 - Пенсионный возраст: мужчины 63, женщины 61
 - Базовая ставка НБРК: 15.25%
 
-## Категории калькуляторов (117 калькуляторов в 14 категориях)
+## Категории калькуляторов (132 калькулятора в 14 категориях)
 
 ### Налоговые калькуляторы
 - /calculator/income-tax/ — Калькулятор ИПН для наёмных работников
@@ -38,6 +38,10 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 - /calculator/universal-declaration/ — Всеобщее декларирование (ФНО 250/270)
 - /calculator/unified-payment/ — Единый платёж с ФОТ
 - /calculator/tax-regime-comparison/ — Сравнение налоговых режимов ИП
+- /calculator/dividend-tax/ — Налог на дивиденды
+- /calculator/self-employed/ — Калькулятор самозанятого
+- /calculator/mobile-transfers/ — Проверка мобильных переводов
+- /calculator/ip-payments/ — Платежи ИП «за себя»
 
 ### Автомобильные калькуляторы
 - /calculator/customs-clearance/ — Таможенная очистка автомобилей
@@ -59,6 +63,7 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 ### Финансовые калькуляторы
 - /calculator/credit/ — Универсальный кредитный калькулятор
 - /calculator/deposit/ — Калькулятор банковских вкладов
+- /calculator/kdif-guarantee/ — Гарантия КФГД по депозитам
 - /calculator/mortgage-specialized/ — Специализированный ипотечный калькулятор
 - /calculator/rent-vs-buy/ — Аренда или покупка жилья
 - /calculator/compound-interest/ — Калькулятор сложного процента
@@ -66,6 +71,7 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 - /calculator/microloan/ — Калькулятор микрокредита
 - /calculator/early-repayment/ — Калькулятор досрочного погашения кредита
 - /calculator/otbasy-bank/ — Программы Отбасы Банк
+- /calculator/mortgage-compare/ — Сравнение госипотек 2026
 - /calculator/fire/ — Калькулятор FIRE
 - /calculator/business-roi/ — ROI бизнеса и NPV
 - /calculator/break-even/ — Точка безубыточности
@@ -97,6 +103,10 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 - /calculator/overtime/ — Калькулятор сверхурочных и ночных
 - /calculator/second-job/ — Калькулятор совместительства
 - /calculator/teacher-salary/ — Калькулятор зарплаты учителя 2026
+- /calculator/enpf-threshold/ — Порог достаточности ЕНПФ
+- /calculator/gph-tax/ — Налоги по договору ГПХ
+- /calculator/production-calendar/ — Производственный календарь 2026
+- /calculator/work-experience/ — Калькулятор трудового стажа
 
 ### Юридические услуги
 - /calculator/court-fee/ — Государственная пошлина в суд
@@ -120,10 +130,12 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 - /calculator/electricity/ — Счет за электроэнергию
 - /calculator/water/ — Водоснабжение и канализация
 - /calculator/heating/ — Центральное отопление
+- /calculator/house-heating/ — Отопление частного дома
 - /calculator/gas/ — Природный газ
 
 ### Конвертеры и преобразователи
 - /calculator/currency-converter/ — Универсальный конвертер валют
+- /calculator/mrp-converter/ — Конвертер МРП и МЗП 2026
 - /calculator/time-converter/ — Конвертация единиц времени
 - /calculator/number-to-words/ — Калькулятор записи чисел прописью
 - /calculator/time-to-words/ — Калькулятор преобразования времени прописью
@@ -145,6 +157,7 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 
 ### Математические калькуляторы
 - /calculator/discount/ — Калькулятор скидок
+- /calculator/tip-split/ — Чаевые и сплит счёта
 - /calculator/percentage/ — Процентный калькулятор
 - /calculator/leap-year/ — Калькулятор високосного года
 - /calculator/date-calculator/ — Калькулятор добавления/вычитания дат
@@ -156,6 +169,8 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 - /calculator/body-fat/ — Калькулятор процента жира
 - /calculator/sleep/ — Калькулятор сна
 - /calculator/water-intake/ — Калькулятор нормы воды
+- /calculator/alcohol-blood/ — Алкоголь в крови: когда за руль
+- /calculator/bad-habits-cost/ — Стоимость курения и алкоголя
 
 ### Образование
 - /calculator/ent-score/ — Калькулятор баллов ЕНТ

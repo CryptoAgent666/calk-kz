@@ -31,9 +31,9 @@ interface Program {
 // Отау: 7% (соц. уязвимые; 9% — прочие); лимит Астана/Алматы — 36M, регионы — 30M.
 const programs: Program[] = [
   { id: 'baspana-hit', labelKey: 'otbasy-bank.programs.baspanaHit', rate: 8.5, maxTerm: 25, downPaymentMin: 20, maxAmount: 30_000_000 },
-  { id: '7-20-25', labelKey: 'otbasy-bank.programs.program72025', rate: 7, maxTerm: 25, downPaymentMin: 20, maxAmount: 25_000_000 },
+  { id: '7-20-25', labelKey: 'otbasy-bank.programs.program72025', rate: 7, maxTerm: 25, downPaymentMin: 20, maxAmount: 30_000_000 },
   { id: 'baspana-zhas', labelKey: 'otbasy-bank.programs.baspanaZhas', rate: 6, maxTerm: 25, downPaymentMin: 10, maxAmount: 18_000_000 },
-  { id: 'otau', labelKey: 'otbasy-bank.programs.otau', rate: 7, maxTerm: 20, downPaymentMin: 20, maxAmount: 36_000_000 },
+  { id: 'otau', labelKey: 'otbasy-bank.programs.otau', rate: 9, maxTerm: 19, downPaymentMin: 20, maxAmount: 36_000_000 },
 ];
 
 function calcAnnuity(principal: number, annualRate: number, termYears: number): number {

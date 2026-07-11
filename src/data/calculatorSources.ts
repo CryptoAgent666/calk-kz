@@ -67,6 +67,26 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'enpf-threshold': [ENPF, EGOV],
   'gph-tax': [NK_RK, KGD],
   'production-calendar': [EGOV, TK_RK],
+  'work-experience': [TK_RK, EGOV],
+  'tip-split': [],
+  'mrp-converter': [EGOV],
+  'alcohol-blood': [
+    { title: 'КоАП РК, ст. 608 (adilet.zan.kz)', url: 'https://adilet.zan.kz/rus/docs/K1400000235' },
+    { title: 'NIH: Alcohol calculations and their uncertainty', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4361698/' },
+  ],
+  'kdif-guarantee': [
+    { title: 'КФГД (kdif.kz)', url: 'https://kdif.kz/' },
+    EGOV,
+  ],
+  'bad-habits-cost': [
+    { title: 'МРЦ на сигареты (adilet.zan.kz)', url: 'https://www.adilet.zan.kz/rus/docs/V2200026923' },
+    STAT,
+  ],
+  'mortgage-compare': [
+    { title: 'КФУ — программа 7-20-25', url: 'https://kfu.kz/' },
+    { title: 'Отбасы банк (hcsbk.kz)', url: 'https://hcsbk.kz/' },
+    NBK,
+  ],
   'house-heating': [],
   'tax-regime-comparison': [NK_RK, KGD, EGOV],
   'universal-declaration': [NK_RK, KGD, EGOV],

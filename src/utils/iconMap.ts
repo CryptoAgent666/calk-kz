@@ -21,6 +21,7 @@ import {
   Cake,
   Calculator,
   Calendar,
+  Cigarette,
   CalendarDays,
   Car,
   CircleDot,
@@ -75,6 +76,7 @@ import {
   Users,
   Wallet,
   Wheat,
+  Wine,
   Zap,
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
@@ -98,6 +100,7 @@ export const iconMap: Record<string, LucideIcon> = {
   Cake,
   Calculator,
   Calendar,
+  Cigarette,
   CalendarDays,
   Car,
   CircleDot,
@@ -152,6 +155,7 @@ export const iconMap: Record<string, LucideIcon> = {
   Users,
   Wallet,
   Wheat,
+  Wine,
   Zap,
 };
 

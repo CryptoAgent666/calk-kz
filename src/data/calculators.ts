@@ -323,6 +323,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         component: React.lazy(() => import('../components/calculators/DepositCalculator'))
       },
       {
+        id: 'kdif-guarantee',
+        title: 'Гарантия КФГД по депозитам',
+        description: 'Сколько из ваших вкладов защищено государством: 20/10/5 млн ₸',
+        category: 'finance',
+        icon: 'Shield',
+        component: React.lazy(() => import('../components/calculators/KdifGuaranteeCalculator'))
+      },
+      {
         id: 'mortgage-specialized',
         title: 'Специализированный ипотечный калькулятор',
         description: 'Сравнение ипотечных программ Казахстана с расчетом ГЭСВ',
@@ -378,6 +386,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'finance',
         icon: 'Home',
         component: React.lazy(() => import('../components/calculators/OtbasyBankCalculator'))
+      },
+      {
+        id: 'mortgage-compare',
+        title: 'Сравнение госипотек 2026',
+        description: '7-20-25, Наурыз, Отау или рыночная — где платёж ниже',
+        category: 'finance',
+        icon: 'Scale',
+        component: React.lazy(() => import('../components/calculators/MortgageCompareCalculator'))
       },
       {
         id: 'fire',
@@ -634,6 +650,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'social',
         icon: 'CalendarDays',
         component: React.lazy(() => import('../components/calculators/ProductionCalendarCalculator'))
+      },
+      {
+        id: 'work-experience',
+        title: 'Калькулятор трудового стажа',
+        description: 'Общий стаж по нескольким периодам работы — годы, месяцы, дни',
+        category: 'social',
+        icon: 'Briefcase',
+        component: React.lazy(() => import('../components/calculators/WorkExperienceCalculator'))
       }
     ]
   },
@@ -884,6 +908,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         component: React.lazy(() => import('../components/calculators/UnitConverterCalculator'))
       },
       {
+        id: 'mrp-converter',
+        title: 'МРП и МЗП в тенге',
+        description: 'Конвертер: сколько тенге в N МРП или МЗП (2026) + история по годам',
+        category: 'converters',
+        icon: 'ArrowLeftRight',
+        component: React.lazy(() => import('../components/calculators/MrpConverterCalculator'))
+      },
+      {
         id: 'timezone',
         title: 'Калькулятор часовых поясов',
         description: 'Сравнение времени в 18 городах мира с Казахстаном (UTC+5)',
@@ -981,6 +1013,14 @@ export const calculatorCategories: CalculatorCategory[] = [
         component: React.lazy(() => import('../components/calculators/DiscountCalculator'))
       },
       {
+        id: 'tip-split',
+        title: 'Чаевые и сплит счёта',
+        description: 'Сколько оставить чаевых и разделить счёт на компанию',
+        category: 'math',
+        icon: 'HandHeart',
+        component: React.lazy(() => import('../components/calculators/TipSplitCalculator'))
+      },
+      {
         id: 'percentage',
         title: 'Процентный калькулятор',
         description: 'Все виды процентных расчетов: процент от числа, изменение, обратный расчет',
@@ -1059,6 +1099,22 @@ export const calculatorCategories: CalculatorCategory[] = [
         category: 'health',
         icon: 'Droplets',
         component: React.lazy(() => import('../components/calculators/WaterIntakeCalculator'))
+      },
+      {
+        id: 'alcohol-blood',
+        title: 'Алкоголь в крови: когда за руль',
+        description: 'Оценка промилле по формуле Видмарка и время до полного выведения',
+        category: 'health',
+        icon: 'Wine',
+        component: React.lazy(() => import('../components/calculators/AlcoholBloodCalculator'))
+      },
+      {
+        id: 'bad-habits-cost',
+        title: 'Стоимость курения и алкоголя',
+        description: 'Сколько привычки стоят в год и что бы дал депозит вместо них',
+        category: 'health',
+        icon: 'Cigarette',
+        component: React.lazy(() => import('../components/calculators/BadHabitsCostCalculator'))
       }
     ]
   },
