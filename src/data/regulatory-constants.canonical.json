@@ -7801,6 +7801,293 @@
       "official_value": "21675",
       "verify_note": "Мин. пакет ИП за себя 2026: ОПВ 8 500 + ОПВР 2 975 + СО 4 250 + ВОСМС 5 950 = 21 675 ₸/мес (без ОПВР, рожд. до 1975 — 18 700). Производная от МЗП и ставки ОПВР — пересчитывать при rollover.",
       "reverified": "2026-07-11"
+    },
+    {
+      "key": "kdif_guarantee_savings_kzt",
+      "value": 20000000,
+      "unit": "KZT",
+      "law": "Закон о обязательном гарантировании депозитов; лимиты КФГД",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "kdif_guarantee_savings_kzt"
+      ],
+      "status": "current",
+      "used_by": [
+        "KdifGuaranteeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://kdif.kz/",
+      "verify_note": "Сберегательные вклады в тенге — 20 млн ₸ (kdif.kz, подтверждено 07.2026). Совокупный потолок на вкладчика в одном банке — те же 20 млн.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "kdif_guarantee_other_kzt",
+      "value": 10000000,
+      "unit": "KZT",
+      "law": "Лимиты КФГД",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "kdif_guarantee_other_kzt"
+      ],
+      "status": "current",
+      "used_by": [
+        "KdifGuaranteeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://kdif.kz/",
+      "verify_note": "Прочие тенговые депозиты/счета/карты — 10 млн ₸.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "kdif_guarantee_fx",
+      "value": 5000000,
+      "unit": "KZT",
+      "law": "Лимиты КФГД",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "kdif_guarantee_fx"
+      ],
+      "status": "current",
+      "used_by": [
+        "KdifGuaranteeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://kdif.kz/",
+      "verify_note": "Валютные вклады — 5 млн ₸ в эквиваленте.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "kdif_payout_working_days",
+      "value": 35,
+      "unit": "working_days",
+      "law": "Закон об обязательном гарантировании депозитов",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [
+        "kdif_payout_working_days"
+      ],
+      "status": "current",
+      "used_by": [
+        "KdifGuaranteeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://kdif.kz/",
+      "verify_note": "Начало выплат в течение 35 рабочих дней после лишения лицензии.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "alcohol_widmark_r_male",
+      "value": 0.68,
+      "unit": "coefficient",
+      "law": "Формула Видмарка (научная константа)",
+      "year": "2026",
+      "change_frequency": "never",
+      "aliases": [
+        "alcohol_widmark_r_male"
+      ],
+      "status": "current",
+      "used_by": [
+        "AlcoholBloodCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4361698/",
+      "verify_note": "Коэффициент распределения у мужчин. Научная константа, не меняется.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "alcohol_widmark_r_female",
+      "value": 0.55,
+      "unit": "coefficient",
+      "law": "Формула Видмарка (научная константа)",
+      "year": "2026",
+      "change_frequency": "never",
+      "aliases": [
+        "alcohol_widmark_r_female"
+      ],
+      "status": "current",
+      "used_by": [
+        "AlcoholBloodCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4361698/",
+      "verify_note": "Коэффициент распределения у женщин.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "alcohol_elimination_rate",
+      "value": 0.15,
+      "unit": "permille_per_hour",
+      "law": "Физиологическая константа (диапазон 0,10–0,20)",
+      "year": "2026",
+      "change_frequency": "never",
+      "aliases": [
+        "alcohol_elimination_rate"
+      ],
+      "status": "current",
+      "used_by": [
+        "AlcoholBloodCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4361698/",
+      "verify_note": "Средняя скорость выведения алкоголя.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "driving_dui_arrest_days",
+      "value": 15,
+      "unit": "days",
+      "law": "КоАП РК, ст. 608 ч.1",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [
+        "driving_dui_arrest_days"
+      ],
+      "status": "current",
+      "used_by": [
+        "AlcoholBloodCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "Арест за управление в опьянении; повторно в течение года — 25 суток. ВАЖНО: порог 0,3‰ — только ПРОЕКТ приказа МЗ (не принят на 07.2026), в НПА нулевая терпимость.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "driving_dui_license_revoke_years",
+      "value": 7,
+      "unit": "years",
+      "law": "КоАП РК, ст. 608 ч.1",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [
+        "driving_dui_license_revoke_years"
+      ],
+      "status": "current",
+      "used_by": [
+        "AlcoholBloodCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "Лишение прав за опьянение; повторно — 9 лет. Подтверждено КС РК (2023).",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "cigarettes_min_retail_price",
+      "value": 970,
+      "unit": "KZT_per_pack",
+      "law": "Приказ о минимальных розничных ценах на табак",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "cigarettes_min_retail_price"
+      ],
+      "status": "current",
+      "used_by": [
+        "BadHabitsCostCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://www.adilet.zan.kz/rus/docs/V2200026923",
+      "verify_note": "МРЦ пачки 20 шт с 01.01.2026 (2025: 920). ПРОЕКТ повышения до 1060 ₸ обсуждался до 20.07.2026 — проверить осенью. В калькуляторе дефолт 1100 ₸ = средняя фактическая.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "vodka_min_retail_price_05l",
+      "value": 1050,
+      "unit": "KZT",
+      "law": "Приказ МФ №740 от 04.07.2023",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "vodka_min_retail_price_05l"
+      ],
+      "status": "current",
+      "used_by": [
+        "BadHabitsCostCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2300033035",
+      "verify_note": "МРЦ водки 2100 ₸/л (1050 за 0,5). Фактическая средняя ~2550 ₸/0,5 (03.2026) — в калькуляторе используется фактическая.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "mortgage_72025_rate",
+      "value": 7,
+      "unit": "percent",
+      "law": "Программа 7-20-25 (НБРК/КФУ)",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "mortgage_72025_rate"
+      ],
+      "status": "current",
+      "used_by": [
+        "MortgageCompareCalculator",
+        "OtbasyBankCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://kfu.kz/",
+      "verify_note": "Ставка 7%, взнос от 20%, срок до 25 лет, только первичка. Лимит жилья: 30 млн (Астана/Алматы/Актау/Атырау/Шымкент), 25 млн (Караганда), 20 млн (прочие). Квартальные транши 25 млрд.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "mortgage_nauryz_rate_standard",
+      "value": 9,
+      "unit": "percent",
+      "law": "Программа Наурыз (Отбасы банк)",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "mortgage_nauryz_rate_standard"
+      ],
+      "status": "current",
+      "used_by": [
+        "MortgageCompareCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/nauryz/",
+      "verify_note": "9% обычным очередникам, 7% соц.уязвимым; лимит займа 36 млн (Астана/Алматы) / 30 млн; до 19 лет; заявки кампаниями (последняя 10–31.03.2026).",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "mortgage_otau_rate",
+      "value": 9,
+      "unit": "percent",
+      "law": "Программа Отау (Отбасы банк)",
+      "year": "2026",
+      "change_frequency": "yearly",
+      "aliases": [
+        "mortgage_otau_rate"
+      ],
+      "status": "current",
+      "used_by": [
+        "MortgageCompareCalculator",
+        "OtbasyBankCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/otau/",
+      "verify_note": "9%, взнос от 20%, до 19 лет, лимит 36/30 млн через ЖСС.",
+      "reverified": "2026-07-11"
+    },
+    {
+      "key": "mortgage_market_gesv_2026",
+      "value": 23.5,
+      "unit": "percent",
+      "law": "Рыночные ставки банков (ориентир)",
+      "year": "2026",
+      "change_frequency": "monthly",
+      "aliases": [
+        "mortgage_market_gesv_2026"
+      ],
+      "status": "current",
+      "used_by": [
+        "MortgageCompareCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://krisha.kz/content/articles/2026/2026-ipoteka-na-vtorichku-2026-usloviya-vseh-bankov",
+      "verify_note": "ГЭСВ вторички 07.2026: Halyk от 23%, БЦК от 22,9%; диапазон 23–25% при базовой ставке 17%. Дефолт слайдера.",
+      "reverified": "2026-07-11"
     }
   ],
   "estimates_excluded": [
