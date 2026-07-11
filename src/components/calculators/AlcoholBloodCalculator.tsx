@@ -264,7 +264,7 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
           { title: i18n.language === 'kk' ? 'Widmark формуласы (NIH зерттеуі)' : 'Формула Видмарка (исследование NIH)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4361698/' },
         ]}
       />
-      <LegalDisclaimer type="social" />
+      <LegalDisclaimer type="medical" />
       <ExpertBlock />
       <EmbedWidget calculatorId="alcohol-blood" calculatorTitle={t('alcohol-blood.heading')} />
       <LastUpdated calculatorId="alcohol-blood" />

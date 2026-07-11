@@ -1,7 +1,7 @@
 import { AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export type DisclaimerType = 'tax' | 'legal' | 'finance' | 'construction' | 'religious' | 'social';
+export type DisclaimerType = 'tax' | 'legal' | 'finance' | 'construction' | 'religious' | 'social' | 'medical';
 
 interface LegalDisclaimerProps {
   type: DisclaimerType;
@@ -31,6 +31,10 @@ const DISCLAIMERS: Record<DisclaimerType, { ru: string; kk: string }> = {
   social: {
     ru: 'Расчёт носит информационный характер. Точные размеры выплат и условия начисления подтверждайте в государственных органах (ГФСС, ЕНПФ, акимат).',
     kk: 'Есеп ақпараттық сипатта. Төлемдердің нақты мөлшерлерін және есептеу шарттарын мемлекеттік органдарда (ӘСМҚ, ЕЗТҚ, әкімдік) растаңыз.',
+  },
+  medical: {
+    ru: 'Расчёт носит информационный характер и не является медицинским заключением. Оценка приблизительна и не может служить доказательством трезвости или состояния здоровья — при любых сомнениях не садитесь за руль.',
+    kk: 'Есеп ақпараттық сипатта және медициналық қорытынды емес. Бағалау шамамен және айықтықтың не денсаулық жағдайының дәлелі бола алмайды — кез келген күмәнда рөлге отырмаңыз.',
   },
 };
 

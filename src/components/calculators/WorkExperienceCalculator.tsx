@@ -188,7 +188,7 @@ export default function WorkExperienceCalculator() {
           { title: i18n.language === 'kk' ? 'ҚР Әлеуметтік кодексі (зейнетақы өтілі)' : 'Социальный кодекс РК (стаж для пенсии)', url: 'https://adilet.zan.kz/rus/docs/K2300000224' },
         ]}
       />
-      <LegalDisclaimer type="tax" />
+      <LegalDisclaimer type="social" />
       <ExpertBlock />
       <EmbedWidget calculatorId="work-experience" calculatorTitle={t('work-experience.heading')} />
       <LastUpdated calculatorId="work-experience" />
