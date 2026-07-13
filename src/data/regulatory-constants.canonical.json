@@ -189,8 +189,8 @@
       "audit_status": "representation_variants",
       "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
       "official_value": "40",
-      "verify_note": "Соцвыплата ГФСС по уходу за ребёнком = 40% среднемесячного дохода (для участников ОСС). Подтверждено.",
-      "reverified": "2026-07-06"
+      "verify_note": "Соцвыплата ГФСС по уходу за ребёнком = 40% среднемесячного дохода (для участников ОСС). Подтверждено. [wf-сверка 2026-07-11: confirmed_current, adversarial, high conf; источник ui_decret менялся из-за +10% индексации фикс. МРП-сумм неработающим, структурная константа не изменилась]",
+      "reverified": "2026-07-11"
     },
     {
       "key": "monthly_childcare_benefit_mrp_table",
@@ -231,8 +231,8 @@
       "audit_status": "clean",
       "source_url": "https://informburo.kz/cards/bolnicnyi-po-beremennosti-i-rodam-skolko-deneg-polucit-kazaxstanka-scitaem-na-konkretnom-primere",
       "official_value": "4.2",
-      "verify_note": "Коэффициент дней нетрудоспособности при обычных родах = 126/30 = 4.2. Формула ГФСС подтверждена (Правила V2300032912).",
-      "reverified": "2026-07-06"
+      "verify_note": "Коэффициент дней нетрудоспособности при обычных родах = 126/30 = 4.2. Формула ГФСС подтверждена (Правила V2300032912). [wf-сверка 2026-07-11: confirmed_current, adversarial, high conf; источник ui_decret менялся из-за +10% индексации фикс. МРП-сумм неработающим, структурная константа не изменилась]",
+      "reverified": "2026-07-11"
     },
     {
       "key": "maternity_income_cap_mzp",
@@ -251,8 +251,8 @@
       ],
       "audit_status": "clean",
       "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
-      "verify_note": "Объект исчисления СО (база для пособий ГФСС, включая декретные/по беременности) ограничен 7 МЗП = 595 000 ₸ в 2026. Структурный множитель стабилен; подтверждён для 2026.",
-      "reverified": "2026-07-06"
+      "verify_note": "Объект исчисления СО (база для пособий ГФСС, включая декретные/по беременности) ограничен 7 МЗП = 595 000 ₸ в 2026. Структурный множитель стабилен; подтверждён для 2026. [wf-сверка 2026-07-11: confirmed_current, adversarial, high conf; источник ui_decret менялся из-за +10% индексации фикс. МРП-сумм неработающим, структурная константа не изменилась]",
+      "reverified": "2026-07-11"
     },
     {
       "key": "ent_max_score",
