@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { isScreenshotMode } from '../../utils/screenshotMode';
+import { emitIap } from '../../telemetry';
 import {
   isAdFree,
   onAdFreeChange,
@@ -38,6 +39,7 @@ export function RemoveAdsToast() {
     const onSuggest = () => {
       if (isAdFree()) return;
       setVisible(true);
+      emitIap('paywall_shown'); // показ оффера (место 3 — тост после интерстишела)
       clearTimeout(timer);
       timer = setTimeout(() => setVisible(false), AUTO_HIDE_MS);
     };

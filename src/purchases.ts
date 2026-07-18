@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { emitIap } from './telemetry';
 
 /**
  * RevenueCat: разовая покупка «Убрать рекламу» (non-consumable / durable one-time).
@@ -126,6 +127,7 @@ export async function getRemoveAdsPrice(): Promise<string | null> {
 /** Купить «Убрать рекламу». true — успех (или уже куплено). */
 export async function buyRemoveAds(): Promise<boolean> {
   if (!purchasesAvailable()) return false;
+  emitIap('purchase_tapped');
   try {
     const { Purchases } = await loadSdk();
     const { products } = await Purchases.getProducts({ productIdentifiers: [REMOVE_ADS_PRODUCT_ID] });
@@ -134,8 +136,9 @@ export async function buyRemoveAds(): Promise<boolean> {
     const ok = hasEntitlement(customerInfo);
     setAdFree(ok);
     return ok;
-  } catch {
-    // Пользователь отменил покупку — это не ошибка.
+  } catch (e) {
+    // Отмена пользователем — не ошибка; для воронки различаем отмену и сбой.
+    emitIap((e as { userCancelled?: boolean })?.userCancelled ? 'purchase_cancelled' : 'purchase_failed');
     return false;
   }
 }

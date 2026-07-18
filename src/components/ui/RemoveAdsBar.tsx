@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { isScreenshotMode } from '../../utils/screenshotMode';
+import { emitIap } from '../../telemetry';
 import {
   isAdFree,
   onAdFreeChange,
@@ -53,6 +54,15 @@ export function RemoveAdsBar() {
 
   useEffect(() => onAdFreeChange(setAdFree), []);
   useEffect(() => { void getRemoveAdsPrice().then(setPrice); }, []);
+
+  // Воронка: один показ оффера при первом появлении плашки в сессии.
+  const shownRef = useRef(false);
+  useEffect(() => {
+    if (shownRef.current) return;
+    if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return;
+    shownRef.current = true;
+    emitIap('paywall_shown');
+  }, [adFree, dismissed]);
 
   if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return null;
 
