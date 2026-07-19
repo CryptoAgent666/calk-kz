@@ -85,7 +85,9 @@ export default function BusinessROICalculator() {
     const paybackMonths =
       netMonthlyProfit > 0 && inv > 0 ? inv / netMonthlyProfit : 0;
 
-    const roiPercent = inv > 0 ? (yearlyProfit / inv) * 100 * period : 0;
+    // Классический ROI: (совокупная прибыль за период − инвестиции) / инвестиции.
+    // Ранее инвестиции не вычитались — показатель завышался ровно на 100 п.п.
+    const roiPercent = inv > 0 ? ((periodProfit - inv) / inv) * 100 : 0;
 
     // NPV: −Инвестиции + Σ годовая_прибыль / (1+r)^k
     let npv = -inv;
@@ -138,8 +140,8 @@ export default function BusinessROICalculator() {
     if (months <= 0) return '—';
     const years = Math.floor(months / 12);
     const restMonths = Math.round(months - years * 12);
-    const monthWord = pluralize(i18n.language, restMonths, 'месяц', 'месяца', 'месяцев');
-    const yearWord = pluralize(i18n.language, years, 'год', 'года', 'лет');
+    const monthWord = i18n.language === 'kk' ? 'ай' : pluralize(i18n.language, restMonths, 'месяц', 'месяца', 'месяцев');
+    const yearWord = i18n.language === 'kk' ? 'жыл' : pluralize(i18n.language, years, 'год', 'года', 'лет');
     if (years === 0) return `${restMonths} ${monthWord}`;
     if (restMonths === 0) return `${years} ${yearWord}`;
     return `${years} ${yearWord} ${restMonths} ${monthWord}`;
