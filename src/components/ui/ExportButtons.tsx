@@ -61,16 +61,25 @@ export function ExportButtons({
   const { t } = useTranslation('common');
   const [exportingPDF, setExportingPDF] = useState(false);
 
+  // Защита: data может быть null/не тем форматом на первом рендере (результаты
+  // считаются в useEffect ПОСЛЕ первого рендера) — без гарда падение здесь
+  // сносило белым экраном ВСЮ страницу (franchise-payback, 07.2026).
+  const safeData = data && Array.isArray((data as { sections?: unknown }).sections) ? data : null;
+
   // История расчётов: ExportButtons рендерится только при готовом результате и
   // уже держит его в структурированном виде — снапшотим отсюда централизованно
   // (дебаунс и дедуп внутри saveCalcSnapshot), не трогая 120 калькуляторов.
-  const dataFingerprint = JSON.stringify(data.sections);
+  const dataFingerprint = JSON.stringify(safeData?.sections ?? null);
   React.useEffect(() => {
-    saveCalcSnapshot(filename, data.title, data.sections);
+    if (!safeData) return;
+    saveCalcSnapshot(filename, safeData.title, safeData.sections);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filename, dataFingerprint]);
   const [exportingExcel, setExportingExcel] = useState(false);
   const [exported, setExported] = useState<'pdf' | 'excel' | 'tsv' | null>(null);
+
+  // После всех хуков (порядок хуков стабилен): нет валидных данных — не рендерим.
+  if (!safeData) return null;
 
   // Копирование результата как TSV — вставляется в Excel/Google Sheets как таблица.
   const copyForExcel = async () => {

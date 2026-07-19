@@ -139,33 +139,41 @@ export default function FranchisePaybackCalculator() {
 
   const generateExportData = () => {
     if (results.startup === 0) return null;
-    return `${t('franchise-payback.exportTitle')}
-─────────────────────────────
-${t('franchise-payback.paushal')}: ${formatCurrency(parseFloat(paushal) || 0)}
-${t('franchise-payback.equipment')}: ${formatCurrency(parseFloat(equipment) || 0)}
-${t('franchise-payback.training')}: ${formatCurrency(parseFloat(training) || 0)}
-${t('franchise-payback.startStock')}: ${formatCurrency(parseFloat(startStock) || 0)}
-${t('franchise-payback.revenue')}: ${formatCurrency(parseFloat(revenue) || 0)}
-${t('franchise-payback.royalty')}: ${royalty}%
-${t('franchise-payback.marketingFee')}: ${marketingFee}%
-${t('franchise-payback.opex')}: ${formatCurrency(parseFloat(opex) || 0)}
-${t('franchise-payback.taxMode')}: ${t(taxMode === 'simple' ? 'franchise-payback.taxSimple' : 'franchise-payback.taxGeneral')}
-
-${t('franchise-payback.resultsTitle')}:
-─────────────────────────────
-${t('franchise-payback.startup')}: ${formatCurrency(results.startup)}
-${t('franchise-payback.feesTotal')}: ${formatCurrency(results.feesTotal)}
-${t('franchise-payback.taxAmount')}: ${formatCurrency(results.taxAmount)}
-${t('franchise-payback.monthlyProfit')}: ${formatCurrency(results.monthlyProfit)}
-${t('franchise-payback.yearlyProfit')}: ${formatCurrency(results.yearlyProfit)}
-${t('franchise-payback.paybackMonths')}: ${results.paybackMonths} ${t('franchise-payback.months')} (~${paybackYears} ${t('franchise-payback.years')})
-ROI: ${results.roi}%
-${t('franchise-payback.margin')}: ${results.margin}%
-${t('franchise-payback.depositCompare')}: ${formatCurrency(results.depositYearly)} (${DEPOSIT_RATE}%)
-─────────────────────────────
-calk.kz`;
+    return {
+      title: t('franchise-payback.exportTitle'),
+      subtitle: `${t('franchise-payback.paybackMonths')}: ${results.paybackMonths} ${t('franchise-payback.months')} (~${paybackYears} ${t('franchise-payback.years')})`,
+      sections: [
+        {
+          title: t('franchise-payback.parameters'),
+          data: [
+            { label: t('franchise-payback.paushal'), value: formatCurrency(parseFloat(paushal) || 0) },
+            { label: t('franchise-payback.equipment'), value: formatCurrency(parseFloat(equipment) || 0) },
+            { label: t('franchise-payback.training'), value: formatCurrency(parseFloat(training) || 0) },
+            { label: t('franchise-payback.startStock'), value: formatCurrency(parseFloat(startStock) || 0) },
+            { label: t('franchise-payback.revenue'), value: formatCurrency(parseFloat(revenue) || 0) },
+            { label: t('franchise-payback.royalty'), value: `${royalty}%` },
+            { label: t('franchise-payback.marketingFee'), value: `${marketingFee}%` },
+            { label: t('franchise-payback.opex'), value: formatCurrency(parseFloat(opex) || 0) },
+          ],
+        },
+        {
+          title: t('franchise-payback.resultsTitle'),
+          data: [
+            { label: t('franchise-payback.startup'), value: formatCurrency(results.startup) },
+            { label: t('franchise-payback.feesTotal'), value: formatCurrency(results.feesTotal) },
+            { label: t('franchise-payback.taxAmount'), value: formatCurrency(results.taxAmount) },
+            { label: t('franchise-payback.monthlyProfit'), value: formatCurrency(results.monthlyProfit) },
+            { label: t('franchise-payback.yearlyProfit'), value: formatCurrency(results.yearlyProfit) },
+            { label: t('franchise-payback.paybackMonths'), value: `${results.paybackMonths} ${t('franchise-payback.months')} (~${paybackYears} ${t('franchise-payback.years')})` },
+            { label: 'ROI', value: `${results.roi}%` },
+            { label: t('franchise-payback.margin'), value: `${results.margin}%` },
+            { label: t('franchise-payback.depositCompare'), value: `${formatCurrency(results.depositYearly)} (${DEPOSIT_RATE}%)` },
+          ],
+        },
+      ],
+      footer: 'calk.kz',
+    };
   };
-
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
