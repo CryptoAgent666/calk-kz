@@ -31,8 +31,10 @@ export function purchasesAvailable(): boolean {
   return Capacitor.isNativePlatform() && Capacitor.isPluginAvailable('Purchases');
 }
 
-/** Запасная цена для UI, пока RevenueCat не вернул локализованную (getRemoveAdsPrice). */
-export const REMOVE_ADS_FALLBACK_PRICE = '2 490 ₸';
+/** Запасная цена для UI, пока RevenueCat не вернул локализованную (getRemoveAdsPrice).
+ *  Держать в синхроне с ценой продукта в App Store Connect / Google Play (сейчас 999 ₸).
+ *  Живая цена приходит из стора автоматически — это только на миг загрузки/оффлайн. */
+export const REMOVE_ADS_FALLBACK_PRICE = '999 ₸';
 
 // Публичные SDK-ключи RevenueCat (Project Settings → API keys, по одному на
 // платформу). Их МОЖНО держать в клиенте — это НЕ секретные `sk_`-ключи.
