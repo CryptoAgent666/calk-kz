@@ -77,13 +77,15 @@ export default function PensionCalculator() {
       basePension = (PM * baseRate) / 100;
     }
 
-    // 2. Солидарная пенсия (упрощенный расчет)
+    // 2. Солидарная пенсия (упрощенный расчет по правилам Соцкодекса):
+    // при полном стаже до 1998 г. (25 лет) — 60% среднемесячного дохода,
+    // пропорционально меньшему стажу; общий потолок замещения — 75% дохода.
+    // (Ранее формула домножала ещё на коэффициент дохода до ×3 — это завышало
+    // солидарную часть при доходах выше 50 000 и не имело опоры в правилах.)
     let solidarityPension = 0;
     if (experienceBefore > 0 && incomeBefore > 0) {
-      // Упрощенная формула: зависит от стажа и дохода до 1998 года
-      const experienceCoef = Math.min(experienceBefore / 25, 0.75); // максимум 75% замещения
-      const incomeCoef = Math.min(incomeBefore / 50000, 3); // ограничение по доходу
-      solidarityPension = incomeBefore * experienceCoef * 0.6 * incomeCoef;
+      const replacement = 0.6 * Math.min(experienceBefore / 25, 1);
+      solidarityPension = Math.min(incomeBefore * replacement, incomeBefore * 0.75);
     }
 
     // 3. Накопительная пенсия

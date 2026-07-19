@@ -353,8 +353,8 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                         <div className="text-sm text-yellow-900">
                           <p className="font-semibold mb-1">{t('sick-leave.legislativeLimitApplied')}</p>
                           <p>
-                            {t('sick-leave.maxPaymentIs')} {MAX_BENEFIT_MRP} {t('sick-leave.mrp')} {t('sick-leave.perMonth')} ({formatNumber(MONTHLY_LIMIT)}).
-                            {t('sick-leave.forDays')} {sickDays} {t('sick-leave.daysLimit')} {formatNumber(results.proportionalLimit)}.
+                            {t('sick-leave.maxPaymentIs')} {MAX_BENEFIT_MRP} {t('sick-leave.mrp')} {t('sick-leave.perMonth')} ({formatNumber(MONTHLY_LIMIT)}).{' '}
+                            {t('sick-leave.limitForDays', { days: sickDays, amount: formatNumber(results.proportionalLimit) })}
                           </p>
                         </div>
                       </div>
