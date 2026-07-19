@@ -19,8 +19,11 @@ export default function ZakatCalculator() {
   const [silverValue, setSilverValue] = useState<string>('0');
   const [businessGoods, setBusinessGoods] = useState<string>('0');
   const [debts, setDebts] = useState<string>('0');
-  const [goldPricePerGram, setGoldPricePerGram] = useState<string>('32000');
-  const [silverPricePerGram, setSilverPricePerGram] = useState<string>('400');
+  // Дефолтные цены металлов — учётный курс НБРК, сверено 07.2026 (золото 61 214 ₸/г,
+  // серебро 858 ₸/г; спот×курс сходится в ~1%). Для нисаба берём рыночную цену грамма,
+  // НЕ розничный слиток с премией. Обновлять при заметном движении рынка.
+  const [goldPricePerGram, setGoldPricePerGram] = useState<string>('61000');
+  const [silverPricePerGram, setSilverPricePerGram] = useState<string>('860');
   const [calculateByWeight, setCalculateByWeight] = useState<boolean>(false);
   const [goldWeight, setGoldWeight] = useState<string>('');
   const [silverWeight, setSilverWeight] = useState<string>('');
@@ -54,8 +57,8 @@ export default function ZakatCalculator() {
     const cash = parseFloat(cashSavings) || 0;
     const business = parseFloat(businessGoods) || 0;
     const debtsAmount = parseFloat(debts) || 0;
-    const goldPrice = parseFloat(goldPricePerGram) || 32000;
-    const silverPrice = parseFloat(silverPricePerGram) || 400;
+    const goldPrice = parseFloat(goldPricePerGram) || 61000;
+    const silverPrice = parseFloat(silverPricePerGram) || 860;
 
     let gold = 0;
     let silver = 0;

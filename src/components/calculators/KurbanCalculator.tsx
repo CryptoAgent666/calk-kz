@@ -69,16 +69,19 @@ export default function KurbanCalculator() {
   const KURBAN_DATE = t('kurban-sacrifice.date2025');
   const CURRENT_YEAR = 2026;
 
+  // Цены Курбан-2026 (сверено 05.2026: zakon/inform/tengrinews — страна 80–120 тыс.,
+  // Алматы типично 100–110, Астана 90–170, Шымкент от 60, сёла от 45–60; пай в корове:
+  // рынок ~70–75 тыс., платформа ДУМК 125 тыс.). Обновлять перед каждым Курбан-айтом.
   const regionalPrices: RegionalPrices[] = [
     {
       id: 'almaty',
       name: t('kurban-sacrifice.regions.almaty'),
       ramPrices: {
-        small: { min: 45000, max: 65000, description: t('kurban-sacrifice.ramSmallDesc') },
-        medium: { min: 60000, max: 85000, description: t('kurban-sacrifice.ramMediumDesc') },
-        large: { min: 80000, max: 120000, description: t('kurban-sacrifice.ramLargeDesc') }
+        small: { min: 70000, max: 90000, description: t('kurban-sacrifice.ramSmallDesc') },
+        medium: { min: 90000, max: 115000, description: t('kurban-sacrifice.ramMediumDesc') },
+        large: { min: 110000, max: 150000, description: t('kurban-sacrifice.ramLargeDesc') }
       },
-      cowPricePerShare: 65000,
+      cowPricePerShare: 90000,
       additionalServices: {
         butchering: { min: 8000, max: 12000 },
         delivery: { min: 3000, max: 5000 },
@@ -90,11 +93,11 @@ export default function KurbanCalculator() {
       id: 'astana',
       name: t('kurban-sacrifice.regions.astana'),
       ramPrices: {
-        small: { min: 42000, max: 62000, description: t('kurban-sacrifice.ramSmallDesc') },
-        medium: { min: 58000, max: 82000, description: t('kurban-sacrifice.ramMediumDesc') },
-        large: { min: 75000, max: 115000, description: t('kurban-sacrifice.ramLargeDesc') }
+        small: { min: 90000, max: 110000, description: t('kurban-sacrifice.ramSmallDesc') },
+        medium: { min: 100000, max: 130000, description: t('kurban-sacrifice.ramMediumDesc') },
+        large: { min: 120000, max: 170000, description: t('kurban-sacrifice.ramLargeDesc') }
       },
-      cowPricePerShare: 62000,
+      cowPricePerShare: 95000,
       additionalServices: {
         butchering: { min: 7000, max: 11000 },
         delivery: { min: 3000, max: 5000 },
@@ -106,11 +109,11 @@ export default function KurbanCalculator() {
       id: 'shymkent',
       name: t('kurban-sacrifice.regions.shymkent'),
       ramPrices: {
-        small: { min: 38000, max: 55000, description: t('kurban-sacrifice.ramSmallDesc') },
-        medium: { min: 52000, max: 75000, description: t('kurban-sacrifice.ramMediumDesc') },
-        large: { min: 68000, max: 95000, description: t('kurban-sacrifice.ramLargeDesc') }
+        small: { min: 60000, max: 80000, description: t('kurban-sacrifice.ramSmallDesc') },
+        medium: { min: 80000, max: 100000, description: t('kurban-sacrifice.ramMediumDesc') },
+        large: { min: 95000, max: 130000, description: t('kurban-sacrifice.ramLargeDesc') }
       },
-      cowPricePerShare: 55000,
+      cowPricePerShare: 75000,
       additionalServices: {
         butchering: { min: 5000, max: 8000 },
         delivery: { min: 2000, max: 4000 },
@@ -122,11 +125,11 @@ export default function KurbanCalculator() {
       id: 'karaganda',
       name: t('kurban-sacrifice.regions.karaganda'),
       ramPrices: {
-        small: { min: 40000, max: 58000, description: t('kurban-sacrifice.ramSmallDesc') },
-        medium: { min: 55000, max: 78000, description: t('kurban-sacrifice.ramMediumDesc') },
-        large: { min: 72000, max: 100000, description: t('kurban-sacrifice.ramLargeDesc') }
+        small: { min: 60000, max: 80000, description: t('kurban-sacrifice.ramSmallDesc') },
+        medium: { min: 75000, max: 100000, description: t('kurban-sacrifice.ramMediumDesc') },
+        large: { min: 90000, max: 120000, description: t('kurban-sacrifice.ramLargeDesc') }
       },
-      cowPricePerShare: 58000,
+      cowPricePerShare: 75000,
       additionalServices: {
         butchering: { min: 6000, max: 9000 },
         delivery: { min: 2500, max: 4500 },
@@ -138,11 +141,11 @@ export default function KurbanCalculator() {
       id: 'rural',
       name: t('kurban-sacrifice.regions.rural'),
       ramPrices: {
-        small: { min: 30000, max: 45000, description: t('kurban-sacrifice.ramSmallDesc') },
-        medium: { min: 42000, max: 65000, description: t('kurban-sacrifice.ramMediumDesc') },
-        large: { min: 55000, max: 80000, description: t('kurban-sacrifice.ramLargeDesc') }
+        small: { min: 45000, max: 60000, description: t('kurban-sacrifice.ramSmallDesc') },
+        medium: { min: 55000, max: 80000, description: t('kurban-sacrifice.ramMediumDesc') },
+        large: { min: 75000, max: 100000, description: t('kurban-sacrifice.ramLargeDesc') }
       },
-      cowPricePerShare: 45000,
+      cowPricePerShare: 65000,
       additionalServices: {
         butchering: { min: 3000, max: 5000 },
         delivery: { min: 1000, max: 2000 },
