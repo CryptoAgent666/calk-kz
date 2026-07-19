@@ -19,7 +19,10 @@ export default function RentOrBuyCalculator() {
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
   const [downPayment, setDownPayment] = useState<string>('5000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
-  const [mortgageRate, setMortgageRate] = useState<string>('12');
+  // Дефолты приведены к рынку 2026: рыночная ипотека ~21% номинал (вторичка,
+  // сверено 07.2026; льготные 7-20-25/Наурыз — ниже, меняется в поле),
+  // альтернативная доходность ~14% (типичный тенговый депозит 2026).
+  const [mortgageRate, setMortgageRate] = useState<string>('21');
   const [mortgageTermYears, setMortgageTermYears] = useState<string>('20');
   const [monthlyRent, setMonthlyRent] = useState<string>('150000');
   const [rentIncrease, setRentIncrease] = useState<string>('5');
@@ -29,7 +32,7 @@ export default function RentOrBuyCalculator() {
   const [annualPropertyTax, setAnnualPropertyTax] = useState<string>('');
   const [annualInsurance, setAnnualInsurance] = useState<string>('');
   const [annualMaintenance, setAnnualMaintenance] = useState<string>('');
-  const [opportunityCostRate, setOpportunityCostRate] = useState<string>('8');
+  const [opportunityCostRate, setOpportunityCostRate] = useState<string>('14');
 
   const [results, setResults] = useState({
     loanAmount: 0,

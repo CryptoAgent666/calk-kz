@@ -498,9 +498,9 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                   results.bmi >= category.min && results.bmi < category.max ? 'bg-blue-50' : ''
                 }`}>
                   <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm font-medium">
-                    {category.min === 0 ? t('common:lessThan') + ' ' : ''}
-                    {category.min > 0 ? category.min : ''}
-                    {category.max !== Infinity ? ` - ${category.max}` : '+'}
+                    {category.min === 0
+                      ? `${t('common:lessThan')} ${category.max}`
+                      : category.max !== Infinity ? `${category.min} - ${category.max}` : `${category.min}+`}
                   </td>
                   <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-900">
                     {category.category}
