@@ -21,6 +21,9 @@ const WITHDRAWAL_RATE: Record<FIREType, number> = {
 
 export default function FIRECalculator() {
   const { t, i18n } = useTranslation('calculators');
+  // kk не склоняет: «жыл» (лет/год) и «жас» (возраст) — без плюрализации
+  const yWord = (n: number) => i18n.language === 'kk' ? 'жыл' : pluralize(i18n.language, n, 'год', 'года', 'лет');
+  const ageWord = (n: number) => i18n.language === 'kk' ? 'жас' : pluralize(i18n.language, n, 'год', 'года', 'лет');
   const [currentAge, setCurrentAge] = useState<string>('30');
   const [monthlyExpenses, setMonthlyExpenses] = useState<string>('300000');
   const [currentSavings, setCurrentSavings] = useState<string>('2000000');
@@ -105,7 +108,7 @@ export default function FIRECalculator() {
           <h2 className="text-xl font-semibold">{t('fire.parameters')}</h2>
 
           <RangeSlider label={t('fire.currentAge')} value={parseFloat(currentAge) || 0}
-            onChange={v => setCurrentAge(String(v))} min={18} max={70} step={1} formatValue={v => `${v} ${pluralize(i18n.language, v, 'год', 'года', 'лет')}`} />
+            onChange={v => setCurrentAge(String(v))} min={18} max={70} step={1} formatValue={v => `${v} ${ageWord(v)}`} />
           <RangeSlider label={t('fire.monthlyExpenses')} value={parseFloat(monthlyExpenses) || 0}
             onChange={v => setMonthlyExpenses(String(v))} min={50000} max={3000000} step={10000} formatValue={formatNumber} />
           <RangeSlider label={t('fire.currentSavings')} value={parseFloat(currentSavings) || 0}
@@ -147,8 +150,8 @@ export default function FIRECalculator() {
                   <Target className="w-5 h-5 text-orange-700" />
                   <span className="text-sm text-orange-900 font-medium">{t('fire.timeToFire')}</span>
                 </div>
-                <div className="text-3xl font-bold text-orange-700">{results.years} {pluralize(i18n.language, parseFloat(results.years), 'год', 'года', 'лет')}</div>
-                <div className="text-sm text-orange-800">{t('fire.atAge')}: {results.ageAtFIRE} {pluralize(i18n.language, results.ageAtFIRE, 'год', 'года', 'лет')}</div>
+                <div className="text-3xl font-bold text-orange-700">{results.years} {yWord(parseFloat(results.years))}</div>
+                <div className="text-sm text-orange-800">{t('fire.atAge')}: {results.ageAtFIRE} {ageWord(results.ageAtFIRE)}</div>
               </div>
 
               <div className="bg-gray-50 rounded-lg p-4">
@@ -173,7 +176,7 @@ export default function FIRECalculator() {
                   {results.scenarios.map((s, idx) => (
                     <div key={idx} className="bg-gray-50 rounded p-2 flex justify-between">
                       <span>{t('fire.saving')}: {formatNumber(s.monthlySaving)}</span>
-                      <span className="font-semibold">{s.years} {pluralize(i18n.language, parseFloat(s.years), 'год', 'года', 'лет')} ({s.ageAtFIRE} {pluralize(i18n.language, s.ageAtFIRE, 'год', 'года', 'лет')})</span>
+                      <span className="font-semibold">{s.years} {yWord(parseFloat(s.years))} ({s.ageAtFIRE} {ageWord(s.ageAtFIRE)})</span>
                     </div>
                   ))}
                 </div>
@@ -191,8 +194,8 @@ export default function FIRECalculator() {
               subtitle: t(`fire.types.${fireType}`),
               sections: [{ title: t('fire.resultsTitle'), data: [
                 { label: t('fire.fireNumber'), value: formatNumber(results.fireNumber) },
-                { label: t('fire.timeToFire'), value: `${results.years} ${pluralize(i18n.language, parseFloat(results.years), 'год', 'года', 'лет')}` },
-                { label: t('fire.atAge'), value: `${results.ageAtFIRE} лет` },
+                { label: t('fire.timeToFire'), value: `${results.years} ${yWord(parseFloat(results.years))}` },
+                { label: t('fire.atAge'), value: `${results.ageAtFIRE} ${ageWord(results.ageAtFIRE)}` },
                 { label: t('fire.monthlyFromCapital'), value: formatNumber(results.withdrawalMonthly) },
               ]}],
               footer: 'Calk.kz'
