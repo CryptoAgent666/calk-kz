@@ -147,8 +147,8 @@
       "audit_status": "clean",
       "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
       "official_value": "38",
-      "verify_note": "Единовременное пособие при рождении 1-3 ребёнка = 38 МРП (164350 ₸ при МРП 4325). Подтверждено для 2026.",
-      "reverified": "2026-07-06"
+      "verify_note": "Единовременное пособие при рождении 1-3 ребёнка = 38 МРП (164350 ₸ при МРП 4325). Подтверждено для 2026. [wf-сверка 2026-07-19: confirmed_current, adversarial, high conf]",
+      "reverified": "2026-07-19"
     },
     {
       "key": "birth_lumpsum_benefit_4plus_mrp",
@@ -168,8 +168,8 @@
       "audit_status": "clean",
       "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
       "official_value": "63",
-      "verify_note": "Единовременное пособие при рождении 4-го и последующих = 63 МРП (272475 ₸). Подтверждено для 2026.",
-      "reverified": "2026-07-06"
+      "verify_note": "Единовременное пособие при рождении 4-го и последующих = 63 МРП (272475 ₸). Подтверждено для 2026. [wf-сверка 2026-07-19: confirmed_current, adversarial, high conf]",
+      "reverified": "2026-07-19"
     },
     {
       "key": "childcare_benefit_rate",
@@ -210,8 +210,8 @@
       "audit_status": "clean",
       "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
       "official_value": "1:5.76; 2:6.81; 3:7.85; 4+:8.90 (МРП/мес)",
-      "verify_note": "Гос. пособие по уходу до 1.5 лет: 1=5.76, 2=6.81, 3=7.85, 4+=8.90 МРП. Все четыре значения подтверждены для 2026 (индексация +10%).",
-      "reverified": "2026-07-06"
+      "verify_note": "Гос. пособие по уходу до 1.5 лет: 1=5.76, 2=6.81, 3=7.85, 4+=8.90 МРП. Все четыре значения подтверждены для 2026 (индексация +10%). [wf-сверка 2026-07-19: confirmed_current, adversarial, high conf]",
+      "reverified": "2026-07-19"
     },
     {
       "key": "maternity_benefit_coefficient",
@@ -275,7 +275,7 @@
       "key": "gons_max_premium_base_yearly_mrp",
       "value": 100,
       "unit": "MRP",
-      "law": "Закон РК об образовании — ГОНС (госпремия по образовательному накопительному вкладу), макс. база премирования",
+      "law": "Закон РК об образовании — ГОНС; 100 МРП/год = ПОТОЛОК самой госпремии (макс. выплата государства), НЕ лимит базы начисления",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -289,8 +289,8 @@
       "audit_status": "clean",
       "source_url": "https://egov.kz/cms/ru/articles/nakop_sistema",
       "official_value": "100",
-      "verify_note": "ГОНС (ГОНС/AQYL): госпремия начисляется на сумму вклада ежегодно, но не более 100 МРП в год (5% обычным, 7% приоритетным категориям). Подтверждено на egov.kz/cms/ru/articles/nakop_sistema.",
-      "reverified": "2026-07-06"
+      "verify_note": "100 МРП/год — максимальный РАЗМЕР госпремии ГОНС (432 500 ₸/год), не лимит базы. Правило (egov nakop_sistema): премия = ставка(5%/7%) × сумма вклада с вознаграждением банка, но ≤100 МРП. [wf-сверка 2026-07-19: значение 100 верно, но семантика в коде была перевёрнута — GONSCalculator считал min(взносы,100МРП)×ставка (макс ~5 МРП/год); исправлено на min(база×ставка, 100МРП). confirmed value / fixed code]",
+      "reverified": "2026-07-19"
     },
     {
       "key": "gons_min_initial_deposit_mrp",
@@ -310,8 +310,8 @@
       "audit_status": "clean",
       "source_url": "https://kazatu.edu.kz/assets/i/docs/pamyatka_GONS_ru.pdf",
       "official_value": "3",
-      "verify_note": "Минимальный первоначальный взнос по договору ГОНС = 3 МРП. Подтверждено на egov.kz/cms/ru/articles/nakop_sistema. (Отдельные банки — AlatauCityBank, BCC — добровольно снижают порог до 1000 ₸, но нормативный минимум 3 МРП.)",
-      "reverified": "2026-07-06"
+      "verify_note": "Минимальный первоначальный взнос по договору ГОНС = 3 МРП. Подтверждено на egov.kz/cms/ru/articles/nakop_sistema. (Отдельные банки — AlatauCityBank, BCC — добровольно снижают порог до 1000 ₸, но нормативный минимум 3 МРП.) [wf-сверка 2026-07-19: confirmed_current, adversarial, high conf]",
+      "reverified": "2026-07-19"
     },
     {
       "key": "gons_state_premium_rate_priority",
@@ -331,8 +331,8 @@
       "audit_status": "clean",
       "source_url": "https://egov.kz/cms/ru/articles/nakop_sistema",
       "official_value": "7",
-      "verify_note": "ГОНС госпремия для льготных категорий (сироты, дети без попечения, дети-инвалиды, из многодетных/малообеспеченных семей) = 7%. Подтверждено на egov.kz для 2026.",
-      "reverified": "2026-07-06"
+      "verify_note": "ГОНС госпремия для льготных категорий (сироты, дети без попечения, дети-инвалиды, из многодетных/малообеспеченных семей) = 7%. Подтверждено на egov.kz для 2026. [wf-сверка 2026-07-19: confirmed_current, adversarial, high conf]",
+      "reverified": "2026-07-19"
     },
     {
       "key": "gons_state_premium_rate_regular",
@@ -352,8 +352,8 @@
       "audit_status": "clean",
       "source_url": "https://egov.kz/cms/ru/articles/nakop_sistema",
       "official_value": "5",
-      "verify_note": "ГОНС госпремия для остальных категорий населения РК = 5%. Подтверждено на egov.kz для 2026.",
-      "reverified": "2026-07-06"
+      "verify_note": "ГОНС госпремия для остальных категорий населения РК = 5%. Подтверждено на egov.kz для 2026. [wf-сверка 2026-07-19: confirmed_current, adversarial, high conf]",
+      "reverified": "2026-07-19"
     },
     {
       "key": "gov_program_7_20_25_rate",

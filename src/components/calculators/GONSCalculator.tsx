@@ -41,7 +41,11 @@ export default function GONSCalculator() {
   // Константы на 2026 год
   const MRP_2026 = 4325;
   const MIN_INITIAL_DEPOSIT = 3 * MRP_2026; // 12 975 тенге
-  const MAX_PREMIUM_BASE_YEARLY = 100 * MRP_2026; // 432 500 тенге в год
+  // 100 МРП/год — ПОТОЛОК самой госпремии (макс. выплата государства = 432 500 ₸/год),
+  // а НЕ лимит базы начисления. Правило (egov.kz/cms/ru/articles/nakop_sistema):
+  // госпремия = ставка × сумма вклада с учётом вознаграждения банка, но не более
+  // 100 МРП в год. Сверено wf-сверкой 2026-07-19.
+  const MAX_STATE_PREMIUM_YEARLY = 100 * MRP_2026; // 432 500 тенге в год
   const REGULAR_PREMIUM_RATE = 0.05; // 5% для обычных категорий
   const PRIORITY_PREMIUM_RATE = 0.07; // 7% для льготных категорий
 
@@ -64,7 +68,8 @@ export default function GONSCalculator() {
     const statePremiumRate = childCategory === 'priority' ? PRIORITY_PREMIUM_RATE : REGULAR_PREMIUM_RATE;
 
     // Расчет по годам
-    let currentBalance = initial;
+    let currentBalance = initial;         // полный счёт (для вознаграждения банка компаундится всё)
+    let premiumBaseBalance = initial;     // взносы + вознагр. банка (без госпремий — на них премия не начисляется)
     let totalContributions = initial;
     let totalBankReward = 0;
     let totalStatePremium = 0;
@@ -80,11 +85,10 @@ export default function GONSCalculator() {
       const yearlyBankReward = averageBalance * annualBankRate;
       totalBankReward += yearlyBankReward;
 
-      // Баланс для расчета государственной премии (взносы пользователя без банковского вознаграждения)
-      const contributionsForPremium = Math.min(initial + (monthly * 12 * year), MAX_PREMIUM_BASE_YEARLY * year);
-
-      // Государственная премия за год (только с взносов пользователя, не превышающих лимит)
-      const yearlyStatePremium = Math.min(yearlyContributions, MAX_PREMIUM_BASE_YEARLY) * statePremiumRate;
+      // Госпремия = ставка × сумма вклада с учётом вознаграждения банка (без ранее
+      // полученных госпремий — на них премия не начисляется), но НЕ более 100 МРП/год.
+      premiumBaseBalance += yearlyContributions + yearlyBankReward;
+      const yearlyStatePremium = Math.min(premiumBaseBalance * statePremiumRate, MAX_STATE_PREMIUM_YEARLY);
       totalStatePremium += yearlyStatePremium;
 
       // Обновляем текущий баланс
@@ -108,7 +112,7 @@ export default function GONSCalculator() {
       totalStatePremium: Math.round(totalStatePremium),
       finalAmount: Math.round(finalAmount),
       statePremiumRate: Math.round(statePremiumRate * 10000) / 100,
-      maxPremiumBase: MAX_PREMIUM_BASE_YEARLY,
+      maxPremiumBase: MAX_STATE_PREMIUM_YEARLY,
       effectiveReturn: Number(effectiveReturn.toFixed(2)),
       isMinimumMet,
       yearlyBreakdown
@@ -332,7 +336,7 @@ export default function GONSCalculator() {
               <div className="text-xs text-teal-800 space-y-1">
                 <p>• {t('gons.feature1')}</p>
                 <p>• {t('gons.feature2')}</p>
-                <p>• {t('gons.feature3')}: {formatNumber(MAX_PREMIUM_BASE_YEARLY)} {t('gons.perYear')}</p>
+                <p>• {t('gons.feature3')}: {formatNumber(MAX_STATE_PREMIUM_YEARLY)} {t('gons.perYear')}</p>
                 <p>• {t('gons.feature4')}</p>
               </div>
             </div>
@@ -600,7 +604,7 @@ export default function GONSCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.restrictions')}:</div>
-                <div className="text-gray-900">{t('gons.premiumMaxWith')} {formatNumber(MAX_PREMIUM_BASE_YEARLY)}/{t('gons.year')}</div>
+                <div className="text-gray-900">{t('gons.premiumMaxWith')} {formatNumber(MAX_STATE_PREMIUM_YEARLY)}/{t('gons.year')}</div>
                 <div className="text-xs text-amber-600">{t('gons.notFromAllAmount')}</div>
               </div>
               <div>
@@ -719,7 +723,7 @@ export default function GONSCalculator() {
               </div>
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('gons.tip3', { amount: formatNumber(MAX_PREMIUM_BASE_YEARLY) })}</span>
+                <span>{t('gons.tip3', { amount: formatNumber(MAX_STATE_PREMIUM_YEARLY) })}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -741,7 +745,7 @@ export default function GONSCalculator() {
               </div>
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('gons.restriction3', { amount: formatNumber(MAX_PREMIUM_BASE_YEARLY) })}</span>
+                <span>{t('gons.restriction3', { amount: formatNumber(MAX_STATE_PREMIUM_YEARLY) })}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
