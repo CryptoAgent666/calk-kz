@@ -12,8 +12,10 @@ export default function LeapYearCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [inputYear, setInputYear] = useState<string>(String(new Date().getFullYear()));
   const [currentYear] = useState<number>(new Date().getFullYear());
-  const [rangeStart, setRangeStart] = useState<string>('2020');
-  const [rangeEnd, setRangeEnd] = useState<string>('2030');
+  // Окно диапазона и быстрая кнопка — ОТ текущего года, а не хардкод: иначе
+  // «2020–2030» и кнопка «2024» протухают с каждым годом (аудит 08.2026).
+  const [rangeStart, setRangeStart] = useState<string>(String(new Date().getFullYear() - 5));
+  const [rangeEnd, setRangeEnd] = useState<string>(String(new Date().getFullYear() + 5));
   const [showRange, setShowRange] = useState<boolean>(false);
 
   const [results, setResults] = useState({
@@ -153,6 +155,27 @@ export default function LeapYearCalculator() {
     }
   };
 
+  // Ближайший будущий високосный год (для быстрой кнопки) — считаем, не хардкодим.
+  const isLeap = (y: number) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+  const nextLeapFromNow = (() => {
+    let y = currentYear + 1;
+    while (!isLeap(y)) y += 1;
+    return y;
+  })();
+
+  // Прошедшее и следующее 29 февраля — по фактической дате, чтобы текст не устаревал.
+  const today = new Date();
+  const lastFeb29Year = (() => {
+    let y = currentYear;
+    while (!(isLeap(y) && new Date(y, 1, 29) <= today)) y -= 1;
+    return y;
+  })();
+  const nextFeb29Year = (() => {
+    let y = currentYear;
+    while (!(isLeap(y) && new Date(y, 1, 29) > today)) y += 1;
+    return y;
+  })();
+
   const setQuickYear = (year: number | 'current') => {
     if (year === 'current') {
       setInputYear(currentYear.toString());
@@ -273,10 +296,10 @@ export default function LeapYearCalculator() {
                     {t('leap-year.current', { year: currentYear })}
                   </button>
                   <button
-                    onClick={() => setQuickYear(2024)}
+                    onClick={() => setQuickYear(nextLeapFromNow)}
                     className="p-2 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
                   >
-                    2024
+                    {nextLeapFromNow}
                   </button>
                   <button
                     onClick={() => setQuickYear(2000)}
@@ -630,7 +653,7 @@ export default function LeapYearCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('leap-year.lastLeapDayTitle')}</h3>
             <p className="text-gray-600 text-sm">
-              {t('leap-year.lastLeapDayDescription')}
+              {t('leap-year.lastLeapDayDescription', { last: lastFeb29Year, next: nextFeb29Year })}
             </p>
           </div>
 

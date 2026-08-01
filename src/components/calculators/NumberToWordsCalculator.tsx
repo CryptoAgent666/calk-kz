@@ -616,7 +616,8 @@ export default function NumberToWordsCalculator() {
                   {t('number-to-words.quickSelect')}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {['4', '15', '100', '1000', '2024', '12345', '1000000', '3.14'].map((number) => (
+                  {/* Год берём текущий, а не хардкод «2024» — иначе пример протухает (аудит 08.2026). */}
+                  {['4', '15', '100', '1000', String(new Date().getFullYear()), '12345', '1000000', '3.14'].map((number) => (
                     <button
                       key={number}
                       onClick={() => setQuickNumber(number)}
