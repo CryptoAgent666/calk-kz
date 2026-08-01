@@ -74,7 +74,12 @@ export function TaxPieChart({
       )}
       <ResponsiveContainer width="100%" height={height}>
         <PieChart>
+            // Анимация монтирования Recharts делала SVG недетерминированным:
+            // пререндер снимал HTML до дорисовки path'ов, а клиент при гидратации
+            // строил уже финальный график → mismatch и откат всей страницы на
+            // клиентский рендер (#418/#423). Отключаем — график и так рисуется сразу.
           <Pie
+            isAnimationActive={false}
             data={data}
             cx="50%"
             cy="50%"
@@ -165,6 +170,7 @@ export function ComparisonBarChart({
           <Legend />
           {dataKeys.map((dk, index) => (
             <Bar
+              isAnimationActive={false}
               key={dk.key}
               dataKey={dk.key}
               name={dk.name}
@@ -233,6 +239,7 @@ export function TrendLineChart({
           {dataKeys.map((dk, index) => (
             showArea ? (
               <Area
+                isAnimationActive={false}
                 key={dk.key}
                 type="monotone"
                 dataKey={dk.key}
@@ -244,6 +251,7 @@ export function TrendLineChart({
               />
             ) : (
               <Line
+                isAnimationActive={false}
                 key={dk.key}
                 type="monotone"
                 dataKey={dk.key}

@@ -172,6 +172,31 @@ async function prerenderRoute(page, distPath, lang, route) {
     document.querySelectorAll('iframe[src*="googleads"], iframe[src*="doubleclick"], iframe[src*="recaptcha"]').forEach(el => el.remove());
   });
 
+  // КРИТИЧНО для гидратации: JSX вида `{count} {word}` даёт НЕСКОЛЬКО соседних
+  // текстовых узлов, а сериализация DOM в HTML (page.content()) склеивает их в
+  // один — при hydrateRoot React ждёт отдельные узлы и валит mismatch (#418),
+  // затем #423 «весь root переключается на клиентский рендер», т.е. пререндер
+  // фактически обесценивается. React SSR ставит в таких местах разделитель
+  // `<!-- -->`; воспроизводим его вручную ПЕРЕД снятием HTML.
+  await page.evaluate(() => {
+    const root = document.getElementById('root');
+    if (!root) return 0;
+    const SKIP = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'TITLE']);
+    const elements = [root, ...root.querySelectorAll('*')];
+    let inserted = 0;
+    for (const el of elements) {
+      if (SKIP.has(el.tagName)) continue;
+      const kids = Array.from(el.childNodes);
+      for (let i = 0; i < kids.length - 1; i++) {
+        if (kids[i].nodeType === Node.TEXT_NODE && kids[i + 1].nodeType === Node.TEXT_NODE) {
+          el.insertBefore(document.createComment(''), kids[i + 1]);
+          inserted++;
+        }
+      }
+    }
+    return inserted;
+  });
+
   const html = await page.content();
   const normalizedRoute = route === '/' ? '' : route.replace(/^\/+/, '');
   const outputRoot = lang.outputPrefix ? path.join(distPath, lang.outputPrefix) : distPath;
