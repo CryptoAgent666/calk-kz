@@ -171,6 +171,12 @@ async function prerenderRoute(page, distPath, lang, route) {
   await page.evaluate(() => {
     document.querySelectorAll('meta[http-equiv="origin-trial"]').forEach(el => el.remove());
     document.querySelectorAll('script[src*="pagead/managed"]').forEach(el => el.remove());
+    // КРИТИЧНО: отложенный AdSense-лоадер (index.html) успевает выполниться и в
+    // puppeteer — запрос мы блокируем, но <script src=adsbygoogle.js> уже висит
+    // в <head> и сериализуется в статику. У пользователя такой тег грузится
+    // сразу при парсинге HTML, В ОБХОД всей отложки «после гидратации», и
+    // auto-ads ломал гидратацию на каждой странице (#418/#423 на проде).
+    document.querySelectorAll('script[src*="googlesyndication"], script[src*="adsbygoogle"]').forEach(el => el.remove());
     document.querySelectorAll('ins.adsbygoogle').forEach(el => el.remove());
     document.querySelectorAll('iframe[id^="aswift_"], iframe[id^="google_esf"]').forEach(el => el.remove());
     document.querySelectorAll('iframe[src*="googleads"], iframe[src*="doubleclick"], iframe[src*="recaptcha"]').forEach(el => el.remove());

@@ -19,6 +19,16 @@ import NotFoundPage from './components/NotFoundPage';
 
 function App() {
   const location = useLocation();
+
+  // Сигнал «первый commit готов» для отложенного AdSense-лоадера (index.html).
+  // Эффект выполняется ПОСЛЕ commit-фазы — в отличие от кода сразу за
+  // hydrateRoot(): тот возвращается до конца конкурентной гидратации, и на
+  // холодной загрузке реклама успевала вставиться в ещё гидрируемое дерево
+  // (#418/#423 только на первом визите). Слушатель в index.html одноразовый.
+  useEffect(() => {
+    (window as unknown as { __APP_HYDRATED__?: boolean }).__APP_HYDRATED__ = true;
+    window.dispatchEvent(new Event('app:hydrated'));
+  }, []);
   const navigate = useLocalizedNavigate();
   const [recentCalculators, setRecentCalculators] = useLocalStorage<string[]>('recent-calculators', []);
 

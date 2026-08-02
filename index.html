@@ -170,7 +170,10 @@
           return;
         }
 
+        let adsStarted = false;
         const loadAds = () => {
+          if (adsStarted) return;
+          adsStarted = true;
           const script = document.createElement('script');
           script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4859241862365215';
           script.async = true;
@@ -180,10 +183,24 @@
           document.head.appendChild(script);
         };
 
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(loadAds, { timeout: 3000 });
+        const scheduleAds = () => {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadAds, { timeout: 3000 });
+          } else {
+            setTimeout(loadAds, 1500);
+          }
+        };
+
+        // КРИТИЧНО: auto-ads вставляет узлы прямо в React-дерево. Если это
+        // случается ДО завершения гидратации — mismatch и каскад #418/#423 на
+        // каждой странице (лечили всю статику, а прод валился именно из-за
+        // рекламы). Ждём сигнала app:hydrated из main.tsx; страховка 8с — если
+        // гидратация не случилась (боты, сломанный JS), рекламу всё равно грузим.
+        if (window.__APP_HYDRATED__) {
+          scheduleAds();
         } else {
-          setTimeout(loadAds, 1500);
+          window.addEventListener('app:hydrated', scheduleAds, { once: true });
+          setTimeout(() => { if (!window.__APP_HYDRATED__) scheduleAds(); }, 8000);
         }
       }, { once: true });
     </script>
