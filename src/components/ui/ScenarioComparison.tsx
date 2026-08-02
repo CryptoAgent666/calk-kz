@@ -1,7 +1,10 @@
 import React, { Suspense } from 'react';
 import type { ScenarioComparisonProps } from './ScenarioComparisonImpl';
+import { useLazyWithoutSuspense } from '../../utils/lazyReady';
 
-const LazyScenarioComparison = React.lazy(() =>
+// Экспортируется для прогрева в main.tsx (см. primeRouteChunk): на
+// пререндеренной странице обёртка <Suspense> не должна попадать в дерево.
+export const LazyScenarioComparison = React.lazy(() =>
   import('./ScenarioComparisonImpl').then((module) => ({ default: module.ScenarioComparison }))
 );
 
@@ -18,11 +21,18 @@ function ScenarioPlaceholder() {
 }
 
 export function ScenarioComparison(props: ScenarioComparisonProps) {
+  // Как в CalculatorView: если чанк уже прогрет (main.tsx делает это до
+  // hydrateRoot), рендерим без Suspense — граница ломает гидратацию статики.
+  const skipSuspense = useLazyWithoutSuspense(LazyScenarioComparison, 'scenario-comparison');
   return (
     <div className="print:hidden">
-      <Suspense fallback={<ScenarioPlaceholder />}>
+      {skipSuspense ? (
         <LazyScenarioComparison {...props} />
-      </Suspense>
+      ) : (
+        <Suspense fallback={<ScenarioPlaceholder />}>
+          <LazyScenarioComparison {...props} />
+        </Suspense>
+      )}
     </div>
   );
 }

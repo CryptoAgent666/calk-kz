@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useLazyWithoutSuspense } from '../utils/lazyReady';
 import { useTranslation } from 'react-i18next';
 import { calculatorCategories } from '../data/calculators';
 import { useLocalizedNavigate } from '../hooks/useLocalizedNavigate';
@@ -17,6 +18,12 @@ interface CalculatorViewProps {
 export default function CalculatorView({ calculatorId, onBackClick, onCalculatorClick }: CalculatorViewProps) {
   const { t } = useTranslation(['common', 'categories', 'calculators']);
   const navigate = useLocalizedNavigate();
+
+  const lazyComponent = calculatorCategories
+    .flatMap(cat => cat.calculators)
+    .find(calc => calc.id === calculatorId)?.component;
+  // Хук обязан вызываться до ранних return (правила хуков)
+  const skipSuspense = useLazyWithoutSuspense(lazyComponent, calculatorId);
 
   // Найти калькулятор по ID
   let calculator = null;
@@ -74,9 +81,15 @@ export default function CalculatorView({ calculatorId, onBackClick, onCalculator
       {/* Бейдж актуальности данных (E-E-A-T) — на всех калькуляторах разом */}
       <DataFreshnessBadge categoryId={category?.id} />
 
-      <Suspense fallback={<CalculatorSkeleton />}>
+      {/* Без обёртки, если чанк уже прогрет (см. utils/lazyReady): Suspense в
+          дереве не гидратируется поверх пререндеренного HTML. */}
+      {skipSuspense ? (
         <CalculatorComponent />
-      </Suspense>
+      ) : (
+        <Suspense fallback={<CalculatorSkeleton />}>
+          <CalculatorComponent />
+        </Suspense>
+      )}
 
       <RelatedCalculators
         currentCalculatorId={calculatorId}

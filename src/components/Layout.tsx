@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import LocalizedLink from './LocalizedLink';
+import { stripLocalePrefix } from '../utils/localizedRouting';
 import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info, History } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SearchBar from './SearchBar';
@@ -35,9 +36,12 @@ export default function Layout({
   const location = useLocation();
   const { t, i18n } = useTranslation(['common', 'categories']);
   
-  // Определяем текущую страницу на основе URL
+  // Определяем текущую страницу на основе URL.
+  // Языковой префикс (/__kk/...) снимаем: без этого ЛЮБАЯ казахская страница
+  // попадала в fallback 'home' и в шапке подсвечивалась «Главная», а заодно
+  // расходилась с пререндером (тот снимается по ru-путям) → mismatch className.
   const getCurrentPage = () => {
-    const pathname = location.pathname;
+    const pathname = stripLocalePrefix(location.pathname) || '/';
     if (pathname === '/') return 'home';
     if (pathname.startsWith('/category/')) return 'category';
     if (pathname.startsWith('/calculator/')) return 'calculator';
@@ -138,10 +142,7 @@ export default function Layout({
             <div className="flex flex-col h-full">
               {/* Header — фикс-панель, поэтому сами добавляем верхний safe-area
                   инсет (iOS contentInset не трогает position:fixed). */}
-              <div
-                className="flex items-center justify-between p-4 border-b border-gray-100"
-                style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1rem)' }}
-              >
+              <div className="flex items-center justify-between p-4 border-b border-gray-100 safe-area-top-p4">
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                     <Calculator className="w-4 h-4 text-white" />

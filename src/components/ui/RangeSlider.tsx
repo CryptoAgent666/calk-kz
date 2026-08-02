@@ -14,6 +14,29 @@ interface RangeSliderProps {
   disabled?: boolean;
 }
 
+/**
+ * #RRGGBB + прозрачность → строка ровно в той форме, в которой браузер
+ * сериализует цвет в DOM (rgba(r, g, b, a)). Алфа-хекс (`#3b82f620`) при
+ * пререндере превращался браузером в rgba(...), а клиент писал hex — React
+ * ругался «Prop `style` did not match» на каждом слайдере.
+ */
+function hexWithAlpha(hex: string, alphaByte: number): string {
+  const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  if (!m) return hex;
+  const [r, g, b] = [m[1], m[2], m[3]].map(x => parseInt(x, 16));
+  // Chrome печатает алфу с точностью до трёх значащих цифр (32/255 → 0.125)
+  const a = Math.round((alphaByte / 255) * 1000) / 1000;
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+
+/** #RRGGBB → rgb(r, g, b) — форма, в которой браузер сериализует цвет в DOM. */
+function hexToRgb(hex: string): string {
+  const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  if (!m) return hex;
+  const [r, g, b] = [m[1], m[2], m[3]].map(x => parseInt(x, 16));
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 export function RangeSlider({
   value,
   onChange,
@@ -54,7 +77,7 @@ export function RangeSlider({
           {showValue && (
             <span 
               className="text-sm font-semibold px-2 py-1 rounded-md"
-              style={{ backgroundColor: `${color}20`, color }}
+              style={{ backgroundColor: hexWithAlpha(color, 0x20), color: hexToRgb(color) }}
             >
               {formatValue(safeValue)}
             </span>
@@ -127,7 +150,7 @@ export function DualRangeSlider({
           <label className="text-sm font-medium text-gray-700">{label}</label>
           <span 
             className="text-sm font-semibold px-2 py-1 rounded-md"
-            style={{ backgroundColor: `${color}20`, color }}
+            style={{ backgroundColor: hexWithAlpha(color, 0x20), color: hexToRgb(color) }}
           >
             {formatValue(minValue)} — {formatValue(maxValue)}
           </span>
@@ -144,7 +167,7 @@ export function DualRangeSlider({
           style={{
             left: `${minPercentage}%`,
             width: `${maxPercentage - minPercentage}%`,
-            backgroundColor: color
+            backgroundColor: hexToRgb(color)
           }}
         />
         

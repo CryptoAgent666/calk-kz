@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Activity, Calculator, Users, TrendingUp, AlertTriangle, Info, Target, Heart, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import InputField from '../InputField';
@@ -22,14 +22,11 @@ export default function BMICalculator() {
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [heightUnit, setHeightUnit] = useState<'cm' | 'm'>('cm');
   
-  // Состояния для валидации
-  const [errors, setErrors] = useState({
-    height: '',
-    weight: '',
-    age: ''
-  });
-  
-  const [results, setResults] = useState({
+  // Результаты и ошибки считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули/пустые блоки — структура не
+  // совпадает и React валит гидратацию целиком (#418/#423).
+  const EMPTY_RESULTS = {
     bmi: 0,
     category: '',
     categoryDescription: '',
@@ -38,7 +35,7 @@ export default function BMICalculator() {
     weightDifference: 0,
     ageAdjustedCategory: '',
     recommendations: [] as string[]
-  });
+  };
 
   const validateHeight = (value: string): string | null => {
     const num = parseFloat(value);
@@ -103,7 +100,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
     { min: 40, max: Infinity, category: t('bmi.categories.obese3'), description: t('bmi.categories.obese3Desc'), risk: t('bmi.categories.obese3Risk'), color: 'red' }
   ];
 
-  const calculateBMI = () => {
+  const computeBMI = () => {
     const weightKg = parseFloat(weight) || 0;
     let heightM = 0;
     
@@ -116,12 +113,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
     const ageYears = parseInt(age) || 0;
     
     if (weightKg <= 0 || heightM <= 0) {
-      setResults({
-        bmi: 0, category: '', categoryDescription: '', healthRisk: '',
-        normalWeightRange: { min: 0, max: 0 }, weightDifference: 0,
-        ageAdjustedCategory: '', recommendations: []
-      });
-      return;
+      return { results: EMPTY_RESULTS, errors: { height: '', weight: '', age: '' } };
     }
 
     // Валидация при расчете
@@ -129,20 +121,15 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
     const weightError = validateWeight(weight);
     const ageError = validateAge(age);
 
-    setErrors({
+    const validationErrors = {
       height: heightError || '',
       weight: weightError || '',
       age: ageError || ''
-    });
+    };
 
     // Если есть ошибки, не рассчитываем
     if (heightError || weightError || (age && ageError)) {
-      setResults({
-        bmi: 0, category: '', categoryDescription: '', healthRisk: '',
-        normalWeightRange: { min: 0, max: 0 }, weightDifference: 0,
-        ageAdjustedCategory: '', recommendations: []
-      });
-      return;
+      return { results: EMPTY_RESULTS, errors: validationErrors };
     }
     // Расчет ИМТ
     const bmi = weightKg / (heightM * heightM);
@@ -201,7 +188,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
       recommendations.push(t('bmi.recommendationsList.abdominalControl'));
     }
 
-    setResults({
+    return { results: {
       bmi: Number(bmi.toFixed(1)),
       category: categoryInfo.category,
       categoryDescription: categoryInfo.description,
@@ -213,12 +200,16 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
       weightDifference: Number(Math.abs(weightDifference).toFixed(1)),
       ageAdjustedCategory,
       recommendations
-    });
+    }, errors: validationErrors };
   };
 
-  useEffect(() => {
-    calculateBMI();
-  }, [height, weight, age, gender, heightUnit]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const { results, errors } = useMemo(
+    computeBMI,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [height, weight, age, gender, heightUnit, i18n.language]
+  );
 
   const formatWeight = (weight: number) => {
     return weight.toFixed(1) + ' ' + t('bmi.weightUnit');

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Calculator, TrendingUp, AlertTriangle, Info, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -15,25 +15,12 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
 export default function IncomeTaxCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [grossSalary, setGrossSalary] = useState<number>(250000);
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
   const [showCharts, setShowCharts] = useState<boolean>(true);
-  const [results, setResults] = useState({
-    opv: 0,
-    vosms: 0,
-    standardDeduction: 0,
-    taxableIncome: 0,
-    incomeTax: 0,
-    netSalary: 0,
-    totalDeductions: 0,
-    effectiveRate: 0,
-    hasNinetyPercentReduction: false,
-    isNearThreshold: false,
-    thresholdWarning: ''
-  });
 
   const MZP = 85000;
   const MRP = 4325;
@@ -103,9 +90,14 @@ export default function IncomeTaxCalculator() {
     };
   };
 
-  useEffect(() => {
-    setResults(calculateTax(grossSalary));
-  }, [grossSalary, isResident, isPrimaryJob, isSpecialCategory]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => calculateTax(grossSalary),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, i18n.language]
+  );
 
   // Данные для круговой диаграммы
   const pieChartData = [

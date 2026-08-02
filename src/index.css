@@ -94,3 +94,11 @@
   to { transform: translateY(0); opacity: 1; }
 }
 .calk-slide-up { animation: calk-slide-up 0.35s ease-out both; }
+
+/* Safe-area паддинг для фикс-панелей. ВАЖНО: именно классом, а не inline style —
+   браузер сериализует inline-стиль как "padding-top: calc(...);" (с пробелом и
+   точкой с запятой), а React при гидратации сравнивает строку буквально и
+   получает mismatch → откат страницы на клиентский рендер (диагноз 02.08.2026). */
+.safe-area-top-p4 {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+}

@@ -48,6 +48,12 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
+    // Инициализация СИНХРОННАЯ. По умолчанию i18next дозавершает init в
+    // setTimeout(0), поэтому на момент hydrateRoot isInitialized ещё false и
+    // useTranslation (useSuspense: true) приостанавливает компонент — граница
+    // Suspense в CalculatorView отдавала скелет вместо готовой разметки и
+    // валила гидратацию всей страницы калькулятора.
+    initImmediate: false,
     lng: detectInitialLang(),
     fallbackLng: 'ru',
     defaultNS: 'common',

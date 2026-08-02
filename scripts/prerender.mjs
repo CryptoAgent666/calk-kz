@@ -124,6 +124,10 @@ async function setupPage(context, langCode) {
     } catch {
       // ignore storage errors
     }
+    // Метка «это снимок для статики»: компоненты, которые на клиенте при первом
+    // рендере показывают плейсхолдер (чарты в ui/ChartComponents), не должны
+    // попасть в HTML уже отрендеренными — иначе гидратация валится структурно.
+    window.__PRERENDER__ = true;
   }, langCode);
 
   // Cache static assets (CSS/JS chunks) — reuse between page loads
