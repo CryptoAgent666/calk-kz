@@ -228,10 +228,31 @@ async function prerender() {
   console.log(`Dist path: ${distPath}`);
   console.log(`Concurrency: ${CONCURRENCY}`);
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  // Браузер может умереть целиком (OOM: «Connection closed» на всех воркерах
+  // разом — 2026-08-02 так каскадом легли 141 маршрут после 429 успешных).
+  // Поэтому не держим один экземпляр, а умеем перезапускать: ensureBrowser()
+  // возвращает живой browser, перезапуская Chrome при необходимости; параллельные
+  // вызовы из воркеров сливаются в один relaunch через общий промис.
+  let browser = null;
+  let relaunchPromise = null;
+
+  async function ensureBrowser() {
+    if (browser && browser.isConnected()) return browser;
+    if (!relaunchPromise) {
+      relaunchPromise = (async () => {
+        if (browser) await browser.close().catch(() => {});
+        console.warn('  ⟳ перезапуск Chrome...');
+        browser = await puppeteer.launch({
+          headless: true,
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+      })().finally(() => { relaunchPromise = null; });
+    }
+    await relaunchPromise;
+    return browser;
+  }
+
+  await ensureBrowser();
 
   const routes = generateRoutes();
 
@@ -253,9 +274,9 @@ async function prerender() {
   async function worker(workerId) {
     // Each worker uses its own browser context for isolation
     // (separate localStorage, cookies, cache)
-    const context = await browser.createBrowserContext();
+    let context = await browser.createBrowserContext();
     // Pre-create 2 pages (one per locale) — reuse instead of newPage/close cycle
-    const pages = {
+    let pages = {
       ru: await setupPage(context, 'ru'),
       kk: await setupPage(context, 'kk'),
     };
@@ -281,12 +302,26 @@ async function prerender() {
             // Detached page/frame (краш вкладки Chrome): переиспользуемая page
             // мертва навсегда — без пересоздания каскадом падают ВСЕ оставшиеся
             // роуты воркера (2026-07-10: 484 роута после смерти на /calculator/vat).
-            if (/detached|Target closed|Session closed|disconnected/i.test(error.message)) {
-              await pages[lang.code].close().catch(() => {});
+            // Если умер весь браузер (Connection closed) — перезапускаем Chrome
+            // и пересоздаём контекст воркера целиком.
+            if (/detached|Target closed|Session closed|disconnected|Connection closed|Protocol error/i.test(error.message)) {
+              await ensureBrowser();
               try {
+                await pages[lang.code].close().catch(() => {});
                 pages[lang.code] = await setupPage(context, lang.code);
-              } catch (recreateErr) {
-                console.warn(`  ⚠ W${workerId}: не удалось пересоздать страницу: ${recreateErr.message}`);
+              } catch {
+                // контекст умер вместе с браузером — новый контекст + обе страницы
+                try {
+                  await context.close().catch(() => {});
+                  context = await browser.createBrowserContext();
+                  pages = {
+                    ru: await setupPage(context, 'ru'),
+                    kk: await setupPage(context, 'kk'),
+                  };
+                  console.warn(`  ⟳ W${workerId}: контекст пересоздан после смерти браузера`);
+                } catch (recreateErr) {
+                  console.warn(`  ⚠ W${workerId}: не удалось пересоздать контекст: ${recreateErr.message}`);
+                }
               }
             }
             if (attempt < MAX_RETRIES) {
