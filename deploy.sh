@@ -31,7 +31,7 @@ set ssl:verify-certificate no
 set net:timeout 30
 set net:max-retries 3
 open -u $FTP_USER,$FTP_PASS $FTP_HOST
-mirror --reverse --delete --verbose --parallel=4 \
+mirror --reverse --delete --verbose --parallel=10 \
   --exclude .DS_Store \
   --exclude .git/ \
   --exclude app-updates/ \
