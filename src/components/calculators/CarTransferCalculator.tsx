@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Calculator, FileCheck, Users, AlertTriangle, Info, ShieldCheck, Receipt } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -79,21 +79,7 @@ export default function CarTransferCalculator() {
   const [buyerAge, setBuyerAge] = useState<string>('35');
   const [buyerExperience, setBuyerExperience] = useState<string>('10');
 
-  const [results, setResults] = useState({
-    registrationFee: 0,
-    platesFee: 0,
-    certificateFee: 0,
-    notaryFee: 0,
-    ogpoFee: 0,
-    inspectionFee: 0,
-    salesTax: 0,
-    taxReason: '' as string,
-    total: 0,
-    sellerPays: 0,
-    buyerPays: 0,
-  });
-
-  useEffect(() => {
+  const computeResults = () => {
     const sale = parseFloat(salePrice) || 0;
     const purchase = parseFloat(purchasePrice) || 0;
     const years = parseInt(ownershipYears) || 0;
@@ -149,7 +135,7 @@ export default function CarTransferCalculator() {
     const sellerPays = (notaryFee - notaryHalf) + salesTax;
     const total = buyerPays + sellerPays;
 
-    setResults({
+    return {
       registrationFee,
       platesFee,
       certificateFee,
@@ -161,8 +147,17 @@ export default function CarTransferCalculator() {
       total,
       sellerPays,
       buyerPays,
-    });
-  }, [salePrice, purchasePrice, ownershipYears, ownershipMonths, keepPlates, needInspection, region, notaryParty, buyerAge, buyerExperience, t]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [salePrice, purchasePrice, ownershipYears, ownershipMonths, keepPlates, needInspection, region, notaryParty, buyerAge, buyerExperience, t, i18n.language]
+  );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 

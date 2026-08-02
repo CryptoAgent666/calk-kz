@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Calculator, TrendingDown, TrendingUp, Info, MapPin, Tag, FileText } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -49,30 +49,25 @@ export default function CarMarketValueCalculator() {
   const [isDamaged, setIsDamaged] = useState<boolean>(false);
   const [docs, setDocs] = useState<DocsKey>('original');
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     baseAfterDepreciation: 0, marketValue: 0, minPrice: 0, maxPrice: 0,
     lossAmount: 0, lossPercent: 0, mileageK: 1, conditionK: 1,
     regionK: 1, bodyK: 1, damagedK: 1, docsK: 1, sellPrice: 0, buyPrice: 0,
-  });
+  };
 
   useEffect(() => {
     const preset = carPresets.find((c) => c.id === selectedPreset);
     if (preset) setNewPrice(String(preset.price));
   }, [selectedPreset]);
 
-  useEffect(() => {
+  const computeResults = () => {
     const basePrice = parseFloat(newPrice) || 0;
     const y = parseInt(year) || CURRENT_YEAR;
     const km = parseFloat(mileage) || 0;
     const age = Math.max(0, CURRENT_YEAR - y);
 
     if (basePrice <= 0) {
-      setResults({
-        baseAfterDepreciation: 0, marketValue: 0, minPrice: 0, maxPrice: 0,
-        lossAmount: 0, lossPercent: 0, mileageK: 1, conditionK: 1,
-        regionK: 1, bodyK: 1, damagedK: 1, docsK: 1, sellPrice: 0, buyPrice: 0,
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     let depreciated = basePrice;
@@ -102,7 +97,7 @@ export default function CarMarketValueCalculator() {
     const marketValue = depreciated * mileageK * conditionK * regionK * bodyK * damagedK * docsK;
     const lossAmount = basePrice - marketValue;
 
-    setResults({
+    return {
       baseAfterDepreciation: Math.round(depreciated),
       marketValue: Math.round(marketValue),
       minPrice: Math.round(marketValue * 0.90),
@@ -112,8 +107,17 @@ export default function CarMarketValueCalculator() {
       mileageK, conditionK, regionK, bodyK, damagedK, docsK,
       sellPrice: Math.round(marketValue * 0.95),
       buyPrice: Math.round(marketValue * 0.94),
-    });
-  }, [newPrice, year, mileage, condition, region, body, isDamaged, docs]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [newPrice, year, mileage, condition, region, body, isDamaged, docs]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

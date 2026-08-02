@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp, Calculator, DollarSign, Target, BarChart3, PieChart, Info, AlertTriangle, Percent, Calendar } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
@@ -30,15 +30,6 @@ export default function CompoundInterestCalculator() {
   const [investmentYears, setInvestmentYears] = useState<number>(10);
   const [compoundingFrequency, setCompoundingFrequency] = useState<'monthly' | 'quarterly' | 'semiannually' | 'annually'>('monthly');
   const [currency, setCurrency] = useState<'KZT' | 'USD' | 'EUR'>('KZT');
-
-  const [results, setResults] = useState({
-    finalAmount: 0,
-    totalPersonalContributions: 0,
-    totalInterestEarned: 0,
-    effectiveReturn: 0,
-    totalReturn: 0,
-    yearlyData: [] as YearlyData[]
-  });
 
   const currencies = [
     { code: 'KZT', symbol: '₸', name: t('compound-interest.kzt') },
@@ -101,19 +92,24 @@ export default function CompoundInterestCalculator() {
     const effectiveReturn = totalContributions > 0 ? (totalInterestEarned / totalContributions) * 100 : 0;
     const totalReturn = totalContributions > 0 ? ((finalAmount / totalContributions) - 1) * 100 : 0;
 
-    setResults({
+    return {
       finalAmount: Math.round(finalAmount),
       totalPersonalContributions: Math.round(totalContributions),
       totalInterestEarned: Math.round(totalInterestEarned),
       effectiveReturn: Number(effectiveReturn.toFixed(2)),
       totalReturn: Number(totalReturn.toFixed(2)),
       yearlyData
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateCompoundInterest();
-  }, [initialDeposit, regularContribution, contributionFrequency, annualRate, investmentYears, compoundingFrequency]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateCompoundInterest,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [initialDeposit, regularContribution, contributionFrequency, annualRate, investmentYears, compoundingFrequency, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     const selectedCurrency = currencies.find(c => c.code === currency);

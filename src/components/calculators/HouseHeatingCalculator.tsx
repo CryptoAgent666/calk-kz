@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Flame, Info } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -46,9 +46,10 @@ export default function HouseHeatingCalculator() {
     coal: '20', gas: '32', electric: '35', heatpump: '35',
   });
 
-  const [results, setResults] = useState<{ fuel: Fuel; cost: number; consumption: number }[]>([]);
-
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const computeResults = (): { fuel: Fuel; cost: number; consumption: number }[] => {
     const a = parseFloat(area) || 0;
     const demand = a * INSULATION[insulation]; // кВт·ч/сезон
     const rows = FUELS.map((fuel) => {
@@ -59,8 +60,14 @@ export default function HouseHeatingCalculator() {
       const cost = consumption * price;
       return { fuel, cost: Math.round(cost), consumption: Math.round(consumption) };
     }).sort((x, y) => x.cost - y.cost);
-    setResults(rows);
-  }, [area, insulation, prices]);
+    return rows;
+  };
+
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [area, insulation, prices]
+  );
 
   const nf = (n: number) => n.toLocaleString('ru-KZ');
   const fmt = (n: number) => nf(n) + ' ₸';

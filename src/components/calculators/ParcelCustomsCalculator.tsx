@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Package, Calculator, Info, AlertTriangle, Scale } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -36,7 +36,10 @@ export default function ParcelCustomsCalculator() {
   const [itemWeight, setItemWeight] = useState<string>('');
   const [deliveryCost, setDeliveryCost] = useState<string>('');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     valueInEur: 0,
     valueInKzt: 0,
     weightKg: 0,
@@ -51,7 +54,7 @@ export default function ParcelCustomsCalculator() {
     totalCostKzt: 0,
     isDutyFree: true,
     effectiveDutyRate: 0
-  });
+  };
 
   const calculateDuty = () => {
     const value = parseFloat(itemValue) || 0;
@@ -59,15 +62,7 @@ export default function ParcelCustomsCalculator() {
     const delivery = parseFloat(deliveryCost) || 0;
 
     if (value <= 0) {
-      setResults({
-        valueInEur: 0, valueInKzt: 0, weightKg: 0,
-        isValueExceeded: false, isWeightExceeded: false,
-        valueExcess: 0, weightExcess: 0,
-        dutyByValue: 0, dutyByWeight: 0,
-        totalDutyEur: 0, totalDutyKzt: 0,
-        totalCostKzt: 0, isDutyFree: true, effectiveDutyRate: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     let valueInEur: number;
@@ -117,7 +112,7 @@ export default function ParcelCustomsCalculator() {
     const totalCostKzt = valueInKzt + totalDutyKzt;
     const effectiveDutyRate = valueInKzt > 0 ? (totalDutyKzt / valueInKzt) * 100 : 0;
 
-    setResults({
+    return {
       valueInEur: Math.round(totalValueEur * 100) / 100,
       valueInKzt: Math.round(valueInKzt),
       weightKg: weight,
@@ -132,12 +127,16 @@ export default function ParcelCustomsCalculator() {
       totalCostKzt: Math.round(totalCostKzt),
       isDutyFree,
       effectiveDutyRate: Number(effectiveDutyRate.toFixed(2))
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateDuty();
-  }, [shipmentType, itemValue, currency, eurRate, usdRate, itemWeight, deliveryCost]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateDuty,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [shipmentType, itemValue, currency, eurRate, usdRate, itemWeight, deliveryCost]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, Calculator, Users, DollarSign, Clock, Info, TrendingDown, Calendar, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
@@ -15,7 +15,10 @@ export default function UnemploymentBenefitCalculator() {
   const [workExperienceMonths, setWorkExperienceMonths] = useState<string>('36');
   const [socialContributions, setSocialContributions] = useState<string>('500000');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     averageMonthlyIncome: 0,
     incomeReplacementCoef: 0.45,
     experienceCoef: 0,
@@ -24,7 +27,7 @@ export default function UnemploymentBenefitCalculator() {
     totalBenefit: 0,
     isEligible: false,
     minRequiredExperience: 6
-  });
+  };
 
   // Коэффициент стажа участия (ГФСС, 2026): 6 мес–1 г = 0.7 ... 5–6 лет = 1.0,
   // свыше 6 лет +0.02 за каждый год (макс. 1.3)
@@ -67,28 +70,18 @@ export default function UnemploymentBenefitCalculator() {
   const normalizeContributionsInput = (value: string) =>
     Math.max(0, normalizeNumberInput(value));
 
-  const calculateUnemploymentBenefit = () => {
+  const computeUnemploymentBenefit = () => {
     const experienceMonths = normalizeMonthsInput(workExperienceMonths);
     const contributions = normalizeContributionsInput(socialContributions);
 
     if (experienceMonths === 0 || contributions === 0) {
-      setResults({
-        averageMonthlyIncome: 0, incomeReplacementCoef: 0.45, experienceCoef: 0,
-        monthlyBenefit: 0, paymentPeriodMonths: 0, totalBenefit: 0,
-        isEligible: false, minRequiredExperience: 6
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const isEligible = experienceMonths >= 6;
 
     if (!isEligible) {
-      setResults({
-        averageMonthlyIncome: 0, incomeReplacementCoef: 0.45, experienceCoef: 0,
-        monthlyBenefit: 0, paymentPeriodMonths: 0, totalBenefit: 0,
-        isEligible: false, minRequiredExperience: 6
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     // Средний доход восстанавливается из соц. отчислений (СО — 5% от дохода в 2026),
@@ -103,7 +96,7 @@ export default function UnemploymentBenefitCalculator() {
 
     const totalBenefit = monthlyBenefit * paymentPeriodMonths;
 
-    setResults({
+    return {
       averageMonthlyIncome: Math.round(averageMonthlyIncome),
       incomeReplacementCoef,
       experienceCoef,
@@ -112,12 +105,16 @@ export default function UnemploymentBenefitCalculator() {
       totalBenefit: Math.round(totalBenefit),
       isEligible: true,
       minRequiredExperience: 6
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateUnemploymentBenefit();
-  }, [workExperienceMonths, socialContributions]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeUnemploymentBenefit,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [workExperienceMonths, socialContributions]
+  );
 
   const formatNumber = (num: number) => {
     const safeValue = Number.isFinite(num) ? num : 0;

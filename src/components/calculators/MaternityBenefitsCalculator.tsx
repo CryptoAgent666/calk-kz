@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Baby, Calculator, Users, Wallet, Heart, Info, AlertTriangle, CheckCircle, Calendar, FileText, Building2, Clock, Briefcase, BarChart3 } from 'lucide-react';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -26,24 +26,6 @@ export default function MaternityBenefitsCalculator() {
   const [averageIncomeForChildcare, setAverageIncomeForChildcare] = useState<string>('300000');
   const [childNumber, setChildNumber] = useState<number>(1);
   const [birthType, setBirthType] = useState<BirthType>('normal');
-
-  const [results, setResults] = useState({
-    // Для работающих
-    maternityBenefit: 0,
-    childcareBenefit: 0,
-    maternityOPV: 0,
-    childcareOPV: 0,
-    netMaternityBenefit: 0,
-    netChildcareBenefit: 0,
-
-    // Для неработающих
-    birthBenefit: 0,
-    monthlyChildcareBenefit: 0,
-
-    // Общие
-    totalFirstYearBenefits: 0,
-    isIncomeExceedsLimit: false
-  });
 
   // Константы на 2026 год
   const MZP = 85000; // МЗП
@@ -85,7 +67,7 @@ export default function MaternityBenefitsCalculator() {
       const isIncomeExceedsLimit = (parseFloat(averageIncomeForMaternity) || 0) > MAX_INCOME_FOR_CALCULATION ||
                                   (parseFloat(averageIncomeForChildcare) || 0) > MAX_INCOME_FOR_CALCULATION;
 
-      setResults({
+      return {
         maternityBenefit: Math.round(grossMaternityBenefit),
         childcareBenefit: Math.round(grossChildcareBenefit),
         maternityOPV: Math.round(maternityOPV),
@@ -96,7 +78,7 @@ export default function MaternityBenefitsCalculator() {
         monthlyChildcareBenefit: 0,
         totalFirstYearBenefits: Math.round(totalFirstYearBenefits),
         isIncomeExceedsLimit
-      });
+      };
     } else {
       // Расчет для неработающих
       const birthBenefit = birthBenefitMRP * MRP;
@@ -106,7 +88,7 @@ export default function MaternityBenefitsCalculator() {
       // Общая сумма за первый год (единовременная + 18 месяцев ежемесячной)
       const totalFirstYearBenefits = birthBenefit + (monthlyChildcareBenefit * 18);
 
-      setResults({
+      return {
         maternityBenefit: 0,
         childcareBenefit: 0,
         maternityOPV: 0,
@@ -117,13 +99,17 @@ export default function MaternityBenefitsCalculator() {
         monthlyChildcareBenefit: Math.round(monthlyChildcareBenefit),
         totalFirstYearBenefits: Math.round(totalFirstYearBenefits),
         isIncomeExceedsLimit: false
-      });
+      };
     }
   };
 
-  useEffect(() => {
-    calculateBenefits();
-  }, [isEmployed, averageIncomeForMaternity, averageIncomeForChildcare, childNumber, birthType]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateBenefits,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isEmployed, averageIncomeForMaternity, averageIncomeForChildcare, childNumber, birthType]
+  );
 
   const formatNumber = (num: number) => {
     const locale = i18n.language === 'kk' ? 'kk-KZ' : 'ru-KZ';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Clock, Calculator, Users, DollarSign, TrendingUp, Info, AlertTriangle, Building, PiggyBank, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,10 @@ export default function PensionCalculator() {
   const [averageIncomeBefore1998, setAverageIncomeBefore1998] = useState<string>('50000');
   const [currentAccumulations, setCurrentAccumulations] = useState<string>('3000000');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
+  const EMPTY_RESULTS = {
     age: 0,
     totalWorkExperience: 0,
     basePension: 0,
@@ -31,7 +34,7 @@ export default function PensionCalculator() {
     retirementAge: { men: 63, women: 61 },
     yearsToRetirement: 0,
     estimatedAccumulationsAtRetirement: 0
-  });
+  };
 
   // Константы на 2026 год
   const PM = 50851; // Прожиточный минимум
@@ -48,12 +51,7 @@ export default function PensionCalculator() {
     const accumulations = parseFloat(currentAccumulations) || 0;
 
     if (year === 0) {
-      setResults({
-        age: 0, totalWorkExperience: 0, basePension: 0, solidarityPension: 0,
-        accumulativePension: 0, totalMonthlyPension: 0, retirementAge: { men: 63, women: 61 },
-        yearsToRetirement: 0, estimatedAccumulationsAtRetirement: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const age = CURRENT_YEAR - year;
@@ -111,7 +109,7 @@ export default function PensionCalculator() {
 
     const totalMonthlyPension = basePension + solidarityPension + accumulativePension;
 
-    setResults({
+    return {
       age,
       totalWorkExperience,
       basePension: Math.round(basePension),
@@ -121,12 +119,16 @@ export default function PensionCalculator() {
       retirementAge: { men: retirementAgeMen, women: retirementAgeWomen },
       yearsToRetirement: Math.max(yearsToRetirement, 0),
       estimatedAccumulationsAtRetirement: Math.round(estimatedAccumulationsAtRetirement)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculatePension();
-  }, [birthYear, workExperienceBefore1998, workExperienceAfter1998, averageIncomeBefore1998, currentAccumulations]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculatePension,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [birthYear, workExperienceBefore1998, workExperienceAfter1998, averageIncomeBefore1998, currentAccumulations]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Zap, Calculator, MapPin, Home, Info, AlertTriangle, TrendingUp, Lightbulb, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
@@ -31,12 +31,12 @@ export default function ElectricityBillCalculator() {
   const [consumption, setConsumption] = useState<string>('150');
   const [stoveType, setStoveType] = useState<'electric' | 'gas'>('electric');
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     totalAmount: 0,
     breakdown: [] as Array<{tier: number, consumption: number, rate: number, amount: number, descriptionKey: string}>,
     averageRate: 0,
     recommendationKey: ''
-  });
+  };
 
   // Тарифы обновлены для 2026 года (включая НДС 16%)
   // Алматы — по данным АО «Алатау Жарық Компаниясы» — «Энергосбыт»
@@ -104,14 +104,11 @@ export default function ElectricityBillCalculator() {
     const kwhConsumed = parseFloat(consumption) || 0;
 
     if (kwhConsumed <= 0) {
-      setResults({
-        totalAmount: 0, breakdown: [], averageRate: 0, recommendationKey: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const selectedCity = cityTariffs.find(c => c.id === city);
-    if (!selectedCity) return;
+    if (!selectedCity) return EMPTY_RESULTS;
 
     const tariffs = stoveType === 'electric' ? selectedCity.electricStove : selectedCity.gasStove;
 
@@ -156,17 +153,22 @@ export default function ElectricityBillCalculator() {
       recommendationKey = 'calculators:electricity.recommendationModerate';
     }
 
-    setResults({
+    return {
       totalAmount: Math.round(totalAmount),
       breakdown,
       averageRate: Number(averageRate.toFixed(2)),
       recommendationKey
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateElectricityBill();
-  }, [city, consumption, stoveType]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateElectricityBill,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [city, consumption, stoveType, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₸';

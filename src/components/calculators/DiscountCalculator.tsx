@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShoppingBag, Calculator, Percent, TrendingDown, Target, Info, AlertTriangle, Copy, Download, RotateCcw, Tag, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
@@ -59,13 +59,13 @@ export default function DiscountCalculator() {
     { id: '2', name: `${t('discount.optionN')} 2`, originalPrice: 0, discountPercent: 0, finalPrice: 0, savings: 0 }
   ]);
   
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     // Основные результаты
     finalPrice: 0,
     discountAmount: 0,
     savings: 0,
     effectiveDiscountPercent: 0,
-    
+
     // Каскадные скидки
     cascadeSteps: [] as Array<{
       step: number;
@@ -76,14 +76,14 @@ export default function DiscountCalculator() {
       priceAfter: number;
     }>,
     totalCascadeDiscount: 0,
-    
+
     // Обратный расчет
     calculatedDiscountPercent: 0,
-    
+
     // Сравнение
     bestScenario: null as ComparisonScenario | null,
     comparisonResults: [] as ComparisonScenario[]
-  });
+  };
 
   const normalizeNumberInput = (value: string) => {
     if (!value) {
@@ -195,16 +195,9 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
   const calculateSingleDiscount = () => {
     const price = normalizePriceInput(originalPrice);
     const discount = normalizePercentInput(discountPercent);
-    
+
     if (price <= 0) {
-      setResults(prev => ({
-        ...prev,
-        finalPrice: 0,
-        discountAmount: 0,
-        savings: 0,
-        effectiveDiscountPercent: 0
-      }));
-      return;
+      return EMPTY_RESULTS;
     }
 
     const discountAmount = price * (discount / 100);
@@ -212,13 +205,13 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
     const savings = discountAmount;
     const effectiveDiscountPercent = discount;
 
-    setResults(prev => ({
-      ...prev,
+    return {
+      ...EMPTY_RESULTS,
       finalPrice,
       discountAmount,
       savings,
       effectiveDiscountPercent
-    }));
+    };
   };
 
   // Расчет каскадных скидок
@@ -226,14 +219,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
     const price = normalizePriceInput(cascadeOriginalPrice);
     
     if (price <= 0 || cascadeDiscounts.length === 0) {
-      setResults(prev => ({
-        ...prev,
-        cascadeSteps: [],
-        totalCascadeDiscount: 0,
-        finalPrice: 0,
-        effectiveDiscountPercent: 0
-      }));
-      return;
+      return EMPTY_RESULTS;
     }
 
     let currentPrice = price;
@@ -264,13 +250,13 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
     const finalPrice = currentPrice;
     const effectiveDiscountPercent = price > 0 ? ((price - finalPrice) / price) * 100 : 0;
 
-    setResults(prev => ({
-      ...prev,
+    return {
+      ...EMPTY_RESULTS,
       cascadeSteps: steps,
       totalCascadeDiscount: totalDiscountAmount,
       finalPrice,
       effectiveDiscountPercent
-    }));
+    };
   };
 
   // Обратный расчет
@@ -279,22 +265,17 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
     const finalPriceValue = normalizePriceInput(reverseFinalPrice);
     
     if (originalPriceValue <= 0 || finalPriceValue < 0 || finalPriceValue > originalPriceValue) {
-      setResults(prev => ({
-        ...prev,
-        calculatedDiscountPercent: 0,
-        discountAmount: 0
-      }));
-      return;
+      return EMPTY_RESULTS;
     }
 
     const discountAmount = originalPriceValue - finalPriceValue;
     const calculatedDiscountPercent = (discountAmount / originalPriceValue) * 100;
 
-    setResults(prev => ({
-      ...prev,
+    return {
+      ...EMPTY_RESULTS,
       calculatedDiscountPercent,
       discountAmount
-    }));
+    };
   };
 
   // Сравнение сценариев
@@ -326,11 +307,11 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
         )
       : null;
 
-    setResults(prev => ({
-      ...prev,
+    return {
+      ...EMPTY_RESULTS,
       comparisonResults,
       bestScenario
-    }));
+    };
   };
 
   const addCascadeDiscount = () => {
@@ -388,23 +369,30 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
     ));
   };
 
-  useEffect(() => {
+  const computeResults = () => {
     switch (calculationType) {
       case 'single':
-        calculateSingleDiscount();
-        break;
+        return calculateSingleDiscount();
       case 'cascade':
-        calculateCascadeDiscounts();
-        break;
+        return calculateCascadeDiscounts();
       case 'reverse':
-        calculateReverseDiscount();
-        break;
+        return calculateReverseDiscount();
       case 'compare':
-        calculateComparison();
-        break;
+        return calculateComparison();
+      default:
+        return EMPTY_RESULTS;
     }
-  }, [calculationType, originalPrice, discountPercent, cascadeOriginalPrice, cascadeDiscounts, 
-      reverseOriginalPrice, reverseFinalPrice, compareScenarios]);
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [calculationType, originalPrice, discountPercent, cascadeOriginalPrice, cascadeDiscounts,
+      reverseOriginalPrice, reverseFinalPrice, compareScenarios, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     const safeValue = Number.isFinite(num) ? num : 0;

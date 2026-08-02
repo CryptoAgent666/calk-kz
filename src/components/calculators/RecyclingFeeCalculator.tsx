@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Recycle, Calculator, Zap, Truck, Car, Info, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -13,18 +13,11 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 
 export default function RecyclingFeeCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [vehicleType, setVehicleType] = useState<'car' | 'truck' | 'bus'>('car');
   const [engineVolume, setEngineVolume] = useState<string>('1500');
   const [totalMass, setTotalMass] = useState<string>('');
   const [isElectric, setIsElectric] = useState<boolean>(false);
-
-  const [results, setResults] = useState({
-    coefficient: 0,
-    fee: 0,
-    category: '',
-    isExempt: false
-  });
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
@@ -54,13 +47,12 @@ export default function RecyclingFeeCalculator() {
 
   const calculateFee = () => {
     if (isElectric) {
-      setResults({
+      return {
         coefficient: 0,
         fee: 0,
         category: t('recycling-fee.electricVehicle'),
         isExempt: true
-      });
-      return;
+      };
     }
 
     let coefficient = 0;
@@ -94,17 +86,22 @@ export default function RecyclingFeeCalculator() {
 
     const fee = BASE_RATE_KZT * coefficient;
 
-    setResults({
+    return {
       coefficient,
       fee: Math.round(fee),
       category,
       isExempt: false
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateFee();
-  }, [vehicleType, engineVolume, totalMass, isElectric]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateFee,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [vehicleType, engineVolume, totalMass, isElectric, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

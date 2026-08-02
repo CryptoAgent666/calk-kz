@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Shield, Calculator, Info, AlertTriangle } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -31,11 +31,7 @@ export default function KdifGuaranteeCalculator() {
   const [fx, setFx] = useState<string>('0');
   const [loan, setLoan] = useState<string>('0');
 
-  const [results, setResults] = useState({
-    covSavings: 0, covOther: 0, covFx: 0, covered: 0, uncovered: 0, offset: 0, total: 0,
-  });
-
-  useEffect(() => {
+  const computeResults = () => {
     const s = Math.max(0, parseFloat(savings) || 0);
     const o = Math.max(0, parseFloat(otherKzt) || 0);
     const f = Math.max(0, parseFloat(fx) || 0);
@@ -56,7 +52,7 @@ export default function KdifGuaranteeCalculator() {
       covSavings *= scale; covOther *= scale; covFx *= scale;
       covered = LIMIT_TOTAL;
     }
-    setResults({
+    return {
       covSavings: Math.round(covSavings),
       covOther: Math.round(covOther),
       covFx: Math.round(covFx),
@@ -64,8 +60,16 @@ export default function KdifGuaranteeCalculator() {
       uncovered: Math.round(afterOffset - covered),
       offset: Math.round(offset),
       total: Math.round(total),
-    });
-  }, [savings, otherKzt, fx, loan]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [savings, otherKzt, fx, loan]
+  );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 

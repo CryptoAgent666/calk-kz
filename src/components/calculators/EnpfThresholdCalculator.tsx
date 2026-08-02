@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Wallet, Calculator, Info, CheckCircle2, XCircle } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -40,25 +40,27 @@ export default function EnpfThresholdCalculator() {
   const [age, setAge] = useState<string>('35');
   const [savings, setSavings] = useState<string>('12000000');
 
-  const [results, setResults] = useState({
-    pmd: 0,
-    available: 0,
-    shortfall: 0,
-    eligible: false,
-  });
-
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const computeResults = () => {
     const a = Math.min(Math.max(parseInt(age) || MIN_AGE, MIN_AGE), MAX_AGE);
     const s = parseFloat(savings) || 0;
     const pmd = PMD_2026[a] ?? PMD_2026[MAX_AGE];
     const diff = s - pmd;
-    setResults({
+    return {
       pmd,
       available: Math.max(0, Math.round(diff)),
       shortfall: Math.max(0, Math.round(-diff)),
       eligible: diff > 0,
-    });
-  }, [age, savings]);
+    };
+  };
+
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [age, savings]
+  );
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

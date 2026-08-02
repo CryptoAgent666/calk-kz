@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bitcoin, Calculator, TrendingUp, Info, AlertTriangle, FileText, Shield } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -26,16 +26,7 @@ export default function CryptoTaxCalculator() {
   const [transactions, setTransactions] = useState<string>('1');
   const [aifcLicensed, setAifcLicensed] = useState<boolean>(true);
 
-  const [results, setResults] = useState({
-    gainPerTx: 0,
-    totalGain: 0,
-    taxRate: 0,
-    taxAmount: 0,
-    netProfit: 0,
-    effectiveRate: 0,
-  });
-
-  useEffect(() => {
+  const computeResults = () => {
     const buy = parseFloat(buyPrice) || 0;
     const sell = parseFloat(sellPrice) || 0;
     const txCount = Math.max(1, parseInt(transactions) || 1);
@@ -53,15 +44,24 @@ export default function CryptoTaxCalculator() {
     const netProfit = totalGain - taxAmount;
     const effectiveRate = totalGain > 0 ? (taxAmount / totalGain) * 100 : 0;
 
-    setResults({
+    return {
       gainPerTx: Math.round(gainPerTx),
       totalGain: Math.round(totalGain),
       taxRate,
       taxAmount,
       netProfit: Math.round(netProfit),
       effectiveRate: Number(effectiveRate.toFixed(2)),
-    });
-  }, [operation, payer, buyPrice, sellPrice, transactions]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [operation, payer, buyPrice, sellPrice, transactions]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

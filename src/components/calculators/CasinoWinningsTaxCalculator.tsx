@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DollarSign, Calculator, TrendingUp, AlertTriangle, Info, Plus, Trash2, Calendar } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
@@ -31,19 +31,6 @@ export default function CasinoWinningsTaxCalculator() {
   const [winningEntries, setWinningEntries] = useState<WinningEntry[]>([
     { id: '1', amount: '', stake: '', date: '' }
   ]);
-
-  const [results, setResults] = useState({
-    grossWinning: 0,
-    totalStake: 0,
-    taxFreeThreshold: 0,
-    taxableBase: 0,
-    taxAmount: 0,
-    netAmount: 0,
-    effectiveRate: 0,
-    isAboveThreshold: false,
-    isTaxable: false,
-    requiresSelfDeclaration: false
-  });
 
   const MRP_2026 = 4325;
   // НК РК 2026: специального необлагаемого минимума по выигрышам нет.
@@ -127,15 +114,21 @@ export default function CasinoWinningsTaxCalculator() {
     };
   };
 
-  useEffect(() => {
-    if (multipleMode) {
-      setResults(calculateMultipleWinnings());
-    } else {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => {
+      if (multipleMode) {
+        return calculateMultipleWinnings();
+      }
       const gross = parseFloat(winningAmount) || 0;
       const stake = parseFloat(stakeAmount) || 0;
-      setResults(calculateTax(gross, stake));
-    }
-  }, [winningAmount, stakeAmount, isResident, locationInKz, multipleMode, winningEntries, t]);
+      return calculateTax(gross, stake);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [winningAmount, stakeAmount, isResident, locationInKz, multipleMode, winningEntries, t]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

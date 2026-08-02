@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TimerOff, Calculator, TrendingDown, Info, AlertTriangle, ArrowRight } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -21,7 +21,10 @@ export default function EarlyRepaymentCalculator() {
   const [earlyPaymentAmount, setEarlyPaymentAmount] = useState<string>('500000');
   const [strategy, setStrategy] = useState<'reduce-term' | 'reduce-payment'>('reduce-term');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     currentMonthlyPayment: 0,
     currentTotalPayment: 0,
     currentTotalInterest: 0,
@@ -33,7 +36,7 @@ export default function EarlyRepaymentCalculator() {
     interestSaved: 0,
     timeSavedMonths: 0,
     savingsPercentage: 0
-  });
+  };
 
   const formatNumber = (num: number) => {
     return Math.round(num).toLocaleString('ru-KZ') + ' ₸';
@@ -99,27 +102,14 @@ export default function EarlyRepaymentCalculator() {
     };
   };
 
-  useEffect(() => {
+  const computeResults = () => {
     const P = parseFloat(loanBalance) || 0;
     const rateAnnual = parseFloat(annualRate) || 0;
     const N = parseInt(remainingMonths) || 0;
     const D = parseFloat(earlyPaymentAmount) || 0;
 
     if (P <= 0 || rateAnnual <= 0 || N <= 0 || D <= 0 || D >= P) {
-      setResults({
-        currentMonthlyPayment: 0,
-        currentTotalPayment: 0,
-        currentTotalInterest: 0,
-        newBalance: 0,
-        newMonthlyPayment: 0,
-        newTerm: 0,
-        newTotalPayment: 0,
-        newTotalInterest: 0,
-        interestSaved: 0,
-        timeSavedMonths: 0,
-        savingsPercentage: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const r = rateAnnual / 100 / 12;
@@ -141,20 +131,7 @@ export default function EarlyRepaymentCalculator() {
       newMonthlyPayment = currentMonthlyPayment;
       const logArg = newMonthlyPayment / (newMonthlyPayment - r * newBalance);
       if (logArg <= 0) {
-        setResults({
-          currentMonthlyPayment: 0,
-          currentTotalPayment: 0,
-          currentTotalInterest: 0,
-          newBalance: 0,
-          newMonthlyPayment: 0,
-          newTerm: 0,
-          newTotalPayment: 0,
-          newTotalInterest: 0,
-          interestSaved: 0,
-          timeSavedMonths: 0,
-          savingsPercentage: 0
-        });
-        return;
+        return EMPTY_RESULTS;
       }
       newTerm = Math.ceil(Math.log(logArg) / Math.log(1 + r));
       newTotalPayment = newMonthlyPayment * newTerm;
@@ -174,7 +151,7 @@ export default function EarlyRepaymentCalculator() {
       ? (interestSaved / currentTotalInterest) * 100
       : 0;
 
-    setResults({
+    return {
       currentMonthlyPayment,
       currentTotalPayment,
       currentTotalInterest,
@@ -186,8 +163,16 @@ export default function EarlyRepaymentCalculator() {
       interestSaved,
       timeSavedMonths,
       savingsPercentage
-    });
-  }, [loanBalance, annualRate, remainingMonths, earlyPaymentAmount, strategy]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [loanBalance, annualRate, remainingMonths, earlyPaymentAmount, strategy]
+  );
 
   const hasResults = results.currentMonthlyPayment > 0;
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Wine, Calculator, Info, AlertTriangle, Plus, Trash2 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -38,9 +38,9 @@ export default function AlcoholBloodCalculator() {
   const [hours, setHours] = useState<string>('0');
   const [drinks, setDrinks] = useState<Drink[]>([{ volume: '500', abv: '5' }]);
 
-  const [results, setResults] = useState({ grams: 0, peak: 0, now: 0, hoursToZero: 0, zeroTime: '' });
+  const EMPTY_RESULTS = { grams: 0, peak: 0, now: 0, hoursToZero: 0, zeroTime: '' };
 
-  useEffect(() => {
+  const computeResults = () => {
     const w = parseFloat(weight) || 0;
     const h = Math.max(0, parseFloat(hours) || 0);
     const grams = drinks.reduce((sum, d) => {
@@ -49,22 +49,30 @@ export default function AlcoholBloodCalculator() {
       return sum + v * (a / 100) * ETHANOL_DENSITY;
     }, 0);
     if (w <= 0 || grams <= 0) {
-      setResults({ grams: 0, peak: 0, now: 0, hoursToZero: 0, zeroTime: '' });
-      return;
+      return EMPTY_RESULTS;
     }
     // Видмарк: C₀ (‰) = A / (r × m), далее минус β за каждый час
     const peak = grams / (R[sex] * w);
     const now = Math.max(0, peak - BETA * h);
     const hoursToZero = now / BETA;
     const zero = new Date(Date.now() + hoursToZero * 3600_000);
-    setResults({
+    return {
       grams: Math.round(grams),
       peak: Math.round(peak * 100) / 100,
       now: Math.round(now * 100) / 100,
       hoursToZero: Math.ceil(hoursToZero * 10) / 10,
       zeroTime: hoursToZero > 0 ? zero.toLocaleTimeString('ru-KZ', { hour: '2-digit', minute: '2-digit' }) : '',
-    });
-  }, [sex, weight, hours, drinks]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sex, weight, hours, drinks]
+  );
 
   const upd = (i: number, k: keyof Drink, v: string) =>
     setDrinks((ds) => ds.map((d, idx) => (idx === i ? { ...d, [k]: v } : d)));

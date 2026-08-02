@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { FileCheck, Calculator, AlertTriangle, Info, Calendar, Car, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
@@ -16,7 +16,10 @@ export default function RegistrationFeeCalculator() {
   const [vehicleType, setVehicleType] = useState<'car' | 'electric' | 'truck' | 'bus'>('car');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
+  const EMPTY_RESULTS = {
     vehicleAge: 0,
     ageCategory: '',
     registrationFee: 0,
@@ -25,7 +28,7 @@ export default function RegistrationFeeCalculator() {
     totalFee: 0,
     isHighFee: false,
     warning: ''
-  });
+  };
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
@@ -52,12 +55,7 @@ export default function RegistrationFeeCalculator() {
 
   const calculateRegistrationFee = () => {
     if (!manufactureYear) {
-      setResults({
-        vehicleAge: 0, ageCategory: '', registrationFee: 0,
-        certificateFee: 0, platesFee: 0, totalFee: 0,
-        isHighFee: false, warning: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const year = parseInt(manufactureYear);
@@ -101,7 +99,7 @@ export default function RegistrationFeeCalculator() {
       }
     }
 
-    setResults({
+    return {
       vehicleAge,
       ageCategory,
       registrationFee: Math.round(registrationFee),
@@ -110,16 +108,22 @@ export default function RegistrationFeeCalculator() {
       totalFee: Math.round(totalFee),
       isHighFee,
       warning
-    });
+    };
   };
-
-  useEffect(() => {
-    calculateRegistrationFee();
-  }, [vehicleType, manufactureYear]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
   };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  // useMemo стоит ПОСЛЕ formatNumber: расчёт вызывает его синхронно при рендере.
+  const results = useMemo(
+    calculateRegistrationFee,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [vehicleType, manufactureYear, i18n.language]
+  );
 
   const formatMRP = (mrpAmount: number) => {
     return `${mrpAmount} ${t('registration-fee.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;

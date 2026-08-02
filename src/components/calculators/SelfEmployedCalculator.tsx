@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Briefcase, Calculator, Info, AlertTriangle } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -41,35 +41,39 @@ export default function SelfEmployedCalculator() {
   const [mode, setMode] = useState<WorkMode>('direct');
   const [commission, setCommission] = useState<string>('15');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
+  const EMPTY_RESULTS = {
     base: 0,
     payments: 0,
     perComponent: 0,
     commissionAmount: 0,
     net: 0,
     overLimit: false,
-  });
+  };
 
-  useEffect(() => {
+  const results = useMemo(() => {
     const gross = parseFloat(income) || 0;
     const commPct = mode === 'platform' ? Math.min(Math.max(parseFloat(commission) || 0, 0), 90) : 0;
     if (gross <= 0) {
-      setResults({ base: 0, payments: 0, perComponent: 0, commissionAmount: 0, net: 0, overLimit: false });
-      return;
+      return EMPTY_RESULTS;
     }
     const commissionAmount = gross * (commPct / 100);
     // База 4% — доход, начисленный исполнителю платформой (после её комиссии)
     const base = gross - commissionAmount;
     const payments = base * RATE_TOTAL;
-    setResults({
+    return {
       base: Math.round(base),
       payments: Math.round(payments),
       perComponent: Math.round(payments / 4),
       commissionAmount: Math.round(commissionAmount),
       net: Math.round(base - payments),
       overLimit: base > LIMIT_KZT,
-    });
-  }, [income, mode, commission]);
+    };
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [income, mode, commission]);
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

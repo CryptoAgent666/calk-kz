@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Droplets, Calculator, MapPin, Users, Info, AlertTriangle, TrendingUp, Waves, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -30,7 +30,10 @@ export default function WaterBillCalculator() {
   const [waterConsumption, setWaterConsumption] = useState<string>('5');
   const [residentsCount, setResidentsCount] = useState<string>('1');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState(нули) +
+  // useEffect: пререндер сохраняет страницу с числами, и первый клиентский
+  // рендер обязан выдать те же числа — иначе гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     coldWaterAmount: 0,
     sewerageAmount: 0,
     totalAmount: 0,
@@ -38,7 +41,7 @@ export default function WaterBillCalculator() {
     breakdown: [] as Array<{tier: number, volume: number, rate: number, amount: number, descriptionKey: string}>,
     averageRate: 0,
     recommendationKey: ''
-  });
+  };
 
   const cityTariffs: CityTariff[] = [
     {
@@ -92,15 +95,11 @@ export default function WaterBillCalculator() {
     const residents = parseInt(residentsCount) || 1;
 
     if (totalConsumption <= 0 || residents <= 0) {
-      setResults({
-        coldWaterAmount: 0, sewerageAmount: 0, totalAmount: 0,
-        consumptionPerPerson: 0, breakdown: [], averageRate: 0, recommendationKey: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const selectedCity = cityTariffs.find(c => c.id === city);
-    if (!selectedCity) return;
+    if (!selectedCity) return EMPTY_RESULTS;
 
     const consumptionPerPerson = totalConsumption / residents;
     const tariffs = selectedCity.coldWaterTiers;
@@ -150,7 +149,7 @@ export default function WaterBillCalculator() {
       recommendationKey = 'calculators:water.recommendationNormal';
     }
 
-    setResults({
+    return {
       coldWaterAmount: Math.round(coldWaterAmount),
       sewerageAmount: Math.round(sewerageAmount),
       totalAmount: Math.round(totalAmount),
@@ -158,12 +157,16 @@ export default function WaterBillCalculator() {
       breakdown,
       averageRate: Number(averageRate.toFixed(2)),
       recommendationKey
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateWaterBill();
-  }, [city, waterConsumption, residentsCount]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateWaterBill,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [city, waterConsumption, residentsCount]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₸';

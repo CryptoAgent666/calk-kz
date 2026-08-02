@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Briefcase, Info, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LocalizedLink from '../LocalizedLink';
@@ -22,7 +22,10 @@ export default function IPSimplifiedCalculator() {
   const [paidSocialContributions, setPaidSocialContributions] = useState<string>('');
   const [declaredIncome, setDeclaredIncome] = useState<number>(85000); // Минимум 1 МЗП
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     totalTax: 0,
     ipnTax: 0,
     socialTax: 0,
@@ -31,7 +34,7 @@ export default function IPSimplifiedCalculator() {
     opvSelf: 0,
     opvrSelf: 0,
     soSelf: 0,
-    vosmsSelf: 5950, // Фиксированная сумма
+    vosmsSelf: 0,
     totalMonthlySelf: 0,
     totalYearlySelf: 0,
 
@@ -42,7 +45,7 @@ export default function IPSimplifiedCalculator() {
     // Проекции
     yearlyPensionContributions: 0,
     effectiveMonthlyBurden: 0
-  });
+  };
 
   // Константы на 2026 год
   const MZP = 85000; // МЗП
@@ -57,14 +60,7 @@ export default function IPSimplifiedCalculator() {
     const socialContributions = parseFloat(paidSocialContributions) || 0;
 
     if (income <= 0) {
-      setResults({
-        totalTax: 0, ipnTax: 0, socialTax: 0,
-        opvSelf: 0, opvrSelf: 0, soSelf: 0, vosmsSelf: 0,
-        totalMonthlySelf: 0, totalYearlySelf: 0,
-        semiannualTotalTax: 0, yearlyTotalPayments: 0,
-        yearlyPensionContributions: 0, effectiveMonthlyBurden: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     // 1. Расчет налога с дохода (раз в полгода).
@@ -93,7 +89,7 @@ export default function IPSimplifiedCalculator() {
     const yearlyPensionContributions = (opvSelf + opvrSelf) * 12;
     const effectiveMonthlyBurden = yearlyTotalPayments / 12;
 
-    setResults({
+    return {
       totalTax: Math.round(totalTax),
       ipnTax: Math.round(ipnTax),
       socialTax: Math.round(socialTax),
@@ -110,12 +106,16 @@ export default function IPSimplifiedCalculator() {
 
       yearlyPensionContributions: Math.round(yearlyPensionContributions),
       effectiveMonthlyBurden: Math.round(effectiveMonthlyBurden)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateTaxes();
-  }, [semiannualIncome, hasEmployees, paidSocialContributions, declaredIncome]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateTaxes,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [semiannualIncome, hasEmployees, paidSocialContributions, declaredIncome]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

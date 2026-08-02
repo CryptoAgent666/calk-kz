@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CreditCard, TrendingDown, Calendar, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
@@ -21,13 +21,6 @@ export default function CreditCalculator() {
   const [interestRate, setInterestRate] = useState<number>(20);
   const [loanTerm, setLoanTerm] = useState<number>(24);
   const [showCharts, setShowCharts] = useState<boolean>(true);
-
-  const [results, setResults] = useState({
-    monthlyPayment: 0,
-    totalPayment: 0,
-    totalInterest: 0,
-    payments: [] as Array<{month: number, payment: number, principal: number, interest: number, balance: number}>
-  });
 
   const validateLoanAmount = (value: string): string | null => {
     const num = parseFloat(value);
@@ -116,9 +109,14 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
     };
   };
 
-  useEffect(() => {
-    setResults(calculateCredit(loanAmount, interestRate, loanTerm));
-  }, [loanAmount, interestRate, loanTerm]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => calculateCredit(loanAmount, interestRate, loanTerm),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [loanAmount, interestRate, loanTerm, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

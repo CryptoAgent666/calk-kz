@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HeartPulse, Calculator, Wallet, AlertTriangle, Info, TrendingDown, FileText, CheckCircle, Clock, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
@@ -21,21 +21,6 @@ export default function SickLeaveCalculator() {
   const [sickLeaveType, setSickLeaveType] = useState<'regular' | 'occupational'>('regular');
   const [hasLessThanYear, setHasLessThanYear] = useState<boolean>(false);
 
-  const [results, setResults] = useState({
-    averageDailyIncome: 0,
-    grossBenefit: 0,
-    opv: 0,
-    ipn: 0,
-    vosms: 0,
-    totalDeductions: 0,
-    netBenefit: 0,
-    isAtLimit: false,
-    monthlyLimit: 0,
-    effectiveRate: 0,
-    daysInMonth: 0,
-    proportionalLimit: 0
-  });
-
   const MRP = 4325;
   const MAX_BENEFIT_MRP = 25;
   const MONTHLY_LIMIT = MAX_BENEFIT_MRP * MRP;
@@ -44,27 +29,31 @@ export default function SickLeaveCalculator() {
   const VOSMS_RATE = 0.02;
   const AVERAGE_DAYS_IN_MONTH = 30;
 
-  const calculateSickLeave = () => {
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
+    averageDailyIncome: 0,
+    grossBenefit: 0,
+    opv: 0,
+    ipn: 0,
+    vosms: 0,
+    totalDeductions: 0,
+    netBenefit: 0,
+    isAtLimit: false,
+    monthlyLimit: MONTHLY_LIMIT,
+    effectiveRate: 0,
+    daysInMonth: 0,
+    proportionalLimit: 0
+  };
+
+  const computeSickLeave = () => {
     const income = parseFloat(averageMonthlyIncome) || 0;
     const days = parseFloat(sickDays) || 0;
     const months = parseFloat(monthsWorked) || 12;
 
     if (income <= 0 || days <= 0 || months <= 0) {
-      setResults({
-        averageDailyIncome: 0,
-        grossBenefit: 0,
-        opv: 0,
-        ipn: 0,
-        vosms: 0,
-        totalDeductions: 0,
-        netBenefit: 0,
-        isAtLimit: false,
-        monthlyLimit: MONTHLY_LIMIT,
-        effectiveRate: 0,
-        daysInMonth: 0,
-        proportionalLimit: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const totalIncome = income * Math.min(months, 12);
@@ -95,7 +84,7 @@ export default function SickLeaveCalculator() {
 
     const effectiveRate = grossBenefit > 0 ? (totalDeductions / grossBenefit) * 100 : 0;
 
-    setResults({
+    return {
       averageDailyIncome: Math.round(averageDailyIncome),
       grossBenefit: Math.round(grossBenefit),
       opv: Math.round(opv),
@@ -108,12 +97,16 @@ export default function SickLeaveCalculator() {
       effectiveRate: Number(effectiveRate.toFixed(2)),
       daysInMonth,
       proportionalLimit: Math.round(proportionalLimit)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateSickLeave();
-  }, [averageMonthlyIncome, sickDays, monthsWorked, sickLeaveType, hasLessThanYear]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeSickLeave,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [averageMonthlyIncome, sickDays, monthsWorked, sickLeaveType, hasLessThanYear]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

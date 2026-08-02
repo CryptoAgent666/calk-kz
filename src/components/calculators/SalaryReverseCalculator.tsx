@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowUpRight, Calculator, Wallet, Info, TrendingUp } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -16,25 +16,6 @@ export default function SalaryReverseCalculator() {
   const [desiredNet, setDesiredNet] = useState<string>('250000');
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
-
-  const [results, setResults] = useState({
-    grossSalary: 0,
-    opv: 0,
-    vosms: 0,
-    standardDeduction: 0,
-    taxableIncome: 0,
-    incomeTax: 0,
-    totalEmployeeDeductions: 0,
-    netSalary: 0,
-    sn: 0,
-    so: 0,
-    oosms: 0,
-    opvr: 0,
-    totalEmployerContributions: 0,
-    totalLaborCost: 0,
-    effectiveEmployeeTaxRate: 0,
-    effectiveEmployerRate: 0,
-  });
 
   // 2026 constants
   const MZP = 85000;
@@ -179,11 +160,16 @@ export default function SalaryReverseCalculator() {
     return Math.abs(netHigh - targetNet) <= Math.abs(netLow - targetNet) ? high : low;
   };
 
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(() => {
     const net = parseFloat(desiredNet) || 0;
     const gross = findGrossFromNet(net);
-    setResults(calculateFullResults(gross));
-  }, [desiredNet, isResident, isPrimaryJob]);
+    return calculateFullResults(gross);
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [desiredNet, isResident, isPrimaryJob]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' \u20B8';

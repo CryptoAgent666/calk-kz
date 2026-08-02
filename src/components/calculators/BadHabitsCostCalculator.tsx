@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Cigarette, Calculator, Info, TrendingUp } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -30,11 +30,7 @@ export default function BadHabitsCostCalculator() {
   const [winePerWeek, setWinePerWeek] = useState<string>('0');
   const [rate, setRate] = useState<string>(String(DEPOSIT_RATE));
 
-  const [results, setResults] = useState({
-    smokeYear: 0, alcoYear: 0, year: 0, month: 0, five: 0, ten: 0, fvFive: 0, fvTen: 0,
-  });
-
-  useEffect(() => {
+  const computeResults = () => {
     const smokeYear = (parseFloat(packsPerDay) || 0) * (parseFloat(packPrice) || 0) * 365;
     const alcoWeek =
       (parseFloat(beerPerWeek) || 0) * DEFAULTS.beer +
@@ -46,7 +42,7 @@ export default function BadHabitsCostCalculator() {
     // FV аннуитета: ежемесячный взнос под rate% годовых
     const i = (parseFloat(rate) || 0) / 100 / 12;
     const fv = (months: number) => (i > 0 ? month * ((Math.pow(1 + i, months) - 1) / i) : month * months);
-    setResults({
+    return {
       smokeYear: Math.round(smokeYear),
       alcoYear: Math.round(alcoYear),
       year: Math.round(year),
@@ -55,8 +51,17 @@ export default function BadHabitsCostCalculator() {
       ten: Math.round(year * 10),
       fvFive: Math.round(fv(60)),
       fvTen: Math.round(fv(120)),
-    });
-  }, [packsPerDay, packPrice, beerPerWeek, vodkaPerWeek, winePerWeek, rate]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [packsPerDay, packPrice, beerPerWeek, vodkaPerWeek, winePerWeek, rate]
+  );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Shield, Calculator, Users, DollarSign, TrendingUp, Info, AlertTriangle, Clock, Target, Heart, CheckCircle, XCircle, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -21,7 +21,10 @@ export default function PensionAnnuityCalculator() {
   const [currentAccumulations, setCurrentAccumulations] = useState<string>('5000000');
   const [insuranceCompany, setInsuranceCompany] = useState<string>('halyk-life');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     // Базовые показатели
     sufficientAmount: 0,
     isSufficientForAnnuity: false,
@@ -45,7 +48,7 @@ export default function PensionAnnuityCalculator() {
     // Дополнительная информация
     retirementAge: 0,
     annuityFactor: 0
-  });
+  };
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
@@ -156,23 +159,7 @@ export default function PensionAnnuityCalculator() {
     const accumulations = parseFloat(currentAccumulations) || 0;
 
     if (currentAge === 0 || accumulations === 0) {
-      setResults({
-        sufficientAmount: 0,
-        isSufficientForAnnuity: false,
-        shortfall: 0,
-        monthlyAnnuityPayment: 0,
-        lifeExpectancy: 0,
-        totalPayoutsLifetime: 0,
-        enpfMonthlyPayment: 0,
-        enpfPayoutPeriod: 19,
-        enpfTotalPayouts: 0,
-        annuityAdvantage: 0,
-        isAnnuityBetter: false,
-        breakEvenAge: 0,
-        retirementAge: 0,
-        annuityFactor: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     // Определение пенсионного возраста
@@ -216,7 +203,7 @@ export default function PensionAnnuityCalculator() {
     // Точка безубыточности (когда аннуитет станет выгоднее)
     const breakEvenAge = currentAge + enpfPayoutPeriod;
 
-    setResults({
+    return {
       sufficientAmount,
       isSufficientForAnnuity,
       shortfall: Math.round(shortfall),
@@ -231,12 +218,16 @@ export default function PensionAnnuityCalculator() {
       breakEvenAge: Math.round(breakEvenAge),
       retirementAge,
       annuityFactor: Number(annuityFactor.toFixed(2))
-    });
+    };
   };
 
-  useEffect(() => {
-    calculatePensionAnnuity();
-  }, [gender, age, currentAccumulations, insuranceCompany]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculatePensionAnnuity,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [gender, age, currentAccumulations, insuranceCompany]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

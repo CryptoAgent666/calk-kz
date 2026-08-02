@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PiggyBank, Calculator, TrendingUp, Percent, Calendar, DollarSign, Info, Target, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
@@ -24,7 +24,7 @@ export default function DepositCalculator() {
   const [capitalizationPeriod, setCapitalizationPeriod] = useState<'monthly' | 'quarterly' | 'yearly'>('monthly');
   const [showCharts, setShowCharts] = useState<boolean>(true);
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     simpleInterestAmount: 0,
     simpleInterestEarnings: 0,
     compoundAmount: 0,
@@ -35,7 +35,7 @@ export default function DepositCalculator() {
     effectiveRate: 0,
     capitalizationBonus: 0,
     contributionBonus: 0
-  });
+  };
 
   const calculateDeposit = () => {
     const principal = parseFloat(initialAmount) || 0;
@@ -45,13 +45,7 @@ export default function DepositCalculator() {
     const annualRate = (parseFloat(nominalRate) || 0) / 100;
 
     if (principal <= 0 || termInMonths <= 0 || annualRate <= 0) {
-      setResults({
-        simpleInterestAmount: 0, simpleInterestEarnings: 0,
-        compoundAmount: 0, compoundEarnings: 0,
-        finalAmountWithContributions: 0, totalContributions: 0, totalEarningsWithContributions: 0,
-        effectiveRate: 0, capitalizationBonus: 0, contributionBonus: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const periodsPerYear = {
@@ -92,7 +86,7 @@ export default function DepositCalculator() {
     const capitalizationBonus = compoundEarnings - simpleInterestEarnings;
     const contributionBonus = finalAmountWithContributions - compoundAmount;
 
-    setResults({
+    return {
       simpleInterestAmount: Math.round(simpleInterestAmount),
       simpleInterestEarnings: Math.round(simpleInterestEarnings),
       compoundAmount: Math.round(compoundAmount),
@@ -103,12 +97,17 @@ export default function DepositCalculator() {
       effectiveRate: effectiveRate * 100,
       capitalizationBonus: Math.round(capitalizationBonus),
       contributionBonus: Math.round(contributionBonus)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateDeposit();
-  }, [initialAmount, monthlyContribution, termValue, termUnit, nominalRate, capitalizationPeriod]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateDeposit,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [initialAmount, monthlyContribution, termValue, termUnit, nominalRate, capitalizationPeriod, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

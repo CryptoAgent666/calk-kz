@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Type, Calculator, Languages, Copy, Download, RotateCcw, DollarSign, Info, AlertTriangle, Banknote, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -33,11 +33,15 @@ export default function NumberToWordsCalculator() {
   const [case_, setCase] = useState<'nominative' | 'genitive' | 'dative'>('nominative');
   const [history, setHistory] = useState<ConversionHistory[]>([]);
 
-  const [results, setResults] = useState<ConversionResult>({
+  // Результат считается СИНХРОННО (useMemo ниже), а не через
+  // useState(пустые) + useEffect: пререндер сохраняет страницу уже с текстом,
+  // и если первый клиентский рендер отдаёт пустые блоки — гидратация падает
+  // (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const EMPTY_RESULTS: ConversionResult = {
     words: '',
     currency: '',
     description: ''
-  });
+  };
 
   // Словари для русского языка
   const ruNumbers = {
@@ -360,13 +364,12 @@ export default function NumberToWordsCalculator() {
     return result;
   };
 
-  // Основная функция конвертации
-  const convertNumber = () => {
+  // Основная функция конвертации (чистая: запись в историю — отдельным useEffect)
+  const computeConversion = (): ConversionResult => {
     const num = parseFloat(inputNumber.replace(',', '.')) || 0;
 
     if (inputNumber === '') {
-      setResults({ words: '', currency: '', description: '' });
-      return;
+      return EMPTY_RESULTS;
     }
 
     try {
@@ -400,21 +403,18 @@ export default function NumberToWordsCalculator() {
         description = t('number-to-words.numberRecordDescription', { number: inputNumber });
       }
 
-      // Добавляем в историю
-      addToHistory(inputNumber, words);
-
-      setResults({
+      return {
         words: words || (language === 'ru' ? 'ошибка конвертации' : language === 'kz' ? 'түрлендіру қатесі' : 'conversion error'),
         currency: currencyText,
         description
-      });
+      };
 
     } catch (error) {
-      setResults({
+      return {
         words: language === 'ru' ? 'ошибка при конвертации' : language === 'kz' ? 'түрлендіру қатесі' : 'conversion error',
         currency: '',
         description: t('number-to-words.conversionFailed')
-      });
+      };
     }
   };
 
@@ -461,15 +461,28 @@ export default function NumberToWordsCalculator() {
 
   const clearAll = () => {
     setInputNumber('');
-    setResults({ words: '', currency: '', description: '' });
   };
 
   const setQuickNumber = (number: string) => {
     setInputNumber(number);
   };
 
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeConversion,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [inputNumber, language, format, currency, gender, case_, i18n.language]
+  );
+
+  // Запись в историю — побочный эффект (Date.now/Math.random внутри
+  // addToHistory), поэтому НЕ переносится в useMemo и остаётся в useEffect.
   useEffect(() => {
-    convertNumber();
+    if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return; // история не должна попадать в статику
+    if (inputNumber !== '') {
+      addToHistory(inputNumber, results.words);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputNumber, language, format, currency, gender, case_]);
 
   const languages = [

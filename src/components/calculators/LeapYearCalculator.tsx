@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Calendar, Calculator, Clock, Info, CheckCircle, XCircle, ArrowLeft, ArrowRight, RotateCcw, Star, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
@@ -18,7 +18,9 @@ export default function LeapYearCalculator() {
   const [rangeEnd, setRangeEnd] = useState<string>(String(new Date().getFullYear() + 5));
   const [showRange, setShowRange] = useState<boolean>(false);
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState+useEffect:
+  // иначе первый клиентский рендер отдаёт нули и гидратация падает (#418/#425).
+  const EMPTY_SINGLE_RESULTS = {
     year: 0,
     isLeapYear: false,
     leapDate: '',
@@ -26,13 +28,15 @@ export default function LeapYearCalculator() {
     previousLeapYear: 0,
     dayNumber: 0,
     totalDaysInYear: 0,
-    explanation: '',
+    explanation: ''
+  };
 
+  const EMPTY_RANGE_RESULTS = {
     leapYearsInRange: [] as number[],
     totalLeapYears: 0,
     rangeLength: 0,
     frequency: 0
-  });
+  };
 
   const isLeapYear = (year: number): boolean => {
     return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
@@ -77,18 +81,7 @@ export default function LeapYearCalculator() {
     const year = parseInt(inputYear) || 0;
 
     if (year === 0 || year < 1) {
-      setResults(prev => ({
-        ...prev,
-        year: 0,
-        isLeapYear: false,
-        leapDate: '',
-        nextLeapYear: 0,
-        previousLeapYear: 0,
-        dayNumber: 0,
-        totalDaysInYear: 0,
-        explanation: ''
-      }));
-      return;
+      return EMPTY_SINGLE_RESULTS;
     }
 
     const isLeap = isLeapYear(year);
@@ -99,8 +92,7 @@ export default function LeapYearCalculator() {
     const totalDaysInYear = isLeap ? 366 : 365;
     const explanation = getExplanation(year);
 
-    setResults(prev => ({
-      ...prev,
+    return {
       year,
       isLeapYear: isLeap,
       leapDate,
@@ -109,7 +101,7 @@ export default function LeapYearCalculator() {
       dayNumber,
       totalDaysInYear,
       explanation
-    }));
+    };
   };
 
   const calculateRange = () => {
@@ -117,14 +109,7 @@ export default function LeapYearCalculator() {
     const end = parseInt(rangeEnd) || 0;
 
     if (start === 0 || end === 0 || start > end) {
-      setResults(prev => ({
-        ...prev,
-        leapYearsInRange: [],
-        totalLeapYears: 0,
-        rangeLength: 0,
-        frequency: 0
-      }));
-      return;
+      return EMPTY_RANGE_RESULTS;
     }
 
     const leapYearsInRange = [];
@@ -137,13 +122,12 @@ export default function LeapYearCalculator() {
     const rangeLength = end - start + 1;
     const frequency = rangeLength > 0 ? (leapYearsInRange.length / rangeLength) * 100 : 0;
 
-    setResults(prev => ({
-      ...prev,
+    return {
       leapYearsInRange,
       totalLeapYears: leapYearsInRange.length,
       rangeLength,
       frequency: Number(frequency.toFixed(1))
-    }));
+    };
   };
 
   const navigateYear = (direction: 'prev' | 'next') => {
@@ -191,15 +175,16 @@ export default function LeapYearCalculator() {
     setShowRange(false);
   };
 
-  useEffect(() => {
-    calculateSingleYear();
-  }, [inputYear]);
-
-  useEffect(() => {
-    if (showRange) {
-      calculateRange();
-    }
-  }, [rangeStart, rangeEnd, showRange]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    () => ({
+      ...calculateSingleYear(),
+      ...(showRange ? calculateRange() : EMPTY_RANGE_RESULTS)
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [inputYear, rangeStart, rangeEnd, showRange, i18n.language]
+  );
 
   const getRecentLeapYears = () => {
     const years = [];

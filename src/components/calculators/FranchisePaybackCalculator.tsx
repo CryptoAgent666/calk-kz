@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Briefcase, Calculator, TrendingUp, Info, AlertTriangle, PiggyBank, Building2, Award } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -62,11 +62,6 @@ export default function FranchisePaybackCalculator() {
   const [opex, setOpex] = useState<string>('4200000');
   const [taxMode, setTaxMode] = useState<'simple' | 'general'>('simple');
 
-  const [results, setResults] = useState({
-    startup: 0, royaltyAmount: 0, marketingAmount: 0, feesTotal: 0, taxAmount: 0,
-    monthlyProfit: 0, yearlyProfit: 0, paybackMonths: 0, roi: 0, margin: 0, depositYearly: 0,
-  });
-
   // Применяем пресет при его выборе
   useEffect(() => {
     const p = presets.find((x) => x.id === preset);
@@ -81,8 +76,10 @@ export default function FranchisePaybackCalculator() {
     setOpex(String(p.opex));
   }, [preset]);
 
-  // Расчёт
-  useEffect(() => {
+  // Расчёт — СИНХРОННО (useMemo, не useState+useEffect): пререндер сохраняет
+  // страницу с числами, и первый клиентский рендер обязан выдать те же числа —
+  // иначе гидратация падает (#418/#425).
+  const computeResults = () => {
     const pau = parseFloat(paushal) || 0;
     const eq = parseFloat(equipment) || 0;
     const tr = parseFloat(training) || 0;
@@ -106,7 +103,7 @@ export default function FranchisePaybackCalculator() {
     const margin = rev > 0 ? (monthlyProfit / rev) * 100 : 0;
     const depositYearly = (startup * DEPOSIT_RATE) / 100;
 
-    setResults({
+    return {
       startup: Math.round(startup),
       royaltyAmount: Math.round(royaltyAmount),
       marketingAmount: Math.round(marketingAmount),
@@ -118,8 +115,14 @@ export default function FranchisePaybackCalculator() {
       roi: Number(roi.toFixed(1)),
       margin: Number(margin.toFixed(1)),
       depositYearly: Math.round(depositYearly),
-    });
-  }, [paushal, equipment, training, startStock, revenue, royalty, marketingFee, opex, taxMode]);
+    };
+  };
+
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [paushal, equipment, training, startStock, revenue, royalty, marketingFee, opex, taxMode]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

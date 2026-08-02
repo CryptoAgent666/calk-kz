@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserMinus, Calculator, Info, AlertTriangle, FileText } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -22,7 +22,10 @@ export default function SeverancePayCalculator() {
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
+  const EMPTY_RESULTS = {
     earnedVacationDays: 0,
     unusedVacationDays: 0,
     averageDailyPay: 0,
@@ -36,7 +39,7 @@ export default function SeverancePayCalculator() {
     ipn: 0,
     totalDeductions: 0,
     netTotal: 0
-  });
+  };
 
   const MRP = 4325;
   const MZP = 85000;
@@ -53,22 +56,7 @@ export default function SeverancePayCalculator() {
     const income = parseFloat(monthlyIncome) || 0;
 
     if (income <= 0) {
-      setResults({
-        earnedVacationDays: 0,
-        unusedVacationDays: 0,
-        averageDailyPay: 0,
-        vacationCompensation: 0,
-        severancePay: 0,
-        grossTotal: 0,
-        opv: 0,
-        vosms: 0,
-        standardDeduction: 0,
-        taxableIncome: 0,
-        ipn: 0,
-        totalDeductions: 0,
-        netTotal: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const averageDailyPay = income / CALENDAR_DAYS_PER_MONTH;
@@ -114,7 +102,7 @@ export default function SeverancePayCalculator() {
     const totalDeductions = opv + vosms + ipn;
     const netTotal = grossTotal - totalDeductions;
 
-    setResults({
+    return {
       earnedVacationDays,
       unusedVacationDays,
       averageDailyPay: Math.round(averageDailyPay),
@@ -128,12 +116,17 @@ export default function SeverancePayCalculator() {
       ipn: Math.round(ipn),
       totalDeductions: Math.round(totalDeductions),
       netTotal: Math.round(netTotal)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateSeverance();
-  }, [monthlyIncome, workMonths, usedVacationDays, dismissalReason, isResident, isPrimaryJob]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateSeverance,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [monthlyIncome, workMonths, usedVacationDays, dismissalReason, isResident, isPrimaryJob]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

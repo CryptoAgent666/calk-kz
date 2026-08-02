@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Smartphone, Info, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -32,29 +32,29 @@ export default function MobileTransfersCalculator() {
   const [senders, setSenders] = useState<string[]>(['110', '95', '120']);
   const [amounts, setAmounts] = useState<string[]>(['400000', '350000', '420000']);
 
-  const [results, setResults] = useState({
-    sendersEachMonth: false,
-    totalSum: 0,
-    sumExceeded: false,
-    flagged: false,
-    monthsOver: [false, false, false],
-  });
-
-  useEffect(() => {
+  const computeResults = () => {
     const s = senders.map((v) => parseInt(v) || 0);
     const a = amounts.map((v) => parseFloat(v) || 0);
     const monthsOver = s.map((n) => n >= SENDERS_THRESHOLD);
     const sendersEachMonth = monthsOver.every(Boolean);
     const totalSum = a.reduce((acc, v) => acc + v, 0);
     const sumExceeded = totalSum > SUM_THRESHOLD;
-    setResults({
+    return {
       sendersEachMonth,
       totalSum,
       sumExceeded,
       flagged: sendersEachMonth && sumExceeded,
       monthsOver,
-    });
-  }, [senders, amounts]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [senders, amounts]
+  );
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

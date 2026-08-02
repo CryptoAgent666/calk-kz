@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Receipt, Calculator, Info, PieChart } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -28,16 +28,6 @@ export default function UnifiedPaymentCalculator() {
   const OOSMS_SHARE = 0.121;
   const SO_SHARE = 0.181;
 
-  const [results, setResults] = useState({
-    epTotal: 0,
-    opv: 0,
-    vosms: 0,
-    ipn: 0,
-    opvr: 0,
-    oosms: 0,
-    so: 0,
-  });
-
   const calculate = (gross: number) => {
     if (gross <= 0) {
       return { epTotal: 0, opv: 0, vosms: 0, ipn: 0, opvr: 0, oosms: 0, so: 0 };
@@ -56,10 +46,14 @@ export default function UnifiedPaymentCalculator() {
     };
   };
 
-  useEffect(() => {
-    const gross = parseFloat(grossSalary) || 0;
-    setResults(calculate(gross));
-  }, [grossSalary]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => calculate(parseFloat(grossSalary) || 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grossSalary]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' \u20B8';

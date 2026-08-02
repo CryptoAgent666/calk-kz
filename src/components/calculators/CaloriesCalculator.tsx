@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Apple, Calculator, Target, TrendingUp, Activity, Users, Heart, Zap, Info, BarChart3 } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -23,7 +23,7 @@ export default function CaloriesCalculator() {
   const [goal, setGoal] = useState<'maintain' | 'lose' | 'gain'>('maintain');
   const [macroSplit, setMacroSplit] = useState<string>('balanced');
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     bmr: 0,
     maintenanceCalories: 0,
     targetCalories: 0,
@@ -34,7 +34,7 @@ export default function CaloriesCalculator() {
       carbs: { grams: 0, calories: 0, percentage: 0 }
     },
     recommendations: [] as string[]
-  });
+  };
 
   const activityLevels = [
     { id: 'sedentary', coefficient: 1.2 },
@@ -63,12 +63,7 @@ export default function CaloriesCalculator() {
     const heightCm = parseFloat(height) || 0;
 
     if (ageYears <= 0 || weightKg <= 0 || heightCm <= 0) {
-      setResults({
-        bmr: 0, maintenanceCalories: 0, targetCalories: 0, calorieAdjustment: 0,
-        macros: { protein: { grams: 0, calories: 0, percentage: 0 }, fats: { grams: 0, calories: 0, percentage: 0 }, carbs: { grams: 0, calories: 0, percentage: 0 } },
-        recommendations: []
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     let bmr: number;
@@ -87,7 +82,7 @@ export default function CaloriesCalculator() {
     const calorieAdjustment = targetCalories - maintenanceCalories;
 
     const macroData = macroSplits.find(split => split.id === macroSplit);
-    if (!macroData) return;
+    if (!macroData) return EMPTY_RESULTS;
 
     const proteinCalories = targetCalories * (macroData.protein / 100);
     const fatsCalories = targetCalories * (macroData.fats / 100);
@@ -142,19 +137,24 @@ export default function CaloriesCalculator() {
       recommendations.push(t('calories.recommendations.maleProtein'));
     }
 
-    setResults({
+    return {
       bmr: Math.round(bmr),
       maintenanceCalories: Math.round(maintenanceCalories),
       targetCalories: Math.round(targetCalories),
       calorieAdjustment: Math.round(calorieAdjustment),
       macros,
       recommendations
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateCalories();
-  }, [age, gender, height, weight, activityLevel, goal, macroSplit]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateCalories,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [age, gender, height, weight, activityLevel, goal, macroSplit, i18n.language]
+  );
 
   const selectedActivity = activityLevels.find(level => level.id === activityLevel);
 

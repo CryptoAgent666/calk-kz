@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Wheat, Calculator, MapPin, TrendingUp, Info, AlertTriangle, Target, Sprout, TreePine, Building, Tractor, FileText, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -21,7 +21,10 @@ export default function FarmLandTaxCalculator() {
   const [farmType, setFarmType] = useState<'peasant' | 'farm' | 'individual'>('peasant');
   const [hasPreferences, setHasPreferences] = useState<boolean>(false);
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     baseRate: 0,
     qualityCoefficient: 1.0,
     locationCoefficient: 1.0,
@@ -32,7 +35,7 @@ export default function FarmLandTaxCalculator() {
     regionName: '',
     landTypeName: '',
     effectiveRate: 0
-  });
+  };
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
@@ -235,19 +238,14 @@ export default function FarmLandTaxCalculator() {
     const bonityScore = parseFloat(bonityScoret) || 50; // Средний балл по умолчанию
 
     if (area <= 0) {
-      setResults({
-        baseRate: 0, qualityCoefficient: 1.0, locationCoefficient: 1.0,
-        preferenceDiscount: 0, taxPerHectare: 0, totalTax: 0, savedTaxes: 0,
-        regionName: '', landTypeName: '', effectiveRate: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const selectedRegion = regionalRates.find(r => r.id === region);
     const selectedLandType = landTypes.find(lt => lt.id === landType);
     const selectedFarmType = farmTypeCoefficients[farmType];
 
-    if (!selectedRegion || !selectedLandType) return;
+    if (!selectedRegion || !selectedLandType) return EMPTY_RESULTS;
 
     // Базовая ставка для региона и типа земли
     const baseRatePerHa = selectedRegion.baseRates[landType];
@@ -281,7 +279,7 @@ export default function FarmLandTaxCalculator() {
 
     const effectiveRate = totalTax / area; // Эффективная ставка на гектар
 
-    setResults({
+    return {
       baseRate: Math.round(baseRate),
       qualityCoefficient,
       locationCoefficient,
@@ -292,12 +290,16 @@ export default function FarmLandTaxCalculator() {
       regionName: selectedRegion.name,
       landTypeName: selectedLandType.name,
       effectiveRate: Math.round(effectiveRate)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateLandTax();
-  }, [region, landArea, bonityScoret, landType, farmType, hasPreferences]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateLandTax,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [region, landArea, bonityScoret, landType, farmType, hasPreferences, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

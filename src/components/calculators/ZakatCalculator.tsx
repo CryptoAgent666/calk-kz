@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Heart, Calculator, DollarSign, Coins, TrendingUp, Info, AlertTriangle, Star, Target, Building, Gift, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -27,27 +27,6 @@ export default function ZakatCalculator() {
   const [calculateByWeight, setCalculateByWeight] = useState<boolean>(false);
   const [goldWeight, setGoldWeight] = useState<string>('');
   const [silverWeight, setSilverWeight] = useState<string>('');
-
-  const [results, setResults] = useState({
-    totalAssets: 0,
-    totalDebts: 0,
-    netWealth: 0,
-    goldNisab: 0,
-    silverNisab: 0,
-    applicableNisab: 0,
-    nisabType: '',
-    isAboveNisab: false,
-    zakatableAmount: 0,
-    zakatAmount: 0,
-    zakatRate: 2.5,
-    breakdown: {
-      cash: 0,
-      gold: 0,
-      silver: 0,
-      business: 0,
-      debts: 0
-    }
-  });
 
   const GOLD_NISAB_GRAMS = 85;
   const SILVER_NISAB_GRAMS = 595;
@@ -89,7 +68,7 @@ export default function ZakatCalculator() {
       zakatAmount = zakatableAmount * ZAKAT_RATE;
     }
 
-    setResults({
+    return {
       totalAssets: Math.round(totalAssets),
       totalDebts: Math.round(debtsAmount),
       netWealth: Math.round(netWealth),
@@ -108,12 +87,17 @@ export default function ZakatCalculator() {
         business: Math.round(business),
         debts: Math.round(debtsAmount)
       }
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateZakat();
-  }, [cashSavings, goldValue, silverValue, businessGoods, debts, goldPricePerGram, silverPricePerGram, calculateByWeight, goldWeight, silverWeight]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateZakat,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cashSavings, goldValue, silverValue, businessGoods, debts, goldPricePerGram, silverPricePerGram, calculateByWeight, goldWeight, silverWeight, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

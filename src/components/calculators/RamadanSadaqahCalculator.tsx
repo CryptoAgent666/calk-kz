@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Moon, Calculator, Users, Calendar, Heart, Star, Info, AlertTriangle, Gift, Clock, Book, Target, BarChart3 } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -18,29 +18,6 @@ export default function RamadanSadaqahCalculator() {
   const [familyMembers, setFamilyMembers] = useState<string>('1');
   const [missedFastingDays, setMissedFastingDays] = useState<string>('0');
   const [alternativeCalculation, setAlternativeCalculation] = useState<'flour' | 'dates' | 'raisins'>('flour');
-
-  const [results, setResults] = useState({
-    // Фитр-садака
-    fitrSadaqahAmount: 0,
-    fitrPerPerson: 0,
-    fitrBasedOn: '',
-
-    // Фидия-садака
-    fidyaSadaqahAmount: 0,
-    fidyaPerDay: 0,
-
-    // Общие
-    totalSadaqahAmount: 0,
-    alternativeFitrAmount: 0,
-    recommendedMinimum: 0,
-
-    // Информация
-    ramadanInfo: {
-      currentYear: 2026,
-      estimatedRamadanStart: 'середина февраля 2026',
-      ramadanDays: 30
-    }
-  });
 
   // Константы на 2026 год
   const CURRENT_YEAR = 2026;
@@ -98,7 +75,7 @@ export default function RamadanSadaqahCalculator() {
     // Рекомендуемый минимум
     const recommendedMinimum = Math.max(fitrSadaqahAmount, alternativeFitrAmount);
 
-    setResults({
+    return {
       fitrSadaqahAmount,
       fitrPerPerson,
       fitrBasedOn: alternativeRate.name,
@@ -112,12 +89,17 @@ export default function RamadanSadaqahCalculator() {
         estimatedRamadanStart: t('ramadan-sadaqah.estimatedRamadanStart'),
         ramadanDays: 30
       }
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateSadaqah();
-  }, [calculationType, familyMembers, missedFastingDays, alternativeCalculation]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateSadaqah,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [calculationType, familyMembers, missedFastingDays, alternativeCalculation, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

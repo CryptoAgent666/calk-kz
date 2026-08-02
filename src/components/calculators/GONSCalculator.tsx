@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GraduationCap, Calculator, PiggyBank, TrendingUp, Baby, Users, DollarSign, Info, AlertTriangle, Target, BookOpen, Star, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -20,7 +20,10 @@ export default function GONSCalculator() {
   const [childCategory, setChildCategory] = useState<'regular' | 'priority'>('regular');
   const [bankRate, setBankRate] = useState<string>('5.5');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     totalContributions: 0,
     bankReward: 0,
     totalStatePremium: 0,
@@ -36,7 +39,7 @@ export default function GONSCalculator() {
       statePremium: number,
       total: number
     }>
-  });
+  };
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
@@ -56,12 +59,7 @@ export default function GONSCalculator() {
     const annualBankRate = (parseFloat(bankRate) || 0) / 100;
 
     if (initial < MIN_INITIAL_DEPOSIT || years < 3 || years > 20) {
-      setResults({
-        totalContributions: 0, bankReward: 0, totalStatePremium: 0, finalAmount: 0,
-        statePremiumRate: 0, maxPremiumBase: 0, effectiveReturn: 0, isMinimumMet: false,
-        yearlyBreakdown: []
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const isMinimumMet = initial >= MIN_INITIAL_DEPOSIT;
@@ -106,7 +104,7 @@ export default function GONSCalculator() {
     const finalAmount = currentBalance;
     const effectiveReturn = totalContributions > 0 ? ((finalAmount - totalContributions) / totalContributions) * 100 : 0;
 
-    setResults({
+    return {
       totalContributions: Math.round(totalContributions),
       bankReward: Math.round(totalBankReward),
       totalStatePremium: Math.round(totalStatePremium),
@@ -116,12 +114,16 @@ export default function GONSCalculator() {
       effectiveReturn: Number(effectiveReturn.toFixed(2)),
       isMinimumMet,
       yearlyBreakdown
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateGONS();
-  }, [initialDeposit, monthlyContribution, savingPeriodYears, childCategory, bankRate]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateGONS,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [initialDeposit, monthlyContribution, savingPeriodYears, childCategory, bankRate]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

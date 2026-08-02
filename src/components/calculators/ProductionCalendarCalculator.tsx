@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { CalendarDays, Calculator, Info } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -70,21 +70,25 @@ export default function ProductionCalendarCalculator() {
   const [endDate, setEndDate] = useState('2026-12-31');
   const [mode, setMode] = useState<WorkMode>('5x40');
 
-  const [results, setResults] = useState({ calendar: 0, working: 0, weekend: 0, holiday: 0, hours: 0 });
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
+  const EMPTY_RESULTS = { calendar: 0, working: 0, weekend: 0, holiday: 0, hours: 0 };
 
-  useEffect(() => {
+  const results = useMemo(() => {
     const from = new Date(startDate);
     const to = new Date(endDate);
     if (isNaN(from.getTime()) || isNaN(to.getTime()) || from > to) {
-      setResults({ calendar: 0, working: 0, weekend: 0, holiday: 0, hours: 0 });
-      return;
+      return EMPTY_RESULTS;
     }
     const c = countDays(from, to, false);
     // средняя длина рабочего дня: год-норма часов / год-норма дней
     const norm = YEAR_NORM[mode];
     const hoursPerDay = norm.hours / norm.days;
-    setResults({ ...c, hours: Math.round(c.working * hoursPerDay * 10) / 10 });
-  }, [startDate, endDate, mode]);
+    return { ...c, hours: Math.round(c.working * hoursPerDay * 10) / 10 };
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [startDate, endDate, mode]);
 
   const nf = (n: number) => n.toLocaleString('ru-KZ');
 

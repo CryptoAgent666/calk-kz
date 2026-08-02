@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Truck, Calculator, DollarSign, AlertTriangle, Info, Calendar, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -13,7 +13,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 
 export default function CustomsClearanceCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
   const [engineVolume, setEngineVolume] = useState<string>('2000');
   const [customsValue, setCustomsValue] = useState<string>('15000');
@@ -21,7 +21,7 @@ export default function CustomsClearanceCalculator() {
   const [exchangeRate, setExchangeRate] = useState<string>('470');
   const [isElectric, setIsElectric] = useState<boolean>(false); // электромобиль (растаможка ВТО 0%)
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     customsValueKZT: 0,
     customsFee: 0,
     customsDuty: 0,
@@ -30,7 +30,7 @@ export default function CustomsClearanceCalculator() {
     vehicleAge: 0,
     isOldVehicle: false,
     additionalRestrictions: ''
-  });
+  };
 
   // НК РК / ПП РК от 05.04.2018 № 171 (ред. ПП № 631 от 02.08.2023): таможенный сбор
   // за таможенное декларирование товаров — ФИКСИРОВАННЫЙ 6 МРП за декларацию,
@@ -47,12 +47,7 @@ export default function CustomsClearanceCalculator() {
     const rate = parseFloat(exchangeRate) || 470;
 
     if (value <= 0) {
-      setResults({
-        customsValueKZT: 0, customsFee: 0, customsDuty: 0,
-        vat: 0, totalPayments: 0, vehicleAge: 0,
-        isOldVehicle: false, additionalRestrictions: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const customsValueKZT = currency === 'USD' ? value * rate : value;
@@ -96,7 +91,7 @@ export default function CustomsClearanceCalculator() {
       additionalRestrictions = t('customs-clearance.oldVehicleHigherRates');
     }
 
-    setResults({
+    return {
       customsValueKZT: Math.round(customsValueKZT),
       customsFee: Math.round(customsFee),
       customsDuty: Math.round(customsDuty),
@@ -105,12 +100,17 @@ export default function CustomsClearanceCalculator() {
       vehicleAge,
       isOldVehicle,
       additionalRestrictions
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateCustomsPayments();
-  }, [manufactureYear, engineVolume, customsValue, currency, exchangeRate, isElectric]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateCustomsPayments,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [manufactureYear, engineVolume, customsValue, currency, exchangeRate, isElectric, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

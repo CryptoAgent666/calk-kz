@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Crown, Calculator, MapPin, Users, Scissors, Info, AlertTriangle, Star, Heart, Gift, Calendar, Banknote, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -53,7 +53,9 @@ export default function KurbanCalculator() {
     packaging: false
   });
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState+useEffect:
+  // иначе первый клиентский рендер отдаёт нули и гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     animalCost: { min: 0, max: 0 },
     servicesCost: { min: 0, max: 0 },
     totalCost: { min: 0, max: 0 },
@@ -64,7 +66,7 @@ export default function KurbanCalculator() {
     costPerShare: { min: 0, max: 0 },
     marketAdvice: '',
     recommendedBudget: 0
-  });
+  };
 
   const KURBAN_DATE = t('kurban-sacrifice.date2025');
   const CURRENT_YEAR = 2026;
@@ -186,7 +188,7 @@ export default function KurbanCalculator() {
 
   const calculateKurbanCost = () => {
     const selectedRegion = regionalPrices.find(r => r.id === region);
-    if (!selectedRegion) return;
+    if (!selectedRegion) return EMPTY_RESULTS;
 
     const shares = parseInt(familyShares) || 1;
     let animalCost = { min: 0, max: 0 };
@@ -235,7 +237,7 @@ export default function KurbanCalculator() {
 
     const recommendedBudget = totalCost.max * 1.15;
 
-    setResults({
+    return {
       animalCost,
       servicesCost,
       totalCost,
@@ -246,12 +248,16 @@ export default function KurbanCalculator() {
       costPerShare,
       marketAdvice: selectedRegion.marketInfo,
       recommendedBudget: Math.round(recommendedBudget)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateKurbanCost();
-  }, [region, animalType, familyShares, additionalServices]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateKurbanCost,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [region, animalType, familyShares, additionalServices, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

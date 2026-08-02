@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp, Calculator, Briefcase, DollarSign, Info, Target, Award, AlertTriangle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -45,21 +45,7 @@ export default function BusinessROICalculator() {
   const [period, setPeriod] = useState<PeriodYears>(3);
   const [discountRate, setDiscountRate] = useState<string>('12');
 
-  const [results, setResults] = useState({
-    monthlyRevenue: 0,
-    grossProfit: 0,
-    taxAmount: 0,
-    netMonthlyProfit: 0,
-    yearlyProfit: 0,
-    periodProfit: 0,
-    paybackMonths: 0,
-    roiPercent: 0,
-    npv: 0,
-    breakEvenClients: 0,
-    rating: 'neutral' as 'great' | 'normal' | 'poor' | 'neutral',
-  });
-
-  useEffect(() => {
+  const computeResults = () => {
     const inv = parseFloat(investments) || 0;
     const check = parseFloat(avgCheck) || 0;
     const clients = parseFloat(clientsPerMonth) || 0;
@@ -119,7 +105,7 @@ export default function BusinessROICalculator() {
       rating = 'poor';
     }
 
-    setResults({
+    return {
       monthlyRevenue: Math.round(monthlyRevenue),
       grossProfit: Math.round(grossProfit),
       taxAmount: Math.round(taxAmount),
@@ -131,8 +117,17 @@ export default function BusinessROICalculator() {
       npv: Math.round(npv),
       breakEvenClients: Math.ceil(breakEvenClients),
       rating,
-    });
-  }, [investments, avgCheck, clientsPerMonth, monthlyExpenses, taxRegime, period, discountRate]); // eslint-disable-line react-hooks/exhaustive-deps
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [investments, avgCheck, clientsPerMonth, monthlyExpenses, taxRegime, period, discountRate]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

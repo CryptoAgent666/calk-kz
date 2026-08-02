@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Banknote, AlertTriangle, Calendar, Percent, TrendingUp, Info, UserCheck, Award, BookOpen, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
@@ -64,8 +64,6 @@ export default function MicroloanCalculator() {
   const [rate, setRate] = useState<string>('0.25');
   const [term, setTerm] = useState<string>('15');
   const [commission, setCommission] = useState<string>('0');
-
-  const [results, setResults] = useState<CalculationResults | null>(null);
 
   const currentLoanType = LOAN_TYPES[loanType];
 
@@ -146,7 +144,7 @@ ${t('microloan.export.calculatedOn')} ${new Date().toLocaleDateString('ru-KZ')}
 ${t('microloan.export.calculator')}: Calk.kz`;
   };
 
-  useEffect(() => {
+  const computeResults = (): CalculationResults | null => {
     const loanAmount = parseFloat(amount) || 0;
     const loanRate = parseFloat(rate) || 0;
     const loanTerm = parseInt(term) || 0;
@@ -217,18 +215,26 @@ ${t('microloan.export.calculator')}: Calk.kz`;
 
       const totalPayment = loanAmount + totalInterest + loanCommission;
 
-      setResults({
+      return {
         totalPayment,
         totalInterest: totalInterest + loanCommission,
         dailyRate,
         effectiveRate,
         monthlyPayment,
         payments
-      });
+      };
     } else {
-      setResults(null);
+      return null;
     }
-  }, [amount, rate, term, commission, loanType, currentLoanType.termUnit]);
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount, rate, term, commission, loanType, currentLoanType.termUnit]
+  );
 
   const getOverpaymentWarning = () => {
     if (!results) return null;

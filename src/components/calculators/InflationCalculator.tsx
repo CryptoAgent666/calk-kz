@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingDown, Calculator, BarChart3, Info, Calendar } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -61,12 +61,14 @@ export default function InflationCalculator() {
   const [yearTo, setYearTo] = useState<number>(2026);
   const [showMrpTable, setShowMrpTable] = useState<boolean>(false);
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState+useEffect:
+  // иначе первый клиентский рендер отдаёт нули и гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     adjustedAmount: 0,
     purchasingPowerLoss: 0,
     averageAnnualInflation: 0,
     cpiRatio: 0
-  });
+  };
 
   const formatCurrency = (value: number) => {
     return value.toLocaleString(locale, {
@@ -82,21 +84,20 @@ export default function InflationCalculator() {
     }) + '%';
   };
 
-  useEffect(() => {
+  const computeResults = () => {
     if (amount <= 0 || yearFrom === yearTo) {
-      setResults({
+      return {
         adjustedAmount: amount,
         purchasingPowerLoss: 0,
         averageAnnualInflation: 0,
         cpiRatio: 1
-      });
-      return;
+      };
     }
 
     const cpiSource = CPI_DATA[yearFrom];
     const cpiTarget = CPI_DATA[yearTo];
 
-    if (!cpiSource || !cpiTarget) return;
+    if (!cpiSource || !cpiTarget) return EMPTY_RESULTS;
 
     const cpiRatio = cpiTarget / cpiSource;
     const adjustedAmount = amount * cpiRatio;
@@ -112,13 +113,21 @@ export default function InflationCalculator() {
       ? (Math.pow(cpiRatio, 1 / yearDiff) - 1) * 100
       : 0;
 
-    setResults({
+    return {
       adjustedAmount: Math.round(adjustedAmount),
       purchasingPowerLoss: Math.abs(purchasingPowerLoss),
       averageAnnualInflation: Math.abs(averageAnnualInflation),
       cpiRatio
-    });
-  }, [amount, yearFrom, yearTo]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount, yearFrom, yearTo]
+  );
 
   const erosionPercent = Math.min(results.purchasingPowerLoss, 100);
   const isForward = yearTo > yearFrom;

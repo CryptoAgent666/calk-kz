@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Scale, Calculator, Users, Building, AlertTriangle, Info, FileText, Gavel, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
@@ -19,13 +19,13 @@ export default function CourtFeeCalculator() {
   const [claimAmount, setClaimAmount] = useState<string>('1000000');
   const [nonPropertyClaimType, setNonPropertyClaimType] = useState<string>('divorce');
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     feeAmount: 0,
     feeRate: 0,
     maxAmount: 0,
     isMaxReached: false,
     feeDescription: ''
-  });
+  };
 
   const MRP_2026 = 4325;
   const MAX_FEE_INDIVIDUAL = 10000 * MRP_2026;
@@ -65,11 +65,7 @@ export default function CourtFeeCalculator() {
       const amount = parseFloat(claimAmount) || 0;
 
       if (amount <= 0) {
-        setResults({
-          feeAmount: 0, feeRate: 0, maxAmount: 0,
-          isMaxReached: false, feeDescription: ''
-        });
-        return;
+        return EMPTY_RESULTS;
       }
 
       const rate = claimantType === 'individual' ? 0.01 : 0.03;
@@ -79,37 +75,42 @@ export default function CourtFeeCalculator() {
       const feeAmount = Math.min(calculatedFee, maxAmount);
       const isMaxReached = calculatedFee >= maxAmount;
 
-      setResults({
+      return {
         feeAmount: Math.round(feeAmount),
         feeRate: rate * 100,
         maxAmount,
         isMaxReached,
         feeDescription: `${rate * 100}% ${t('court-fee.ofClaimAmount')}`
-      });
+      };
     } else {
       const feeInfo = nonPropertyFees[nonPropertyClaimType as keyof typeof nonPropertyFees];
       const feeInMRP = claimantType === 'individual' ? feeInfo.individual : feeInfo.legal;
 
       if (feeInMRP === 0) {
-        setResults({
+        return {
           feeAmount: 0, feeRate: 0, maxAmount: 0,
           isMaxReached: false, feeDescription: t('court-fee.exemption')
-        });
+        };
       } else {
-        setResults({
+        return {
           feeAmount: Math.round(feeInMRP * MRP_2026),
           feeRate: 0,
           maxAmount: 0,
           isMaxReached: false,
           feeDescription: `${feeInMRP} МРП`
-        });
+        };
       }
     }
   };
 
-  useEffect(() => {
-    calculateCourtFee();
-  }, [claimantType, claimType, claimAmount, nonPropertyClaimType]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateCourtFee,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [claimantType, claimType, claimAmount, nonPropertyClaimType, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

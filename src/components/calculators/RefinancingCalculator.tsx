@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RefreshCw, TrendingDown, TrendingUp, AlertCircle, CheckCircle, Calendar, Percent, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
@@ -37,8 +37,6 @@ export default function RefinancingCalculator() {
   const [newRate, setNewRate] = useState<string>('12');
   const [newTerm, setNewTerm] = useState<string>('60');
   const [refinancingCosts, setRefinancingCosts] = useState<string>('0');
-
-  const [results, setResults] = useState<CalculationResults | null>(null);
 
   const validateAmount = (value: string): string | null => {
     const num = parseFloat(value);
@@ -123,7 +121,10 @@ ${t('refinancing.export.calculatedOn')} ${new Date().toLocaleDateString('ru-KZ')
 ${t('refinancing.export.calculator')}: Calk.kz`;
   };
 
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo((): CalculationResults | null => {
     const balance = parseFloat(remainingBalance) || 0;
     const curRate = parseFloat(currentRate) || 0;
     const remTerm = parseInt(remainingTerm) || 0;
@@ -149,7 +150,7 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
         breakEven = Math.ceil(costs / monthlyDiff);
       }
 
-      setResults({
+      return {
         currentMonthlyPayment: currentMonthly,
         currentTotalPayment: currentTotal,
         currentTotalInterest: currentInterest,
@@ -161,11 +162,12 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
         netSavings: netSav,
         breakEvenMonths: breakEven,
         isWorthIt: netSav > 0
-      });
-    } else {
-      setResults(null);
+      };
     }
-  }, [remainingBalance, currentRate, remainingTerm, newRate, newTerm, refinancingCosts]);
+    return null;
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [remainingBalance, currentRate, remainingTerm, newRate, newTerm, refinancingCosts]);
 
   return (
     <div className="max-w-6xl mx-auto">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Crown, Calculator, Home, Car, Plane, DollarSign, Info, AlertTriangle, TrendingUp, Building, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -18,7 +18,9 @@ export default function LuxuryTaxCalculator() {
   const [assetValue, setAssetValue] = useState<string>('120000000');
   const [totalPropertyValue, setTotalPropertyValue] = useState<string>('120000000');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState+useEffect:
+  // иначе первый клиентский рендер отдаёт нули и гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     isSubjectToTax: false,
     regularTax: 0,
     luxuryTax: 0,
@@ -28,7 +30,7 @@ export default function LuxuryTaxCalculator() {
     effectiveRate: 0,
     category: '',
     description: ''
-  });
+  };
 
   const MRP_2026 = 4325;
 
@@ -84,18 +86,7 @@ export default function LuxuryTaxCalculator() {
     const totalPropValue = parseFloat(totalPropertyValue) || value;
 
     if (value <= 0) {
-      setResults({
-        isSubjectToTax: false,
-        regularTax: 0,
-        luxuryTax: 0,
-        totalTax: 0,
-        threshold: 0,
-        excessAmount: 0,
-        effectiveRate: 0,
-        category: '',
-        description: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     let isSubjectToTax = false;
@@ -178,7 +169,7 @@ export default function LuxuryTaxCalculator() {
     const totalTax = regularTax + luxuryTax;
     const effectiveRate = value > 0 ? (totalTax / value) * 100 : 0;
 
-    setResults({
+    return {
       isSubjectToTax,
       regularTax: Math.round(regularTax),
       luxuryTax: Math.round(luxuryTax),
@@ -188,16 +179,21 @@ export default function LuxuryTaxCalculator() {
       effectiveRate: Number(effectiveRate.toFixed(2)),
       category,
       description
-    });
+    };
   };
-
-  useEffect(() => {
-    calculateLuxuryTax();
-  }, [assetType, assetValue, totalPropertyValue]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
   };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  // (useMemo стоит после formatNumber — он используется внутри расчёта.)
+  const results = useMemo(
+    calculateLuxuryTax,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [assetType, assetValue, totalPropertyValue, i18n.language]
+  );
 
   const formatMRP = (mrpAmount: number) => {
     return `${mrpAmount.toLocaleString()} ${t('luxury-tax.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Scale, Calculator, Users, Heart, AlertTriangle, Info, BookOpen, Star, Crown, Building, DollarSign, Target, Gavel, BarChart3 } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -45,14 +45,16 @@ export default function IslamicInheritanceCalculator() {
   const [sisters, setSisters] = useState<string>('0');
   const [hasPatGrandfather, setHasPatGrandfather] = useState<boolean>(false);
 
-  const [results, setResults] = useState<InheritanceResult>({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState+useEffect:
+  // иначе первый клиентский рендер отдаёт пустоту и гидратация падает (#418/#425).
+  const EMPTY_RESULTS: InheritanceResult = {
     heirs: [],
     totalDistributed: 0,
     remainingAmount: 0,
     isValidDistribution: true,
     warnings: [],
     scenario: ''
-  });
+  };
 
   const calculateIslamicInheritance = () => {
     const inheritance = parseFloat(totalInheritance) || 0;
@@ -62,11 +64,7 @@ export default function IslamicInheritanceCalculator() {
     const sistersCount = parseInt(sisters) || 0;
 
     if (inheritance <= 0) {
-      setResults({
-        heirs: [], totalDistributed: 0, remainingAmount: 0,
-        isValidDistribution: true, warnings: [], scenario: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const heirs: Heir[] = [];
@@ -306,23 +304,28 @@ export default function IslamicInheritanceCalculator() {
       warnings.push(t('islamic-inheritance.warningDaughtersOnly'));
     }
 
-    setResults({
+    return {
       heirs,
       totalDistributed: Math.round(totalDistributed),
       remainingAmount: Math.round(remainingForResidual),
       isValidDistribution,
       warnings,
       scenario
-    });
+    };
   };
-
-  useEffect(() => {
-    calculateIslamicInheritance();
-  }, [totalInheritance, hasSpouse, spouseGender, sons, daughters, hasFather, hasMother, brothers, sisters, hasPatGrandfather]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
   };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  // (useMemo стоит после formatNumber — он используется внутри расчёта.)
+  const results = useMemo(
+    calculateIslamicInheritance,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [totalInheritance, hasSpouse, spouseGender, sons, daughters, hasFather, hasMother, brothers, sisters, hasPatGrandfather, i18n.language]
+  );
 
   const formatFraction = (decimal: number) => {
     const fractions = [

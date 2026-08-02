@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { FileSignature, Calculator, Info } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -41,15 +41,15 @@ export default function GphTaxCalculator() {
   const [amount, setAmount] = useState<string>('500000');
   const [useDeduction, setUseDeduction] = useState(true);
 
-  const [results, setResults] = useState({
-    opv: 0, vosms: 0, so: 0, ipn: 0, total: 0, net: 0,
-  });
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const EMPTY_RESULTS = { opv: 0, vosms: 0, so: 0, ipn: 0, total: 0, net: 0 };
 
-  useEffect(() => {
+  const computeResults = () => {
     const gross = parseFloat(amount) || 0;
     if (gross <= 0) {
-      setResults({ opv: 0, vosms: 0, so: 0, ipn: 0, total: 0, net: 0 });
-      return;
+      return EMPTY_RESULTS;
     }
     const opv = Math.min(gross, OPV_BASE_CAP) * OPV_RATE;
     const vosms = Math.min(gross, VOSMS_BASE_CAP) * VOSMS_RATE;
@@ -57,15 +57,21 @@ export default function GphTaxCalculator() {
     const taxable = Math.max(0, gross - opv - vosms - so - (useDeduction ? DEDUCTION_30MRP : 0));
     const ipn = taxable * IPN_RATE;
     const total = opv + vosms + so + ipn;
-    setResults({
+    return {
       opv: Math.round(opv),
       vosms: Math.round(vosms),
       so: Math.round(so),
       ipn: Math.round(ipn),
       total: Math.round(total),
       net: Math.round(gross - total),
-    });
-  }, [amount, useDeduction]);
+    };
+  };
+
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount, useDeduction]
+  );
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

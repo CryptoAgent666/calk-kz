@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Wallet, Calculator, TrendingUp, Users, Info, Building, DollarSign, Percent, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -19,24 +19,6 @@ export default function SalaryCalculator() {
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
-
-  const [results, setResults] = useState({
-    opv: 0,
-    vosms: 0,
-    standardDeduction: 0,
-    taxableIncome: 0,
-    incomeTax: 0,
-    totalEmployeeDeductions: 0,
-    sn: 0,
-    so: 0,
-    oosms: 0,
-    opvr: 0,
-    totalEmployerContributions: 0,
-    netSalary: 0,
-    totalLaborCost: 0,
-    effectiveEmployeeTaxRate: 0,
-    effectiveEmployerRate: 0
-  });
 
   const MZP = 85000;
   const MRP = 4325;
@@ -131,10 +113,14 @@ export default function SalaryCalculator() {
     };
   };
 
-  useEffect(() => {
-    const gross = parseFloat(grossSalary) || 0;
-    setResults(calculateSalary(gross));
-  }, [grossSalary, isResident, isPrimaryJob, isSpecialCategory]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => calculateSalary(parseFloat(grossSalary) || 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grossSalary, isResident, isPrimaryJob, isSpecialCategory]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Shield,
@@ -46,22 +46,6 @@ export default function KaskoCalculator() {
   const [carAge, setCarAge] = useState<string>('3');
   const [coverage, setCoverage] = useState<Coverage>('full');
   const [deductible, setDeductible] = useState<Deductible>('50000');
-
-  const [results, setResults] = useState({
-    basePremium: 0,
-    driverCoeff: 1,
-    experienceCoeff: 1,
-    regionCoeff: 1,
-    carAgeCoeff: 1,
-    coverageCoeff: 1,
-    deductibleCoeff: 1,
-    finalPremium: 0,
-    monthlyPremium: 0,
-    percentOfValue: 0,
-    maxPayout: 0,
-    ogpoReference: 0,
-    refused: false,
-  });
 
   const regionOptions = useMemo(
     () => [
@@ -111,7 +95,7 @@ export default function KaskoCalculator() {
     return { coeff: 1.5, refused: true };
   };
 
-  useEffect(() => {
+  const computeResults = () => {
     const value = parseFloat(carValue) || 0;
     const age = parseInt(driverAge) || 0;
     const exp = parseInt(drivingExperience) || 0;
@@ -141,7 +125,7 @@ export default function KaskoCalculator() {
     // Примерная ОГПО для сравнения — фиксированная базовая премия ~12 000 ₸
     const ogpoReference = 12000;
 
-    setResults({
+    return {
       basePremium: Math.round(basePremium),
       driverCoeff,
       experienceCoeff,
@@ -155,19 +139,27 @@ export default function KaskoCalculator() {
       maxPayout: Math.round(value),
       ogpoReference,
       refused,
-    });
-  }, [
-    carValue,
-    driverAge,
-    drivingExperience,
-    region,
-    carAge,
-    coverage,
-    deductible,
-    regionOptions,
-    coverageOptions,
-    deductibleOptions,
-  ]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      carValue,
+      driverAge,
+      drivingExperience,
+      region,
+      carAge,
+      coverage,
+      deductible,
+      regionOptions,
+      coverageOptions,
+      deductibleOptions,
+    ]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

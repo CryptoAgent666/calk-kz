@@ -78,7 +78,25 @@ async function primeRouteChunk(): Promise<void> {
   }
 }
 
-if (container.hasChildNodes()) {
+/**
+ * Калькуляторы с принципиально недетерминированным первым рендером — гидратация
+ * для них невозможна по определению (контент клиента ≠ снятой статике):
+ *  - date-calculator: дефолт «сегодня», дата пререндера ≠ дата визита;
+ *  - currency-converter: курсы приходят fetch'ем после маунта;
+ *  - password-generator: crypto.getRandomValues на маунте;
+ *  - qr-code-generator: QR-dataURL генерится асинхронно в эффекте.
+ * Для них рендерим клиентом заново (createRoot): статика остаётся для SEO,
+ * React заменяет её при первом коммите — без каскада ошибок #418/#423.
+ */
+const VOLATILE_IDS = new Set(['date-calculator', 'currency-converter', 'password-generator', 'qr-code-generator']);
+
+function routeCalculatorId(): string | null {
+  const pathname = stripLocalePrefix(window.location.pathname).replace(/\/+$/, '');
+  const match = pathname.match(/^\/(?:calculator|embed)\/([^/]+)$/);
+  return match ? match[1] : null;
+}
+
+if (container.hasChildNodes() && !VOLATILE_IDS.has(routeCalculatorId() ?? '')) {
   void primeRouteChunk().then(() => hydrateRoot(container, app));
 } else {
   createRoot(container).render(app);

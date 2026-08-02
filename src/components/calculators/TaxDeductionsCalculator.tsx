@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Receipt, Info, AlertTriangle, TrendingUp, FileText, CheckCircle, ShieldCheck, XCircle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -20,20 +20,6 @@ export default function TaxDeductionsCalculator() {
   const [monthlyIncome, setMonthlyIncome] = useState<number>(500000);
   const [socialCategory, setSocialCategory] = useState<SocialCategory>('none');
   const [applyBaseDeduction, setApplyBaseDeduction] = useState<boolean>(true);
-
-  const [results, setResults] = useState({
-    opv: 0,
-    vosms: 0,
-    baseDeduction: 0,
-    socialDeduction: 0,
-    totalDeductions: 0,
-    taxableBase: 0,
-    ipn: 0,
-    net: 0,
-    ipnNoDeductions: 0,
-    savings: 0,
-    effectiveRate: 0,
-  });
 
   // Параметры 2026 (НК РК K2500000214)
   const MRP = 4325;
@@ -60,38 +46,45 @@ export default function TaxDeductionsCalculator() {
   const socialDeductionAnnual =
     socialCategory === 'group3' ? GROUP3_ANNUAL : socialCategory === 'group12' ? GROUP12_ANNUAL : 0;
 
-  useEffect(() => {
-    const income = monthlyIncome > 0 ? monthlyIncome : 0;
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => {
+      const income = monthlyIncome > 0 ? monthlyIncome : 0;
 
-    const opv = OPV_RATE * Math.min(income, OPV_MAX_BASE);
-    const vosms = VOSMS_RATE * Math.min(income, VOSMS_MAX_BASE);
-    const baseDeduction = applyBaseDeduction ? BASE_DEDUCTION : 0;
-    const socialDeduction = socialDeductionAnnual / 12;
+      const opv = OPV_RATE * Math.min(income, OPV_MAX_BASE);
+      const vosms = VOSMS_RATE * Math.min(income, VOSMS_MAX_BASE);
+      const baseDeduction = applyBaseDeduction ? BASE_DEDUCTION : 0;
+      const socialDeduction = socialDeductionAnnual / 12;
 
-    const taxableBase = Math.max(0, income - opv - vosms - baseDeduction - socialDeduction);
-    const ipn = calcIPN(taxableBase);
-    const net = income - opv - vosms - ipn;
+      const taxableBase = Math.max(0, income - opv - vosms - baseDeduction - socialDeduction);
+      const ipn = calcIPN(taxableBase);
+      const net = income - opv - vosms - ipn;
 
-    const baseNoDeductions = Math.max(0, income - opv - vosms);
-    const ipnNoDeductions = calcIPN(baseNoDeductions);
-    const savings = Math.max(0, ipnNoDeductions - ipn);
+      const baseNoDeductions = Math.max(0, income - opv - vosms);
+      const ipnNoDeductions = calcIPN(baseNoDeductions);
+      const savings = Math.max(0, ipnNoDeductions - ipn);
 
-    const effectiveRate = income > 0 ? (ipn / income) * 100 : 0;
+      const effectiveRate = income > 0 ? (ipn / income) * 100 : 0;
 
-    setResults({
-      opv: Math.round(opv),
-      vosms: Math.round(vosms),
-      baseDeduction: Math.round(baseDeduction),
-      socialDeduction: Math.round(socialDeduction),
-      totalDeductions: Math.round(baseDeduction + socialDeduction),
-      taxableBase: Math.round(taxableBase),
-      ipn: Math.round(ipn),
-      net: Math.round(net),
-      ipnNoDeductions: Math.round(ipnNoDeductions),
-      savings: Math.round(savings),
-      effectiveRate: Number(effectiveRate.toFixed(2)),
-    });
-  }, [monthlyIncome, socialCategory, applyBaseDeduction]);
+      return {
+        opv: Math.round(opv),
+        vosms: Math.round(vosms),
+        baseDeduction: Math.round(baseDeduction),
+        socialDeduction: Math.round(socialDeduction),
+        totalDeductions: Math.round(baseDeduction + socialDeduction),
+        taxableBase: Math.round(taxableBase),
+        ipn: Math.round(ipn),
+        net: Math.round(net),
+        ipnNoDeductions: Math.round(ipnNoDeductions),
+        savings: Math.round(savings),
+        effectiveRate: Number(effectiveRate.toFixed(2)),
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [monthlyIncome, socialCategory, applyBaseDeduction]
+  );
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
   const formatPercent = (num: number) => num.toFixed(2) + '%';

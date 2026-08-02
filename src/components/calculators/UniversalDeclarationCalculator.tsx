@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileText, Calculator, AlertTriangle, CheckCircle2, XCircle, Calendar, Info, Users } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -33,14 +33,6 @@ export default function UniversalDeclarationCalculator() {
   const [ipnWithheld, setIpnWithheld] = useState<boolean>(true);
   const [hasOtherIncome, setHasOtherIncome] = useState<boolean>(false);
 
-  const [result, setResult] = useState<DeclarationResult>({
-    mustDeclare: true,
-    needsForm250: true,
-    needsForm270: true,
-    deadlineYear: 2026,
-    explanationKey: 'explRegular',
-  });
-
   const statusOptions: { id: Status; labelKey: string; explKey: string }[] = [
     { id: 'civilServant', labelKey: 'universal-declaration.statusCivilServant', explKey: 'explCivilServant' },
     { id: 'quasiGov', labelKey: 'universal-declaration.statusQuasiGov', explKey: 'explQuasiGov' },
@@ -49,7 +41,10 @@ export default function UniversalDeclarationCalculator() {
     { id: 'regular', labelKey: 'universal-declaration.statusRegular', explKey: 'explRegular' },
   ];
 
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const computeResult = (): DeclarationResult => {
     // Проверка обязанности подавать декларацию
     const statusStartYear: Record<Status, number> = {
       civilServant: 2021,
@@ -66,14 +61,20 @@ export default function UniversalDeclarationCalculator() {
     const deadlineYear = reportYear + 1;
     const explanationKey = statusOptions.find((s) => s.id === status)?.explKey || 'explRegular';
 
-    setResult({
+    return {
       mustDeclare,
       needsForm250,
       needsForm270,
       deadlineYear,
       explanationKey,
-    });
-  }, [status, reportYear, firstDeclaration]);
+    };
+  };
+
+  const result = useMemo(
+    computeResult,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [status, reportYear, firstDeclaration]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

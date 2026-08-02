@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Calculator, Clock, DollarSign, Info, Calendar, TrendingUp, FileText, BarChart3 } from 'lucide-react';
 import { RangeSlider } from '../ui/RangeSlider';
@@ -19,13 +19,16 @@ export default function PenaltyCalculator() {
   const [penaltyRate, setPenaltyRate] = useState<string>('0.1');
   const [penaltyType, setPenaltyType] = useState<string>('custom');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     dailyPenalty: 0,
     totalPenalty: 0,
     totalToPay: 0,
     effectivePenaltyRate: 0,
     dailyPenaltyRate: 0
-  });
+  };
 
   const penaltyTypes = [
     {
@@ -72,7 +75,7 @@ export default function PenaltyCalculator() {
     }
   ];
 
-  const calculatePenalty = () => {
+  const computePenalty = () => {
     const debt = parseFloat(debtAmount) || 0;
     const days = parseInt(daysOverdue) || 0;
     let rate = parseFloat(penaltyRate) || 0;
@@ -81,19 +84,11 @@ export default function PenaltyCalculator() {
       const selectedType = penaltyTypes.find(type => type.id === penaltyType);
       if (selectedType && selectedType.rate) {
         rate = parseFloat(selectedType.rate);
-        setPenaltyRate(selectedType.rate);
       }
     }
 
     if (debt <= 0 || days <= 0 || rate <= 0) {
-      setResults({
-        dailyPenalty: 0,
-        totalPenalty: 0,
-        totalToPay: 0,
-        effectivePenaltyRate: 0,
-        dailyPenaltyRate: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const dailyPenaltyRate = rate / 100;
@@ -102,18 +97,35 @@ export default function PenaltyCalculator() {
     const totalToPay = debt + totalPenalty;
     const effectivePenaltyRate = debt > 0 ? (totalPenalty / debt) * 100 : 0;
 
-    setResults({
+    return {
       dailyPenalty: Math.round(dailyPenalty),
       totalPenalty: Math.round(totalPenalty),
       totalToPay: Math.round(totalToPay),
       effectivePenaltyRate: Number(effectivePenaltyRate.toFixed(2)),
       dailyPenaltyRate: Number(dailyPenaltyRate.toFixed(4))
-    });
+    };
   };
 
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computePenalty,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [debtAmount, daysOverdue, penaltyRate, penaltyType, i18n.language]
+  );
+
+  // Автоподстановка ставки в поле при выборе преднастроенного типа — запись в
+  // ДРУГОЙ стейт (setPenaltyRate), поэтому остаётся побочным useEffect'ом,
+  // а не переносится в useMemo.
   useEffect(() => {
-    calculatePenalty();
-  }, [debtAmount, daysOverdue, penaltyRate, penaltyType]);
+    if (penaltyType !== 'custom') {
+      const selectedType = penaltyTypes.find(type => type.id === penaltyType);
+      if (selectedType && selectedType.rate) {
+        setPenaltyRate(selectedType.rate);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [penaltyType]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

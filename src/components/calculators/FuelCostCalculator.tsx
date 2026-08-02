@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Fuel, Calculator, Car, TrendingUp, Info, MapPin } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -44,15 +44,21 @@ export default function FuelCostCalculator() {
   const [selectedFuel, setSelectedFuel] = useState<string>('ai92');
   const [distance, setDistance] = useState<string>('100');
   const [consumption, setConsumption] = useState<string>('8');
-  const [fuelPrice, setFuelPrice] = useState<string>('205');
+  // Дефолт цены обязан совпадать с ценой дефолтного топлива (ai92): эффект
+  // «обновить цену при смене типа» срабатывает и на маунте, и если значения
+  // расходятся — первый клиентский рендер не совпадает с пререндером.
+  const [fuelPrice, setFuelPrice] = useState<string>(() => String(fuelTypes.find(f => f.id === 'ai92')?.price ?? 237));
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     fuelNeeded: 0,
     tripCost: 0,
     costPerKm: 0,
     monthlyCost: 0,
     yearlyCost: 0,
-  });
+  };
 
   // Обновляем цену при смене типа топлива
   useEffect(() => {
@@ -62,15 +68,14 @@ export default function FuelCostCalculator() {
     }
   }, [selectedFuel]);
 
-  // Расчёт
-  useEffect(() => {
+  // Расчёт — синхронно, чтобы первый рендер совпал с пререндером
+  const computeResults = () => {
     const dist = parseFloat(distance) || 0;
     const cons = parseFloat(consumption) || 0;
     const price = parseFloat(fuelPrice) || 0;
 
     if (dist <= 0 || cons <= 0 || price <= 0) {
-      setResults({ fuelNeeded: 0, tripCost: 0, costPerKm: 0, monthlyCost: 0, yearlyCost: 0 });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const fuelNeeded = (dist * cons) / 100;
@@ -79,14 +84,20 @@ export default function FuelCostCalculator() {
     const monthlyCost = dist * 22 * (cons / 100) * price;
     const yearlyCost = monthlyCost * 12;
 
-    setResults({
+    return {
       fuelNeeded: Number(fuelNeeded.toFixed(2)),
       tripCost: Math.round(tripCost),
       costPerKm: Number(costPerKm.toFixed(2)),
       monthlyCost: Math.round(monthlyCost),
       yearlyCost: Math.round(yearlyCost),
-    });
-  }, [distance, consumption, fuelPrice]);
+    };
+  };
+
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [distance, consumption, fuelPrice]
+  );
 
   const formatCurrency = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

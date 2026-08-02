@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Baby, Calendar, Heart, Info, AlertTriangle, Star, Clock, Target, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -15,7 +15,10 @@ export default function PregnancyCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [lastPeriodDate, setLastPeriodDate] = useState<string>('');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     estimatedDueDate: '',
     currentWeek: 0,
     currentDay: 0,
@@ -30,7 +33,7 @@ export default function PregnancyCalculator() {
       recommendations: [] as string[]
     },
     progressPercentage: 0
-  });
+  };
 
   // Информация о развитии плода по неделям
   const pregnancyWeeks = {
@@ -188,13 +191,7 @@ export default function PregnancyCalculator() {
 
   const calculatePregnancy = () => {
     if (!lastPeriodDate) {
-      setResults({
-        estimatedDueDate: '', currentWeek: 0, currentDay: 0,
-        daysPregnant: 0, daysRemaining: 0, trimester: 1,
-        weekInfo: { title: '', description: '', size: '', developments: [], recommendations: [] },
-        progressPercentage: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const lmpDate = new Date(lastPeriodDate);
@@ -248,7 +245,7 @@ export default function PregnancyCalculator() {
       weekInfo = pregnancyWeeks[selectedWeek as keyof typeof pregnancyWeeks];
     }
 
-    setResults({
+    return {
       estimatedDueDate: estimatedDueDate.toLocaleDateString('ru-RU'),
       currentWeek,
       currentDay,
@@ -257,12 +254,16 @@ export default function PregnancyCalculator() {
       trimester,
       weekInfo,
       progressPercentage: Number(progressPercentage.toFixed(1))
-    });
+    };
   };
 
-  useEffect(() => {
-    calculatePregnancy();
-  }, [lastPeriodDate]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculatePregnancy,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lastPeriodDate, i18n.language]
+  );
 
   const getTrimesterInfo = (trimester: number) => {
     switch (trimester) {

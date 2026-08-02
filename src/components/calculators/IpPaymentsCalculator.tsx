@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Banknote, Calculator, Info } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -42,11 +42,7 @@ export default function IpPaymentsCalculator() {
   const [actualIncome, setActualIncome] = useState<string>('600000');
   const [bornBefore1975, setBornBefore1975] = useState(false);
 
-  const [results, setResults] = useState({
-    opv: 0, opvr: 0, so: 0, vosms: VOSMS_FIXED, selfTotal: 0, tax: 0, grandTotal: 0,
-  });
-
-  useEffect(() => {
+  const computeResults = () => {
     const declared = Math.max(parseFloat(declaredIncome) || 0, 0);
     const actual = Math.max(parseFloat(actualIncome) || 0, 0);
     const opvBase = Math.min(Math.max(declared, BASE_MIN), BASE_MAX_OPV);
@@ -56,7 +52,7 @@ export default function IpPaymentsCalculator() {
     const so = soBase * SO_RATE;
     const selfTotal = opv + opvr + so + VOSMS_FIXED;
     const tax = actual * TAX_RATE;
-    setResults({
+    return {
       opv: Math.round(opv),
       opvr: Math.round(opvr),
       so: Math.round(so),
@@ -64,8 +60,16 @@ export default function IpPaymentsCalculator() {
       selfTotal: Math.round(selfTotal),
       tax: Math.round(tax),
       grandTotal: Math.round(selfTotal + tax),
-    });
-  }, [declaredIncome, actualIncome, bornBefore1975]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [declaredIncome, actualIncome, bornBefore1975]
+  );
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

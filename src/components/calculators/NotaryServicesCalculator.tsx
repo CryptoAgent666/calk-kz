@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileSignature, Calculator, Users, Building, MapPin, Info, AlertTriangle, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -19,7 +19,10 @@ export default function NotaryServicesCalculator() {
   const [location, setLocation] = useState<'city' | 'rural'>('city');
   const [propertyValue, setPropertyValue] = useState<string>('15000000');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     stateFee: 0,
     technicalServiceFee: 0,
     totalCost: 0,
@@ -27,7 +30,7 @@ export default function NotaryServicesCalculator() {
     hasPropertyValue: false,
     percentageFee: false,
     percentageRate: 0
-  });
+  };
 
   const MRP_2026 = 4325;
 
@@ -117,7 +120,7 @@ export default function NotaryServicesCalculator() {
 
   const calculateNotaryCost = () => {
     const service = notaryServices[serviceType as keyof typeof notaryServices];
-    if (!service) return;
+    if (!service) return EMPTY_RESULTS;
 
     // Недвижимость: тариф зависит от местности (город/село) и стоимости (порог 30 МРП).
     if ((service as { isRealEstate?: boolean }).isRealEstate) {
@@ -139,7 +142,7 @@ export default function NotaryServicesCalculator() {
       }
 
       const fee = Math.round(rateMrp * MRP_2026);
-      setResults({
+      return {
         stateFee: fee,
         technicalServiceFee: 0,
         totalCost: fee,
@@ -147,8 +150,7 @@ export default function NotaryServicesCalculator() {
         hasPropertyValue: true,
         percentageFee: false,
         percentageRate: 0,
-      });
-      return;
+      };
     }
 
     // Map UI party types to data-keys used in rate tables
@@ -171,7 +173,7 @@ export default function NotaryServicesCalculator() {
 
     const totalCost = stateFee + technicalServiceFee;
 
-    setResults({
+    return {
       stateFee: Math.round(stateFee),
       technicalServiceFee: Math.round(technicalServiceFee),
       totalCost: Math.round(totalCost),
@@ -179,12 +181,16 @@ export default function NotaryServicesCalculator() {
       hasPropertyValue: service.hasPropertyValue || false,
       percentageFee: false,
       percentageRate: 0
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateNotaryCost();
-  }, [serviceType, partyTypes, areRelated, location, propertyValue, t]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateNotaryCost,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [serviceType, partyTypes, areRelated, location, propertyValue, t, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

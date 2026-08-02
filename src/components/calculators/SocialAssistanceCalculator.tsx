@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HandHeart, Calculator, Users, MapPin, Baby, Info, CheckCircle, XCircle, AlertTriangle, DollarSign, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -18,7 +18,10 @@ export default function SocialAssistanceCalculator() {
   const [region, setRegion] = useState<string>('almaty');
   const [childrenAge1to6, setChildrenAge1to6] = useState<string>('1');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
+  const EMPTY_RESULTS = {
     averageMonthlyIncomePerPerson: 0,
     povertyThreshold: 0,
     medianIncome: 0,
@@ -29,7 +32,7 @@ export default function SocialAssistanceCalculator() {
     totalAspAmount: 0,
     incomeShortfall: 0,
     regionName: ''
-  });
+  };
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
@@ -64,19 +67,7 @@ export default function SocialAssistanceCalculator() {
     const children = parseInt(childrenAge1to6) || 0;
 
     if (totalIncome <= 0 || members <= 0) {
-      setResults({
-        averageMonthlyIncomePerPerson: 0,
-        povertyThreshold: 0,
-        medianIncome: 0,
-        minPovertyThreshold: 0,
-        isEligible: false,
-        aspAmount: 0,
-        childrenBonus: 0,
-        totalAspAmount: 0,
-        incomeShortfall: 0,
-        regionName: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     // Найти данные региона
@@ -113,7 +104,7 @@ export default function SocialAssistanceCalculator() {
       totalAspAmount = aspAmount + childrenBonus;
     }
 
-    setResults({
+    return {
       averageMonthlyIncomePerPerson: Math.round(averageMonthlyIncomePerPerson),
       povertyThreshold: Math.round(povertyThreshold),
       medianIncome,
@@ -124,12 +115,17 @@ export default function SocialAssistanceCalculator() {
       totalAspAmount: Math.round(totalAspAmount),
       incomeShortfall: Math.round(incomeShortfall),
       regionName
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateASP();
-  }, [quarterlyIncome, familyMembers, region, childrenAge1to6]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateASP,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [quarterlyIncome, familyMembers, region, childrenAge1to6, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

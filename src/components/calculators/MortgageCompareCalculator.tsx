@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Scale, Info, AlertTriangle } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -53,9 +53,7 @@ export default function MortgageCompareCalculator() {
   const [vulnerable, setVulnerable] = useState(false);
   const [marketRate, setMarketRate] = useState<string>(String(MARKET_RATE_DEFAULT));
 
-  const [programs, setPrograms] = useState<ProgramResult[]>([]);
-
-  useEffect(() => {
+  const computePrograms = (): ProgramResult[] => {
     const p = parseFloat(price) || 0;
     const dp = Math.min(90, Math.max(0, parseFloat(downPercent) || 0));
     const term = Math.max(1, parseFloat(termYears) || 1);
@@ -69,7 +67,7 @@ export default function MortgageCompareCalculator() {
     };
 
     const nauryzRate = vulnerable ? 7 : 9;
-    setPrograms([
+    return [
       mk('72025', 7, 25,
         p <= CAP_72025[city] && dp >= 20,
         p > CAP_72025[city] ? 'mortgage-compare.reasonPriceCap' : dp < 20 ? 'mortgage-compare.reasonDown20' : undefined),
@@ -80,8 +78,16 @@ export default function MortgageCompareCalculator() {
         loan <= CAP_OTBASY[city] && dp >= 20,
         loan > CAP_OTBASY[city] ? 'mortgage-compare.reasonLoanCap' : dp < 20 ? 'mortgage-compare.reasonDown20' : undefined),
       mk('market', mkt, 25, true),
-    ]);
-  }, [price, downPercent, termYears, city, vulnerable, marketRate]);
+    ];
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const programs = useMemo(
+    computePrograms,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [price, downPercent, termYears, city, vulnerable, marketRate]
+  );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
   const loan = Math.round((parseFloat(price) || 0) * (1 - (Math.min(90, Math.max(0, parseFloat(downPercent) || 0))) / 100));

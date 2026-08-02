@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp, Calculator, Percent, DollarSign, Info, Package, BarChart3 } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -43,7 +43,10 @@ export default function MarginMarkupCalculator() {
   const [volume, setVolume] = useState<string>('100');
   const [tax, setTax] = useState<TaxMode>('none');
 
-  const [results, setResults] = useState<Results>({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS: Results = {
     sellingPrice: 0,
     profitPerUnit: 0,
     markupPct: 0,
@@ -52,18 +55,14 @@ export default function MarginMarkupCalculator() {
     monthlyProfit: 0,
     taxAmount: 0,
     profitAfterTax: 0,
-  });
+  };
 
-  useEffect(() => {
+  const computeResults = (): Results => {
     const c = parseFloat(cost) || 0;
     const vol = parseFloat(volume) || 0;
 
     if (c <= 0) {
-      setResults({
-        sellingPrice: 0, profitPerUnit: 0, markupPct: 0, marginPct: 0,
-        monthlyRevenue: 0, monthlyProfit: 0, taxAmount: 0, profitAfterTax: 0,
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     let sellingPrice = 0;
@@ -99,7 +98,7 @@ export default function MarginMarkupCalculator() {
     }
     const profitAfterTax = monthlyProfit - taxAmount;
 
-    setResults({
+    return {
       sellingPrice: Math.round(sellingPrice),
       profitPerUnit: Math.round(profitPerUnit),
       markupPct: Number(markupPct.toFixed(1)),
@@ -108,8 +107,16 @@ export default function MarginMarkupCalculator() {
       monthlyProfit: Math.round(monthlyProfit),
       taxAmount: Math.round(taxAmount),
       profitAfterTax: Math.round(profitAfterTax),
-    });
-  }, [mode, cost, markupPctInput, marginPctInput, priceInput, volume, tax]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mode, cost, markupPctInput, marginPctInput, priceInput, volume, tax]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

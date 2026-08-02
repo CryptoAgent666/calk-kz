@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Calculator, Info, Calendar } from 'lucide-react';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -20,16 +20,6 @@ export default function VehicleTaxCalculator() {
   const [seatingCapacity, setSeatingCapacity] = useState<string>('30');
   const [vehicleAge, setVehicleAge] = useState<string>('5');
   const [applyAgeDiscount, setApplyAgeDiscount] = useState<boolean>(false);
-
-  const [results, setResults] = useState({
-    taxRate: 0,
-    taxAmount: 0,
-    discountAmount: 0,
-    finalAmount: 0,
-    category: '',
-    isHighVolumeAfter2013: false,
-    ageDiscountPercent: 0
-  });
 
   const MRP_2026 = 4325;
 
@@ -58,7 +48,7 @@ export default function VehicleTaxCalculator() {
     { minSeats: 25, maxSeats: Infinity, rate: 20, descriptionKey: 'calculators:vehicle-tax.rate_bus_3' }
   ];
 
-  const calculateVehicleTax = () => {
+  const computeVehicleTax = () => {
     let taxRate = 0;
     let taxAmount = 0;
     let category = '';
@@ -116,7 +106,7 @@ export default function VehicleTaxCalculator() {
 
     const finalAmount = taxAmount - discountAmount;
 
-    setResults({
+    return {
       taxRate,
       taxAmount: Math.round(taxAmount),
       discountAmount: Math.round(discountAmount),
@@ -124,12 +114,17 @@ export default function VehicleTaxCalculator() {
       category,
       isHighVolumeAfter2013,
       ageDiscountPercent
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateVehicleTax();
-  }, [vehicleType, engineVolume, cargoCapacity, seatingCapacity, vehicleAge, applyAgeDiscount]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeVehicleTax,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [vehicleType, engineVolume, cargoCapacity, seatingCapacity, vehicleAge, applyAgeDiscount, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

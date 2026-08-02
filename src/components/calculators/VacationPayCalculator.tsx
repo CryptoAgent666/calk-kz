@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Palmtree, Calculator, Info, AlertTriangle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -21,7 +21,10 @@ export default function VacationPayCalculator() {
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState(нули) +
+  // useEffect: пререндер сохраняет страницу с числами, и первый клиентский
+  // рендер обязан выдать те же числа — иначе гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     averageDailyPay: 0,
     grossVacationPay: 0,
     opv: 0,
@@ -32,7 +35,7 @@ export default function VacationPayCalculator() {
     totalDeductions: 0,
     netVacationPay: 0,
     effectiveRate: 0
-  });
+  };
 
   const MRP = 4325;
   const MZP = 85000;
@@ -49,19 +52,7 @@ export default function VacationPayCalculator() {
     const income = parseFloat(monthlyIncome) || 0;
 
     if (income <= 0 || workMonths <= 0 || vacationDays <= 0) {
-      setResults({
-        averageDailyPay: 0,
-        grossVacationPay: 0,
-        opv: 0,
-        vosms: 0,
-        taxableIncome: 0,
-        standardDeduction: 0,
-        ipn: 0,
-        totalDeductions: 0,
-        netVacationPay: 0,
-        effectiveRate: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const totalIncome = income * workMonths;
@@ -85,7 +76,7 @@ export default function VacationPayCalculator() {
     const netVacationPay = grossVacationPay - totalDeductions;
     const effectiveRate = grossVacationPay > 0 ? (totalDeductions / grossVacationPay) * 100 : 0;
 
-    setResults({
+    return {
       averageDailyPay: Math.round(averageDailyPay),
       grossVacationPay: Math.round(grossVacationPay),
       opv: Math.round(opv),
@@ -96,12 +87,16 @@ export default function VacationPayCalculator() {
       totalDeductions: Math.round(totalDeductions),
       netVacationPay: Math.round(netVacationPay),
       effectiveRate: Number(effectiveRate.toFixed(2))
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateVacationPay();
-  }, [monthlyIncome, workMonths, vacationDays, isResident, isPrimaryJob]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateVacationPay,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [monthlyIncome, workMonths, vacationDays, isResident, isPrimaryJob]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Thermometer, Calculator, MapPin, Home, Info, AlertTriangle, TrendingUp, Calendar, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -31,7 +31,10 @@ export default function HeatingBillCalculator() {
   const [actualConsumption, setActualConsumption] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState<string>('january');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     monthlyAmount: 0,
     seasonalAmount: 0,
     consumption: 0,
@@ -40,7 +43,7 @@ export default function HeatingBillCalculator() {
     heatingSeasonMonths: 7,
     averageMonthlyRate: 0,
     recommendationKey: ''
-  });
+  };
 
   const cityHeatingData: CityHeatingData[] = [
     {
@@ -135,16 +138,11 @@ export default function HeatingBillCalculator() {
     const area = parseFloat(heatingArea) || 0;
 
     if (area <= 0) {
-      setResults({
-        monthlyAmount: 0, seasonalAmount: 0, consumption: 0,
-        norm: 0, tariff: 0, heatingSeasonMonths: 7,
-        averageMonthlyRate: 0, recommendationKey: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const selectedCity = cityHeatingData.find(c => c.id === city);
-    if (!selectedCity) return;
+    if (!selectedCity) return EMPTY_RESULTS;
 
     let consumption: number;
     let norm: number;
@@ -177,7 +175,7 @@ export default function HeatingBillCalculator() {
       recommendationKey = 'calculators:heating.recommendationNormal';
     }
 
-    setResults({
+    return {
       monthlyAmount: Math.round(monthlyAmount),
       seasonalAmount: Math.round(seasonalAmount),
       consumption: Number(consumption.toFixed(4)),
@@ -186,12 +184,16 @@ export default function HeatingBillCalculator() {
       heatingSeasonMonths: selectedCity.monthlyNorms.length,
       averageMonthlyRate: Number(averageMonthlyRate.toFixed(2)),
       recommendationKey
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateHeatingBill();
-  }, [city, heatingArea, hasMeter, actualConsumption, selectedMonth]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateHeatingBill,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [city, heatingArea, hasMeter, actualConsumption, selectedMonth]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₸';

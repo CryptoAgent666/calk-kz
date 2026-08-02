@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Receipt, Calculator, AlertTriangle, CheckCircle, Calendar, TrendingUp, Info, Target, Building, FileText, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -40,20 +40,6 @@ export default function VATThresholdCalculator() {
     december: ''
   });
 
-  const [results, setResults] = useState({
-    currentTotal: 0,
-    thresholdAmount: 0,
-    isExceeded: false,
-    exceedanceMonth: '',
-    exceedanceMonthName: '',
-    remainingToThreshold: 0,
-    excessAmount: 0,
-    registrationDeadline: '',
-    monthlyBreakdown: [] as MonthlyTurnover[],
-    projectedYearEnd: 0,
-    averageMonthlyTurnover: 0
-  });
-
   const MRP_VALUES = {
     2024: 3692,
     2025: 3932,
@@ -86,7 +72,7 @@ export default function VATThresholdCalculator() {
     { id: 'december', name: t('vat-threshold.months.december'), shortName: t('vat-threshold.months.decemberShort') }
   ];
 
-  const calculateVATThreshold = () => {
+  const computeVATThreshold = () => {
     const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 4938 /* последний известный МРП (2028) для будущих лет */;
     const thresholdAmount = thresholdMrpForYear * mrpValue;
 
@@ -141,7 +127,7 @@ export default function VATThresholdCalculator() {
     const averageMonthlyTurnover = filledMonths > 0 ? runningTotal / filledMonths : 0;
     const projectedYearEnd = filledMonths > 0 ? averageMonthlyTurnover * 12 : 0;
 
-    setResults({
+    return {
       currentTotal: Math.round(runningTotal),
       thresholdAmount: Math.round(thresholdAmount),
       isExceeded,
@@ -153,12 +139,17 @@ export default function VATThresholdCalculator() {
       monthlyBreakdown,
       projectedYearEnd: Math.round(projectedYearEnd),
       averageMonthlyTurnover: Math.round(averageMonthlyTurnover)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateVATThreshold();
-  }, [monthlyTurnovers, calculationYear]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeVATThreshold,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [monthlyTurnovers, calculationYear, i18n.language]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

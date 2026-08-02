@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Briefcase, Calculator, Info, Plus, Trash2 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -37,9 +37,10 @@ export default function WorkExperienceCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [periods, setPeriods] = useState<Period[]>([{ from: '2018-01-10', to: '2022-06-30' }, { from: '2022-08-01', to: '2026-07-11' }]);
 
-  const [total, setTotal] = useState({ y: 0, m: 0, d: 0, valid: 0 });
-
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const computeTotal = () => {
     let y = 0, m = 0, d = 0, valid = 0;
     periods.forEach((p) => {
       const r = diffPeriod(p.from, p.to);
@@ -49,8 +50,14 @@ export default function WorkExperienceCalculator() {
     });
     m += Math.floor(d / 30); d = d % 30;
     y += Math.floor(m / 12); m = m % 12;
-    setTotal({ y, m, d, valid });
-  }, [periods]);
+    return { y, m, d, valid };
+  };
+
+  const total = useMemo(
+    computeTotal,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [periods]
+  );
 
   const upd = (i: number, k: keyof Period, v: string) =>
     setPeriods((ps) => ps.map((p, idx) => (idx === i ? { ...p, [k]: v } : p)));

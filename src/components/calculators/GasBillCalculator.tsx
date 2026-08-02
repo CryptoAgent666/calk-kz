@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flame, Calculator, MapPin, Home, Info, AlertTriangle, TrendingUp, Thermometer, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -25,14 +25,17 @@ export default function GasBillCalculator() {
   const [gasConsumption, setGasConsumption] = useState<string>('30');
   const [propertyType, setPropertyType] = useState<'apartment' | 'house'>('apartment');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     monthlyAmount: 0,
     yearlyAmount: 0,
     tariff: 0,
     averageConsumption: 0,
     isHighConsumption: false,
     recommendationKey: ''
-  });
+  };
 
   const cityGasData: CityGasData[] = [
     {
@@ -89,15 +92,11 @@ export default function GasBillCalculator() {
     const consumption = parseFloat(gasConsumption) || 0;
 
     if (consumption <= 0) {
-      setResults({
-        monthlyAmount: 0, yearlyAmount: 0, tariff: 0,
-        averageConsumption: 0, isHighConsumption: false, recommendationKey: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const selectedCity = cityGasData.find(c => c.id === city);
-    if (!selectedCity) return;
+    if (!selectedCity) return EMPTY_RESULTS;
 
     const tariff = selectedCity.tariffPerCubicMeter;
     const monthlyAmount = consumption * tariff;
@@ -117,19 +116,23 @@ export default function GasBillCalculator() {
       recommendationKey = 'calculators:gas.recommendationNormal';
     }
 
-    setResults({
+    return {
       monthlyAmount: Math.round(monthlyAmount),
       yearlyAmount: Math.round(yearlyAmount),
       tariff,
       averageConsumption,
       isHighConsumption,
       recommendationKey
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateGasBill();
-  }, [city, gasConsumption, propertyType]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculateGasBill,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [city, gasConsumption, propertyType]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₸';

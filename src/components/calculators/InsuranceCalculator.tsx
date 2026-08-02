@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Shield, Calculator, ChevronRight, ChevronLeft, Users, MapPin, Car, Award, Info, AlertTriangle, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
@@ -25,7 +25,10 @@ export default function InsuranceCalculator() {
   const [drivers, setDrivers] = useState<Driver[]>([{ id: '1', age: 30, experience: 5 }]);
   const [bonusMalusClass, setBonusMalusClass] = useState<string>('A');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     basePremium: 0,
     territoryCoeff: 0,
     vehicleTypeCoeff: 0,
@@ -35,7 +38,7 @@ export default function InsuranceCalculator() {
     finalPremium: 0,
     vehicleAge: 0,
     worstDriver: null as { age: number; experience: number } | null
-  });
+  };
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
@@ -109,12 +112,16 @@ export default function InsuranceCalculator() {
   ];
 
   const calculatePremium = () => {
+    if (!region || !vehicleType || !manufactureYear || drivers.length === 0 || !bonusMalusClass) {
+      return EMPTY_RESULTS;
+    }
+
     const selectedRegion = territoryCoefficients.find(r => r.id === region);
     const selectedVehicleType = vehicleTypeCoefficients.find(v => v.id === vehicleType);
     const selectedBonusMalus = bonusMalusClasses.find(b => b.class === bonusMalusClass);
 
     if (!selectedRegion || !selectedVehicleType || !selectedBonusMalus) {
-      return;
+      return EMPTY_RESULTS;
     }
 
     const basePremium = BASE_PREMIUM_MRP * MRP_2026;
@@ -161,7 +168,7 @@ export default function InsuranceCalculator() {
     const finalPremium = basePremium * territoryCoeff * vehicleTypeCoeff *
                         ageExperienceCoeff * exploitationCoeff * bonusMalusCoeff;
 
-    setResults({
+    return {
       basePremium: Math.round(basePremium),
       territoryCoeff,
       vehicleTypeCoeff,
@@ -171,14 +178,16 @@ export default function InsuranceCalculator() {
       finalPremium: Math.round(finalPremium),
       vehicleAge,
       worstDriver
-    });
+    };
   };
 
-  useEffect(() => {
-    if (region && vehicleType && manufactureYear && drivers.length > 0 && bonusMalusClass) {
-      calculatePremium();
-    }
-  }, [region, vehicleType, manufactureYear, drivers, bonusMalusClass]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculatePremium,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [region, vehicleType, manufactureYear, drivers, bonusMalusClass]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

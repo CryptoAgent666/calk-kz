@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, TrendingUp, TrendingDown, DollarSign, PieChart, BarChart3, Info, AlertTriangle, Building, Key, Percent } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -34,7 +34,10 @@ export default function RentOrBuyCalculator() {
   const [annualMaintenance, setAnnualMaintenance] = useState<string>('');
   const [opportunityCostRate, setOpportunityCostRate] = useState<string>('14');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
+  const EMPTY_RESULTS = {
     loanAmount: 0,
     monthlyMortgagePayment: 0,
     totalMortgagePayments: 0,
@@ -62,7 +65,7 @@ export default function RentOrBuyCalculator() {
       equity: number,
       rentPaid: number
     }>
-  });
+  };
 
   const calculateComparison = () => {
     const price = parseFloat(propertyPrice) || 0;
@@ -79,15 +82,7 @@ export default function RentOrBuyCalculator() {
     const opportunityRate = (parseFloat(opportunityCostRate) || 0) / 100;
 
     if (price <= 0 || downPay < 0 || rent <= 0 || years <= 0) {
-      setResults({
-        loanAmount: 0, monthlyMortgagePayment: 0, totalMortgagePayments: 0,
-        totalInterestPaid: 0, totalOwnershipCosts: 0, propertyValueAtEnd: 0,
-        equityBuilt: 0, netOwnershipCost: 0, totalRentPaid: 0,
-        opportunityCostOfDownPayment: 0, totalRentingCost: 0,
-        difference: 0, isRentingBetter: false, breakEvenYear: 0, breakEvenMonth: 0,
-        yearlyData: []
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const loanAmount = price - downPay;
@@ -199,7 +194,7 @@ export default function RentOrBuyCalculator() {
       currentRent *= (1 + rentIncreaseRate);
     }
 
-    setResults({
+    return {
       loanAmount: Math.round(loanAmount),
       monthlyMortgagePayment: Math.round(monthlyMortgagePayment),
       totalMortgagePayments: Math.round(totalMortgagePayments),
@@ -216,14 +211,19 @@ export default function RentOrBuyCalculator() {
       breakEvenYear,
       breakEvenMonth,
       yearlyData: yearlyData.slice(0, years)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculateComparison();
-  }, [propertyPrice, downPayment, downPaymentPercent, mortgageRate, mortgageTermYears,
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    calculateComparison,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [propertyPrice, downPayment, downPaymentPercent, mortgageRate, mortgageTermYears,
       monthlyRent, rentIncrease, propertyAppreciation, analysisYears,
-      annualPropertyTax, annualInsurance, annualMaintenance, opportunityCostRate]);
+      annualPropertyTax, annualInsurance, annualMaintenance, opportunityCostRate]
+  );
 
   useEffect(() => {
     const price = parseFloat(propertyPrice) || 0;

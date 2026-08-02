@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Calculator, TrendingUp, Info, Percent, Building2, User, Shield } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -37,7 +37,7 @@ export default function AutoLeasingCalculator() {
   const [includeKasko, setIncludeKasko] = useState<boolean>(false);
   const [purpose, setPurpose] = useState<Purpose>('commercial');
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     downPaymentAmount: 0,
     monthlyPayment: 0,
     residualAmount: 0,
@@ -48,24 +48,12 @@ export default function AutoLeasingCalculator() {
     creditTotal: 0,
     diff: 0,
     leasingBetter: true,
-  });
+  };
 
-  useEffect(() => {
+  const computeResults = () => {
     const price = parseFloat(carPrice) || 0;
     if (price <= 0 || termMonths <= 0) {
-      setResults({
-        downPaymentAmount: 0,
-        monthlyPayment: 0,
-        residualAmount: 0,
-        totalPayments: 0,
-        overpayment: 0,
-        effectiveRate: 0,
-        creditMonthly: 0,
-        creditTotal: 0,
-        diff: 0,
-        leasingBetter: true,
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const effectiveRateAnnual = includeKasko ? annualRate + 4 : annualRate;
@@ -103,7 +91,7 @@ export default function AutoLeasingCalculator() {
     const diff = Math.abs(totalPayments - creditTotal);
     const leasingBetter = totalPayments < creditTotal;
 
-    setResults({
+    return {
       downPaymentAmount: Math.round(downPaymentAmount),
       monthlyPayment: Math.round(monthlyPayment),
       residualAmount: Math.round(residualAmount),
@@ -114,8 +102,17 @@ export default function AutoLeasingCalculator() {
       creditTotal: Math.round(creditTotal),
       diff: Math.round(diff),
       leasingBetter,
-    });
-  }, [carPrice, downPaymentPct, termMonths, annualRate, residualPct, includeKasko]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [carPrice, downPaymentPct, termMonths, annualRate, residualPct, includeKasko]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

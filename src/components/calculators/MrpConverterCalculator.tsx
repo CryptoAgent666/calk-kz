@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { ArrowLeftRight, Calculator, Info } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -37,14 +37,19 @@ export default function MrpConverterCalculator() {
   const [unit, setUnit] = useState<Unit>('mrp');
   const [direction, setDirection] = useState<Direction>('toKzt');
 
-  const [result, setResult] = useState(0);
-
   const rate = unit === 'mrp' ? MRP_2026 : MZP_2026;
 
-  useEffect(() => {
-    const a = parseFloat(amount) || 0;
-    setResult(direction === 'toKzt' ? a * rate : a / rate);
-  }, [amount, unit, direction, rate]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const result = useMemo(
+    () => {
+      const a = parseFloat(amount) || 0;
+      return direction === 'toKzt' ? a * rate : a / rate;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount, unit, direction, rate]
+  );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ', { maximumFractionDigits: 2 });
   const unitName = t(`mrp-converter.unit_${unit}`);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { HandHeart, Calculator, Info } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -25,15 +25,20 @@ export default function TipSplitCalculator() {
   const [people, setPeople] = useState<string>('2');
   const [serviceIncluded, setServiceIncluded] = useState(false);
 
-  const [results, setResults] = useState({ tip: 0, total: 0, perPerson: 0 });
-
-  useEffect(() => {
-    const b = parseFloat(bill) || 0;
-    const n = Math.max(1, parseInt(people) || 1);
-    const tip = serviceIncluded ? 0 : b * (tipPercent / 100);
-    const total = b + tip;
-    setResults({ tip: Math.round(tip), total: Math.round(total), perPerson: Math.ceil(total / n) });
-  }, [bill, tipPercent, people, serviceIncluded]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => {
+      const b = parseFloat(bill) || 0;
+      const n = Math.max(1, parseInt(people) || 1);
+      const tip = serviceIncluded ? 0 : b * (tipPercent / 100);
+      const total = b + tip;
+      return { tip: Math.round(tip), total: Math.round(total), perPerson: Math.ceil(total / n) };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bill, tipPercent, people, serviceIncluded]
+  );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 

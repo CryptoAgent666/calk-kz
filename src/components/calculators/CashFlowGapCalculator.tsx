@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Wallet,
@@ -30,7 +30,7 @@ export default function CashFlowGapCalculator() {
   const [dio, setDio] = useState<string>('20');
   const [growth, setGrowth] = useState<string>('0');
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     cashCycle: 0,
     gapSize: 0,
     recommended: 0,
@@ -39,9 +39,9 @@ export default function CashFlowGapCalculator() {
     gap10: 0,
     gap20: 0,
     gap50: 0,
-  });
+  };
 
-  useEffect(() => {
+  const computeResults = () => {
     const revenue = parseFloat(monthlyRevenue) || 0;
     const expenses = parseFloat(monthlyExpenses) || 0;
     const dsoDays = parseFloat(dso) || 0;
@@ -49,17 +49,7 @@ export default function CashFlowGapCalculator() {
     const dioDays = parseFloat(dio) || 0;
 
     if (revenue <= 0) {
-      setResults({
-        cashCycle: 0,
-        gapSize: 0,
-        recommended: 0,
-        dailyRevenue: 0,
-        dailyExpenses: 0,
-        gap10: 0,
-        gap20: 0,
-        gap50: 0,
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const dailyRevenue = revenue / 30;
@@ -72,7 +62,7 @@ export default function CashFlowGapCalculator() {
     const growthFactor20 = 1.2;
     const growthFactor50 = 1.5;
 
-    setResults({
+    return {
       cashCycle: Math.round(cashCycle),
       gapSize: Math.round(gapSize),
       recommended: Math.round(recommended),
@@ -81,8 +71,17 @@ export default function CashFlowGapCalculator() {
       gap10: Math.round(gapSize * growthFactor10),
       gap20: Math.round(gapSize * growthFactor20),
       gap50: Math.round(gapSize * growthFactor50),
-    });
-  }, [monthlyRevenue, monthlyExpenses, dso, dpo, dio, growth]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [monthlyRevenue, monthlyExpenses, dso, dpo, dio, growth]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

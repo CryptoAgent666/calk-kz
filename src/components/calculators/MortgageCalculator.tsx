@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, TrendingDown, MapPin, Percent, DollarSign, Info, AlertTriangle, Building, Banknote, TrendingUp, BarChart3 } from 'lucide-react';
 import { TaxPieChart, TrendLineChart, ProgressBar } from '../ui/ChartComponents';
@@ -41,7 +41,10 @@ export default function MortgageCalculator() {
   const [yearlyInsurance, setYearlyInsurance] = useState<string>('');
   const [showCharts, setShowCharts] = useState<boolean>(true);
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     loanAmount: 0,
     downPayment: 0,
     monthlyPayment: 0,
@@ -52,7 +55,7 @@ export default function MortgageCalculator() {
     totalAdditionalCosts: 0,
     isEligible: true,
     eligibilityIssues: [] as string[]
-  });
+  };
 
   const mortgagePrograms: MortgageProgram[] = [
     {
@@ -174,12 +177,7 @@ export default function MortgageCalculator() {
   const calculateMortgage = () => {
     const program = mortgagePrograms.find(p => p.id === selectedProgram);
     if (!program || !propertyValue) {
-      setResults({
-        loanAmount: 0, downPayment: 0, monthlyPayment: 0, totalPayment: 0,
-        totalInterest: 0, nominalRate: 0, effectiveRate: 0, totalAdditionalCosts: 0,
-        isEligible: true, eligibilityIssues: []
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const propertyPrice = parseFloat(propertyValue) || 0;
@@ -267,7 +265,7 @@ export default function MortgageCalculator() {
     const monthlyEff = (lo + hi) / 2;
     const effectiveRate = (Math.pow(1 + monthlyEff, 12) - 1) * 100;
 
-    setResults({
+    return {
       loanAmount: Math.round(loanAmount),
       downPayment: Math.round(downPayment),
       monthlyPayment: Math.round(monthlyPayment),
@@ -278,12 +276,8 @@ export default function MortgageCalculator() {
       totalAdditionalCosts: Math.round(totalAdditionalCosts),
       isEligible,
       eligibilityIssues
-    });
+    };
   };
-
-  useEffect(() => {
-    calculateMortgage();
-  }, [selectedProgram, propertyValue, downPaymentPercent, loanTermYears, region, customRate, additionalCommissions, yearlyInsurance]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
@@ -292,6 +286,15 @@ export default function MortgageCalculator() {
   const formatPercent = (num: number) => {
     return num.toFixed(2) + '%';
   };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  // (useMemo стоит после formatNumber — он используется внутри расчёта.)
+  const results = useMemo(
+    calculateMortgage,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedProgram, propertyValue, downPaymentPercent, loanTermYears, region, customRate, additionalCommissions, yearlyInsurance, i18n.language]
+  );
 
   const selectedProgramData = mortgagePrograms.find(p => p.id === selectedProgram);
 

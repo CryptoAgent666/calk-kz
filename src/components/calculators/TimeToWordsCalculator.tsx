@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Clock, Calculator, Languages, Copy, Download, RotateCcw, Info, AlertTriangle, Target, BarChart3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { FAQSection } from '../ui/FAQSection';
@@ -33,12 +33,6 @@ export default function TimeToWordsCalculator() {
   const [style, setStyle] = useState<'formal' | 'colloquial' | 'both'>('formal');
   const [history, setHistory] = useState<ConversionHistory[]>([]);
 
-  const [results, setResults] = useState<TimeConversionResult>({
-    words: '',
-    formal: '',
-    colloquial: '',
-    description: ''
-  });
 
   // Словари числительных для времени
   const timeNumbers = {
@@ -370,8 +364,8 @@ export default function TimeToWordsCalculator() {
   };
 
   const clearAll = () => {
+    // results — производное от inputTime (useMemo), пустой ввод даст пустой результат
     setInputTime('');
-    setResults({ words: '', formal: '', colloquial: '', description: '' });
   };
 
   const copyResult = () => {
@@ -410,13 +404,23 @@ export default function TimeToWordsCalculator() {
     }
   };
 
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // текстом, и первый клиентский рендер обязан выдать тот же текст — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    convertTimeToWords,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [inputTime, language, timeFormat, includeSeconds, style, i18n.language]
+  );
+
+  // Запись в историю — побочный эффект (Date.now/Math.random), остаётся в useEffect.
   useEffect(() => {
-    const result = convertTimeToWords();
-    setResults(result);
-    if (result.words && !result.words.includes(t('time-to-words.invalidFormat').substring(0, 10))) {
-      addToHistory(result);
+    if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return; // история не должна попадать в статику
+    if (results.words && !results.words.includes(t('time-to-words.invalidFormat').substring(0, 10))) {
+      addToHistory(results);
     }
-  }, [inputTime, language, timeFormat, includeSeconds, style]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results]);
 
   const languages = [
     { id: 'ru', name: t('time-to-words.russian'), flag: '🇷🇺' },

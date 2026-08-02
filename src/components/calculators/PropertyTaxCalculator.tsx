@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, AlertTriangle, Info, Building, BarChart3 } from 'lucide-react';
 import { TaxPieChart } from '../ui/ChartComponents';
@@ -23,7 +23,10 @@ export default function PropertyTaxCalculator() {
   const [zoneCoefficient, setZoneCoefficient] = useState<string>('');
   const [mrpCoefficient, setMrpCoefficient] = useState<string>('');
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     baseCostPerSqm: 0,
     zoneCoeff: 0,
     mrpCoeff: 0,
@@ -33,7 +36,7 @@ export default function PropertyTaxCalculator() {
     taxAmount: 0,
     exemptionAmount: 0,
     finalAmount: 0
-  });
+  };
 
   const CURRENT_YEAR = 2026;
   const MRP_2026 = 4325;
@@ -82,11 +85,7 @@ export default function PropertyTaxCalculator() {
 
   const calculatePropertyTax = () => {
     if (!area || parseFloat(area) <= 0) {
-      setResults({
-        baseCostPerSqm: 0, zoneCoeff: 0, mrpCoeff: 0, wearPercent: 0,
-        taxBase: 0, taxRate: 0, taxAmount: 0, exemptionAmount: 0, finalAmount: 0
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     const propertyArea = parseFloat(area);
@@ -127,7 +126,7 @@ export default function PropertyTaxCalculator() {
 
     const finalAmount = Math.max(0, taxAmount);
 
-    setResults({
+    return {
       baseCostPerSqm: Math.round(baseCostPerSqm),
       zoneCoeff,
       mrpCoeff,
@@ -137,12 +136,16 @@ export default function PropertyTaxCalculator() {
       taxAmount: Math.round(taxAmount + exemptionAmount),
       exemptionAmount: Math.round(exemptionAmount),
       finalAmount: Math.round(finalAmount)
-    });
+    };
   };
 
-  useEffect(() => {
-    calculatePropertyTax();
-  }, [propertyType, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]);
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    calculatePropertyTax,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [propertyType, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Heart, Calculator, Users, DollarSign, Info, AlertTriangle, Baby, TrendingUp, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
@@ -20,21 +20,6 @@ export default function AlimonyCalculator() {
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
-
-  const [results, setResults] = useState({
-    opv: 0,
-    vosms: 0,
-    standardDeduction: 0,
-    taxableIncome: 0,
-    incomeTax: 0,
-    totalDeductions: 0,
-    netIncome: 0,
-    alimonyRate: 0,
-    alimonyAmount: 0,
-    remainingIncome: 0,
-    hasNinetyPercentReduction: false,
-    effectiveAlimonyRate: 0
-  });
 
   const MZP = 85000;
   const MRP = 4325;
@@ -116,10 +101,14 @@ export default function AlimonyCalculator() {
     };
   };
 
-  useEffect(() => {
-    const gross = parseFloat(grossSalary) || 0;
-    setResults(calculateAlimony(gross));
-  }, [grossSalary, childrenCount, isResident, isPrimaryJob, isSpecialCategory]);
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    () => calculateAlimony(parseFloat(grossSalary) || 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grossSalary, childrenCount, isResident, isPrimaryJob, isSpecialCategory]
+  );
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

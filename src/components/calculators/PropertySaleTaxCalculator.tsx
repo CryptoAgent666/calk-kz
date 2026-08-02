@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, TrendingUp, Info, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -44,17 +44,6 @@ export default function PropertySaleTaxCalculator() {
   const [isMainHome, setIsMainHome] = useState<boolean>(false);
   const [isInherited, setIsInherited] = useState<boolean>(false);
 
-  const [results, setResults] = useState({
-    gain: 0,
-    isTaxable: false,
-    reasonKey: '' as string,
-    tax: 0,
-    netProfit: 0,
-    effectiveRate: 0,
-    declarationDeadline: '',
-    recommendation: '' as string,
-  });
-
   // Вычисление дедлайна декларации ФНО 240.00 — 31 марта следующего года
   const getDeclarationDeadline = (): string => {
     const now = new Date();
@@ -62,7 +51,10 @@ export default function PropertySaleTaxCalculator() {
     return `31.03.${nextYear}`;
   };
 
-  useEffect(() => {
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const computeResults = () => {
     const sale = parseFloat(salePrice) || 0;
     const purchase = parseFloat(purchasePrice) || 0;
     const years = parseFloat(ownershipYears) || 0;
@@ -73,7 +65,7 @@ export default function PropertySaleTaxCalculator() {
 
     const propertyType = propertyTypes.find((p) => p.id === selectedType);
     if (!propertyType || sale <= 0) {
-      setResults({
+      return {
         gain: 0,
         isTaxable: false,
         reasonKey: '',
@@ -82,8 +74,7 @@ export default function PropertySaleTaxCalculator() {
         effectiveRate: 0,
         declarationDeadline: getDeclarationDeadline(),
         recommendation: '',
-      });
-      return;
+      };
     }
 
     let isTaxable = true;
@@ -128,7 +119,7 @@ export default function PropertySaleTaxCalculator() {
     const netProfit = sale - purchase - tax;
     const effectiveRate = sale > 0 ? (tax / sale) * 100 : 0;
 
-    setResults({
+    return {
       gain: Math.round(gain),
       isTaxable,
       reasonKey,
@@ -137,8 +128,16 @@ export default function PropertySaleTaxCalculator() {
       effectiveRate: Number(effectiveRate.toFixed(2)),
       declarationDeadline: getDeclarationDeadline(),
       recommendation,
-    });
-  }, [selectedType, salePrice, purchasePrice, ownershipYears, ownershipMonths, isMainHome, isInherited]);
+    };
+  };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedType, salePrice, purchasePrice, ownershipYears, ownershipMonths, isMainHome, isInherited]
+  );
 
   const formatCurrency = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

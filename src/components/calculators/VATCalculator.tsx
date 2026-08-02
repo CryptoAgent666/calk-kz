@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calculator, Plus, Minus, FileText, Copy, Download, Trash2, RotateCcw, Info, AlertTriangle, Receipt, DollarSign, BarChart3 } from 'lucide-react';
 import InputField from '../InputField';
@@ -46,21 +46,25 @@ export default function VATCalculator() {
 
   const [history, setHistory] = useState<CalculationHistory[]>([]);
 
-  const [results, setResults] = useState({
+  // Результаты считаются СИНХРОННО (useMemo ниже), а не через
+  // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
+  // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
+  const EMPTY_RESULTS = {
     amountWithoutVat: 0,
     vatAmount: 0,
     amountWithVat: 0,
     effectiveRate: 0,
+    description: '',
     formula: ''
-  });
+  };
 
-  const [bulkResults, setBulkResults] = useState({
+  const EMPTY_BULK_RESULTS = {
     totalWithoutVat: 0,
     totalVat: 0,
     totalWithVat: 0,
     itemCount: 0,
     averageVatRate: 0
-  });
+  };
 
   const validateAmount = (value: string): string | null => {
     const num = parseFloat(value);
@@ -122,16 +126,16 @@ ${t('vat.export.formula')}: ${results.formula}`;
     { value: '16', label: t('vat.rates.standard.label'), description: t('vat.rates.standard.description') }
   ];
 
-  const calculateVAT = () => {
+  const computeVAT = () => {
+    if (calculationType === 'bulk') {
+      return EMPTY_RESULTS;
+    }
+
     const baseAmount = parseFloat(amount) || 0;
     const rate = parseFloat(vatRate) || 0;
 
     if (baseAmount <= 0) {
-      setResults({
-        amountWithoutVat: 0, vatAmount: 0, amountWithVat: 0,
-        effectiveRate: 0, description: '', formula: ''
-      });
-      return;
+      return EMPTY_RESULTS;
     }
 
     let amountWithoutVat = 0;
@@ -156,23 +160,19 @@ ${t('vat.export.formula')}: ${results.formula}`;
 
     const effectiveRate = amountWithoutVat > 0 ? (vatAmount / amountWithoutVat) * 100 : 0;
 
-    setResults({
+    return {
       amountWithoutVat: Number(amountWithoutVat.toFixed(precision)),
       vatAmount: Number(vatAmount.toFixed(precision)),
       amountWithVat: Number(amountWithVat.toFixed(precision)),
       effectiveRate: Number(effectiveRate.toFixed(precision)),
       description,
       formula
-    });
+    };
   };
 
-  const calculateBulkVAT = () => {
+  const computeBulkVAT = () => {
     if (items.length === 0) {
-      setBulkResults({
-        totalWithoutVat: 0, totalVat: 0, totalWithVat: 0,
-        itemCount: 0, averageVatRate: 0
-      });
-      return;
+      return EMPTY_BULK_RESULTS;
     }
 
     const totalWithoutVat = items.reduce((sum, item) => sum + item.amount, 0);
@@ -180,13 +180,13 @@ ${t('vat.export.formula')}: ${results.formula}`;
     const totalWithVat = items.reduce((sum, item) => sum + item.totalWithVat, 0);
     const averageVatRate = totalWithoutVat > 0 ? (totalVat / totalWithoutVat) * 100 : 0;
 
-    setBulkResults({
+    return {
       totalWithoutVat: Number(totalWithoutVat.toFixed(precision)),
       totalVat: Number(totalVat.toFixed(precision)),
       totalWithVat: Number(totalWithVat.toFixed(precision)),
       itemCount: items.length,
       averageVatRate: Number(averageVatRate.toFixed(2))
-    });
+    };
   };
 
   const addToHistory = () => {
@@ -238,14 +238,6 @@ ${t('vat.export.formula')}: ${results.formula}`;
     setNewItemDescription('');
     setNewItemAmount('');
     setNewItemVatRate('16');
-    setResults({
-      amountWithoutVat: 0, vatAmount: 0, amountWithVat: 0,
-      effectiveRate: 0, description: '', formula: ''
-    });
-    setBulkResults({
-      totalWithoutVat: 0, totalVat: 0, totalWithVat: 0,
-      itemCount: 0, averageVatRate: 0
-    });
   };
 
   const copyResult = () => {
@@ -292,30 +284,35 @@ ${t('vat.export.formula')}: ${results.formula}`;
     }
   };
 
-  useEffect(() => {
-    if (calculationType !== 'bulk') {
-      calculateVAT();
-    }
-  }, [amount, vatRate, calculationType, precision]);
-
-  useEffect(() => {
-    if (calculationType === 'bulk') {
-      calculateBulkVAT();
-    }
-  }, [items, precision]);
-
-  useEffect(() => {
-    if (results.description && (calculationType === 'add' || calculationType === 'extract')) {
-      addToHistory();
-    }
-  }, [results.description]);
-
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ', {
       minimumFractionDigits: precision,
       maximumFractionDigits: precision
     }) + ' ₸';
   };
+
+  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
+  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
+  const results = useMemo(
+    computeVAT,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount, vatRate, calculationType, precision, i18n.language]
+  );
+
+  const bulkResults = useMemo(
+    computeBulkVAT,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [items, precision]
+  );
+
+  // Побочный эффект (накопление истории) остаётся в useEffect — в useMemo ему не место.
+  useEffect(() => {
+    if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return; // история не должна попадать в статику
+    if (results.description && (calculationType === 'add' || calculationType === 'extract')) {
+      addToHistory();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [results.description]);
 
   const calculationTypes = [
     {

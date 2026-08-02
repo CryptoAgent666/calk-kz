@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   TrendingUp,
@@ -43,18 +43,7 @@ export default function BreakEvenCalculator() {
   const [expectedVolume, setExpectedVolume] = useState<string>('200');
   const [taxRate, setTaxRate] = useState<TaxRate>(0);
 
-  const [results, setResults] = useState<Results>({
-    contributionMargin: 0,
-    marginPercent: 0,
-    breakEvenUnits: 0,
-    breakEvenRevenue: 0,
-    safetyMargin: 0,
-    monthlyProfit: 0,
-    expectedRevenue: 0,
-    valid: false,
-  });
-
-  useEffect(() => {
+  const computeResults = (): Results => {
     const p = parseFloat(price) || 0;
     const vc = parseFloat(variableCost) || 0;
     const fc = parseFloat(fixedCost) || 0;
@@ -67,7 +56,7 @@ export default function BreakEvenCalculator() {
     const marginPercent = effectivePrice > 0 ? (contributionMargin / effectivePrice) * 100 : 0;
 
     if (contributionMargin <= 0 || p <= 0) {
-      setResults({
+      return {
         contributionMargin: Math.round(contributionMargin),
         marginPercent: Number(marginPercent.toFixed(2)),
         breakEvenUnits: 0,
@@ -76,8 +65,7 @@ export default function BreakEvenCalculator() {
         monthlyProfit: 0,
         expectedRevenue: 0,
         valid: false,
-      });
-      return;
+      };
     }
 
     const breakEvenUnits = Math.ceil(fc / contributionMargin);
@@ -87,7 +75,7 @@ export default function BreakEvenCalculator() {
       expectedRevenue > 0 ? ((expectedRevenue - breakEvenRevenue) / expectedRevenue) * 100 : 0;
     const monthlyProfit = vol * contributionMargin - fc;
 
-    setResults({
+    return {
       contributionMargin: Math.round(contributionMargin),
       marginPercent: Number(marginPercent.toFixed(2)),
       breakEvenUnits,
@@ -96,8 +84,17 @@ export default function BreakEvenCalculator() {
       monthlyProfit: Math.round(monthlyProfit),
       expectedRevenue: Math.round(expectedRevenue),
       valid: true,
-    });
-  }, [price, variableCost, fixedCost, expectedVolume, taxRate]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [price, variableCost, fixedCost, expectedVolume, taxRate]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 

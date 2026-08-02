@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { TrendingUp, Calculator, Info, AlertTriangle } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
@@ -38,20 +38,19 @@ export default function DividendTaxCalculator() {
   const [amount, setAmount] = useState<string>('5000000');
   const [status, setStatus] = useState<ResidencyStatus>('resident');
 
-  const [results, setResults] = useState({
+  const EMPTY_RESULTS = {
     tax: 0,
     net: 0,
     lowPart: 0,
     highPart: 0,
     effectiveRate: 0,
     overThreshold: false,
-  });
+  };
 
-  useEffect(() => {
+  const computeResults = () => {
     const gross = parseFloat(amount) || 0;
     if (gross <= 0) {
-      setResults({ tax: 0, net: 0, lowPart: 0, highPart: 0, effectiveRate: 0, overThreshold: false });
-      return;
+      return EMPTY_RESULTS;
     }
     let tax = 0;
     let lowPart = 0;
@@ -68,15 +67,24 @@ export default function DividendTaxCalculator() {
       highPart = (gross - THRESHOLD_KZT) * RATE_HIGH;
       tax = lowPart + highPart;
     }
-    setResults({
+    return {
       tax: Math.round(tax),
       net: Math.round(gross - tax),
       lowPart: Math.round(lowPart),
       highPart: Math.round(highPart),
       effectiveRate: (tax / gross) * 100,
       overThreshold,
-    });
-  }, [amount, status]);
+    };
+  };
+
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [amount, status, i18n.language]
+  );
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
