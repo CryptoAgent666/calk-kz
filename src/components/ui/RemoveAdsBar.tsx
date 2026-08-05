@@ -7,10 +7,9 @@ import {
   isAdFree,
   onAdFreeChange,
   buyRemoveAds,
-  getRemoveAdsPrice,
   purchasesAvailable,
-  REMOVE_ADS_FALLBACK_PRICE,
 } from '../../purchases';
+import { useRemoveAdsPrice } from '../../hooks/useRemoveAdsPrice';
 
 const DISMISS_KEY = 'calk_removeads_bar_dismissed';
 const VARIANT_KEY = 'calk_removeads_bar_variant';
@@ -48,23 +47,25 @@ export function RemoveAdsBar() {
   const [dismissed, setDismissed] = useState(() => {
     try { return sessionStorage.getItem(DISMISS_KEY) === '1'; } catch { return false; }
   });
-  const [price, setPrice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [variant] = useState(pickBarVariant);
+  const priceState = useRemoveAdsPrice();
 
   useEffect(() => onAdFreeChange(setAdFree), []);
-  useEffect(() => { void getRemoveAdsPrice().then(setPrice); }, []);
 
   // Воронка: один показ оффера при первом появлении плашки в сессии.
   const shownRef = useRef(false);
   useEffect(() => {
     if (shownRef.current) return;
     if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return;
+    if (priceState.status === 'unavailable') return; // покупать нечего — оффер не показан
     shownRef.current = true;
     emitIap('paywall_shown');
-  }, [adFree, dismissed]);
+  }, [adFree, dismissed, priceState.status]);
 
   if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return null;
+  // Стор ничего не отдал → плашку не рисуем совсем (тап вёл бы в тупик).
+  if (priceState.status === 'unavailable') return null;
 
   const dismiss = () => {
     try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* ignore */ }
@@ -77,7 +78,7 @@ export function RemoveAdsBar() {
 
   const label = variant === 'coffee'
     ? t('removeAds.barCoffee')
-    : `${t('removeAds.remove')} — ${price ?? REMOVE_ADS_FALLBACK_PRICE}`;
+    : `${t('removeAds.remove')} — ${priceState.price}`;
 
   return (
     <div

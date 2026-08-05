@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { isScreenshotMode } from '../../utils/screenshotMode';
@@ -7,10 +7,9 @@ import {
   isAdFree,
   onAdFreeChange,
   buyRemoveAds,
-  getRemoveAdsPrice,
   purchasesAvailable,
-  REMOVE_ADS_FALLBACK_PRICE,
 } from '../../purchases';
+import { useRemoveAdsPrice } from '../../hooks/useRemoveAdsPrice';
 
 /** Событие «предложить убрать рекламу» — шлётся из ads.ts после каждого 3-го интерстишела. */
 export const SUGGEST_REMOVE_ADS_EVENT = 'calk:suggest-remove-ads';
@@ -27,17 +26,21 @@ export function RemoveAdsToast() {
   const { t } = useTranslation('common');
   const [adFree, setAdFree] = useState(isAdFree());
   const [visible, setVisible] = useState(false);
-  const [price, setPrice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const priceState = useRemoveAdsPrice();
 
   useEffect(() => onAdFreeChange(setAdFree), []);
-  useEffect(() => { void getRemoveAdsPrice().then(setPrice); }, []);
+
+  // Статус цены читаем через ref: слушатель события вешается один раз.
+  const priceStatusRef = useRef(priceState.status);
+  useEffect(() => { priceStatusRef.current = priceState.status; }, [priceState.status]);
 
   useEffect(() => {
     if (!purchasesAvailable()) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const onSuggest = () => {
       if (isAdFree()) return;
+      if (priceStatusRef.current === 'unavailable') return; // стор не отдал продукт
       setVisible(true);
       emitIap('paywall_shown'); // показ оффера (место 3 — тост после интерстишела)
       clearTimeout(timer);
@@ -51,12 +54,15 @@ export function RemoveAdsToast() {
   }, []);
 
   if (isScreenshotMode() || !purchasesAvailable() || adFree || !visible) return null;
+  if (priceState.status === 'unavailable') return null;
 
   const buy = async () => {
     setBusy(true);
     try {
-      const ok = await buyRemoveAds();
-      if (ok) setVisible(false);
+      const result = await buyRemoveAds();
+      // Закрываем и при успехе, и когда покупать нечего: тост с мёртвой кнопкой
+      // висеть не должен. Отмену пользователя оставляем на экране.
+      if (result === 'ok' || result === 'unavailable') setVisible(false);
     } finally {
       setBusy(false);
     }
@@ -73,7 +79,7 @@ export function RemoveAdsToast() {
         <div className="flex-1 text-sm">
           <div className="font-semibold">{t('removeAds.tired')}</div>
           <button onClick={buy} disabled={busy} className="text-blue-300 underline disabled:opacity-70">
-            {busy ? t('removeAds.processing') : t('removeAds.removeForPrice', { price: price ?? REMOVE_ADS_FALLBACK_PRICE })}
+            {busy ? t('removeAds.processing') : t('removeAds.removeForPrice', { price: priceState.price })}
           </button>
         </div>
         <button onClick={() => setVisible(false)} aria-label={t('removeAds.close')} className="p-1 opacity-70 hover:opacity-100">

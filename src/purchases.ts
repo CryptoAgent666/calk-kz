@@ -114,34 +114,68 @@ export async function initPurchases(): Promise<void> {
   }
 }
 
-/** Локализованная цена продукта (напр. «990 ₸») для кнопки, или null. */
+type PurchasesSdk = Awaited<ReturnType<typeof loadSdk>>['Purchases'];
+type ProductCategory = NonNullable<Parameters<PurchasesSdk['getProducts']>[0]['type']>;
+
+/**
+ * КРИТИЧНО: `type` обязателен.
+ *
+ * Нативный Android-плагин при отсутствии параметра подставляет подписку
+ * (PurchasesPlugin.kt: `val type = call.getString("type") ?: "SUBSCRIPTION"`),
+ * то есть спрашивает у Google Play подписку `removeads`, которой не существует —
+ * «Убрать рекламу» это разовая покупка. Play возвращает пустой список → цена
+ * null → покупка невозможна. На iOS параметр игнорируется, поэтому там всё
+ * работало с первого дня и баг был не виден.
+ *
+ * Enum PRODUCT_CATEGORY лежит в транзитивной зависимости SDK, поэтому берём
+ * литерал, а тип выводим из сигнатуры самого getProducts.
+ */
+const NON_SUBSCRIPTION = 'NON_SUBSCRIPTION' as ProductCategory;
+
+/** Единая точка запроса продукта — и для цены, и для покупки (тип не разъедется). */
+async function fetchRemoveAdsProduct(Purchases: PurchasesSdk) {
+  const { products } = await Purchases.getProducts({
+    productIdentifiers: [REMOVE_ADS_PRODUCT_ID],
+    type: NON_SUBSCRIPTION,
+  });
+  return products[0] ?? null;
+}
+
+/** Локализованная цена продукта (напр. «999 ₸»), или null если стор её не отдал. */
 export async function getRemoveAdsPrice(): Promise<string | null> {
   if (!purchasesAvailable()) return null;
   try {
     const { Purchases } = await loadSdk();
-    const { products } = await Purchases.getProducts({ productIdentifiers: [REMOVE_ADS_PRODUCT_ID] });
-    return products[0]?.priceString ?? null;
+    const product = await fetchRemoveAdsProduct(Purchases);
+    return product?.priceString ?? null;
   } catch {
     return null;
   }
 }
 
-/** Купить «Убрать рекламу». true — успех (или уже куплено). */
-export async function buyRemoveAds(): Promise<boolean> {
-  if (!purchasesAvailable()) return false;
+/**
+ * Результат покупки. Голый boolean не годился: «пользователь передумал» и
+ * «стор не отдал продукт» требуют разного разговора с пользователем.
+ */
+export type BuyResult = 'ok' | 'cancelled' | 'unavailable' | 'failed';
+
+/** Купить «Убрать рекламу». */
+export async function buyRemoveAds(): Promise<BuyResult> {
+  if (!purchasesAvailable()) return 'unavailable';
   emitIap('purchase_tapped');
   try {
     const { Purchases } = await loadSdk();
-    const { products } = await Purchases.getProducts({ productIdentifiers: [REMOVE_ADS_PRODUCT_ID] });
-    if (!products.length) return false;
-    const { customerInfo } = await Purchases.purchaseStoreProduct({ product: products[0] });
+    const product = await fetchRemoveAdsProduct(Purchases);
+    if (!product) return 'unavailable';
+    const { customerInfo } = await Purchases.purchaseStoreProduct({ product });
     const ok = hasEntitlement(customerInfo);
     setAdFree(ok);
-    return ok;
+    return ok ? 'ok' : 'failed';
   } catch (e) {
     // Отмена пользователем — не ошибка; для воронки различаем отмену и сбой.
-    emitIap((e as { userCancelled?: boolean })?.userCancelled ? 'purchase_cancelled' : 'purchase_failed');
-    return false;
+    const cancelled = !!(e as { userCancelled?: boolean })?.userCancelled;
+    emitIap(cancelled ? 'purchase_cancelled' : 'purchase_failed');
+    return cancelled ? 'cancelled' : 'failed';
   }
 }
 
