@@ -16,12 +16,23 @@ const BDO_2026 = 17_697;
 const MRP_2026 = 4_325;
 const MZP_2026 = 85_000;
 
-// Коэффициенты категория × стаж (приложение к приказу МОН РК)
-// Формат: [категория][стажIndex] → коэффициент к БДО
-const CATEGORIES = ['none', 'moderator', 'expert', 'researcher', 'master'] as const;
-type Category = typeof CATEGORIES[number];
+// Поправочный коэффициент для педагогов — 2,0, применяется с 01.01.2023 (ПП РК № 1193)
+const TEACHER_FACTOR = 2.0;
 
-// Стаж: 0-1, 1-2, 2-3, 3-5, 5-7, 7-10, 10-14, 14-18, 18-22, 22-25, 25+
+// Учитель — блок B, звено B2, ступени 1–4 (прил. 1 и прил. 2 ПП РК № 1193
+// в ред. ПП РК от 21.05.2019 № 302 с изм. ПП РК от 26.12.2023 № 1184, с 01.01.2024).
+// Ступень определяется КВАЛИФИКАЦИОННОЙ категорией педагога.
+const QUAL_CATEGORIES = ['highest', 'first', 'second', 'none'] as const;
+type QualCategory = typeof QUAL_CATEGORIES[number];
+
+const TIER_BY_QUAL: Record<QualCategory, number> = {
+  highest: 1,
+  first: 2,
+  second: 3,
+  none: 4,
+};
+
+// 11 стажевых полос: 0-1, 1-2, 2-3, 3-5, 5-7, 7-10, 10-13, 13-16, 16-20, 20-25, свыше 25
 const EXPERIENCE_RANGES = [
   { min: 0, max: 1 },
   { min: 1, max: 2 },
@@ -29,20 +40,32 @@ const EXPERIENCE_RANGES = [
   { min: 3, max: 5 },
   { min: 5, max: 7 },
   { min: 7, max: 10 },
-  { min: 10, max: 14 },
-  { min: 14, max: 18 },
-  { min: 18, max: 22 },
-  { min: 22, max: 25 },
-  { min: 25, max: 99 },
+  { min: 10, max: 13 },
+  { min: 13, max: 16 },
+  { min: 16, max: 20 },
+  { min: 20, max: 25 },
+  { min: 25, max: Infinity },
 ];
 
-// Коэффициенты — строки: категория, столбцы: стаж
-const COEFFICIENTS: Record<Category, number[]> = {
-  none:       [4.40, 4.49, 4.59, 4.68, 4.78, 4.97, 5.06, 5.15, 5.25, 5.34, 5.34],
-  moderator:  [4.84, 4.94, 5.04, 5.14, 5.24, 5.48, 5.58, 5.68, 5.78, 5.88, 5.88],
-  expert:     [5.28, 5.39, 5.50, 5.61, 5.72, 5.98, 6.09, 6.20, 6.31, 6.41, 6.41],
-  researcher: [5.72, 5.84, 5.96, 6.07, 6.19, 6.49, 6.60, 6.72, 6.83, 6.95, 6.95],
-  master:     [6.16, 6.29, 6.41, 6.54, 6.66, 6.99, 7.12, 7.24, 7.37, 7.49, 7.49],
+// Коэффициенты к БДО — строки: ступень (квалификационная категория), столбцы: стажевая полоса
+const COEFFICIENTS: Record<QualCategory, number[]> = {
+  highest: [4.67, 4.74, 4.81, 4.88, 4.95, 5.01, 5.08, 5.16, 5.24, 5.32, 5.41],
+  first:   [4.39, 4.50, 4.57, 4.65, 4.72, 4.79, 4.86, 4.95, 5.03, 5.12, 5.20],
+  second:  [4.36, 4.44, 4.51, 4.59, 4.66, 4.74, 4.81, 4.90, 4.99, 5.08, 5.16],
+  none:    [4.10, 4.14, 4.19, 4.23, 4.27, 4.33, 4.38, 4.49, 4.59, 4.67, 4.73],
+};
+
+// Педагогическая категория — это ДОПЛАТА к должностному окладу, а не строка сетки
+// (прил. 4 стр. 7–8, п. 3 пп. 2 ПП РК № 1193). Считается с учётом фактической нагрузки.
+const PED_CATEGORIES = ['none', 'moderator', 'expert', 'researcher', 'master'] as const;
+type PedCategory = typeof PED_CATEGORIES[number];
+
+const PED_CATEGORY_RATES: Record<PedCategory, number> = {
+  none: 0,
+  moderator: 0.30,
+  expert: 0.35,
+  researcher: 0.40,
+  master: 0.50,
 };
 
 // Доплаты (в МРП/месяц)
@@ -63,7 +86,8 @@ function getExperienceIndex(years: number): number {
 export default function TeacherSalaryCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [category, setCategory] = useState<Category>('moderator');
+  const [qualCategory, setQualCategory] = useState<QualCategory>('first');
+  const [pedCategory, setPedCategory] = useState<PedCategory>('moderator');
   const [experience, setExperience] = useState<string>('10');
   const [hoursPerWeek, setHoursPerWeek] = useState<string>('18');
   const [isRural, setIsRural] = useState(false);
@@ -81,14 +105,19 @@ export default function TeacherSalaryCalculator() {
     const standardHours = 18; // норма часов педагога
 
     const expIndex = getExperienceIndex(years);
-    const coeff = COEFFICIENTS[category][expIndex];
+    const coeff = COEFFICIENTS[qualCategory][expIndex];
+    const tier = TIER_BY_QUAL[qualCategory];
 
-    // Базовый оклад = БДО × коэффициент
-    const baseOklad = Math.round(BDO_2026 * coeff);
+    // Должностной оклад = БДО × коэффициент(ступень, стажевая полоса) × 2,0
+    const baseOklad = Math.round(BDO_2026 * coeff * TEACHER_FACTOR);
 
     // Пропорционально нагрузке
     const loadFactor = hours / standardHours;
     const okladByLoad = Math.round(baseOklad * loadFactor);
+
+    // Доплата за педагогическую категорию — с учётом фактической нагрузки
+    const pedRate = PED_CATEGORY_RATES[pedCategory];
+    const pedCategoryBonus = Math.round(okladByLoad * pedRate);
 
     // Региональные надбавки
     const ruralBonus = isRural ? Math.round(okladByLoad * 0.25) : 0;
@@ -102,7 +131,7 @@ export default function TeacherSalaryCalculator() {
     if (bonuses.methodist) bonusMRP += BONUSES.methodist;
     const bonusAmount = bonusMRP * MRP_2026;
 
-    const grossSalary = okladByLoad + ruralBonus + smallSchoolBonus + bonusAmount;
+    const grossSalary = okladByLoad + pedCategoryBonus + ruralBonus + smallSchoolBonus + bonusAmount;
 
     // Удержания
     const opv = Math.round(Math.min(grossSalary, 50 * MZP_2026) * 0.10);
@@ -115,8 +144,12 @@ export default function TeacherSalaryCalculator() {
 
     return {
       coeff,
+      tier,
+      expIndex,
+      pedRate,
       baseOklad,
       okladByLoad,
+      pedCategoryBonus,
       ruralBonus,
       smallSchoolBonus,
       bonusAmount,
@@ -127,7 +160,7 @@ export default function TeacherSalaryCalculator() {
       totalDeductions,
       netSalary,
     };
-  }, [category, experience, hoursPerWeek, isRural, isSmallSchool, bonuses]);
+  }, [qualCategory, pedCategory, experience, hoursPerWeek, isRural, isSmallSchool, bonuses]);
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
@@ -149,10 +182,12 @@ export default function TeacherSalaryCalculator() {
         {
           title: t('teacher-salary.parameters'),
           data: [
-            { label: t('teacher-salary.category'), value: t(`teacher-salary.categories.${category}`) },
+            { label: t('teacher-salary.qualCategory'), value: t(`teacher-salary.qualCategories.${qualCategory}`) },
+            { label: t('teacher-salary.pedCategory'), value: t(`teacher-salary.categories.${pedCategory}`) },
             { label: t('teacher-salary.experience'), value: `${experience} ${t('teacher-salary.years')}` },
             { label: t('teacher-salary.hoursPerWeek'), value: `${hoursPerWeek} ${t('teacher-salary.hours')}` },
             { label: t('teacher-salary.coefficient'), value: String(results.coeff) },
+            { label: t('teacher-salary.correctionFactor'), value: '2,0' },
           ],
         },
         {
@@ -160,6 +195,7 @@ export default function TeacherSalaryCalculator() {
           data: [
             { label: t('teacher-salary.baseOklad'), value: formatCurrency(results.baseOklad) },
             { label: t('teacher-salary.okladByLoad'), value: formatCurrency(results.okladByLoad) },
+            { label: t('teacher-salary.pedCategoryBonus'), value: formatCurrency(results.pedCategoryBonus) },
             { label: t('teacher-salary.grossSalary'), value: formatCurrency(results.grossSalary) },
             { label: t('teacher-salary.totalDeductions'), value: formatCurrency(results.totalDeductions) },
             { label: t('teacher-salary.netSalary'), value: formatCurrency(results.netSalary) },
@@ -201,27 +237,55 @@ export default function TeacherSalaryCalculator() {
           </h2>
 
           <div className="space-y-6">
-            {/* Category */}
+            {/* Qualification category → tier of the pay grid */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 <Award className="w-4 h-4 inline mr-1" />
-                {t('teacher-salary.category')}
+                {t('teacher-salary.qualCategory')}
               </label>
               <div className="space-y-2">
-                {CATEGORIES.map((cat) => (
+                {QUAL_CATEGORIES.map((cat) => (
                   <button
                     key={cat}
-                    onClick={() => setCategory(cat)}
+                    onClick={() => setQualCategory(cat)}
                     className={`w-full text-left px-4 py-2.5 rounded-lg border-2 text-sm transition-all ${
-                      category === cat
+                      qualCategory === cat
+                        ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
+                        : 'border-gray-100 hover:border-gray-200 text-gray-600'
+                    }`}
+                  >
+                    {t(`teacher-salary.qualCategories.${cat}`)}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">{t('teacher-salary.qualCategoryHint')}</p>
+            </div>
+
+            {/* Pedagogical category → surcharge on top of the salary */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                <Award className="w-4 h-4 inline mr-1" />
+                {t('teacher-salary.pedCategory')}
+              </label>
+              <div className="space-y-2">
+                {PED_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setPedCategory(cat)}
+                    className={`w-full text-left px-4 py-2.5 rounded-lg border-2 text-sm transition-all ${
+                      pedCategory === cat
                         ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
                         : 'border-gray-100 hover:border-gray-200 text-gray-600'
                     }`}
                   >
                     {t(`teacher-salary.categories.${cat}`)}
+                    {PED_CATEGORY_RATES[cat] > 0 && (
+                      <span className="text-xs opacity-70"> +{Math.round(PED_CATEGORY_RATES[cat] * 100)}%</span>
+                    )}
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-gray-500 mt-2">{t('teacher-salary.pedCategoryHint')}</p>
             </div>
 
             {/* Experience */}
@@ -324,12 +388,19 @@ export default function TeacherSalaryCalculator() {
             {/* Coefficient */}
             <div className="bg-blue-50 rounded-lg p-4 flex justify-between items-center">
               <div>
-                <div className="text-sm text-blue-600">{t('teacher-salary.coefficient')}</div>
+                <div className="text-sm text-blue-600">
+                  {t('teacher-salary.coefficient')} · {t('teacher-salary.tier')} {results.tier}
+                </div>
                 <div className="text-xs text-blue-500">
-                  {t(`teacher-salary.categories.${category}`)}, {experience} {t('teacher-salary.years')}
+                  {t(`teacher-salary.qualCategories.${qualCategory}`)}, {experience} {t('teacher-salary.years')}
                 </div>
               </div>
               <span className="text-2xl font-bold text-blue-700">{results.coeff}</span>
+            </div>
+
+            {/* Formula reminder */}
+            <div className="text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
+              {t('teacher-salary.formula')}
             </div>
 
             {/* Salary breakdown */}
@@ -342,6 +413,14 @@ export default function TeacherSalaryCalculator() {
                 <span className="text-gray-600">{t('teacher-salary.okladByLoad')}</span>
                 <span className="font-medium">{formatCurrency(results.okladByLoad)}</span>
               </div>
+              {results.pedCategoryBonus > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">
+                    {t('teacher-salary.pedCategoryBonus')} (+{Math.round(results.pedRate * 100)}%)
+                  </span>
+                  <span className="font-medium text-green-600">+{formatCurrency(results.pedCategoryBonus)}</span>
+                </div>
+              )}
               {results.ruralBonus > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">{t('teacher-salary.ruralBonus')} (+25%)</span>
@@ -416,23 +495,23 @@ export default function TeacherSalaryCalculator() {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left py-2 px-1 text-gray-600">{t('teacher-salary.category')}</th>
+                <th className="text-left py-2 px-1 text-gray-600">{t('teacher-salary.qualCategory')}</th>
                 {EXPERIENCE_RANGES.map((r, i) => (
                   <th key={i} className="text-center py-2 px-1 text-gray-600">
-                    {r.max === 99 ? `${r.min}+` : `${r.min}-${r.max}`}
+                    {Number.isFinite(r.max) ? `${r.min}-${r.max}` : `${r.min}+`}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {CATEGORIES.map((cat) => (
-                <tr key={cat} className={`border-b border-gray-50 ${category === cat ? 'bg-blue-50' : ''}`}>
-                  <td className="py-2 px-1 font-medium">{t(`teacher-salary.categories.${cat}`)}</td>
+              {QUAL_CATEGORIES.map((cat) => (
+                <tr key={cat} className={`border-b border-gray-50 ${qualCategory === cat ? 'bg-blue-50' : ''}`}>
+                  <td className="py-2 px-1 font-medium">{t(`teacher-salary.qualCategories.${cat}`)}</td>
                   {COEFFICIENTS[cat].map((c, i) => (
                     <td
                       key={i}
                       className={`text-center py-2 px-1 ${
-                        category === cat && getExperienceIndex(parseFloat(experience) || 0) === i
+                        qualCategory === cat && results.expIndex === i
                           ? 'bg-blue-200 font-bold rounded'
                           : ''
                       }`}

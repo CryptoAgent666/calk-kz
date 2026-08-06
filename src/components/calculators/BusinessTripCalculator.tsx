@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plane, MapPin, Info } from 'lucide-react';
+import InputField from '../InputField';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -17,13 +18,36 @@ type DomesticCity = 'capital' | 'regional' | 'other';
 type ForeignRegion = 'cis' | 'china' | 'eu' | 'uae';
 
 const MRP_2026 = 4325;
-const DOMESTIC_DAILY_MRP: Record<DomesticCity, number> = { capital: 6, regional: 5, other: 4 };
+
+/**
+ * Суточные по РК за счёт БЮДЖЕТНЫХ средств — плоские 2 МРП, без деления по
+ * городам (ПП РК от 11.05.2018 № 256, п. 3 пп. 1).
+ *
+ * Прежние 6/5/4 МРП были ошибкой: градация 7/6/4/2 МРП в том же пункте
+ * относится к НАЙМУ ЖИЛЬЯ (пп. 2), а не к суточным.
+ *
+ * Для частных компаний размер суточных НЕ нормируется (НК ст. 260 пп. 3) —
+ * это решение работодателя; ограничен лишь необлагаемый предел ИПН
+ * (НК ст. 366 пп. 2): 6 МРП/сутки по РК и 8 МРП/сутки за рубежом.
+ */
+const BUDGET_DOMESTIC_PERDIEM_MRP = 2;
+
+/** Потолок возмещения найма жилья за счёт бюджета, МРП/сутки (ПП № 256, п. 3 пп. 2). */
+const BUDGET_HOUSING_CAP_MRP: Record<DomesticCity, number> = { capital: 7, regional: 6, other: 4 };
+
+/** Необлагаемый ИПН предел суточных, МРП/сутки (НК ст. 366 пп. 2). */
+const PERDIEM_TAX_FREE_MRP = { domestic: 6, foreign: 8 };
 const FOREIGN_DAILY_USD: Record<ForeignRegion, number> = { cis: 75, china: 80, eu: 120, uae: 150 };
 
 export default function BusinessTripCalculator() {
   const { t } = useTranslation('calculators');
   const [tripType, setTripType] = useState<TripType>('domestic');
   const [domesticCity, setDomesticCity] = useState<DomesticCity>('regional');
+  // Бюджетная организация или частная компания: у них разные правила суточных.
+  const [budgetFunded, setBudgetFunded] = useState<boolean>(false);
+  // Суточные частной компании задаёт работодатель — по умолчанию берём
+  // необлагаемый предел 6 МРП, чтобы подсказка про ИПН была наглядной.
+  const [customPerDiemMrp, setCustomPerDiemMrp] = useState<string>('6');
   const [foreignRegion, setForeignRegion] = useState<ForeignRegion>('cis');
   const [days, setDays] = useState<string>('5');
   const [usdRate, setUsdRate] = useState<string>('470');
@@ -37,7 +61,9 @@ export default function BusinessTripCalculator() {
     let dailyPerDay = 0;
 
     if (tripType === 'domestic') {
-      dailyPerDay = DOMESTIC_DAILY_MRP[domesticCity] * MRP_2026;
+      dailyPerDay = budgetFunded
+        ? BUDGET_DOMESTIC_PERDIEM_MRP * MRP_2026
+        : (parseFloat(customPerDiemMrp) || 0) * MRP_2026;
     } else {
       dailyPerDay = FOREIGN_DAILY_USD[foreignRegion] * rate;
     }
@@ -52,11 +78,24 @@ export default function BusinessTripCalculator() {
     // Налогообложение сверхнормативных сумм (НК РК 2026, ст. 366): не облагаются ИПН суточные
     // в пределах 6 МРП/сутки по РК и 8 МРП/сутки за рубежом. Превышение суточных — доход работника.
     // Проживание и проезд (ст. 260) возмещаются по факту и НЕ ограничены лимитом в МРП.
-    const dailyTaxFreeLimit = (tripType === 'domestic' ? 6 : 8) * MRP_2026; // per day
+    const dailyTaxFreeLimit = (tripType === 'domestic'
+      ? PERDIEM_TAX_FREE_MRP.domestic
+      : PERDIEM_TAX_FREE_MRP.foreign) * MRP_2026; // per day
     const overLimit = Math.max(0, dailyPerDay - dailyTaxFreeLimit) * n;
     const taxOnOverLimit = overLimit * 0.10;
 
+    // Бюджетникам наём жилья возмещается в пределах потолка по типу населённого
+    // пункта; разницу сотрудник платит сам.
+    const housingCapPerDay = budgetFunded && tripType === 'domestic'
+      ? BUDGET_HOUSING_CAP_MRP[domesticCity] * MRP_2026
+      : null;
+    const housingOverCap = housingCapPerDay === null
+      ? 0
+      : Math.max(0, (parseFloat(accommodation) || 0) - housingCapPerDay) * n;
+
     return {
+      housingCapPerDay: housingCapPerDay === null ? null : Math.round(housingCapPerDay),
+      housingOverCap: Math.round(housingOverCap),
       dailyPerDay: Math.round(dailyPerDay),
       dailyTotal: Math.round(dailyTotal),
       accTotal: Math.round(accTotal),
@@ -67,7 +106,8 @@ export default function BusinessTripCalculator() {
       overLimit: Math.round(overLimit),
       taxOnOverLimit: Math.round(taxOnOverLimit),
     };
-  }, [tripType, domesticCity, foreignRegion, days, usdRate, accommodation, transport, avgDaySalary]);
+  }, [tripType, domesticCity, foreignRegion, days, usdRate, accommodation, transport, avgDaySalary,
+    budgetFunded, customPerDiemMrp]);
 
   const formatNumber = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 
@@ -103,14 +143,51 @@ export default function BusinessTripCalculator() {
           </div>
 
           {tripType === 'domestic' ? (
-            <div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.fundingSource')}</label>
+                <div className="flex gap-2">
+                  <button onClick={() => setBudgetFunded(true)}
+                    className={`flex-1 p-3 rounded-lg border text-sm ${budgetFunded ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>
+                    {t('business-trip.budgetFunded')}
+                  </button>
+                  <button onClick={() => setBudgetFunded(false)}
+                    className={`flex-1 p-3 rounded-lg border text-sm ${!budgetFunded ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>
+                    {t('business-trip.privateCompany')}
+                  </button>
+                </div>
+                <p className="mt-2 text-xs text-gray-500">
+                  {budgetFunded
+                    ? t('business-trip.budgetPerDiemHint', {
+                        mrp: BUDGET_DOMESTIC_PERDIEM_MRP,
+                        sum: formatNumber(BUDGET_DOMESTIC_PERDIEM_MRP * MRP_2026),
+                      })
+                    : t('business-trip.privatePerDiemHint', { mrp: PERDIEM_TAX_FREE_MRP.domestic })}
+                </p>
+              </div>
+
+              {!budgetFunded && (
+                <InputField
+                  label={t('business-trip.perDiemMrp')}
+                  value={customPerDiemMrp}
+                  onChange={setCustomPerDiemMrp}
+                  type="number"
+                  suffix={t('business-trip.mrpPerDay')}
+                />
+              )}
+
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.cityCategory')}</label>
               <div className="space-y-2">
                 {(['capital', 'regional', 'other'] as DomesticCity[]).map(c => (
                   <button key={c} onClick={() => setDomesticCity(c)}
                     className={`w-full p-3 rounded-lg border text-left ${domesticCity === c ? 'bg-indigo-50 border-indigo-500' : 'bg-white border-gray-300'}`}>
                     <div className="text-sm font-medium">{t(`business-trip.city.${c}`)}</div>
-                    <div className="text-xs text-gray-500">{DOMESTIC_DAILY_MRP[c]} МРП = {formatNumber(DOMESTIC_DAILY_MRP[c] * MRP_2026)}/сут</div>
+                    <div className="text-xs text-gray-500">
+                      {t('business-trip.housingCapHint', {
+                        mrp: BUDGET_HOUSING_CAP_MRP[c],
+                        sum: formatNumber(BUDGET_HOUSING_CAP_MRP[c] * MRP_2026),
+                      })}
+                    </div>
                   </button>
                 ))}
               </div>

@@ -47,11 +47,14 @@ export default function PropertyDivisionCalculator() {
     const personalAssets = (parseFloat(apartmentPreMarriage) || 0) + (parseFloat(depositsPreMarriage) || 0);
     const netAssets = assetsMarriage - debts;
 
-    // Доли по умолчанию 50/50
+    // По ЗАКОНУ доли равные — ст. 38 п. 1 КоБС РК.
     let husbandShare = 0.5;
     let wifeShare = 0.5;
 
-    // Если дети с одной стороной — может отступить в пользу родителя (55/45)
+    // 55/45 — НЕ норма права, а иллюстративный сценарий. Ст. 38 п. 2 КоБС даёт
+    // суду право отступить от равенства в интересах детей, но РАЗМЕР отступления
+    // в законе не указан — конкретную долю определяет суд. Показываем как
+    // типичный пример, а не как «положено по закону».
     if (hasChildren && childrenWith === 'wife') {
       wifeShare = 0.55;
       husbandShare = 0.45;

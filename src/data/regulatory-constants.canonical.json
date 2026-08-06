@@ -522,18 +522,20 @@
       "key": "marital_share_with_children",
       "value": 55,
       "unit": "percent",
-      "law": "Кодекс о браке (супружестве) и семье РК — отступление от равенства долей в интересах детей",
+      "law": "ст. 38 п. 2 КоБС РК даёт суду право отступить от равенства долей БЕЗ указания размера",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
         "marital_share_with_children"
       ],
-      "status": "current",
-      "conflict": "Raw captured as factor 0.55 (55/45 when children stay with one parent); canonicalized as 55%. Distinct real-world constant from the equal 50% share — NOT merged. Decimal-vs-percent encoding only.",
+      "status": "assumption",
+      "conflict": "55% — не норма права, а иллюстративный сценарий отступления от равенства. В законе числа нет.",
       "used_by": [
         "PropertyDivisionCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "verify_note": "Tier-2 2026-08: проверено исследователем и скептиком — «55» в акте отсутствует. В UI разведено: «по закону 50/50 (ст. 38 п. 1)» vs «55/45 — иллюстративный сценарий».",
+      "reverified": "2026-08-06"
     },
     {
       "key": "unemployment_income_cap_mzp",
@@ -658,8 +660,8 @@
       "audit_status": "clean",
       "source_url": "https://zhts.kgd.gov.kz/ru/news/vazhnye-usloviya-dlya-vnesudebnogo-bankrotstva-put-k-osvobozhdeniyu-ot-dolgov-21-157788",
       "official_value": "1600",
-      "verify_note": "Внесудебное банкротство: сумма обязательств не более 1600-кратного МРП на дату подачи заявления. Закон РК О восстановлении платёжеспособности и банкротстве граждан. Подтверждено.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08: подтверждено 1600 МРП (ст. 5 п. 1 Закона № 178-VII). Доп. условия: пп. 3) досудебное урегулирование ≤12 мес. (не применяется к договорам до 01.01.2025), п. 2 (получатели АСП), п. 3 (просрочка >5 лет).",
+      "reverified": "2026-08-06"
     },
     {
       "key": "customs_duty_rate_vehicle_base",
@@ -1200,20 +1202,22 @@
     },
     {
       "key": "installment_loan_max_amount_kzt",
-      "value": 3000000,
+      "value": 4757500,
       "unit": "KZT",
-      "law": "Закон РК О микрофинансовой деятельности (лимит регулярного МФО-займа)",
+      "law": "п. 73 пп. 1) Требований к осуществлению микрофинансовой деятельности (пост. Правления АРРФР от 15.05.2026 № 92, рег. МЮ № 38746) — 1100 МРП",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [
         "installment_loan_max_amount"
       ],
       "status": "current",
-      "conflict": "Regulatory/product ceiling on a standard MFO installment loan (3,000,000 ₸). Flat KZT cap, not МРП-indexed.",
+      "conflict": "Лимит задан в МРП (1100), а не в тенге: при МРП 4325 = 4 757 500 ₸. Прежние 3 000 000 ₸ нормативной опоры не имели. В коде хранится как INSTALLMENT_MAX_MRP × MRP_2026.",
       "used_by": [
         "MicroloanCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "Tier-2 2026-08: в силе с 21.07.2026; п. 73 не входит в нормы, отсрочённые до 01.10.2026. Прежний акт (пост. АРРФР № 51 от 28.08.2025) отменён.",
+      "reverified": "2026-08-06"
     },
     {
       "key": "limitation_admin_fine_years",
@@ -1443,20 +1447,22 @@
     },
     {
       "key": "pdl_overpayment_cap_factor",
-      "value": 1,
+      "value": 0.5,
       "unit": "factor",
-      "law": "ст. 4 Закона РК О микрофинансовой деятельности (предел переплаты по PDL = сумме займа)",
+      "law": "прил. 5 п. 3 пп. 2) к Требованиям (пост. Правления АРРФР от 15.05.2026 № 92); ранее п. 4-1 пп. 2) прил. 2 к пост. НБ РК № 232",
       "year": "2026",
       "change_frequency": "rare",
       "status": "current",
       "aliases": [
         "pdl_overpayment_cap_factor"
       ],
-      "conflict": "",
+      "conflict": "Ограничивает СОВОКУПНОСТЬ всех платежей сверх основного долга (вознаграждение + комиссии + неустойка), а не только вознаграждение. Область: договор с физлицом вне предпринимательства, срок ≤45 к.д. И сумма ≤45 МРП.",
       "used_by": [
         "MicroloanCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "Tier-2 2026-08: действует непрерывно с ~09.10.2024, дословно перенесено в новый акт. Кэпа переплаты в самом Законе о МФД нет — прежняя ссылка на ст. 4 была ошибочной.",
+      "reverified": "2026-08-06"
     },
     {
       "key": "notary_fee_property_division",
@@ -1677,15 +1683,17 @@
       "law": "ст. 297 ГК РК (суд вправе уменьшить несоразмерную неустойку)",
       "year": "2026",
       "change_frequency": "rare",
-      "status": "current",
+      "status": "not_a_law_value",
       "aliases": [
         "penalty_effective_rate_warning_threshold"
       ],
-      "conflict": "Soft UI warning threshold (effective penalty rate >50% triggers a 'court may reduce' notice), not a statutory cap. ГК РК ст. 297 gives courts discretion without a fixed percentage.",
+      "conflict": "Внутренний UI-порог предупреждения, не норма. Ст. 297 ГК РК — оценочная норма, и база сравнения в ней иная (убытки кредитора, а не сумма долга).",
       "used_by": [
         "PenaltyCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "Tier-2 2026-08: для сценария банковского займа статутный лимит другой — ст. 35 п. 2 ЗРК «О банках»: 0,5%/день (до 90 дн.), далее 0,03%/день, но ≤10% от суммы займа за год.",
+      "reverified": "2026-08-06"
     },
     {
       "key": "traffic_fine_child_seat",
@@ -2455,7 +2463,7 @@
       "key": "overtime_multiplier_night_overtime",
       "value": 1.5,
       "unit": "factor",
-      "law": "Трудовой кодекс РК ст.107–108 (ночные/сверхурочные — не менее ×1.5)",
+      "law": "ст. 108 ТК РК (сверхурочные) и ст. 110 ТК РК (ночные)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -2465,7 +2473,8 @@
       "used_by": [
         "OvertimeCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-06"
     },
     {
       "key": "overtime_multiplier_weekend_holiday",
@@ -2606,41 +2615,43 @@
     },
     {
       "key": "perdiem_domestic_regional_mrp",
-      "value": 5,
+      "value": 2,
       "unit": "MRP",
-      "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — областной центр)",
+      "law": "ПП РК от 11.05.2018 № 256, п. 3 пп. 1) — суточные по РК за счёт бюджетных средств, 2 МРП без деления по городам",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
         "perdiem_domestic_regional_mrp"
       ],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "BusinessTripCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
-      "verify_note": "Не облагаемый лимит суточных по НК РК = ПЛОСКИЙ 6 МРП/день, без деления столица/обл.центр/прочее. Значение 5 МРП для 'обл.центра' соответствует не налоговому лимиту, а старой шкале бюджетных командировок (Пост. №256). Если калькулятор моделирует tax-free лимит — корректно 6, а не 5. Требует уточнения контекста.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08: подтверждено дословной цитатой п. 3 пп. 1) — «суточные в размере двух месячных расчетных показателей». Норма в 2025–2026 не менялась.",
+      "reverified": "2026-08-06",
+      "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2)."
     },
     {
       "key": "perdiem_domestic_other_mrp",
-      "value": 4,
+      "value": 2,
       "unit": "MRP",
-      "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — прочие города)",
+      "law": "ПП РК от 11.05.2018 № 256, п. 3 пп. 1) — суточные по РК за счёт бюджетных средств, 2 МРП без деления по городам",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
         "perdiem_domestic_other_mrp"
       ],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "BusinessTripCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
-      "verify_note": "Аналогично perdiem_domestic_regional: налоговый лимит НК = плоский 6 МРП, дифференциации 'прочие города'=4 МРП в НК нет. 4 МРП — из шкалы бюджетных командировок (Пост. №256), не tax-free лимит. Уточнить, что моделирует поле.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08: подтверждено дословной цитатой п. 3 пп. 1) — «суточные в размере двух месячных расчетных показателей». Норма в 2025–2026 не менялась.",
+      "reverified": "2026-08-06",
+      "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2)."
     },
     {
       "key": "teacher_bdo_base_salary_2026",
@@ -2665,9 +2676,9 @@
     },
     {
       "key": "teacher_coefficient_grid",
-      "value": "none 4.40–5.34 / moderator 4.84–5.88 / expert 5.28–6.41 / researcher 5.72–6.95 / master 6.16–7.49 (категория × 11 стажевых полос)",
+      "value": "ступень 1 (высшая) 4.67–5.41 / ступень 2 (первая) 4.39–5.20 / ступень 3 (вторая) 4.36–5.16 / ступень 4 (без категории) 4.10–4.73 (звено В2, ступень × 11 стажевых полос: 0-1,1-2,2-3,3-5,5-7,7-10,10-13,13-16,16-20,20-25,25+)",
       "unit": "table",
-      "law": "Приказ МОН РК — коэффициенты (категория × стаж) к БДО педагога",
+      "law": "ПП РК № 1193 от 31.12.2015, прил. 1 и прил. 2 (в ред. ПП РК от 21.05.2019 № 302 с изм. ПП РК от 26.12.2023 № 1184, с 01.01.2024) — коэффициенты к БДО, блок В, звено В2, ступени 1–4",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [
@@ -2675,15 +2686,57 @@
         "teacher_salary_coefficients_table"
       ],
       "status": "current",
-      "conflict": "Two captures of the SAME category×experience coefficient grid (TeacherSalaryCalculator COEFFICIENTS map), written with slightly different text formatting but identical ranges (none 4.40..5.34 / moderator 4.84..5.88 / expert 5.28..6.41 / researcher 5.72..6.95 / master 6.16..7.49, 11 experience bands). One real-world table.",
       "used_by": [
         "TeacherSalaryCalculator"
       ],
-      "audit_status": "representation_variants",
-      "source_url": "https://calk.kz/calculator/teacher-salary/",
-      "official_value": "none 4.40–5.34 / moderator 4.84–5.88 / expert 5.28–6.41 / researcher 5.72–6.95 / master 6.16–7.49",
-      "verify_note": "Сетка коэффициентов (5 категорий × 11 стажевых полос), диапазон 4.40–7.49. Совпадает со значениями калькулятора calk.kz и порядком надбавок по категориям (мастер +50%, исследователь +40%, эксперт +35%, модератор +30%). Подтверждено.",
-      "reverified": "2026-06-23"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
+      "official_value": "ступень 1: 4.67 4.74 4.81 4.88 4.95 5.01 5.08 5.16 5.24 5.32 5.41 / ступень 2: 4.39 4.50 4.57 4.65 4.72 4.79 4.86 4.95 5.03 5.12 5.20 / ступень 3: 4.36 4.44 4.51 4.59 4.66 4.74 4.81 4.90 4.99 5.08 5.16 / ступень 4: 4.10 4.14 4.19 4.23 4.27 4.33 4.38 4.49 4.59 4.67 4.73",
+      "verify_note": "Исправлено 06.08.2026 по первоисточнику ПП № 1193. Прежняя запись (none 4.40–5.34 / moderator 4.84–5.88 / expert 5.28–6.41 / researcher 5.72–6.95 / master 6.16–7.49) была неверной: строки сетки — не педагогические категории, а ступени звена В2, определяемые КВАЛИФИКАЦИОННОЙ категорией (высшая/первая/вторая/без категории); стажевые полосы 10-13/13-16/16-20/20-25 вместо 10-14/14-18/18-22/22-25. Педагогические категории (модератор +30%, эксперт +35%, исследователь +40%, мастер +50%) — это доплата к должностному окладу (прил. 4 стр. 7–8, п. 3 пп. 2), см. отдельные ключи. Дополнительно: к БДО × коэффициент применяется поправочный коэффициент педагогов 2,0 (с 01.01.2023) — см. teacher_correction_factor.",
+      "reverified": "2026-08-06"
+    },
+    {
+      "key": "teacher_correction_factor",
+      "value": 2.0,
+      "unit": "multiplier",
+      "law": "Поправочный коэффициент для педагогов — 2,0, применяется к должностному окладу с 01.01.2023 (ПП РК № 1193 от 31.12.2015)",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [
+        "teacher_correction_factor",
+        "teacher_popravochny_koefficient"
+      ],
+      "status": "current",
+      "used_by": [
+        "TeacherSalaryCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
+      "official_value": "2,0",
+      "verify_note": "Добавлено 06.08.2026. Должностной оклад педагога = БДО × коэффициент(ступень, стажевая полоса) × 2,0 × доля нагрузки. Без этого множителя расчёт занижает зарплату вдвое.",
+      "confidence": "high",
+      "reverified": "2026-08-06"
+    },
+    {
+      "key": "teacher_ped_category_bonus_rates",
+      "value": "модератор 30% / эксперт 35% / исследователь 40% / мастер 50% (доплата к должностному окладу, с учётом фактической нагрузки)",
+      "unit": "percent_table",
+      "law": "ПП РК № 1193 от 31.12.2015, прил. 4 стр. 7–8, п. 3 пп. 2 — доплата за педагогическую категорию",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [
+        "teacher_ped_category_bonus_rates"
+      ],
+      "status": "current",
+      "used_by": [
+        "TeacherSalaryCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
+      "official_value": "модератор +30%, эксперт +35%, исследователь +40%, мастер +50%",
+      "verify_note": "Добавлено 06.08.2026. Педагогическая категория — доплата, а не строка сетки коэффициентов; не путать с квалификационной категорией (она задаёт ступень 1–4).",
+      "confidence": "high",
+      "reverified": "2026-08-06"
     },
     {
       "key": "teacher_rural_bonus_rate",
@@ -2934,14 +2987,13 @@
       "aliases": [
         "land_tax_bonity_quality_coeff_table"
       ],
-      "status": "uncertain",
-      "used_by": [
-        "FarmLandTaxCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "audit_status": "clean",
       "source_url": "https://prg.kz/document/?doc_id=35328916",
-      "verify_note": "Коэффициенты по баллу бонитета почвы не подтверждены постранично из официального текста НК РК. Не угадываю конкретные значения.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08: нормы не существует. FarmLandTaxCalculator перестроен на прямые ставки ст. 576 НК (₸/га по баллу бонитета и почвенно-климатической зоне) — коэффициент удалён из расчёта.",
+      "reverified": "2026-08-06",
+      "conflict": "Коэффициентов по баллу бонитета в НК РК НЕТ: ст. 576 задаёт ставки напрямую в ₸/га (101 строка × 2 почвенно-климатические зоны). Требуется переработка модели, а не подстановка чисел."
     },
     {
       "key": "land_tax_farm_type_coeff",
@@ -2953,14 +3005,13 @@
       "aliases": [
         "land_tax_farm_type_coeff_table"
       ],
-      "status": "uncertain",
-      "used_by": [
-        "FarmLandTaxCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "audit_status": "clean",
       "source_url": "https://prg.kz/document/?doc_id=35328916",
-      "verify_note": "Коэффициент по типу хозяйства (крестьянское/фермерское/индивидуальное) не подтверждён официальным источником постранично. Требует сверки с НК РК.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08: нормы не существует. FarmLandTaxCalculator перестроен на прямые ставки ст. 576 НК (₸/га по баллу бонитета и почвенно-климатической зоне) — коэффициент удалён из расчёта.",
+      "reverified": "2026-08-06",
+      "conflict": "Нормы не существует ни в НК-2026, ни в НК-2017. Льгота устроена иначе: КФХ на СНР не плательщик земельного налога (ст. 571 п. 3 пп. 1), платит ИПН 0,5% от дохода (ст. 730)."
     },
     {
       "key": "land_tax_land_type_coeff",
@@ -2972,20 +3023,19 @@
       "aliases": [
         "land_tax_land_type_coeff_table"
       ],
-      "status": "uncertain",
-      "used_by": [
-        "FarmLandTaxCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "audit_status": "clean",
       "source_url": "https://prg.kz/document/?doc_id=35328916",
-      "verify_note": "Коэффициент по типу земли не подтверждён постранично из официального текста. Требует сверки с НК РК.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08: нормы не существует. FarmLandTaxCalculator перестроен на прямые ставки ст. 576 НК (₸/га по баллу бонитета и почвенно-климатической зоне) — коэффициент удалён из расчёта.",
+      "reverified": "2026-08-06",
+      "conflict": "Терминов «орошаемые/богарные/пастбища/сенокосы» в разделе 11 НК нет. Дифференциация только по баллу бонитета и зоне. В коде тип угодий учитывается ДВАЖДЫ (baseRates + coefficient)."
     },
     {
       "key": "land_tax_preference_discount_pct",
       "value": 50,
       "unit": "percent",
-      "law": "НК РК (льготы по земельному налогу)",
+      "law": "ст. 582 п. 1 НК РК (местные представительные органы вправе понижать/повышать ставки до 50%)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -2998,8 +3048,8 @@
       "audit_status": "clean",
       "source_url": "https://prg.kz/document/?doc_id=35328916",
       "official_value": "50",
-      "verify_note": "Местные представительные органы (маслихаты) вправе понижать или повышать базовые ставки земельного налога не более чем на 50% (ст. 510/582 редакции НК РК, действующей с 2026). Подтверждено.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08: ссылка на ст. 510 НК-2017 (утратил силу) убрана. ВАЖНО: ±50% применимы к ставкам ст. 577/578, а used_by — FarmLandTaxCalculator (с/х земли, ст. 576), т.е. чекбокс «льгота −50%» работает вне сферы нормы.",
+      "reverified": "2026-08-06"
     },
     {
       "key": "property_tax_progressive_brackets",
@@ -7571,7 +7621,7 @@
       "key": "dividend_ipn_rate_low",
       "value": 5,
       "unit": "percent",
-      "law": "НК РК (№ 214-VIII от 18.07.2025), ст. 363 п.1 пп.3",
+      "law": "ст. 363 пп. 3) НК РК",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -7583,7 +7633,7 @@
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "official_value": "5",
       "verify_note": "Дивиденды резидентам: 5% с суммы до 230 000 МРП за год. Льгота 30 000 МРП отменена с 01.01.2026. Сверено по 2+ источникам (pro1c, mybuh) при создании калькулятора.",
-      "reverified": "2026-07-10"
+      "reverified": "2026-08-06"
     },
     {
       "key": "dividend_ipn_rate_high",
@@ -7607,7 +7657,7 @@
       "key": "dividend_ipn_threshold_annual_mrp",
       "value": 230000,
       "unit": "MRP",
-      "law": "НК РК ст. 363; порог за налоговый период — календарный год (ст. 441)",
+      "law": "ст. 363 пп. 3) НК РК, сноска *; ст. 415 п. 1 НК РК",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -7619,7 +7669,7 @@
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "official_value": "230000",
       "verify_note": "994 750 000 ₸ в 2026 (МРП 4 325). Нарастающим итогом по всем дивидендам за год. Переходное: начисленные в 2025 — по старым правилам (10% + льгота 30 000 МРП), разъяснение КГД 02.03.2026.",
-      "reverified": "2026-07-10"
+      "reverified": "2026-08-06"
     },
     {
       "key": "dividend_ipn_rate_nonresident",
@@ -7752,7 +7802,7 @@
       "key": "gph_ipn_deduction_mrp",
       "value": 30,
       "unit": "MRP",
-      "law": "НК РК ст. 403 (базовый вычет)",
+      "law": "ст. 403 НК РК (вычет 30 МРП/мес); ст. 437 НК РК",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -7763,8 +7813,8 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "official_value": "30",
-      "verify_note": "Базовый вычет 30 МРП (129 750 ₸/мес в 2026) применим к ГПХ у одного налогового агента.",
-      "reverified": "2026-07-11"
+      "verify_note": "Tier-2 2026-08: годовой потолок 360 МРП; применяется только у ОДНОГО налогового агента (ст. 437 п. 3).",
+      "reverified": "2026-08-06"
     },
     {
       "key": "ip_self_vosms_fixed_monthly",
@@ -8088,6 +8138,26 @@
       "source_url": "https://krisha.kz/content/articles/2026/2026-ipoteka-na-vtorichku-2026-usloviya-vseh-bankov",
       "verify_note": "ГЭСВ вторички 07.2026: Halyk от 23%, БЦК от 22,9%; диапазон 23–25% при базовой ставке 17%. Дефолт слайдера.",
       "reverified": "2026-07-11"
+    },
+    {
+      "key": "land_tax_farmland_rates_table",
+      "value": "ст. 576 п. 2 (степная/сухостепная): балл 1 → 2,4 ₸/га … балл 100 → 965, свыше 100 → 1013,3; ст. 576 п. 3 (полупустынная/пустынная/предгорно-пустынная): балл 1 → 2,4 … балл 100 → 241,25, свыше 100 → 250,9",
+      "unit": "KZT_per_ha",
+      "law": "ст. 576 п. 2 и п. 3 НК РК (Кодекс РК от 18.07.2025 № 214-VIII ЗРК)",
+      "year": "2026",
+      "change_frequency": "occasional",
+      "aliases": [
+        "land_tax_farmland_rates_table"
+      ],
+      "status": "current",
+      "conflict": "Ставка задана НАПРЯМУЮ в ₸/га; дополнительных коэффициентов (качество почвы, тип угодий, тип хозяйства, региональные ставки) кодекс не предусматривает. Скидка ±50% ст. 582 п. 1 к ст. 576 НЕ применяется.",
+      "used_by": [
+        "FarmLandTaxCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Tier-2 2026-08: выгружены обе таблицы целиком (по 101 строке), сверены с казахской редакцией — расхождений нет; 12 опорных точек совпали. Аномалия в п. 3: балл 91 = 210,9 (прирост 0,05 против ~3 у соседей) — опубликовано именно так, воспроизведено как есть.",
+      "reverified": "2026-08-06"
     }
   ],
   "estimates_excluded": [
@@ -8166,7 +8236,8 @@
         "nds_vat_rate"
       ],
       "note": "audit_status preserves the original representation-audit label per constant. VAT rate=16% confirmed current (point 3); no constant retains a 12% VAT gross-up."
-    }
+    },
+    "last_tier2_review": "2026-08-06"
   },
   "completeness_audit": {
     "date": "2026-06-10",

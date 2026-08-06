@@ -96,6 +96,9 @@ function routeCalculatorId(): string | null {
   return match ? match[1] : null;
 }
 
+// Сигнал app:hydrated для AdSense-лоадера уходит из App.tsx (useEffect после
+// первого commit) — здесь его давать рано: hydrateRoot возвращается ДО конца
+// конкурентной гидратации.
 if (container.hasChildNodes() && !VOLATILE_IDS.has(routeCalculatorId() ?? '')) {
   void primeRouteChunk().then(() => hydrateRoot(container, app));
 } else {

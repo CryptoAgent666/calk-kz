@@ -1,317 +1,126 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Wheat, Calculator, MapPin, TrendingUp, Info, AlertTriangle, Target, Sprout, TreePine, Building, Tractor, FileText, BarChart3 } from 'lucide-react';
-import { FAQSection } from '../ui/FAQSection';
+import { Wheat, Info, AlertTriangle, Sprout, Tractor, Scale } from 'lucide-react';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
-import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { ComparisonBarChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+
+/* ------------------------------------------------------------------------- *
+ * БАЗОВЫЕ СТАВКИ ЗЕМЕЛЬНОГО НАЛОГА НА ЗЕМЛИ СЕЛЬХОЗНАЗНАЧЕНИЯ
+ *
+ * Источник: Налоговый кодекс РК (Кодекс РК от 18.07.2025 № 214-VIII ЗРК),
+ * статья 576 «Базовые налоговые ставки на земли сельскохозяйственного
+ * назначения». https://adilet.zan.kz/rus/docs/K2500000214
+ *
+ * Ставки заданы кодексом НАПРЯМУЮ в тенге за 1 гектар и дифференцируются
+ * ТОЛЬКО по двум признакам: почвенно-климатическая зона и балл бонитета
+ * (ст. 576 п. 1). Никаких коэффициентов качества почвы, типов угодий,
+ * форм хозяйствования или региональных надбавок статья не предусматривает.
+ *
+ * Корректировка ±50 % (ст. 582 п. 1) применяется к ставкам ст. 577 и 578
+ * и на ст. 576 НЕ распространяется.
+ *
+ * Индекс массива = балл бонитета − 1 (т.е. RATES[0] — это балл 1).
+ * ------------------------------------------------------------------------- */
+
+/** Ст. 576 п. 2 — земли степной и сухостепной зон. Баллы 1–100. */
+const RATES_STEPPE: number[] = [
+  2.4, 3.35, 4.35, 5.3, 6.25, 7.25, 8.4, 9.65, 10.8, 12.05,          // балл 1–10
+  14.45, 15.45, 16.4, 17.35, 18.35, 19.3, 20.45, 21.7, 22.85, 24.1,  // балл 11–20
+  26.55, 28.95, 31.35, 33.75, 36.2, 38.6, 41, 43.4, 45.85, 48.25,    // балл 21–30
+  72.35, 77.7, 82.95, 90.4, 93.8, 99.1, 104.4, 110, 115.3, 120.6,    // балл 31–40
+  144.75, 150.05, 155.35, 160.85, 166.15, 171.45, 176.8, 182.4, 187.7, 193,      // балл 41–50
+  217.1, 222.45, 227.75, 233.25, 238.55, 243.85, 249.15, 254.75, 260.05, 265.35, // балл 51–60
+  289.5, 303.15, 316.3, 329.75, 343.05, 356.55, 369.8, 383.3, 396.6, 410.1,      // балл 61–70
+  434.25, 447.75, 460.95, 474.45, 487.8, 501.3, 514.55, 528.05, 541.35, 554.85,  // балл 71–80
+  579, 595.1, 611.05, 627.25, 643.35, 659.3, 675.5, 691.6, 707.55, 723.75,       // балл 81–90
+  747.85, 772, 796.1, 820.25, 844.35, 868.5, 892.6, 916.75, 940.85, 965          // балл 91–100
+];
+/** Ст. 576 п. 2, строка «свыше 100». */
+const RATE_STEPPE_OVER_100 = 1013.3;
+
+/** Ст. 576 п. 3 — земли полупустынной, пустынной и предгорно-пустынной зон. Баллы 1–100. */
+const RATES_DESERT: number[] = [
+  2.4, 2.7, 2.9, 3.1, 3.35, 3.65, 3.85, 4.05, 4.35, 4.8,             // балл 1–10
+  7.25, 9.15, 11.1, 12.75, 14.65, 16.6, 18.55, 20.25, 22.2, 24.1,    // балл 11–20
+  26.55, 28.95, 31.35, 33.75, 36.2, 38.6, 41, 43.4, 45.85, 48.25,    // балл 21–30
+  50.65, 53.05, 55.45, 57.9, 60.3, 62.7, 65.15, 67.55, 69.95, 72.35, // балл 31–40
+  74.8, 77.2, 79.6, 82, 84.45, 86.85, 89.25, 91.65, 94.1, 96.5,      // балл 41–50
+  98.9, 101.3, 103.75, 106.15, 108.55, 110.95, 113.4, 115.8, 118.2, 120.6,       // балл 51–60
+  123.05, 126.4, 129.1, 132.2, 135.1, 138.2, 141.1, 144.25, 147.45, 150.35,      // балл 61–70
+  153.45, 156.35, 159.4, 162.3, 165.45, 168.4, 171.55, 174.65, 177.55, 180.75,   // балл 71–80
+  183.55, 186.7, 189.6, 192.8, 195.9, 198.8, 201.9, 204.75, 207.95, 210.85,      // балл 81–90
+  // балл 91 в официальном тексте ст. 576 п. 3 — 210,9 (и в рус., и в каз. редакции
+  // на adilet.zan.kz). Прирост к баллу 90 всего 0,05 ₸ против ~3 ₸ у соседних строк,
+  // но ставка воспроизведена ровно так, как она опубликована в кодексе.
+  210.9, 216.95, 220, 223.1, 226, 229.2, 231.9, 235.15, 238.05, 241.25           // балл 91–100
+];
+/** Ст. 576 п. 3, строка «свыше 100». */
+const RATE_DESERT_OVER_100 = 250.9;
+
+type SoilZone = 'steppe' | 'desert';
+
+/**
+ * Ставка земельного налога за 1 га по ст. 576 НК РК.
+ * @param zone почвенно-климатическая зона (п. 2 — степная/сухостепная, п. 3 — пустынная)
+ * @param bonityScore балл бонитета; значения свыше 100 берут отдельную строку таблицы
+ */
+function getRatePerHectare(zone: SoilZone, bonityScore: number): number {
+  const table = zone === 'steppe' ? RATES_STEPPE : RATES_DESERT;
+  const over100 = zone === 'steppe' ? RATE_STEPPE_OVER_100 : RATE_DESERT_OVER_100;
+  if (!Number.isFinite(bonityScore) || bonityScore < 1) return 0;
+  if (bonityScore > 100) return over100;
+  return table[Math.floor(bonityScore) - 1];
+}
+
+/** Баллы, показываемые в справочной выдержке из таблиц ст. 576. */
+const TABLE_PREVIEW_SCORES = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+/** Предельные площади для СНР КФХ, ст. 728 п. 2 НК РК (га по территориальным зонам 1–4). */
+const SNR_AREA_LIMITS = [5000, 3500, 1500, 500];
 
 export default function FarmLandTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
-  const [region, setRegion] = useState<string>('almaty-region');
   const [landArea, setLandArea] = useState<string>('100');
-  const [bonityScoret, setBonityScoret] = useState<string>('50');
-  const [landType, setLandType] = useState<'irrigated' | 'rainfed' | 'pasture' | 'hayfield'>('irrigated');
-  const [farmType, setFarmType] = useState<'peasant' | 'farm' | 'individual'>('peasant');
-  const [hasPreferences, setHasPreferences] = useState<boolean>(false);
+  const [bonityScore, setBonityScore] = useState<string>('40');
+  const [zone, setZone] = useState<SoilZone>('steppe');
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
   // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
-  const EMPTY_RESULTS = {
-    baseRate: 0,
-    qualityCoefficient: 1.0,
-    locationCoefficient: 1.0,
-    preferenceDiscount: 0,
-    taxPerHectare: 0,
-    totalTax: 0,
-    savedTaxes: 0,
-    regionName: '',
-    landTypeName: '',
-    effectiveRate: 0
-  };
-
-  // Константы на 2026 год
-  const MRP_2026 = 4325;
-
-  // Базовые ставки земельного налога по регионам (в МРП за 1 га)
-  const regionalRates = [
-    {
-      id: 'almaty-region',
-      name: t('farm-land-tax.regions.almatyRegion'),
-      baseRates: {
-        irrigated: 0.68,
-        rainfed: 0.45,
-        pasture: 0.15,
-        hayfield: 0.25
-      }
-    },
-    {
-      id: 'zhambyl-region',
-      name: t('farm-land-tax.regions.zhambylRegion'),
-      baseRates: {
-        irrigated: 0.65,
-        rainfed: 0.42,
-        pasture: 0.12,
-        hayfield: 0.22
-      }
-    },
-    {
-      id: 'turkestan-region',
-      name: t('farm-land-tax.regions.turkestanRegion'),
-      baseRates: {
-        irrigated: 0.70,
-        rainfed: 0.48,
-        pasture: 0.18,
-        hayfield: 0.28
-      }
-    },
-    {
-      id: 'kyzylorda-region',
-      name: t('farm-land-tax.regions.kyzylordaRegion'),
-      baseRates: {
-        irrigated: 0.72,
-        rainfed: 0.50,
-        pasture: 0.20,
-        hayfield: 0.30
-      }
-    },
-    {
-      id: 'aktobe-region',
-      name: t('farm-land-tax.regions.aktobeRegion'),
-      baseRates: {
-        irrigated: 0.60,
-        rainfed: 0.38,
-        pasture: 0.10,
-        hayfield: 0.18
-      }
-    },
-    {
-      id: 'west-kazakhstan',
-      name: t('farm-land-tax.regions.westKazakhstan'),
-      baseRates: {
-        irrigated: 0.58,
-        rainfed: 0.35,
-        pasture: 0.08,
-        hayfield: 0.15
-      }
-    },
-    {
-      id: 'north-kazakhstan',
-      name: t('farm-land-tax.regions.northKazakhstan'),
-      baseRates: {
-        irrigated: 0.55,
-        rainfed: 0.40,
-        pasture: 0.12,
-        hayfield: 0.20
-      }
-    },
-    {
-      id: 'kostanay-region',
-      name: t('farm-land-tax.regions.kostanayRegion'),
-      baseRates: {
-        irrigated: 0.52,
-        rainfed: 0.38,
-        pasture: 0.11,
-        hayfield: 0.19
-      }
-    },
-    {
-      id: 'akmola-region',
-      name: t('farm-land-tax.regions.akmolaRegion'),
-      baseRates: {
-        irrigated: 0.50,
-        rainfed: 0.35,
-        pasture: 0.10,
-        hayfield: 0.17
-      }
-    },
-    {
-      id: 'karaganda-region',
-      name: t('farm-land-tax.regions.karagandaRegion'),
-      baseRates: {
-        irrigated: 0.48,
-        rainfed: 0.32,
-        pasture: 0.09,
-        hayfield: 0.16
-      }
-    },
-    {
-      id: 'pavlodar-region',
-      name: t('farm-land-tax.regions.pavlodarRegion'),
-      baseRates: {
-        irrigated: 0.45,
-        rainfed: 0.30,
-        pasture: 0.08,
-        hayfield: 0.14
-      }
-    },
-    {
-      id: 'east-kazakhstan',
-      name: t('farm-land-tax.regions.eastKazakhstan'),
-      baseRates: {
-        irrigated: 0.42,
-        rainfed: 0.28,
-        pasture: 0.07,
-        hayfield: 0.13
-      }
-    },
-    {
-      id: 'atyrau-region',
-      name: t('farm-land-tax.regions.atyrauRegion'),
-      baseRates: {
-        irrigated: 0.75,
-        rainfed: 0.55,
-        pasture: 0.25,
-        hayfield: 0.35
-      }
-    },
-    {
-      id: 'mangystau-region',
-      name: t('farm-land-tax.regions.mangystauRegion'),
-      baseRates: {
-        irrigated: 0.80,
-        rainfed: 0.60,
-        pasture: 0.30,
-        hayfield: 0.40
-      }
-    }
-  ];
-
-  // Коэффициенты качества почвы (по баллу бонитета)
-  const getQualityCoefficient = (bonityScore: number): number => {
-    if (bonityScore <= 20) return 0.5;
-    if (bonityScore <= 40) return 0.7;
-    if (bonityScore <= 60) return 1.0;
-    if (bonityScore <= 80) return 1.3;
-    if (bonityScore <= 100) return 1.6;
-    return 1.0; // По умолчанию
-  };
-
-  // Коэффициенты по типу хозяйства
-  const farmTypeCoefficients = {
-    peasant: { coefficient: 0.5, name: t('farm-land-tax.farmTypes.peasant.name'), description: t('farm-land-tax.farmTypes.peasant.description') },
-    farm: { coefficient: 0.7, name: t('farm-land-tax.farmTypes.farm.name'), description: t('farm-land-tax.farmTypes.farm.description') },
-    individual: { coefficient: 1.0, name: t('farm-land-tax.farmTypes.individual.name'), description: t('farm-land-tax.farmTypes.individual.description') }
-  };
-
-  // Типы земель
-  const landTypes = [
-    {
-      id: 'irrigated',
-      name: t('farm-land-tax.landTypes.irrigated.name'),
-      description: t('farm-land-tax.landTypes.irrigated.description'),
-      icon: '💧',
-      coefficient: 1.0
-    },
-    {
-      id: 'rainfed',
-      name: t('farm-land-tax.landTypes.rainfed.name'),
-      description: t('farm-land-tax.landTypes.rainfed.description'),
-      icon: '🌧️',
-      coefficient: 0.8
-    },
-    {
-      id: 'pasture',
-      name: t('farm-land-tax.landTypes.pasture.name'),
-      description: t('farm-land-tax.landTypes.pasture.description'),
-      icon: '🐄',
-      coefficient: 0.3
-    },
-    {
-      id: 'hayfield',
-      name: t('farm-land-tax.landTypes.hayfield.name'),
-      description: t('farm-land-tax.landTypes.hayfield.description'),
-      icon: '🌾',
-      coefficient: 0.4
-    }
-  ];
-
-  const calculateLandTax = () => {
+  const results = useMemo(() => {
     const area = parseFloat(landArea) || 0;
-    const bonityScore = parseFloat(bonityScoret) || 50; // Средний балл по умолчанию
+    const score = parseFloat(bonityScore) || 0;
 
-    if (area <= 0) {
-      return EMPTY_RESULTS;
-    }
-
-    const selectedRegion = regionalRates.find(r => r.id === region);
-    const selectedLandType = landTypes.find(lt => lt.id === landType);
-    const selectedFarmType = farmTypeCoefficients[farmType];
-
-    if (!selectedRegion || !selectedLandType) return EMPTY_RESULTS;
-
-    // Базовая ставка для региона и типа земли
-    const baseRatePerHa = selectedRegion.baseRates[landType];
-    const baseRate = baseRatePerHa * MRP_2026;
-
-    // Коэффициент качества почвы
-    const qualityCoefficient = getQualityCoefficient(bonityScore);
-
-    // Коэффициент местоположения (тип земли)
-    const locationCoefficient = selectedLandType.coefficient;
-
-    // Коэффициент типа хозяйства
-    const farmTypeCoeff = selectedFarmType.coefficient;
-
-    // Льготы (если есть)
-    const preferenceDiscount = hasPreferences ? 50 : 0; // 50% скидка для льготников
-
-    // Расчет налога на 1 гектар
-    let taxPerHectare = baseRate * qualityCoefficient * locationCoefficient * farmTypeCoeff;
-
-    // Применение льгот
-    if (hasPreferences) {
-      taxPerHectare *= (1 - preferenceDiscount / 100);
-    }
-
-    // Общий налог
-    const totalTax = taxPerHectare * area;
-
-    // Примерная экономия от единого налога (по сравнению с обычным режимом)
-    const savedTaxes = totalTax * 0.3; // Приблизительно 30% экономии
-
-    const effectiveRate = totalTax / area; // Эффективная ставка на гектар
+    const ratePerHectare = getRatePerHectare(zone, score);
+    const rateSteppe = getRatePerHectare('steppe', score);
+    const rateDesert = getRatePerHectare('desert', score);
 
     return {
-      baseRate: Math.round(baseRate),
-      qualityCoefficient,
-      locationCoefficient,
-      preferenceDiscount,
-      taxPerHectare: Math.round(taxPerHectare),
-      totalTax: Math.round(totalTax),
-      savedTaxes: Math.round(savedTaxes),
-      regionName: selectedRegion.name,
-      landTypeName: selectedLandType.name,
-      effectiveRate: Math.round(effectiveRate)
+      area,
+      score,
+      isOver100: score > 100,
+      ratePerHectare,
+      rateSteppe,
+      rateDesert,
+      totalTax: area > 0 ? ratePerHectare * area : 0
     };
-  };
+  }, [landArea, bonityScore, zone]);
 
-  // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
-  // клиентская разметка совпадает с пререндеренной и гидратация проходит.
-  const results = useMemo(
-    calculateLandTax,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [region, landArea, bonityScoret, landType, farmType, hasPreferences, i18n.language]
-  );
+  const formatTenge = (num: number) =>
+    num.toLocaleString('ru-KZ', { maximumFractionDigits: 2 }) + ' ₸';
 
-  const formatNumber = (num: number) => {
-    return num.toLocaleString('ru-KZ') + ' ₸';
-  };
-
-  const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount.toFixed(2)} ${t('farm-land-tax.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
-  };
-
-  const selectedRegionData = regionalRates.find(r => r.id === region);
-  const selectedLandTypeData = landTypes.find(lt => lt.id === landType);
-  const selectedFarmTypeData = farmTypeCoefficients[farmType];
+  const zoneName = t(`farm-land-tax.zones.${zone}.name`);
+  const scoreLabel = results.isOver100
+    ? t('farm-land-tax.ratesTable.over100')
+    : String(Math.floor(results.score) || '—');
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -337,12 +146,8 @@ export default function FarmLandTaxCalculator() {
               {t('farm-land-tax.infoBox.title')}
             </h3>
             <div className="text-green-800 space-y-2">
-              <p>
-                {t('farm-land-tax.infoBox.description1')}
-              </p>
-              <p>
-                {t('farm-land-tax.infoBox.description2')}
-              </p>
+              <p>{t('farm-land-tax.infoBox.description1')}</p>
+              <p>{t('farm-land-tax.infoBox.description2')}</p>
             </div>
           </div>
         </div>
@@ -354,26 +159,6 @@ export default function FarmLandTaxCalculator() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.inputs.title')}</h2>
 
           <div className="space-y-6">
-            {/* Region Selection */}
-            <div>
-              <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-2">
-                <MapPin className="w-4 h-4 inline mr-1" />
-                {t('farm-land-tax.inputs.region')}
-              </label>
-              <select
-                id="region"
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-              >
-                {regionalRates.map((regionOption) => (
-                  <option key={regionOption.id} value={regionOption.id}>
-                    {regionOption.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             {/* Land Area */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -385,7 +170,7 @@ export default function FarmLandTaxCalculator() {
                 min={1}
                 max={1000}
                 step={1}
-                formatValue={(v) => `${v} га`}
+                formatValue={(v) => `${v} ${t('farm-land-tax.inputs.hectare')}`}
                 color="#22c55e"
               />
               <div className="relative mt-3">
@@ -406,17 +191,18 @@ export default function FarmLandTaxCalculator() {
 
             {/* Bonity Score */}
             <div>
-              <label htmlFor="bonityScoret" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="bonityScore" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('farm-land-tax.inputs.bonityScore')}
               </label>
               <input
                 type="number"
-                id="bonityScoret"
-                value={bonityScoret}
-                onChange={(e) => setBonityScoret(e.target.value)}
+                id="bonityScore"
+                value={bonityScore}
+                onChange={(e) => setBonityScore(e.target.value)}
                 placeholder={t('farm-land-tax.inputs.bonityScorePlaceholder')}
-                min="0"
-                max="100"
+                min="1"
+                max="120"
+                step="1"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -424,87 +210,35 @@ export default function FarmLandTaxCalculator() {
               </p>
             </div>
 
-            {/* Land Type */}
+            {/* Soil-climatic zone */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                {t('farm-land-tax.inputs.landType')}
+                {t('farm-land-tax.inputs.zone')}
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {landTypes.map((type) => (
+              <div className="grid grid-cols-1 gap-3">
+                {(['steppe', 'desert'] as SoilZone[]).map((z) => (
                   <button
-                    key={type.id}
-                    onClick={() => setLandType(type.id as any)}
+                    key={z}
+                    type="button"
+                    onClick={() => setZone(z)}
                     className={`p-3 rounded-lg border-2 transition-all text-left ${
-                      landType === type.id
+                      zone === z
                         ? 'border-green-500 bg-green-50 text-green-700'
                         : 'border-gray-200 hover:border-gray-300 text-gray-600'
                     }`}
                   >
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className="text-lg">{type.icon}</span>
-                      <span className="font-medium text-sm">{type.name}</span>
-                    </div>
-                    <div className="text-xs text-gray-600">{type.description}</div>
+                    <div className="font-medium text-sm mb-1">{t(`farm-land-tax.zones.${z}.name`)}</div>
+                    <div className="text-xs text-gray-600">{t(`farm-land-tax.zones.${z}.description`)}</div>
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-gray-500 mt-2">{t('farm-land-tax.inputs.zoneHelp')}</p>
             </div>
 
-            {/* Farm Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                {t('farm-land-tax.inputs.farmType')}
-              </label>
-              <div className="space-y-2">
-                {Object.entries(farmTypeCoefficients).map(([key, farmTypeData]) => (
-                  <label key={key} className="flex items-center">
-                    <input
-                      type="radio"
-                      name="farmType"
-                      value={key}
-                      checked={farmType === key}
-                      onChange={(e) => setFarmType(e.target.value as any)}
-                      className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
-                    />
-                    <div className="ml-3">
-                      <div className="text-sm font-medium text-gray-900">{farmTypeData.name}</div>
-                      <div className="text-xs text-gray-600">{farmTypeData.description}</div>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Preferences */}
-            <div className="border-t pt-4">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="hasPreferences"
-                  checked={hasPreferences}
-                  onChange={(e) => setHasPreferences(e.target.checked)}
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                />
-                <label htmlFor="hasPreferences" className="ml-2 block text-sm text-gray-700">
-                  {t('farm-land-tax.inputs.hasPreferences')}
-                </label>
-              </div>
-              {hasPreferences && (
-                <p className="text-xs text-green-600 mt-1">
-                  {t('farm-land-tax.inputs.preferencesDiscount')}
-                </p>
-              )}
-            </div>
-
-            <div className="bg-green-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-green-900 mb-2">
-                {t('farm-land-tax.inputs.advantagesTitle')}
-              </h3>
-              <div className="text-xs text-green-800 space-y-1">
-                <div>{t('farm-land-tax.inputs.advantage1')}</div>
-                <div>{t('farm-land-tax.inputs.advantage2')}</div>
-                <div>{t('farm-land-tax.inputs.advantage3')}</div>
-                <div>{t('farm-land-tax.inputs.advantage4')}</div>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="flex items-start space-x-2">
+                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-800">{t('farm-land-tax.inputs.noCoefficientsNote')}</p>
               </div>
             </div>
           </div>
@@ -516,52 +250,28 @@ export default function FarmLandTaxCalculator() {
 
           <div className="space-y-6">
             {/* Summary Info */}
-            {landArea && parseFloat(landArea) > 0 && (
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 mb-2">{t('farm-land-tax.results.summaryTitle')}</h3>
-                <div className="text-sm text-gray-700 space-y-1">
-                  <div>{t('farm-land-tax.results.area')}: <strong>{landArea} {t('farm-land-tax.inputs.hectare')}</strong></div>
-                  <div>{t('farm-land-tax.results.region')}: <strong>{results.regionName}</strong></div>
-                  <div>{t('farm-land-tax.results.landType')}: <strong>{results.landTypeName}</strong></div>
-                  <div>{t('farm-land-tax.results.bonityScore')}: <strong>{bonityScoret} {t('farm-land-tax.results.points')}</strong></div>
-                  <div>{t('farm-land-tax.results.farmType')}: <strong>{selectedFarmTypeData?.name}</strong></div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-medium text-gray-900 mb-2">{t('farm-land-tax.results.summaryTitle')}</h3>
+              <div className="text-sm text-gray-700 space-y-1">
+                <div>
+                  {t('farm-land-tax.results.area')}: <strong>{results.area.toLocaleString('ru-KZ')} {t('farm-land-tax.inputs.hectare')}</strong>
+                </div>
+                <div>
+                  {t('farm-land-tax.results.bonityScore')}: <strong>{scoreLabel}</strong>
+                </div>
+                <div>
+                  {t('farm-land-tax.results.zone')}: <strong>{zoneName}</strong>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Tax Calculation */}
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">{t('farm-land-tax.results.baseRate')}</span>
-                <span className="font-semibold text-gray-900">{formatNumber(results.baseRate)}</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">{t('farm-land-tax.results.qualityCoefficient')}</span>
-                <span className="font-semibold text-gray-900">×{results.qualityCoefficient}</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">{t('farm-land-tax.results.locationCoefficient')}</span>
-                <span className="font-semibold text-gray-900">×{results.locationCoefficient}</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">{t('farm-land-tax.results.farmTypeCoefficient')}</span>
-                <span className="font-semibold text-green-600">×{selectedFarmTypeData?.coefficient}</span>
-              </div>
-
-              {hasPreferences && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">{t('farm-land-tax.results.additionalDiscount')}</span>
-                  <span className="font-semibold text-green-600">-{results.preferenceDiscount}%</span>
-                </div>
-              )}
-
               <div className="flex justify-between items-center py-3 bg-blue-50 rounded-lg px-3">
-                <span className="font-semibold text-blue-900">{t('farm-land-tax.results.taxPerHectare')}</span>
-                <span className="text-lg font-bold text-blue-700">{formatNumber(results.taxPerHectare)}</span>
+                <span className="font-semibold text-blue-900">{t('farm-land-tax.results.ratePerHectare')}</span>
+                <span className="text-lg font-bold text-blue-700">{formatTenge(results.ratePerHectare)}</span>
               </div>
+              <p className="text-xs text-gray-500">{t('farm-land-tax.results.rateSource')}</p>
             </div>
 
             {/* Total Tax */}
@@ -570,23 +280,20 @@ export default function FarmLandTaxCalculator() {
                 <span className="text-lg font-semibold text-gray-900">{t('farm-land-tax.results.totalTax')}</span>
                 <div className="flex items-center space-x-2">
                   <Wheat className="w-6 h-6 text-green-600" />
-                  <span className="text-2xl font-bold text-green-700">{formatNumber(results.totalTax)}</span>
+                  <span className="text-2xl font-bold text-green-700">{formatTenge(results.totalTax)}</span>
                 </div>
               </div>
               <div className="text-sm text-gray-600">
-                {t('farm-land-tax.results.forArea', { area: landArea, landType: results.landTypeName.toLowerCase() })}
+                {formatTenge(results.ratePerHectare)} × {results.area.toLocaleString('ru-KZ')} {t('farm-land-tax.inputs.hectare')}
               </div>
             </div>
 
-            {/* Savings */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-start space-x-2">
-                <TrendingUp className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <Scale className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-medium text-blue-900 mb-1">{t('farm-land-tax.results.savingsTitle')}</h3>
-                  <p className="text-blue-800 text-sm">
-                    {t('farm-land-tax.results.savingsDescription', { amount: formatNumber(results.savedTaxes) })}
-                  </p>
+                  <h3 className="font-medium text-blue-900 mb-1">{t('farm-land-tax.results.formulaTitle')}</h3>
+                  <p className="text-blue-800 text-sm">{t('farm-land-tax.results.formulaDescription')}</p>
                 </div>
               </div>
             </div>
@@ -594,404 +301,141 @@ export default function FarmLandTaxCalculator() {
         </div>
       </div>
 
-      {/* Regional Rates Table */}
+      {/* Special tax regime for peasant/farm households */}
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.ratesTable.title')}</h2>
+        <div className="flex items-start space-x-3 mb-4">
+          <Tractor className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('farm-land-tax.snr.title')}</h2>
+            <p className="text-gray-700 text-sm">{t('farm-land-tax.snr.description')}</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 mt-4">
+          <div className="bg-green-50 rounded-lg p-4">
+            <h3 className="font-semibold text-green-900 mb-2 text-sm">{t('farm-land-tax.snr.notPayerTitle')}</h3>
+            <ul className="text-sm text-green-800 space-y-1 list-disc list-inside">
+              <li>{t('farm-land-tax.snr.notPayer')}</li>
+              <li>{t('farm-land-tax.snr.ipn')}</li>
+            </ul>
+          </div>
+
+          <div className="bg-blue-50 rounded-lg p-4">
+            <h3 className="font-semibold text-blue-900 mb-2 text-sm">{t('farm-land-tax.snr.limitsTitle')}</h3>
+            <ul className="text-sm text-blue-800 space-y-1">
+              {SNR_AREA_LIMITS.map((limit, idx) => (
+                <li key={limit}>
+                  {t('farm-land-tax.snr.limitZone', { zone: idx + 1 })}: <strong>{limit.toLocaleString('ru-KZ')} {t('farm-land-tax.inputs.hectare')}</strong>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-blue-700 mt-2">{t('farm-land-tax.snr.limitsNote')}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Rates excerpt from Art. 576 */}
+      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('farm-land-tax.ratesTable.title')}</h2>
+        <p className="text-sm text-gray-600 mb-6">{t('farm-land-tax.ratesTable.subtitle')}</p>
 
         <div className="overflow-x-auto -mx-4 sm:mx-0">
-          <table className="w-full">
+          <table className="w-full min-w-[380px]">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.regionColumn')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.irrigatedColumn')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.rainfedColumn')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.pastureColumn')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.hayfieldColumn')}</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.scoreColumn')}</th>
+                <th className="text-right py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.steppeColumn')}</th>
+                <th className="text-right py-3 px-4 text-sm font-medium text-gray-700">{t('farm-land-tax.ratesTable.desertColumn')}</th>
               </tr>
             </thead>
             <tbody>
-              {regionalRates.map((regionData) => (
-                <tr key={regionData.id} className={`border-b border-gray-100 ${region === regionData.id ? 'bg-green-50' : ''}`}>
-                  <td className="py-3 px-4 font-medium text-gray-900">{regionData.name}</td>
-                  <td className="py-3 px-4 text-center text-sm text-gray-700">{formatMRP(regionData.baseRates.irrigated)}</td>
-                  <td className="py-3 px-4 text-center text-sm text-gray-700">{formatMRP(regionData.baseRates.rainfed)}</td>
-                  <td className="py-3 px-4 text-center text-sm text-gray-700">{formatMRP(regionData.baseRates.pasture)}</td>
-                  <td className="py-3 px-4 text-center text-sm text-gray-700">{formatMRP(regionData.baseRates.hayfield)}</td>
+              {TABLE_PREVIEW_SCORES.map((score) => (
+                <tr
+                  key={score}
+                  className={`border-b border-gray-100 ${
+                    !results.isOver100 && Math.floor(results.score) === score ? 'bg-green-50 font-medium' : ''
+                  }`}
+                >
+                  <td className="py-2 px-4 text-gray-900">{score}</td>
+                  <td className="py-2 px-4 text-right text-sm text-gray-700">{getRatePerHectare('steppe', score).toLocaleString('ru-KZ')}</td>
+                  <td className="py-2 px-4 text-right text-sm text-gray-700">{getRatePerHectare('desert', score).toLocaleString('ru-KZ')}</td>
                 </tr>
               ))}
+              <tr className={`border-b border-gray-100 ${results.isOver100 ? 'bg-green-50 font-medium' : ''}`}>
+                <td className="py-2 px-4 text-gray-900">{t('farm-land-tax.ratesTable.over100')}</td>
+                <td className="py-2 px-4 text-right text-sm text-gray-700">{RATE_STEPPE_OVER_100.toLocaleString('ru-KZ')}</td>
+                <td className="py-2 px-4 text-right text-sm text-gray-700">{RATE_DESERT_OVER_100.toLocaleString('ru-KZ')}</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-800">
-            {t('farm-land-tax.ratesTable.note')}
-            <br />
-            {t('farm-land-tax.ratesTable.mrpNote', { amount: formatNumber(MRP_2026) })}
-          </p>
-        </div>
-      </div>
-
-      {/* Bonity Scale */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.bonityScale.title')}</h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          <div className="text-center p-4 bg-red-50 rounded-lg">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-red-600 font-bold">0-20</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-1">{t('farm-land-tax.bonityScale.low.title')}</h3>
-            <div className="text-sm text-gray-600">{t('farm-land-tax.bonityScale.low.coefficient')}</div>
-            <p className="text-xs text-red-700 mt-1">{t('farm-land-tax.bonityScale.low.description')}</p>
-          </div>
-
-          <div className="text-center p-4 bg-orange-50 rounded-lg">
-            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-orange-600 font-bold">21-40</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-1">{t('farm-land-tax.bonityScale.belowAverage.title')}</h3>
-            <div className="text-sm text-gray-600">{t('farm-land-tax.bonityScale.belowAverage.coefficient')}</div>
-            <p className="text-xs text-orange-700 mt-1">{t('farm-land-tax.bonityScale.belowAverage.description')}</p>
-          </div>
-
-          <div className="text-center p-4 bg-yellow-50 rounded-lg">
-            <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-yellow-600 font-bold">41-60</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-1">{t('farm-land-tax.bonityScale.average.title')}</h3>
-            <div className="text-sm text-gray-600">{t('farm-land-tax.bonityScale.average.coefficient')}</div>
-            <p className="text-xs text-yellow-700 mt-1">{t('farm-land-tax.bonityScale.average.description')}</p>
-          </div>
-
-          <div className="text-center p-4 bg-lime-50 rounded-lg">
-            <div className="w-12 h-12 bg-lime-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-lime-600 font-bold">61-80</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-1">{t('farm-land-tax.bonityScale.good.title')}</h3>
-            <div className="text-sm text-gray-600">{t('farm-land-tax.bonityScale.good.coefficient')}</div>
-            <p className="text-xs text-lime-700 mt-1">{t('farm-land-tax.bonityScale.good.description')}</p>
-          </div>
-
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-green-600 font-bold">81-100</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-1">{t('farm-land-tax.bonityScale.excellent.title')}</h3>
-            <div className="text-sm text-gray-600">{t('farm-land-tax.bonityScale.excellent.coefficient')}</div>
-            <p className="text-xs text-green-700 mt-1">{t('farm-land-tax.bonityScale.excellent.description')}</p>
-          </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-amber-50 rounded-lg">
-          <div className="flex items-start space-x-2">
-            <Sprout className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-medium text-amber-900 mb-1">
-                {t('farm-land-tax.bonityScale.noteTitle')}
-              </h3>
-              <p className="text-amber-800 text-sm">
-                {t('farm-land-tax.bonityScale.noteDescription')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Benefits and Features */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.benefits.title')}</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-blue-50 rounded-lg">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-blue-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.benefits.simplifiedReporting.title')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('farm-land-tax.benefits.simplifiedReporting.description')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-green-50 rounded-lg">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Tractor className="w-8 h-8 text-green-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.benefits.farmerBenefits.title')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('farm-land-tax.benefits.farmerBenefits.description')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-yellow-50 rounded-lg">
-            <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Target className="w-8 h-8 text-yellow-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.benefits.fairness.title')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('farm-land-tax.benefits.fairness.description')}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Examples */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.examples.title')}</h2>
-
-        <div className="space-y-6">
-          {/* Example 1 */}
-          <div className="border border-green-200 rounded-lg p-4 bg-green-50">
-            <h3 className="font-semibold text-green-900 mb-3">{t('farm-land-tax.examples.example1.title')}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-800">
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.parametersLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example1.area')}</div>
-                <div>{t('farm-land-tax.examples.example1.landType')}</div>
-                <div>{t('farm-land-tax.examples.example1.bonity')}</div>
-                <div>{t('farm-land-tax.examples.example1.farmType')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.coefficientsLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example1.qualityCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example1.landTypeCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example1.farmTypeCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example1.benefits')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.calculationLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example1.baseRate')}</div>
-                <div>{t('farm-land-tax.examples.example1.withCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example1.total')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-green-700">{t('farm-land-tax.examples.savingsLabel')}:</div>
-                <div className="text-lg font-bold text-green-600">{t('farm-land-tax.examples.example1.savings')}</div>
-                <div className="text-xs text-green-600">{t('farm-land-tax.examples.vsStandardRegime')}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Example 2 */}
-          <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
-            <h3 className="font-semibold text-blue-900 mb-3">{t('farm-land-tax.examples.example2.title')}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-800">
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.parametersLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example2.area')}</div>
-                <div>{t('farm-land-tax.examples.example2.landType')}</div>
-                <div>{t('farm-land-tax.examples.example2.bonity')}</div>
-                <div>{t('farm-land-tax.examples.example2.farmType')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.coefficientsLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example2.qualityCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example2.landTypeCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example2.farmTypeCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example2.benefits')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.calculationLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example2.baseRate')}</div>
-                <div>{t('farm-land-tax.examples.example2.withCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example2.total')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-blue-700">{t('farm-land-tax.examples.savingsLabel')}:</div>
-                <div className="text-lg font-bold text-blue-600">{t('farm-land-tax.examples.example2.savings')}</div>
-                <div className="text-xs text-blue-600">{t('farm-land-tax.examples.vsStandardRegime')}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Example 3 */}
-          <div className="border border-teal-200 rounded-lg p-4 bg-teal-50">
-            <h3 className="font-semibold text-teal-900 mb-3">{t('farm-land-tax.examples.example3.title')}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-800">
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.parametersLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example3.area')}</div>
-                <div>{t('farm-land-tax.examples.example3.landType')}</div>
-                <div>{t('farm-land-tax.examples.example3.bonity')}</div>
-                <div>{t('farm-land-tax.examples.example3.farmType')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.coefficientsLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example3.qualityCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example3.landTypeCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example3.farmTypeCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example3.benefits')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-gray-700">{t('farm-land-tax.examples.calculationLabel')}:</div>
-                <div>{t('farm-land-tax.examples.example3.baseRate')}</div>
-                <div>{t('farm-land-tax.examples.example3.withCoeff')}</div>
-                <div>{t('farm-land-tax.examples.example3.total')}</div>
-              </div>
-              <div>
-                <div className="font-medium text-teal-700">{t('farm-land-tax.examples.savingsLabel')}:</div>
-                <div className="text-lg font-bold text-teal-600">{t('farm-land-tax.examples.example3.savings')}</div>
-                <div className="text-xs text-teal-600">{t('farm-land-tax.examples.vsStandardRegime')}</div>
-              </div>
-            </div>
-          </div>
+          <p className="text-sm text-blue-800">{t('farm-land-tax.ratesTable.note')}</p>
         </div>
       </div>
 
       {/* Legal Information */}
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div className="flex items-start space-x-3 mb-4">
+        <div className="flex items-start space-x-3">
           <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('farm-land-tax.legal.title')}</h3>
+          <div className="w-full">
+            <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('farm-land-tax.legal.title')}</h2>
             <div className="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.taxpayersTitle')}</h4>
+                <h3 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.taxpayersTitle')}</h3>
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('farm-land-tax.legal.taxpayers.item1')}</li>
                   <li>{t('farm-land-tax.legal.taxpayers.item2')}</li>
                   <li>{t('farm-land-tax.legal.taxpayers.item3')}</li>
-                  <li>{t('farm-land-tax.legal.taxpayers.item4')}</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.replacesTitle')}</h4>
+                <h3 className="font-semibold text-gray-900 mb-2">{t('farm-land-tax.legal.exemptTitle')}</h3>
                 <ul className="space-y-1 list-disc list-inside">
-                  <li>{t('farm-land-tax.legal.replaces.item1')}</li>
-                  <li>{t('farm-land-tax.legal.replaces.item2')}</li>
-                  <li>{t('farm-land-tax.legal.replaces.item3')}</li>
-                  <li>{t('farm-land-tax.legal.replaces.item4')}</li>
-                  <li>{t('farm-land-tax.legal.replaces.item5')}</li>
+                  <li>{t('farm-land-tax.legal.exempt.item1')}</li>
+                  <li>{t('farm-land-tax.legal.exempt.item2')}</li>
+                  <li>{t('farm-land-tax.legal.exempt.item3')}</li>
                 </ul>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-green-50 rounded-lg p-4 mt-4">
-          <div className="flex items-start space-x-2">
-            <Building className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-medium text-green-900 mb-1">
-                {t('farm-land-tax.legal.conditionsTitle')}
-              </h3>
-              <div className="text-green-800 text-sm space-y-1">
-                <p>{t('farm-land-tax.legal.conditions.item1')}</p>
-                <p>{t('farm-land-tax.legal.conditions.item2')}</p>
-                <p>{t('farm-land-tax.legal.conditions.item3')}</p>
-                <p>{t('farm-land-tax.legal.conditions.item4')}</p>
-                <p>{t('farm-land-tax.legal.conditions.item5')}</p>
+            <div className="bg-gray-50 rounded-lg p-4 mt-4">
+              <div className="flex items-start space-x-2">
+                <Sprout className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 mb-1">{t('farm-land-tax.legal.deadlineTitle')}</h3>
+                  <p className="text-gray-700 text-sm">{t('farm-land-tax.legal.deadline')}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Optimization Tips */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.optimization.title')}</h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('farm-land-tax.optimization.reduceTaxTitle')}</h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.reduceTax.tip1')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.reduceTax.tip2')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.reduceTax.tip3')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.reduceTax.tip4')}</span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('farm-land-tax.optimization.properAccountingTitle')}</h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.properAccounting.tip1')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.properAccounting.tip2')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.properAccounting.tip3')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('farm-land-tax.optimization.properAccounting.tip4')}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <div className="flex items-start space-x-2">
-            <TreePine className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-medium text-blue-900 mb-1">
-                {t('farm-land-tax.optimization.supportTitle')}
-              </h3>
-              <p className="text-blue-800 text-sm">
-                {t('farm-land-tax.optimization.supportDescription')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Regional Context */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.regional.title')}</h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('farm-land-tax.regional.agricultureTitle')}</h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div><strong>{t('farm-land-tax.regional.agriculture.kostanay')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.agriculture.north')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.agriculture.akmola')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.agriculture.almaty')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.agriculture.turkestan')}</strong></div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('farm-land-tax.regional.livestockTitle')}</h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div><strong>{t('farm-land-tax.regional.livestock.mangystau')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.livestock.atyrau')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.livestock.kyzylorda')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.livestock.zhambyl')}</strong></div>
-              <div><strong>{t('farm-land-tax.regional.livestock.aktobe')}</strong></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Диаграмма */}
-      {results.totalTax > 0 && (
+      {/* Zone comparison chart */}
+      {results.ratePerHectare > 0 && results.area > 0 && (
         <div className="mt-8">
-          <TaxPieChart
+          <ComparisonBarChart
             data={[
-              { name: t('farm-land-tax.chart.landTax'), value: results.totalTax },
+              {
+                name: `${t('farm-land-tax.results.bonityScore')} ${scoreLabel}`,
+                steppe: Math.round(results.rateSteppe * results.area),
+                desert: Math.round(results.rateDesert * results.area)
+              }
+            ]}
+            dataKeys={[
+              { key: 'steppe', name: t('farm-land-tax.zones.steppe.name'), color: '#22c55e' },
+              { key: 'desert', name: t('farm-land-tax.zones.desert.name'), color: '#f59e0b' }
             ]}
             title={t('farm-land-tax.chart.title')}
+            formatValue={(v) => formatTenge(v)}
           />
         </div>
       )}
+
+      <CalculatorExamples calculatorId="farm-land-tax" />
+      <MethodologySection calculatorId="farm-land-tax" />
 
       {/* Экспорт результатов */}
       {results.totalTax > 0 && (
@@ -999,21 +443,21 @@ export default function FarmLandTaxCalculator() {
           <ExportButtons
             data={{
               title: t('farm-land-tax.export.title'),
-              subtitle: `${t('farm-land-tax.export.region')}: ${results.regionName}`,
+              subtitle: `${t('farm-land-tax.export.zone')}: ${zoneName}`,
               sections: [
                 {
                   title: t('farm-land-tax.export.parameters'),
                   data: [
-                    { label: t('farm-land-tax.export.area'), value: `${parseFloat(landArea || '0').toLocaleString()} ${t('farm-land-tax.inputs.hectare')}` },
-                    { label: t('farm-land-tax.export.landType'), value: results.landTypeName },
-                    { label: t('farm-land-tax.export.farmType'), value: selectedFarmTypeData?.name || '' },
+                    { label: t('farm-land-tax.export.area'), value: `${results.area.toLocaleString('ru-KZ')} ${t('farm-land-tax.inputs.hectare')}` },
+                    { label: t('farm-land-tax.export.bonityScore'), value: scoreLabel },
+                    { label: t('farm-land-tax.export.zone'), value: zoneName }
                   ]
                 },
                 {
                   title: t('farm-land-tax.export.results'),
                   data: [
-                    { label: t('farm-land-tax.export.baseRate'), value: `${results.baseRate.toLocaleString()} ₸` },
-                    { label: t('farm-land-tax.export.totalTax'), value: `${results.totalTax.toLocaleString()} ₸` },
+                    { label: t('farm-land-tax.export.ratePerHectare'), value: formatTenge(results.ratePerHectare) },
+                    { label: t('farm-land-tax.export.totalTax'), value: formatTenge(results.totalTax) }
                   ]
                 }
               ],
@@ -1034,8 +478,14 @@ export default function FarmLandTaxCalculator() {
           { question: t('farm-land-tax.faq.q5'), answer: t('farm-land-tax.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Жер кодексі' : 'Земельный кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=1040583' },
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — жер салығы' : 'Налоговый кодекс РК — земельный налог', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          {
+            title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 576-бап' : 'НК РК, ст. 576 — базовые ставки на земли сельхозназначения',
+            url: 'https://adilet.zan.kz/rus/docs/K2500000214'
+          },
+          {
+            title: i18n.language === 'kk' ? 'ҚР Жер кодексі' : 'Земельный кодекс РК',
+            url: 'https://adilet.zan.kz/rus/docs/K030000442_'
+          }
         ]}
       />
 

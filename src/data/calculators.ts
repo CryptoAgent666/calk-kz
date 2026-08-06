@@ -477,8 +477,8 @@ export const calculatorCategories: CalculatorCategory[] = [
     calculators: [
       {
         id: 'farm-land-tax',
-        title: 'Калькулятор единого земельного налога',
-        description: 'Расчет упрощенного налогообложения для крестьянских и фермерских хозяйств',
+        title: 'Калькулятор земельного налога на сельхозземли',
+        description: 'Расчет земельного налога по базовым ставкам ст. 576 НК РК: балл бонитета и почвенно-климатическая зона',
         category: 'agriculture',
         icon: 'Wheat',
         component: React.lazy(() => import('../components/calculators/FarmLandTaxCalculator'))
@@ -622,7 +622,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'teacher-salary',
         title: 'Калькулятор зарплаты учителя 2026',
-        description: 'БДО × категория × стаж + доплаты за классное руководство, сельские школы, тетради',
+        description: 'БДО × коэффициент (ступень × стаж) × 2,0 + доплата за педагогическую категорию, классное руководство, сельские школы',
         category: 'social',
         icon: 'GraduationCap',
         component: React.lazy(() => import('../components/calculators/TeacherSalaryCalculator'))

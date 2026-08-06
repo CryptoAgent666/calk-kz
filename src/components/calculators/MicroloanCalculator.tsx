@@ -15,6 +15,26 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 
+// МРП 2026 (Закон о республиканском бюджете). Лимиты микрофинансирования
+// заданы в МРП, поэтому держим множитель, а не плоские тенге.
+const MRP_2026 = 4325;
+
+/** Потолок регулярного микрокредита с рассрочкой: 1100 МРП.
+ *  Требования к осуществлению микрофинансовой деятельности, пост. Правления
+ *  АРРФР от 15.05.2026 № 92, п. 73 пп. 1) — в силе с 21.07.2026. Прежние
+ *  «3 000 000 ₸» нормативной опоры не имели. */
+const INSTALLMENT_MAX_MRP = 1100;
+
+/** Предел ВСЕХ платежей сверх основного долга по PDL: 0,5 суммы займа.
+ *  Прил. 5 п. 3 пп. 2) к Требованиям (пост. АРРФР № 92); действует непрерывно
+ *  с 09.10.2024 (ранее — п. 4-1 пп. 2) прил. 2 к пост. НБ РК № 232).
+ *  Область: договор с физлицом вне предпринимательства, срок ≤45 к.д.
+ *  И сумма ≤45 МРП. Ограничивается СОВОКУПНОСТЬ вознаграждения, комиссий и
+ *  неустойки — не только вознаграждение. */
+const PDL_OVERPAYMENT_CAP_FACTOR = 0.5;
+const PDL_CAP_MAX_TERM_DAYS = 45;
+const PDL_CAP_MAX_AMOUNT_MRP = 45;
+
 type LoanType = 'online' | 'shortterm' | 'installment';
 type TermUnit = 'days' | 'months';
 
@@ -49,7 +69,7 @@ const LOAN_TYPES = {
   installment: {
     name: 'microloan.loanTypes.installment.name',
     description: 'microloan.loanTypes.installment.description',
-    maxAmount: 3000000,
+    maxAmount: INSTALLMENT_MAX_MRP * MRP_2026, // 1100 МРП = 4 757 500 ₸
     maxTerm: 12,
     termUnit: 'months' as TermUnit,
     typicalRate: { min: 15, max: 46 }, // регулярные МФО — ГЭСВ не выше 46%
@@ -161,10 +181,14 @@ ${t('microloan.export.calculator')}: Calk.kz`;
         dailyRate = loanRate;
         totalInterest = loanAmount * (dailyRate / 100) * loanTerm;
 
-        // Предел переплаты (платежи ≤ сумме займа, ст.4 Закона о МФД РК) — для ВСЕХ PDL-микрозаймов.
-        const maxInterest = loanAmount;
-        if ((loanType === 'online' || loanType === 'shortterm') && totalInterest > maxInterest) {
-          totalInterest = maxInterest;
+        // Предел переплаты по PDL: срок ≤45 к.д. И сумма ≤45 МРП (АРРФР № 92,
+        // прил. 5 п. 3 пп. 2). Кэп накрывает вознаграждение ВМЕСТЕ с комиссиями,
+        // поэтому вычитаем комиссию из доступного лимита.
+        const capApplies = loanTerm <= PDL_CAP_MAX_TERM_DAYS
+          && loanAmount <= PDL_CAP_MAX_AMOUNT_MRP * MRP_2026;
+        if (capApplies) {
+          const maxExtraPayments = loanAmount * PDL_OVERPAYMENT_CAP_FACTOR;
+          totalInterest = Math.min(totalInterest, Math.max(0, maxExtraPayments - loanCommission));
         }
 
         effectiveRate = (Math.pow(1 + dailyRate / 100, 365) - 1) * 100;

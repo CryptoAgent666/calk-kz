@@ -221,6 +221,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'overtime': [TK_RK],
   'second-job': [TK_RK, NK_RK],
   'teacher-salary': [
+    { title: 'ПП РК № 1193 от 31.12.2015 — система оплаты труда (БДО, коэффициенты, поправочный коэффициент педагогов)', url: 'https://adilet.zan.kz/rus/docs/P1500001193' },
     { title: 'Указ Президента о БДО педагогов', url: 'https://adilet.zan.kz/rus/docs/U2300000404' },
     TK_RK,
   ],
@@ -372,7 +373,8 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 
   // === СЕЛЬСКОЕ ХОЗЯЙСТВО ===
   'farm-land-tax': [
-    NK_RK,
+    { title: 'НК РК, ст. 576 — базовые ставки на земли сельхозназначения', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
+    { title: 'НК РК, ст. 571 и 728–731 — спецрежим для КФХ', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
     { title: 'Земельный кодекс РК', url: 'https://adilet.zan.kz/rus/docs/K030000442_' },
   ],
 
