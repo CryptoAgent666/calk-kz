@@ -25,8 +25,16 @@ echo "Deploying dist/ to $FTP_HOST:$FTP_REMOTE_DIR ..."
 echo "User: $FTP_USER"
 
 lftp <<LFTP_EOF
+# Транспорт: TLS ОБЯЗАТЕЛЕН (проверено — сервер поддерживает AUTH TLS).
+# ssl-protect-data критично: без него шифруется только управляющий канал,
+# а содержимое файлов и листинги идут открытым текстом.
+# verify-certificate выключен осознанно: хост задан голым IP, поэтому имя в
+# сертификате никогда не совпадёт. Это оставляет теоретическую возможность
+# MITM — принимаем как известное ограничение хостинга, но шифрование канала
+# всё равно защищает от пассивного перехвата пароля и данных.
 set ftp:ssl-allow yes
-set ftp:ssl-force no
+set ftp:ssl-force yes
+set ftp:ssl-protect-data yes
 set ssl:verify-certificate no
 set net:timeout 30
 set net:max-retries 3

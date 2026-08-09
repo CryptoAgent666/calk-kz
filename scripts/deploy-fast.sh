@@ -20,6 +20,11 @@ DIST=dist
 HTML_COUNT=$(find "$DIST" -name index.html | wc -l | tr -d ' ')
 [ "$HTML_COUNT" -ge 570 ] || { echo "ОШИБКА: в dist только $HTML_COUNT index.html (гейт 570)"; exit 1; }
 
+# Транспорт: TLS обязателен, включая канал данных (сервер поддерживает AUTH TLS).
+# Проверка сертификата отключена осознанно — хост задан голым IP, имя в серте
+# совпасть не может; шифрование от пассивного перехвата это всё равно даёт.
+LFTP_TLS='set ftp:ssl-allow yes; set ftp:ssl-force yes; set ftp:ssl-protect-data yes; set ssl:verify-certificate no;'
+
 RAND=$(openssl rand -hex 6)
 TOKEN=$(openssl rand -hex 24)
 TOKEN_HASH=$(printf '%s' "$TOKEN" | shasum -a 256 | cut -d' ' -f1)
@@ -31,9 +36,16 @@ EXTRACT_LOCAL="/tmp/$EXTRACT_NAME"
 cleanup() {
   rm -f "$ZIP_LOCAL" "$EXTRACT_LOCAL"
   # подчистить артефакты на сервере (экстрактор самоудаляется, но не при обрыве)
-  lftp -e "set ftp:ssl-allow yes; set ssl:verify-certificate no; set net:timeout 20; set net:max-retries 1; \
-    open -u $FTP_USER,$FTP_PASS $FTP_HOST; \
-    rm -f $FTP_REMOTE_DIR/$ZIP_NAME; rm -f $FTP_REMOTE_DIR/$EXTRACT_NAME; quit" >/dev/null 2>&1 || true
+  # Пароль передаём через stdin, а не в argv: аргументы процесса видны в `ps`.
+  lftp >/dev/null 2>&1 <<LFTP_CLEANUP || true
+$LFTP_TLS
+set net:timeout 20
+set net:max-retries 1
+open -u $FTP_USER,$FTP_PASS $FTP_HOST
+rm -f $FTP_REMOTE_DIR/$ZIP_NAME
+rm -f $FTP_REMOTE_DIR/$EXTRACT_NAME
+quit
+LFTP_CLEANUP
 }
 trap cleanup EXIT
 
@@ -45,10 +57,15 @@ sed -e "s/__TOKEN_HASH__/$TOKEN_HASH/" -e "s/__ZIP_NAME__/$ZIP_NAME/" \
   scripts/deploy-extract.php.tpl > "$EXTRACT_LOCAL"
 
 echo "[2/4] Заливаю пакет и экстрактор (FTP, один поток)..."
-lftp -e "set ftp:ssl-allow yes; set ssl:verify-certificate no; set net:timeout 60; set net:max-retries 3; \
-  open -u $FTP_USER,$FTP_PASS $FTP_HOST; \
-  put \"$ZIP_LOCAL\" -o $FTP_REMOTE_DIR/$ZIP_NAME; \
-  put \"$EXTRACT_LOCAL\" -o $FTP_REMOTE_DIR/$EXTRACT_NAME; quit"
+lftp <<LFTP_UPLOAD
+$LFTP_TLS
+set net:timeout 60
+set net:max-retries 3
+open -u $FTP_USER,$FTP_PASS $FTP_HOST
+put "$ZIP_LOCAL" -o $FTP_REMOTE_DIR/$ZIP_NAME
+put "$EXTRACT_LOCAL" -o $FTP_REMOTE_DIR/$EXTRACT_NAME
+quit
+LFTP_UPLOAD
 
 echo "[3/4] Распаковка на сервере..."
 RESP=$(curl -sS -m 300 -X POST --data-urlencode "token=$TOKEN" "https://calk.kz/$EXTRACT_NAME")

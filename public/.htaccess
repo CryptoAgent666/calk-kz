@@ -30,6 +30,25 @@ ErrorDocument 404 /index.html
   RewriteRule . /index.html [L]
 </IfModule>
 
+# Заголовки безопасности
+<IfModule mod_headers.c>
+  # HSTS: сайт и так только по https, закрепляем на год с поддоменами.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  # Запрет MIME-sniffing: браузер не должен «додумывать» тип за Content-Type.
+  Header always set X-Content-Type-Options "nosniff"
+  # Реферер третьим сторонам — только origin, без пути (в путях бывают параметры расчёта).
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Явно отключаем сенсоры, которые калькуляторам не нужны.
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+
+  # Защита от кликджекинга — ТОЛЬКО вне /embed/. Виджеты в /embed/ существуют
+  # именно ради встраивания на сторонние сайты (132 страницы), запрет фреймов
+  # сломал бы продукт.
+  <If "%{REQUEST_URI} !~ m#^/(__kk/)?embed/#">
+    Header always set X-Frame-Options "SAMEORIGIN"
+  </If>
+</IfModule>
+
 # Кэширование статики
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|css|svg|png|jpg|jpeg|webp|avif|ico|woff2|woff|ttf)$">

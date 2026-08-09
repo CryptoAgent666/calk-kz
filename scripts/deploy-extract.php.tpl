@@ -37,14 +37,31 @@ set_time_limit(300);
 $zip = new ZipArchive();
 if ($zip->open($zipPath) !== true) $fail(500, 'zip open failed');
 
-// список путей пакета — он же «что должно остаться»
+// Список путей пакета — он же «что должно остаться».
+// ВАЖНО: путь проверяем ДО extractTo и при любом подозрительном имени отвергаем
+// АРХИВ ЦЕЛИКОМ, а не пропускаем запись. extractTo() распаковывает всё подряд,
+// поэтому «continue» здесь защитил бы только манифест, но не файловую систему
+// (zip slip: запись вида ../../file вышла бы за пределы корня).
 $manifest = [];
 for ($i = 0; $i < $zip->numFiles; $i++) {
     $name = $zip->getNameIndex($i);
-    if ($name === false || str_contains($name, '..')) continue;
-    $manifest[rtrim($name, '/')] = true;
+    if ($name === false) { $zip->close(); $fail(400, 'unreadable entry name'); }
+    $normalized = str_replace('\\', '/', $name);
+    $unsafe = str_starts_with($normalized, '/')
+        || preg_match('#(^|/)\.\.(/|$)#', $normalized) === 1
+        || preg_match('#^[a-zA-Z]:#', $normalized) === 1;   // C:\... на всякий случай
+    if ($unsafe) { $zip->close(); $fail(400, 'unsafe path in package — refuse'); }
+    $manifest[rtrim($normalized, '/')] = true;
 }
-if (!isset($manifest['index.html'])) { $zip->close(); $fail(400, 'no index.html in package — refuse'); }
+
+// Предохранитель против массового удаления неполным пакетом. Одного index.html
+// мало: архив из единственного файла прошёл бы проверку и снёс весь сайт.
+// Полный dist — это 570 index.html; порог с запасом.
+$htmlCount = 0;
+foreach ($manifest as $rel => $_) {
+    if (str_ends_with($rel, 'index.html')) $htmlCount++;
+}
+if ($htmlCount < 500) { $zip->close(); $fail(400, "package too small ({$htmlCount} pages) — refuse"); }
 
 if (!$zip->extractTo($root)) { $zip->close(); $fail(500, 'extract failed'); }
 $extracted = $zip->numFiles;
