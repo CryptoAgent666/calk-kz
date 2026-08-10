@@ -5674,18 +5674,20 @@
     },
     {
       "key": "penalty_tax_daily_rate_example",
-      "value": "",
-      "unit": "",
-      "law": "",
+      "value": "0,0574% в день = 1,25 × 16,75% / 365 (ст. 121 НК РК; кратность 0,65 для горизонтального мониторинга)",
+      "unit": "percent_per_day",
+      "law": "ст. 121 НК РК — пеня кратна базовой ставке НБРК, действовавшей на каждый день просрочки",
       "year": "",
-      "change_frequency": "rare",
-      "status": "uncertain",
+      "change_frequency": "monthly",
+      "status": "current",
       "aliases": [],
       "recovery_reason": "Tax penalty (пеня) daily rate under НК РК ст.117 (1.25× NBK base rate / 365). Prompt explicitly name",
       "used_by": [
         "PenaltyCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "recovered_from_estimate",
+      "verify_note": "Tier-2 2026-08: кратность 1,25 подтверждена дословно по НК-2026 (К2500000214). Производная от nbrk_base_rate — пересчитывать при каждом решении НБРК.",
+      "reverified": "2026-08-06"
     },
     {
       "key": "vehicle_reg_fee_electric_new_mrp",
@@ -8136,8 +8138,8 @@
       ],
       "audit_status": "clean",
       "source_url": "https://krisha.kz/content/articles/2026/2026-ipoteka-na-vtorichku-2026-usloviya-vseh-bankov",
-      "verify_note": "ГЭСВ вторички 07.2026: Halyk от 23%, БЦК от 22,9%; диапазон 23–25% при базовой ставке 17%. Дефолт слайдера.",
-      "reverified": "2026-07-11"
+      "verify_note": "ГЭСВ вторички 08.2026: Halyk 23%, ЦентрКредит 23,6%, Altyn 24,9%, Нурбанк 22,9-24,6% — диапазон 23-25%, дефолт 23,5% внутри него. Базовая ставка НБРК 16,75% с 27.07.2026 (снижение на 0,25 п.п. рыночную ипотеку пока не сдвинуло).",
+      "reverified": "2026-08-06"
     },
     {
       "key": "land_tax_farmland_rates_table",
@@ -8157,6 +8159,28 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "verify_note": "Tier-2 2026-08: выгружены обе таблицы целиком (по 101 строке), сверены с казахской редакцией — расхождений нет; 12 опорных точек совпали. Аномалия в п. 3: балл 91 = 210,9 (прирост 0,05 против ~3 у соседей) — опубликовано именно так, воспроизведено как есть.",
+      "reverified": "2026-08-06"
+    },
+    {
+      "key": "nbrk_base_rate",
+      "value": 16.75,
+      "unit": "percent",
+      "law": "Решение Правления НБРК от 27.07.2026 (коридор 15,75-17,75%)",
+      "year": "2026",
+      "change_frequency": "monthly",
+      "aliases": [
+        "nbrk_base_rate",
+        "base_rate_nbrk"
+      ],
+      "status": "current",
+      "conflict": "Якорь для производных величин: пеня по налогам = 1,25 × базовая ставка / 365 (0,65 — для участников горизонтального мониторинга) и ориентир рыночной ипотечной ГЭСВ. Менять ВМЕСТЕ с ними.",
+      "used_by": [
+        "PenaltyCalculator",
+        "MortgageCompareCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://nationalbank.kz/ru/news/grafik-prinyatiya-resheniy-po-bazovoy-stavke",
+      "verify_note": "Tier-2 2026-08: 2026 год — 18% (26.01, 10.03, 27.04), 17% (08.06), 16,75% (27.07). Ближайшие заседания: 04.09, 23.10, 04.12. РАНЬШЕ В РЕЕСТРЕ ОТСУТСТВОВАЛА — поэтому снижение 17→16,75 мониторинг не пометил, а зависимая пеня осталась на 0,0582%/день.",
       "reverified": "2026-08-06"
     }
   ],
