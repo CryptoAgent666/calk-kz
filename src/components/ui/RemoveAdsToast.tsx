@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { isScreenshotMode } from '../../utils/screenshotMode';
@@ -42,7 +43,7 @@ export function RemoveAdsToast() {
       if (isAdFree()) return;
       if (priceStatusRef.current === 'unavailable') return; // стор не отдал продукт
       setVisible(true);
-      emitIap('paywall_shown'); // показ оффера (место 3 — тост после интерстишела)
+      emitIap('paywall_shown', { platform: Capacitor.getPlatform() }); // показ оффера (место 3 — тост после интерстишела)
       clearTimeout(timer);
       timer = setTimeout(() => setVisible(false), AUTO_HIDE_MS);
     };

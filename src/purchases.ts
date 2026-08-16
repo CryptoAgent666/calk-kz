@@ -76,6 +76,30 @@ async function loadSdk() {
   return import('@revenuecat/purchases-capacitor');
 }
 
+/** Код ошибки RevenueCat: полезное (code, underlyingErrorMessage) лежит в
+ *  неперечисляемых свойствах и через обычный JSON.stringify теряется. */
+function rcErrorCode(e: unknown): string {
+  const err = e as { code?: unknown; errorCode?: unknown; message?: unknown } | null;
+  const code = err?.code ?? err?.errorCode;
+  if (code !== undefined && code !== null) return String(code);
+  return String(err?.message ?? e).slice(0, 64);
+}
+
+/** Диагностика стора в консоль (порт с calk.kg, b13): молчаливый провал для
+ *  пользователя правилен, но при отладке «продукт не разъехался по трекам»,
+ *  «поставлено не из стора» и «SDK не сконфигурен» неотличимы без следа.
+ *  Смотреть: Android — adb logcat -s Capacitor/Console:*; iOS — Safari →
+ *  Разработка → устройство. */
+function logStoreIssue(what: string, e?: unknown): void {
+  let detail = '';
+  if (e instanceof Error) {
+    detail = `: ${JSON.stringify(e, Object.getOwnPropertyNames(e))}`;
+  } else if (e !== undefined) {
+    detail = `: ${String(e)}`;
+  }
+  console.error(`[purchases] ${what} (${Capacitor.getPlatform()})${detail}`);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function hasEntitlement(customerInfo: any): boolean {
   return !!customerInfo?.entitlements?.active?.[ENTITLEMENT_ID];
@@ -88,7 +112,8 @@ export async function initPurchases(): Promise<void> {
   let Purchases: typeof import('@revenuecat/purchases-capacitor').Purchases;
   try {
     ({ Purchases } = await loadSdk());
-  } catch {
+  } catch (e) {
+    logStoreIssue('SDK не загрузился', e);
     return;
   }
 
@@ -106,11 +131,12 @@ export async function initPurchases(): Promise<void> {
     try {
       const { customerInfo } = await Purchases.getCustomerInfo();
       setAdFree(hasEntitlement(customerInfo));
-    } catch {
-      /* офлайн — остаёмся на закэшированном значении */
+    } catch (e) {
+      // Офлайн — ок, но сюда же прилетает 401 при неверном ключе RevenueCat.
+      logStoreIssue('статус покупок не получен', e);
     }
-  } catch {
-    /* конфиг не удался → безопасный дефолт: реклама показывается */
+  } catch (e) {
+    logStoreIssue('configure не прошёл', e);
   }
 }
 
@@ -147,8 +173,10 @@ export async function getRemoveAdsPrice(): Promise<string | null> {
   try {
     const { Purchases } = await loadSdk();
     const product = await fetchRemoveAdsProduct(Purchases);
+    if (!product) logStoreIssue('стор не отдал продукт (цена)');
     return product?.priceString ?? null;
-  } catch {
+  } catch (e) {
+    logStoreIssue('цена не получена', e);
     return null;
   }
 }
@@ -162,19 +190,28 @@ export type BuyResult = 'ok' | 'cancelled' | 'unavailable' | 'failed';
 /** Купить «Убрать рекламу». */
 export async function buyRemoveAds(): Promise<BuyResult> {
   if (!purchasesAvailable()) return 'unavailable';
-  emitIap('purchase_tapped');
+  const platform = Capacitor.getPlatform();
+  emitIap('purchase_tapped', { platform });
   try {
     const { Purchases } = await loadSdk();
     const product = await fetchRemoveAdsProduct(Purchases);
-    if (!product) return 'unavailable';
+    if (!product) {
+      // Тап был, а покупать нечего — без события этот путь в воронке невидим.
+      logStoreIssue('стор не отдал продукт (тап)');
+      emitIap('purchase_unavailable', { platform, code: 'product_not_found' });
+      return 'unavailable';
+    }
     const { customerInfo } = await Purchases.purchaseStoreProduct({ product });
     const ok = hasEntitlement(customerInfo);
     setAdFree(ok);
+    if (!ok) emitIap('purchase_failed', { platform, code: 'no_entitlement_after_purchase' });
     return ok ? 'ok' : 'failed';
   } catch (e) {
     // Отмена пользователем — не ошибка; для воронки различаем отмену и сбой.
     const cancelled = !!(e as { userCancelled?: boolean })?.userCancelled;
-    emitIap(cancelled ? 'purchase_cancelled' : 'purchase_failed');
+    if (!cancelled) logStoreIssue('покупка сорвалась', e);
+    emitIap(cancelled ? 'purchase_cancelled' : 'purchase_failed',
+      { platform, code: cancelled ? undefined : rcErrorCode(e) });
     return cancelled ? 'cancelled' : 'failed';
   }
 }

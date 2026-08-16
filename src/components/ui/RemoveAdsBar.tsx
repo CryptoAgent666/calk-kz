@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { isScreenshotMode } from '../../utils/screenshotMode';
@@ -60,7 +61,7 @@ export function RemoveAdsBar() {
     if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return;
     if (priceState.status === 'unavailable') return; // покупать нечего — оффер не показан
     shownRef.current = true;
-    emitIap('paywall_shown');
+    emitIap('paywall_shown', { platform: Capacitor.getPlatform() });
   }, [adFree, dismissed, priceState.status]);
 
   if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return null;
