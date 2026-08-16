@@ -265,6 +265,21 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
                 <p className="text-gray-700 leading-relaxed">{t('privacy.cookiesText')}</p>
               </div>
 
+              {/* Раздел про приложение обязателен: анкета App Privacy в App Store
+                  Connect декларирует сбор данных (AdMob, покупка, телеметрия),
+                  и политика по ссылке обязана его объяснять. */}
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t('privacy.mobileApp')}</h2>
+                <p className="text-gray-700 leading-relaxed mb-3">{t('privacy.mobileAppIntro')}</p>
+                <ul className="list-disc pl-5 space-y-2 text-gray-700 leading-relaxed">
+                  <li>{t('privacy.mobileAppAds')}</li>
+                  <li>{t('privacy.mobileAppPurchase')}</li>
+                  <li>{t('privacy.mobileAppRewarded')}</li>
+                  <li>{t('privacy.mobileAppTelemetry')}</li>
+                  <li>{t('privacy.mobileAppOta')}</li>
+                </ul>
+              </div>
+
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t('privacy.dataProtection')}</h2>
                 <p className="text-gray-700 leading-relaxed">{t('privacy.dataProtectionText')}</p>

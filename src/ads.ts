@@ -23,12 +23,16 @@ const AD_IDS = {
     appId: 'ca-app-pub-4859241862365215~9297974937',
     banner: 'ca-app-pub-4859241862365215/3230270353',
     interstitial: 'ca-app-pub-4859241862365215/1375252885',
+    // ✅ Боевой Rewarded (Calk.kz iOS).
+    rewarded: 'ca-app-pub-4859241862365215/4563633320',
   },
   android: {
     // ✅ Боевые (Calk.kz Android). appId → AndroidManifest APPLICATION_ID.
     appId: 'ca-app-pub-4859241862365215~1247260374',
     banner: 'ca-app-pub-4859241862365215/3241878642',
     interstitial: 'ca-app-pub-4859241862365215/2108760371',
+    // ✅ Боевой Rewarded (Calk.kz Android).
+    rewarded: 'ca-app-pub-4859241862365215/9166007134',
   },
 };
 
@@ -37,18 +41,107 @@ const AD_IDS = {
 //    Для собственного QA собери debug и зарегистрируй устройство как test device.
 const IS_TESTING = false;
 
+// ── Временное отключение рекламы за просмотр rewarded-ролика ─────────────────
+// Награда: N часов без баннера и интерстишелов НА ЭТОМ УСТРОЙСТВЕ — локальный
+// localStorage-таймер, между устройствами НЕ синхронизируется (в отличие от
+// купленного ad_free) и не должен. Намеренно не конкурирует с покупкой: даёт
+// распробовать жизнь без рекламы и подводит к «навсегда за 999 ₸».
+//
+// 6 часов: покрывает «полдня» задач (справедливо за 30-секундный ролик), но к
+// следующему дню реклама возвращается — показы копятся, а покупка «навсегда»
+// не обесценивается. 12–24 ч = один ролик закрывает все сессии эпизодического
+// пользователя и режет и рекламу, и покупки. Длительность — единственный
+// источник правды, UI подставляет {{hours}} отсюда.
+export const TEMP_AD_FREE_HOURS = 6;
+const TEMP_AD_FREE_KEY = 'calk_ads_free_until';
+
 // Интерстишал не чаще одного раза в этот интервал (UX + требования сторов).
 const INTERSTITIAL_MIN_INTERVAL_MS = 3 * 60 * 1000;
 // Не показывать интерстишал до N-й навигации (не доставать сразу после запуска).
 const INTERSTITIAL_MIN_NAVIGATIONS = 3;
 
 let interstitialReady = false;
+let tempUntilMem = 0;
+let adsReturnTimer: ReturnType<typeof setTimeout> | undefined;
 let navCount = 0;
 let interstitialShownCount = 0;
 
 function platformIds() {
   const p = Capacitor.getPlatform();
   return p === 'ios' ? AD_IDS.ios : AD_IDS.android;
+}
+
+/** Таймстамп окончания временного (за ролик) периода без рекламы, 0 если нет. */
+export function tempAdFreeUntil(): number {
+  let stored = 0;
+  try { stored = Number(localStorage.getItem(TEMP_AD_FREE_KEY) || '0'); } catch { /* mem-фолбэк */ }
+  return Math.max(stored, tempUntilMem);
+}
+
+/** Активен ли временный период без рекламы (за просмотр ролика). */
+export function tempAdFreeActive(): boolean {
+  return Date.now() < tempAdFreeUntil();
+}
+
+/** Rewarded доступен в этой сборке? (native + ID юнита создан). Гейт кнопки в UI. */
+export function rewardedAvailable(): boolean {
+  return Capacitor.isNativePlatform() && !!platformIds().rewarded;
+}
+
+/** Когда период истечёт — вернуть рекламу (баннер + интерстишалы) без перезапуска. */
+function scheduleAdsReturn(): void {
+  const left = tempAdFreeUntil() - Date.now();
+  if (left <= 0) return;
+  clearTimeout(adsReturnTimer);
+  adsReturnTimer = setTimeout(() => {
+    if (!isAdFree() && !tempAdFreeActive()) void initAds();
+  }, left + 1000);
+}
+
+export type WatchAdResult = 'ok' | 'cancelled' | 'unavailable' | 'failed';
+
+/**
+ * Показать rewarded-ролик и, если досмотрен, выдать TEMP_AD_FREE_HOURS часов
+ * без рекламы. Награда — ТОЛЬКО по событию Rewarded (пользователь досмотрел);
+ * закрытие раньше времени = 'cancelled' и ничего не выдаём (правила AdMob).
+ */
+export async function watchAdForTempAdFree(): Promise<WatchAdResult> {
+  if (!rewardedAvailable()) return 'unavailable';
+  if (isAdFree() || tempAdFreeActive()) return 'ok'; // выдавать нечего — уже без рекламы
+  try {
+    const { AdMob, RewardAdPluginEvents } = await import('@capacitor-community/admob');
+    await AdMob.prepareRewardVideoAd({ adId: platformIds().rewarded, isTesting: IS_TESTING });
+
+    let rewarded = false;
+    const handles = [
+      await AdMob.addListener(RewardAdPluginEvents.Rewarded, () => { rewarded = true; }),
+    ];
+    // Ждём закрытия ролика (или провала показа). Страховочный таймаут — чтобы
+    // кнопка не зависла в busy, если платформа не пришлёт Dismissed.
+    const closed = new Promise<void>((resolve) => {
+      const finish = () => resolve();
+      void AdMob.addListener(RewardAdPluginEvents.Dismissed, finish).then((h) => handles.push(h));
+      void AdMob.addListener(RewardAdPluginEvents.FailedToShow, finish).then((h) => handles.push(h));
+      setTimeout(finish, 5 * 60 * 1000);
+    });
+
+    await AdMob.showRewardVideoAd();
+    await closed;
+    handles.forEach((h) => { void h.remove(); });
+
+    if (!rewarded) return 'cancelled';
+
+    tempUntilMem = Date.now() + TEMP_AD_FREE_HOURS * 3600_000;
+    try {
+      localStorage.setItem(TEMP_AD_FREE_KEY, String(tempUntilMem));
+    } catch { /* приватный режим — mem-зеркало доживёт до конца сессии */ }
+    void hideAds();
+    scheduleAdsReturn();
+    return 'ok';
+  } catch (e) {
+    console.error('[admob] rewarded не показался:', e);
+    return 'failed';
+  }
 }
 
 async function prepareInterstitial(): Promise<void> {
@@ -93,6 +186,9 @@ export async function initAds(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
   // Пользователь купил «Убрать рекламу» → не грузим и не показываем ничего.
   if (isAdFree()) return;
+  // Активен временный период за просмотр ролика — рекламу не поднимаем,
+  // но ставим таймер, чтобы она вернулась ровно по истечении срока.
+  if (tempAdFreeActive()) { scheduleAdsReturn(); return; }
 
   let mod: typeof import('@capacitor-community/admob');
   try {
@@ -155,6 +251,7 @@ export async function initAds(): Promise<void> {
 export async function maybeShowInterstitial(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
   if (isAdFree()) return;
+  if (tempAdFreeActive()) return; // награда за ролик снимает и интерстишалы
   navCount += 1;
   if (navCount < INTERSTITIAL_MIN_NAVIGATIONS || !interstitialReady) return;
 
