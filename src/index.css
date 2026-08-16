@@ -102,3 +102,11 @@
 .safe-area-top-p4 {
   padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
 }
+
+/* В нативном приложении не показываем ссылки на магазины: бейдж Google Play
+   внутри iOS-сборки = App Store Guideline 2.3.10 (упоминание другой площадки).
+   Прячем через CSS, а не условным рендером, чтобы разметка совпадала между
+   пререндером и клиентом и гидратация в приложении (после OTA) не падала. */
+html[data-native="1"] .store-badges {
+  display: none;
+}

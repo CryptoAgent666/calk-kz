@@ -1,4 +1,5 @@
 import { StrictMode } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
@@ -10,6 +11,14 @@ import { initLiveUpdates } from './liveUpdates';
 import { initPurchases } from './purchases';
 import { initAds } from './ads';
 import { isScreenshotMode } from './utils/screenshotMode';
+
+// Метка нативной платформы на <html> — ВНЕ React-дерева, поэтому не влияет на
+// гидратацию. По ней CSS прячет то, что не должно быть видно в приложении:
+// бейдж Google Play в футере на iOS = App Store Guideline 2.3.10 (реджект
+// cryptocalk, июль 2026 — бейдж без гейта был виден на каждой странице).
+try {
+  if (Capacitor.isNativePlatform()) document.documentElement.dataset.native = '1';
+} catch { /* веб — метки нет */ }
 
 const container = document.getElementById('root');
 

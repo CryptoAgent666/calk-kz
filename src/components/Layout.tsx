@@ -344,8 +344,10 @@ export default function Layout({
                 {t('common:footer.tagline')}
               </p>
 
-              {/* App Store Badges */}
-              <div className="mb-4 flex flex-wrap gap-2">
+              {/* App Store Badges. Класс store-badges скрывается в нативных
+                  сборках (см. index.css + метку data-native в main.tsx):
+                  ссылка на Google Play внутри iOS-приложения — Guideline 2.3.10. */}
+              <div className="store-badges mb-4 flex flex-wrap gap-2">
                 <a
                   href="https://apps.apple.com/kz/app/calk-kz/id6770814234"
                   target="_blank"
