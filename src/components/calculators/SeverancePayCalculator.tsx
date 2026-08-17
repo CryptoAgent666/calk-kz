@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { AVG_WORKING_DAYS_PER_MONTH, workingDaysForPeriod } from '../../utils/workingTime';
 import { useTranslation } from 'react-i18next';
 import { UserMinus, Calculator, Info, AlertTriangle, FileText } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -50,7 +51,10 @@ export default function SeverancePayCalculator() {
   const IPN_ANNUAL_THRESHOLD = 8500 * MRP; // 36 762 500 ₸/год (новый НК РК 2026)
   const STANDARD_DEDUCTION = 30 * MRP;
   const ANNUAL_VACATION_DAYS = 24;
-  const CALENDAR_DAYS_PER_MONTH = 29.3;
+  // Средний дневной заработок — по РАБОЧИМ дням (Единые правила, приказ № 908
+  // от 30.11.2015, п. 8), компенсация — за рабочие дни, приходящиеся на
+  // неиспользованный отпуск (п. 7). Прежние 29,3 календарных дня — константа
+  // ТК РФ, в праве РК её нет; см. src/utils/workingTime.ts.
 
   const calculateSeverance = () => {
     const income = parseFloat(monthlyIncome) || 0;
@@ -59,12 +63,15 @@ export default function SeverancePayCalculator() {
       return EMPTY_RESULTS;
     }
 
-    const averageDailyPay = income / CALENDAR_DAYS_PER_MONTH;
+    const averageDailyPay = income / AVG_WORKING_DAYS_PER_MONTH;
 
-    // Vacation compensation
+    // Vacation compensation. Дни отпуска — календарные (ст. 88 ТК РК), а
+    // оплачиваются рабочие дни, приходящиеся на этот период: переводим по доле
+    // рабочих дней в году (дата увольнения для оценки не нужна).
     const earnedVacationDays = Math.round(ANNUAL_VACATION_DAYS * workMonths / 12);
     const unusedVacationDays = Math.max(0, earnedVacationDays - usedVacationDays);
-    const vacationCompensation = averageDailyPay * unusedVacationDays;
+    const paidWorkingDays = workingDaysForPeriod(unusedVacationDays);
+    const vacationCompensation = averageDailyPay * paidWorkingDays;
 
     // Severance pay depends on reason
     let severancePay = 0;

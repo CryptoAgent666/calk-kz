@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { AVG_WORKING_DAYS_PER_MONTH } from '../../utils/workingTime';
 import { useTranslation } from 'react-i18next';
 import { Calculator, Clock, Info } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -47,7 +48,9 @@ export default function AverageEarningsCalculator() {
       const bonus = parseFloat(yearlyBonus) || 0;
       const allow = parseFloat(allowances) || 0;
       totalPay = (salary + allow) * months + (bonus * months / 12);
-      days = months * 21;
+      // Рабочих дней в месяце — по производственному календарю (246/12 = 20,5),
+      // а не «примерно 21»: тем же числом считают отпускные и выходное пособие.
+      days = months * AVG_WORKING_DAYS_PER_MONTH;
       hours = days * 8;
     } else {
       totalPay = parseFloat(totalPayments) || 0;

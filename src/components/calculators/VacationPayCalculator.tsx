@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { AVG_WORKING_DAYS_PER_MONTH, workingDaysForPeriod } from '../../utils/workingTime';
 import { useTranslation } from 'react-i18next';
 import { Palmtree, Calculator, Info, AlertTriangle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -18,6 +19,9 @@ export default function VacationPayCalculator() {
   const [monthlyIncome, setMonthlyIncome] = useState<string>('250000');
   const [workMonths, setWorkMonths] = useState<number>(12);
   const [vacationDays, setVacationDays] = useState<number>(24);
+  // Дата начала отпуска (необязательно): с ней рабочие дни считаются точно по
+  // производственному календарю, без неё — усреднённой оценкой.
+  const [vacationStart, setVacationStart] = useState<string>('');
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
 
@@ -25,6 +29,8 @@ export default function VacationPayCalculator() {
   // useEffect: пререндер сохраняет страницу с числами, и первый клиентский
   // рендер обязан выдать те же числа — иначе гидратация падает (#418/#425).
   const EMPTY_RESULTS = {
+    paidWorkingDays: 0,
+    isExactDays: false,
     averageDailyPay: 0,
     grossVacationPay: 0,
     opv: 0,
@@ -44,7 +50,10 @@ export default function VacationPayCalculator() {
   const IPN_RATE = 0.10;
   const STANDARD_DEDUCTION = 30 * MRP;
   const DEFAULT_VACATION_DAYS = 24;
-  const WORKING_DAYS_PER_MONTH = 29.3;
+  // Средний дневной заработок считается по РАБОЧИМ дням (Единые правила,
+  // приказ № 908 от 30.11.2015, п. 8), а оплата — за рабочие дни, приходящиеся
+  // на отпуск (п. 7). Прежние 29,3 календарных дня — константа ТК РФ, в праве
+  // РК её нет; см. src/utils/workingTime.ts.
   const OPV_MAX_BASE = 50 * MZP;
   const VOSMS_MAX_BASE = 20 * MZP; // С 2026 г. максимальная база ВОСМС повышена с 10 до 20 МЗП
 
@@ -56,8 +65,11 @@ export default function VacationPayCalculator() {
     }
 
     const totalIncome = income * workMonths;
-    const averageDailyPay = totalIncome / (workMonths * WORKING_DAYS_PER_MONTH);
-    const grossVacationPay = averageDailyPay * vacationDays;
+    const averageDailyPay = totalIncome / (workMonths * AVG_WORKING_DAYS_PER_MONTH);
+    // Рабочие дни отпуска: точно по календарю, если указана дата начала,
+    // иначе — оценка по годовой доле рабочих дней.
+    const paidWorkingDays = workingDaysForPeriod(vacationDays, vacationStart || undefined);
+    const grossVacationPay = averageDailyPay * paidWorkingDays;
 
     const opvBase = Math.min(grossVacationPay, OPV_MAX_BASE);
     const opv = opvBase * OPV_RATE;
@@ -77,6 +89,8 @@ export default function VacationPayCalculator() {
     const effectiveRate = grossVacationPay > 0 ? (totalDeductions / grossVacationPay) * 100 : 0;
 
     return {
+      paidWorkingDays: Math.round(paidWorkingDays * 10) / 10,
+      isExactDays: !!vacationStart,
       averageDailyPay: Math.round(averageDailyPay),
       grossVacationPay: Math.round(grossVacationPay),
       opv: Math.round(opv),
@@ -95,7 +109,7 @@ export default function VacationPayCalculator() {
   const results = useMemo(
     calculateVacationPay,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [monthlyIncome, workMonths, vacationDays, isResident, isPrimaryJob]
+    [monthlyIncome, workMonths, vacationDays, vacationStart, isResident, isPrimaryJob]
   );
 
   const formatNumber = (num: number) => {
@@ -193,6 +207,25 @@ export default function VacationPayCalculator() {
               </p>
             </div>
 
+            {/* Дата начала отпуска — необязательна. С ней оплачиваемые рабочие
+                дни считаются точно по производственному календарю (п. 7 Правил). */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('vacation-pay.vacationStart')}
+              </label>
+              <input
+                type="date"
+                value={vacationStart}
+                onChange={(e) => setVacationStart(e.target.value)}
+                min="2026-01-01"
+                max="2026-12-31"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {t('vacation-pay.vacationStartHint')}
+              </p>
+            </div>
+
             {/* Checkboxes */}
             <div className="space-y-4">
               <div className="flex items-center">
@@ -286,6 +319,16 @@ export default function VacationPayCalculator() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('vacation-pay.detailedBreakdown')}</h3>
 
               <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">
+                    {t('vacation-pay.paidWorkingDays')}
+                    {!results.isExactDays && (
+                      <span className="ml-1 text-xs text-gray-400">{t('vacation-pay.approx')}</span>
+                    )}
+                  </span>
+                  <span className="font-semibold text-gray-900">{results.paidWorkingDays}</span>
+                </div>
+
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">{t('vacation-pay.averageDailyPay')}</span>
                   <span className="font-semibold text-gray-900">{formatNumber(results.averageDailyPay)}</span>
