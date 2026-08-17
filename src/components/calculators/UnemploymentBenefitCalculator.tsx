@@ -29,8 +29,13 @@ export default function UnemploymentBenefitCalculator() {
     minRequiredExperience: 6
   };
 
-  // Коэффициент стажа участия (ГФСС, 2026): 6 мес–1 г = 0.7 ... 5–6 лет = 1.0,
-  // свыше 6 лет +0.02 за каждый год (макс. 1.3)
+  // Коэффициент стажа участия (КСУ). Правила, утв. приказом от 22.06.2023 № 237
+  // (рег. МЮ № 32881), п. 37, дословно:
+  //   «При стаже участия 72 и более месяцев КСУ = 1,0 + 0,02 × ЦЕЛОЕ((Мсо − 60 мес.)/12 мес.)»,
+  //   «за каждый год стажа участия СВЫШЕ ПЯТИ ЛЕТ», но не более 1,3.
+  // Отсчёт надбавки идёт от 60 месяцев, а не от 72: при стаже 6 лет КСУ уже 1,02.
+  // До 17.08.2026 в коде стояло (months − 72) — надбавка отставала на год и
+  // занижала выплату всем со стажем 6–19 лет примерно на 2%.
   const getExperienceCoefficient = (months: number) => {
     if (months < 6) return 0;
     if (months < 12) return 0.7;
@@ -39,7 +44,7 @@ export default function UnemploymentBenefitCalculator() {
     if (months < 48) return 0.9;
     if (months < 60) return 0.95;
     if (months < 72) return 1.0;
-    return Math.min(1.3, 1.0 + 0.02 * Math.floor((months - 72) / 12));
+    return Math.min(1.3, 1.0 + 0.02 * Math.floor((months - 60) / 12));
   };
 
   // Срок выплаты (ГФСС, 2026): от 6 мес стажа — 1 месяц ... 5+ лет — 6 месяцев
@@ -312,7 +317,7 @@ export default function UnemploymentBenefitCalculator() {
                 ['threeToFourYears', '0.9'],
                 ['fourToFiveYears', '0.95'],
                 ['fiveToSixYears', '1.0'],
-                ['sixPlusYears', '1.0–1.3'],
+                ['sixPlusYears', '1.02–1.3'],
               ].map(([k, v], i, arr) => (
                 <div key={k} className={`flex justify-between text-sm py-2 px-3 rounded ${i === arr.length - 1 ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
                   <span className={i === arr.length - 1 ? 'text-green-800' : 'text-gray-700'}>{t(`unemployment.${k}`)}</span>
