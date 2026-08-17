@@ -153,7 +153,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
                       <Mail className="w-5 h-5 text-blue-600" />
                       <div>
                         <div className="font-medium text-gray-900">{t('contact.email')}</div>
-                        <div className="text-gray-600">info@calk.kz</div>
+                        <a href="mailto:info@calk.kz" className="text-blue-600 hover:text-blue-800 hover:underline">info@calk.kz</a>
                       </div>
                     </div>
                     
