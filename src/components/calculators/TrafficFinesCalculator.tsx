@@ -45,7 +45,7 @@ const violations: Violation[] = [
 ];
 
 export default function TrafficFinesCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedViolation, setSelectedViolation] = useState<string | null>('speed10_20');
@@ -101,7 +101,7 @@ export default function TrafficFinesCalculator() {
                 { label: t('traffic-fines.penalty'), value: penaltyKey ? t(penaltyKey) : t('traffic-fines.noFineLabel') },
               ]
             : [
-                { label: t('traffic-fines.fineInMRP'), value: `${fineInMRP} МРП` },
+                { label: t('traffic-fines.fineInMRP'), value: `${fineInMRP} ${mrpUnit}` },
                 { label: t('traffic-fines.fullAmount'), value: formatCurrency(fineAmount) },
                 { label: t('traffic-fines.discountAmount'), value: formatCurrency(discountedAmount) },
               ],
@@ -175,7 +175,7 @@ export default function TrafficFinesCalculator() {
                 <div className="text-xs text-gray-500 mt-1">
                   {v.noMonetaryFine
                     ? t('traffic-fines.noFineLabel')
-                    : <>{v.firstMRP} МРП{v.repeatMRP !== null && ` / ${v.repeatMRP} МРП`}</>}
+                    : <>{v.firstMRP} {mrpUnit}{v.repeatMRP !== null && ` / ${v.repeatMRP} ${mrpUnit}`}</>}
                 </div>
               </button>
             ))}
@@ -236,9 +236,9 @@ export default function TrafficFinesCalculator() {
                   <div className="bg-orange-50 rounded-lg p-4 flex justify-between items-center">
                     <div>
                       <div className="text-sm text-orange-600">{t('traffic-fines.fineInMRP')}</div>
-                      <div className="text-xs text-orange-500">1 МРП = {formatCurrency(MRP_2026)}</div>
+                      <div className="text-xs text-orange-500">{`1 ${mrpUnit} = `}{formatCurrency(MRP_2026)}</div>
                     </div>
-                    <span className="text-2xl font-bold text-orange-700">{fineInMRP} МРП</span>
+                    <span className="text-2xl font-bold text-orange-700">{fineInMRP} {mrpUnit}</span>
                   </div>
 
                   {/* Full amount */}
@@ -327,10 +327,10 @@ export default function TrafficFinesCalculator() {
                   <td className="py-2 px-2">{t(v.labelKey)}</td>
                   <td className="py-2 px-2 text-gray-500">ст. {v.articleRef}</td>
                   <td className="py-2 px-2 text-right font-medium">
-                    {v.noMonetaryFine ? t('traffic-fines.noFineLabel') : `${v.firstMRP} МРП`}
+                    {v.noMonetaryFine ? t('traffic-fines.noFineLabel') : `${v.firstMRP} ${mrpUnit}`}
                   </td>
                   <td className="py-2 px-2 text-right font-medium">
-                    {v.noMonetaryFine ? '—' : v.repeatMRP !== null ? `${v.repeatMRP} МРП` : '—'}
+                    {v.noMonetaryFine ? '—' : v.repeatMRP !== null ? `${v.repeatMRP} ${mrpUnit}` : '—'}
                   </td>
                   <td className="py-2 px-2 text-right text-gray-600">
                     {v.noMonetaryFine ? '—' : formatCurrency(v.firstMRP * MRP_2026)}

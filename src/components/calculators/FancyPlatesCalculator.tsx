@@ -37,7 +37,7 @@ const plateCategories: PlateCategory[] = [
 ];
 
 export default function FancyPlatesCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [selectedCategory, setSelectedCategory] = useState('premium');
   const [quantity, setQuantity] = useState<string>('1');
@@ -62,7 +62,7 @@ export default function FancyPlatesCalculator() {
         title: t('fancy-plates.resultsTitle'),
         data: [
           { label: t('fancy-plates.category'), value: t(selected.labelKey) },
-          { label: t('fancy-plates.feeInMRP'), value: `${results.mrp} МРП` },
+          { label: t('fancy-plates.feeInMRP'), value: `${results.mrp} ${mrpUnit}` },
           { label: t('fancy-plates.feeInTenge'), value: formatCurrency(results.pricePerPlate) },
           { label: t('fancy-plates.quantity'), value: String(results.qty) },
           { label: t('fancy-plates.total'), value: formatCurrency(results.total) },
@@ -119,7 +119,7 @@ export default function FancyPlatesCalculator() {
                     <div className="text-xs text-gray-500">{t(cat.descKey)}</div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-3">
-                    <div className="text-sm font-bold text-amber-700">{cat.mrp} МРП</div>
+                    <div className="text-sm font-bold text-amber-700">{cat.mrp} {mrpUnit}</div>
                     <div className="text-xs text-gray-500 font-mono">{cat.example}</div>
                   </div>
                 </div>
@@ -162,9 +162,9 @@ export default function FancyPlatesCalculator() {
               <div className="bg-amber-50 rounded-lg p-4 flex justify-between items-center">
                 <div>
                   <div className="text-sm text-amber-600">{t('fancy-plates.feeInMRP')}</div>
-                  <div className="text-xs text-amber-500">1 МРП = {formatCurrency(MRP_2026)}</div>
+                  <div className="text-xs text-amber-500">{`1 ${mrpUnit} = `}{formatCurrency(MRP_2026)}</div>
                 </div>
-                <span className="text-2xl font-bold text-amber-700">{results.mrp} МРП</span>
+                <span className="text-2xl font-bold text-amber-700">{results.mrp} {mrpUnit}</span>
               </div>
 
               {/* Price per plate */}
@@ -205,7 +205,7 @@ export default function FancyPlatesCalculator() {
               <tr className="border-b border-gray-200">
                 <th className="text-left py-3 px-2 text-gray-600">{t('fancy-plates.category')}</th>
                 <th className="text-left py-3 px-2 text-gray-600">{t('fancy-plates.example')}</th>
-                <th className="text-right py-3 px-2 text-gray-600">МРП</th>
+                <th className="text-right py-3 px-2 text-gray-600">{mrpUnit}</th>
                 <th className="text-right py-3 px-2 text-gray-600">{t('fancy-plates.amountTenge')}</th>
               </tr>
             </thead>

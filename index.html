@@ -178,7 +178,10 @@
           script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4859241862365215';
           script.async = true;
           script.crossOrigin = 'anonymous';
-          // data-anchor-shown="false" + data-overlays="bottom" предотвращают vignette/anchor агрессивные форматы
+          // data-overlays="bottom" управляет ТОЛЬКО позицией anchor-баннера.
+          // Vignette (межстраничная реклама по клику) этим атрибутом НЕ отключается —
+          // подтверждено browser-qa 17.08.2026: вигнетка перехватывает клики по
+          // карточкам. Управление vignette — в аккаунте AdSense (Auto ads → форматы).
           script.dataset.overlays = 'bottom';
           document.head.appendChild(script);
         };
