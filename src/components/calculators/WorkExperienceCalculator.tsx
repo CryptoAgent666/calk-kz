@@ -41,13 +41,30 @@ export default function WorkExperienceCalculator() {
   // числами, и первый клиентский рендер обязан выдать те же числа — иначе
   // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
   const computeTotal = () => {
-    let y = 0, m = 0, d = 0, valid = 0;
-    periods.forEach((p) => {
-      const r = diffPeriod(p.from, p.to);
-      if (!r) return;
-      valid++;
+    // Пересекающиеся периоды (совместительство) НЕ удваивают стаж: календарный
+    // трудовой стаж считается по объединению интервалов, а не по их сумме.
+    // Раньше 2020–2023 + 2022–2026 давали «7 л. 11 мес.» вместо честных 6,5 лет.
+    const intervals = periods
+      .map((p) => ({ from: new Date(p.from), to: new Date(p.to) }))
+      .filter((iv) => !isNaN(+iv.from) && !isNaN(+iv.to) && iv.to >= iv.from)
+      .sort((a, b) => +a.from - +b.from);
+    const valid = intervals.length;
+    const merged: typeof intervals = [];
+    for (const iv of intervals) {
+      const last = merged[merged.length - 1];
+      // +1 день: смежные периоды («…по 30.06» и «с 01.07») — непрерывный стаж
+      if (last && +iv.from <= +last.to + 86_400_000) {
+        if (+iv.to > +last.to) last.to = iv.to;
+      } else {
+        merged.push({ ...iv });
+      }
+    }
+    let y = 0, m = 0, d = 0;
+    for (const iv of merged) {
+      const r = diffPeriod(iv.from.toISOString().slice(0, 10), iv.to.toISOString().slice(0, 10));
+      if (!r) continue;
       y += r.y; m += r.m; d += r.d;
-    });
+    }
     m += Math.floor(d / 30); d = d % 30;
     y += Math.floor(m / 12); m = m % 12;
     return { y, m, d, valid };
@@ -55,7 +72,7 @@ export default function WorkExperienceCalculator() {
 
   const total = useMemo(
     computeTotal,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [periods]
   );
 

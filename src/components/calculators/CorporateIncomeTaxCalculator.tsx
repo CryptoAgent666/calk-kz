@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Building2, Calculator, TrendingUp, Info, Percent, Wallet, Coins } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -41,18 +41,10 @@ export default function CorporateIncomeTaxCalculator() {
   const [dividends, setDividends] = useState<string>('0');
   const [royalties, setRoyalties] = useState<string>('0');
 
-  const [results, setResults] = useState({
-    taxableIncome: 0,
-    mainTax: 0,
-    withholdingTax: 0,
-    totalTax: 0,
-    effectiveRate: 0,
-    monthlyAdvance: 0,
-    netProfit: 0,
-    rate: 20,
-  });
-
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const computeResults = () => {
     const income = parseFloat(grossIncome) || 0;
     const deduct = parseFloat(deductions) || 0;
     const losses = parseFloat(pastLosses) || 0;
@@ -70,7 +62,7 @@ export default function CorporateIncomeTaxCalculator() {
     const monthlyAdvance = Math.round(mainTax / 12);
     const netProfit = taxableIncome - mainTax;
 
-    setResults({
+    return {
       taxableIncome: Math.round(taxableIncome),
       mainTax,
       withholdingTax,
@@ -79,8 +71,14 @@ export default function CorporateIncomeTaxCalculator() {
       monthlyAdvance,
       netProfit: Math.round(netProfit),
       rate,
-    });
-  }, [grossIncome, deductions, pastLosses, activity, hasDividends, dividends, royalties]);
+    };
+  };
+
+  const results = useMemo(
+    computeResults,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grossIncome, deductions, pastLosses, activity, hasDividends, dividends, royalties]
+  );
 
   const formatCurrency = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';

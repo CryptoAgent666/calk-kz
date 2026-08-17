@@ -17,7 +17,9 @@ const MRP_2026 = 4325;
 type Mode = 'zags' | 'court';
 
 export default function DivorceCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
+  // «МРП» по-казахски — АЕК; паттерн DataFreshnessBadge
+  const mrpUnit = i18n.language === 'kk' ? 'АЕК' : 'МРП';
   const [mode, setMode] = useState<Mode>('zags');
   const [mutualConsent, setMutualConsent] = useState<boolean>(true);
   const [hasChildren, setHasChildren] = useState<boolean>(false);
@@ -137,7 +139,7 @@ export default function DivorceCalculator() {
 
           <div className="space-y-2 text-sm">
             <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-              <span>{t('divorce.divorceFee')} ({mode === 'zags' ? '2 МРП' : '0,3 МРП'})</span>
+              <span>{t('divorce.divorceFee')} ({mode === 'zags' ? `2 ${mrpUnit}` : `0,3 ${mrpUnit}`})</span>
               <span className="font-semibold">{formatNumber(results.divorceFee)}</span>
             </div>
             {results.propertyFee > 0 && (
@@ -148,7 +150,7 @@ export default function DivorceCalculator() {
             )}
             {results.alimonyPetitionFee > 0 && (
               <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-                <span>{t('divorce.alimonyFee')} (1 МРП)</span>
+                <span>{t('divorce.alimonyFee')} (1 {mrpUnit})</span>
                 <span className="font-semibold">{formatNumber(results.alimonyPetitionFee)}</span>
               </div>
             )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, TrendingUp, Info, Building2, Wallet, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -50,17 +50,7 @@ export default function RentalIncomeTaxCalculator() {
   const [utilitiesIncluded, setUtilitiesIncluded] = useState<boolean>(false);
   const [utilitiesAmount, setUtilitiesAmount] = useState<string>('25000');
 
-  const [results, setResults] = useState({
-    yearlyIncome: 0,
-    taxableIncome: 0,
-    incomeTax: 0,
-    socialPayments: 0,
-    totalTax: 0,
-    netIncome: 0,
-    effectiveRate: 0,
-  });
 
-  const [comparison, setComparison] = useState<RegimeResult[]>([]);
 
   const calculateForRegime = (
     regime: TaxRegime,
@@ -106,23 +96,22 @@ export default function RentalIncomeTaxCalculator() {
     };
   };
 
-  useEffect(() => {
+  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
+  // числами, и первый клиентский рендер обязан выдать те же числа — иначе
+  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
+  const computeAll = () => {
     const rent = parseFloat(monthlyRent) || 0;
     const months = parseFloat(rentalMonths) || 12;
     const util = parseFloat(utilitiesAmount) || 0;
 
     if (rent <= 0) {
-      setResults({
-        yearlyIncome: 0,
-        taxableIncome: 0,
-        incomeTax: 0,
-        socialPayments: 0,
-        totalTax: 0,
-        netIncome: 0,
-        effectiveRate: 0,
-      });
-      setComparison([]);
-      return;
+      return {
+        results: {
+          yearlyIncome: 0, taxableIncome: 0, incomeTax: 0, socialPayments: 0,
+          totalTax: 0, netIncome: 0, effectiveRate: 0,
+        },
+        comparison: [] as RegimeResult[],
+      };
     }
 
     const yearlyIncome = rent * months;
@@ -140,18 +129,25 @@ export default function RentalIncomeTaxCalculator() {
         ? patent
         : simplified;
 
-    setResults({
-      yearlyIncome: Math.round(yearlyIncome),
-      taxableIncome: Math.round(taxableIncome),
-      incomeTax: selected.incomeTax,
-      socialPayments: selected.socialPayments,
-      totalTax: selected.totalTax,
-      netIncome: selected.netIncome,
-      effectiveRate: selected.effectiveRate,
-    });
+    return {
+      results: {
+        yearlyIncome: Math.round(yearlyIncome),
+        taxableIncome: Math.round(taxableIncome),
+        incomeTax: selected.incomeTax,
+        socialPayments: selected.socialPayments,
+        totalTax: selected.totalTax,
+        netIncome: selected.netIncome,
+        effectiveRate: selected.effectiveRate,
+      },
+      comparison: [individual, patent, simplified],
+    };
+  };
 
-    setComparison([individual, patent, simplified]);
-  }, [monthlyRent, rentalMonths, utilitiesIncluded, utilitiesAmount, selectedRegime, propertyType]);
+  const { results, comparison } = useMemo(
+    computeAll,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [monthlyRent, rentalMonths, utilitiesIncluded, utilitiesAmount, selectedRegime, propertyType]
+  );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
