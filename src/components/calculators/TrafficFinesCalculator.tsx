@@ -46,6 +46,8 @@ const violations: Violation[] = [
 
 export default function TrafficFinesCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  // «МРП» по-казахски — АЕК (айлық есептік көрсеткіш); паттерн DataFreshnessBadge
+  const mrpUnit = i18n.language === 'kk' ? 'АЕК' : 'МРП';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedViolation, setSelectedViolation] = useState<string | null>('speed10_20');

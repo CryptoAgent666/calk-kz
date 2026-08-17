@@ -38,6 +38,8 @@ const plateCategories: PlateCategory[] = [
 
 export default function FancyPlatesCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  // «МРП» по-казахски — АЕК (айлық есептік көрсеткіш); паттерн DataFreshnessBadge
+  const mrpUnit = i18n.language === 'kk' ? 'АЕК' : 'МРП';
 
   const [selectedCategory, setSelectedCategory] = useState('premium');
   const [quantity, setQuantity] = useState<string>('1');
