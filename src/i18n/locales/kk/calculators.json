@@ -8041,7 +8041,8 @@
     "sources": {
       "laborCode": "ҚР Еңбек кодексі",
       "enbek": "enbek.kz порталы"
-    }
+    },
+    "workingDays": "жұмыс күні"
   },
   "parcel-customs": {
     "title": "Сәлемдемелерге кедендік баж калькуляторы",

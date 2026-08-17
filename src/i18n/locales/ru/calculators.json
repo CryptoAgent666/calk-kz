@@ -8087,7 +8087,8 @@
     "sources": {
       "laborCode": "Трудовой кодекс РК",
       "enbek": "Портал enbek.kz"
-    }
+    },
+    "workingDays": "раб. дней"
   },
   "parcel-customs": {
     "title": "Калькулятор таможенной пошлины на посылки",

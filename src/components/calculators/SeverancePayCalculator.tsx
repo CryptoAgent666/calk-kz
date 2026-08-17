@@ -469,7 +469,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                     <span className="text-lg font-bold text-orange-900">{formatNumber(results.averageDailyPay)}</span>
                   </div>
                   <p className="text-xs text-orange-700 mt-1">
-                    {formatNumber(parseFloat(monthlyIncome) || 0)} / {CALENDAR_DAYS_PER_MONTH} {t('severance-pay.days')}
+                    {formatNumber(parseFloat(monthlyIncome) || 0)} / {AVG_WORKING_DAYS_PER_MONTH.toFixed(1)} {t('severance-pay.workingDays')}
                   </p>
                 </div>
 
