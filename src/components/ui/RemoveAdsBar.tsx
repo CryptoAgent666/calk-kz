@@ -84,9 +84,11 @@ export function RemoveAdsBar() {
   return (
     <div
       className="calk-slide-up fixed left-0 right-0 z-40 flex items-center justify-between gap-2 bg-blue-600 px-3 py-2 text-white shadow-lg"
-      // Посадка ровно над нативным AdMob-баннером: его фактическую высоту
-      // ads.ts кладёт в --admob-banner-height по событию SizeChanged.
-      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + var(--admob-banner-height, 56px) + 6px)' }}
+      // Посадка над нативным AdMob-баннером. SizeChanged в admob@8 НЕ приходит
+      // (сим-QA calk-usa 26.08.2026), поэтому --admob-banner-height обычно пуст:
+      // минимум 96px держит бар выше адаптивного баннера в любом случае,
+      // а var уточняет позицию вверх, если событие всё же сработает.
+      style={{ bottom: 'calc(max(var(--admob-banner-height, 0px), 96px) + env(safe-area-inset-bottom, 0px) + 6px)' }}
       role="region"
       aria-label={t('removeAds.remove')}
     >

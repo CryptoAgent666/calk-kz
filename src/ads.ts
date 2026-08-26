@@ -196,10 +196,24 @@ export async function initAds(): Promise<void> {
   } catch {
     return;
   }
-  const { AdMob, BannerAdPosition, BannerAdSize, BannerAdPluginEvents } = mod;
+  const { AdMob, AdmobConsentStatus, BannerAdPosition, BannerAdSize, BannerAdPluginEvents } = mod;
 
   try {
     await AdMob.initialize({ initializeForTesting: IS_TESTING });
+
+    // GDPR/UMP-согласие — ПЕРВЫМ, до ATT и баннера (порядок флота: UMP→ATT→баннер,
+    // calk.uz 1.3.1). Для EEA/UK форма обязательна до запроса рекламы; в KZ статус
+    // NOT_REQUIRED и она не появляется. Сама форма приходит из опубликованного
+    // AdMob-сообщения «Calk fleet - GDPR consent» (Privacy & messaging) — без него
+    // requestConsentInfo вернёт REQUIRED, а показать будет нечего.
+    try {
+      const consent = await AdMob.requestConsentInfo();
+      if (consent.isConsentFormAvailable && consent.status === AdmobConsentStatus.REQUIRED) {
+        await AdMob.showConsentForm();
+      }
+    } catch {
+      /* ignore */
+    }
 
     // iOS App Tracking Transparency — Apple требует запрос перед таргет-рекламой.
     if (Capacitor.getPlatform() === 'ios') {
@@ -211,13 +225,6 @@ export async function initAds(): Promise<void> {
       } catch {
         /* ignore */
       }
-    }
-
-    // GDPR/UMP-согласие (для EEA; в KZ обычно не показывается).
-    try {
-      await AdMob.requestConsentInfo();
-    } catch {
-      /* ignore */
     }
 
     // Фактическая высота баннера (приходит после загрузки и при поворотах).
