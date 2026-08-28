@@ -68,22 +68,33 @@ const PED_CATEGORY_RATES: Record<PedCategory, number> = {
   master: 0.50,
 };
 
-// Доплаты. База у них РАЗНАЯ, поэтому хранится явно, а не одним числом в МРП:
-// ПП РК № 1193 задаёт доплату за заведование кабинетом как процент от БДО,
-// а не фиксированную сумму в МРП. Сверка Tier-2 23.08.2026 подтвердила 20% БДО;
-// прежнее «1 МРП» занижало доплату примерно на 20%.
-// Остальные три доплаты этой сверкой НЕ подтверждались — значения в МРП
-// оставлены как были и помечены как неподтверждённые.
-type BonusSpec = { base: 'bdo' | 'mrp'; value: number; verified: boolean };
-const BONUSES: Record<string, BonusSpec> = {
-  classTeacher:  { base: 'mrp', value: 5,    verified: false }, // классное руководство
-  notebookCheck: { base: 'mrp', value: 3,    verified: false }, // проверка тетрадей
-  cabinetHead:   { base: 'bdo', value: 0.20, verified: true  }, // заведование кабинетом — 20% БДО
-  methodist:     { base: 'mrp', value: 2,    verified: false }, // методист
-};
+// Доплаты. ВСЕ они задаются Приложением 4 к ПП РК № 1193 процентом от БДО —
+// не суммой в МРП. Сверка Tier-2 29.08.2026 по тексту постановления на adilet:
+//   классное руководство — 50% БДО (1-4 кл.), 60% БДО (5-11(12) кл.);
+//   проверка тетрадей   — 40% БДО (базовая ставка);
+//   заведование кабинетом — 20% БДО (школы, школы-интернаты, детдома).
+// До этой сверки в коде стояли 5 / 3 / 2 МРП — ровная убывающая лесенка, которой
+// нет ни в одном НПА: классное руководство было завышено в 2,0-2,4 раза, проверка
+// тетрадей — в 1,5-1,8 раза. Доплата «методисту» (2 МРП) удалена: такой доплаты
+// не существует, «методист» в ПП № 1193 — это наименование штатной должности,
+// а не надбавка и не квалификационная категория (их шесть: педагог-стажёр,
+// педагог, педагог-модератор, педагог-эксперт, педагог-исследователь,
+// педагог-мастер). В МРП Закон «О статусе педагога» (ст. 8) задаёт только
+// доплаты за учёные степени и магистратуру — их калькулятор не считает.
+type SchoolLevel = 'primary' | 'secondary';
+type BonusSpec = { value: number; prorated: boolean };
 
-function bonusAmountFor(spec: BonusSpec, mrp: number, bdo: number): number {
-  return spec.base === 'bdo' ? Math.round(spec.value * bdo) : Math.round(spec.value * mrp);
+// prorated: по п. 37 Правил исчисления зарплаты педагогов (приказ МОН РК № 622)
+// доплаты считаются от ФАКТИЧЕСКОЙ нагрузки. Единственное исключение из тех,
+// что здесь есть, — проверка тетрадей у основного учителя 1-4 классов.
+const bonusSpecsFor = (level: SchoolLevel): Record<string, BonusSpec> => ({
+  classTeacher:  { value: level === 'primary' ? 0.50 : 0.60, prorated: true },
+  notebookCheck: { value: 0.40, prorated: level !== 'primary' },
+  cabinetHead:   { value: 0.20, prorated: true },
+});
+
+function bonusAmountFor(spec: BonusSpec, bdo: number, loadFactor: number): number {
+  return Math.round(spec.value * bdo * (spec.prorated ? loadFactor : 1));
 }
 
 function getExperienceIndex(years: number): number {
@@ -102,11 +113,11 @@ export default function TeacherSalaryCalculator() {
   const [hoursPerWeek, setHoursPerWeek] = useState<string>('18');
   const [isRural, setIsRural] = useState(false);
   const [isSmallSchool, setIsSmallSchool] = useState(false);
+  const [schoolLevel, setSchoolLevel] = useState<SchoolLevel>('secondary');
   const [bonuses, setBonuses] = useState({
     classTeacher: true,
     notebookCheck: false,
     cabinetHead: false,
-    methodist: false,
   });
 
   const results = useMemo(() => {
@@ -133,9 +144,9 @@ export default function TeacherSalaryCalculator() {
     const ruralBonus = isRural ? Math.round(okladByLoad * 0.25) : 0;
     const smallSchoolBonus = isSmallSchool ? Math.round(okladByLoad * 0.20) : 0;
 
-    const bonusAmount = Object.entries(BONUSES).reduce(
+    const bonusAmount = Object.entries(bonusSpecsFor(schoolLevel)).reduce(
       (sum, [key, spec]) =>
-        bonuses[key as keyof typeof bonuses] ? sum + bonusAmountFor(spec, MRP_2026, BDO_2026) : sum,
+        bonuses[key as keyof typeof bonuses] ? sum + bonusAmountFor(spec, BDO_2026, loadFactor) : sum,
       0
     );
 
@@ -155,6 +166,7 @@ export default function TeacherSalaryCalculator() {
       tier,
       expIndex,
       pedRate,
+      loadFactor,
       baseOklad,
       okladByLoad,
       pedCategoryBonus,
@@ -168,7 +180,7 @@ export default function TeacherSalaryCalculator() {
       totalDeductions,
       netSalary,
     };
-  }, [qualCategory, pedCategory, experience, hoursPerWeek, isRural, isSmallSchool, bonuses]);
+  }, [qualCategory, pedCategory, experience, hoursPerWeek, isRural, isSmallSchool, bonuses, schoolLevel]);
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
@@ -363,12 +375,36 @@ export default function TeacherSalaryCalculator() {
               </label>
             </div>
 
+            {/* School level — от него зависят ставки доплат по Прил. 4 ПП № 1193 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t('teacher-salary.schoolLevel')}
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {(['primary', 'secondary'] as SchoolLevel[]).map((lvl) => (
+                  <button
+                    key={lvl}
+                    type="button"
+                    onClick={() => setSchoolLevel(lvl)}
+                    className={`px-3 py-2 rounded-lg border text-sm transition-colors ${
+                      schoolLevel === lvl
+                        ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {t(`teacher-salary.schoolLevels.${lvl}`)}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500">{t('teacher-salary.schoolLevelHint')}</p>
+            </div>
+
             {/* Additional bonuses */}
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 {t('teacher-salary.additionalBonuses')}
               </label>
-              {Object.entries(BONUSES).map(([key, spec]) => (
+              {Object.entries(bonusSpecsFor(schoolLevel)).map(([key, spec]) => (
                 <label key={key} className="flex items-center space-x-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -377,13 +413,13 @@ export default function TeacherSalaryCalculator() {
                     className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <span className="text-sm text-gray-700">
-                    {t(`teacher-salary.bonus.${key}`)} (
-                    {spec.base === 'bdo' ? `${Math.round(spec.value * 100)}% БДО` : `${spec.value} МРП`}
+                    {t(`teacher-salary.bonus.${key}`)} ({Math.round(spec.value * 100)}% {t('teacher-salary.bdoShort')}
                     {' = '}
-                    {formatCurrency(bonusAmountFor(spec, MRP_2026, BDO_2026))})
+                    {formatCurrency(bonusAmountFor(spec, BDO_2026, results.loadFactor))})
                   </span>
                 </label>
               ))}
+              <p className="text-xs text-gray-500">{t('teacher-salary.notebookCheckHint')}</p>
             </div>
           </div>
         </div>

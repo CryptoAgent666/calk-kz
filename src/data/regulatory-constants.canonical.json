@@ -428,7 +428,6 @@
     },
     {
       "key": "otbasy_baspana_hit_rate",
-      "value": 8.5,
       "unit": "percent",
       "law": "АО «Отбасы банк» (hcsbk.kz) — программа «Баспана хит»",
       "year": "2026",
@@ -436,20 +435,16 @@
       "aliases": [
         "otbasy_baspana_hit_rate"
       ],
-      "status": "current",
-      "conflict": "Баспана хит rate = 8.5% (промзаём, стартовая; снижается до 5% после 3 лет; term 25y, down 20%, max 30M). Обновлено 13.06.2026 (было 5%, hcsbk.kz). Distinct Otbasy product from Баспана жас (6%) and Отау (7%); not merged.",
-      "used_by": [
-        "OtbasyBankCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "audit_status": "clean",
-      "source_url": "https://calk.kz/__kk/calculator/otbasy-bank/",
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/",
       "official_value": "8.5",
-      "verify_note": "Баспана Хит — промежуточный заём со ставкой 8.5% (после накопления ~3 лет снижается до 5%). Совпадает со значением сайта calk.kz. Линейка программ Отбасы банка периодически меняется — при сомнениях сверять с hcsbk.kz.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 29.08.2026: продукта «Баспана хит» у Отбасы банка НЕТ — в меню hcsbk.kz не значится. 8,5 % — это ставка ПРОМЕЖУТОЧНОГО займа (базовый вид займа, не программа). Из калькулятора убрано.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "otbasy_baspana_zhas_rate",
-      "value": 6,
       "unit": "percent",
       "law": "АО «Отбасы банк» — программа «Баспана жас» (молодёжная)",
       "year": "2026",
@@ -457,19 +452,16 @@
       "aliases": [
         "otbasy_baspana_zhas_rate"
       ],
-      "status": "current",
-      "conflict": "Баспана жас rate = 6% (заём «Жас Отбасы», накопление 1г; down 10%, max 18M). Обновлено 13.06.2026 (было 2% — это депозитная ставка, не кредитная). Distinct product; not merged.",
-      "used_by": [
-        "OtbasyBankCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "audit_status": "clean",
-      "source_url": "https://hcsbk.kz/ru/save/young-family/",
-      "verify_note": "Tier-2 2026-08-23: Значение 6 % подтверждено первоисточником — вердикт current. Но две оговорки. (1) Имя в реестре неверное: у Отбасы банка нет продукта «Баспана жас»; 6 % относится к продукту «Жас Отбасы» (промежуточный заём). В текущей линейке банка на 24.08.2026 — Нұрлы Жер (5 %), Бақытты Отбасы (2 %), Свой дом (3,5–7 %), Наурыз / Наурыз Жұмыскер / Наурыз Әскери, Отау, Әскери баспана, депозит «Жас Отбасы»; продукта с названием «Баспана жас» нет. (2) Константа ОСИРОТЕЛА: used_by указывает на OtbasyBankCalculator, но в /Users/konstantin/Projects/KZ-CALK/src/components/calculators/OtbasyBankCalculator.tsx массив programs содержит только 7-20-25, nauryz и otau — «Баспана хит» и «Баспана/Жас Отбасы» были осознан",
-      "reverified": "2026-08-23"
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/",
+      "verify_note": "Tier-2 29.08.2026: «Жас Отбасы» — это ДЕПОЗИТ (hcsbk.kz/ru/save/young-family/), а не заём; продукта «Баспана жас» в линейке банка нет вовсе. Из калькулятора убрано.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "otbasy_otau_rate",
-      "value": 7,
+      "value": "7 % (СУСН) / 9 % (прочие очередники, граждане РК, кандасы)",
       "unit": "percent",
       "law": "АО «Отбасы банк» — программа «Отау»",
       "year": "2026",
@@ -482,7 +474,10 @@
       "used_by": [
         "OtbasyBankCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/",
+      "verify_note": "Tier-2 29.08.2026, hcsbk.kz/ru/to-get-a-loan/otau/: у «Отау» ДВЕ ставки одновременно — 7 % для состоящих на учёте по категории СУСН (ГЭСВ 7,1-9,6 %) и 9 % для остальных (ГЭСВ 9,4-13 %). В реестре стояло 7 %, в коде 9 % — оба верны наполовину. Прежняя пометка «Отау rate raised 5%→7% in 2026» — выдуманная модель: повышения 5→7 не было, есть двухуровневая шкала. Та же шкала у «Наурыз» и «Наурыз Жұмыскер». КОД ПОКА НЕ ПРАВЛЕН — нужен отдельный батч по Отбасы.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "mortgage_max_dti_ratio",
@@ -2788,7 +2783,7 @@
     },
     {
       "key": "teacher_bonus_class_teacher_mrp",
-      "value": 5,
+      "value": "0.50 БДО (1-4 кл., = 8 849 ₸) / 0.60 БДО (5-11(12) кл., = 10 618 ₸)",
       "unit": "MRP",
       "law": "Доплата за классное руководство — 5 МРП/мес",
       "year": "2026",
@@ -2801,14 +2796,14 @@
         "TeacherSalaryCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://buh.mcfr.kz/article/1400-kalkulyator-zarplaty-uchitelya-i-vospitatelya-kak-rasschitat-v-rk-v-2025-godu",
+      "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
       "official_value": "5",
-      "verify_note": "Доплата за классное руководство = 5 МРП/мес (при наполняемости 24+, иначе пропорц.). Подтверждено (текущая методика по №1193 переводит историч. % в МРП-выплаты). Совпадает с calk.kz.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 29.08.2026, первоисточник ПП РК № 1193, Приложение 4, стр. 2 пп. 2): «за классное руководство… 1-4 классов — 50 % от БДО; 5-11 (12) классов — 60 % от БДО». Было 5 МРП (21 625 ₸) — ЗАВЫШЕНО в 2,0-2,4 раза. Это была не устаревшая цифра, а выдуманная модель: доплата вообще не задаётся в МРП. Применено в коде 29.08.2026 (добавлена развилка по ступени обучения). Считается от фактической нагрузки (приказ МОН РК № 622, п. 37). ⚠️ Имя ключа с суффиксом _mrp — легаси, значение в долях БДО.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "teacher_bonus_notebook_check_mrp",
-      "value": 3,
+      "value": "0.40 БДО (= 7 079 ₸); 0.50 БДО для языков и литературы 5-11 кл. и нац./рус. языка в 1-4 кл.",
       "unit": "MRP",
       "law": "Доплата за проверку тетрадей — 3 МРП/мес",
       "year": "2026",
@@ -2821,14 +2816,13 @@
         "TeacherSalaryCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://buh.mcfr.kz/article/1400-kalkulyator-zarplaty-uchitelya-i-vospitatelya-kak-rasschitat-v-rk-v-2025-godu",
+      "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
       "official_value": "3",
-      "verify_note": "Доплата за проверку тетрадей = 3 МРП/мес. Подтверждено вторичными источниками и калькулятором calk.kz.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 29.08.2026, ПП РК № 1193, Приложение 4, стр. 2 пп. 3): учителям 1-4 классов — 40 % от БДО; по языкам и литературе 5-11 (12) кл. — 50 %; по математике, химии, физике, биологии, ин. языку и др. — 40 %. Было 3 МРП (12 975 ₸) — ЗАВЫШЕНО в 1,5-1,8 раза, выдуманная модель. В коде применена базовая ставка 40 % с подсказкой про 50 %. НЕ пропорционируется по нагрузке у основного учителя 1-4 классов (исключение п. 37 приказа № 622). ⚠️ Суффикс _mrp — легаси.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "teacher_bonus_methodist_mrp",
-      "value": 2,
       "unit": "MRP",
       "law": "Доплата методисту — 2 МРП/мес",
       "year": "2026",
@@ -2836,14 +2830,12 @@
       "aliases": [
         "teacher_bonus_methodist_mrp"
       ],
-      "status": "uncertain",
-      "used_by": [
-        "TeacherSalaryCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
-      "verify_note": "Tier-2 2026-08-23: uncertain по правилу консерватизма: официального ЗНАЧЕНИЯ для этой доплаты не существует, поэтому нечем заменить и нельзя сказать «устарело» — но и нормативного подтверждения 2 МРП нет ни в одном первоисточнике. Дополнительный аргумент против: квалификационных категорий педагога всего пять (стажёр, модератор, эксперт, исследователь, мастер) — категории «педагог-методист» в системе аттестации РК нет вообще, так что чекбокс «методист» в TeacherSalaryCalculator (строка 76) описывает несуществующую нормативную сущность. Ближайшая реальная аналогия — руководство методическим объединением, которое нормативка задаёт в процентах от оклада, а не в МРП. Рекомендация: не подбирать «правильный» МРП, а л",
-      "reverified": "2026-08-23"
+      "verify_note": "Tier-2 29.08.2026: ДОПЛАТЫ НЕ СУЩЕСТВУЕТ — удалена из кода. В ПП РК № 1193 слово «методист» встречается только в Приложении 1 как НАИМЕНОВАНИЕ ШТАТНОЙ ДОЛЖНОСТИ, а не надбавка. Квалификационной категории «педагог-методист» в системе аттестации РК нет (приказ МОН РК от 27.01.2016 № 83: педагог-стажёр, педагог, педагог-модератор, педагог-эксперт, педагог-исследователь, педагог-мастер). Прежние 2 МРП описывали несуществующую нормативную сущность.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "teacher_bonus_cabinet_head_mrp",
@@ -5687,9 +5679,9 @@
         "RamadanSadaqahCalculator"
       ],
       "audit_status": "recovered_from_estimate",
-      "reverified": "2026-08-23",
-      "source_url": "https://www.muftyat.kz/ru/news/qmdb/2025-02-24/46136-dumk-razmer-fitr-sadaka-ustanovlen-v-razmere-655-tenge-foto/",
-      "verify_note": "Tier-2 2026-08-23: Значение верно для 2025 года и не устаревает — это историческая строка. Расчётная константа текущего года в коде — DUMK_FITR_RATE_2026 = 735 ₸ (объявление ДУМК от 11.02.2026), она отдельным ключом уже помечена current. Оговорка: остальные исторические строки фитр-садаки в том же блоке НЕ совпадают с ДУМК: у нас 2024 = 600 ₸ при официальных 640 ₸ (muftyat.kz, 05.03.2024), 2023 = 550 ₸ при официальных 535 ₸ (muftyat.kz, 14.03.2023); совпадает только 2022 = 500 ₸ (muftyat.kz, 25.03.2022). Эти ключи вне батча, но требуют правки."
+      "reverified": "2026-08-29",
+      "source_url": "https://muftyat.kz/",
+      "verify_note": "Tier-2 29.08.2026: сверено с первоисточником muftyat.kz. ДУМК 655 ₸ (muftyat.kz, 24.02.2025). Поле year раньше содержало 2026 (дату свипа), а не год действия ставки."
     },
     {
       "key": "living_minimum_pm_2026",
@@ -6979,58 +6971,55 @@
     },
     {
       "key": "otbasy_baspana_hit_terms",
-      "value": "maxAmount: 30000000 KZT, minDownPayment: 20%, maxTerm: 25 years",
       "unit": "",
       "law": "Программа Баспана Хит, Отбасы банк (hcsbk.kz), данные на апрель 2026",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "current",
-      "used_by": [
-        "OtbasyBankCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "note": "Only the 5% rate is in the list; the program's amount limit, min down payment and max term are not.",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://calk.kz/__kk/calculator/otbasy-bank/",
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/",
       "official_value": "maxAmount 30000000 KZT, minDownPayment 20%, maxTerm 25 years",
-      "verify_note": "Баспана Хит: макс. сумма 30 млн ₸, первонач. взнос 20%, срок до 25 лет. Совпадает с моделью calk.kz и общими параметрами Отбасы банка. Линейка периодически обновляется — при необходимости сверить с hcsbk.kz.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 29.08.2026: параметры несуществующего продукта «Баспана хит». Из кода убрано.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "otbasy_7_20_25_terms",
-      "value": "maxAmount: 25000000 KZT, minDownPayment: 20%, maxTerm: 25 years",
+      "value": "макс. СТОИМОСТЬ ЖИЛЬЯ 30 млн ₸ (Астана/Алматы/Актау/Атырау/Шымкент), 25 млн (Караганда), 20 млн (прочие); заём = 80 % от неё",
       "unit": "",
       "law": "Программа 7-20-25",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "current",
+      "status": "stale_confirmed",
       "used_by": [
         "OtbasyBankCalculator"
       ],
       "note": "Absent from this component's list (present in MortgageCalculator's list by value). CROSS-FILE INCONSISTENCY: this file still uses the 25 млн",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/",
+      "verify_note": "Tier-2 29.08.2026: ДВЕ ошибки. (1) «7-20-25» — НЕ продукт Отбасы банка: оператор АО «Казахстанский фонд устойчивости» (baspana72025.kz), Отбасы нет среди банков-партнёров; в калькуляторе программа подана как отбасовская. (2) Зашитые 30 млн ₸ — это потолок СТОИМОСТИ ЖИЛЬЯ, а не суммы займа (заём = 80 %, т.е. до 24 млн), и он региональный. КОД НЕ ПРАВЛЕН — отдельный батч.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "otbasy_baspana_zhas_terms",
-      "value": "maxAmount: 18000000 KZT, minDownPayment: 10%, maxTerm: 25 years",
       "unit": "",
       "law": "Программа Баспана Жас (молодёжная), Отбасы банк",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
-      "used_by": [
-        "OtbasyBankCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "note": "Only the 2% rate is in the list; limit/down payment/term missing.",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://hcsbk.kz/ru/save/young-family/",
-      "verify_note": "Tier-2 2026-08-23: Расходятся ВСЕ ТРИ параметра: 18 млн против 200 млн, 25 лет против 6–9 лет, «взнос 10 %» против требования накопить 50 % стоимости жилья на депозите. Похоже на склейку из разных продуктов: 6 % — от «Жас Отбасы», взнос 10 % — от «Бақытты Отбасы» (2 % годовых, взнос 10 %, срок до 19 лет), 25 лет — от «Нұрлы Жер»/«Свой дом»; продукта, у которого сходились бы все четыре параметра, у банка нет. ВАЖНО для применения: правка боевого калькулятора не требуется — в OtbasyBankCalculator.tsx этой программы уже нет (осталось три: 7-20-25, Наурыз, Отау), константа не используется. Достаточно удалить строку из реестра или заменить её реальными условиями «Жас Отбасы». | Адверсариальная проверка: refuted=True.",
-      "reverified": "2026-08-23"
+      "source_url": "https://hcsbk.kz/ru/to-get-a-loan/",
+      "verify_note": "Tier-2 29.08.2026: запись-химера — 6 % от депозита «Жас Отбасы», взнос 10 % от «Бақытты Отбасы», срок 25 лет от «Нұрлы Жер», лимит 18 млн ₸ не соответствует ни одному продукту банка. Из кода убрано.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "otbasy_otau_terms",
@@ -7312,10 +7301,10 @@
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2024",
-      "value": 600,
+      "value": 640,
       "unit": "₸ per person",
       "law": "Ставка фитр-садака ДУМК 2024",
-      "year": "2026",
+      "year": "2024",
       "change_frequency": "occasional",
       "aliases": [],
       "status": "current",
@@ -7324,14 +7313,17 @@
       ],
       "note": "Historical rates table line 512. First sweep captured 2026+2025 but not 2024/2023/2022.",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://muftyat.kz/",
+      "reverified": "2026-08-29",
+      "verify_note": "Tier-2 29.08.2026: сверено с первоисточником muftyat.kz. ДУМК 640 ₸ (muftyat.kz, 05.03.2024). В реестре стояло 600 — число, которого нет ни в коде, ни у ДУМК. Поле year раньше содержало 2026 (дату свипа), а не год действия ставки."
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2023",
-      "value": 550,
+      "value": 535,
       "unit": "₸ per person",
       "law": "Ставка фитр-садака ДУМК 2023",
-      "year": "2026",
+      "year": "2023",
       "change_frequency": "occasional",
       "aliases": [],
       "status": "current",
@@ -7340,14 +7332,17 @@
       ],
       "note": "Historical rates table line 516.",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://muftyat.kz/",
+      "reverified": "2026-08-29",
+      "verify_note": "Tier-2 29.08.2026: сверено с первоисточником muftyat.kz. ДУМК 535 ₸ (muftyat.kz, 14.03.2023). В реестре стояло 550 — число, которого нет ни в коде, ни у ДУМК. Поле year раньше содержало 2026 (дату свипа), а не год действия ставки."
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2022",
       "value": 500,
       "unit": "₸ per person",
       "law": "Ставка фитр-садака ДУМК 2022",
-      "year": "2026",
+      "year": "2022",
       "change_frequency": "occasional",
       "aliases": [],
       "status": "current",
@@ -7356,7 +7351,10 @@
       ],
       "note": "Historical rates table line 520.",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://muftyat.kz/",
+      "reverified": "2026-08-29",
+      "verify_note": "Tier-2 29.08.2026: сверено с первоисточником muftyat.kz. ДУМК 500 ₸ (muftyat.kz, 25.03.2022). Значение совпало. Поле year раньше содержало 2026 (дату свипа), а не год действия ставки."
     },
     {
       "key": "dumk_fidya_rate_2024",
