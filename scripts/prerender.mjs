@@ -207,6 +207,26 @@ async function prerenderRoute(page, distPath, lang, route) {
     return inserted;
   });
 
+  // КРИТИЧНО: page.content() сериализует АТРИБУТЫ, а React выставляет значение
+  // <select> как DOM-СВОЙСТВО (select.value) — атрибут `selected` при этом ни на
+  // одной <option> не появляется. В снятой статике селект схлопывается на первую
+  // опцию, а гидратация его не чинит: React считает, что DOM уже соответствует
+  // состоянию. Итог — контрол показывает не то, что посчитано (на
+  // /calculator/inflation/ оба года показывали «2015», хотя расчёт шёл 2015→2026).
+  // react-dom/server в этом месте как раз печатает `selected`; воспроизводим.
+  const fixedSelects = await page.evaluate(() => {
+    let fixed = 0;
+    for (const select of document.querySelectorAll('select')) {
+      const chosen = select.multiple
+        ? Array.from(select.selectedOptions)
+        : (select.selectedIndex >= 0 ? [select.options[select.selectedIndex]] : []);
+      for (const option of select.options) option.removeAttribute('selected');
+      for (const option of chosen) { option.setAttribute('selected', ''); fixed++; }
+    }
+    return fixed;
+  });
+  if (fixedSelects > 0) console.log(`    selects: зафиксировано выбранных опций — ${fixedSelects}`);
+
   const html = await page.content();
   const normalizedRoute = route === '/' ? '' : route.replace(/^\/+/, '');
   const outputRoot = lang.outputPrefix ? path.join(distPath, lang.outputPrefix) : distPath;

@@ -3,6 +3,20 @@ import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Shield, FileText, AlertTriangle, Phone, Mail, MapPin, Globe, Calculator, CheckCircle, Info, Sparkles } from 'lucide-react';
 import { generateFAQSchema } from '../utils/faqSchema';
 
+/**
+ * Дата последнего содержательного изменения правовых документов.
+ * Раньше здесь стоял new Date() — страница заявляла, что политика и оферта
+ * обновлены «сегодня», в какой бы день её ни открыли. Для юридических
+ * документов это дезинформация: пользователь не может понять, менялись ли
+ * условия. Бампить руками при правке текста (как в ui/LastUpdated.tsx).
+ */
+const LEGAL_LAST_UPDATED = '2026-08-17';
+
+function formatLegalDate(lang: string): string {
+  const [y, m, d] = LEGAL_LAST_UPDATED.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(lang === 'kk' ? 'kk-KZ' : 'ru-RU');
+}
+
 interface LegalPagesProps {
   pageId: string;
   onBackClick: () => void;
@@ -292,7 +306,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {new Date().toLocaleDateString(i18n.language === 'kk' ? 'kk-KZ' : 'ru-RU')}
+                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
                 </p>
               </div>
             </div>
@@ -378,7 +392,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {new Date().toLocaleDateString(i18n.language === 'kk' ? 'kk-KZ' : 'ru-RU')}
+                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
                 </p>
               </div>
             </div>
@@ -487,7 +501,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {new Date().toLocaleDateString(i18n.language === 'kk' ? 'kk-KZ' : 'ru-RU')}
+                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
                 </p>
               </div>
             </div>
@@ -533,7 +547,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6 mt-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {new Date().toLocaleDateString(i18n.language === 'kk' ? 'kk-KZ' : 'ru-RU')}
+                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
                 </p>
               </div>
             </div>
