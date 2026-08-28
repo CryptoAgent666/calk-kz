@@ -37,56 +37,70 @@ export default function GasBillCalculator() {
     recommendationKey: ''
   };
 
+  // Цены розничной реализации товарного газа для населения (1 группа),
+  // АО «QazaqGaz Aimaq», прайс с 01.08.2026, «с учётом тарифа на транспортировку».
+  // Официальный прайс публикуется БЕЗ НДС — здесь приведено С НДС 16%, потому что
+  // калькулятор показывает сумму к оплате потребителем.
+  // Проверено Tier-2 23.08.2026: до этого все восемь значений были неверны, причём
+  // в обе стороны (Алматы занижена вдвое, Атырау завышена втрое), а порядок городов
+  // по дороговизне был обратен реальному.
   const cityGasData: CityGasData[] = [
     {
       id: 'astana',
       nameKey: 'calculators:gas.cityAstana',
-      tariffPerCubicMeter: 49.20,
+      tariffPerCubicMeter: 54.79, // 47 230,48 тг/1000 м3 без НДС
       averageMonthlyConsumption: { apartment: 25, house: 45 }
     },
     {
       id: 'almaty',
       nameKey: 'calculators:gas.cityAlmaty',
-      tariffPerCubicMeter: 27.69,
+      tariffPerCubicMeter: 62.43, // 53 814,98 тг/1000 м3 без НДС
       averageMonthlyConsumption: { apartment: 30, house: 55 }
     },
     {
       id: 'shymkent',
       nameKey: 'calculators:gas.cityShymkent',
-      tariffPerCubicMeter: 32.15,
+      tariffPerCubicMeter: 60.07, // 51 782,66 тг/1000 м3 без НДС
       averageMonthlyConsumption: { apartment: 28, house: 50 }
     },
     {
       id: 'aktobe',
       nameKey: 'calculators:gas.cityAktobe',
-      tariffPerCubicMeter: 35.80,
+      tariffPerCubicMeter: 19.10, // 16 466,94 тг/1000 м3 без НДС
       averageMonthlyConsumption: { apartment: 32, house: 60 }
     },
     {
       id: 'karaganda',
       nameKey: 'calculators:gas.cityKaraganda',
-      tariffPerCubicMeter: 41.25,
+      tariffPerCubicMeter: 54.81, // 47 250,00 тг/1000 м3 без НДС
       averageMonthlyConsumption: { apartment: 35, house: 65 }
     },
-    {
-      id: 'pavlodar',
-      nameKey: 'calculators:gas.cityPavlodar',
-      tariffPerCubicMeter: 38.90,
-      averageMonthlyConsumption: { apartment: 30, house: 55 }
-    },
+    // Павлодар убран: Павлодарская область не газифицирована — у QazaqGaz Aimaq
+    // нет такого филиала, сетевого газа в регионе не существует.
     {
       id: 'atyrau',
       nameKey: 'calculators:gas.cityAtyrau',
-      tariffPerCubicMeter: 44.60,
+      tariffPerCubicMeter: 13.56, // 11 691,95 тг/1000 м3 без НДС
       averageMonthlyConsumption: { apartment: 28, house: 50 }
     },
     {
       id: 'other',
       nameKey: 'calculators:gas.otherRegions',
-      tariffPerCubicMeter: 38.50,
+      // Единой цены «для прочих регионов» не публикуется: QazaqGaz Aimaq утверждает
+      // её отдельно по каждому филиалу. Здесь — среднее по шести филиалам выше;
+      // в интерфейсе подписано как ориентир, а не как утверждённый тариф.
+      tariffPerCubicMeter: 44.13,
       averageMonthlyConsumption: { apartment: 30, house: 50 }
     }
   ];
+
+  // Самый дорогой и самый дешёвый считаем ИЗ таблицы, а не хардкодим: раньше тут
+  // стояли Астана 49,20 как «самый дорогой» и Алматы 27,69 как «самый дешёвый» —
+  // после сверки с прайсом QazaqGaz Aimaq оба числа оказались неверными, а города
+  // перепутаны местами (реально дороже всего Алматы, дешевле всего Атырау).
+  const rankedCities = cityGasData.filter(c => c.id !== 'other');
+  const mostExpensiveCity = rankedCities.reduce((a, b) => b.tariffPerCubicMeter > a.tariffPerCubicMeter ? b : a);
+  const cheapestCity = rankedCities.reduce((a, b) => b.tariffPerCubicMeter < a.tariffPerCubicMeter ? b : a);
 
   const calculateGasBill = () => {
     const consumption = parseFloat(gasConsumption) || 0;
@@ -454,18 +468,18 @@ export default function GasBillCalculator() {
           <div className="p-4 bg-red-50 rounded-lg">
             <h4 className="font-semibold text-red-900 mb-2">{t('gas.mostExpensiveTariff')}</h4>
             <div className="text-red-800 text-sm">
-              <strong>{t('gas.cityAstana')}:</strong> {formatTariff(49.20)}
+              <strong>{t(mostExpensiveCity.nameKey)}:</strong> {formatTariff(mostExpensiveCity.tariffPerCubicMeter)}
               <br />
-              {t('gas.averageBillFor')}: {formatNumber(49.20 * 25)}
+              {t('gas.averageBillFor')}: {formatNumber(mostExpensiveCity.tariffPerCubicMeter * mostExpensiveCity.averageMonthlyConsumption.apartment)}
             </div>
           </div>
 
           <div className="p-4 bg-green-50 rounded-lg">
             <h4 className="font-semibold text-green-900 mb-2">{t('gas.cheapestTariff')}</h4>
             <div className="text-green-800 text-sm">
-              <strong>{t('gas.cityAlmaty')}:</strong> {formatTariff(27.69)}
+              <strong>{t(cheapestCity.nameKey)}:</strong> {formatTariff(cheapestCity.tariffPerCubicMeter)}
               <br />
-              {t('gas.averageBillFor')}: {formatNumber(27.69 * 30)}
+              {t('gas.averageBillFor')}: {formatNumber(cheapestCity.tariffPerCubicMeter * cheapestCity.averageMonthlyConsumption.apartment)}
             </div>
           </div>
         </div>

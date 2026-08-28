@@ -326,7 +326,9 @@ export default function TimeToWordsCalculator() {
 
     const words = style === 'formal' ? formal : style === 'colloquial' ? colloquial : formal;
     const languageName = language === 'ru' ? t('time-to-words.russian') : language === 'kz' ? t('time-to-words.kazakh') : t('time-to-words.english');
-    const description = `${t('time-to-words.time')} ${inputTime} ${t('time-to-words.in')} ${languageName}`;
+    // Не склеиваем предлог с названием языка пословно: в RU выходило
+    // «Время 14:30 на Русский», в KK — нарушенный порядок послелога.
+    const description = t('time-to-words.descriptionTemplate', { time: inputTime, language: languageName });
 
     return { words, formal, colloquial, description };
   };

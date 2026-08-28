@@ -10,6 +10,20 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
+/**
+ * Согласование числительного с существительным.
+ * Раньше выводилось «1 года», «7 года», «2 месяцев» — форма бралась одна на все
+ * числа. В казахском форма действительно одна, в русском их три.
+ */
+function pluralForm(n: number): 'one' | 'few' | 'many' {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return 'many';
+  if (mod10 === 1) return 'one';
+  if (mod10 >= 2 && mod10 <= 4) return 'few';
+  return 'many';
+}
+
 type Category =
   | 'general' | 'contract' | 'loan' | 'salary' | 'damage'
   | 'family' | 'tax' | 'labor' | 'adminFine' | 'criminal'
@@ -143,8 +157,8 @@ export default function StatuteLimitationsCalculator() {
               <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                 <span>{t('statute-limitations.period')}</span>
                 <span className="font-semibold">
-                  {results.rule.years ? `${results.rule.years} ${t('statute-limitations.yearsWord')}` : ''}
-                  {results.rule.months ? ` ${results.rule.months} ${t('statute-limitations.monthsWord')}` : ''}
+                  {results.rule.years ? `${results.rule.years} ${t(`statute-limitations.yearsWord_${pluralForm(results.rule.years)}`)}` : ''}
+                  {results.rule.months ? ` ${results.rule.months} ${t(`statute-limitations.monthsWord_${pluralForm(results.rule.months)}`)}` : ''}
                 </span>
               </div>
               <div className="bg-gray-50 rounded-lg p-3 flex justify-between">

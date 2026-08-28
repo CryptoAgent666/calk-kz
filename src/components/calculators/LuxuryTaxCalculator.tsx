@@ -603,7 +603,9 @@ export default function LuxuryTaxCalculator() {
                 <div className="font-medium text-gray-700">{t('luxury-tax.examples.sourceData')}:</div>
                 <div>{t('luxury-tax.examples.example3.yacht')}: 120 {t('luxury-tax.examples.millionTenge')}</div>
                 <div>{t('luxury-tax.examples.threshold')}: {formatMRP(YACHT_AIRCRAFT_THRESHOLD_MRP)}</div>
-                <div>{t('luxury-tax.examples.excess')}: 25.6 {t('luxury-tax.examples.millionTenge')}</div>
+                {/* Превышение считаем, а не хардкодим: зашитые 25.6 млн были
+                    посчитаны от МРП 2025 г. и разошлись с порогом на экране. */}
+                <div>{t('luxury-tax.examples.excess')}: {((120_000_000 - YACHT_AIRCRAFT_THRESHOLD) / 1_000_000).toFixed(1)} {t('luxury-tax.examples.millionTenge')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('luxury-tax.examples.calculation')}:</div>

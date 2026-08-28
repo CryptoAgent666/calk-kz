@@ -90,18 +90,19 @@ export default function PensionAnnuityCalculator() {
     }
   };
 
-  // Ожидаемая продолжительность жизни (актуарные данные для Казахстана)
+  // Ориентировочный возраст дожития. ЭТО ПРИБЛИЖЕНИЕ, а не актуарная таблица:
+  // отталкивается от средней продолжительности жизни в РК и слегка растёт с
+  // возрастом (чем дольше человек уже прожил, тем выше ожидаемый возраст
+  // дожития — обычное свойство таблиц смертности).
+  // Прежняя версия давала разрыв: мужчина 54 лет → 69,5, а 55 лет → 75, то
+  // есть +5,5 года за один день рождения, и дальше плато ровно на 75. Это
+  // скачком меняло аннуитетный фактор и, значит, размер выплаты.
   const getLifeExpectancy = (currentAge: number, gender: 'male' | 'female') => {
-    const baseLifeExpectancy = gender === 'male' ? 69.5 : 77.2; // Средние показатели для РК
-
-    // Корректировка для пенсионного возраста
-    if (currentAge >= 55) {
-      return gender === 'male' ?
-        Math.max(75, baseLifeExpectancy + (65 - currentAge) * 0.3) :
-        Math.max(82, baseLifeExpectancy + (60 - currentAge) * 0.2);
-    }
-
-    return baseLifeExpectancy;
+    const baseLifeExpectancy = gender === 'male' ? 69.5 : 77.2; // средние показатели для РК
+    const slope = gender === 'male' ? 0.35 : 0.25;
+    const expected = baseLifeExpectancy + Math.max(0, currentAge - 45) * slope;
+    // Функция непрерывна и монотонна: ступенек на границах возрастов нет.
+    return Number(Math.max(baseLifeExpectancy, expected).toFixed(1));
   };
 
   // Аннуитетный фактор (упрощенный расчет)
@@ -117,13 +118,19 @@ export default function PensionAnnuityCalculator() {
     return (1 - Math.pow(1 + discountRate, -monthsRemaining)) / discountRate;
   };
 
-  // Страховые компании-участники
+  // Страховые компании, работающие с пенсионным аннуитетом.
+  // РАНЬШЕ у каждой стоял свой annuityRate (0.95 / 0.98 / 0.92) и выводился
+  // как «Коэффициент: X% — какой процент от расчётной суммы выплачивает
+  // страховая». Источника у этих чисел не было ни в реестре констант, ни где
+  // либо ещё: выдуманная количественная характеристика названных компаний,
+  // которая ещё и меняла результат расчёта. Убрано. Расчёт теперь не зависит
+  // от выбора компании; фактические условия аннуитета даёт только сам
+  // страховщик по запросу.
   const insuranceCompanies = [
     {
       id: 'halyk-life',
       name: t('pension-annuity.companies.halykLife.name'),
       description: t('pension-annuity.companies.halykLife.description'),
-      annuityRate: 0.95, // 95% от расчетного аннуитета
       features: [
         t('pension-annuity.companies.halykLife.features.0'),
         t('pension-annuity.companies.halykLife.features.1'),
@@ -134,7 +141,6 @@ export default function PensionAnnuityCalculator() {
       id: 'nomad-life',
       name: t('pension-annuity.companies.nomadLife.name'),
       description: t('pension-annuity.companies.nomadLife.description'),
-      annuityRate: 0.98, // 98% от расчетного аннуитета
       features: [
         t('pension-annuity.companies.nomadLife.features.0'),
         t('pension-annuity.companies.nomadLife.features.1'),
@@ -145,7 +151,6 @@ export default function PensionAnnuityCalculator() {
       id: 'kazkommerts-life',
       name: t('pension-annuity.companies.kazkommertsLife.name'),
       description: t('pension-annuity.companies.kazkommertsLife.description'),
-      annuityRate: 0.92, // 92% от расчетного аннуитета
       features: [
         t('pension-annuity.companies.kazkommertsLife.features.0'),
         t('pension-annuity.companies.kazkommertsLife.features.1'),
@@ -177,14 +182,11 @@ export default function PensionAnnuityCalculator() {
     // Расчет аннуитетного фактора
     const annuityFactor = calculateAnnuityFactor(currentAge, gender);
 
-    // Выбранная страховая компания
-    const selectedCompany = insuranceCompanies.find(c => c.id === insuranceCompany);
-    const companyRate = selectedCompany?.annuityRate || 0.95;
 
     // Расчет ежемесячного аннуитетного платежа
     let monthlyAnnuityPayment = 0;
     if (isSufficientForAnnuity && annuityFactor > 0) {
-      monthlyAnnuityPayment = (accumulations / annuityFactor) * companyRate;
+      monthlyAnnuityPayment = accumulations / annuityFactor;
     }
 
     // Общие выплаты за всю жизнь (теоретические)
@@ -603,9 +605,6 @@ export default function PensionAnnuityCalculator() {
                 {company.features.map((feature, index) => (
                   <div key={index} className="break-words">• {feature}</div>
                 ))}
-              </div>
-              <div className="mt-3 text-sm font-semibold">
-                {t('pension-annuity.companiesComparison.coefficient')}: {(company.annuityRate * 100).toFixed(1)}%
               </div>
             </div>
           ))}

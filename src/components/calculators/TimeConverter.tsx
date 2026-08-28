@@ -327,7 +327,9 @@ export default function TimeConverter() {
     const languageName = language === 'ru' ? t('time-converter.languages.russian') :
                          language === 'kz' ? t('time-converter.languages.kazakh') :
                          t('time-converter.languages.english');
-    const description = `${t('time-converter.time')} ${inputTime} ${t('time-converter.on')} ${languageName} ${t('time-converter.language')}`;
+    // Не склеиваем предлог с названием языка пословно: выходило
+    // «Время 14:30 на Русский Язык», в KK — «Уақыт 14:30 тілінде Орыс Тіл».
+    const description = t('time-converter.descriptionTemplate', { time: inputTime, language: languageName });
 
     return { words, formal, colloquial, description };
   };

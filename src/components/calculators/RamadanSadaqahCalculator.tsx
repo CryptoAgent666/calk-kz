@@ -490,11 +490,11 @@ export default function RamadanSadaqahCalculator() {
               </div>
               <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
                 <span>{t('ramadan-sadaqah.year2024')}</span>
-                <span className="font-medium">600 ₸</span>
+                <span className="font-medium">640 ₸</span>
               </div>
               <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
                 <span>{t('ramadan-sadaqah.year2023')}</span>
-                <span className="font-medium">550 ₸</span>
+                <span className="font-medium">535 ₸</span>
               </div>
               <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
                 <span>{t('ramadan-sadaqah.year2022')}</span>
@@ -506,21 +506,18 @@ export default function RamadanSadaqahCalculator() {
           <div>
             <h3 className="font-semibold text-gray-900 mb-3">{t('ramadan-sadaqah.fidyaByYears')}</h3>
             <div className="space-y-2 text-sm">
+              {/* Ряд 3000/2800/2500/2200 был выдуманной лесенкой — ни одно значение
+                  не совпало с ДУМК. Оставлены только подтверждённые годы:
+                  2025 — 3 520 ₸ (muftyat.kz, 21.02.2025), 2024 — 3 400 ₸ (ҚМДБ).
+                  За 2023 и 2022 официальных значений найти не удалось — строки убраны,
+                  чтобы не показывать придуманные числа. */}
               <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
                 <span>{t('ramadan-sadaqah.year2025')}</span>
-                <span className="font-semibold text-teal-600">{formatNumber(3000)}</span>
+                <span className="font-semibold text-teal-600">{formatNumber(3520)}</span>
               </div>
               <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
                 <span>{t('ramadan-sadaqah.year2024')}</span>
-                <span className="font-medium">2800 ₸</span>
-              </div>
-              <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
-                <span>{t('ramadan-sadaqah.year2023')}</span>
-                <span className="font-medium">2500 ₸</span>
-              </div>
-              <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
-                <span>{t('ramadan-sadaqah.year2022')}</span>
-                <span className="font-medium">2200 ₸</span>
+                <span className="font-medium">3400 ₸</span>
               </div>
             </div>
           </div>

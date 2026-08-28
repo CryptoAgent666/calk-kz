@@ -45,6 +45,7 @@ export default function RentOrBuyCalculator() {
     totalOwnershipCosts: 0,
     propertyValueAtEnd: 0,
     equityBuilt: 0,
+    remainingBalance: 0,
     netOwnershipCost: 0,
 
     totalRentPaid: 0,
@@ -202,6 +203,7 @@ export default function RentOrBuyCalculator() {
       totalOwnershipCosts: Math.round(totalOwnershipCosts),
       propertyValueAtEnd: Math.round(propertyValueAtEnd),
       equityBuilt: Math.round(equityBuilt),
+      remainingBalance: Math.round(remainingBalance),
       netOwnershipCost: Math.round(netOwnershipCost),
       totalRentPaid: Math.round(totalRentPaid),
       opportunityCostOfDownPayment: Math.round(opportunityCostOfDownPayment),
@@ -684,6 +686,13 @@ export default function RentOrBuyCalculator() {
                   <div className="flex justify-between border-t border-blue-200 pt-2">
                     <span>{t('rent-vs-buy.financialSummary.propertyValueAtEnd')}:</span>
                     <span className="font-semibold text-green-600">+{formatNumber(results.propertyValueAtEnd)}</span>
+                  </div>
+                  {/* Без этой строки сводка не сходилась: «Чистые затраты» вычитают
+                      собственный капитал (стоимость − остаток долга), а не полную
+                      стоимость жилья, и читатель не мог свести цифры глазами. */}
+                  <div className="flex justify-between">
+                    <span>{t('rent-vs-buy.financialSummary.remainingBalance')}:</span>
+                    <span className="font-semibold text-red-600">−{formatNumber(results.remainingBalance)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg">
                     <span>{t('rent-vs-buy.financialSummary.netCost')}:</span>

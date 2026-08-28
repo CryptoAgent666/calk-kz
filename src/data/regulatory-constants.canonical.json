@@ -457,15 +457,15 @@
       "aliases": [
         "otbasy_baspana_zhas_rate"
       ],
-      "status": "uncertain",
+      "status": "current",
       "conflict": "Баспана жас rate = 6% (заём «Жас Отбасы», накопление 1г; down 10%, max 18M). Обновлено 13.06.2026 (было 2% — это депозитная ставка, не кредитная). Distinct product; not merged.",
       "used_by": [
         "OtbasyBankCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://hcsbk.kz/ru/affordable-housing/all-about-affordable-housing-programs/",
-      "verify_note": "Ставку 6% по 'Баспана жас' прямого подтверждения на hcsbk.kz найти не удалось (программы Жас Отбасы / Наурыз / Отау имеют свои ставки). Значение совпадает с моделью сайта, но не верифицировано первоисточником — рекомендуется ручная сверка с hcsbk.kz.",
-      "reverified": "2026-06-23"
+      "source_url": "https://hcsbk.kz/ru/save/young-family/",
+      "verify_note": "Tier-2 2026-08-23: Значение 6 % подтверждено первоисточником — вердикт current. Но две оговорки. (1) Имя в реестре неверное: у Отбасы банка нет продукта «Баспана жас»; 6 % относится к продукту «Жас Отбасы» (промежуточный заём). В текущей линейке банка на 24.08.2026 — Нұрлы Жер (5 %), Бақытты Отбасы (2 %), Свой дом (3,5–7 %), Наурыз / Наурыз Жұмыскер / Наурыз Әскери, Отау, Әскери баспана, депозит «Жас Отбасы»; продукта с названием «Баспана жас» нет. (2) Константа ОСИРОТЕЛА: used_by указывает на OtbasyBankCalculator, но в /Users/konstantin/Projects/KZ-CALK/src/components/calculators/OtbasyBankCalculator.tsx массив programs содержит только 7-20-25, nauryz и otau — «Баспана хит» и «Баспана/Жас Отбасы» были осознан",
+      "reverified": "2026-08-23"
     },
     {
       "key": "otbasy_otau_rate",
@@ -673,14 +673,15 @@
       "aliases": [
         "customs_duty_rate_vehicle"
       ],
-      "status": "uncertain",
+      "status": "current",
       "conflict": "Base EAEU customs duty rate for a vehicle (<=7 years). Distinct from the old-vehicle rate (25%) and the large-engine surcharge (5%).",
       "used_by": [
         "CustomsClearanceCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "ЕАЭС customs duty (ЕТТ) — out of scope of this KZ vehicle-tax/registration verification (set in EAEU common tariff, not НК РК); did not verify.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Базовая ставка 15% подтверждается официальной позицией КГД (июль 2026) и детальной тарифной разбивкой по объёмам двигателя. Прямой первоисточник (текст Решения Совета ЕЭК №107 / ЕТТ) не вычитан — поэтому confidence medium, а не high. Электромобили 0% в нашем калькуляторе стоят верно.",
+      "reverified": "2026-08-23",
+      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/"
     },
     {
       "key": "customs_duty_rate_vehicle_old",
@@ -698,8 +699,9 @@
         "CustomsClearanceCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "ЕАЭС customs duty — out of scope; not verified against EAEU tariff sources this run.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: ВЫСОКИЙ ПРИОРИТЕТ ПЕРЕПРОВЕРКИ. Наши 25% не подтверждаются ни одним найденным источником; по разъяснению КГД повышение для ТС старше 7 лет реализовано не как ad valorem 25%, а как минимальная специфическая ставка (€/см³) при той же адвалорной 15%. Вердикт оставлен uncertain, т.к. первоисточник (ЕТТ ЕАЭС / Решение Совета ЕЭК №107, приложение по ТС) вычитать не удалось, а официального «другого числа» в виде одной ставки нет. Правку боевого калькулятора делать только после сверки с ЕТТ.",
+      "reverified": "2026-08-23",
+      "source_url": "https://el.kz/ru/chto-stalo-s-rastamozhkoy-na-avto-posle-1-iyulya-v-kazahstane-otvet-kgd_400049531/"
     },
     {
       "key": "customs_duty_surcharge_large_engine",
@@ -728,13 +730,14 @@
       "aliases": [
         "customs_vehicle_old_age_threshold_years"
       ],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "CustomsClearanceCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "EAEU customs age threshold — out of scope; not verified.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Сам порог 7 лет подтверждён и актуален. Спорным остаётся не порог, а то, ЧТО меняется при его превышении (см. customs_duty_rate_vehicle_old).",
+      "reverified": "2026-08-23",
+      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/"
     },
     {
       "key": "customs_fee_rate",
@@ -1664,7 +1667,7 @@
       "law": "Закон РК О нотариате / тарифы",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "removed_from_code",
       "aliases": [
         "notary_vehicle_base_mrp"
       ],
@@ -1673,8 +1676,10 @@
         "CarTransferCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "Notary tariffs — separate domain (Закон о нотариате / МЮ orders), and the input itself carries newer notary keys (notary_unified_tariff_vehicle_sale_mrp citing Приказ МЮ №533 от 27.09.2025, w.e.f. 01.01.2026: relatives 4 / individuals 10 / legal 12 МРП) that SUPERSEDE this old 5/7/10 tiered scheme. This legacy key looks stale but full notary verification was out of scope here.",
-      "reverified": "2026-06-23"
+      "verify_note": "Phase-4 2026-08-23: В коде уже верная модель по сторонам сделки (4/10/12 МРП, Приказ МЮ № 533) — ступенчатая по цене в CarTransferCalculator отсутствует. Устарела запись реестра, не код.",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+      "official_value": "12 МРП (одна из сторон — юрлицо); 4 МРП (дети, супруг, родители, родные братья/сёстры, внуки); 10 МРП (другие лица). Градация по цене сделки отсутствует."
     },
     {
       "key": "penalty_disproportionate_warning_threshold",
@@ -1756,7 +1761,7 @@
       "law": "КоАП РК ст. 590 ч.4",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [
         "traffic_fine_no_plates_mrp",
         "traffic_fine_no_plates_mrp_koap590_4"
@@ -1766,8 +1771,9 @@
         "TrafficFinesCalculator"
       ],
       "audit_status": "representation_variants",
-      "verify_note": "КоАП РК fine (not НК РК) — out of scope of vehicle-tax/registration constants; not verified this run.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Числа 10/20 МРП подтверждены. Confidence medium, а не high: текст ст.590 вычитан через агрегатор zakonexpertt.kz — adilet отдаёт КоАП одним документом, в котором WebFetch до Особенной части не доходит. Содержательный дефект: в TrafficFinesCalculator.tsx у нарушения noPlates указан articleRef '590 ч.4', фактически это ч.2 и ч.2-1 — ссылку на часть статьи надо поправить. Санкция «лишение прав на 1 год» как альтернатива повторному штрафу в калькуляторе не отражена.",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235"
     },
     {
       "key": "traffic_fine_oncoming_lane",
@@ -2084,10 +2090,10 @@
       "used_by": [
         "RegistrationFeeCalculator"
       ],
-      "audit_status": "VALUE_CONFLICT",
-      "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
-      "verify_note": "0.25 МРП base registration duty corroborated for newer vehicles (kolesa.kz). Note: the real schedule is tiered by age/fuel/category (0.25 МРП floor up to high МРП for old commercial), so '0.25 flat' is an approximation but the floor value is correct.",
-      "reverified": "2026-06-23"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Tier-2 2026-08-23: Подтверждено. Реестровая пометка VALUE_CONFLICT снимается: 0,25 МРП — это именно обычная регистрация/перерегистрация (её использует CarTransferCalculator), а сетка 0,25/50/500 МРП — отдельный сбор за ПЕРВИЧНУЮ регистрацию (ст. 615 п.4), и её использует RegistrationFeeCalculator. Оба применения корректны по смыслу. Текст статьи вычитан через зеркало kodeksy-kz.com/ka/nalogovyj_kodeks/615.htm (adilet отдаёт кодекс одним огромным документом).",
+      "reverified": "2026-08-23"
     },
     {
       "key": "mrp_2026",
@@ -2434,9 +2440,9 @@
         "PensionAnnuityCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://www.enpf.kz/ru/services/vyplaty/57494/",
-      "verify_note": "Методика ЕНПФ не закрепляет единый фиксированный 'стандартный график ~19 лет': график выплат и пороги достаточности рассчитываются по формуле приведённой стоимости индивидуально по возрасту получателя. Конкретное число '19 лет' официальным источником не подтверждено как нормативная константа.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/P2300000521",
+      "verify_note": "Tier-2 2026-08-23: НЕ подтверждено как нормативная константа, но и не опровергнуто как модельное допущение — поэтому uncertain. Существенно: наши калькуляторы используют 19 лет как ПЛОСКИЙ делитель (accumulations / (19*12), PensionAnnuityCalculator.tsx:196-198 и PensionCalculator.tsx:107-108), тогда как официальная формула первого года даёт делитель 1/0,065 = 15,4 года. Из-за этого сайт занижает ежемесячную выплату по графику ЕНПФ примерно на 19 % и, как следствие, систематически смещает сравнение «аннуитет против ЕНПФ» в пользу аннуитета. При этом сама цифра 19 не абсурдна: при доходности ЕНПФ ~7 % годовых схема 6,5 % + индексация 5 % исчерпывает накопления примерно за 19,5 лет, то есть 19 лет правдоподобны к",
+      "reverified": "2026-08-23"
     },
     {
       "key": "pension_annuity_sufficient_amount_mrp",
@@ -2835,13 +2841,13 @@
         "TeacherSalaryCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://calk.kz/calculator/teacher-salary/",
-      "verify_note": "Калькулятор calk.kz использует 2 МРП за методическую работу. Однако нормативка (Пост. №1927/приказ 191) исторически задаёт методобъединение как % оклада (~10–15%), а не фикс. МРП. 2 МРП согласуется с моделью сайта, но прямого норм. подтверждения МРП-формы нет — уточнить.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
+      "verify_note": "Tier-2 2026-08-23: uncertain по правилу консерватизма: официального ЗНАЧЕНИЯ для этой доплаты не существует, поэтому нечем заменить и нельзя сказать «устарело» — но и нормативного подтверждения 2 МРП нет ни в одном первоисточнике. Дополнительный аргумент против: квалификационных категорий педагога всего пять (стажёр, модератор, эксперт, исследователь, мастер) — категории «педагог-методист» в системе аттестации РК нет вообще, так что чекбокс «методист» в TeacherSalaryCalculator (строка 76) описывает несуществующую нормативную сущность. Ближайшая реальная аналогия — руководство методическим объединением, которое нормативка задаёт в процентах от оклада, а не в МРП. Рекомендация: не подбирать «правильный» МРП, а л",
+      "reverified": "2026-08-23"
     },
     {
       "key": "teacher_bonus_cabinet_head_mrp",
-      "value": 1,
+      "value": "0.20 БДО (= 3 539,40 ₸/мес при БДО 17 697 ₸)",
       "unit": "MRP",
       "law": "Доплата за заведование кабинетом — 1 МРП/мес",
       "year": "2026",
@@ -2849,14 +2855,15 @@
       "aliases": [
         "teacher_bonus_cabinet_head_mrp"
       ],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "TeacherSalaryCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://calk.kz/calculator/teacher-salary/",
-      "verify_note": "Калькулятор calk.kz использует 1 МРП за заведование кабинетом; ряд источников указывает 5% оклада. Значение 1 МРП согласуется с собственной моделью сайта, но норм. источник чаще даёт %. Внутренне консистентно, но первоисточник в МРП не подтверждён — уточнить.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
+      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом (TeacherSalaryCalculator, cabinetHead = 20 % БДО). ПП РК № 1193 задаёт доплату за заведование кабинетом процентом от БДО, а не фиксированной суммой в МРП. Было 1 МРП/мес (4 325 ₸) — завышение примерно на 22 %. ⚠️ Имя ключа с суффиксом _mrp — легаси, значение больше НЕ в МРП; переименование отложено, чтобы не разорвать конфиги мониторинга.",
+      "reverified": "2026-08-29",
+      "official_value": "20 % от БДО в школах, школах-интернатах, детских домах (= 3 539,40 ₸/мес при БДО 17 697 ₸); 25 % от БДО в организациях ТиПО и послесреднего образования; 30 % от БДО при наличии комбинированных мастерских"
     },
     {
       "key": "vosms_employee_rate",
@@ -2970,14 +2977,15 @@
       "aliases": [
         "land_tax_base_rate_mrp_per_ha_table"
       ],
-      "status": "uncertain",
+      "status": "removed_from_code",
       "used_by": [
         "FarmLandTaxCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://prg.kz/document/?doc_id=35328916",
-      "verify_note": "Базовые ставки земельного налога на сельхозземли в зависимости от типа угодий установлены НК РК (ст. 577-578 нового кодекса), но точные числовые диапазоны (ирриг/богар/пастб/сенокос по 14 регионам) из официального источника не извлечены/не подтверждены постранично. Структура правдоподобна, числовые значения требуют сверки с текстом НК.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Phase-4 2026-08-23: FarmLandTaxCalculator переведён на прямые ставки ст. 576 (₸/га по баллу бонитета) ещё в августе — модель в МРП/га из кода удалена. Реестровый хвост.",
+      "reverified": "2026-08-23",
+      "official_value": "Ставки заданы НЕ в МРП, а прямо в тенге за 1 га и дифференцируются только по почвенно-климатической зоне и баллу бонитета (ст. 576 НК РК): степная/сухостепная зона — от 2,4 ₸/га (балл 1) до 965 ₸/га (балл 100), свыше 100 — 1 013,3 ₸/га; полупустынная/пустынная/предгорно-пустынная — от 2,4 до 241,25 ₸/га, свыше 100 — 250,9 ₸/га"
     },
     {
       "key": "land_tax_bonity_quality_coeff",
@@ -3157,12 +3165,12 @@
         "CarTransferCalculator",
         "InsuranceCalculator"
       ],
-      "audit_status": "VALUE_CONFLICT",
+      "audit_status": "clean",
       "official_value": "детальная пер-региональная таблица 2026 (АРРФР Пост. Правления №72 от 13.11.2025): kyzylorda 1.85; zhambyl 1.74; turkestan 1.69; shymkent 1.61; astana 1.44; almaty-obl 1.44; … almaty-city 0.71; … atyrau 0.48",
-      "source_url": "https://www.zakon.kz/finansy/6498932-utverzhdeny-popravochnye-koeffitsienty-dlya-rascheta-strakhovoy-premii-po-strakhovaniyu-gpo-na-2026-god.html",
-      "verify_note": "VALUE_CONFLICT: каноническое значение (детальная таблица АРРФР 2026) верно; устаревшая грубая поверхность CarTransferCalculator (Алматы/Астана 2.96, прочие 1.86) — drift-to-fix.",
+      "source_url": "https://adilet.zan.kz/rus/docs/Z030000446_",
+      "verify_note": "Tier-2 2026-08-23: Числа актуальны на 2026 — правки не требуют. НО МЕТОДОЛОГИЧЕСКАЯ ОШИБКА В ФОРМУЛЕ: по ст.19 п.3-1 Закона РК от 01.07.2003 № 446-II эти величины — ПОПРАВОЧНЫЕ коэффициенты, которые «дополнительно применяются» К коэффициентам по территории регистрации из п.3 той же статьи (Алматы 2,96; Атырауская 2,69; Астана 2,20; Алматинская 1,78; Жамбылская 1,00 и т.д.), то есть перемножаются с ними, а не заменяют их. Наш калькулятор использует только поправочный коэффициент — премия занижена примерно в 2–3 раза, и региональный порядок инвертирован (Алматы получается самым дешёвым регионом вместо одного из дорогих). Это правка формулы, а не константы; трогать саму таблицу не нужно.",
       "confidence": "high",
-      "reverified": "2026-06-27"
+      "reverified": "2026-08-23"
     },
     {
       "key": "ogpo_bonus_malus_coeff",
@@ -3219,7 +3227,7 @@
     },
     {
       "key": "property_tax_wear_max_pct",
-      "value": 70,
+      "value": "70 (каменные и панельные жилища) / 65 (жилища из иных материалов)",
       "unit": "percent",
       "law": "методика оценки НК РК — макс. износ (2% в год; коттедж +10 до 80, гараж +5 до 75)",
       "year": "2026",
@@ -3227,14 +3235,15 @@
       "aliases": [
         "property_tax_wear_max_percent"
       ],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "PropertyTaxCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
-      "verify_note": "Норма амортизации в методике зависит от материала здания (панель ~1%/год, кирпич ~0,7%/год), а не единые 2%/год; следовательно макс. износ и привязки '+10/+5' к 80/75 не находят прямого официального подтверждения как фиксированные нормы. Требует сверки с методикой Госкорпорации.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом (PropertyTaxCalculator). Порог износа зависит от материала стен: 70 % для каменных и панельных, 65 % для иных материалов. Раньше в коде и реестре стояли плоские 70 % для всего подряд.",
+      "reverified": "2026-08-29",
+      "official_value": "Порог 70 % — для каменных и панельных жилищ, 65 % — для жилищ из иных материалов; при превышении порога К физ принимается равным 0,2 (то есть эффективный износ 80 %, а не 70 %)"
     },
     {
       "key": "thermal_resistance_R_required_by_zone",
@@ -3739,15 +3748,16 @@
       "aliases": [
         "businesstrip_accommodation_taxfree_limit_mrp"
       ],
-      "status": "uncertain",
+      "status": "removed_from_code",
       "conflict": "Statutory 12 MRP/day tax-free accommodation limit on business trips (excess is taxable). This is a real legal limit, not a market/example value. KZT equivalent tracks MRP, so annual.",
       "used_by": [
         "BusinessTripCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://mybuh.kz/useful/kak-rasschitat-sutochnye-v-too-na-our.html",
-      "verify_note": "Could not confirm a 12 MRP/day non-taxable accommodation cap (no-documents case) under the new 2026 code; sources only confirm per-diem limits (6 MRP domestic / 8 MRP foreign, art.319) and documented accommodation deducted at actual cost. Ledger cites art.244 which does not match new-code numbering. Needs direct check of new code text.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Phase-4 2026-08-23: Лимита 12 МРП в BusinessTripCalculator нет: там BUDGET_HOUSING_CAP_MRP 7/6/4 и PERDIEM_TAX_FREE_MRP 6/8. Константа в коде не используется. Реестровый хвост.",
+      "reverified": "2026-08-23",
+      "official_value": "Такого лимита нет. Расходы на проживание в командировке не являются доходом физлица в полном объёме — «на основании документов, подтверждающих расходы». В МРП нормируются только суточные: 6 МРП/сутки по РК и 8 МРП/сутки за рубежом, и не более чем за 40 календарных дней командировки"
     },
     {
       "key": "excise_alcohol_spirit_per_liter_kzt",
@@ -4038,18 +4048,19 @@
       "aliases": [
         "vehicle_sale_tax_free_ownership_months"
       ],
-      "status": "uncertain",
+      "status": "current",
       "conflict": "Distinct constant — ownership holding period (12 months / 1 year) above which a vehicle sale is exempt from ИПН on the value gain. Not a tax rate; kept separate from the rate constants. Structural rule, value 12 valid for 2026.",
       "used_by": [
         "CarTransferCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "ИПН exemption on vehicle sale after >=1 year ownership — income-tax domain, not vehicle-tax/registration; not verified this run.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Подтверждено, срок не менялся (реформа 2026 подняла порог с 1 года до 2 лет только по недвижимости, автомобилей не коснулась). Ставка ИПН 10% с прироста также актуальна. Замечание не по константе: ст.384 распространяется на ТС, зарегистрированные в компетентном органе иностранного государства, НЕЗАВИСИМО от срока владения — CarTransferCalculator этот случай не обрабатывает.",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214"
     },
     {
       "key": "gas_tariff_astana_per_m3",
-      "value": 49.2,
+      "value": 54.79,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (Астана)",
       "year": "2026",
@@ -4062,11 +4073,15 @@
       "used_by": [
         "GasBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://qazaqgazaimaq.kz/",
+      "official_value": "47 230,48 тг/1000 м3 без НДС = 47,23 тг/м3 (≈54,79 тг/м3 с НДС 16%)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (GasBillCalculator). Прайс АО «QazaqGaz Aimaq» с 01.08.2026, указано с НДС 16 %. До Tier-2 23.08 в реестре и коде стояла таблица, расходившаяся с прайсом в обе стороны. Астана: 47 230,48 ₸/1000 м³ без НДС."
     },
     {
       "key": "gas_tariff_atyrau_per_m3",
-      "value": 44.6,
+      "value": 13.56,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (Атырау)",
       "year": "2026",
@@ -4079,11 +4094,15 @@
       "used_by": [
         "GasBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://qazaqgazaimaq.kz/",
+      "official_value": "11 691,95 тг/1000 м3 без НДС = 11,69 тг/м3 (≈13,56 с НДС 16%)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (GasBillCalculator). Прайс АО «QazaqGaz Aimaq» с 01.08.2026, указано с НДС 16 %. До Tier-2 23.08 в реестре и коде стояла таблица, расходившаяся с прайсом в обе стороны. Атырау: 11 691,95 ₸/1000 м³ без НДС. Было 44,60 — завышено втрое."
     },
     {
       "key": "gas_tariff_karaganda_per_m3",
-      "value": 41.25,
+      "value": 54.81,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (Караганда)",
       "year": "2026",
@@ -4096,11 +4115,14 @@
       "used_by": [
         "GasBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://qazaqgazaimaq.kz/",
+      "official_value": "47 250,00 тг/1000 м3 без НДС = 47,25 тг/м3 (≈54,81 с НДС 16%)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (GasBillCalculator). Прайс АО «QazaqGaz Aimaq» с 01.08.2026, указано с НДС 16 %. До Tier-2 23.08 в реестре и коде стояла таблица, расходившаяся с прайсом в обе стороны. Караганда: 47 250,00 ₸/1000 м³ без НДС."
     },
     {
       "key": "gas_tariff_pavlodar_per_m3",
-      "value": 38.9,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (Павлодар)",
       "year": "2026",
@@ -4108,16 +4130,17 @@
       "aliases": [
         "gas_tariff_pavlodar_per_m3"
       ],
-      "status": "current",
-      "conflict": "",
-      "used_by": [
-        "GasBillCalculator"
-      ],
-      "audit_status": "clean"
+      "status": "removed_from_code",
+      "used_by": [],
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://www.aimaq.kz/ru/%D1%82%D0%B0%D1%80%D0%B8%D1%84%D1%8B-%D0%B8-%D1%86%D0%B5%D0%BD%D1%8B/tarify-i-czeny-2026/",
+      "official_value": "нет — природного газа и газораспределительных сетей в Павлодарской области нет",
+      "verify_note": "Phase-4 29.08.2026: константа УДАЛЕНА из кода. Павлодарская область не газифицирована — у АО «QazaqGaz Aimaq» нет такого филиала, сетевого газа в регионе не существует (газификация планируется к 2030-м). Город убран из GasBillCalculator целиком."
     },
     {
       "key": "gas_tariff_other_regions_per_m3",
-      "value": 38.5,
+      "value": 44.13,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (прочие регионы, по умолчанию)",
       "year": "2026",
@@ -4125,16 +4148,19 @@
       "aliases": [
         "gas_tariff_other_regions_per_m3"
       ],
-      "status": "current",
-      "conflict": "",
+      "status": "not_a_law_value",
+      "conflict": "Не утверждённый тариф, а расчётный ориентир.",
       "used_by": [
         "GasBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://qazaqgazaimaq.kz/",
+      "verify_note": "Phase-4 29.08.2026: единой цены «для прочих регионов» QazaqGaz Aimaq не публикует — тариф утверждается отдельно по каждому филиалу. В коде это среднее по шести филиалам выше, в интерфейсе подписано как ориентир. Не норма — сверять не с чем."
     },
     {
       "key": "gas_tariff_aktobe_per_m3",
-      "value": 35.8,
+      "value": 19.1,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (Актобе)",
       "year": "2026",
@@ -4147,11 +4173,15 @@
       "used_by": [
         "GasBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://qazaqgazaimaq.kz/",
+      "official_value": "16 466,94 тг/1000 м3 без НДС = 16,47 тг/м3 (≈19,10 с НДС 16%)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (GasBillCalculator). Прайс АО «QazaqGaz Aimaq» с 01.08.2026, указано с НДС 16 %. До Tier-2 23.08 в реестре и коде стояла таблица, расходившаяся с прайсом в обе стороны. Актобе: 16 466,94 ₸/1000 м³ без НДС. Было 35,80 — завышено почти вдвое."
     },
     {
       "key": "gas_tariff_shymkent_per_m3",
-      "value": 32.15,
+      "value": 60.07,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (Шымкент)",
       "year": "2026",
@@ -4164,11 +4194,15 @@
       "used_by": [
         "GasBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://qazaqgazaimaq.kz/",
+      "official_value": "51 782,66 тг/1000 м3 без НДС = 51,78 тг/м3 (≈60,07 с НДС 16%)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (GasBillCalculator). Прайс АО «QazaqGaz Aimaq» с 01.08.2026, указано с НДС 16 %. До Tier-2 23.08 в реестре и коде стояла таблица, расходившаяся с прайсом в обе стороны. Шымкент: 51 782,66 ₸/1000 м³ без НДС."
     },
     {
       "key": "gas_tariff_almaty_per_m3",
-      "value": 27.69,
+      "value": 62.43,
       "unit": "KZT",
       "law": "АРЕМ — регулируемые тарифы на природный газ (Алматы)",
       "year": "2026",
@@ -4181,11 +4215,15 @@
       "used_by": [
         "GasBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://qazaqgazaimaq.kz/",
+      "official_value": "Алматинский ПФ QazaqGaz Aimaq: 53 814,98 тг/1000 м3 без НДС = 53,81 тг/м3 (≈62,43 с НДС 16%)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (GasBillCalculator). Прайс АО «QazaqGaz Aimaq» с 01.08.2026, указано с НДС 16 %. До Tier-2 23.08 в реестре и коде стояла таблица, расходившаяся с прайсом в обе стороны. Алматы: 53 814,98 ₸/1000 м³ без НДС. Было 27,69 — занижено более чем вдвое."
     },
     {
       "key": "heating_tariff_almaty_per_gcal",
-      "value": 8400,
+      "value": 9139.07,
       "unit": "KZT",
       "law": "ТОО «АлТС» — тариф на тепловую энергию (Алматы), с 01.04.2026",
       "year": "2026",
@@ -4198,7 +4236,11 @@
       "used_by": [
         "HeatingBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-08-29",
+      "source_url": "https://alts.kz/tarify/",
+      "official_value": "ТОО «АлТС» с 01.05.2026 (без НДС): население — 7 878,51; с ОДПУ — 7 733,12; без ОДПУ — 9 454,21 тг/Гкал (с НДС 16%: 9 139,07 / 8 970,42 / 10 966,88)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (HeatingBillCalculator), с НДС 16 %. ТОО «АлТС» с 01.05.2026: 7 878,51 ₸/Гкал без НДС (приказ ДКРЕМ по Алматы от 22.04.2026 № 65-ОД). Было 8 400."
     },
     {
       "key": "heating_tariff_astana_per_gcal",
@@ -4218,8 +4260,8 @@
       "audit_status": "clean",
       "source_url": "https://astanaenergosbyt.kz/ru/fiz/tarify1.html",
       "official_value": "3929",
-      "verify_note": "Тариф снабжения тепловой энергией для населения Астаны с приборами учёта = 3929 ₸/Гкал (без приборов 4727 ₸/Гкал). Входное 3930 ≈ 3929 (округление, по сути совпадает). Примечание: тариф состоит из компонентов производства/передачи/сбыта; указанный — итоговый сбытовой для населения с учётом приборов учёта.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Значение совпадает с официальным дифференцированным тарифом «с приборами учета». Две оговорки, почему confidence не high: (1) комментарий в коде «АО «Астана-Теплотранзит» с 01.04.2026, с НДС 16%» неверен — это тариф ТОО «Астанаэнергосбыт» от 01.01.2025, а Астана-Теплотранзит оказывает только услугу передачи; (2) 3 929,99 публиковалось «с учетом НДС» при ставке 12%; при НДС 16% с 01.01.2026 та же нетто-величина дала бы ~4 070 тг/Гкал, но поставщик обновлённой цифры не публиковал, поэтому объявлять устаревание нельзя. Для калькулятора без счётчика уместнее 4 727,60.",
+      "reverified": "2026-08-23"
     },
     {
       "key": "nds_rate",
@@ -4305,8 +4347,8 @@
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
-      "verify_note": "Закон о бюджете на 2026-2028 устанавливает МРП только на 2026 (4325 ₸); значение МРП на 2027 (4580) официально не закреплено отдельным законом и в таблице ПРГ отсутствует — это прогноз, не действующая норма. Не подтверждено.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Подтверждено обратное: официального значения МРП на 2027 год не существует, поэтому объявить наши 4580 ₸ «устаревшими» нельзя — сравнивать не с чем (вердикт uncertain по правилу консервативности). При этом 4580 не совпадает ни с одним публичным прогнозом: findh.org со ссылкой на Прогноз СЭР МНЭ даёт 4355 ₸, другие вторичные источники — 4606 ₸. Практический риск: VATThresholdCalculator.tsx (MRP_VALUES[2027] = 4580) выдаёт порог постановки на учёт по НДС в тенге на 2027 год как факт. Рекомендация: либо помечать 2027/2028 в UI как прогноз с оговоркой, либо считать порог в МРП без перевода в тенге до принятия закона о бюджете на 2027 год (декабрь 2026).",
+      "reverified": "2026-08-23"
     },
     {
       "key": "mrp_2028",
@@ -4322,8 +4364,8 @@
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
-      "verify_note": "МРП на 2028 (4938) официально не закреплён (устанавливается ежегодным законом о бюджете, ещё не принят на 2028). Прогнозное значение, не подтверждено.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: МРП на 2028 будет установлен законом о республиканском бюджете на 2028–2030 годы (ориентировочно декабрь 2027). Наши 4938 ₸ — интерполяция, официального подтверждения или опровержения нет → uncertain. Те же рекомендации, что и по mrp_2027; и 4938 используется ещё и как fallback «последний известный МРП» для любых будущих лет в VATThresholdCalculator.tsx, что распространяет непроверенное число на 2029+.",
+      "reverified": "2026-08-23"
     },
     {
       "key": "nds_threshold_mrp_2024",
@@ -5091,9 +5133,9 @@
         "VehicleTCOCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
-      "verify_note": "Value '2 МРП' for a generic 'registration fee' does not map cleanly to any single 2026 line item. The actual 2026 charges are: plates 2.8 МРП + СРТС 1.25 МРП + base reg duty 0.25 МРП (newer veh). No 2026 source shows a flat 2 МРП registration госпошлина. Likely a stale/misaggregated figure — recommend replacing with the explicit 2.8/1.25/0.25 components, but no source affirms exactly '2 МРП' so marked uncertain rather than stale.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Tier-2 2026-08-23: Ставка 2 МРП ни к одному автомобильному платежу не привязывается. В коде она НЕ используется: RegistrationFeeCalculator.tsx оперирует 0,25 МРП (сбор) + 1,25 МРП (СРТС) + 2,8 МРП (номера) = 4,05 МРП, что совпадает с публикуемой стоимостью постановки на учёт в 2026 (~17 516 ₸). Похоже на артефакт реестра — рекомендую переопределить ключ или удалить, а не «править» калькулятор.",
+      "reverified": "2026-08-23"
     },
     {
       "key": "zakat_rate",
@@ -5557,18 +5599,22 @@
     },
     {
       "key": "dumk_fidya_rate_2025",
-      "value": 3000,
+      "value": 3520,
       "unit": "KZT",
       "law": "ДУМК",
       "year": "2025",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
       "recovery_reason": "ДУМК fidya rate prior-year (3000 KZT/missed day), same quasi-official ДУМК annual norm as the 2026 v",
       "used_by": [
         "RamadanSadaqahCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "recovered_from_estimate",
+      "reverified": "2026-08-29",
+      "source_url": "https://muftyat.kz/",
+      "official_value": "3520 ₸/день",
+      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом. ДУМК 3 520 ₸/день за 2025 (muftyat.kz, 21.02.2025). Было 3 000."
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2026",
@@ -5634,13 +5680,16 @@
       "law": "ДУМК",
       "year": "2025",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
       "recovery_reason": "ДУМК fitr sadaqah prior-year rate (655 KZT/person), quasi-official ДУМК annual norm. Historical regu",
       "used_by": [
         "RamadanSadaqahCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "recovered_from_estimate",
+      "reverified": "2026-08-23",
+      "source_url": "https://www.muftyat.kz/ru/news/qmdb/2025-02-24/46136-dumk-razmer-fitr-sadaka-ustanovlen-v-razmere-655-tenge-foto/",
+      "verify_note": "Tier-2 2026-08-23: Значение верно для 2025 года и не устаревает — это историческая строка. Расчётная константа текущего года в коде — DUMK_FITR_RATE_2026 = 735 ₸ (объявление ДУМК от 11.02.2026), она отдельным ключом уже помечена current. Оговорка: остальные исторические строки фитр-садаки в том же блоке НЕ совпадают с ДУМК: у нас 2024 = 600 ₸ при официальных 640 ₸ (muftyat.kz, 05.03.2024), 2023 = 550 ₸ при официальных 535 ₸ (muftyat.kz, 14.03.2023); совпадает только 2022 = 500 ₸ (muftyat.kz, 25.03.2022). Эти ключи вне батча, но требуют правки."
     },
     {
       "key": "living_minimum_pm_2026",
@@ -5674,7 +5723,10 @@
       "used_by": [
         "MoralDamageCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "recovered_from_estimate",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/P150000007S",
+      "verify_note": "Tier-2 2026-08-23: Подтвердить или опровергнуть наши диапазоны первоисточником НЕВОЗМОЖНО: в РК размер компенсации морального вреда законом и НПА ВС не нормирован. Более того, обобщение судебной практики на портале ВС (office.sud.kz/taldau, справка code=2237) прямо говорит, что таблицу коэффициентов тяжести «необходимо разработать», а статья судьи К. Шакарова (2023, prg.kz) констатирует отсутствие пороговых минимумов/максимумов. Вывод: uncertain — не менять цифры «под источник», но обязательно держать на странице дисклеймер, что диапазоны иллюстративные (в коде такой комментарий есть: «Ориентировочные размеры … Суд имеет широкую дискрецию»)."
     },
     {
       "key": "penalty_tax_daily_rate_example",
@@ -5690,70 +5742,85 @@
         "PenaltyCalculator"
       ],
       "audit_status": "recovered_from_estimate",
-      "verify_note": "Tier-2 2026-08: кратность 1,25 подтверждена дословно по НК-2026 (К2500000214). Производная от nbrk_base_rate — пересчитывать при каждом решении НБРК.",
-      "reverified": "2026-08-06"
+      "verify_note": "Tier-2 2026-08-23: ЗНАЧЕНИЕ АКТУАЛЬНО, НО ССЫЛКА НА СТАТЬЮ В КОДЕ НЕВЕРНА (подтверждено по adilet). Мы везде пишем «ст. 121 НК РК», а статья 121 НК-2026 называется «Излишне уплаченные и уплаченные суммы налога, платежа в бюджет и пеней, не подлежащие зачету и (или) возврату» — она про зачёт/возврат, не про пеню. Размер пени задан ТОЛЬКО в ст. 5 подп. 2) (единственное вхождение «кратной базовой ставке» во всём кодексе), порядок начисления — в ст. 85 «Пени». Ст. 117 (её называют вторичные источники) — «Основные положения, связанные с приостановлением и возобновлением представления налоговой отчетности», тоже мимо. Править на «ст. 5 подп. 2) и ст. 85 НК РК» в: src/data/calculatorMethodology.ts:831,843; src/compon",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214"
     },
     {
       "key": "vehicle_reg_fee_electric_new_mrp",
-      "value": 0.1,
+      "value": 0.25,
       "unit": "MRP",
       "law": "льгота для электромобилей",
       "year": "",
       "change_frequency": "rare",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
       "recovery_reason": "Vehicle registration state duty (госпошлина) expressed in МРП, set by НК РК; EV preferential rate (0",
       "used_by": [
         "RegistrationFeeCalculator"
       ],
       "audit_status": "recovered_from_estimate",
-      "verify_note": "EV registration concession 0.1 МРП — no 2026 source found confirming or refuting a 0.1 МРП EV-specific registration duty. The age/fuel-tiered duty schedule does vary by fuel type, but the exact 0.1 МРП figure is unverified. Do not guess.",
-      "reverified": "2026-06-23"
+      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом (RegistrationFeeCalculator). 0,25 МРП по НК РК; было 0,1 МРП с комментарием «предполагаемая льготная ставка» — то есть значение изначально было догадкой, а не нормой.",
+      "reverified": "2026-08-29",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_value": "0,25 МРП"
     },
     {
       "key": "heating_tariff_karaganda_per_gcal",
-      "value": 5500,
+      "value": 5735.27,
       "unit": "KZT",
       "law": "регион. оценка",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
       "recovery_reason": "Regional district-heating tariff (₸/Гкал, Karaganda = 5500), a utility tariff regulated by the antim",
       "used_by": [
         "HeatingBillCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "recovered_from_estimate",
+      "reverified": "2026-08-29",
+      "source_url": "https://www.teplotranzit.kz/ru/dlya-potrebitelya/tarif",
+      "official_value": "4 944,20 тг/Гкал без НДС = 5 735,27 тг/Гкал с НДС; плата по норме — 168,10 тг/м2 без НДС (195,00 с НДС)",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (HeatingBillCalculator), с НДС 16 %. ТОО «Теплотранзит Караганда» с 15.08.2026: 4 944,20 ₸/Гкал без НДС. Было 5 500."
     },
     {
       "key": "heating_tariff_shymkent_per_gcal",
-      "value": 4500,
+      "value": 7456.61,
       "unit": "KZT",
       "law": "регион. оценка",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "current",
       "aliases": [],
       "recovery_reason": "Regional district-heating tariff (₸/Гкал, Shymkent = 4500), regulated utility tariff set by the anti",
       "used_by": [
         "HeatingBillCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "recovered_from_estimate",
+      "reverified": "2026-08-29",
+      "source_url": "https://kzho.kz/tariffs",
+      "official_value": "ГКП «Қуатжылуорталық-3»: среднеотпускной для населения 6 428,11 без НДС / 7 456,61 с НДС; с ОДПУ 4 272,71 / 4 956,34; без ОДПУ 8 404,06 / 9 748,71 тг/Гкал",
+      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (HeatingBillCalculator), с НДС 16 %. ГКП «Қуатжылуорталық-3», среднеотпускной для населения: 6 428,11 ₸/Гкал без НДС. Было 4 500."
     },
     {
       "key": "heating_tariff_other_regions_per_gcal",
-      "value": 5000,
+      "value": 6565.24,
       "unit": "KZT",
       "law": "среднее по РК",
       "year": "2026",
       "change_frequency": "annual",
-      "status": "uncertain",
+      "status": "not_a_law_value",
       "aliases": [],
       "recovery_reason": "Regional district-heating tariff (₸/Гкал, other regions = 5000), regulated utility tariff (antimonop",
       "used_by": [
         "HeatingBillCalculator"
       ],
-      "audit_status": "recovered_from_estimate"
+      "audit_status": "recovered_from_estimate",
+      "reverified": "2026-08-29",
+      "source_url": "https://informburo.kz/novosti/skolko-platiat-za-kommunalku-v-raznyx-gorodax-kazaxstana",
+      "verify_note": "Phase-4 29.08.2026: единого тарифа «по РК» не публикуется — в коде среднее по четырём городам выше. Не норма.",
+      "conflict": "Не утверждённый тариф, а расчётный ориентир."
     },
     {
       "key": "perdiem_ipn_free_limit_foreign_mrp",
@@ -5781,14 +5848,15 @@
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "CarTransferCalculator"
       ],
       "note_deep": "Lines 28-32: NOTARY_MRP table by deal parties is the operative tariff. List's notary_vehicle_base_mrp=5 is STALE — value 5 no longer appears",
       "audit_status": "clean",
-      "verify_note": "Notary unified tariff (relatives 4 / others 10 / legal 12 МРП) cites Приказ МЮ от 27.09.2025 w.e.f. 01.01.2026 and matches the sibling key notary_unified_tariff_vehicle_sale_mrp; values look internally consistent and current, but notary tariffs are outside the НК РК vehicle-tax/registration scope and were not independently verified against the МЮ order this run.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Совпадение точное по всем трём ставкам. Круг «близких родственников» в приказе — дети, супруг, родители, родные братья/сёстры, внуки — в точности совпадает с подписью в коде (CarTransferCalculator.tsx, строка 34). Изменяющий приказ МЮ № 195 (adilet V2600038051) подпункт 3) не трогал — правки коснулись пп.1), 2), 13), 26). Значение подтверждено на 2026-08-24, статус в реестре можно поднять с uncertain до current.",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2500036957"
     },
     {
       "key": "plate_fee_high_demand_grid_mrp_2026",
@@ -5798,15 +5866,15 @@
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "FancyPlatesCalculator"
       ],
       "note_deep": "STALE EXTRACTION: извлечённая таблица gov_duty_plate_fee_mrp_table (170/150/100) НЕ совпадает ни с одним значением файла (строки 26-37) — ак",
       "audit_status": "clean",
-      "source_url": "https://adilet.zan.kz/rus/docs/G24C0000516",
-      "verify_note": "Это не payroll/pension, а прейскурант сбора за гос. рег. номерных знаков (в МРП). Множители-в-МРП устанавливаются постановлением Правительства и при росте МРП пересчитываются автоматически. Конкретную сетку 285/228/194/137/114/72/57/15/10 МРП на 2026 не удалось сверить с первоисточником adilet (вне профиля payroll/pension) — не подтверждаю и не опровергаю.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Tier-2 2026-08-23: Вся сетка МРП совпадает с НК — константа актуальна. НО два примера в UI отнесены не к тем категориям: (1) категория round = 137 МРП с примером «777 XYZ» — номер 777 по ст.667 относится к разряду 228 МРП (001–009 и 777), в 137 МРП входят 100, 111, 200, 222 … 999; (2) категория triplet = 57 МРП с примером «070 TTT» — комбинация «популярные цифры + три одинаковые буквы» стоит 114 МРП, а 57 МРП — те же цифры с РАЗНЫМИ буквами. Пользователь, ориентируясь на примеры, получит заниженную цену. Ставка 10 МРП (любая незанятая комбинация вне перечня повышенного спроса, сервис с 05.01.2026) подтверждается публикациями 2026 года, но в вычитанном фрагменте ст.667 отдельной строкой не встретилась — стоит п",
+      "reverified": "2026-08-23"
     },
     {
       "key": "ogpo_vehicle_type_coeff_table_current",
@@ -5816,14 +5884,15 @@
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "InsuranceCalculator"
       ],
       "note_deep": "Lines 69-83. The provided extracted table contains the OLD relative grid (passenger:1.0; taxi:2.0; truck<=3.5t:1.2 ...) which does NOT match",
       "audit_status": "clean",
-      "verify_note": "2026 ОГПО absolute coefficients (passenger 2.09; truck 3.98; bus<=20 3.26; bus>20 3.45; moto 1.00) cite Приказ АРРФР № G2500000072 w.e.f. 01.01.2026. This is the insurance (АРРФР/МТСБ) domain, not НК РК; the figures are plausible and self-consistent but were not independently verified against the АРРФР order this run.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Все используемые нами значения совпадают с законом; базовая премия 1,9 МРП в коде тоже верна. Нюансы, не влияющие на вердикт: (1) отдельной строки «такси» в законе нет — наше отнесение такси к 2,09 (легковой) корректно; (2) грузовые в законе не делятся по тоннажу, поэтому три наши градации с одинаковым 3,98 безопасны; (3) граница автобусов в законе — 16 мест, у нас в UI подписано «до 20» и «20–35» — подписи стоит привести к 16/свыше 16, иначе пользователь с 18-местным автобусом выберет 3,26 вместо 3,45; (4) строка «троллейбусы, трамваи» 2,33 в списке отсутствует (в комментарии кода упомянута, в массив не внесена).",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/Z030000446_"
     },
     {
       "key": "notary_unified_tariff_real_estate_sale_mrp",
@@ -5851,14 +5920,15 @@
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "NotaryServicesCalculator"
       ],
       "note_deep": "STALE LIST: list has individuals:5, mixed:7, legal:10 — does not match file values.",
       "audit_status": "clean",
-      "verify_note": "Unified notary tariff for vehicle sale (individuals 10 / mixed-legal 12 / close relatives 4 МРП, Приказ МЮ №533 от 27.09.2025 w.e.f. 01.01.2026). Out of НК РК scope; consistent with notary_vehicle_tariff_by_party_mrp but not independently verified this run.",
-      "reverified": "2026-06-23"
+      "verify_note": "Tier-2 2026-08-23: Совпадение точное. Это дубль ключа notary_vehicle_tariff_by_party_mrp (та же позиция приказа, другой калькулятор) — оба верны. Отмечу побочно: NotaryServicesCalculator.tsx показывает в таблице 12 и 10 МРП, что согласуется; статус в реестре можно поднять с uncertain до current.",
+      "reverified": "2026-08-23",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2500036957"
     },
     {
       "key": "notary_unified_tariff_will_mrp",
@@ -6530,16 +6600,17 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "uncertain",
+      "status": "removed_from_code",
       "used_by": [
         "FarmLandTaxCalculator"
       ],
       "note": "первый проход зафиксировал только МИН-МАКС диапазоны (0.42-0.80 и т.д.) — 56 пер-региональных значений (строки 41-182) не зафиксированы, изм",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://prg.kz/document/?doc_id=35328916",
-      "verify_note": "Полная региональная матрица базовых ставок (МРП/га по 14 регионам, ирриг/богар/пастб/сенокос) из официального текста НК РК постранично не подтверждена; маслихаты дополнительно корректируют ±50%. Конкретные числовые значения не угадываю — требуют сверки с НК РК (ст. 577-578).",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Phase-4 2026-08-23: Региональная матрица из кода удалена вместе с переходом на ст. 576. Реестровый хвост.",
+      "reverified": "2026-08-23",
+      "official_value": "Региональной матрицы базовых ставок в НК РК нет. Базовая ставка для сельхозземель зависит только от почвенно-климатической зоны (2 таблицы ст. 576) и балла бонитета; область/регион в качестве признака не используется"
     },
     {
       "key": "gons_min_saving_period_years",
@@ -6693,7 +6764,7 @@
       "year": "2026",
       "change_frequency": "annual",
       "aliases": [],
-      "status": "uncertain",
+      "status": "removed_from_code",
       "used_by": [
         "InheritanceCalculator"
       ],
@@ -6701,8 +6772,9 @@
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
-      "verify_note": "Не удалось сопоставить «5 МРП» с конкретной позицией Приказа №533 (значение «прочее»/flat fee неоднозначно). В новом перечне фиксированных тарифов прямого аналога 5 МРП по наследству нет (свидетельство = 4 МРП). Требует уточнения по полному тексту Приказа V2500036957 — не угадываю.",
-      "reverified": "2026-06-23"
+      "verify_note": "Phase-4 2026-08-23: Надбавки 5 МРП в InheritanceCalculator нет — константа в коде не используется. Реестровый хвост.",
+      "reverified": "2026-08-23",
+      "official_value": "4 МРП за каждое выданное свидетельство о праве на наследство — единая ставка, без дифференциации по степени родства и без процентной составляющей"
     },
     {
       "key": "inheritance_mandatory_share_fraction",
@@ -6901,9 +6973,9 @@
       "note": "DATA REPAIR: the provided list value is truncated mid-string at 'severeIn', so 7 of 9 categories plus all avg values are missing from the pa",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://kodeksy-kz.com/ka/grazhdanskij_kodeks_osobennaya_chast/952.htm",
-      "verify_note": "Размер компенсации морального вреда законом НЕ фиксирован (ст. 951-952 ГК РК): определяется судом по принципам справедливости и достаточности. Приведённые диапазоны в МРП — иллюстративная судебная практика, не государственно установленные величины.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/P150000007S",
+      "verify_note": "Tier-2 2026-08-23: Вердикт uncertain по правилу консервативности: официального значения для сравнения не существует, значит stale_confirmed поставить нельзя. Два риска для редактуры (не подтверждены первоисточником, но требуют проверки в отдельной задаче): (1) сама структура таблицы выглядит сгенерированной — круглые ступени 10/20/30/50/200/500/1000/2000/3000/5000, avg почти всегда посередине диапазона; (2) death avg 2500 МРП × 4325 ₸ ≈ 10,8 млн ₸ и illegalArrest до 3000 МРП ≈ 13 млн ₸ выглядят завышенными относительно реальной практики РК, а для реабилитированных по уголовным делам в законодательстве есть отдельный порядок возмещения с ограничением в МРП (норму первоисточником не подтвердил — банк источников ",
+      "reverified": "2026-08-23"
     },
     {
       "key": "otbasy_baspana_hit_terms",
@@ -6956,9 +7028,9 @@
       "note": "Only the 2% rate is in the list; limit/down payment/term missing.",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://hcsbk.kz/ru/affordable-housing/all-about-affordable-housing-programs/",
-      "verify_note": "Параметры 'Баспана жас' (18 млн ₸ / 10% / 25 лет) совпадают с моделью сайта, но прямого подтверждения именно по программе с таким названием на hcsbk.kz не найдено (актуальные молодёжные программы — Жас Отбасы и др.). Рекомендуется ручная сверка с hcsbk.kz.",
-      "reverified": "2026-06-23"
+      "source_url": "https://hcsbk.kz/ru/save/young-family/",
+      "verify_note": "Tier-2 2026-08-23: Расходятся ВСЕ ТРИ параметра: 18 млн против 200 млн, 25 лет против 6–9 лет, «взнос 10 %» против требования накопить 50 % стоимости жилья на депозите. Похоже на склейку из разных продуктов: 6 % — от «Жас Отбасы», взнос 10 % — от «Бақытты Отбасы» (2 % годовых, взнос 10 %, срок до 19 лет), 25 лет — от «Нұрлы Жер»/«Свой дом»; продукта, у которого сходились бы все четыре параметра, у банка нет. ВАЖНО для применения: правка боевого калькулятора не требуется — в OtbasyBankCalculator.tsx этой программы уже нет (осталось три: 7-20-25, Наурыз, Отау), константа не используется. Достаточно удалить строку из реестра или заменить её реальными условиями «Жас Отбасы». | Адверсариальная проверка: refuted=True.",
+      "reverified": "2026-08-23"
     },
     {
       "key": "otbasy_otau_terms",
@@ -7137,9 +7209,9 @@
       "note": "Line 108: averagePayoutPeriodMonths = 19 * 12. Present in PensionAnnuityCalculator's list but ABSENT from this component's list.",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://www.enpf.kz/ru/services/vyplaty/57494/",
-      "verify_note": "Дубликат enpf_standard_payout_period_years. Фиксированный стандартный период '19 лет' методикой ЕНПФ как нормативная константа не подтверждён; график рассчитывается индивидуально по формуле приведённой стоимости.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/P2300000521",
+      "verify_note": "Tier-2 2026-08-23: Полный дубликат enpf_standard_payout_period_years (то же значение, тот же первоисточник), но used_by указывает на другой компонент — PensionCalculator.tsx (строка 107-108: averagePayoutPeriodMonths = 19 * 12). Вердикт и обоснование идентичны. Отдельно стоит свести две записи реестра в одну, иначе будущие правки разъедутся по калькуляторам.",
+      "reverified": "2026-08-23"
     },
     {
       "key": "property_sale_exempt_ownership_years_realestate",
@@ -7182,22 +7254,23 @@
     },
     {
       "key": "property_tax_wear_rate_per_year_pct",
-      "value": 2,
+      "value": "1.0 (каменные и панельные) / 2.0 (иные материалы)",
       "unit": "% per year of building age",
       "law": "Методика определения стоимости (НК РК / Госкорпорация) — износ 2%/год",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "PropertyTaxCalculator"
       ],
       "note": "Line 105: wearPercent = Math.min(age * 2, 70). First sweep extracted only the 70% cap, not the 2%/yr rate that drives it. (Cottage +10/garag",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
-      "verify_note": "Единой нормы износа 2%/год нет: методика применяет норму амортизации в зависимости от материала здания (панель ~1%, кирпич ~0,7% и т.д.). Значение '2%/год' не подтверждается как универсальная официальная норма.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом. Норма амортизации по НК зависит от группы капитальности здания (0,7 / 0,8 / 1,0 / 2,0 / 3,3 / 6,6 %); калькулятор моделирует её по материалу стен двумя ставками — 1,0 % для каменных и панельных, 2,0 % для иных. Раньше стояли плоские 2 % для всех объектов. УПРОЩЕНИЕ МОДЕЛИ: шесть групп НК сведены к двум — при следующей сверке решить, разворачивать ли полную шкалу.",
+      "reverified": "2026-08-29",
+      "official_value": "Норма амортизации (Н аморт) зависит от группы капитальности здания: 1 гр. — 0,7 %; 2 гр. — 0,8 %; 3 гр. — 1,0 %; 4 гр. — 2,0 %; 5 гр. — 3,3 %; 6 гр. — 6,6 % в год"
     },
     {
       "key": "property_tax_progressive_brackets_full_16_steps",
@@ -7287,7 +7360,7 @@
     },
     {
       "key": "dumk_fidya_rate_2024",
-      "value": 2800,
+      "value": 3400,
       "unit": "₸ per missed day",
       "law": "Ставка фидия ДУМК 2024",
       "year": "2026",
@@ -7299,39 +7372,40 @@
       ],
       "note": "Historical rates table line 534.",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://muftyat.kz/",
+      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом. ҚМДБ 3 400 ₸/день за 2024. Было 2 800 — часть выдуманной лесенки 3000/2800/2500/2200, ни одно значение которой не совпало с ДУМК.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "dumk_fidya_rate_2023",
-      "value": 2500,
       "unit": "₸ per missed day",
       "law": "Ставка фидия ДУМК 2023",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
-      "used_by": [
-        "RamadanSadaqahCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "note": "Historical rates table line 538.",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "Phase-4 29.08.2026: строка УДАЛЕНА из кода. Официального значения фидии ДУМК за 2023 найти не удалось; прежние 2 500 ₸ были частью выдуманной лесенки. Показывать придуманное число вместо отсутствующего — хуже, чем не показывать.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "dumk_fidya_rate_2022",
-      "value": 2200,
       "unit": "₸ per missed day",
       "law": "Ставка фидия ДУМК 2022",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
-      "used_by": [
-        "RamadanSadaqahCalculator"
-      ],
+      "status": "removed_from_code",
+      "used_by": [],
       "note": "Historical rates table line 542. Value coincides with dumk_fitr_dates_rate_2026=2200 already in list, but it is a DISTINCT regulatory datapo",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "Phase-4 29.08.2026: строка УДАЛЕНА из кода. Официального значения фидии ДУМК за 2022 найти не удалось; прежние 2 200 ₸ были частью выдуманной лесенки.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "self_employed_ipn_rate",
@@ -8142,8 +8216,8 @@
       ],
       "audit_status": "clean",
       "source_url": "https://krisha.kz/content/articles/2026/2026-ipoteka-na-vtorichku-2026-usloviya-vseh-bankov",
-      "verify_note": "ГЭСВ вторички 17.08.2026: Halyk 23%, ЦентрКредит 23,6%, Altyn 24,9%, Нурбанк 22,9-24,6% — диапазон 23-24,9%, дефолт 23,5% внутри. Базовая ставка НБРК без изменений 16,75% (последнее решение 27.07.2026, следующее заседание 04.09.2026).",
-      "reverified": "2026-08-17"
+      "verify_note": "Tier-2 2026-08-23: Изменений с прошлой сверки 17.08.2026 не найдено: тот же диапазон ГЭСВ 22,9–24,9%, дефолт 23,5% лежит внутри. Confidence = medium сознательно: это РЫНОЧНЫЙ ориентир, а не регуляторная константа — первоисточника уровня adilet/НБРК для него не существует, сайты банков за Cloudflare не долбил, опора на агрегаторы (krisha.kz, kn.kz). Стало быть stale_confirmed по такой константе в принципе не выносится — только «диапазон подтверждён/не подтверждён». Риск на горизонте: если 04.09.2026 НБРК снова снизит ставку, банки начнут двигать ГЭСВ вниз с лагом — перепроверять этот пункт стоит не раньше октября 2026. Также синхронизированы тексты: src/components/calculators/MortgageCompareCalculator.tsx:20,27",
+      "reverified": "2026-08-23"
     },
     {
       "key": "land_tax_farmland_rates_table",
@@ -8183,9 +8257,9 @@
         "MortgageCompareCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://nationalbank.kz/ru/news/grafik-prinyatiya-resheniy-po-bazovoy-stavke",
-      "verify_note": "Tier-2 2026-08: 2026 год — 18% (26.01, 10.03, 27.04), 17% (08.06), 16,75% (27.07). Ближайшие заседания: 04.09, 23.10, 04.12. РАНЬШЕ В РЕЕСТРЕ ОТСУТСТВОВАЛА — поэтому снижение 17→16,75 мониторинг не пометил, а зависимая пеня осталась на 0,0582%/день. Подтверждено 17.08.2026: решений после 27.07 не было.",
-      "reverified": "2026-08-17"
+      "source_url": "https://nationalbank.kz/ru/news/press-relizy/19982",
+      "verify_note": "Tier-2 2026-08-23: Наше значение 16,75% совпадает с действующим решением НБРК. Заседаний между 27.07.2026 и сегодняшним днём (23–24.08.2026) не было. Следующее решение — 04.09.2026, 12:00 по Астане (далее 23.10 и 04.12). Рекомендация: поставить перепроверку на 04.09.2026 — при изменении ставки нужно синхронно пересчитать penalty_tax_daily_rate_example и упоминания «16,75%» в ru/kk-локалях, methodology, QuickAnswer и legal-чейнджлоге.",
+      "reverified": "2026-08-23"
     }
   ],
   "estimates_excluded": [
@@ -8265,7 +8339,22 @@
       ],
       "note": "audit_status preserves the original representation-audit label per constant. VAT rate=16% confirmed current (point 3); no constant retains a 12% VAT gross-up."
     },
-    "last_tier2_review": "2026-08-06"
+    "last_tier2_review": "2026-08-23",
+    "tier2_2026_08_23": {
+      "checked": 48,
+      "current": 16,
+      "stale_confirmed": 20,
+      "uncertain": 12,
+      "method": "workflow: 7 тематических агентов по первоисточникам + адверсариальная перепроверка каждого stale",
+      "mode": "tier2 — статусы слиты в реестр, код НЕ менялся, деплой НЕ выполнялся",
+      "synthetic_flags": 31,
+      "phase4": {
+        "date": "2026-08-23",
+        "applied_to_code": 15,
+        "registry_only_tails": 5,
+        "deploy": "НЕ выполнялся"
+      }
+    }
   },
   "completeness_audit": {
     "date": "2026-06-10",

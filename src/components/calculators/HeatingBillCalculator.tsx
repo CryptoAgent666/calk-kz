@@ -45,6 +45,11 @@ export default function HeatingBillCalculator() {
     recommendationKey: ''
   };
 
+  // Тарифы на тепловую энергию для населения, ВСЕ с НДС 16%.
+  // Сверено Tier-2 23.08.2026 по приказам ДКРЕМ и прейскурантам поставщиков.
+  // До сверки Алматы/Шымкент/Караганда были помечены в коде как «оценка по региону»
+  // и связаны ровными множителями с «прочими регионами» (×0,9 и ×1,1) — то есть
+  // таблица была сгенерирована от одного числа, а не выписана из тарифов.
   const cityHeatingData: CityHeatingData[] = [
     {
       id: 'astana',
@@ -64,7 +69,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'almaty',
       nameKey: 'calculators:heating.cityAlmaty',
-      tariffPerGcal: 8400.00, // ТОО «АлТС» с 01.04.2026, с потерями
+      tariffPerGcal: 9139.07, // ТОО «АлТС» с 01.05.2026: 7 878,51 без НДС (приказ ДКРЕМ по Алматы от 22.04.2026 № 65-ОД)
       averageNorm: 0.0165,
       monthlyNorms: [
         { month: 'october', norm: 0.012, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -79,7 +84,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'shymkent',
       nameKey: 'calculators:heating.cityShymkent',
-      tariffPerGcal: 4500.00, // 2026 — оценка по региону
+      tariffPerGcal: 7456.61, // ГКП «Қуатжылуорталық-3», среднеотпускной для населения: 6 428,11 без НДС
       averageNorm: 0.0145,
       monthlyNorms: [
         { month: 'november', norm: 0.013, descriptionKey: 'calculators:heating.novemberStart' },
@@ -92,7 +97,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'karaganda',
       nameKey: 'calculators:heating.cityKaraganda',
-      tariffPerGcal: 5500.00, // 2026 — оценка по региону
+      tariffPerGcal: 5735.27, // ТОО «Теплотранзит Караганда» с 15.08.2026: 4 944,20 без НДС
       averageNorm: 0.0195,
       monthlyNorms: [
         { month: 'october', norm: 0.016, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -107,7 +112,7 @@ export default function HeatingBillCalculator() {
     {
       id: 'other',
       nameKey: 'calculators:heating.otherRegions',
-      tariffPerGcal: 5000.00, // 2026 — среднее по РК
+      tariffPerGcal: 6565.24, // единого тарифа «по РК» не публикуется — среднее по четырём городам выше
       averageNorm: 0.017,
       monthlyNorms: [
         { month: 'october', norm: 0.014, descriptionKey: 'calculators:heating.octoberRegular' },

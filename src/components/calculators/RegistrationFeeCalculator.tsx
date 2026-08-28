@@ -70,7 +70,10 @@ export default function RegistrationFeeCalculator() {
     let actualRegistrationRate = registrationRateMRP;
     if (vehicleType === 'electric' && vehicleAge <= 2) {
       // Для новых электромобилей может быть льготная ставка
-      actualRegistrationRate = 0.1; // Предполагаемая льготная ставка
+      // Отдельной льготной ставки для электромобилей в НК нет: применяется общая
+      // 0,25 МРП (ст. 615 п.4). Раньше здесь стояли 0,1 МРП с комментарием
+      // «Предполагаемая льготная ставка» — то есть значение было догадкой.
+      actualRegistrationRate = 0.25;
     }
 
     // Расчет сборов

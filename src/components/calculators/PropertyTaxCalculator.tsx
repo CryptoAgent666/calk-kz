@@ -18,6 +18,8 @@ export default function PropertyTaxCalculator() {
   const [city, setCity] = useState<string>('almaty');
   const [area, setArea] = useState<string>('60');
   const [buildYear, setBuildYear] = useState<string>('2010');
+  // Материал стен определяет и норму амортизации, и предельный износ (НК РК ст.600).
+  const [wallMaterial, setWallMaterial] = useState<string>('stone');
   const [useCustomCoefficients, setUseCustomCoefficients] = useState<boolean>(false);
   const [baseCost, setBaseCost] = useState<string>('');
   const [zoneCoefficient, setZoneCoefficient] = useState<string>('');
@@ -40,6 +42,16 @@ export default function PropertyTaxCalculator() {
 
   const CURRENT_YEAR = 2026;
   const MRP_2026 = 4325;
+
+  // Норма амортизации и порог износа по материалу стен.
+  // Раньше в коде стояли плоские 2%/год и порог 70% для всего подряд, плюс
+  // надбавки «коттедж +10 / гараж +5» без правового основания. Сверка Tier-2
+  // 23.08.2026: 2% — норма для деревянных/смешанных стен, для каменных и
+  // панельных она ниже, а порог износа для иных материалов 65%, а не 70%.
+  const wallMaterials = [
+    { id: 'stone', rate: 1.0, maxWear: 70, nameKey: 'calculators:property-tax.wallStone' },
+    { id: 'other', rate: 2.0, maxWear: 65, nameKey: 'calculators:property-tax.wallOther' }
+  ];
 
   const propertyTypes = [
     { id: 'apartment', nameKey: 'calculators:property-tax.propertyType_apartment', icon: '🏠' },
@@ -104,10 +116,8 @@ export default function PropertyTaxCalculator() {
 
     const yearBuilt = parseInt(buildYear) || CURRENT_YEAR;
     const age = Math.max(0, CURRENT_YEAR - yearBuilt);
-    let wearPercent = Math.min(age * 2, 70);
-
-    if (propertyType === 'cottage') wearPercent = Math.min(wearPercent + 10, 80);
-    if (propertyType === 'garage') wearPercent = Math.min(wearPercent + 5, 75);
+    const material = wallMaterials.find(m => m.id === wallMaterial) || wallMaterials[0];
+    const wearPercent = Math.min(age * material.rate, material.maxWear);
 
     const taxBase = baseCostPerSqm * propertyArea * (1 - wearPercent / 100) * zoneCoeff * mrpCoeff;
 
@@ -144,7 +154,7 @@ export default function PropertyTaxCalculator() {
   const results = useMemo(
     calculatePropertyTax,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [propertyType, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]
+    [propertyType, wallMaterial, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]
   );
 
   const formatNumber = (num: number) => {
@@ -275,6 +285,28 @@ export default function PropertyTaxCalculator() {
                 max={CURRENT_YEAR}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('property-tax.wallMaterial')}
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {wallMaterials.map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => setWallMaterial(m.id)}
+                    className={`p-3 rounded-lg border-2 text-sm transition-all ${
+                      wallMaterial === m.id
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                    }`}
+                  >
+                    {t(m.nameKey)}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">{t('property-tax.wallMaterialHint')}</p>
             </div>
 
             <div className="border-t pt-6">

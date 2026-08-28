@@ -68,7 +68,9 @@ export default function KurbanCalculator() {
     recommendedBudget: 0
   };
 
-  const KURBAN_DATE = t('kurban-sacrifice.date2025');
+  // Дата плавает по лунному календарю и объявляется ДУМК — обновлять ежегодно.
+  // Ключ раньше назывался date2025, а хранил уже дату 2026 г.
+  const KURBAN_DATE = t('kurban-sacrifice.holidayDate');
   const CURRENT_YEAR = 2026;
 
   // Цены Курбан-2026 (сверено 05.2026: zakon/inform/tengrinews — страна 80–120 тыс.,

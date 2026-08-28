@@ -27,10 +27,12 @@ const plateCategories: PlateCategory[] = [
   { id: 'premiumLetters', labelKey: 'fancy-plates.cat.premiumLetters', descKey: 'fancy-plates.desc.premiumLetters', mrp: 285, example: '001 AAA' },
   { id: 'premium', labelKey: 'fancy-plates.cat.premium', descKey: 'fancy-plates.desc.premium', mrp: 228, example: '007 BCA' },
   { id: 'roundLetters', labelKey: 'fancy-plates.cat.roundLetters', descKey: 'fancy-plates.desc.roundLetters', mrp: 194, example: '100 BBB' },
-  { id: 'round', labelKey: 'fancy-plates.cat.round', descKey: 'fancy-plates.desc.round', mrp: 137, example: '777 XYZ' },
+  // Сверка Tier-2 23.08.2026: пример '777 XYZ' был не из этого разряда — 777 стоит 228 МРП.
+  { id: 'round', labelKey: 'fancy-plates.cat.round', descKey: 'fancy-plates.desc.round', mrp: 137, example: '222 XYZ' },
   { id: 'popularLetters', labelKey: 'fancy-plates.cat.popularLetters', descKey: 'fancy-plates.desc.popularLetters', mrp: 114, example: '070 DDD' },
   { id: 'mirrorLetters', labelKey: 'fancy-plates.cat.mirrorLetters', descKey: 'fancy-plates.desc.mirrorLetters', mrp: 72, example: '101 AAA' },
-  { id: 'triplet', labelKey: 'fancy-plates.cat.triplet', descKey: 'fancy-plates.desc.triplet', mrp: 57, example: '070 TTT' },
+  // Пример '070 TTT' был из разряда 114 МРП: три одинаковые буквы стоят дороже.
+  { id: 'triplet', labelKey: 'fancy-plates.cat.triplet', descKey: 'fancy-plates.desc.triplet', mrp: 57, example: '070 ABC' },
   { id: 'mirror', labelKey: 'fancy-plates.cat.mirror', descKey: 'fancy-plates.desc.mirror', mrp: 15, example: '121 XYZ' },
   { id: 'custom', labelKey: 'fancy-plates.cat.custom', descKey: 'fancy-plates.desc.custom', mrp: 10, example: '720 TNO' },
   { id: 'standard', labelKey: 'fancy-plates.cat.standard', descKey: 'fancy-plates.desc.standard', mrp: 2.8, example: '548 BCA' },

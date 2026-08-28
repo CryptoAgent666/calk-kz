@@ -68,13 +68,23 @@ const PED_CATEGORY_RATES: Record<PedCategory, number> = {
   master: 0.50,
 };
 
-// Доплаты (в МРП/месяц)
-const BONUSES = {
-  classTeacher: 5,       // классное руководство
-  notebookCheck: 3,      // проверка тетрадей
-  cabinetHead: 1,        // заведование кабинетом
-  methodist: 2,          // методист
+// Доплаты. База у них РАЗНАЯ, поэтому хранится явно, а не одним числом в МРП:
+// ПП РК № 1193 задаёт доплату за заведование кабинетом как процент от БДО,
+// а не фиксированную сумму в МРП. Сверка Tier-2 23.08.2026 подтвердила 20% БДО;
+// прежнее «1 МРП» занижало доплату примерно на 20%.
+// Остальные три доплаты этой сверкой НЕ подтверждались — значения в МРП
+// оставлены как были и помечены как неподтверждённые.
+type BonusSpec = { base: 'bdo' | 'mrp'; value: number; verified: boolean };
+const BONUSES: Record<string, BonusSpec> = {
+  classTeacher:  { base: 'mrp', value: 5,    verified: false }, // классное руководство
+  notebookCheck: { base: 'mrp', value: 3,    verified: false }, // проверка тетрадей
+  cabinetHead:   { base: 'bdo', value: 0.20, verified: true  }, // заведование кабинетом — 20% БДО
+  methodist:     { base: 'mrp', value: 2,    verified: false }, // методист
 };
+
+function bonusAmountFor(spec: BonusSpec, mrp: number, bdo: number): number {
+  return spec.base === 'bdo' ? Math.round(spec.value * bdo) : Math.round(spec.value * mrp);
+}
 
 function getExperienceIndex(years: number): number {
   for (let i = 0; i < EXPERIENCE_RANGES.length; i++) {
@@ -123,13 +133,11 @@ export default function TeacherSalaryCalculator() {
     const ruralBonus = isRural ? Math.round(okladByLoad * 0.25) : 0;
     const smallSchoolBonus = isSmallSchool ? Math.round(okladByLoad * 0.20) : 0;
 
-    // Доплаты в МРП
-    let bonusMRP = 0;
-    if (bonuses.classTeacher) bonusMRP += BONUSES.classTeacher;
-    if (bonuses.notebookCheck) bonusMRP += BONUSES.notebookCheck;
-    if (bonuses.cabinetHead) bonusMRP += BONUSES.cabinetHead;
-    if (bonuses.methodist) bonusMRP += BONUSES.methodist;
-    const bonusAmount = bonusMRP * MRP_2026;
+    const bonusAmount = Object.entries(BONUSES).reduce(
+      (sum, [key, spec]) =>
+        bonuses[key as keyof typeof bonuses] ? sum + bonusAmountFor(spec, MRP_2026, BDO_2026) : sum,
+      0
+    );
 
     const grossSalary = okladByLoad + pedCategoryBonus + ruralBonus + smallSchoolBonus + bonusAmount;
 
@@ -360,7 +368,7 @@ export default function TeacherSalaryCalculator() {
               <label className="block text-sm font-medium text-gray-700">
                 {t('teacher-salary.additionalBonuses')}
               </label>
-              {Object.entries(BONUSES).map(([key, mrp]) => (
+              {Object.entries(BONUSES).map(([key, spec]) => (
                 <label key={key} className="flex items-center space-x-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -369,7 +377,10 @@ export default function TeacherSalaryCalculator() {
                     className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <span className="text-sm text-gray-700">
-                    {t(`teacher-salary.bonus.${key}`)} ({mrp} МРП = {formatCurrency(mrp * MRP_2026)})
+                    {t(`teacher-salary.bonus.${key}`)} (
+                    {spec.base === 'bdo' ? `${Math.round(spec.value * 100)}% БДО` : `${spec.value} МРП`}
+                    {' = '}
+                    {formatCurrency(bonusAmountFor(spec, MRP_2026, BDO_2026))})
                   </span>
                 </label>
               ))}

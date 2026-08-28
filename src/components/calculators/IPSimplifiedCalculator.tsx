@@ -458,11 +458,17 @@ export default function IPSimplifiedCalculator() {
       {results.totalTax > 0 && (
         <div className="mt-8 space-y-6">
           <TaxPieChart
+            // Всё приводим к ГОДУ. Раньше здесь стоял полугодовой ipnTax рядом с
+            // годовыми ОПВ/СО (×12), из-за чего доли на диаграмме (44/37/19%)
+            // не отражали ни год, ни полугодие. ИПН платится за два полугодия.
+            // Заодно добавлены ОПВР и ВОСМС — без них «структура» неполная.
             data={[
-              { name: t('ip-simplified.ipnTax'), value: results.ipnTax },
-              { name: t('ip-simplified.socialTax'), value: results.socialTax },
+              { name: t('ip-simplified.ipnTax'), value: results.ipnTax * 2 },
+              { name: t('ip-simplified.socialTax'), value: results.socialTax * 2 },
               { name: t('ip-simplified.opv'), value: results.opvSelf * 12 },
+              { name: t('ip-simplified.opvr'), value: results.opvrSelf * 12 },
               { name: t('ip-simplified.so'), value: results.soSelf * 12 },
+              { name: t('ip-simplified.vosms'), value: results.vosmsSelf * 12 },
             ].filter(item => item.value > 0)}
             title={t('ip-simplified.taxStructure')}
           />
