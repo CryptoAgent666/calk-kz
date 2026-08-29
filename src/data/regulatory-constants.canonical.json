@@ -676,7 +676,11 @@
       "audit_status": "clean",
       "verify_note": "Tier-2 2026-08-23: Базовая ставка 15% подтверждается официальной позицией КГД (июль 2026) и детальной тарифной разбивкой по объёмам двигателя. Прямой первоисточник (текст Решения Совета ЕЭК №107 / ЕТТ) не вычитан — поэтому confidence medium, а не high. Электромобили 0% в нашем калькуляторе стоят верно.",
       "reverified": "2026-08-23",
-      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/"
+      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/",
+      "official_value": "15",
+      "official_source": "https://www.tks.ru/auto/2000000008/",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "customs_duty_rate_vehicle_old",
@@ -696,7 +700,11 @@
       "audit_status": "clean",
       "verify_note": "Tier-2 2026-08-23: ВЫСОКИЙ ПРИОРИТЕТ ПЕРЕПРОВЕРКИ. Наши 25% не подтверждаются ни одним найденным источником; по разъяснению КГД повышение для ТС старше 7 лет реализовано не как ad valorem 25%, а как минимальная специфическая ставка (€/см³) при той же адвалорной 15%. Вердикт оставлен uncertain, т.к. первоисточник (ЕТТ ЕАЭС / Решение Совета ЕЭК №107, приложение по ТС) вычитать не удалось, а официального «другого числа» в виде одной ставки нет. Правку боевого калькулятора делать только после сверки с ЕТТ.",
       "reverified": "2026-08-23",
-      "source_url": "https://el.kz/ru/chto-stalo-s-rastamozhkoy-na-avto-posle-1-iyulya-v-kazahstane-otvet-kgd_400049531/"
+      "source_url": "https://el.kz/ru/chto-stalo-s-rastamozhkoy-na-avto-posle-1-iyulya-v-kazahstane-otvet-kgd_400049531/",
+      "official_value": "25",
+      "official_source": "https://www.tks.ru/auto/2000000008/",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "customs_duty_surcharge_large_engine",
@@ -713,7 +721,11 @@
       "used_by": [
         "CustomsClearanceCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "5",
+      "official_source": "https://www.alta.ru/ett/gruppa87.html",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "customs_vehicle_old_age_threshold_years",
@@ -732,7 +744,11 @@
       "audit_status": "clean",
       "verify_note": "Tier-2 2026-08-23: Сам порог 7 лет подтверждён и актуален. Спорным остаётся не порог, а то, ЧТО меняется при его превышении (см. customs_duty_rate_vehicle_old).",
       "reverified": "2026-08-23",
-      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/"
+      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/",
+      "official_value": "7",
+      "official_source": "https://www.tks.ru/auto/2000000008/",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "customs_fee_rate",
@@ -1674,7 +1690,9 @@
       "verify_note": "Phase-4 2026-08-23: В коде уже верная модель по сторонам сделки (4/10/12 МРП, Приказ МЮ № 533) — ступенчатая по цене в CarTransferCalculator отсутствует. Устарела запись реестра, не код.",
       "reverified": "2026-08-23",
       "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
-      "official_value": "12 МРП (одна из сторон — юрлицо); 4 МРП (дети, супруг, родители, родные братья/сёстры, внуки); 10 МРП (другие лица). Градация по цене сделки отсутствует."
+      "official_value": "5 base (7 if price≥3M KZT, 10 if price≥10M KZT)",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "penalty_disproportionate_warning_threshold",
@@ -1768,7 +1786,10 @@
       "audit_status": "representation_variants",
       "verify_note": "Tier-2 2026-08-23: Числа 10/20 МРП подтверждены. Confidence medium, а не high: текст ст.590 вычитан через агрегатор zakonexpertt.kz — adilet отдаёт КоАП одним документом, в котором WebFetch до Особенной части не доходит. Содержательный дефект: в TrafficFinesCalculator.tsx у нарушения noPlates указан articleRef '590 ч.4', фактически это ч.2 и ч.2-1 — ссылку на часть статьи надо поправить. Санкция «лишение прав на 1 год» как альтернатива повторному штрафу в калькуляторе не отражена.",
       "reverified": "2026-08-23",
-      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235"
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "official_value": "first 10 / repeat 20",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "traffic_fine_oncoming_lane",
@@ -2437,7 +2458,10 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/P2300000521",
       "verify_note": "Tier-2 2026-08-23: НЕ подтверждено как нормативная константа, но и не опровергнуто как модельное допущение — поэтому uncertain. Существенно: наши калькуляторы используют 19 лет как ПЛОСКИЙ делитель (accumulations / (19*12), PensionAnnuityCalculator.tsx:196-198 и PensionCalculator.tsx:107-108), тогда как официальная формула первого года даёт делитель 1/0,065 = 15,4 года. Из-за этого сайт занижает ежемесячную выплату по графику ЕНПФ примерно на 19 % и, как следствие, систематически смещает сравнение «аннуитет против ЕНПФ» в пользу аннуитета. При этом сама цифра 19 не абсурдна: при доходности ЕНПФ ~7 % годовых схема 6,5 % + индексация 5 % исчерпывает накопления примерно за 19,5 лет, то есть 19 лет правдоподобны к",
-      "reverified": "2026-08-23"
+      "reverified": "2026-08-23",
+      "official_value": "19",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "pension_annuity_sufficient_amount_mrp",
@@ -2598,7 +2622,7 @@
     },
     {
       "key": "perdiem_domestic_capital_mrp",
-      "value": 6,
+      "value": 2,
       "unit": "MRP",
       "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — столица)",
       "year": "2026",
@@ -2611,10 +2635,10 @@
         "BusinessTripCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
-      "official_value": "6",
-      "verify_note": "Не облагаемый ИПН лимит суточных по РК = не более 6 МРП/день (НК РК, на 01.01 фин.года, до 40 дней). Это плоский лимит — 6 МРП совпадает. ВАЖНО: налоговый лимит НЕ дифференцируется по типу города (см. ниже).",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "official_value": 2,
+      "verify_note": "Phase-4 29.08.2026: сверено по первоисточнику (ПП РК от 11.05.2018 № 256, глава 2, п. 3 пп. 1, дословно: «за каждый день нахождения в командировке выплачиваются суточные в размере ДВУХ месячных расчетных показателей»). Суточные за счёт бюджета — ПЛОСКИЕ 2 МРП, деления по городам у них НЕТ. Градация 7/6/4 МРП из того же пункта относится к НАЙМУ ЖИЛЬЯ (пп. 2) и была ошибочно приклеена к суточным. Для частных компаний суточные вообще не нормируются (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел ИПН — 6 МРП/сутки по РК, 8 за рубежом (НК ст. 366 пп. 2). ⚠️ Ключ с суффиксом города — легаси: различия по городу у суточных не существует. БЫЛО 6 МРП и в value, и в official_value — рассинхрон, который loop-closer НЕ ловит, потому что оба поля согласованы между собой и оба неверны относительно кода.",
+      "reverified": "2026-08-29"
     },
     {
       "key": "perdiem_domestic_regional_mrp",
@@ -2631,10 +2655,14 @@
         "BusinessTripCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
-      "verify_note": "Tier-2 2026-08: подтверждено дословной цитатой п. 3 пп. 1) — «суточные в размере двух месячных расчетных показателей». Норма в 2025–2026 не менялась.",
-      "reverified": "2026-08-17",
-      "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2)."
+      "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "verify_note": "Phase-4 29.08.2026: сверено по первоисточнику (ПП РК от 11.05.2018 № 256, глава 2, п. 3 пп. 1, дословно: «за каждый день нахождения в командировке выплачиваются суточные в размере ДВУХ месячных расчетных показателей»). Суточные за счёт бюджета — ПЛОСКИЕ 2 МРП, деления по городам у них НЕТ. Градация 7/6/4 МРП из того же пункта относится к НАЙМУ ЖИЛЬЯ (пп. 2) и была ошибочно приклеена к суточным. Для частных компаний суточные вообще не нормируются (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел ИПН — 6 МРП/сутки по РК, 8 за рубежом (НК ст. 366 пп. 2). ⚠️ Ключ с суффиксом города — легаси: различия по городу у суточных не существует. official_value содержал 5 — значение из прежней выдуманной лесенки 6/5/4.",
+      "reverified": "2026-08-29",
+      "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2).",
+      "official_value": 2,
+      "official_source": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "perdiem_domestic_other_mrp",
@@ -2651,10 +2679,14 @@
         "BusinessTripCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
-      "verify_note": "Tier-2 2026-08: подтверждено дословной цитатой п. 3 пп. 1) — «суточные в размере двух месячных расчетных показателей». Норма в 2025–2026 не менялась.",
-      "reverified": "2026-08-17",
-      "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2)."
+      "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "verify_note": "Phase-4 29.08.2026: сверено по первоисточнику (ПП РК от 11.05.2018 № 256, глава 2, п. 3 пп. 1, дословно: «за каждый день нахождения в командировке выплачиваются суточные в размере ДВУХ месячных расчетных показателей»). Суточные за счёт бюджета — ПЛОСКИЕ 2 МРП, деления по городам у них НЕТ. Градация 7/6/4 МРП из того же пункта относится к НАЙМУ ЖИЛЬЯ (пп. 2) и была ошибочно приклеена к суточным. Для частных компаний суточные вообще не нормируются (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел ИПН — 6 МРП/сутки по РК, 8 за рубежом (НК ст. 366 пп. 2). ⚠️ Ключ с суффиксом города — легаси: различия по городу у суточных не существует. official_value содержал 4 — значение из прежней выдуманной лесенки 6/5/4.",
+      "reverified": "2026-08-29",
+      "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2).",
+      "official_value": 2,
+      "official_source": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "teacher_bdo_base_salary_2026",
@@ -2835,7 +2867,10 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
       "verify_note": "Tier-2 29.08.2026: ДОПЛАТЫ НЕ СУЩЕСТВУЕТ — удалена из кода. В ПП РК № 1193 слово «методист» встречается только в Приложении 1 как НАИМЕНОВАНИЕ ШТАТНОЙ ДОЛЖНОСТИ, а не надбавка. Квалификационной категории «педагог-методист» в системе аттестации РК нет (приказ МОН РК от 27.01.2016 № 83: педагог-стажёр, педагог, педагог-модератор, педагог-эксперт, педагог-исследователь, педагог-мастер). Прежние 2 МРП описывали несуществующую нормативную сущность.",
-      "reverified": "2026-08-29"
+      "reverified": "2026-08-29",
+      "official_value": "2",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "teacher_bonus_cabinet_head_mrp",
@@ -2855,7 +2890,9 @@
       "source_url": "https://adilet.zan.kz/rus/docs/P1500001193",
       "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом (TeacherSalaryCalculator, cabinetHead = 20 % БДО). ПП РК № 1193 задаёт доплату за заведование кабинетом процентом от БДО, а не фиксированной суммой в МРП. Было 1 МРП/мес (4 325 ₸) — завышение примерно на 22 %. ⚠️ Имя ключа с суффиксом _mrp — легаси, значение больше НЕ в МРП; переименование отложено, чтобы не разорвать конфиги мониторинга.",
       "reverified": "2026-08-29",
-      "official_value": "20 % от БДО в школах, школах-интернатах, детских домах (= 3 539,40 ₸/мес при БДО 17 697 ₸); 25 % от БДО в организациях ТиПО и послесреднего образования; 30 % от БДО при наличии комбинированных мастерских"
+      "official_value": "1",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "vosms_employee_rate",
@@ -3013,7 +3050,10 @@
       "source_url": "https://prg.kz/document/?doc_id=35328916",
       "verify_note": "Tier-2 2026-08: нормы не существует. FarmLandTaxCalculator перестроен на прямые ставки ст. 576 НК (₸/га по баллу бонитета и почвенно-климатической зоне) — коэффициент удалён из расчёта.",
       "reverified": "2026-08-06",
-      "conflict": "Нормы не существует ни в НК-2026, ни в НК-2017. Льгота устроена иначе: КФХ на СНР не плательщик земельного налога (ст. 571 п. 3 пп. 1), платит ИПН 0,5% от дохода (ст. 730)."
+      "conflict": "Нормы не существует ни в НК-2026, ни в НК-2017. Льгота устроена иначе: КФХ на СНР не плательщик земельного налога (ст. 571 п. 3 пп. 1), платит ИПН 0,5% от дохода (ст. 730).",
+      "official_value": "peasant 0.5; farm 0.7; individual 1.0",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "land_tax_land_type_coeff",
@@ -3235,7 +3275,9 @@
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом (PropertyTaxCalculator). Порог износа зависит от материала стен: 70 % для каменных и панельных, 65 % для иных материалов. Раньше в коде и реестре стояли плоские 70 % для всего подряд.",
       "reverified": "2026-08-29",
-      "official_value": "Порог 70 % — для каменных и панельных жилищ, 65 % — для жилищ из иных материалов; при превышении порога К физ принимается равным 0,2 (то есть эффективный износ 80 %, а не 70 %)"
+      "official_value": "70",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "thermal_resistance_R_required_by_zone",
@@ -3749,7 +3791,10 @@
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "verify_note": "Phase-4 2026-08-23: Лимита 12 МРП в BusinessTripCalculator нет: там BUDGET_HOUSING_CAP_MRP 7/6/4 и PERDIEM_TAX_FREE_MRP 6/8. Константа в коде не используется. Реестровый хвост.",
       "reverified": "2026-08-23",
-      "official_value": "Такого лимита нет. Расходы на проживание в командировке не являются доходом физлица в полном объёме — «на основании документов, подтверждающих расходы». В МРП нормируются только суточные: 6 МРП/сутки по РК и 8 МРП/сутки за рубежом, и не более чем за 40 календарных дней командировки"
+      "official_value": "12",
+      "official_source": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "excise_alcohol_spirit_per_liter_kzt",
@@ -4340,7 +4385,11 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
       "verify_note": "Tier-2 2026-08-23: Подтверждено обратное: официального значения МРП на 2027 год не существует, поэтому объявить наши 4580 ₸ «устаревшими» нельзя — сравнивать не с чем (вердикт uncertain по правилу консервативности). При этом 4580 не совпадает ни с одним публичным прогнозом: findh.org со ссылкой на Прогноз СЭР МНЭ даёт 4355 ₸, другие вторичные источники — 4606 ₸. Практический риск: VATThresholdCalculator.tsx (MRP_VALUES[2027] = 4580) выдаёт порог постановки на учёт по НДС в тенге на 2027 год как факт. Рекомендация: либо помечать 2027/2028 в UI как прогноз с оговоркой, либо считать порог в МРП без перевода в тенге до принятия закона о бюджете на 2027 год (декабрь 2026).",
-      "reverified": "2026-08-23"
+      "reverified": "2026-08-23",
+      "official_value": "4580",
+      "official_source": "https://adilet.zan.kz/rus/docs/Z2500000239",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "mrp_2028",
@@ -4357,7 +4406,11 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
       "verify_note": "Tier-2 2026-08-23: МРП на 2028 будет установлен законом о республиканском бюджете на 2028–2030 годы (ориентировочно декабрь 2027). Наши 4938 ₸ — интерполяция, официального подтверждения или опровержения нет → uncertain. Те же рекомендации, что и по mrp_2027; и 4938 используется ещё и как fallback «последний известный МРП» для любых будущих лет в VATThresholdCalculator.tsx, что распространяет непроверенное число на 2029+.",
-      "reverified": "2026-08-23"
+      "reverified": "2026-08-23",
+      "official_value": "4938",
+      "official_source": "https://adilet.zan.kz/rus/docs/Z2500000239",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "nds_threshold_mrp_2024",
@@ -5127,7 +5180,10 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "verify_note": "Tier-2 2026-08-23: Ставка 2 МРП ни к одному автомобильному платежу не привязывается. В коде она НЕ используется: RegistrationFeeCalculator.tsx оперирует 0,25 МРП (сбор) + 1,25 МРП (СРТС) + 2,8 МРП (номера) = 4,05 МРП, что совпадает с публикуемой стоимостью постановки на учёт в 2026 (~17 516 ₸). Похоже на артефакт реестра — рекомендую переопределить ключ или удалить, а не «править» калькулятор.",
-      "reverified": "2026-08-23"
+      "reverified": "2026-08-23",
+      "official_value": "2",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "zakat_rate",
@@ -5605,8 +5661,11 @@
       "audit_status": "recovered_from_estimate",
       "reverified": "2026-08-29",
       "source_url": "https://muftyat.kz/",
-      "official_value": "3520 ₸/день",
-      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом. ДУМК 3 520 ₸/день за 2025 (muftyat.kz, 21.02.2025). Было 3 000."
+      "official_value": "3520",
+      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом. ДУМК 3 520 ₸/день за 2025 (muftyat.kz, 21.02.2025). Было 3 000.",
+      "official_source": "muftyat.kz / informburo.kz (ДУМК)",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2026",
@@ -5644,7 +5703,10 @@
       "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
       "official_value": "12400",
       "verify_note": "ДУМК фитр-садака по финикам (4 кг) на Рамадан 2026 = 12 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 2200.",
-      "reverified": "2026-07-06"
+      "reverified": "2026-07-06",
+      "official_source": "muftyat.kz / tengrinews.kz (ДУМК 2026)",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "dumk_fitr_raisins_rate_2026",
@@ -5663,7 +5725,10 @@
       "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
       "official_value": "6400",
       "verify_note": "ДУМК фитр-садака по изюму (2 кг) на Рамадан 2026 = 6 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 1800.",
-      "reverified": "2026-07-06"
+      "reverified": "2026-07-06",
+      "official_source": "muftyat.kz / tengrinews.kz (ДУМК 2026)",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "dumk_fitr_sadaqah_rate_2025",
@@ -5718,7 +5783,11 @@
       "audit_status": "recovered_from_estimate",
       "reverified": "2026-08-23",
       "source_url": "https://adilet.zan.kz/rus/docs/P150000007S",
-      "verify_note": "Tier-2 2026-08-23: Подтвердить или опровергнуть наши диапазоны первоисточником НЕВОЗМОЖНО: в РК размер компенсации морального вреда законом и НПА ВС не нормирован. Более того, обобщение судебной практики на портале ВС (office.sud.kz/taldau, справка code=2237) прямо говорит, что таблицу коэффициентов тяжести «необходимо разработать», а статья судьи К. Шакарова (2023, prg.kz) констатирует отсутствие пороговых минимумов/максимумов. Вывод: uncertain — не менять цифры «под источник», но обязательно держать на странице дисклеймер, что диапазоны иллюстративные (в коде такой комментарий есть: «Ориентировочные размеры … Суд имеет широкую дискрецию»)."
+      "verify_note": "Tier-2 2026-08-23: Подтвердить или опровергнуть наши диапазоны первоисточником НЕВОЗМОЖНО: в РК размер компенсации морального вреда законом и НПА ВС не нормирован. Более того, обобщение судебной практики на портале ВС (office.sud.kz/taldau, справка code=2237) прямо говорит, что таблицу коэффициентов тяжести «необходимо разработать», а статья судьи К. Шакарова (2023, prg.kz) констатирует отсутствие пороговых минимумов/максимумов. Вывод: uncertain — не менять цифры «под источник», но обязательно держать на странице дисклеймер, что диапазоны иллюстративные (в коде такой комментарий есть: «Ориентировочные размеры … Суд имеет широкую дискрецию»).",
+      "official_value": "",
+      "official_source": "ст. 951-952 ГК РК",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "penalty_tax_daily_rate_example",
@@ -5736,7 +5805,11 @@
       "audit_status": "recovered_from_estimate",
       "verify_note": "Tier-2 2026-08-23: ЗНАЧЕНИЕ АКТУАЛЬНО, НО ССЫЛКА НА СТАТЬЮ В КОДЕ НЕВЕРНА (подтверждено по adilet). Мы везде пишем «ст. 121 НК РК», а статья 121 НК-2026 называется «Излишне уплаченные и уплаченные суммы налога, платежа в бюджет и пеней, не подлежащие зачету и (или) возврату» — она про зачёт/возврат, не про пеню. Размер пени задан ТОЛЬКО в ст. 5 подп. 2) (единственное вхождение «кратной базовой ставке» во всём кодексе), порядок начисления — в ст. 85 «Пени». Ст. 117 (её называют вторичные источники) — «Основные положения, связанные с приостановлением и возобновлением представления налоговой отчетности», тоже мимо. Править на «ст. 5 подп. 2) и ст. 85 НК РК» в: src/data/calculatorMethodology.ts:831,843; src/compon",
       "reverified": "2026-08-23",
-      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_value": "",
+      "official_source": "НК РК ст. 117",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "vehicle_reg_fee_electric_new_mrp",
@@ -5752,10 +5825,13 @@
         "RegistrationFeeCalculator"
       ],
       "audit_status": "recovered_from_estimate",
-      "verify_note": "Phase-4 29.08.2026: синхронизировано с кодом (RegistrationFeeCalculator). 0,25 МРП по НК РК; было 0,1 МРП с комментарием «предполагаемая льготная ставка» — то есть значение изначально было догадкой, а не нормой.",
+      "verify_note": "Phase-4 29.08.2026: 0,25 МРП по НК РК (ст. 615 п. 4), применено в коде. В official_value оставался 0,1 — прежняя догадка с комментарием «предполагаемая льготная ставка»; из-за расхождения value vs official_value запись пере-флагалась loop-closer'ом как stale, хотя код уже верен.",
       "reverified": "2026-08-29",
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
-      "official_value": "0,25 МРП"
+      "official_value": 0.25,
+      "official_source": "kolesa.kz (сбор за первичную регистрацию 2026)",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "heating_tariff_karaganda_per_gcal",
@@ -5792,8 +5868,11 @@
       "audit_status": "recovered_from_estimate",
       "reverified": "2026-08-29",
       "source_url": "https://kzho.kz/tariffs",
-      "official_value": "ГКП «Қуатжылуорталық-3»: среднеотпускной для населения 6 428,11 без НДС / 7 456,61 с НДС; с ОДПУ 4 272,71 / 4 956,34; без ОДПУ 8 404,06 / 9 748,71 тг/Гкал",
-      "verify_note": "Phase-4 29.08.2026: значение синхронизировано с кодом (HeatingBillCalculator), с НДС 16 %. ГКП «Қуатжылуорталық-3», среднеотпускной для населения: 6 428,11 ₸/Гкал без НДС. Было 4 500."
+      "official_value": 7456.61,
+      "verify_note": "Phase-4 29.08.2026: 7 456,61 ₸/Гкал с НДС (ГКП «Қуатжылуорталық-3», среднеотпускной для населения, 6 428,11 без НДС) — применено в коде. В official_value оставалось 4 500 — сгенерированное значение (прежнее «прочие регионы» 5 000 × 0,9), из-за него запись пере-флагалась как stale.",
+      "official_source": "teplotranzit.kz (Теплотранзит, Шымкент)",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "heating_tariff_other_regions_per_gcal",
@@ -5812,7 +5891,11 @@
       "reverified": "2026-08-29",
       "source_url": "https://informburo.kz/novosti/skolko-platiat-za-kommunalku-v-raznyx-gorodax-kazaxstana",
       "verify_note": "Phase-4 29.08.2026: единого тарифа «по РК» не публикуется — в коде среднее по четырём городам выше. Не норма.",
-      "conflict": "Не утверждённый тариф, а расчётный ориентир."
+      "conflict": "Не утверждённый тариф, а расчётный ориентир.",
+      "official_value": "5000",
+      "official_source": "—",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "perdiem_ipn_free_limit_foreign_mrp",
@@ -6182,7 +6265,11 @@
       "audit_status": "clean",
       "source_url": "https://prg.kz/document/?doc_id=1026672",
       "verify_note": "Баг-fallback 3876 (не соответствовал ни одному реального МРП) устранён из кода; актуальный МРП 2026 = 4325 ₸. Проверено grep по репозиторию.",
-      "reverified": "2026-07-06"
+      "reverified": "2026-07-06",
+      "official_value": "4325",
+      "official_source": "adilet.zan.kz Z2500000239 (Закон о респ. бюджете 2026-2028)",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "alimony_min_per_child_mrp",
@@ -6766,7 +6853,10 @@
       "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
       "verify_note": "Phase-4 2026-08-23: Надбавки 5 МРП в InheritanceCalculator нет — константа в коде не используется. Реестровый хвост.",
       "reverified": "2026-08-23",
-      "official_value": "4 МРП за каждое выданное свидетельство о праве на наследство — единая ставка, без дифференциации по степени родства и без процентной составляющей"
+      "official_value": "5",
+      "official_source": "Приказ МЮ №533 от 27.09.2025 / Закон о нотариате",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "inheritance_mandatory_share_fraction",
@@ -7200,7 +7290,11 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/P2300000521",
       "verify_note": "Tier-2 2026-08-23: Полный дубликат enpf_standard_payout_period_years (то же значение, тот же первоисточник), но used_by указывает на другой компонент — PensionCalculator.tsx (строка 107-108: averagePayoutPeriodMonths = 19 * 12). Вердикт и обоснование идентичны. Отдельно стоит свести две записи реестра в одну, иначе будущие правки разъедутся по калькуляторам.",
-      "reverified": "2026-08-23"
+      "reverified": "2026-08-23",
+      "official_value": "19",
+      "official_source": "Методика ЕНПФ",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "property_sale_exempt_ownership_years_realestate",
@@ -7623,7 +7717,11 @@
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
       "verify_note": "Баг устранён в коде: порог НДС 2026 = 10000 МРП = 43 250 000 ₸ (снижен с 20000). Проверено tsc (нет TS2304) и вживую на calk.kz/calculator/vat-threshold.",
-      "reverified": "2026-07-06"
+      "reverified": "2026-07-06",
+      "official_value": "10000 МРП = 43 250 000 ₸ (МРП 4325, 2026)",
+      "official_source": "https://mybuh.kz/news/postanovka-na-uchet-po-nds-v-2026-godu-porog-shtrafy/ ; https://www.gov.kz/memleket/entities/kgd/press/news/details/1096207",
+      "verified_date": "2026-07-08",
+      "verify_method": "tier2-llm"
     },
     {
       "key": "vacation_max_days_clamp",
