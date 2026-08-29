@@ -716,7 +716,7 @@
       "aliases": [
         "customs_duty_surcharge_large_engine"
       ],
-      "status": "current",
+      "status": "uncertain",
       "conflict": "Additive surcharge when engine volume > 3000 cc; not a standalone duty rate.",
       "used_by": [
         "CustomsClearanceCalculator"
@@ -725,7 +725,9 @@
       "official_value": "5",
       "official_source": "https://www.alta.ru/ett/gruppa87.html",
       "verified_date": "2026-07-08",
-      "verify_method": "tier2-llm"
+      "verify_method": "tier2-llm",
+      "reverified": "2026-08-29",
+      "verify_note": "29.08.2026: статус понижен до uncertain. Запись стояла current при ПУСТОМ source_url и ПУСТОЙ verify_note — то есть «проверено» без единого свидетельства. Отчёт о синтетике 23.08.2026 прямо называет эту надбавку выдуманной: по разъяснению КГД ставка 15% применяется независимо от объёма двигателя, а для двигателей свыше 3000 см³ существует АКЦИЗ 100 ₸ за 1 см³, а не надбавка +5 п.п. к пошлине. Правку калькулятора делать только после вычитки ЕТТ ЕАЭС (Решение Совета ЕЭК № 107)."
     },
     {
       "key": "customs_vehicle_old_age_threshold_years",
