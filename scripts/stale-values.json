@@ -1,0 +1,55 @@
+{
+ "generated": "2026-08-29",
+ "roots": [
+  "src"
+ ],
+ "extensions": [
+  ".ts",
+  ".tsx",
+  ".astro",
+  ".md",
+  ".mdx",
+  ".json"
+ ],
+ "skip": [
+  "updates.ts",
+  ".bak",
+  "node_modules",
+  "regulatory-constants.canonical.json",
+  "stale-values.json",
+  ".next",
+  "dist",
+  "build"
+ ],
+ "entries": [
+  {
+   "was": "2200",
+   "now": "12400",
+   "what": "dumk_fitr_dates_rate_2026",
+   "pending_fix": true,
+   "hits": [
+    "src/components/calculators/RamadanSadaqahCalculator.tsx",
+    "src/components/ui/QuickAnswer.tsx"
+   ]
+  },
+  {
+   "was": "1800",
+   "now": "6400",
+   "what": "dumk_fitr_raisins_rate_2026",
+   "pending_fix": true,
+   "hits": [
+    "src/components/calculators/BrickCalculator.tsx",
+    "src/components/calculators/FairRentalPriceCalculator.tsx",
+    "src/components/calculators/HajjCalculator.tsx",
+    "src/data/calculatorExamples.ts",
+    "src/i18n/locales/kk/calculators.json",
+    "src/i18n/locales/ru/calculators.json"
+   ]
+  },
+  {
+   "was": "3876",
+   "now": "4325",
+   "what": "mrp_fallback_3876"
+  }
+ ]
+}

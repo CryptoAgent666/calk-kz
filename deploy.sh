@@ -4,6 +4,9 @@
 
 set -e
 
+# Гард устаревших значений: блокирующий predeploy-шаг (fleet rollout 2026-08-29)
+node scripts/check-stale-values.mjs || { echo "деплой остановлен: устаревшие значения"; exit 1; }
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ENV_FILE="$SCRIPT_DIR/.env.deploy"
 
