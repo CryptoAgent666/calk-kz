@@ -14,7 +14,11 @@
  * печатается как warning и деплой НЕ блокирует; после починки флаг снять —
  * дальше значение охраняется блокирующе. Ложное срабатывание на легитимной
  * истории («ставка выросла с X») — сузьте запись полем ctx (regex по строке),
- * не удаляйте её.
+ * не удаляйте её. Если константа живёт в одном калькуляторе, а само число
+ * ходовое (1800, 2200), сужайте полем only — массив подстрок пути. Без него
+ * «1800» ловилось на плотности кирпича, аренде, BMR-калориях, високосных годах
+ * и ценах умры: 16 ложных срабатываний на одно настоящее, а такой вывод
+ * приучает гард игнорировать.
  *
  * Тираж по флоту 29.08.2026; оригинал идеи — calk-uz/scripts/check-stale-prose.mjs.
  */
@@ -52,14 +56,34 @@ for (const root of CFG.roots) {
   for (const file of walk(root)) {
     let lines
     try { lines = readFileSync(file, 'utf8').split('\n') } catch { continue }
+    let inBlockComment = false
     lines.forEach((line, i) => {
+      // Из строки вырезаем комментарии и ищем только в коде: старое значение
+      // в пояснении («раньше здесь стояло X») пользователю не показывается,
+      // а держать такие места вечно подсвеченными — прямой путь к тому, что
+      // вывод гарда перестанут читать. Префикса строки не хватает: пояснение
+      // обычно многострочное, и вторая строка начинается с самого числа.
+      let code = ''
+      for (let k = 0; k < line.length; k++) {
+        if (!inBlockComment && line[k] === '/' && line[k + 1] === '*') { inBlockComment = true; k++; continue }
+        if (inBlockComment && line[k] === '*' && line[k + 1] === '/') { inBlockComment = false; k++; continue }
+        if (!inBlockComment) code += line[k]
+      }
+      // `//` режем только как комментарий, не как часть URL (`https://`)
+      const lineCommentAt = code.replace(/:\/\//g, ':__').indexOf('//')
+      if (lineCommentAt !== -1) code = code.slice(0, lineCommentAt)
+      if (!code.trim()) return
       for (const e of CFG.entries) {
-        if (!patternFor(e.was).test(line)) continue
-        if (e.ctx && !new RegExp(e.ctx, 'i').test(line)) continue
+        // only — ограничение по путям: константа, живущая в одном калькуляторе,
+        // не должна ловиться в чужих файлах. Без него «1800» матчилось на
+        // плотность кирпича, аренду, BMR-калории, високосные годы и цены умры.
+        if (e.only && !e.only.some((s) => file.includes(s))) continue
+        if (!patternFor(e.was).test(code)) continue
+        if (e.ctx && !new RegExp(e.ctx, 'i').test(code)) continue
         // старое И новое значение в одной строке («808.70 … was $795.20») —
         // это починенное место с историей в комменте, не хвост
         const nowTok = String(e.now).match(/\d[\d.,_ ]*/)?.[0]?.trim()
-        if (nowTok && nowTok !== String(e.was) && line.includes(nowTok)) continue
+        if (nowTok && nowTok !== String(e.was) && code.includes(nowTok)) continue
         const tag = e.pending_fix ? '⚠ известный хвост (apply-план)' : '✗ УСТАРЕВШЕЕ'
         e.pending_fix ? warns++ : errors++
         console.log(`${tag} ${file}:${i + 1}  «${e.was}» → ${e.now}  [${e.what}]`)
