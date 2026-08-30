@@ -28,6 +28,11 @@ function getMobilePlatform(): MobilePlatform | null {
   if (typeof navigator === 'undefined') return null;
   const ua = navigator.userAgent || '';
   if (/iPhone|iPad|iPod/i.test(ua)) return 'ios';
+  // iPadOS 13+ Safari по умолчанию запрашивает «десктопный» сайт и
+  // представляется Macintosh — строки «iPad» в UA НЕТ, поэтому проверка выше
+  // его не ловит и владельцы iPad предложения не видели вовсе. Отличаем от
+  // настоящего Mac по тач-поинтам: у Mac их 0, у iPad — 5.
+  if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) return 'ios';
   if (/Android/i.test(ua)) return 'android';
   return null;
 }
@@ -58,9 +63,18 @@ export function AppInstallPrompt() {
     window.open(STORE_URL[platform], '_blank', 'noopener');
   };
 
+  /*
+   * Центрирование через inset-x-0 + mx-auto, а НЕ через left-1/2 и
+   * -translate-x-1/2: анимация calk-slide-up объявлена с fill-mode both и
+   * держит на элементе собственный transform: translateY(0) после завершения.
+   * Он перекрывает любой transform из классов, поэтому -translate-x-1/2 не
+   * применялся вовсе — карточка вставала левым краем по центру экрана и
+   * вылезала за правую границу на 165 px при ширине 375 px (обрезало иконку,
+   * заголовок и кнопку «Скачать»).
+   */
   return (
     <div
-      className="calk-slide-up fixed left-1/2 z-[55] w-[94%] max-w-md -translate-x-1/2 rounded-2xl border border-gray-200 bg-white p-4 shadow-2xl"
+      className="calk-slide-up fixed inset-x-0 z-[55] mx-auto w-[94%] max-w-md rounded-2xl border border-gray-200 bg-white p-4 shadow-2xl"
       style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)' }}
       role="region"
       aria-label={t('appInstall.title')}
