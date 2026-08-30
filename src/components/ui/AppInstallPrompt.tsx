@@ -82,7 +82,7 @@ export function AppInstallPrompt() {
       <button
         onClick={snooze}
         aria-label={t('appInstall.close')}
-        className="absolute right-2 top-2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+        className="absolute right-1 top-1 grid h-11 w-11 place-items-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600"
       >
         <X className="h-4 w-4" />
       </button>
@@ -96,12 +96,14 @@ export function AppInstallPrompt() {
           loading="lazy"
           decoding="async"
         />
-        <div className="min-w-0 flex-1 pr-4">
+        {/* pr-10 — просвет под кнопку закрытия: у неё тач-цель 44 px, при pr-4
+            заголовок затекал под неё. */}
+        <div className="min-w-0 flex-1 pr-10">
           <div className="font-semibold text-gray-900">{t('appInstall.title')}</div>
           <p className="mt-0.5 text-sm leading-snug text-gray-600">{t('appInstall.pitch')}</p>
           <button
             onClick={install}
-            className="mt-3 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+            className="mt-3 inline-flex min-h-[44px] items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             <Download className="h-4 w-4" />
             {t('appInstall.cta')}
