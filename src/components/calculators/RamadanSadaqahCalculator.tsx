@@ -594,13 +594,17 @@ export default function RamadanSadaqahCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('ramadan-sadaqah.calculation')}</div>
-                <div>4 × 2,200 ₸ = 8,800 ₸</div>
+                {/* Считаем от самой ставки, а не хардкодом: раньше здесь стояло
+                    «4 × 2 200 ₸ = 8 800 ₸», хотя пример заявляет выбор фиников,
+                    а ставка фиников 12 400 ₸ — пример занижал садаку в 5,6 раза
+                    и разошёлся бы снова при следующем изменении ставки. */}
+                <div>4 × {formatNumber(alternativeRates.dates.rate)} ₸ = {formatNumber(4 * alternativeRates.dates.rate)} ₸</div>
                 <div>{t('ramadan-sadaqah.example3InsteadOf')}</div>
                 <div>{t('ramadan-sadaqah.example3Voluntary')}</div>
               </div>
               <div>
                 <div className="font-medium text-green-700">{t('ramadan-sadaqah.toPay')}</div>
-                <div className="text-lg font-bold text-green-600">8,800 ₸</div>
+                <div className="text-lg font-bold text-green-600">{formatNumber(4 * alternativeRates.dates.rate)} ₸</div>
                 <div className="text-xs text-green-600">{t('ramadan-sadaqah.example3Generous')}</div>
               </div>
             </div>
