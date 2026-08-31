@@ -12,7 +12,7 @@
     "prepublish:app": "npm run check:stale",
     "publish:app": "node scripts/publish-app-bundle.mjs",
     "check:ota": "node scripts/check-ota-health.mjs",
-    "check:stale": "node scripts/check-stale-values.mjs",
+    "check:stale": "node scripts/check-stale-values.mjs && node scripts/check-ledger-consistency.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
