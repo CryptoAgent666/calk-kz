@@ -10,6 +10,13 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 
+/** МЗП 2026 (закон о республиканском бюджете). Именованной константой, а не
+ *  литералом в выражении: при смене МЗП поиск по MZP_2026 обязан находить
+ *  ВСЕ места, иначе предел дохода тихо останется на прошлогоднем уровне. */
+const MZP_2026 = 85_000;
+/** Объект исчисления соц. отчислений ограничен 7 МЗП. */
+const SO_INCOME_CAP_MZP = 7;
+
 export default function UnemploymentBenefitCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [workExperienceMonths, setWorkExperienceMonths] = useState<string>('36');
@@ -91,7 +98,7 @@ export default function UnemploymentBenefitCalculator() {
 
     // Средний доход восстанавливается из соц. отчислений (СО — 5% от дохода в 2026),
     // объект исчисления ограничен 7 МЗП (595 000 ₸ в 2026)
-    const averageMonthlyIncome = Math.min(7 * 85000, contributions / 24 / 0.05);
+    const averageMonthlyIncome = Math.min(SO_INCOME_CAP_MZP * MZP_2026, contributions / 24 / 0.05);
 
     const incomeReplacementCoef = 0.45; // коэффициент замещения дохода ГФСС — 45% (Правила V2300032881, ст.118 Соц. кодекса)
     const experienceCoef = getExperienceCoefficient(experienceMonths);
