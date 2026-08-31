@@ -1,0 +1,1475 @@
+{
+  "home": {
+    "url": "https://calk.kz/",
+    "viewports": {
+      "desktop": {
+        "viewport_meta": "width=device-width, initial-scale=1.0, maximum-scale=5.0",
+        "title": "Calk.kz — Калькуляторы для Казахстана 2026",
+        "meta_description": "Удобные онлайн-калькуляторы для жителей Казахстана: налоги, кредиты, зарплаты, коммунальные услуги, социальные выплаты. Все расчеты по актуальному законодательству РК 2026 года.",
+        "canonical": "https://calk.kz/",
+        "og_image": "https://calk.kz/og-image.png",
+        "og_image_w": "1200",
+        "og_image_h": "630",
+        "twitter_image": "https://calk.kz/og-image.png",
+        "h1_count": 1,
+        "h1_texts": [
+          "Calk.kz - Калькуляторы для Казахстана"
+        ],
+        "h1_tops": [
+          113
+        ],
+        "headings": [
+          "H2: Calk.kz",
+          "H3: Язык / Тіл",
+          "H3: Навигация",
+          "H3: Категории калькуляторов",
+          "H3: Информация",
+          "H1: Calk.kz - Калькуляторы для Казахстана",
+          "H3: Налоговые калькуляторы",
+          "H3: Автомобильные калькуляторы",
+          "H3: Финансовые калькуляторы",
+          "H3: Сельское хозяйство",
+          "H3: Социальные выплаты и трудовые отношения",
+          "H3: Юридические услуги",
+          "H3: Строительные калькуляторы",
+          "H3: Коммунальные услуги"
+        ],
+        "img_count": 1,
+        "images": [
+          {
+            "src": "https://calk.kz/zanimaem-partner.avif",
+            "alt": "Zanimaem.kz",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 150,
+            "natH": 101,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 1999
+          }
+        ],
+        "inline_svg_count": 84,
+        "picture_count": 1,
+        "source_types": [
+          "image/avif",
+          "image/webp"
+        ],
+        "has_double_brace": false,
+        "brace_samples": [],
+        "dotted_key_samples": [],
+        "scrollW": 1280,
+        "clientW": 1280,
+        "innerW": 1280,
+        "has_hscroll": false,
+        "docHeight": 2464,
+        "overflow_elems": [],
+        "interactive_count": 54,
+        "interactive_visible": 29,
+        "small_targets": [
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 448,
+            "h": 42,
+            "top": 19
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная",
+            "w": 115,
+            "h": 40,
+            "top": 20
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Русский",
+            "w": 67,
+            "h": 28,
+            "top": 26
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Қазақша",
+            "w": 66,
+            "h": 28,
+            "top": 26
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 280,
+            "h": 20,
+            "top": 1838
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "О проекте",
+            "w": 280,
+            "h": 20,
+            "top": 1866
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Контакты",
+            "w": 280,
+            "h": 20,
+            "top": 1894
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Обновления",
+            "w": 280,
+            "h": 20,
+            "top": 1922
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Политика конфиденциальности",
+            "w": 280,
+            "h": 20,
+            "top": 1838
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Пользовательское соглашение",
+            "w": 280,
+            "h": 20,
+            "top": 1866
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Отказ от ответственности",
+            "w": 280,
+            "h": 20,
+            "top": 1894
+          }
+        ],
+        "small_target_count": 11,
+        "font_issues": [],
+        "font_issue_count": 0,
+        "form_count": 0,
+        "calc_input_count": 3,
+        "first_input_top": 19,
+        "calc_button_top": null,
+        "viewport_h": 800,
+        "atf_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/home-desktop-atf.png",
+        "full_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/home-desktop-full.png"
+      },
+      "mobile": {
+        "viewport_meta": "width=device-width, initial-scale=1.0, maximum-scale=5.0",
+        "title": "Calk.kz — Калькуляторы для Казахстана 2026",
+        "meta_description": "Удобные онлайн-калькуляторы для жителей Казахстана: налоги, кредиты, зарплаты, коммунальные услуги, социальные выплаты. Все расчеты по актуальному законодательству РК 2026 года.",
+        "canonical": "https://calk.kz/",
+        "og_image": "https://calk.kz/og-image.png",
+        "og_image_w": "1200",
+        "og_image_h": "630",
+        "twitter_image": "https://calk.kz/og-image.png",
+        "h1_count": 1,
+        "h1_texts": [
+          "Calk.kz - Калькуляторы для Казахстана"
+        ],
+        "h1_tops": [
+          557
+        ],
+        "headings": [
+          "H2: Calk.kz",
+          "H3: Язык / Тіл",
+          "H3: Навигация",
+          "H3: Категории калькуляторов",
+          "H3: Информация",
+          "H1: Calk.kz - Калькуляторы для Казахстана",
+          "H3: Налоговые калькуляторы",
+          "H3: Автомобильные калькуляторы",
+          "H3: Финансовые калькуляторы",
+          "H3: Сельское хозяйство",
+          "H3: Социальные выплаты и трудовые отношения",
+          "H3: Юридические услуги",
+          "H3: Строительные калькуляторы",
+          "H3: Коммунальные услуги"
+        ],
+        "img_count": 1,
+        "images": [
+          {
+            "src": "https://calk.kz/zanimaem-partner.avif",
+            "alt": "Zanimaem.kz",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 150,
+            "natH": 101,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 5811
+          }
+        ],
+        "inline_svg_count": 85,
+        "picture_count": 1,
+        "source_types": [
+          "image/avif",
+          "image/webp"
+        ],
+        "has_double_brace": false,
+        "brace_samples": [],
+        "dotted_key_samples": [],
+        "scrollW": 390,
+        "clientW": 390,
+        "innerW": 390,
+        "has_hscroll": false,
+        "docHeight": 7549,
+        "overflow_elems": [],
+        "interactive_count": 54,
+        "interactive_visible": 50,
+        "small_targets": [
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная Calk.kz",
+            "w": 40,
+            "h": 40,
+            "top": 12
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Открыть меню",
+            "w": 36,
+            "h": 36,
+            "top": 14
+          },
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 326,
+            "h": 42,
+            "top": 474
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Закрыть меню",
+            "w": 36,
+            "h": 36,
+            "top": 20
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Русский",
+            "w": 44,
+            "h": 28,
+            "top": 129
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Қазақша",
+            "w": 44,
+            "h": 28,
+            "top": 129
+          },
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 288,
+            "h": 42,
+            "top": 194
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 374,
+            "h": 20,
+            "top": 6298
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "О проекте",
+            "w": 374,
+            "h": 20,
+            "top": 6326
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Контакты",
+            "w": 374,
+            "h": 20,
+            "top": 6354
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Обновления",
+            "w": 374,
+            "h": 20,
+            "top": 6382
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Политика конфиденциальности",
+            "w": 374,
+            "h": 20,
+            "top": 6474
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Пользовательское соглашение",
+            "w": 374,
+            "h": 20,
+            "top": 6502
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Отказ от ответственности",
+            "w": 374,
+            "h": 20,
+            "top": 6530
+          }
+        ],
+        "small_target_count": 14,
+        "font_issues": [],
+        "font_issue_count": 0,
+        "form_count": 0,
+        "calc_input_count": 3,
+        "first_input_top": 0,
+        "calc_button_top": null,
+        "viewport_h": 844,
+        "atf_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/home-mobile-atf.png",
+        "full_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/home-mobile-full.png"
+      }
+    }
+  },
+  "salary-reverse": {
+    "url": "https://calk.kz/calculator/salary-reverse/",
+    "viewports": {
+      "desktop": {
+        "viewport_meta": "width=device-width, initial-scale=1.0, maximum-scale=5.0",
+        "title": "Обратный зарплатный калькулятор 2026 — расчёт gross по нетто на руки в РК | Calk.kz",
+        "meta_description": "Обратный зарплатный калькулятор Казахстана 2026 — расчёт оклада gross по сумме на руки net. С удержаниями ОПВ 10%, ВОСМС 2%, ИПН 10%, стандартный вычет 30 МРП.",
+        "canonical": "https://calk.kz/calculator/salary-reverse/",
+        "og_image": "https://calk.kz/og-image.png",
+        "og_image_w": "1200",
+        "og_image_h": "630",
+        "twitter_image": "https://calk.kz/og-image.png",
+        "h1_count": 1,
+        "h1_texts": [
+          "Net → Gross калькулятор"
+        ],
+        "h1_tops": [
+          345
+        ],
+        "headings": [
+          "H2: Calk.kz",
+          "H3: Язык / Тіл",
+          "H3: Навигация",
+          "H3: Категории калькуляторов",
+          "H3: Информация",
+          "H1: Net → Gross калькулятор",
+          "H2: Параметры расчёта",
+          "H3: Как работает обратный расчёт",
+          "H3: Удержания из зарплаты работника",
+          "H3: Затраты работодателя сверху",
+          "H3: Часто задаваемые вопросы",
+          "H3: Экспертное участие",
+          "H2: Другие калькуляторы",
+          "H3: Зарплатный калькулятор"
+        ],
+        "img_count": 2,
+        "images": [
+          {
+            "src": "https://calk.kz/img/experts/arnur-erkenbaev.jpg",
+            "alt": "Арнур Еркенбаев",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 400,
+            "natH": 400,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 2721
+          },
+          {
+            "src": "https://calk.kz/zanimaem-partner.avif",
+            "alt": "Zanimaem.kz",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 150,
+            "natH": 101,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 3547
+          }
+        ],
+        "inline_svg_count": 91,
+        "picture_count": 1,
+        "source_types": [
+          "image/avif",
+          "image/webp"
+        ],
+        "has_double_brace": false,
+        "brace_samples": [],
+        "dotted_key_samples": [],
+        "scrollW": 1280,
+        "clientW": 1280,
+        "innerW": 1280,
+        "has_hscroll": false,
+        "docHeight": 4011,
+        "overflow_elems": [],
+        "interactive_count": 62,
+        "interactive_visible": 37,
+        "small_targets": [
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 448,
+            "h": 42,
+            "top": 19
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная",
+            "w": 115,
+            "h": 40,
+            "top": 20
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Русский",
+            "w": 67,
+            "h": 28,
+            "top": 26
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Қазақша",
+            "w": 66,
+            "h": 28,
+            "top": 26
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Назад",
+            "w": 71,
+            "h": 24,
+            "top": 113
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 16,
+            "h": 16,
+            "top": 163
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Социальные выплаты и трудовые отношения",
+            "w": 305,
+            "h": 20,
+            "top": 161
+          },
+          {
+            "tag": "INPUT",
+            "type": "range",
+            "label": "range",
+            "w": 510,
+            "h": 8,
+            "top": 682
+          },
+          {
+            "tag": "INPUT",
+            "type": "checkbox",
+            "label": "checkbox",
+            "w": 16,
+            "h": 16,
+            "top": 804
+          },
+          {
+            "tag": "INPUT",
+            "type": "checkbox",
+            "label": "checkbox",
+            "w": 16,
+            "h": 16,
+            "top": 840
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать PDF",
+            "w": 151,
+            "h": 40,
+            "top": 1961
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать Excel",
+            "w": 160,
+            "h": 40,
+            "top": 1961
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Печать",
+            "w": 109,
+            "h": 40,
+            "top": 1961
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Налоговый кодекс РК",
+            "w": 189,
+            "h": 30,
+            "top": 2529
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "ЕНПФ — Пенсионные отчисления",
+            "w": 270,
+            "h": 30,
+            "top": 2529
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 280,
+            "h": 20,
+            "top": 3386
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "О проекте",
+            "w": 280,
+            "h": 20,
+            "top": 3414
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Контакты",
+            "w": 280,
+            "h": 20,
+            "top": 3442
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Обновления",
+            "w": 280,
+            "h": 20,
+            "top": 3470
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Политика конфиденциальности",
+            "w": 280,
+            "h": 20,
+            "top": 3386
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Пользовательское соглашение",
+            "w": 280,
+            "h": 20,
+            "top": 3414
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Отказ от ответственности",
+            "w": 280,
+            "h": 20,
+            "top": 3442
+          }
+        ],
+        "small_target_count": 22,
+        "font_issues": [],
+        "font_issue_count": 0,
+        "form_count": 0,
+        "calc_input_count": 4,
+        "first_input_top": 19,
+        "calc_button_top": null,
+        "viewport_h": 800,
+        "atf_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/salary-reverse-desktop-atf.png",
+        "full_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/salary-reverse-desktop-full.png"
+      },
+      "mobile": {
+        "viewport_meta": "width=device-width, initial-scale=1.0, maximum-scale=5.0",
+        "title": "Обратный зарплатный калькулятор 2026 — расчёт gross по нетто на руки в РК | Calk.kz",
+        "meta_description": "Обратный зарплатный калькулятор Казахстана 2026 — расчёт оклада gross по сумме на руки net. С удержаниями ОПВ 10%, ВОСМС 2%, ИПН 10%, стандартный вычет 30 МРП.",
+        "canonical": "https://calk.kz/calculator/salary-reverse/",
+        "og_image": "https://calk.kz/og-image.png",
+        "og_image_w": "1200",
+        "og_image_h": "630",
+        "twitter_image": "https://calk.kz/og-image.png",
+        "h1_count": 1,
+        "h1_texts": [
+          "Net → Gross калькулятор"
+        ],
+        "h1_tops": [
+          482
+        ],
+        "headings": [
+          "H2: Calk.kz",
+          "H3: Язык / Тіл",
+          "H3: Навигация",
+          "H3: Категории калькуляторов",
+          "H3: Информация",
+          "H1: Net → Gross калькулятор",
+          "H2: Параметры расчёта",
+          "H3: Как работает обратный расчёт",
+          "H3: Удержания из зарплаты работника",
+          "H3: Затраты работодателя сверху",
+          "H3: Часто задаваемые вопросы",
+          "H3: Экспертное участие",
+          "H2: Другие калькуляторы",
+          "H3: Зарплатный калькулятор"
+        ],
+        "img_count": 2,
+        "images": [
+          {
+            "src": "https://calk.kz/img/experts/arnur-erkenbaev.jpg",
+            "alt": "Арнур Еркенбаев",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 400,
+            "natH": 400,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 4031
+          },
+          {
+            "src": "https://calk.kz/zanimaem-partner.avif",
+            "alt": "Zanimaem.kz",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 150,
+            "natH": 101,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 5426
+          }
+        ],
+        "inline_svg_count": 93,
+        "picture_count": 1,
+        "source_types": [
+          "image/avif",
+          "image/webp"
+        ],
+        "has_double_brace": false,
+        "brace_samples": [],
+        "dotted_key_samples": [],
+        "scrollW": 390,
+        "clientW": 390,
+        "innerW": 390,
+        "has_hscroll": false,
+        "docHeight": 6366,
+        "overflow_elems": [],
+        "interactive_count": 62,
+        "interactive_visible": 58,
+        "small_targets": [
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная Calk.kz",
+            "w": 40,
+            "h": 40,
+            "top": 12
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Открыть меню",
+            "w": 36,
+            "h": 36,
+            "top": 14
+          },
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 326,
+            "h": 42,
+            "top": 64
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Закрыть меню",
+            "w": 36,
+            "h": 36,
+            "top": 20
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Русский",
+            "w": 44,
+            "h": 28,
+            "top": 129
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Қазақша",
+            "w": 44,
+            "h": 28,
+            "top": 129
+          },
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 288,
+            "h": 42,
+            "top": 194
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Назад",
+            "w": 71,
+            "h": 24,
+            "top": 147
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 16,
+            "h": 16,
+            "top": 189
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Социальные выплаты и трудовые отношения",
+            "w": 305,
+            "h": 20,
+            "top": 187
+          },
+          {
+            "tag": "INPUT",
+            "type": "range",
+            "label": "range",
+            "w": 308,
+            "h": 8,
+            "top": 903
+          },
+          {
+            "tag": "INPUT",
+            "type": "checkbox",
+            "label": "checkbox",
+            "w": 16,
+            "h": 16,
+            "top": 1025
+          },
+          {
+            "tag": "INPUT",
+            "type": "checkbox",
+            "label": "checkbox",
+            "w": 16,
+            "h": 16,
+            "top": 1061
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать PDF",
+            "w": 151,
+            "h": 40,
+            "top": 2978
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать Excel",
+            "w": 160,
+            "h": 40,
+            "top": 2978
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Печать",
+            "w": 109,
+            "h": 40,
+            "top": 3030
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Налоговый кодекс РК",
+            "w": 189,
+            "h": 30,
+            "top": 3710
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "ЕНПФ — Пенсионные отчисления",
+            "w": 270,
+            "h": 30,
+            "top": 3748
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 358,
+            "h": 20,
+            "top": 5590
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "О проекте",
+            "w": 358,
+            "h": 20,
+            "top": 5618
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Контакты",
+            "w": 358,
+            "h": 20,
+            "top": 5646
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Обновления",
+            "w": 358,
+            "h": 20,
+            "top": 5674
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Политика конфиденциальности",
+            "w": 358,
+            "h": 20,
+            "top": 5766
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Пользовательское соглашение",
+            "w": 358,
+            "h": 20,
+            "top": 5794
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Отказ от ответственности",
+            "w": 358,
+            "h": 20,
+            "top": 5822
+          }
+        ],
+        "small_target_count": 25,
+        "font_issues": [],
+        "font_issue_count": 0,
+        "form_count": 0,
+        "calc_input_count": 4,
+        "first_input_top": 0,
+        "calc_button_top": null,
+        "viewport_h": 844,
+        "atf_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/salary-reverse-mobile-atf.png",
+        "full_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/salary-reverse-mobile-full.png"
+      }
+    }
+  },
+  "maternity-benefits": {
+    "url": "https://calk.kz/calculator/maternity-benefits/",
+    "viewports": {
+      "desktop": {
+        "viewport_meta": "width=device-width, initial-scale=1.0, maximum-scale=5.0",
+        "title": "Декретные выплаты 2026 — расчёт | Calk.kz",
+        "meta_description": "Калькулятор декретных выплат и пособий по беременности в Казахстане. Социальные выплаты для работающих и неработающих. Размеры пособий 2026.",
+        "canonical": "https://calk.kz/calculator/maternity-benefits/",
+        "og_image": "https://calk.kz/og-image.png",
+        "og_image_w": "1200",
+        "og_image_h": "630",
+        "twitter_image": "https://calk.kz/og-image.png",
+        "h1_count": 1,
+        "h1_texts": [
+          "Пособия по беременности и родам"
+        ],
+        "h1_tops": [
+          213
+        ],
+        "headings": [
+          "H2: Calk.kz",
+          "H3: Язык / Тіл",
+          "H3: Навигация",
+          "H3: Категории калькуляторов",
+          "H3: Информация",
+          "H1: Пособия по беременности и родам",
+          "H2: Статус занятости",
+          "H3: Работающая женщина",
+          "H3: Неработающая женщина",
+          "H2: Параметры расчета",
+          "H3: Формулы расчета",
+          "H2: Результаты расчета",
+          "H3: Единовременная выплата по беременности и родам",
+          "H3: Ежемесячная выплата по уходу за ребенком"
+        ],
+        "img_count": 2,
+        "images": [
+          {
+            "src": "https://calk.kz/img/experts/arnur-erkenbaev.jpg",
+            "alt": "Арнур Еркенбаев",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 400,
+            "natH": 400,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 5184
+          },
+          {
+            "src": "https://calk.kz/zanimaem-partner.avif",
+            "alt": "Zanimaem.kz",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 150,
+            "natH": 101,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 6009
+          }
+        ],
+        "inline_svg_count": 110,
+        "picture_count": 1,
+        "source_types": [
+          "image/avif",
+          "image/webp"
+        ],
+        "has_double_brace": false,
+        "brace_samples": [],
+        "dotted_key_samples": [],
+        "scrollW": 1280,
+        "clientW": 1280,
+        "innerW": 1280,
+        "has_hscroll": false,
+        "docHeight": 6473,
+        "overflow_elems": [],
+        "interactive_count": 64,
+        "interactive_visible": 39,
+        "small_targets": [
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 448,
+            "h": 42,
+            "top": 19
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная",
+            "w": 115,
+            "h": 40,
+            "top": 20
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Русский",
+            "w": 67,
+            "h": 28,
+            "top": 26
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Қазақша",
+            "w": 66,
+            "h": 28,
+            "top": 26
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Назад",
+            "w": 71,
+            "h": 24,
+            "top": 113
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 16,
+            "h": 16,
+            "top": 163
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Социальные выплаты и трудовые отношения",
+            "w": 305,
+            "h": 20,
+            "top": 161
+          },
+          {
+            "tag": "INPUT",
+            "type": "range",
+            "label": "range",
+            "w": 510,
+            "h": 8,
+            "top": 898
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Как рассчитывается?",
+            "w": 190,
+            "h": 24,
+            "top": 3921
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "eGov.kz — Пособия при рождении",
+            "w": 273,
+            "h": 30,
+            "top": 4473
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "ГФСС — Фонд социального страхования",
+            "w": 315,
+            "h": 30,
+            "top": 4473
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать PDF",
+            "w": 151,
+            "h": 40,
+            "top": 5006
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать Excel",
+            "w": 160,
+            "h": 40,
+            "top": 5006
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Печать",
+            "w": 109,
+            "h": 40,
+            "top": 5006
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 280,
+            "h": 20,
+            "top": 5848
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "О проекте",
+            "w": 280,
+            "h": 20,
+            "top": 5876
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Контакты",
+            "w": 280,
+            "h": 20,
+            "top": 5904
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Обновления",
+            "w": 280,
+            "h": 20,
+            "top": 5932
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Политика конфиденциальности",
+            "w": 280,
+            "h": 20,
+            "top": 5848
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Пользовательское соглашение",
+            "w": 280,
+            "h": 20,
+            "top": 5876
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Отказ от ответственности",
+            "w": 280,
+            "h": 20,
+            "top": 5904
+          }
+        ],
+        "small_target_count": 21,
+        "font_issues": [],
+        "font_issue_count": 0,
+        "form_count": 0,
+        "calc_input_count": 5,
+        "first_input_top": 19,
+        "calc_button_top": 3921,
+        "viewport_h": 800,
+        "atf_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/maternity-benefits-desktop-atf.png",
+        "full_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/maternity-benefits-desktop-full.png"
+      },
+      "mobile": {
+        "viewport_meta": "width=device-width, initial-scale=1.0, maximum-scale=5.0",
+        "title": "Декретные выплаты 2026 — расчёт | Calk.kz",
+        "meta_description": "Калькулятор декретных выплат и пособий по беременности в Казахстане. Социальные выплаты для работающих и неработающих. Размеры пособий 2026.",
+        "canonical": "https://calk.kz/calculator/maternity-benefits/",
+        "og_image": "https://calk.kz/og-image.png",
+        "og_image_w": "1200",
+        "og_image_h": "630",
+        "twitter_image": "https://calk.kz/og-image.png",
+        "h1_count": 1,
+        "h1_texts": [
+          "Пособия по беременности и родам"
+        ],
+        "h1_tops": [
+          259
+        ],
+        "headings": [
+          "H2: Calk.kz",
+          "H3: Язык / Тіл",
+          "H3: Навигация",
+          "H3: Категории калькуляторов",
+          "H3: Информация",
+          "H1: Пособия по беременности и родам",
+          "H2: Статус занятости",
+          "H3: Работающая женщина",
+          "H3: Неработающая женщина",
+          "H2: Параметры расчета",
+          "H3: Формулы расчета",
+          "H2: Результаты расчета",
+          "H3: Единовременная выплата по беременности и родам",
+          "H3: Ежемесячная выплата по уходу за ребенком"
+        ],
+        "img_count": 2,
+        "images": [
+          {
+            "src": "https://calk.kz/img/experts/arnur-erkenbaev.jpg",
+            "alt": "Арнур Еркенбаев",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 400,
+            "natH": 400,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 9482
+          },
+          {
+            "src": "https://calk.kz/zanimaem-partner.avif",
+            "alt": "Zanimaem.kz",
+            "has_alt_attr": true,
+            "w_attr": "48",
+            "h_attr": "48",
+            "loading": "lazy",
+            "srcset": false,
+            "natW": 150,
+            "natH": 101,
+            "dispW": 48,
+            "dispH": 48,
+            "top": 10859
+          }
+        ],
+        "inline_svg_count": 107,
+        "picture_count": 1,
+        "source_types": [
+          "image/avif",
+          "image/webp"
+        ],
+        "has_double_brace": false,
+        "brace_samples": [],
+        "dotted_key_samples": [],
+        "scrollW": 390,
+        "clientW": 390,
+        "innerW": 390,
+        "has_hscroll": false,
+        "docHeight": 11412,
+        "overflow_elems": [],
+        "interactive_count": 64,
+        "interactive_visible": 60,
+        "small_targets": [
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная Calk.kz",
+            "w": 40,
+            "h": 40,
+            "top": 12
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Открыть меню",
+            "w": 36,
+            "h": 36,
+            "top": 14
+          },
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 326,
+            "h": 42,
+            "top": 64
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Закрыть меню",
+            "w": 36,
+            "h": 36,
+            "top": 20
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Русский",
+            "w": 44,
+            "h": 28,
+            "top": 129
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Переключить язык Қазақша",
+            "w": 44,
+            "h": 28,
+            "top": 129
+          },
+          {
+            "tag": "INPUT",
+            "type": "text",
+            "label": "Поиск калькулятора...",
+            "w": 288,
+            "h": 42,
+            "top": 194
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Назад",
+            "w": 71,
+            "h": 24,
+            "top": 147
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 16,
+            "h": 16,
+            "top": 189
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Социальные выплаты и трудовые отношения",
+            "w": 305,
+            "h": 20,
+            "top": 187
+          },
+          {
+            "tag": "INPUT",
+            "type": "range",
+            "label": "range",
+            "w": 308,
+            "h": 8,
+            "top": 1360
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Как рассчитывается?",
+            "w": 190,
+            "h": 24,
+            "top": 7959
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "eGov.kz — Пособия при рождении",
+            "w": 273,
+            "h": 30,
+            "top": 8551
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать PDF",
+            "w": 151,
+            "h": 40,
+            "top": 9162
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Скачать Excel",
+            "w": 160,
+            "h": 40,
+            "top": 9162
+          },
+          {
+            "tag": "BUTTON",
+            "type": "",
+            "label": "Печать",
+            "w": 109,
+            "h": 40,
+            "top": 9214
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Главная страница",
+            "w": 358,
+            "h": 20,
+            "top": 11023
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "О проекте",
+            "w": 358,
+            "h": 20,
+            "top": 11051
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Контакты",
+            "w": 358,
+            "h": 20,
+            "top": 11079
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Обновления",
+            "w": 358,
+            "h": 20,
+            "top": 11107
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Политика конфиденциальности",
+            "w": 358,
+            "h": 20,
+            "top": 11199
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Пользовательское соглашение",
+            "w": 358,
+            "h": 20,
+            "top": 11227
+          },
+          {
+            "tag": "A",
+            "type": "",
+            "label": "Отказ от ответственности",
+            "w": 358,
+            "h": 20,
+            "top": 11255
+          }
+        ],
+        "small_target_count": 23,
+        "font_issues": [],
+        "font_issue_count": 0,
+        "form_count": 0,
+        "calc_input_count": 5,
+        "first_input_top": 0,
+        "calc_button_top": 7959,
+        "viewport_h": 844,
+        "atf_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/maternity-benefits-mobile-atf.png",
+        "full_screenshot": "/Users/konstantin/Projects/KZ-CALK/screenshots/audit-2026-06-04/maternity-benefits-mobile-full.png"
+      }
+    }
+  }
+}

@@ -1,0 +1,236 @@
+[
+ {
+  "key": "customs_duty_rate_vehicle_base",
+  "value": "15",
+  "unit": "percent",
+  "law": "ЕТТ ЕАЭС (единый таможенный тариф)"
+ },
+ {
+  "key": "customs_duty_rate_vehicle_old",
+  "value": "25",
+  "unit": "percent",
+  "law": "ЕТТ ЕАЭС (единый таможенный тариф)"
+ },
+ {
+  "key": "customs_vehicle_old_age_threshold_years",
+  "value": "7",
+  "unit": "years",
+  "law": "ЕАЭС таможенные правила (порог возраста ТС)"
+ },
+ {
+  "key": "gov_duty_vehicle_certificate_mrp",
+  "value": "1.25",
+  "unit": "MRP",
+  "law": "НК РК (выдача свидетельства о регистрации ТС, СРТС)"
+ },
+ {
+  "key": "gov_duty_vehicle_plates_mrp",
+  "value": "2.8",
+  "unit": "MRP",
+  "law": "НК РК (выдача государственных регистрационных номерных знаков)"
+ },
+ {
+  "key": "gov_duty_vehicle_registration_mrp",
+  "value": "0.25",
+  "unit": "MRP",
+  "law": "ст. 615 НК РК (госпошлина за регистрацию ТС)"
+ },
+ {
+  "key": "gov_duty_plate_fee_mrp_table",
+  "value": "triple001/007=170; triple111/777=150; pair100=100; mirror010=50; tens=30; sequential=20; standard=2 (МРП)",
+  "unit": "MRP",
+  "law": "ст. 605 НК РК (сбор за выдачу избранного регистрационного номера)"
+ },
+ {
+  "key": "notary_fee_vehicle_base_tiered",
+  "value": "5 base (7 if price≥3M KZT, 10 if price≥10M KZT)",
+  "unit": "MRP",
+  "law": "Закон РК О нотариате / тарифы"
+ },
+ {
+  "key": "traffic_fine_no_plates",
+  "value": "first 10 / repeat 20",
+  "unit": "MRP",
+  "law": "КоАП РК ст. 590 ч.4"
+ },
+ {
+  "key": "vehicle_reg_certificate_fee_mrp",
+  "value": "1.25",
+  "unit": "MRP",
+  "law": "НК РК ст.615 (госпошлина за выдачу свидетельства о регистрации ТС / СРТС)"
+ },
+ {
+  "key": "vehicle_reg_plates_fee_mrp",
+  "value": "2.8",
+  "unit": "MRP",
+  "law": "НК РК ст.615 (госпошлина за выдачу государственных регистрационных номерных знаков)"
+ },
+ {
+  "key": "vehicle_reg_fee_by_age_mrp",
+  "value": "0.25 MRP (base registration duty, flat)",
+  "unit": "MRP",
+  "law": "НК РК ст.615 (госпошлина за регистрацию ТС)"
+ },
+ {
+  "key": "ogpo_vehicle_type_coeff",
+  "value": "passenger:1.0; taxi:2.0; truck<=3.5t:1.2; truck3.5-12t:1.5; truck>12t:2.0; bus<=20:1.3; bus20-35:1.7; bus>35:2.2; moto:0.7",
+  "unit": "factor",
+  "law": "Закон РК Об ОГПО ВТС — коэффициенты по типам ТС"
+ },
+ {
+  "key": "vehicle_sale_taxfree_ownership_months",
+  "value": "12",
+  "unit": "factor",
+  "law": "НК РК ст. 331 (освобождение от ИПН прироста стоимости ТС при владении не менее 1 года)"
+ },
+ {
+  "key": "vehicle_tax_car_rate_le_1100_mrp",
+  "value": "1",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_car_rate_1101_1500_mrp",
+  "value": "2",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_car_rate_1501_2000_mrp",
+  "value": "3",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_car_rate_2001_2500_mrp",
+  "value": "6",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_car_rate_2501_3000_mrp",
+  "value": "9",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_car_rate_3001_4000_mrp",
+  "value": "15",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_car_rate_gt_4000_mrp",
+  "value": "117",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_car_surcharge_per_cc_over_1500",
+  "value": "7",
+  "unit": "KZT/см³",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_truck_rate_le_1t_mrp",
+  "value": "3",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_truck_rate_1_1_5t_mrp",
+  "value": "5",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_truck_rate_1_5_5t_mrp",
+  "value": "7",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_truck_rate_gt_5t_mrp",
+  "value": "9",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_bus_rate_le_12_mrp",
+  "value": "9",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_bus_rate_12_25_mrp",
+  "value": "14",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_bus_rate_gt_25_mrp",
+  "value": "20",
+  "unit": "МРП",
+  "law": "ст. 565 НК РК"
+ },
+ {
+  "key": "vehicle_tax_age_discount_pct_10_20y",
+  "value": "30",
+  "unit": "%",
+  "law": "НК РК (поправочный коэффициент за возраст)"
+ },
+ {
+  "key": "vehicle_tax_age_discount_pct_gt_20y",
+  "value": "50",
+  "unit": "%",
+  "law": "НК РК (поправочный коэффициент за возраст)"
+ },
+ {
+  "key": "vehicle_registration_fee_mrp",
+  "value": "2",
+  "unit": "МРП",
+  "law": "НК РК (госпошлина за регистрацию ТС)"
+ },
+ {
+  "key": "vehicle_reg_fee_electric_new_mrp",
+  "value": "0.1",
+  "unit": "MRP",
+  "law": "льгота для электромобилей"
+ },
+ {
+  "key": "notary_vehicle_tariff_by_party_mrp",
+  "value": "relatives:4; others:10; legal:12",
+  "unit": "МРП",
+  "law": "Приказ Министра юстиции РК от 27.09.2025 № 957 (adilet.zan.kz V2500036957), с 01"
+ },
+ {
+  "key": "ogpo_vehicle_type_coeff_table_current",
+  "value": "passenger(B):2.09; taxi:2.09; truck(C, all weights):3.98; bus<=20 seats:3.26; bus>20 seats:3.45; motorcycle:1.00",
+  "unit": "coefficient",
+  "law": "Приказ АРРФР № G2500000072 (действ. с 01.01.2026) — абсолютные коэффициенты по т"
+ },
+ {
+  "key": "notary_unified_tariff_vehicle_sale_mrp",
+  "value": "individuals: 10, mixed/legal: 12, close relatives: 4",
+  "unit": "МРП",
+  "law": "Приказ МЮ РК №533 от 27.09.2025, с 01.01.2026"
+ },
+ {
+  "key": "plate_standard_registration_fee_mrp",
+  "value": "2.8",
+  "unit": "МРП",
+  "law": "НК РК 2026 (280% МРП за гос. номерной знак при регистрации)"
+ },
+ {
+  "key": "vehicle_reg_fee_srts_mrp",
+  "value": "1.25",
+  "unit": "МРП",
+  "law": "НК РК ст. 615 (госпошлина за СРТС/техпаспорт)"
+ },
+ {
+  "key": "vehicle_reg_fee_plates_mrp",
+  "value": "2.8",
+  "unit": "МРП",
+  "law": "НК РК ст. 615 (госпошлина за гос. номера)"
+ }
+]

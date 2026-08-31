@@ -1,0 +1,275 @@
+[
+ {
+  "key": "customs_duty_rate_vehicle_base",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "ЕАЭС customs duty (ЕТТ) — out of scope of this KZ vehicle-tax/registration verification (set in EAEU common tariff, not НК РК); did not verify."
+ },
+ {
+  "key": "customs_duty_rate_vehicle_old",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "ЕАЭС customs duty — out of scope; not verified against EAEU tariff sources this run."
+ },
+ {
+  "key": "customs_vehicle_old_age_threshold_years",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "EAEU customs age threshold — out of scope; not verified."
+ },
+ {
+  "key": "gov_duty_vehicle_certificate_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "СРТС (свидетельство о гос. регистрации ТС) = 1.25 МРП confirmed for 2026 (kolesa.kz 5,406.25 ₸; lada.kz; bcc.kz). NB: in the 2026 НК РК the госпошлина provisions moved from ст.615 (2017 code) to the 662-672 range; multiple unchanged."
+ },
+ {
+  "key": "gov_duty_vehicle_plates_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Гос. рег. номерной знак = 2.8 МРП confirmed for 2026 (kolesa.kz 12,110 ₸; lada.kz). Duplicate: 2 units = 2.8 МРП, 1 unit = 1.4 МРП."
+ },
+ {
+  "key": "gov_duty_vehicle_registration_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Base registration госпошлина 0.25 МРП for newer vehicles is corroborated (kolesa.kz: 'новее 2 лет — 0.25 МРП'). Law cite ст.615 is the 2017 code; 2026 code uses the 662-672 range. The category-by-age duty in fact scales (0.25 МРП up to high МРП for old commercial), so 0.25 МРП is the floor, not a flat rate."
+ },
+ {
+  "key": "gov_duty_plate_fee_mrp_table",
+  "verdict": "stale",
+  "official_value": "2026 НК РК (egov.kz): любая своя комбинация=10 МРП; зеркальные (181,272…)=15 МРП; зеркальные+одинак. буквы=72 МРП; VIP стандарт (010-090,707…)=57 МРП; +одинак. буквы=114; премиум(100-900)=137; премиум+буквы=194; редкие(001-009,777)=228; редкие+буквы=285 МРП. Standard plate=2.8 МРП.",
+  "source_url": "https://egov.kz/cms/ru/services/vehicle/pass_vip_number",
+  "note": "STALE. The 2026 НК РК introduced a brand-new vanity/selected-plate scheme (free custom choice from 05.01.2026 at 10 МРП, tiers up to 285 МРП). The input's table (triple001/007=170; triple111/777=150; pair100=100; mirror010=50; tens=30; sequential=20; standard=2) matches NONE of the current categories. Confirmed by egov.kz official service, lada.kz, bcc.kz, nur.kz, zakon.kz."
+ },
+ {
+  "key": "notary_fee_vehicle_base_tiered",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "Notary tariffs — separate domain (Закон о нотариате / МЮ orders), and the input itself carries newer notary keys (notary_unified_tariff_vehicle_sale_mrp citing Приказ МЮ №533 от 27.09.2025, w.e.f. 01.01.2026: relatives 4 / individuals 10 / legal 12 МРП) that SUPERSEDE this old 5/7/10 tiered scheme. This legacy key looks stale but full notary verification was out of scope here."
+ },
+ {
+  "key": "traffic_fine_no_plates",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "КоАП РК fine (not НК РК) — out of scope of vehicle-tax/registration constants; not verified this run."
+ },
+ {
+  "key": "vehicle_reg_certificate_fee_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.lada.kz/kazakhstan-news/147435-novye-gosposhliny-v-kazakhstane-s-2026-goda-za-chto-pridetsia-platit-i-skolko-stoit-kazhdyi-dokument.html",
+  "note": "СРТС = 1.25 МРП for 2026 confirmed (lada.kz, kolesa.kz). Duplicate of gov_duty_vehicle_certificate_mrp. Law cite ст.615 is 2017 code; 2026 provisions in 662-672 range."
+ },
+ {
+  "key": "vehicle_reg_plates_fee_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.lada.kz/kazakhstan-news/147435-novye-gosposhliny-v-kazakhstane-s-2026-goda-za-chto-pridetsia-platit-i-skolko-stoit-kazhdyi-dokument.html",
+  "note": "Plates = 2.8 МРП for 2026 confirmed (lada.kz, kolesa.kz). Duplicate of gov_duty_vehicle_plates_mrp."
+ },
+ {
+  "key": "vehicle_reg_fee_by_age_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "0.25 МРП base registration duty corroborated for newer vehicles (kolesa.kz). Note: the real schedule is tiered by age/fuel/category (0.25 МРП floor up to high МРП for old commercial), so '0.25 flat' is an approximation but the floor value is correct."
+ },
+ {
+  "key": "ogpo_vehicle_type_coeff",
+  "verdict": "stale",
+  "official_value": "Absolute base coefficients from 01.01.2026 (Приказ АРРФР): passenger(B) 2.09; truck(C) 3.98; bus<=20 seats 3.26; bus>20 3.45; motorcycle 1.00 — per the input's own newer key ogpo_vehicle_type_coeff_table_current.",
+  "source_url": "",
+  "note": "STALE relative legacy scheme (passenger 1.0 / taxi 2.0 / truck tiers 1.2-2.0 …). The input ALSO contains ogpo_vehicle_type_coeff_table_current with the 2026 absolute coefficients (Приказ АРРФР № G2500000072, w.e.f. 01.01.2026), which supersede this. ОГПО is the МТСБ/insurance domain, not НК РК — flagged as superseded but not independently re-verified against АРРФР this run."
+ },
+ {
+  "key": "vehicle_sale_taxfree_ownership_months",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "ИПН exemption on vehicle sale after >=1 year ownership — income-tax domain, not vehicle-tax/registration; not verified this run."
+ },
+ {
+  "key": "vehicle_tax_car_rate_le_1100_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "Cars <=1100cc = 1 МРП, confirmed for 2026 (mybuh.kz, brobank.kz, bcc.kz, calk.kz). Rate-table article is ст.492 НК РК (2017 code K1700000120) — NOT ст.565 as the input law field states; the multiple is unchanged in the 2026 code."
+ },
+ {
+  "key": "vehicle_tax_car_rate_1101_1500_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "1101-1500cc = 2 МРП confirmed for 2026 (mybuh.kz, brobank.kz). Article is ст.492, not ст.565 (cite stale, value current)."
+ },
+ {
+  "key": "vehicle_tax_car_rate_1501_2000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "1501-2000cc = 3 МРП confirmed for 2026 (mybuh.kz, brobank.kz). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_2001_2500_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "2001-2500cc = 6 МРП confirmed for 2026 (mybuh.kz, brobank.kz, bcc.kz). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_2501_3000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "2501-3000cc = 9 МРП confirmed for 2026 (mybuh.kz, brobank.kz). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_3001_4000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "3001-4000cc = 15 МРП confirmed for 2026 (mybuh.kz, brobank.kz, kursiv.media). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_gt_4000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": ">4000cc = 117 МРП confirmed for 2026 (mybuh.kz, brobank.kz, kursiv.media). Article ст.492. NB 2026 change: the separate elevated >3000cc rates (35-200 МРП) for vehicles produced/imported after 31.12.2013 were ABOLISHED — now unified rates regardless of import date; the standard 117 МРП top band stands."
+ },
+ {
+  "key": "vehicle_tax_car_surcharge_per_cc_over_1500",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "Surcharge +7 ₸ per cc over 1500cc confirmed for 2026 (mybuh.kz, kursiv.media, brobank.kz). Per НК РК wording it is +7 ₸ per unit over the LOWER bound of the applicable band; unchanged."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_le_1t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck <=1 ton = 3 МРП confirmed for 2026 (zakon.mybuh.kz tax-code text, 12,975 ₸). Article ст.492 НК РК (not ст.565)."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_1_1_5t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck 1-1.5 t = 5 МРП confirmed for 2026 (zakon.mybuh.kz, 21,625 ₸). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_1_5_5t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck 1.5-5 t = 7 МРП confirmed for 2026 (zakon.mybuh.kz, 30,275 ₸). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_gt_5t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck >5 t = 9 МРП confirmed for 2026 (zakon.mybuh.kz, 38,925 ₸). Article ст.492. (Note: one secondary aggregator showed different band edges 2/5/10/20 t — that summary is unreliable; the tax-code text uses 1/1.5/5 t edges matching the input.)"
+ },
+ {
+  "key": "vehicle_tax_bus_rate_le_12_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/nalog-na-zemlyu-transport-imushchestvo/nalog-na-transportnye-sredstva/",
+  "note": "Bus <=12 seats = 9 МРП — long-standing ст.492 НК РК value, unchanged for 2026 (buses not touched by the 2026 amendments). Bus-by-seats structure confirmed (pro1c.kz cites ст.492); 14 МРП for an 18-seat bus independently corroborated, consistent with the 12-25 band. Exact МРП read from secondary sources, not a primary table image."
+ },
+ {
+  "key": "vehicle_tax_bus_rate_12_25_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "Bus 12-25 seats = 14 МРП — ст.492 НК РК, unchanged for 2026. Independently corroborated: an 18-seat bus is taxed at 14 МРП."
+ },
+ {
+  "key": "vehicle_tax_bus_rate_gt_25_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/nalog-na-zemlyu-transport-imushchestvo/nalog-na-transportnye-sredstva/",
+  "note": "Bus >25 seats = 20 МРП — long-standing ст.492 НК РК value, unchanged for 2026. Not contradicted by any 2026 source; buses excluded from 2026 changes."
+ },
+ {
+  "key": "vehicle_tax_age_discount_pct_10_20y",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/izmeneniya-v-nalogakh-na-imushchestvo-i-transport-s-2026-goda-glavnoe/",
+  "note": "NEW for 2026: понижающий коэффициент 0.7 for cars 10-20 years old = 30% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '30%' correctly equals the 0.7 coefficient. (This is a 2026 addition; applies to легковые.)"
+ },
+ {
+  "key": "vehicle_tax_age_discount_pct_gt_20y",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/izmeneniya-v-nalogakh-na-imushchestvo-i-transport-s-2026-goda-glavnoe/",
+  "note": "NEW for 2026: понижающий коэффициент 0.5 for cars >20 years = 50% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '50%' correctly equals the 0.5 coefficient."
+ },
+ {
+  "key": "vehicle_registration_fee_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Value '2 МРП' for a generic 'registration fee' does not map cleanly to any single 2026 line item. The actual 2026 charges are: plates 2.8 МРП + СРТС 1.25 МРП + base reg duty 0.25 МРП (newer veh). No 2026 source shows a flat 2 МРП registration госпошлина. Likely a stale/misaggregated figure — recommend replacing with the explicit 2.8/1.25/0.25 components, but no source affirms exactly '2 МРП' so marked uncertain rather than stale."
+ },
+ {
+  "key": "vehicle_reg_fee_electric_new_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "EV registration concession 0.1 МРП — no 2026 source found confirming or refuting a 0.1 МРП EV-specific registration duty. The age/fuel-tiered duty schedule does vary by fuel type, but the exact 0.1 МРП figure is unverified. Do not guess."
+ },
+ {
+  "key": "notary_vehicle_tariff_by_party_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "Notary unified tariff (relatives 4 / others 10 / legal 12 МРП) cites Приказ МЮ от 27.09.2025 w.e.f. 01.01.2026 and matches the sibling key notary_unified_tariff_vehicle_sale_mrp; values look internally consistent and current, but notary tariffs are outside the НК РК vehicle-tax/registration scope and were not independently verified against the МЮ order this run."
+ },
+ {
+  "key": "ogpo_vehicle_type_coeff_table_current",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "2026 ОГПО absolute coefficients (passenger 2.09; truck 3.98; bus<=20 3.26; bus>20 3.45; moto 1.00) cite Приказ АРРФР № G2500000072 w.e.f. 01.01.2026. This is the insurance (АРРФР/МТСБ) domain, not НК РК; the figures are plausible and self-consistent but were not independently verified against the АРРФР order this run."
+ },
+ {
+  "key": "notary_unified_tariff_vehicle_sale_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "Unified notary tariff for vehicle sale (individuals 10 / mixed-legal 12 / close relatives 4 МРП, Приказ МЮ №533 от 27.09.2025 w.e.f. 01.01.2026). Out of НК РК scope; consistent with notary_vehicle_tariff_by_party_mrp but not independently verified this run."
+ },
+ {
+  "key": "plate_standard_registration_fee_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/services/vehicle/pass_vip_number",
+  "note": "Standard plate issuance = 2.8 МРП for 2026 confirmed (egov.kz official, kolesa.kz, lada.kz). 280% МРП framing in the law field is correct."
+ },
+ {
+  "key": "vehicle_reg_fee_srts_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "СРТС/техпаспорт = 1.25 МРП for 2026 confirmed (kolesa.kz, lada.kz). Duplicate of the certificate keys above. Law cite ст.615 is 2017-code; 2026 provisions in the 662-672 range, multiple unchanged."
+ },
+ {
+  "key": "vehicle_reg_fee_plates_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Гос. номера = 2.8 МРП for 2026 confirmed (kolesa.kz, lada.kz, egov.kz). Duplicate of the plate keys above."
+ }
+]

@@ -1,0 +1,1741 @@
+{
+  "summary": {
+    "generatedAt": "2026-03-05T16:27:16.970Z",
+    "baseUrl": "http://127.0.0.1:5173",
+    "total": 57,
+    "passed": 0,
+    "withIssues": 57,
+    "loadFailures": 0,
+    "jsErrorPages": 0,
+    "overflowPages": 0,
+    "smallTapPages": 57,
+    "calcIssuePages": 3
+  },
+  "records": [
+    {
+      "id": "income-tax",
+      "url": "http://127.0.0.1:5173/calculator/income-tax/",
+      "testedAt": "2026-03-05T16:21:32.439Z",
+      "title": "Калькулятор ИПН 2026 - Расчет подоходного налога для наемных работников в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 20"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 13,
+        "smallTapTargets": 20
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/income-tax.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "vehicle-tax",
+      "url": "http://127.0.0.1:5173/calculator/vehicle-tax/",
+      "testedAt": "2026-03-05T16:21:45.995Z",
+      "title": "Калькулятор транспортного налога 2026 - Налог на автомобили в Казахстане | По МРП",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 17"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 12,
+        "smallTapTargets": 17
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/vehicle-tax.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "property-tax",
+      "url": "http://127.0.0.1:5173/calculator/property-tax/",
+      "testedAt": "2026-03-05T16:21:50.329Z",
+      "title": "Калькулятор налога на имущество 2026 - Расчет налога на недвижимость физических лиц в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 14"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 11,
+        "smallTapTargets": 14
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/property-tax.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "ip-simplified",
+      "url": "http://127.0.0.1:5173/calculator/ip-simplified/",
+      "testedAt": "2026-03-05T16:21:53.858Z",
+      "title": "Калькулятор налогов ИП на упрощенке 2026 - Расчет СНР и соцплатежей для индивидуальных предпринимателей",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 21"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 12,
+        "smallTapTargets": 21
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 4,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/ip-simplified.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "tax-deductions",
+      "url": "http://127.0.0.1:5173/calculator/tax-deductions/",
+      "testedAt": "2026-03-05T16:21:58.890Z",
+      "title": "Калькулятор налоговых вычетов 2026 - Возврат ИПН через социальные вычеты на образование и лечение",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 9,
+        "buttons": 9,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 9,
+        "numericTouched": 7,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/tax-deductions.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "vat",
+      "url": "http://127.0.0.1:5173/calculator/vat/",
+      "testedAt": "2026-03-05T16:22:04.520Z",
+      "title": "Калькулятор НДС онлайн - Добавление и выделение НДС 12% | Налог на добавленную стоимость",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 18"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 17,
+        "smallTapTargets": 18
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/vat.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "vat-threshold",
+      "url": "http://127.0.0.1:5173/calculator/vat-threshold/",
+      "testedAt": "2026-03-05T16:22:08.205Z",
+      "title": "Калькулятор порога по НДС 2026 - Отслеживание оборота для регистрации плательщиком НДС в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 27"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 14,
+        "buttons": 18,
+        "smallTapTargets": 27
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 14,
+        "numericTouched": 12,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/vat-threshold.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "luxury-tax",
+      "url": "http://127.0.0.1:5173/calculator/luxury-tax/",
+      "testedAt": "2026-03-05T16:22:11.897Z",
+      "title": "Калькулятор налога на роскошь 2026 - Повышенные налоги на дорогостоящее имущество в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 13"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 10,
+        "smallTapTargets": 13
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/luxury-tax.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "casino-winnings-tax",
+      "url": "http://127.0.0.1:5173/calculator/casino-winnings-tax/",
+      "testedAt": "2026-03-05T16:22:15.536Z",
+      "title": "Калькулятор налога на выигрыш в казино 2026 - Расчет налога с выигрышей в игорных заведениях РК",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 21"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 9,
+        "buttons": 14,
+        "smallTapTargets": 21
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/casino-winnings-tax.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "esp-self-employed",
+      "url": "http://127.0.0.1:5173/calculator/esp-self-employed/",
+      "testedAt": "2026-03-05T16:22:19.599Z",
+      "title": "Калькулятор ЕСП 2026 - Единый совокупный платеж для самозанятых в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 17"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 11,
+        "smallTapTargets": 17
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/esp-self-employed.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "customs-clearance",
+      "url": "http://127.0.0.1:5173/calculator/customs-clearance/",
+      "testedAt": "2026-03-05T16:22:23.160Z",
+      "title": "Калькулятор таможенной очистки авто 2026 - Растаможка автомобилей в Казахстане | Пошлины и сборы",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 13"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 8,
+        "smallTapTargets": 13
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/customs-clearance.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "recycling-fee",
+      "url": "http://127.0.0.1:5173/calculator/recycling-fee/",
+      "testedAt": "2026-03-05T16:22:26.779Z",
+      "title": "Калькулятор утилизационного сбора 2026 - Расчет утильсбора при регистрации автомобиля в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 14"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 9,
+        "smallTapTargets": 14
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/recycling-fee.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "registration-fee",
+      "url": "http://127.0.0.1:5173/calculator/registration-fee/",
+      "testedAt": "2026-03-05T16:22:32.329Z",
+      "title": "Калькулятор госпошлины за регистрацию авто 2026 - Постановка автомобиля на учет в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 4,
+        "buttons": 13,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 4,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/registration-fee.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "insurance-premium",
+      "url": "http://127.0.0.1:5173/calculator/insurance-premium/",
+      "testedAt": "2026-03-05T16:22:36.158Z",
+      "title": "Калькулятор ОГПО ВТС 2026 - Обязательное страхование автогражданской ответственности в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 15",
+        "Result did not update after input/submit (suspected calculation issue)"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 2,
+        "buttons": 27,
+        "smallTapTargets": 15
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 2,
+        "numericTouched": 0,
+        "producedResult": false,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/insurance-premium.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "parcel-customs",
+      "url": "http://127.0.0.1:5173/calculator/parcel-customs/",
+      "testedAt": "2026-03-05T16:22:40.875Z",
+      "title": "Калькулятор таможенной пошлины на посылки 2026 - Расчет пошлины при покупках из-за рубежа",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 19"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 15,
+        "smallTapTargets": 19
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/parcel-customs.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "credit",
+      "url": "http://127.0.0.1:5173/calculator/credit/",
+      "testedAt": "2026-03-05T16:22:51.951Z",
+      "title": "Кредитный калькулятор 2026 - Расчет ежемесячных платежей и переплаты по кредиту в тенге",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 22"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 8,
+        "buttons": 13,
+        "smallTapTargets": 22
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 8,
+        "numericTouched": 6,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/credit.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "deposit",
+      "url": "http://127.0.0.1:5173/calculator/deposit/",
+      "testedAt": "2026-03-05T16:22:58.696Z",
+      "title": "Калькулятор банковских вкладов - Доходность депозитов с капитализацией | Проценты",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 10,
+        "buttons": 11,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 9,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/deposit.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "mortgage-specialized",
+      "url": "http://127.0.0.1:5173/calculator/mortgage-specialized/",
+      "testedAt": "2026-03-05T16:23:03.708Z",
+      "title": "Ипотечный калькулятор 2026 - Сравнение программ ипотеки в Казахстане | ГЭСВ",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 15"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 8,
+        "buttons": 6,
+        "smallTapTargets": 15
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 8,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [
+        "GET https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-4859241862365215&output=html&adk=1812271804&adf=3025194257&lmt=1772727784&plat=3%3A65536%2C4%3A65536%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C32%3A32%2C41%3A32%2C42%3A32%2C43%3A32&format=0x0&url=http%3A%2F%2F127.0.0.1%3A5173%2Fcalculator%2Fmortgage-specialized%2F&pra=5&aiof=9&asro=0&aiapm=0.1542&aiapmd=0.1423&aiapmi=0.16&aiapmi..."
+      ],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/mortgage-specialized.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "rent-vs-buy",
+      "url": "http://127.0.0.1:5173/calculator/rent-vs-buy/",
+      "testedAt": "2026-03-05T16:23:09.319Z",
+      "title": "Калькулятор аренда или покупка жилья - Сравнение долгосрочных затрат на недвижимость в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 13"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 15,
+        "buttons": 6,
+        "smallTapTargets": 13
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 15,
+        "numericTouched": 13,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [
+        "GET https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-4859241862365215&output=html&adk=1812271804&adf=3025194257&lmt=1772727790&plat=3%3A65536%2C4%3A65536%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C32%3A32%2C41%3A32%2C42%3A32%2C43%3A32&format=0x0&url=http%3A%2F%2F127.0.0.1%3A5173%2Fcalculator%2Frent-vs-buy%2F&pra=5&asro=0&aiapm=0.1542&aiapmd=0.1423&aiapmi=0.16&aiapmid=1&aiact=0.5423..."
+      ],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/rent-vs-buy.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "compound-interest",
+      "url": "http://127.0.0.1:5173/calculator/compound-interest/",
+      "testedAt": "2026-03-05T16:23:14.737Z",
+      "title": "Калькулятор сложного процента - Расчет доходности инвестиций с капитализацией процентов",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 19"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 21,
+        "smallTapTargets": 19
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 4,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [
+        "GET https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-4859241862365215&output=html&adk=1812271804&adf=3025194257&lmt=1772727795&plat=3%3A65536%2C4%3A65536%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C32%3A32%2C41%3A32%2C42%3A32%2C43%3A32&format=0x0&url=http%3A%2F%2F127.0.0.1%3A5173%2Fcalculator%2Fcompound-interest%2F&pra=5&aiof=9&asro=0&aiapm=0.1542&aiapmd=0.1423&aiapmi=0.16&aiapmid=1..."
+      ],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/compound-interest.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "refinancing",
+      "url": "http://127.0.0.1:5173/calculator/refinancing/",
+      "testedAt": "2026-03-05T16:23:18.882Z",
+      "title": "Калькулятор рефинансирования кредита - Calk.kz",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 15"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 8,
+        "buttons": 12,
+        "smallTapTargets": 15
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 8,
+        "numericTouched": 6,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [
+        "GET https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-4859241862365215&output=html&adk=1812271804&adf=3025194257&lmt=1772727799&plat=3%3A65536%2C4%3A65536%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C32%3A32%2C41%3A32%2C42%3A32%2C43%3A32&format=0x0&url=http%3A%2F%2F127.0.0.1%3A5173%2Fcalculator%2Frefinancing%2F&pra=5&asro=0&aiapm=0.1542&aiapmd=0.1423&aiapmi=0.16&aiapmid=1&aiact=0.5423..."
+      ],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/refinancing.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "microloan",
+      "url": "http://127.0.0.1:5173/calculator/microloan/",
+      "testedAt": "2026-03-05T16:23:22.984Z",
+      "title": "Калькулятор микрокредита - Calk.kz",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 15,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/microloan.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "early-repayment",
+      "url": "http://127.0.0.1:5173/calculator/early-repayment/",
+      "testedAt": "2026-03-05T16:23:27.063Z",
+      "title": "Калькулятор досрочного погашения кредита - Экономия на процентах при сокращении срока или платежа",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 17"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 11,
+        "smallTapTargets": 17
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 4,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/early-repayment.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "farm-land-tax",
+      "url": "http://127.0.0.1:5173/calculator/farm-land-tax/",
+      "testedAt": "2026-03-05T16:23:30.633Z",
+      "title": "Калькулятор единого земельного налога 2026 - ЕЗН для крестьянских и фермерских хозяйств Казахстана",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 20"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 10,
+        "buttons": 13,
+        "smallTapTargets": 20
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 9,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/farm-land-tax.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "salary",
+      "url": "http://127.0.0.1:5173/calculator/salary/",
+      "testedAt": "2026-03-05T16:23:35.362Z",
+      "title": "Зарплатный калькулятор 2026 - Расчет зарплаты \"на руки\" в Казахстане | Социальные взносы",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 19"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 12,
+        "smallTapTargets": 19
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/salary.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "sick-leave",
+      "url": "http://127.0.0.1:5173/calculator/sick-leave/",
+      "testedAt": "2026-03-05T16:23:41.887Z",
+      "title": "Калькулятор больничного листа 2026 - Расчет пособия по временной нетрудоспособности в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 17"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 14,
+        "smallTapTargets": 17
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/sick-leave.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "maternity-benefits",
+      "url": "http://127.0.0.1:5173/calculator/maternity-benefits/",
+      "testedAt": "2026-03-05T16:23:48.685Z",
+      "title": "Калькулятор декретных выплат 2026 - Пособия по беременности и родам в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 11,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/maternity-benefits.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "pension",
+      "url": "http://127.0.0.1:5173/calculator/pension/",
+      "testedAt": "2026-03-05T16:23:56.687Z",
+      "title": "Пенсионный калькулятор - Расчет пенсии по возрасту в Казахстане | ЕНПФ",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 17",
+        "Result did not update after input/submit (suspected calculation issue)"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 9,
+        "buttons": 12,
+        "smallTapTargets": 17
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 9,
+        "numericTouched": 7,
+        "producedResult": false,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/pension.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "pension-annuity",
+      "url": "http://127.0.0.1:5173/calculator/pension-annuity/",
+      "testedAt": "2026-03-05T16:24:00.844Z",
+      "title": "Калькулятор пенсионного аннуитета 2026 - Пожизненные выплаты из ЕНПФ через страховую компанию",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 13"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 8,
+        "smallTapTargets": 13
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/pension-annuity.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "unemployment",
+      "url": "http://127.0.0.1:5173/calculator/unemployment/",
+      "testedAt": "2026-03-05T16:24:04.740Z",
+      "title": "Калькулятор пособия по безработице 2026 - Расчет выплат при потере работы в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 9,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/unemployment.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "social-assistance",
+      "url": "http://127.0.0.1:5173/calculator/social-assistance/",
+      "testedAt": "2026-03-05T16:24:08.405Z",
+      "title": "Калькулятор АСП 2026 - Адресная социальная помощь малообеспеченным семьям в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 9,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 4,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/social-assistance.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "gons",
+      "url": "http://127.0.0.1:5173/calculator/gons/",
+      "testedAt": "2026-03-05T16:24:13.708Z",
+      "title": "Калькулятор ГОНС - Образовательный накопительный вклад с государственной поддержкой в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 11,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/gons.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "alimony",
+      "url": "http://127.0.0.1:5173/calculator/alimony/",
+      "testedAt": "2026-03-05T16:24:20.713Z",
+      "title": "Калькулятор алиментов 2026 - Расчет алиментов на детей по закону Казахстана",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 19"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 16,
+        "smallTapTargets": 19
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/alimony.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "vacation-pay",
+      "url": "http://127.0.0.1:5173/calculator/vacation-pay/",
+      "testedAt": "2026-03-05T16:24:26.773Z",
+      "title": "Калькулятор отпускных 2026 - Расчет суммы отпускных выплат с удержаниями по ТК Казахстана",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 19"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 8,
+        "buttons": 9,
+        "smallTapTargets": 19
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 4,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/vacation-pay.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "severance-pay",
+      "url": "http://127.0.0.1:5173/calculator/severance-pay/",
+      "testedAt": "2026-03-05T16:24:33.248Z",
+      "title": "Калькулятор компенсации при увольнении 2026 - Расчет выплат и выходного пособия в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 18"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 8,
+        "buttons": 14,
+        "smallTapTargets": 18
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 4,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/severance-pay.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "court-fee",
+      "url": "http://127.0.0.1:5173/calculator/court-fee/",
+      "testedAt": "2026-03-05T16:24:37.554Z",
+      "title": "Калькулятор госпошлины в суд - Судебные расходы и пошлины в Казахстане | МРП",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 4,
+        "buttons": 13,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 4,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/court-fee.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "penalty",
+      "url": "http://127.0.0.1:5173/calculator/penalty/",
+      "testedAt": "2026-03-05T16:24:43.383Z",
+      "title": "Калькулятор пени онлайн - Расчет пени за просрочку платежей по различным обязательствам в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 19"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 12,
+        "buttons": 6,
+        "smallTapTargets": 19
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 12,
+        "numericTouched": 4,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/penalty.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "notary",
+      "url": "http://127.0.0.1:5173/calculator/notary/",
+      "testedAt": "2026-03-05T16:24:49.424Z",
+      "title": "Калькулятор нотариальных услуг 2026 - Госпошлина и тарифы нотариусов в Казахстане",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 8,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 0,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/notary.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "electricity",
+      "url": "http://127.0.0.1:5173/calculator/electricity/",
+      "testedAt": "2026-03-05T16:24:54.692Z",
+      "title": "Калькулятор за электричество - Счет за электроэнергию по тарифам городов Казахстана",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 11,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/electricity.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "water",
+      "url": "http://127.0.0.1:5173/calculator/water/",
+      "testedAt": "2026-03-05T16:25:00.369Z",
+      "title": "Калькулятор за воду - Водоснабжение и канализация | Дифференцированные тарифы РК",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 9,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/water.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "heating",
+      "url": "http://127.0.0.1:5173/calculator/heating/",
+      "testedAt": "2026-03-05T16:25:06.780Z",
+      "title": "Калькулятор отопления - Центральное отопление по нормативам и приборам учета",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 17",
+        "Result did not update after input/submit (suspected calculation issue)"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 9,
+        "smallTapTargets": 17
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 2,
+        "producedResult": false,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/heating.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "gas",
+      "url": "http://127.0.0.1:5173/calculator/gas/",
+      "testedAt": "2026-03-05T16:25:13.629Z",
+      "title": "Калькулятор за газ - Природный газ | Тарифы по городам Казахстана 2026",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 11,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/gas.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "currency-converter",
+      "url": "http://127.0.0.1:5173/calculator/currency-converter/",
+      "testedAt": "2026-03-05T16:25:22.616Z",
+      "title": "Конвертер валют онлайн - Курсы валют НБРК на сегодня | USD, EUR, RUB к тенге",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 27"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 24,
+        "smallTapTargets": 27
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/currency-converter.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "time-converter",
+      "url": "http://127.0.0.1:5173/calculator/time-converter/",
+      "testedAt": "2026-03-05T16:25:29.770Z",
+      "title": "Конвертер единиц времени онлайн - Преобразование дней, недель, месяцев, лет и других единиц",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 32"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 27,
+        "smallTapTargets": 32
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 0,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/time-converter.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "number-to-words",
+      "url": "http://127.0.0.1:5173/calculator/number-to-words/",
+      "testedAt": "2026-03-05T16:25:32.789Z",
+      "title": "Калькулятор чисел прописью - Преобразование цифр в текст на русском, казахском и английском",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 30"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 3,
+        "buttons": 29,
+        "smallTapTargets": 30
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 2,
+        "numericTouched": 0,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/number-to-words.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "time-to-words",
+      "url": "http://127.0.0.1:5173/calculator/time-to-words/",
+      "testedAt": "2026-03-05T16:25:36.770Z",
+      "title": "Калькулятор времени прописью - Преобразование времени в текстовое представление на разных языках",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 32"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 27,
+        "smallTapTargets": 32
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 0,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/time-to-words.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "zakat",
+      "url": "http://127.0.0.1:5173/calculator/zakat/",
+      "testedAt": "2026-03-05T16:25:40.740Z",
+      "title": "Калькулятор закята онлайн - Расчет обязательного исламского налога в пользу нуждающихся",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 14"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 11,
+        "buttons": 6,
+        "smallTapTargets": 14
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 11,
+        "numericTouched": 8,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/zakat.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "kurban-sacrifice",
+      "url": "http://127.0.0.1:5173/calculator/kurban-sacrifice/",
+      "testedAt": "2026-03-05T16:25:46.885Z",
+      "title": "Калькулятор Курбан-айт - Планирование бюджета на жертвенное животное в праздник жертвоприношения",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 8,
+        "buttons": 10,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 8,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/kurban-sacrifice.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "ramadan-sadaqah",
+      "url": "http://127.0.0.1:5173/calculator/ramadan-sadaqah/",
+      "testedAt": "2026-03-05T16:25:53.079Z",
+      "title": "Калькулятор Фитр-садака и Фидия-садака - Религиозные пожертвования в месяц Рамадан",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 9,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/ramadan-sadaqah.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "islamic-inheritance",
+      "url": "http://127.0.0.1:5173/calculator/islamic-inheritance/",
+      "testedAt": "2026-03-05T16:25:58.018Z",
+      "title": "Калькулятор исламского наследства (Фараиз) - Расчет долей наследников по шариату",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 22"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 11,
+        "buttons": 10,
+        "smallTapTargets": 22
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 11,
+        "numericTouched": 6,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/islamic-inheritance.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "discount",
+      "url": "http://127.0.0.1:5173/calculator/discount/",
+      "testedAt": "2026-03-05T16:26:03.266Z",
+      "title": "Калькулятор скидок онлайн - Расчет скидок, каскадных предложений и сравнение экономии",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 5,
+        "buttons": 16,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 5,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": true,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/discount.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "percentage",
+      "url": "http://127.0.0.1:5173/calculator/percentage/",
+      "testedAt": "2026-03-05T16:26:13.029Z",
+      "title": "Процентный калькулятор онлайн - Все виды процентных расчетов | Проценты от числа",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 16"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 4,
+        "buttons": 17,
+        "smallTapTargets": 16
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 4,
+        "numericTouched": 2,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/percentage.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "leap-year",
+      "url": "http://127.0.0.1:5173/calculator/leap-year/",
+      "testedAt": "2026-03-05T16:26:29.975Z",
+      "title": "Калькулятор високосного года - Определение високосных лет и анализ временных диапазонов",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 31"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 4,
+        "buttons": 24,
+        "smallTapTargets": 31
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 4,
+        "numericTouched": 1,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/leap-year.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "date-calculator",
+      "url": "http://127.0.0.1:5173/calculator/date-calculator/",
+      "testedAt": "2026-03-05T16:26:55.386Z",
+      "title": "Калькулятор дат онлайн - Добавление и вычитание периодов времени с точным расчетом",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 28",
+        "Network request failures: 2"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 6,
+        "buttons": 23,
+        "smallTapTargets": 28
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 6,
+        "numericTouched": 3,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [
+        "POST https://pagead2.googlesyndication.com/pagead/ping?e=1 :: net::ERR_ABORTED",
+        "POST https://pagead2.googlesyndication.com/pagead/ping?e=1 :: net::ERR_ABORTED"
+      ],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/date-calculator.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "bmi",
+      "url": "http://127.0.0.1:5173/calculator/bmi/",
+      "testedAt": "2026-03-05T16:27:05.424Z",
+      "title": "Калькулятор ИМТ онлайн - Индекс массы тела с рекомендациями ВОЗ | Норма веса",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 19"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 7,
+        "buttons": 16,
+        "smallTapTargets": 19
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 7,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/bmi.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "calories",
+      "url": "http://127.0.0.1:5173/calculator/calories/",
+      "testedAt": "2026-03-05T16:27:09.165Z",
+      "title": "Калькулятор калорий онлайн - Суточная норма калорий и макронутриентов для похудения и набора массы",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 22"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 12,
+        "buttons": 18,
+        "smallTapTargets": 22
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 12,
+        "numericTouched": 5,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/calories.png",
+      "httpStatus": 200
+    },
+    {
+      "id": "pregnancy",
+      "url": "http://127.0.0.1:5173/calculator/pregnancy/",
+      "testedAt": "2026-03-05T16:27:13.100Z",
+      "title": "Калькулятор беременности - Расчет срока беременности и предполагаемой даты родов",
+      "status": "ok",
+      "issues": [
+        "Small tap targets: 12"
+      ],
+      "metrics": {
+        "overflowPx": 0,
+        "formFields": 3,
+        "buttons": 6,
+        "smallTapTargets": 12
+      },
+      "calcSmoke": {
+        "clicked": true,
+        "filledFields": 3,
+        "numericTouched": 0,
+        "producedResult": true,
+        "changedAfterInput": false,
+        "hasNaN": false,
+        "hasInfinity": false
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": "/tmp/kz-calk-mobile-audit-shots-after-fixes/pregnancy.png",
+      "httpStatus": 200
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+[
+ {
+  "key": "luxury_tax_vehicle_rate_pct",
+  "value": "10",
+  "unit": "percent",
+  "law": "НК РК — налог на роскошь (акциз) на дорогостоящие авто"
+ },
+ {
+  "key": "luxury_tax_vehicle_threshold_mrp",
+  "value": "18000",
+  "unit": "MRP",
+  "law": "НК РК — порог налога на роскошь для авто"
+ },
+ {
+  "key": "ipn_base_rate",
+  "value": "10",
+  "unit": "percent",
+  "law": "НК РК ст. 320 (ИПН, базовая ставка)"
+ },
+ {
+  "key": "ipn_high_rate_2026",
+  "value": "15",
+  "unit": "percent",
+  "law": "НК РК ст. 320 (прогрессивная шкала ИПН с 2026)"
+ },
+ {
+  "key": "ipn_progressive_threshold_annual_mrp",
+  "value": "8500",
+  "unit": "MRP",
+  "law": "НК РК ст. 320 (порог прогрессии ИПН, 8500 МРП/год)"
+ },
+ {
+  "key": "ipn_standard_personal_deduction",
+  "value": "360",
+  "unit": "MRP",
+  "law": "НК РК ст. 346/403 (стандартный личный вычет по ИПН)"
+ },
+ {
+  "key": "ipn_social_deduction_group12_annual_mrp",
+  "value": "5000",
+  "unit": "MRP",
+  "law": "НК РК ст. 404 (вычет 5000 МРП/год — инвалиды 1-2 гр. и др.)"
+ },
+ {
+  "key": "ipn_social_deduction_group3_annual_mrp",
+  "value": "882",
+  "unit": "MRP",
+  "law": "НК РК ст. 404 (вычет 882 МРП/год — инвалиды 3 гр. и др.)"
+ },
+ {
+  "key": "kpn_general_rate",
+  "value": "20",
+  "unit": "percent",
+  "law": "НК РК ст. 313 (КПН, общеустановленный режим)"
+ },
+ {
+  "key": "kpn_rate_agricultural",
+  "value": "3",
+  "unit": "percent",
+  "law": "новый НК РК с 01.01.2026 — льготная ставка КПН для сельхозтоваропроизводителей"
+ },
+ {
+  "key": "kpn_rate_social",
+  "value": "5",
+  "unit": "percent",
+  "law": "новый НК РК с 01.01.2026 — отмена освобождения для организаций соцсферы"
+ },
+ {
+  "key": "kpn_withholding_rate_nonresident",
+  "value": "15",
+  "unit": "percent",
+  "law": "НК РК ст. 645/646 (КПН у источника — дивиденды/роялти нерезидентам)"
+ },
+ {
+  "key": "snr_simplified_rate",
+  "value": "4",
+  "unit": "percent",
+  "law": "НК РК ст. 687 (СНР на основе упрощённой декларации, 4% с оборота с 01.01.2026)"
+ },
+ {
+  "key": "snr_simplified_semiannual_limit_mrp",
+  "value": "300000",
+  "unit": "MRP",
+  "law": "НК РК ст. 683 (лимит дохода СНР упрощёнки, 300 000 МРП/полугодие)"
+ },
+ {
+  "key": "snr_retail_tax_rate",
+  "value": "4",
+  "unit": "percent",
+  "law": "НК РК (розничный налог, 4% от дохода)"
+ },
+ {
+  "key": "patent_tax_rate",
+  "value": "1",
+  "unit": "percent",
+  "law": "НК РК ст. 685 (СНР на основе патента, 1% = 50% ИПН + 50% СО)"
+ },
+ {
+  "key": "patent_income_limit_halfyear_mrp",
+  "value": "3528",
+  "unit": "MRP",
+  "law": "НК РК ст. 683 (лимит дохода для патента, 3528 МРП/полугодие)"
+ },
+ {
+  "key": "nds_vat_rate",
+  "value": "16",
+  "unit": "percent",
+  "law": "НК РК ст. 422 (НДС, 16% с 2026)"
+ },
+ {
+  "key": "businesstrip_accommodation_taxfree_limit_mrp",
+  "value": "12",
+  "unit": "MRP",
+  "law": "НК РК ст. 244 (необлагаемый предел расходов на проживание в командировке, 12 МРП/сутки)"
+ },
+ {
+  "key": "ipn_90pct_reduction_abolished_2026",
+  "value": "false",
+  "unit": "factor",
+  "law": "НК РК ст. 341/401 (отмена 90% уменьшения ИПН для дохода <=25 МРП с 2026)"
+ },
+ {
+  "key": "luxury_tax_yacht_aircraft_rate",
+  "value": "10",
+  "unit": "percent",
+  "law": "НК РК (акциз/налог на роскошь — яхты и самолёты, 10% от стоимости)"
+ },
+ {
+  "key": "luxury_tax_yacht_aircraft_threshold_mrp",
+  "value": "24000",
+  "unit": "MRP",
+  "law": "НК РК (порог для налога на роскошь — яхты/самолёты, 24000 МРП)"
+ },
+ {
+  "key": "tax_simplified_rate_snr",
+  "value": "4",
+  "unit": "percent",
+  "law": "НК РК ст. 687 (СНР на основе упрощённой декларации)"
+ },
+ {
+  "key": "tax_patent_rate",
+  "value": "0",
+  "unit": "percent",
+  "law": "НК РК 2026 — СНР для самозанятых (преемник патента)"
+ },
+ {
+  "key": "nds_rate",
+  "value": "16",
+  "unit": "%",
+  "law": "НК РК, Раздел 10 (НДС)"
+ },
+ {
+  "key": "nds_rate_zero",
+  "value": "0",
+  "unit": "%",
+  "law": "НК РК, Раздел 10 (НДС)"
+ },
+ {
+  "key": "nds_threshold_mrp_2024",
+  "value": "20000",
+  "unit": "МРП",
+  "law": "НК РК (старый)"
+ },
+ {
+  "key": "nds_threshold_mrp_2025",
+  "value": "20000",
+  "unit": "МРП",
+  "law": "НК РК (старый)"
+ },
+ {
+  "key": "nds_threshold_mrp",
+  "value": "10000",
+  "unit": "МРП",
+  "law": "НК РК K2500000214 (новый)"
+ },
+ {
+  "key": "ipn_rate",
+  "value": "10",
+  "unit": "%",
+  "law": "НК РК (ИПН)"
+ },
+ {
+  "key": "ipn_standard_deduction_mrp",
+  "value": "30",
+  "unit": "МРП",
+  "law": "НК РК (стандартный вычет по ИПН)"
+ },
+ {
+  "key": "perdiem_ipn_free_limit_foreign_mrp",
+  "value": "8",
+  "unit": "МРП/сутки",
+  "law": "ст. 366 НК РК (2026)"
+ },
+ {
+  "key": "ipn_standard_deduction_old_14_mrp",
+  "value": "14",
+  "unit": "МРП",
+  "law": ""
+ },
+ {
+  "key": "tax_declaration_form_too_kpn",
+  "value": "ФНО 100.00",
+  "unit": "",
+  "law": "Приказ МФ РК об утверждении форм налоговой отчётности"
+ },
+ {
+  "key": "tax_declaration_form_individual_ipn",
+  "value": "ФНО 240.00",
+  "unit": "",
+  "law": "Приказ МФ РК об утверждении форм налоговой отчётности"
+ },
+ {
+  "key": "ipn_declaration_deadline_fno240",
+  "value": "31.03",
+  "unit": "date (DD.MM next year)",
+  "law": "НК РК — срок представления декларации ФНО 240.00 до 31 марта года, следующего за"
+ },
+ {
+  "key": "simplified_rate_local_adjustment_range_pct",
+  "value": "±50",
+  "unit": "% of the 4% rate",
+  "law": "НК РК 2026 — право акимата/маслихата корректировать ставку упрощёнки"
+ },
+ {
+  "key": "snr_simplified_maslikhat_rate_adjustment_range",
+  "value": "±50% (2–6%)",
+  "unit": "%",
+  "law": "НК РК 2026 (Закон № 214-VIII от 18.07.2025)"
+ },
+ {
+  "key": "vat_threshold_display_constant_undefined",
+  "value": "VAT_THRESHOLD_MRP — undefined identifier (ReferenceError)",
+  "unit": "",
+  "law": ""
+ }
+]

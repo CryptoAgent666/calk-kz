@@ -1,0 +1,84 @@
+RESPONSE TO APP REVIEW — Build 1.0 (4) with major content additions
+Submission ID: 3cd74180-cf66-4861-a854-f3e404a088d2
+=========================================================================
+
+Hello App Review Team,
+
+Build 1.0 (4) is now uploaded with significant additions that strengthen
+the app and address all previous feedback.
+
+WHAT'S NEW IN BUILD (4)
+-----------------------
+
+1. MEDICAL CITATIONS (Guideline 1.4.1) — ADDRESSED IN BUILD (3)
+   All health calculators (BMI, Calories, Pregnancy, Body Fat, Sleep,
+   Water Intake) now have prominent "Sources of Medical Information"
+   blocks with authoritative citations to:
+   - WHO, CDC, NIH/NHLBI, ACOG
+   - Peer-reviewed papers: Mifflin-St Jeor (1990), Hodgdon & Beckett
+     (1984), Hirshkowitz et al. (2015)
+   - IOM Dietary Reference Intakes 2005
+   - Ministry of Health of Kazakhstan clinical protocols
+
+   The citation blocks are non-collapsible, with direct clickable links
+   and disclaimer that calculations are informational only.
+
+2. CONTENT EXPANSION (61 NEW CALCULATORS)
+   We added 61 calculators that were promised in the App Store
+   description but were not yet active. The app now offers 121 working
+   calculators across 14 categories, fully matching the description:
+
+   • Taxes (17): NEW corporate income tax (KPN), crypto tax, property
+     sale tax, rental income tax, universal declaration (FNO 250/270),
+     unified payment from payroll, tax regime comparison
+   • Finance (15): NEW Otbasy Bank programs, FIRE, business ROI,
+     break-even, margin/markup, cashback comparison, debt burden,
+     inflation, cash flow gap, franchise payback
+   • Auto (14): NEW KASKO insurance, vehicle TCO, auto leasing, car
+     market value, car transfer, fuel cost, traffic fines, fancy plates,
+     tire size
+   • Legal (9): NEW inheritance, divorce, property division, statute of
+     limitations, bankruptcy, moral damage
+   • Social/Labor (12): NEW salary reverse, business trips, overtime,
+     second job, average earnings, teacher salary
+   • Construction (5) — NEW CATEGORY: concrete, brick, wallpaper,
+     flooring, insulation
+   • Real Estate (3) — NEW CATEGORY: fair rental price, apartment
+     valuation, cost of living
+   • Education (2) — NEW CATEGORY: ENT exam scores, GPA conversion
+   • Religious (5): NEW Hajj/Umrah, Islamic mortgage
+   • Health (6): all with medical citations
+   • Tools/Converters (15): NEW age, pet age, Roman numerals, unit
+     converter, timezone, password generator, QR code generator
+
+3. UPDATED SCREENSHOTS
+   We have uploaded new screenshots showing real working calculators
+   (previously the Corporate Income Tax and ENT Score screenshots
+   showed 404 pages because those calculators existed in code but were
+   not yet registered with routes). All screenshots now show actual
+   functional calculators.
+
+4. OFFLINE COMPLIANCE
+   QR Code Generator was refactored from an external API call
+   (api.qrserver.com) to a fully offline JavaScript library (qrcode npm
+   package). All 121 calculators now work completely offline.
+
+5. SOURCE CITATIONS
+   All medical/health calculators have authoritative sources. Tax and
+   legal calculators reference specific articles of:
+   - Tax Code of Republic of Kazakhstan (NK RK 2026)
+   - Civil Code of RK (GK RK)
+   - Labor Code of RK (TK RK)
+   - Administrative Offenses Code (KoAP RK)
+   - National Bank of Kazakhstan regulations
+
+The app is a comprehensive, fully-offline calculator suite for
+Kazakhstan residents, with no ads, no tracking, no sign-in, and no
+personal data collection.
+
+If you need any additional clarification or have specific concerns
+about any calculator, please let us know.
+
+Best regards,
+Konstantin Iakovlev
+info@calk.kz

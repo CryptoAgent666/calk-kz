@@ -1,0 +1,224 @@
+[
+ {
+  "key": "asp_child_bonus_mrp",
+  "value": "1.5",
+  "unit": "MRP",
+  "law": "Закон РК о государственной адресной социальной помощи (АСП)"
+ },
+ {
+  "key": "asp_poverty_threshold_pct_of_living_minimum",
+  "value": "70",
+  "unit": "percent",
+  "law": "Закон РК о государственной адресной социальной помощи (АСП)"
+ },
+ {
+  "key": "asp_poverty_threshold_pct_of_median",
+  "value": "35",
+  "unit": "percent",
+  "law": "Закон РК о государственной адресной социальной помощи (АСП)"
+ },
+ {
+  "key": "birth_lumpsum_benefit_1to3_mrp",
+  "value": "38",
+  "unit": "MRP",
+  "law": "Закон РК о государственных пособиях семьям, имеющим детей"
+ },
+ {
+  "key": "birth_lumpsum_benefit_4plus_mrp",
+  "value": "63",
+  "unit": "MRP",
+  "law": "Закон РК о государственных пособиях семьям, имеющим детей"
+ },
+ {
+  "key": "childcare_benefit_rate",
+  "value": "40",
+  "unit": "percent",
+  "law": "Закон РК об обязательном социальном страховании / ГФСС (пособие по уходу за ребёнком до 1.5 лет)"
+ },
+ {
+  "key": "monthly_childcare_benefit_mrp_table",
+  "value": "1 ребёнок:5.76; 2:6.81; 3:7.85; 4+:8.90 (МРП/мес)",
+  "unit": "MRP",
+  "law": "Закон РК о государственных пособиях семьям, имеющим детей (ежемесячное пособие по уходу до 1.5 лет)"
+ },
+ {
+  "key": "maternity_benefit_coefficient",
+  "value": "4.2",
+  "unit": "factor",
+  "law": "ГФСС РК — единовременная выплата по беременности и родам (126 дней / 30)"
+ },
+ {
+  "key": "otbasy_baspana_hit_rate",
+  "value": "8.5",
+  "unit": "percent",
+  "law": "АО «Отбасы банк» (hcsbk.kz) — программа «Баспана хит»"
+ },
+ {
+  "key": "otbasy_baspana_zhas_rate",
+  "value": "6",
+  "unit": "percent",
+  "law": "АО «Отбасы банк» — программа «Баспана жас» (молодёжная)"
+ },
+ {
+  "key": "unemployment_income_replacement_coef",
+  "value": "45",
+  "unit": "percent",
+  "law": "ГФСС РК — коэффициент замещения дохода для пособия по утрате работы"
+ },
+ {
+  "key": "unemployment_min_experience_months",
+  "value": "6",
+  "unit": "factor",
+  "law": "ГФСС РК — минимальный стаж участия для права на пособие по утрате работы"
+ },
+ {
+  "key": "unemployment_experience_coef_table",
+  "value": "<6m:0; 6-12m:0.7; 1-2y:0.75; 2-3y:0.85; 3-4y:0.9; 4-5y:0.95; 5-6y:1.0; >6y:+0.02/yr (max 1.3)",
+  "unit": "table",
+  "law": "ГФСС РК (2026) — коэффициент стажа участия"
+ },
+ {
+  "key": "unemployment_benefit_payment_period_table",
+  "value": "6-12m:1; 1-2y:2; 2-3y:3; 3-4y:4; 4-5y:5; 5y+:6 (months)",
+  "unit": "table",
+  "law": "Социальный кодекс РК, ст. 84 (социальная выплата на случай потери работы); администратор — ГФСС"
+ },
+ {
+  "key": "sick_leave_max_benefit_mrp",
+  "value": "25",
+  "unit": "MRP",
+  "law": "Постановление Правительства РК — максимальный размер месячного пособия по временной нетрудоспособности = 25 МРП"
+ },
+ {
+  "key": "perdiem_domestic_capital_mrp",
+  "value": "6",
+  "unit": "MRP",
+  "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — столица)"
+ },
+ {
+  "key": "perdiem_domestic_regional_mrp",
+  "value": "5",
+  "unit": "MRP",
+  "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — областной центр)"
+ },
+ {
+  "key": "perdiem_domestic_other_mrp",
+  "value": "4",
+  "unit": "MRP",
+  "law": "Постановление Правительства РК о служебных командировках / НК РК (суточные — прочие города)"
+ },
+ {
+  "key": "teacher_bdo_base_salary_2026",
+  "value": "23578",
+  "unit": "KZT",
+  "law": "Базовый должностной оклад (БДО) педагога на 2026, утв. Постановлением Правительства РК"
+ },
+ {
+  "key": "teacher_coefficient_grid",
+  "value": "none 4.40–5.34 / moderator 4.84–5.88 / expert 5.28–6.41 / researcher 5.72–6.95 / master 6.16–7.49 (категория × 11 стажевых полос)",
+  "unit": "table",
+  "law": "Приказ МОН РК — коэффициенты (категория × стаж) к БДО педагога"
+ },
+ {
+  "key": "teacher_rural_bonus_rate",
+  "value": "25",
+  "unit": "percent",
+  "law": "Сельская надбавка педагогу (+25% к окладу за работу в сельской местности)"
+ },
+ {
+  "key": "teacher_small_school_bonus_rate",
+  "value": "20",
+  "unit": "percent",
+  "law": "Надбавка за работу в малокомплектной школе (+20%)"
+ },
+ {
+  "key": "teacher_bonus_class_teacher_mrp",
+  "value": "5",
+  "unit": "MRP",
+  "law": "Доплата за классное руководство — 5 МРП/мес"
+ },
+ {
+  "key": "teacher_bonus_notebook_check_mrp",
+  "value": "3",
+  "unit": "MRP",
+  "law": "Доплата за проверку тетрадей — 3 МРП/мес"
+ },
+ {
+  "key": "teacher_bonus_methodist_mrp",
+  "value": "2",
+  "unit": "MRP",
+  "law": "Доплата методисту — 2 МРП/мес"
+ },
+ {
+  "key": "teacher_bonus_cabinet_head_mrp",
+  "value": "1",
+  "unit": "MRP",
+  "law": "Доплата за заведование кабинетом — 1 МРП/мес"
+ },
+ {
+  "key": "teacher_standard_hours_per_week",
+  "value": "18",
+  "unit": "factor",
+  "law": "Норма учебной нагрузки педагога — 18 часов/неделю (Закон РК «О статусе педагога» / приказ МП РК)"
+ },
+ {
+  "key": "unemployment_min_experience_stale_12",
+  "value": "12",
+  "unit": "months",
+  "law": ""
+ },
+ {
+  "key": "childcare_benefit_duration_months",
+  "value": "18",
+  "unit": "months",
+  "law": "Социальный кодекс РК — выплата по уходу за ребёнком до 1,5 лет"
+ },
+ {
+  "key": "maternity_leave_start_week",
+  "value": "30",
+  "unit": "недель беременности",
+  "law": "Трудовой кодекс РК, ст. 99"
+ },
+ {
+  "key": "maternity_leave_start_week_ecological_zone",
+  "value": "28",
+  "unit": "недель беременности",
+  "law": "ТК РК — для проживающих в зонах экологического бедствия"
+ },
+ {
+  "key": "maternity_leave_days_complicated_birth",
+  "value": "140",
+  "unit": "days",
+  "law": "ТК РК ст. 99 — осложнённые роды / многоплодная беременность"
+ },
+ {
+  "key": "otbasy_baspana_hit_terms",
+  "value": "maxAmount: 30000000 KZT, minDownPayment: 20%, maxTerm: 25 years",
+  "unit": "",
+  "law": "Программа Баспана Хит, Отбасы банк (hcsbk.kz), данные на апрель 2026"
+ },
+ {
+  "key": "otbasy_baspana_zhas_terms",
+  "value": "maxAmount: 18000000 KZT, minDownPayment: 10%, maxTerm: 25 years",
+  "unit": "",
+  "law": "Программа Баспана Жас (молодёжная), Отбасы банк"
+ },
+ {
+  "key": "sick_leave_avg_days_per_month_divisor",
+  "value": "30",
+  "unit": "days/month",
+  "law": "методика расчёта среднедневного заработка / пропорции лимита 25 МРП"
+ },
+ {
+  "key": "unemployment_income_averaging_period_months",
+  "value": "24",
+  "unit": "months",
+  "law": ""
+ },
+ {
+  "key": "unemployment_experience_coef_6plus_increment",
+  "value": "+0.02 per year above 6 years, capped at 1.3",
+  "unit": "",
+  "law": ""
+ }
+]

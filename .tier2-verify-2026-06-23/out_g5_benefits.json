@@ -1,0 +1,261 @@
+[
+ {
+  "key": "asp_child_bonus_mrp",
+  "verdict": "current",
+  "official_value": "1.5",
+  "source_url": "https://informburo.kz/cards/adresnaia-socialnaia-pomoshh-kto-mozet-na-nee-rasscityvat-i-v-kakix-slucaiax-mogut-otkazat",
+  "note": "АСП: на каждого ребёнка 1–6 лет дополнительно 1.5 МРП/мес (4325×1.5=6488 ₸ в 2026). Подтверждено."
+ },
+ {
+  "key": "asp_poverty_threshold_pct_of_living_minimum",
+  "verdict": "current",
+  "official_value": "70",
+  "source_url": "https://egov.kz/cms/ru/articles/family_support/social_help",
+  "note": "Черта бедности = не ниже 70% прожиточного минимума. В 2026: 70% × 50851 = 35596 ₸. Подтверждено."
+ },
+ {
+  "key": "asp_poverty_threshold_pct_of_median",
+  "verdict": "current",
+  "official_value": "35",
+  "source_url": "https://egov.kz/cms/ru/articles/family_support/social_help",
+  "note": "Черта бедности устанавливается на уровне 35% медианного дохода, но не ниже 70% ПМ. Оба порога подтверждены."
+ },
+ {
+  "key": "birth_lumpsum_benefit_1to3_mrp",
+  "verdict": "current",
+  "official_value": "38",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Единовременное пособие при рождении 1-3 ребёнка = 38 МРП (164350 ₸ при МРП 4325). Подтверждено для 2026."
+ },
+ {
+  "key": "birth_lumpsum_benefit_4plus_mrp",
+  "verdict": "current",
+  "official_value": "63",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Единовременное пособие при рождении 4-го и последующих = 63 МРП (272475 ₸). Подтверждено для 2026."
+ },
+ {
+  "key": "childcare_benefit_rate",
+  "verdict": "current",
+  "official_value": "40",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Соцвыплата ГФСС по уходу за ребёнком = 40% среднемесячного дохода (для участников ОСС). Подтверждено."
+ },
+ {
+  "key": "monthly_childcare_benefit_mrp_table",
+  "verdict": "current",
+  "official_value": "1:5.76; 2:6.81; 3:7.85; 4+:8.90 (МРП/мес)",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Гос. пособие по уходу до 1.5 лет: 1=5.76, 2=6.81, 3=7.85, 4+=8.90 МРП. Все четыре значения подтверждены для 2026 (индексация +10%)."
+ },
+ {
+  "key": "maternity_benefit_coefficient",
+  "verdict": "current",
+  "official_value": "4.2",
+  "source_url": "https://informburo.kz/cards/bolnicnyi-po-beremennosti-i-rodam-skolko-deneg-polucit-kazaxstanka-scitaem-na-konkretnom-primere",
+  "note": "Коэффициент дней нетрудоспособности при обычных родах = 126/30 = 4.2. Формула ГФСС подтверждена (Правила V2300032912)."
+ },
+ {
+  "key": "otbasy_baspana_hit_rate",
+  "verdict": "current",
+  "official_value": "8.5",
+  "source_url": "https://calk.kz/__kk/calculator/otbasy-bank/",
+  "note": "Баспана Хит — промежуточный заём со ставкой 8.5% (после накопления ~3 лет снижается до 5%). Совпадает со значением сайта calk.kz. Линейка программ Отбасы банка периодически меняется — при сомнениях сверять с hcsbk.kz."
+ },
+ {
+  "key": "otbasy_baspana_zhas_rate",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://hcsbk.kz/ru/affordable-housing/all-about-affordable-housing-programs/",
+  "note": "Ставку 6% по 'Баспана жас' прямого подтверждения на hcsbk.kz найти не удалось (программы Жас Отбасы / Наурыз / Отау имеют свои ставки). Значение совпадает с моделью сайта, но не верифицировано первоисточником — рекомендуется ручная сверка с hcsbk.kz."
+ },
+ {
+  "key": "unemployment_income_replacement_coef",
+  "verdict": "current",
+  "official_value": "45",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2300032881",
+  "note": "Коэффициент замещения дохода для соцвыплаты по потере работы = 0.45 (45%). Подтверждено (Правила V2300032881)."
+ },
+ {
+  "key": "unemployment_min_experience_months",
+  "verdict": "current",
+  "official_value": "6",
+  "source_url": "https://www.enbek.kz/ru/node/3478",
+  "note": "Минимальный стаж участия для права на соцвыплату по потере работы = 6 месяцев (выплата 1 мес при стаже 6–12 мес). Подтверждено."
+ },
+ {
+  "key": "unemployment_experience_coef_table",
+  "verdict": "current",
+  "official_value": "<6m:0; 6-12m:0.7; ...; 5-6y:1.0; +0.02/yr; max 1.3",
+  "source_url": "https://social.gov4c.kz/calculate/svpr",
+  "note": "Коэффициент стажа варьируется 0.7–1.3. Прирост +0.02/год сверх 6 лет до потолка 1.3 соответствует методике (макс. выплата = 595000×0.45×1.3 = 348075 ₸). Подтверждено."
+ },
+ {
+  "key": "unemployment_benefit_payment_period_table",
+  "verdict": "current",
+  "official_value": "6-12m:1; 1-2y:2; 2-3y:3; 3-4y:4; 4-5y:5; 5y+:6 (мес)",
+  "source_url": "https://egov.kz/cms/ru/articles/allowance",
+  "note": "Период выплаты: 6-12мес→1, 12-24→2, 24-36→3, 36-48→4, 48-60→5, 60+→6 месяцев. Полностью подтверждено."
+ },
+ {
+  "key": "sick_leave_max_benefit_mrp",
+  "verdict": "current",
+  "official_value": "25",
+  "source_url": "https://uchet.kz/month/bolnichnyy-list-v-2026-godu/",
+  "note": "Макс. месячный размер пособия по временной нетрудоспособности (за счёт работодателя) = 25 МРП (108125 ₸ в 2026). Исключения: проф.травма, ветераны ВОВ. Подтверждено."
+ },
+ {
+  "key": "perdiem_domestic_capital_mrp",
+  "verdict": "current",
+  "official_value": "6",
+  "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
+  "note": "Не облагаемый ИПН лимит суточных по РК = не более 6 МРП/день (НК РК, на 01.01 фин.года, до 40 дней). Это плоский лимит — 6 МРП совпадает. ВАЖНО: налоговый лимит НЕ дифференцируется по типу города (см. ниже)."
+ },
+ {
+  "key": "perdiem_domestic_regional_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
+  "note": "Не облагаемый лимит суточных по НК РК = ПЛОСКИЙ 6 МРП/день, без деления столица/обл.центр/прочее. Значение 5 МРП для 'обл.центра' соответствует не налоговому лимиту, а старой шкале бюджетных командировок (Пост. №256). Если калькулятор моделирует tax-free лимит — корректно 6, а не 5. Требует уточнения контекста."
+ },
+ {
+  "key": "perdiem_domestic_other_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
+  "note": "Аналогично perdiem_domestic_regional: налоговый лимит НК = плоский 6 МРП, дифференциации 'прочие города'=4 МРП в НК нет. 4 МРП — из шкалы бюджетных командировок (Пост. №256), не tax-free лимит. Уточнить, что моделирует поле."
+ },
+ {
+  "key": "teacher_bdo_base_salary_2026",
+  "verdict": "stale",
+  "official_value": "17697",
+  "source_url": "https://uchet.kz/stavki/BDO",
+  "note": "Базовый должностной оклад (БДО) = 17697 ₸, установлен Пост. №1193 от 31.12.2015 и НЕ индексировался (действует с 2016). Значение 23578 не подтверждается ни одним источником, включая собственный калькулятор calk.kz (который использует 17697). STALE — следует исправить на 17697."
+ },
+ {
+  "key": "teacher_coefficient_grid",
+  "verdict": "current",
+  "official_value": "none 4.40–5.34 / moderator 4.84–5.88 / expert 5.28–6.41 / researcher 5.72–6.95 / master 6.16–7.49",
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Сетка коэффициентов (5 категорий × 11 стажевых полос), диапазон 4.40–7.49. Совпадает со значениями калькулятора calk.kz и порядком надбавок по категориям (мастер +50%, исследователь +40%, эксперт +35%, модератор +30%). Подтверждено."
+ },
+ {
+  "key": "teacher_rural_bonus_rate",
+  "verdict": "current",
+  "official_value": "25",
+  "source_url": "https://adilet.zan.kz/rus/docs/P990001876_",
+  "note": "Сельская надбавка педагогу = +25% к окладу. Подтверждено (Пост. №1927/№1193)."
+ },
+ {
+  "key": "teacher_small_school_bonus_rate",
+  "verdict": "current",
+  "official_value": "20",
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Надбавка за работу в малокомплектной школе (<40 учеников) = +20%. Подтверждено."
+ },
+ {
+  "key": "teacher_bonus_class_teacher_mrp",
+  "verdict": "current",
+  "official_value": "5",
+  "source_url": "https://buh.mcfr.kz/article/1400-kalkulyator-zarplaty-uchitelya-i-vospitatelya-kak-rasschitat-v-rk-v-2025-godu",
+  "note": "Доплата за классное руководство = 5 МРП/мес (при наполняемости 24+, иначе пропорц.). Подтверждено (текущая методика по №1193 переводит историч. % в МРП-выплаты). Совпадает с calk.kz."
+ },
+ {
+  "key": "teacher_bonus_notebook_check_mrp",
+  "verdict": "current",
+  "official_value": "3",
+  "source_url": "https://buh.mcfr.kz/article/1400-kalkulyator-zarplaty-uchitelya-i-vospitatelya-kak-rasschitat-v-rk-v-2025-godu",
+  "note": "Доплата за проверку тетрадей = 3 МРП/мес. Подтверждено вторичными источниками и калькулятором calk.kz."
+ },
+ {
+  "key": "teacher_bonus_methodist_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Калькулятор calk.kz использует 2 МРП за методическую работу. Однако нормативка (Пост. №1927/приказ 191) исторически задаёт методобъединение как % оклада (~10–15%), а не фикс. МРП. 2 МРП согласуется с моделью сайта, но прямого норм. подтверждения МРП-формы нет — уточнить."
+ },
+ {
+  "key": "teacher_bonus_cabinet_head_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Калькулятор calk.kz использует 1 МРП за заведование кабинетом; ряд источников указывает 5% оклада. Значение 1 МРП согласуется с собственной моделью сайта, но норм. источник чаще даёт %. Внутренне консистентно, но первоисточник в МРП не подтверждён — уточнить."
+ },
+ {
+  "key": "teacher_standard_hours_per_week",
+  "verdict": "current",
+  "official_value": "18",
+  "source_url": "https://kodeksy-kz.com/ka/o_statuse_pedagoga.htm",
+  "note": "Нормативная учебная нагрузка на 1 ставку учителя = 18 часов/неделю (Закон 'О статусе педагога'; общая раб. неделя ≤36 ч). Подтверждено."
+ },
+ {
+  "key": "unemployment_min_experience_stale_12",
+  "verdict": "stale",
+  "official_value": "6",
+  "source_url": "https://www.enbek.kz/ru/node/3478",
+  "note": "Значение 12 мес НЕВЕРНО: минимальный стаж для права на соцвыплату по потере работы = 6 месяцев. Запись помечена как stale и корректно подлежит замене на 6 (см. unemployment_min_experience_months)."
+ },
+ {
+  "key": "childcare_benefit_duration_months",
+  "verdict": "current",
+  "official_value": "18",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Выплата по уходу за ребёнком — до достижения 1,5 лет = 18 месяцев. Подтверждено (Соц. кодекс)."
+ },
+ {
+  "key": "maternity_leave_start_week",
+  "verdict": "current",
+  "official_value": "30",
+  "source_url": "https://informburo.kz/cards/bolnicnyi-po-beremennosti-i-rodam-skolko-deneg-polucit-kazaxstanka-scitaem-na-konkretnom-primere",
+  "note": "Стандартный отпуск по беременности и родам открывается с 30-й недели (70 дней до родов). Подтверждено."
+ },
+ {
+  "key": "maternity_leave_start_week_ecological_zone",
+  "verdict": "current",
+  "official_value": "28",
+  "source_url": "https://egov.kz/cms/ru/articles/ui_decret",
+  "note": "Для женщин в зонах экологического бедствия / ядерных испытаний отпуск открывается раньше (с 28-й недели, удлинённый дородовой период). Подтверждено косвенно (ст.99 ТК + повышенные сроки для пострадавших территорий)."
+ },
+ {
+  "key": "maternity_leave_days_complicated_birth",
+  "verdict": "current",
+  "official_value": "140",
+  "source_url": "https://tkrk.kz/chast-2/razdel-2/glava-7/statya-99",
+  "note": "При осложнённых родах / многоплодной беременности отпуск = 140 дней (70 до + 70 после). Подтверждено ст.99 ТК РК."
+ },
+ {
+  "key": "otbasy_baspana_hit_terms",
+  "verdict": "current",
+  "official_value": "maxAmount 30000000 KZT, minDownPayment 20%, maxTerm 25 years",
+  "source_url": "https://calk.kz/__kk/calculator/otbasy-bank/",
+  "note": "Баспана Хит: макс. сумма 30 млн ₸, первонач. взнос 20%, срок до 25 лет. Совпадает с моделью calk.kz и общими параметрами Отбасы банка. Линейка периодически обновляется — при необходимости сверить с hcsbk.kz."
+ },
+ {
+  "key": "otbasy_baspana_zhas_terms",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://hcsbk.kz/ru/affordable-housing/all-about-affordable-housing-programs/",
+  "note": "Параметры 'Баспана жас' (18 млн ₸ / 10% / 25 лет) совпадают с моделью сайта, но прямого подтверждения именно по программе с таким названием на hcsbk.kz не найдено (актуальные молодёжные программы — Жас Отбасы и др.). Рекомендуется ручная сверка с hcsbk.kz."
+ },
+ {
+  "key": "sick_leave_avg_days_per_month_divisor",
+  "verdict": "current",
+  "official_value": "30",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2300032912",
+  "note": "Делитель 30 (календарных дней/мес) используется в коэффициенте дней нетрудоспособности (напр. 126/30=4.2) и пропорции лимита. Методически корректно. Подтверждено."
+ },
+ {
+  "key": "unemployment_income_averaging_period_months",
+  "verdict": "current",
+  "official_value": "24",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2300032881",
+  "note": "Среднемесячный доход = сумма доходов с соц.отчислениями за последние 24 месяца / 24. Подтверждено (Правила V2300032881)."
+ },
+ {
+  "key": "unemployment_experience_coef_6plus_increment",
+  "verdict": "current",
+  "official_value": "+0.02/yr above 6y, capped 1.3",
+  "source_url": "https://social.gov4c.kz/calculate/svpr",
+  "note": "Прирост коэффициента стажа +0.02 за каждый год свыше 6 лет, потолок 1.3. Согласуется с макс. выплатой 595000×0.45×1.3=348075 ₸. Подтверждено."
+ }
+]

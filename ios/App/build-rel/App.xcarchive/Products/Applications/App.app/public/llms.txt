@@ -1,0 +1,186 @@
+# Calk.kz
+
+> Бесплатные онлайн-калькуляторы для жителей Казахстана. Все расчёты по актуальному законодательству РК 2026 года.
+
+Calk.kz — платформа с онлайн-калькуляторами, охватывающими налоги, финансы, автомобили, социальные выплаты, коммунальные услуги, недвижимость, строительство, образование, религиозные расчёты и другие сферы жизни в Казахстане. Все расчёты выполняются локально в браузере — данные пользователей не передаются на сервер.
+
+## Основатель
+
+Константин Яковлев — основатель Calk.kz, Zanimaem.kz и Profinance.kz. Более 14 лет в маркетинге, свыше 8 лет в финансовой аналитике.
+
+## Актуальные данные на 2026 год
+
+- МРП (Месячный расчётный показатель): 4 325 тенге
+- МЗП (Минимальная заработная плата): 85 000 тенге
+- НДС: 16% (с 1 января 2025)
+- Базовый налоговый вычет по ИПН: 30 МРП (129 750 тенге) в месяц
+- ОПВ: 10% · ОПВР: 3.5% · ВОСМС: 2% · СО: 3.5%
+- Упрощёнка ИП: 4% ИПН (социальный налог отменён с 2026)
+- Пенсионный возраст: мужчины 63, женщины 61
+- Базовая ставка НБРК: 15.25%
+
+## Категории калькуляторов (117 калькуляторов в 14 категориях)
+
+### Налоговые калькуляторы
+- /calculator/income-tax/ — Калькулятор ИПН для наёмных работников
+- /calculator/vehicle-tax/ — Налог на транспортные средства
+- /calculator/property-tax/ — Налог на имущество физических лиц
+- /calculator/ip-simplified/ — Налоги ИП на упрощенке
+- /calculator/tax-deductions/ — Калькулятор социальных налоговых вычетов по ИПН
+- /calculator/vat/ — Калькулятор НДС
+- /calculator/vat-threshold/ — Калькулятор порога по НДС
+- /calculator/luxury-tax/ — Калькулятор налога на роскошь
+- /calculator/casino-winnings-tax/ — Калькулятор налогов на выигрыш в казино
+- /calculator/corporate-income-tax/ — КПН для ТОО
+- /calculator/crypto-tax/ — Налог на криптовалюту
+- /calculator/property-sale-tax/ — Налог при продаже имущества
+- /calculator/rental-income-tax/ — Налог с аренды
+- /calculator/universal-declaration/ — Всеобщее декларирование (ФНО 250/270)
+- /calculator/unified-payment/ — Единый платёж с ФОТ
+- /calculator/tax-regime-comparison/ — Сравнение налоговых режимов ИП
+
+### Автомобильные калькуляторы
+- /calculator/customs-clearance/ — Таможенная очистка автомобилей
+- /calculator/recycling-fee/ — Утилизационный сбор
+- /calculator/registration-fee/ — Сбор за первичную регистрацию
+- /calculator/insurance-premium/ — ОГПО ВТС (страховка)
+- /calculator/vehicle-tax/ — Налог на транспортные средства
+- /calculator/parcel-customs/ — Таможенная пошлина на посылки
+- /calculator/kasko/ — Калькулятор КАСКО
+- /calculator/vehicle-tco/ — Полная стоимость владения авто (TCO)
+- /calculator/auto-leasing/ — Калькулятор автолизинга
+- /calculator/car-market-value/ — Рыночная стоимость б/у авто
+- /calculator/car-transfer/ — Стоимость переоформления авто
+- /calculator/fuel-cost/ — Калькулятор расхода топлива
+- /calculator/traffic-fines/ — Калькулятор штрафов ПДД
+- /calculator/fancy-plates/ — Стоимость красивых госномеров
+- /calculator/tire-size/ — Калькулятор размеров шин
+
+### Финансовые калькуляторы
+- /calculator/credit/ — Универсальный кредитный калькулятор
+- /calculator/deposit/ — Калькулятор банковских вкладов
+- /calculator/mortgage-specialized/ — Специализированный ипотечный калькулятор
+- /calculator/rent-vs-buy/ — Аренда или покупка жилья
+- /calculator/compound-interest/ — Калькулятор сложного процента
+- /calculator/refinancing/ — Калькулятор рефинансирования кредита
+- /calculator/microloan/ — Калькулятор микрокредита
+- /calculator/early-repayment/ — Калькулятор досрочного погашения кредита
+- /calculator/otbasy-bank/ — Программы Отбасы Банк
+- /calculator/fire/ — Калькулятор FIRE
+- /calculator/business-roi/ — ROI бизнеса и NPV
+- /calculator/break-even/ — Точка безубыточности
+- /calculator/margin-markup/ — Маржа и наценка
+- /calculator/cashback/ — Калькулятор кэшбэка
+- /calculator/debt-burden/ — Долговая нагрузка (DTI)
+- /calculator/inflation/ — Калькулятор инфляции РК
+- /calculator/cash-flow-gap/ — Калькулятор кассового разрыва
+- /calculator/franchise-payback/ — Калькулятор окупаемости франшизы
+
+### Сельское хозяйство
+- /calculator/farm-land-tax/ — Калькулятор единого земельного налога
+
+### Социальные выплаты и трудовые отношения
+- /calculator/salary/ — Зарплатный калькулятор
+- /calculator/sick-leave/ — Калькулятор больничного листа
+- /calculator/maternity-benefits/ — Пособия по беременности и родам
+- /calculator/pension/ — Пенсионные выплаты
+- /calculator/pension-annuity/ — Калькулятор пенсионного аннуитета
+- /calculator/unemployment/ — Пособие по безработице
+- /calculator/social-assistance/ — Калькулятор адресной социальной помощи (АСП)
+- /calculator/gons/ — Калькулятор образовательного накопительного вклада (ГОНС)
+- /calculator/alimony/ — Калькулятор алиментов
+- /calculator/vacation-pay/ — Калькулятор отпускных
+- /calculator/severance-pay/ — Компенсация при увольнении
+- /calculator/salary-reverse/ — Обратный расчёт зарплаты: net → gross
+- /calculator/business-trip/ — Калькулятор командировочных
+- /calculator/average-earnings/ — Калькулятор среднего заработка
+- /calculator/overtime/ — Калькулятор сверхурочных и ночных
+- /calculator/second-job/ — Калькулятор совместительства
+- /calculator/teacher-salary/ — Калькулятор зарплаты учителя 2026
+
+### Юридические услуги
+- /calculator/court-fee/ — Государственная пошлина в суд
+- /calculator/penalty/ — Калькулятор пени
+- /calculator/notary/ — Стоимость нотариальных услуг
+- /calculator/inheritance/ — Калькулятор наследства РК
+- /calculator/divorce/ — Калькулятор стоимости развода РК
+- /calculator/property-division/ — Раздел имущества при разводе
+- /calculator/statute-limitations/ — Сроки исковой давности РК
+- /calculator/bankruptcy/ — Банкротство физлиц РК
+- /calculator/moral-damage/ — Компенсация морального вреда РК
+
+### Строительные калькуляторы
+- /calculator/concrete-volume/ — Калькулятор объёма бетона
+- /calculator/brick/ — Калькулятор кирпича
+- /calculator/wallpaper/ — Калькулятор обоев
+- /calculator/flooring/ — Калькулятор напольного покрытия
+- /calculator/insulation/ — Калькулятор утепления дома
+
+### Коммунальные услуги
+- /calculator/electricity/ — Счет за электроэнергию
+- /calculator/water/ — Водоснабжение и канализация
+- /calculator/heating/ — Центральное отопление
+- /calculator/gas/ — Природный газ
+
+### Конвертеры и преобразователи
+- /calculator/currency-converter/ — Универсальный конвертер валют
+- /calculator/time-converter/ — Конвертация единиц времени
+- /calculator/number-to-words/ — Калькулятор записи чисел прописью
+- /calculator/time-to-words/ — Калькулятор преобразования времени прописью
+- /calculator/age/ — Калькулятор точного возраста
+- /calculator/pet-age/ — Возраст кошки или собаки
+- /calculator/roman-numerals/ — Конвертер арабских и римских чисел
+- /calculator/unit-converter/ — Универсальный конвертер единиц
+- /calculator/timezone/ — Калькулятор часовых поясов
+- /calculator/password-generator/ — Генератор паролей
+- /calculator/qr-code-generator/ — Генератор QR-кодов
+
+### Религиозные калькуляторы
+- /calculator/zakat/ — Калькулятор закята
+- /calculator/kurban-sacrifice/ — Калькулятор стоимости жертвоприношения (Курбан-айт)
+- /calculator/ramadan-sadaqah/ — Калькулятор Фитр-садака и Фидия-садака
+- /calculator/islamic-inheritance/ — Калькулятор исламского наследства (Фараиз)
+- /calculator/hajj/ — Калькулятор стоимости Хаджа и Умры
+- /calculator/islamic-mortgage/ — Калькулятор исламской ипотеки
+
+### Математические калькуляторы
+- /calculator/discount/ — Калькулятор скидок
+- /calculator/percentage/ — Процентный калькулятор
+- /calculator/leap-year/ — Калькулятор високосного года
+- /calculator/date-calculator/ — Калькулятор добавления/вычитания дат
+
+### Здоровье и медицина
+- /calculator/bmi/ — Индекс массы тела (ИМТ)
+- /calculator/calories/ — Суточная норма калорий
+- /calculator/pregnancy/ — Калькулятор беременности
+- /calculator/body-fat/ — Калькулятор процента жира
+- /calculator/sleep/ — Калькулятор сна
+- /calculator/water-intake/ — Калькулятор нормы воды
+
+### Образование
+- /calculator/ent-score/ — Калькулятор баллов ЕНТ
+- /calculator/gpa/ — Калькулятор GPA
+
+### Недвижимость
+- /calculator/fair-rental-price/ — Справедливая цена аренды квартиры
+- /calculator/apartment-valuation/ — Оценка стоимости квартиры
+- /calculator/cost-of-living/ — Калькулятор стоимости жизни
+
+## Языки
+
+Сайт доступен на русском (calk.kz) и казахском (calk.kz/__kk/).
+
+## Источники данных
+
+- Налоговый кодекс Республики Казахстан (adilet.zan.kz)
+- Трудовой кодекс РК (adilet.zan.kz)
+- Данные Национального банка РК (НБРК)
+- Закон РК «О пенсионном обеспечении»
+- Закон РК «Об обязательном социальном страховании»
+- eGov.kz, КГД МФ РК, ЕНПФ, ГФСС
+
+## Контакты
+
+- Email: info@calk.kz
+- Сайт: https://calk.kz
+- Связанные проекты: https://zanimaem.kz, https://profinance.kz

@@ -1,0 +1,317 @@
+[
+ {
+  "key": "alimony_share_one_child",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
+  "note": "КоБС РК ст.139: на 1 ребёнка — 1/4 (25%) дохода. Не изменялось для 2026."
+ },
+ {
+  "key": "alimony_share_two_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
+  "note": "КоБС РК ст.139: на 2 детей — 1/3 (≈33.3%). Не изменялось для 2026."
+ },
+ {
+  "key": "alimony_share_three_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
+  "note": "КоБС РК ст.139: на 3 и более детей — 1/2 (50%). Не изменялось для 2026."
+ },
+ {
+  "key": "gov_duty_court_property_individual_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Имущественный иск, физлица: 1% суммы иска (но не более 10 000 МРП). Сохранено в новом НК РК 2026 (ст.665, ранее ст.610)."
+ },
+ {
+  "key": "gov_duty_court_property_legal_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Имущественный иск, юрлица: 3% суммы иска (но не более 20 000 МРП). Сохранено в новом НК РК 2026."
+ },
+ {
+  "key": "gov_duty_court_property_claim_min_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://sud.gov.kz/rus/content/stavki-gosudarstvennoy-poshliny-v-sudah",
+  "note": "0.5 МРП — общий минимальный/нижний размер госпошлины (совпадает со ставкой неимущественного иска). Подтверждено как действующее в 2026; явного отдельного «минимума именно по имущественному иску» в НК нет, но величина корректна."
+ },
+ {
+  "key": "gov_duty_court_nonproperty_claim_individual_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Неимущественный иск (общий) — 0.5 МРП для физлиц. Сохранено в НК РК 2026."
+ },
+ {
+  "key": "gov_duty_court_max_individual_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://signumlaw.com/posts/vneseny-izmeneniya-v-nalogovyy-kodeks-rk-ustanovlen-verhniy-predel-gosudarstvennoy-poshliny-pri-podache-imuschestvennyh-iskov",
+  "note": "Предельная госпошлина по имущественному иску для физлиц — 10 000 МРП. Действует в 2026."
+ },
+ {
+  "key": "gov_duty_court_max_legal_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://signumlaw.com/posts/vneseny-izmeneniya-v-nalogovyy-kodeks-rk-ustanovlen-verhniy-predel-gosudarstvennoy-poshliny-pri-podache-imuschestvennyh-iskov",
+  "note": "Предельная госпошлина по имущественному иску для юрлиц — 20 000 МРП. Действует в 2026."
+ },
+ {
+  "key": "gov_duty_court_nonproperty_mrp_table",
+  "verdict": "stale",
+  "official_value": "divorce 0.3; alimony 0 (истец освобождён); labor 0 (трудовые споры освобождены/льгота); administrative (АППК, споры с госорганом) 0.5 физлица / 5 юрлица; bankruptcy 0.5 (заявление о банкротстве/несостоятельности), восстановление платёжеспособности 0.3; inheritance disputes 0.5 (как неимущественный иск); consumer 0 (потребители освобождены по ЗоЗПП); housing — как неимущественный 0.5. Общая ставка неимущественного иска 0.5 МРП.",
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Несколько строк таблицы во входных данных НЕ совпадают с НК: administrative заявлено 2/5 (офиц. 0.5/5), bankruptcy 50/100 (офиц. 0.5), labor 0.5/2 (офиц. освобождены), inheritance 3 (офиц. 0.5 как неимущ.), arbitration/corporate/housing — не подтверждаются как отдельные ставки в НК. Divorce 0.3 — единственная верная. Рекомендуется переписать таблицу по ст.665 НК РК 2026."
+ },
+ {
+  "key": "gov_duty_divorce_court_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/marital_status/divorce-details",
+  "note": "Иск о расторжении брака в суде — 0.3 МРП. Подтверждено egov + НК РК 2026."
+ },
+ {
+  "key": "gov_duty_divorce_zags_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://newtimes.kz/obshchestvo/213373-skolko-stoit-registratsiia-braka-i-razvod-v-2026-godu-novye-tseny-dlia-kazakhstantsev",
+  "note": "Регистрация расторжения брака в ЗАГС по взаимному согласию (без несовершеннолетних детей) — 2 МРП = 8 650 ₸ при МРП 4325 (2026). Множитель не изменился. (Устаревшая страница egov показывает 7728 ₸ по старому МРП, но множитель 2 МРП верен.)"
+ },
+ {
+  "key": "gov_duty_alimony_petition_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://sud.gov.kz/rus/content/stavki-gosudarstvennoy-poshliny-v-sudah",
+  "note": "Истец по искам о взыскании алиментов освобождён от госпошлины (0 МРП). Льгота сохранена в НК РК 2026 (перечень освобождений)."
+ },
+ {
+  "key": "gov_duty_property_division_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Раздел имущества — имущественный иск: 1% для физлиц (от стоимости спорного имущества). Действует в 2026."
+ },
+ {
+  "key": "inheritance_marital_share",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K940001000_",
+  "note": "Супружеская доля (1/2 совместно нажитого имущества) — норма ГК/КоБС РК, стабильна, не привязана к МРП."
+ },
+ {
+  "key": "inheritance_notary_cert_per_heir_mrp",
+  "verdict": "stale",
+  "official_value": "4 МРП за свидетельство о праве на наследство (Приказ МЮ РК №533, единый тариф, с 01.01.2026)",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "С 01.01.2026 нотариальный тариф за свидетельство о праве на наследство — 4 МРП (фиксированный, не 1 МРП). Старое значение 1 МРП устарело — заменено Приказом №533. См. также ключ notary_unified_tariff_inheritance_certificate_mrp = 4 (верный)."
+ },
+ {
+  "key": "limitation_inheritance_acceptance_months",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K990000409_",
+  "note": "ст.1072 ГК РК — срок принятия наследства 6 месяцев. Не изменялся."
+ },
+ {
+  "key": "notary_fee_agreement_certification",
+  "verdict": "stale",
+  "official_value": "Единый тариф удостоверения договоров (аренда/займ/подряд и пр.) — 10 МРП (Приказ №533, с 01.01.2026)",
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Старая дифференциация 2/3/5 МРП (individuals/mixed/legal) устарела. С 2026 — единый фиксированный тариф 10 МРП по Приказу №533. См. notary_unified_tariff_agreement_certification_mrp = 10 (верный)."
+ },
+ {
+  "key": "notary_fee_apartment_sale",
+  "verdict": "stale",
+  "official_value": "Отчуждение недвижимости в городе (Приказ №533, с 01.01.2026): между прочими лицами 12 МРП (8 МРП если стоимость ≤30 МРП), близкие родственники 7 МРП (3 МРП если ≤30 МРП), участник-юрлицо 17 МРП",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Старые значения 7/10/15 МРП устарели — заменены единым тарифом Приказа №533. См. notary_unified_tariff_real_estate_sale_mrp (верный)."
+ },
+ {
+  "key": "notary_fee_car_sale",
+  "verdict": "stale",
+  "official_value": "Отчуждение автотранспорта (Приказ №533, с 01.01.2026): прочие лица 10 МРП, близкие родственники 4 МРП, участник-юрлицо 12 МРП",
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Старые значения 5/7/10 МРП устарели — заменены тарифами Приказа №533 (10/4/12). Структура тарифа изменилась (по близости родства, а не individuals/mixed/legal)."
+ },
+ {
+  "key": "notary_fee_copy_certification",
+  "verdict": "stale",
+  "official_value": "Свидетельствование верности копий за страницу (Приказ №533, с 01.01.2026): физлица 0.1 МРП, юрлица 0.17 МРП",
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Старые значения 0.05/0.05/0.1 устарели. С 2026 — 0.1 (физлица) / 0.17 (юрлица) за страницу. См. notary_unified_tariff_copy_certification_per_page_mrp (верный)."
+ },
+ {
+  "key": "notary_fee_inheritance",
+  "verdict": "stale",
+  "official_value": "Свидетельство о праве на наследство — фиксированный тариф 4 МРП за свидетельство (Приказ №533, с 01.01.2026); процентная составляющая (0.5%/0.7%/1.0%) отменена",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Старая модель (фикс 1/1/2 МРП + % от стоимости) устарела. Приказ №533 ввёл единые фиксированные тарифы взамен «госпошлина + % за услуги». Текущий тариф — 4 МРП за свидетельство."
+ },
+ {
+  "key": "notary_fee_marriage_contract",
+  "verdict": "stale",
+  "official_value": "Брачный договор — 10 МРП (Приказ №533, с 01.01.2026)",
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Старое значение 3 МРП устарело — заменено единым тарифом 10 МРП. См. notary_unified_tariff_marriage_contract_mrp = 10 (верный)."
+ },
+ {
+  "key": "notary_fee_power_of_attorney",
+  "verdict": "stale",
+  "official_value": "Доверенность (Приказ №533, с 01.01.2026): физлица 1.1 МРП, юрлица 2.5 МРП",
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Старые значения 0.5/1/2 устарели. С 2026 — 1.1 (физлица) / 2.5 (юрлица). См. notary_unified_tariff_power_of_attorney_mrp (верный)."
+ },
+ {
+  "key": "notary_fee_will",
+  "verdict": "stale",
+  "official_value": "Завещание — 3 МРП (Приказ №533, с 01.01.2026)",
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Старое значение 1 МРП устарело — заменено единым тарифом 3 МРП. См. notary_unified_tariff_will_mrp = 3 (верный)."
+ },
+ {
+  "key": "inheritance_share_wife_with_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля жены при наличии детей — 1/8. Доктринальная константа, неизменна."
+ },
+ {
+  "key": "inheritance_share_wife_no_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля жены без детей — 1/4. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_husband_with_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля мужа при наличии детей — 1/4. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_husband_no_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля мужа без детей — 1/2. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_father",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля отца — 1/6 (при наличии потомства). Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_mother_with_children_or_siblings",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля матери при наличии детей или двух+ братьев/сестёр — 1/6. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_mother_default",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля матери по умолчанию — 1/3. Доктринальная константа."
+ },
+ {
+  "key": "notary_unified_tariff_real_estate_sale_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Приказ №533 (с 01.01.2026): город, стоимость >30 МРП — прочие 12 МРП, юрлицо-участник 17 МРП, близкие родственники 7 МРП. Точно совпадает (для тарифного порога >30 МРП). NB: при стоимости ≤30 МРП ставки ниже (прочие 8, родственники 3)."
+ },
+ {
+  "key": "notary_unified_tariff_will_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: завещание — 3 МРП. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_inheritance_certificate_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: свидетельство о праве на наследство — 4 МРП за свидетельство. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_power_of_attorney_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Приказ №533: доверенность — физлица 1.1 МРП, юрлица 2.5 МРП. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_copy_certification_per_page_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Приказ №533: свидетельствование верности копий — физлица 0.1 МРП, юрлица 0.17 МРП за страницу. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_marriage_contract_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: брачный договор — 10 МРП. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_agreement_certification_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Приказ №533: удостоверение договоров (аренда, займ, подряд и пр.) — 10 МРП. Подтверждено."
+ },
+ {
+  "key": "alimony_min_per_child_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/alimenty",
+  "note": "Минимальный размер алиментов — не менее 0.5 МРП (50% МРП) на ребёнка в месяц = 2 162 ₸ при МРП 4325 (2026). Множитель не изменился."
+ },
+ {
+  "key": "inheritance_notary_flat_fee_other_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Не удалось сопоставить «5 МРП» с конкретной позицией Приказа №533 (значение «прочее»/flat fee неоднозначно). В новом перечне фиксированных тарифов прямого аналога 5 МРП по наследству нет (свидетельство = 4 МРП). Требует уточнения по полному тексту Приказа V2500036957 — не угадываю."
+ },
+ {
+  "key": "inheritance_mandatory_share_fraction",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K990000409_",
+  "note": "ст.1069 ГК РК — обязательная доля не менее 1/2 (0.5) от доли при наследовании по закону. Не изменялась."
+ },
+ {
+  "key": "notary_real_estate_value_threshold_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: порог стоимости недвижимости 30 МРП, разделяющий тарифные ставки (≤30 МРП ниже, >30 МРП выше). Подтверждено."
+ },
+ {
+  "key": "inheritance_asaba_male_female_ratio",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): для асаба (агнатов) мужская доля = 2× женской (2:1). Доктринальная константа."
+ },
+ {
+  "key": "inheritance_mother_reduced_share_siblings_threshold",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля матери снижается с 1/3 до 1/6 при наличии двух и более братьев/сестёр (порог = 2). Доктринальная константа."
+ }
+]

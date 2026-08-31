@@ -1,0 +1,84 @@
+RESPONSE TO APP REVIEW — Guideline 1.4.1 (Safety: Physical Harm)
+Submission ID: 3cd74180-cf66-4861-a854-f3e404a088d2
+==================================================================
+
+Hello App Review Team,
+
+Thank you for the detailed feedback regarding citations for medical
+information. We have addressed the issue in Build 1.0 (2) which is
+now uploaded and ready for review.
+
+WHAT WE CHANGED
+---------------
+
+We added a new prominent, always-visible "Sources of Medical
+Information" section to every health-related calculator in the app.
+Each source is shown as a clearly numbered card with:
+  - the full title and the authoring organization,
+  - a direct clickable link (opens in the system browser),
+  - a one-line description of what the source supports (formula,
+    classification ranges, recommendations, etc.).
+
+The section is rendered immediately above the FAQ section and is NOT
+collapsed by default — the user can see the citations without any
+extra tap or scroll discovery. We also added an explicit disclaimer
+that the calculator is informational and does not replace consultation
+with a qualified medical professional.
+
+WHICH CALCULATORS ARE AFFECTED
+------------------------------
+
+Three calculators in the "Health" category include medical information
+and now carry full citations:
+
+1. BMI / Body Mass Index Calculator
+   URL: https://calk.kz/calculator/bmi/
+   Sources cited:
+     - World Health Organization — A healthy lifestyle: BMI classification
+     - CDC — About Adult BMI
+     - NIH/NHLBI — Clinical Guidelines on Overweight and Obesity in Adults
+     - NIH NLM PMC10484485 — peer-reviewed BMI considerations
+
+2. Daily Calories / BMR Calculator
+   URL: https://calk.kz/calculator/calories/
+   Sources cited:
+     - Mifflin MD, St Jeor ST et al. (1990) — original peer-reviewed
+       publication of the BMR equation (Am J Clin Nutr, PubMed 2305711)
+     - Academy of Nutrition and Dietetics — position paper on energy
+       estimation accuracy
+     - USDA — Dietary Guidelines for Americans 2020-2025
+     - WHO — Healthy diet fact sheet
+     - Institute of Medicine — DRI for Energy, Macronutrients (PAL
+       coefficients, AMDR ranges)
+
+3. Pregnancy Calculator
+   URL: https://calk.kz/calculator/pregnancy/
+   Sources cited:
+     - ACOG Committee Opinion No. 700 — Methods for Estimating the
+       Due Date (the source of the Naegele's rule used in the calc)
+     - WHO — Recommendations on antenatal care for a positive
+       pregnancy experience
+     - NIH NICHD — Pregnancy Information
+     - Mayo Clinic — Fetal development (week-by-week)
+     - Ministry of Health of Kazakhstan (РЦРЗ МЗ РК) — clinical
+       protocols for physiological pregnancy
+
+ADDITIONAL CHANGES
+------------------
+
+- The pre-existing FAQ "Official Sources" footer was also expanded
+  from 1-2 generic links to 3-4 authoritative links per calculator
+  (intentional duplication so sources appear in both the prominent
+  block and the FAQ footer).
+- A disclaimer note ("informational only, does not replace medical
+  advice") is included inside every prominent block.
+
+These changes are part of Build 1.0 (2). The website (calk.kz) and
+the iOS WebView both render the same content, so reviewers can verify
+on either platform.
+
+If anything else is needed, we are happy to address it quickly.
+
+Best regards,
+Konstantin Iakovlev
+info@calk.kz

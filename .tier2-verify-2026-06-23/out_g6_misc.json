@@ -1,0 +1,401 @@
+[
+  {
+    "key": "gons_max_premium_base_yearly_mrp",
+    "verdict": "current",
+    "official_value": "100",
+    "source_url": "https://egov.kz/cms/ru/articles/nakop_sistema",
+    "note": "ГОНС (ГОНС/AQYL): госпремия начисляется на сумму вклада ежегодно, но не более 100 МРП в год (5% обычным, 7% приоритетным категориям). Подтверждено."
+  },
+  {
+    "key": "gons_min_initial_deposit_mrp",
+    "verdict": "current",
+    "official_value": "3",
+    "source_url": "https://kazatu.edu.kz/assets/i/docs/pamyatka_GONS_ru.pdf",
+    "note": "Минимальный первоначальный взнос по договору ГОНС = 3 МРП. (Отдельные банки — AlatauCityBank, BCC — добровольно снижают порог до 1000 ₸, но нормативный минимум 3 МРП.)"
+  },
+  {
+    "key": "bankruptcy_extrajudicial_limit_mrp",
+    "verdict": "current",
+    "official_value": "1600",
+    "source_url": "https://zhts.kgd.gov.kz/ru/news/vazhnye-usloviya-dlya-vnesudebnogo-bankrotstva-put-k-osvobozhdeniyu-ot-dolgov-21-157788",
+    "note": "Внесудебное банкротство: сумма обязательств не более 1600-кратного МРП на дату подачи заявления. Закон РК О восстановлении платёжеспособности и банкротстве граждан. Подтверждено."
+  },
+  {
+    "key": "customs_parcel_dutyfree_value_eur",
+    "verdict": "current",
+    "official_value": "200",
+    "source_url": "https://mybuh.kz/useful/rastamozhka-posylok-dlya-fizicheskikh-lits.html",
+    "note": "Беспошлинный лимит стоимости посылки = 200 EUR. ВНИМАНИЕ: с 01.07.2026 для товаров е-коммерции порог сохраняется 200 EUR, но ставка превышения меняется на 5% (см. note по rate). На 2026-06-23 действует 200 EUR / 15%."
+  },
+  {
+    "key": "customs_parcel_dutyfree_weight_kg",
+    "verdict": "current",
+    "official_value": "31",
+    "source_url": "https://mybuh.kz/useful/rastamozhka-posylok-dlya-fizicheskikh-lits.html",
+    "note": "Беспошлинный лимит веса = 31 кг (действует на дату проверки). ВНИМАНИЕ: с 01.07.2026 для е-коммерции весовой порог 31 кг отменяется. На 2026-06-23 ещё действует."
+  },
+  {
+    "key": "customs_parcel_excess_duty_value_rate",
+    "verdict": "current",
+    "official_value": "15",
+    "source_url": "https://kgd.gov.kz/ru/faq/221/227/54077",
+    "note": "Пошлина 15% от стоимости сверх 200 EUR (но не менее 2 EUR/кг превышения веса) — действует на 2026-06-23. ВНИМАНИЕ: с 01.07.2026 для е-коммерции вводится новая ставка 5% (но не менее 1 EUR/кг) + НДС. Значение верно на текущую дату, но истекает 01.07.2026."
+  },
+  {
+    "key": "limitation_period_tax_disputes",
+    "verdict": "current",
+    "official_value": "5",
+    "source_url": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/65.htm",
+    "note": "Срок исковой давности 5 лет сохраняется, но ТОЛЬКО для крупного предпринимательства, недропользователей, резидентов по гл.33, НДС по методу зачёта. Для прочих НП — 3 года. Статья переномерована: в новом НК РК (№214-VIII, 2026) это ст. 65, а не ст. 48."
+  },
+  {
+    "key": "pdl_max_loan_amount",
+    "verdict": "current",
+    "official_value": "45",
+    "source_url": "https://profinance.kz/glossary/pdl",
+    "note": "PDL-займ (до зарплаты, до 45 дней): предельная сумма 45 МРП (≈194 625 ₸ в 2026), дневная ставка ≤0,3%, ГЭСВ ≤179%. Подтверждено."
+  },
+  {
+    "key": "traffic_fine_early_payment_discount",
+    "verdict": "current",
+    "official_value": "50",
+    "source_url": "https://kazpdd.kz/ru/blog/shtrafy-pdd-kazakhstan-2026",
+    "note": "Скидка 50% при оплате штрафа за нарушение ПДД в установленный срок (КоАП РК). Подтверждено для 2026."
+  },
+  {
+    "key": "traffic_fine_speed_10_20_mrp",
+    "verdict": "current",
+    "official_value": "first 5 MRP",
+    "source_url": "https://safety-driving.kz/ru/useful/fines/",
+    "note": "Превышение 10-20 км/ч = 5 МРП (первичное) — подтверждено для 2026. Значение повторного нарушения (10 МРП) в источниках для именно этой части ст.592 ч.1 явно не подтверждено; первичная ставка 5 МРП верна."
+  },
+  {
+    "key": "traffic_fine_speed_20_40_mrp",
+    "verdict": "current",
+    "official_value": "first 10 MRP",
+    "source_url": "https://safety-driving.kz/ru/useful/fines/",
+    "note": "Превышение 20-40 км/ч = 10 МРП (первичное) — подтверждено 2026. Повтор за превышение 20-60 км/ч = 30 МРП (источник даёт объединённый диапазон 20-60 для повтора, не отдельно 20-40)."
+  },
+  {
+    "key": "traffic_fine_speed_40plus_mrp",
+    "verdict": "current",
+    "official_value": "first 20 MRP",
+    "source_url": "https://safety-driving.kz/ru/useful/fines/",
+    "note": "Превышение 40-60 км/ч = 20 МРП (первичное) — подтверждено 2026. (60+ км/ч = 40 МРП.) Ставка 20 МРП для диапазона 40-60 верна."
+  },
+  {
+    "key": "traffic_fine_tint_mrp",
+    "verdict": "stale",
+    "official_value": "5 MRP (КоАП ст.590 ч.5)",
+    "source_url": "https://autero.kz/avto-blog/zakonodatelstvo-i-pravo/shtraf-tonir-perednih-stekol-kz-2026-mrp-koap-oplate-50-skidka-8392751/",
+    "note": "Неверно дважды: (1) штраф за незаконную тонировку = 5 МРП (ст.590 ч.5 — управление ТС с нарушением требований к техсостоянию/светопропусканию), а не 10/15 МРП; (2) указанная ч.3 ст.590 регулирует подложные госномера (15/50/100 МРП), а не тонировку. Часть источников упоминает повышенные суммы, но базовая официальная ставка по ст.590 ч.5 = 5 МРП."
+  },
+  {
+    "key": "retirement_age_male",
+    "verdict": "current",
+    "official_value": "63",
+    "source_url": "https://www.gov.kz/situations/5/25?lang=ru",
+    "note": "Пенсионный возраст мужчин = 63 года. Подтверждено для 2026."
+  },
+  {
+    "key": "retirement_age_female",
+    "verdict": "current",
+    "official_value": "61",
+    "source_url": "https://informburo.kz/novosti/zamorozka-eshhe-v-sile-v-kakom-vozraste-zenshhiny-v-kazaxstane-budut-vyxodit-na-pensiiu-v-2026-godu",
+    "note": "Пенсионный возраст женщин = 61 год в 2026 (действует мораторий на повышение до 2028). Дальнейший рост с 01.01.2028 (61,5) до 63 лет к 2031. Подтверждено."
+  },
+  {
+    "key": "enpf_standard_payout_period_years",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://www.enpf.kz/ru/services/vyplaty/57494/",
+    "note": "Методика ЕНПФ не закрепляет единый фиксированный 'стандартный график ~19 лет': график выплат и пороги достаточности рассчитываются по формуле приведённой стоимости индивидуально по возрасту получателя. Конкретное число '19 лет' официальным источником не подтверждено как нормативная константа."
+  },
+  {
+    "key": "land_tax_base_rate_mrp_per_ha",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=35328916",
+    "note": "Базовые ставки земельного налога на сельхозземли в зависимости от типа угодий установлены НК РК (ст. 577-578 нового кодекса), но точные числовые диапазоны (ирриг/богар/пастб/сенокос по 14 регионам) из официального источника не извлечены/не подтверждены постранично. Структура правдоподобна, числовые значения требуют сверки с текстом НК."
+  },
+  {
+    "key": "land_tax_bonity_quality_coeff",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=35328916",
+    "note": "Коэффициенты по баллу бонитета почвы не подтверждены постранично из официального текста НК РК. Не угадываю конкретные значения."
+  },
+  {
+    "key": "land_tax_farm_type_coeff",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=35328916",
+    "note": "Коэффициент по типу хозяйства (крестьянское/фермерское/индивидуальное) не подтверждён официальным источником постранично. Требует сверки с НК РК."
+  },
+  {
+    "key": "land_tax_land_type_coeff",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=35328916",
+    "note": "Коэффициент по типу земли не подтверждён постранично из официального текста. Требует сверки с НК РК."
+  },
+  {
+    "key": "land_tax_preference_discount_pct",
+    "verdict": "current",
+    "official_value": "50",
+    "source_url": "https://prg.kz/document/?doc_id=35328916",
+    "note": "Местные представительные органы (маслихаты) вправе понижать или повышать базовые ставки земельного налога не более чем на 50% (ст. 510/582 редакции НК РК, действующей с 2026). Подтверждено."
+  },
+  {
+    "key": "property_tax_progressive_brackets",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=39796749",
+    "note": "Прогрессивная шкала налога на имущество физлиц по ст. 602 нового НК РК (K2500000214/№214-VIII), действ. с 2026; ставки от 0,05% до 2%; верхний порог подтверждён: >450 млн = 2 946 600 ₸ + 2% с превышения — совпадает с входными данными. Промежуточные фиксированные базы (1000/2600/4600...) постранично из официального текста не сверены, но структура и крайние значения согласованы."
+  },
+  {
+    "key": "ogpo_base_premium_mrp",
+    "verdict": "current",
+    "official_value": "1.9",
+    "source_url": "https://profinance.kz/guide/insurance/ogpo-v-kazahstane",
+    "note": "Базовая страховая премия ОГПО ВТС = 1,9 МРП (≈8 217,5 ₸ в 2026). С 2026 обновлены региональные/бонус-малус коэффициенты, но базовая премия 1,9 МРП сохранена. Подтверждено."
+  },
+  {
+    "key": "property_tax_wear_max_pct",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
+    "note": "Норма амортизации в методике зависит от материала здания (панель ~1%/год, кирпич ~0,7%/год), а не единые 2%/год; следовательно макс. износ и привязки '+10/+5' к 80/75 не находят прямого официального подтверждения как фиксированные нормы. Требует сверки с методикой Госкорпорации."
+  },
+  {
+    "key": "utilization_fee_base_rate_mrp",
+    "verdict": "current",
+    "official_value": "50",
+    "source_url": "https://kolesa.kz/content/news/razmery-utilsbora-v-kazahstane-v-2026-godu/",
+    "note": "Базовая ставка утилизационного сбора на все ТС = 50 МРП (≈216 250 ₸ в 2026). Подтверждено для 2026 (с 07.05.2026 действует обновлённый приказ, базовая ставка остаётся 50 МРП)."
+  },
+  {
+    "key": "excise_alcohol_spirit_per_liter_kzt",
+    "verdict": "current",
+    "official_value": "2805",
+    "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+    "note": "Акциз на крепкий алкоголь (кроме вина/виноматериала/пива) = 2805 ₸/литр 100% спирта с 01.01.2026 (+10% к 2025). Подтверждено."
+  },
+  {
+    "key": "excise_beer_per_liter_kzt",
+    "verdict": "current",
+    "official_value": "99",
+    "source_url": "https://mybuh.kz/news/stavki-aktsizov-na-alkogolnuyu-produktsiyu-v-2026-godu/",
+    "note": "Акциз на пиво = 99 ₸/литр с 01.01.2026. Подтверждено."
+  },
+  {
+    "key": "excise_cigarettes_per_1000_kzt",
+    "verdict": "current",
+    "official_value": "18051",
+    "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+    "note": "Акциз на сигареты = 18 051 ₸ за 1000 шт (специфическая ставка) с 01.01.2026 (ранее 15 900). Подтверждено."
+  },
+  {
+    "key": "excise_cigars_per_unit_kzt",
+    "verdict": "current",
+    "official_value": "825",
+    "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+    "note": "Акциз на сигары = 825 ₸/шт с 01.01.2026 (ранее 750). Подтверждено."
+  },
+  {
+    "key": "excise_heated_tobacco_per_1000_kzt",
+    "verdict": "current",
+    "official_value": "11230",
+    "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+    "note": "Акциз на изделия с нагреваемым табаком = 11 230 ₸ за 1000 шт с 01.01.2026 (с 2030 вырастет до 12 803). Подтверждено."
+  },
+  {
+    "key": "excise_wine_per_liter_kzt",
+    "verdict": "current",
+    "official_value": "38",
+    "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+    "note": "Акциз на вино = 38 ₸/литр с 01.01.2026. Подтверждено."
+  },
+  {
+    "key": "gambling_winnings_tax_free_threshold",
+    "verdict": "current",
+    "official_value": "0",
+    "source_url": "https://legalbet.kz/shkola-bettinga/nalog-na-viigrish-v-kazahstane/",
+    "note": "Специальный необлагаемый минимум по выигрышам в НК РК 2026 не предусмотрен; выигрыш облагается ИПН 10% у источника выплаты. Значение '0' (нет порога) корректно."
+  },
+  {
+    "key": "property_sale_exempt_ownership_years",
+    "verdict": "current",
+    "official_value": "1",
+    "source_url": "https://prodengi.kz/post/novye-pravila-prodazi-nedvizimosti-v-rk",
+    "note": "Освобождение при владении >1 года сохраняется для недвижимости, право собственности на которую зарегистрировано ДО 01.01.2026 (переходные положения), и для движимого имущества (авто). Для нового жилья (с 2026) — 2 года (см. отдельный ключ). Значение '1 год' остаётся актуальным для указанных случаев."
+  },
+  {
+    "key": "heating_tariff_astana_per_gcal",
+    "verdict": "current",
+    "official_value": "3929",
+    "source_url": "https://astanaenergosbyt.kz/ru/fiz/tarify1.html",
+    "note": "Тариф снабжения тепловой энергией для населения Астаны с приборами учёта = 3929 ₸/Гкал (без приборов 4727 ₸/Гкал). Входное 3930 ≈ 3929 (округление, по сути совпадает). Примечание: тариф состоит из компонентов производства/передачи/сбыта; указанный — итоговый сбытовой для населения с учётом приборов учёта."
+  },
+  {
+    "key": "mrp_2024",
+    "verdict": "current",
+    "official_value": "3692",
+    "source_url": "https://prg.kz/document/?doc_id=1026672",
+    "note": "МРП 2024 = 3692 ₸. Подтверждено по таблице ПРГ и закону о бюджете."
+  },
+  {
+    "key": "mrp_2025",
+    "verdict": "current",
+    "official_value": "3932",
+    "source_url": "https://prg.kz/document/?doc_id=1026672",
+    "note": "МРП 2025 = 3932 ₸. Подтверждено. (Справочно: МРП 2026 = 4325 ₸.)"
+  },
+  {
+    "key": "mrp_2027",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
+    "note": "Закон о бюджете на 2026-2028 устанавливает МРП только на 2026 (4325 ₸); значение МРП на 2027 (4580) официально не закреплено отдельным законом и в таблице ПРГ отсутствует — это прогноз, не действующая норма. Не подтверждено."
+  },
+  {
+    "key": "mrp_2028",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
+    "note": "МРП на 2028 (4938) официально не закреплён (устанавливается ежегодным законом о бюджете, ещё не принят на 2028). Прогнозное значение, не подтверждено."
+  },
+  {
+    "key": "subsistence_minimum_pm",
+    "verdict": "current",
+    "official_value": "50851",
+    "source_url": "https://tengrinews.kz/kazakhstan_news/projitochnyiy-minimum-izmenitsya-v-kazahstane-586611/",
+    "note": "Прожиточный минимум 2026 = 50 851 ₸ (закреплён в законе о бюджете на 2026-2028). Подтверждено."
+  },
+  {
+    "key": "retirement_age_men",
+    "verdict": "current",
+    "official_value": "63",
+    "source_url": "https://www.gov.kz/situations/5/25?lang=ru",
+    "note": "Дубликат retirement_age_male. Пенсионный возраст мужчин = 63. Подтверждено."
+  },
+  {
+    "key": "retirement_age_women",
+    "verdict": "current",
+    "official_value": "61",
+    "source_url": "https://informburo.kz/novosti/zamorozka-eshhe-v-sile-v-kakom-vozraste-zenshhiny-v-kazaxstane-budut-vyxodit-na-pensiiu-v-2026-godu",
+    "note": "Дубликат retirement_age_female. Пенсионный возраст женщин = 61 в 2026 (мораторий до 2028). Подтверждено."
+  },
+  {
+    "key": "universal_declaration_start_year_civil_servant",
+    "verdict": "current",
+    "official_value": "2021",
+    "source_url": "https://kgd.gov.kz/ru/content/vseobshchee-deklarirovanie-1-2",
+    "note": "1-й этап всеобщего декларирования (с 01.01.2021): госслужащие и приравненные лица и их супруги. Подтверждено."
+  },
+  {
+    "key": "universal_declaration_start_year_quasi_gov",
+    "verdict": "current",
+    "official_value": "2023",
+    "source_url": "https://kgd.gov.kz/ru/news/v-kazahstane-nachalsya-tretiy-etap-vseobshchego-deklarirovaniya-1-143772",
+    "note": "2-й этап (с 01.01.2023): работники госучреждений (образование/здравоохранение/культура/спорт) и субъектов квазигоссектора и их супруги. Подтверждено."
+  },
+  {
+    "key": "universal_declaration_start_year_founder",
+    "verdict": "current",
+    "official_value": "2024",
+    "source_url": "https://kgd.gov.kz/ru/news/v-kazahstane-nachalsya-tretiy-etap-vseobshchego-deklarirovaniya-1-143772",
+    "note": "3-й этап (с 01.01.2024): руководители и учредители (участники) юрлиц, ИП и их супруги. Подтверждено."
+  },
+  {
+    "key": "universal_declaration_start_year_lawyer",
+    "verdict": "current",
+    "official_value": "2024",
+    "source_url": "https://uchet.kz/news/kak-litsa-zanimayushchiesya-chastnoy-praktikoy-budut-platit-ipn-v-2025-godu/",
+    "note": "Лица частной практики (адвокаты, нотариусы, медиаторы, частные судебные исполнители) вошли в систему на 3-м этапе — обязанность по данным на 31.12.2024 (декларация за 2024 г., подаётся в 2025). Год начала 2024 корректен."
+  },
+  {
+    "key": "universal_declaration_start_year_regular",
+    "verdict": "current",
+    "official_value": "2025",
+    "source_url": "https://kapital.kz/economic/123804/v-2025-godu-nachnet-sya-chetvertyy-etap-vseobshchego-deklarirovaniya-chto-nuzhno-znat.html",
+    "note": "4-й (финальный) этап (с 01.01.2025): остальные категории — работники частного сектора, пенсионеры, домохозяйки, студенты и др. Подтверждено."
+  },
+  {
+    "key": "living_minimum_pm_2026",
+    "verdict": "current",
+    "official_value": "50851",
+    "source_url": "https://tengrinews.kz/kazakhstan_news/projitochnyiy-minimum-izmenitsya-v-kazahstane-586611/",
+    "note": "Дубликат subsistence_minimum_pm. Прожиточный минимум 2026 = 50 851 ₸. Подтверждено."
+  },
+  {
+    "key": "mrp_fallback_3876",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=1026672",
+    "note": "Значение 3876 не соответствует ни одному реальному МРП (2024=3692, 2025=3932, 2026=4325); закон не указан. Это технический fallback/placeholder, а не действующая регулируемая величина. Рекомендуется заменить на актуальный МРП 2026 = 4325 либо удалить."
+  },
+  {
+    "key": "customs_duty_large_engine_threshold_cc",
+    "verdict": "current",
+    "official_value": "3000",
+    "source_url": "https://finratings.kz/news/11036-rastamozhka-avto-v-kazakhstane-v-2026-godu-skolko-stoit-oformlenie-importnoi-mashiny/",
+    "note": "Объём двигателя >3000 см³ — порог, выше которого легковой автомобиль является подакцизным (акциз 100 ₸/см³). Таможенная пошлина ЕТТ ЕАЭС едина 15% для всех легковых. Порог 3000 см³ подтверждён для 2026."
+  },
+  {
+    "key": "land_tax_region_base_rates_full_matrix",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=35328916",
+    "note": "Полная региональная матрица базовых ставок (МРП/га по 14 регионам, ирриг/богар/пастб/сенокос) из официального текста НК РК постранично не подтверждена; маслихаты дополнительно корректируют ±50%. Конкретные числовые значения не угадываю — требуют сверки с НК РК (ст. 577-578)."
+  },
+  {
+    "key": "moral_damage_ranges_mrp_full_table",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://kodeksy-kz.com/ka/grazhdanskij_kodeks_osobennaya_chast/952.htm",
+    "note": "Размер компенсации морального вреда законом НЕ фиксирован (ст. 951-952 ГК РК): определяется судом по принципам справедливости и достаточности. Приведённые диапазоны в МРП — иллюстративная судебная практика, не государственно установленные величины."
+  },
+  {
+    "key": "enpf_payout_period_years",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://www.enpf.kz/ru/services/vyplaty/57494/",
+    "note": "Дубликат enpf_standard_payout_period_years. Фиксированный стандартный период '19 лет' методикой ЕНПФ как нормативная константа не подтверждён; график рассчитывается индивидуально по формуле приведённой стоимости."
+  },
+  {
+    "key": "property_sale_exempt_ownership_years_realestate",
+    "verdict": "current",
+    "official_value": "2",
+    "source_url": "https://mybuh.kz/news/prodazha-imushchestva-menee-2-let-vladeniya-10-ipn-s-2026-goda/",
+    "note": "Новый НК РК (K2500000214/№214-VIII): с 01.01.2026 освобождение от ИПН при продаже недвижимости — после 2 лет владения (для объектов, право на которые зарегистрировано после 01.01.2026). Подтверждено. (Для долей в жилстроительстве — 3 года.)"
+  },
+  {
+    "key": "property_tax_wear_rate_per_year_pct",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
+    "note": "Единой нормы износа 2%/год нет: методика применяет норму амортизации в зависимости от материала здания (панель ~1%, кирпич ~0,7% и т.д.). Значение '2%/год' не подтверждается как универсальная официальная норма."
+  },
+  {
+    "key": "property_tax_progressive_brackets_full_16_steps",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://prg.kz/document/?doc_id=39796749",
+    "note": "Дубликат property_tax_progressive_brackets. Шкала ст. 602 нового НК РК (2026), ставки 0,05%-2%; верхняя ступень >450 млн = 2 946 600 ₸ + 2% подтверждена официальным источником и совпадает. Промежуточные фиксированные базы постранично не сверены, но крайние значения и структура согласованы."
+  },
+  {
+    "key": "property_tax_city_base_cost_and_zone_coeff_presets",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
+    "note": "Базовая стоимость 1 м² варьируется (от ~2700 ₸ в сёлах до 60 000 ₸ в Алматы/Астане/Шымкенте по методике НК) — входные пресеты (almaty 120000, astana 110000 и т.д.) ВЫШЕ официальной базовой стоимости м² и, по-видимому, смешивают базовую стоимость с зональными коэффициентами. Зональные коэффициенты — решения местных органов. Конкретные пресеты официально не подтверждены; вероятно требуют пересмотра."
+  },
+  {
+    "key": "limitation_tax_years_default_nk65",
+    "verdict": "current",
+    "official_value": "3",
+    "source_url": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/65.htm",
+    "note": "Ст. 65 НК РК (№214-VIII, 2026): срок исковой давности по налоговому обязательству для НП, не отнесённых к крупному предпринимательству/недропользователям/гл.33/НДС методом зачёта = 3 года. Подтверждено. (Для перечисленных категорий — 5 лет.)"
+  }
+]

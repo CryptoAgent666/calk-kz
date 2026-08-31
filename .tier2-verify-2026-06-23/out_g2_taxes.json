@@ -1,0 +1,275 @@
+[
+  {
+    "key": "luxury_tax_vehicle_rate_pct",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://bizmedia.kz/2025-10-06-akcziz-na-dorogie-mashiny-v-kazahstane-kak-budet-rabotat-novyj-nalog-s-2026-goda/",
+    "note": "New 2026 code: excise ('luxury tax') on cars >=18000 MRP at 10% of price. Confirmed."
+  },
+  {
+    "key": "luxury_tax_vehicle_threshold_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://kz.kursiv.media/2026-02-16/shkv-novyj-nalog-na-roskosh-oczenili-kazahstanskie-avtoeksperty/",
+    "note": "Cars >=18000 MRP (~77.85 mln tenge at MRP 4325) subject to 10% excise. Confirmed."
+  },
+  {
+    "key": "ipn_base_rate",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/progressivnaya-shkala-ipn-izmeneniya-vstupyat-v-silu-s-2026-goda.html",
+    "note": "10% on income up to 8500 MRP/year. Confirmed. NB: new code article is 363 (ledger cites old art.320)."
+  },
+  {
+    "key": "ipn_high_rate_2026",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://trustme.kz/progressivnaya-shkala-ipn-v-kazahstane-2026-stavki-10-i-15-raschyot-vychety/",
+    "note": "15% on the part exceeding 8500 MRP/year. New progressive ИПН from 2026-01-01. Confirmed (art.363 new code)."
+  },
+  {
+    "key": "ipn_progressive_threshold_annual_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://prorosta.com/novyj-nalogovyj-kodeks-kazahstana-2026/",
+    "note": "Progressive bracket threshold = 8500 MRP per calendar year (~36.76 mln tenge). Confirmed."
+  },
+  {
+    "key": "ipn_standard_personal_deduction",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalogovyy-vychet-po-ipn-planiruyut-uvelichit-s-14-mrp-do-30-mrp.html",
+    "note": "Annual cap on base deduction = 360 MRP (30 MRP/month x 12). Art.403 new code. Confirmed."
+  },
+  {
+    "key": "ipn_social_deduction_group12_annual_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+    "note": "5000 MRP/year deduction for disability groups 1-2 etc. Art.404 new code. Confirmed."
+  },
+  {
+    "key": "ipn_social_deduction_group3_annual_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+    "note": "882 MRP/year deduction for disability group 3 etc. Art.404 new code. Confirmed."
+  },
+  {
+    "key": "kpn_general_rate",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://www.bcc.kz/bcc-journal/changes-in-legislation/",
+    "note": "КПН general rate stays 20% in new 2026 code (banks/gambling 25%). Confirmed."
+  },
+  {
+    "key": "kpn_rate_agricultural",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://almalife.kz/officially/6789-lgotnye-nalogovye-usloviya-selkhoz-i-sotsialnaya-sfera-poluchat-ponizhennye-stavki-kpn",
+    "note": "Preferential 3% КПН retained for agricultural producers in 2026. Confirmed."
+  },
+  {
+    "key": "kpn_rate_social",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalogovyy-kodeks-2026-polnyy-razbor-izmeneniy-dlya-biznesa-rk-.html",
+    "note": "Social-sphere organizations: 5% in 2026 (rises to 10% from 2027). Confirmed."
+  },
+  {
+    "key": "kpn_withholding_rate_nonresident",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/nalogooblozhenie-nerezidentov-v-novom-nalogovom-kodekse-2026-goda-chto-izmenilos/",
+    "note": "Ordinary non-resident dividends/royalties withheld at 15% in 2026. Confirmed (qualified 25%+ dividends get 5% up to 230000 MRP then 15%)."
+  },
+  {
+    "key": "snr_simplified_rate",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://uchet.kz/news/obnovlennyy-snr-dlya-msb-chto-izmenilos/",
+    "note": "СНР simplified-declaration rate = 4% in 2026 (maslikhat may adjust +/-50%). Confirmed."
+  },
+  {
+    "key": "snr_simplified_semiannual_limit_mrp",
+    "verdict": "stale",
+    "official_value": "600000 MRP per year (annual limit; tax period = half-year)",
+    "source_url": "https://mybuh.kz/useful/uproshhenka-2026-limity-porog-nds-kazakhstan.html",
+    "note": "New 2026 code sets the simplified-declaration income ceiling as 600000 MRP PER YEAR (~2.4-2.6 bln tenge), not 300000 MRP per half-year. Old code expressed it per half-year (24038 MRP); the per-half-year framing is obsolete. Major increase."
+  },
+  {
+    "key": "snr_retail_tax_rate",
+    "verdict": "stale",
+    "official_value": "abolished (retail tax / розничный налог removed from 2026-01-01)",
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+    "note": "Retail tax regime (and fixed-deduction regime) eliminated under the new code; only 3 special regimes remain (self-employed, simplified declaration, agricultural). The 4% retail rate no longer exists."
+  },
+  {
+    "key": "patent_tax_rate",
+    "verdict": "stale",
+    "official_value": "abolished (patent regime replaced by self-employed СНР at 4% social payments via E-Salyq)",
+    "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+    "note": "Patent regime removed in 2026; successor is СНР for self-employed (E-Salyq app), 4% covering social payments only, income cap 300 MRP/month. The 1% (0.5 ИПН + 0.5 СО) patent rate no longer applies."
+  },
+  {
+    "key": "patent_income_limit_halfyear_mrp",
+    "verdict": "stale",
+    "official_value": "abolished (patent regime removed); self-employed СНР cap = 300 MRP/month",
+    "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+    "note": "Patent half-year income limit no longer exists. Self-employed successor regime caps monthly income at 300 MRP."
+  },
+  {
+    "key": "nds_vat_rate",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/izmeneniya-po-nds-s-1-yanvarya-2026-goda/",
+    "note": "VAT raised 12%->16% from 2026-01-01. New-code article is 503 (ledger cites old art.422). Reduced 5% for meds 2026-2027. Confirmed."
+  },
+  {
+    "key": "businesstrip_accommodation_taxfree_limit_mrp",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/kak-rasschitat-sutochnye-v-too-na-our.html",
+    "note": "Could not confirm a 12 MRP/day non-taxable accommodation cap (no-documents case) under the new 2026 code; sources only confirm per-diem limits (6 MRP domestic / 8 MRP foreign, art.319) and documented accommodation deducted at actual cost. Ledger cites art.244 which does not match new-code numbering. Needs direct check of new code text."
+  },
+  {
+    "key": "ipn_90pct_reduction_abolished_2026",
+    "verdict": "stale",
+    "official_value": "true",
+    "source_url": "https://mybuh.kz/useful/nalogovyy-kodeks-2026-polnyy-razbor-izmeneniy-dlya-biznesa-rk-.html",
+    "note": "The 90% ИПН adjustment for wages below 25 MRP IS abolished from 2026. Ledger value 'false' is wrong; should be 'true'."
+  },
+  {
+    "key": "luxury_tax_yacht_aircraft_rate",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://bizmedia.kz/2025-10-06-akcziz-na-dorogie-mashiny-v-kazahstane-kak-budet-rabotat-novyj-nalog-s-2026-goda/",
+    "note": "Excise on vessels/yachts and aircraft >=24000 MRP at 10% of value. Confirmed."
+  },
+  {
+    "key": "luxury_tax_yacht_aircraft_threshold_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/hotline/komitet-gosudarstvennykh-dokhodov/poryadok-primeneniya-stavok-aktsiza-na-roskosh-razyasnenie-kgd-mf-rk/",
+    "note": "Vessels (ships/yachts) and aircraft threshold = 24000 MRP, 10% excise. Confirmed (KGD clarification 01.10.2025)."
+  },
+  {
+    "key": "tax_simplified_rate_snr",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://uchet.kz/news/obnovlennyy-snr-dlya-msb-chto-izmenilos/",
+    "note": "Duplicate of snr_simplified_rate: 4% simplified-declaration rate in 2026. Confirmed."
+  },
+  {
+    "key": "tax_patent_rate",
+    "verdict": "stale",
+    "official_value": "4 (self-employed СНР = 4%, social payments only)",
+    "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+    "note": "Ledger labels this 'СНР for self-employed (patent successor)' with value 0%, but the self-employed regime charges 4% (covering social payments via E-Salyq), not 0%. Value should be 4, not 0."
+  },
+  {
+    "key": "nds_rate",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/izmeneniya-po-nds-s-1-yanvarya-2026-goda/",
+    "note": "Standard VAT = 16% from 2026-01-01 (duplicate of nds_vat_rate). Confirmed."
+  },
+  {
+    "key": "nds_rate_zero",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://www.1cbit.kz/blog/nds-0-kto-mozhet-primenyat-nulevuyu-stavku/",
+    "note": "0% VAT retained for export and international transport (arts.510-511/520 new code). Confirmed."
+  },
+  {
+    "key": "nds_threshold_mrp_2024",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/uproshhenka-2026-limity-porog-nds-kazakhstan.html",
+    "note": "Historical value: VAT registration threshold was 20000 MRP under the old code (2024). Correctly labeled as old. OK as historical reference."
+  },
+  {
+    "key": "nds_threshold_mrp_2025",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/uproshhenka-2026-limity-porog-nds-kazakhstan.html",
+    "note": "Historical value: 20000 MRP under old code (2025). Correctly labeled. OK as historical reference."
+  },
+  {
+    "key": "nds_threshold_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/izmeneniya-po-nds-s-1-yanvarya-2026-goda/",
+    "note": "New 2026 mandatory VAT registration threshold = 10000 MRP (~43.25 mln tenge), halved from 20000. Art.99 new code. Document K2500000214 cite is correct. Confirmed."
+  },
+  {
+    "key": "ipn_rate",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/progressivnaya-shkala-ipn-izmeneniya-vstupyat-v-silu-s-2026-goda.html",
+    "note": "ИПН standard/base rate = 10% (duplicate of ipn_base_rate). Confirmed; 15% above 8500 MRP."
+  },
+  {
+    "key": "ipn_standard_deduction_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalogovyy-vychet-po-ipn-planiruyut-uvelichit-s-14-mrp-do-30-mrp.html",
+    "note": "Base monthly ИПН deduction raised from 14 to 30 MRP from 2026 (renamed 'базовый вычет', art.403; annual cap 360 MRP). Confirmed."
+  },
+  {
+    "key": "perdiem_ipn_free_limit_foreign_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/kak-rasschitat-sutochnye-v-too-na-our.html",
+    "note": "Foreign per-diem non-taxable limit = 8 MRP/day (domestic 6 MRP), period <=40 days, art.319 new code (ledger cites art.366). Confirmed."
+  },
+  {
+    "key": "ipn_standard_deduction_old_14_mrp",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalogovyy-vychet-po-ipn-planiruyut-uvelichit-s-14-mrp-do-30-mrp.html",
+    "note": "Correctly stored historical value: old base deduction was 14 MRP/month before 2026 (now 30). OK as historical reference."
+  },
+  {
+    "key": "tax_declaration_form_too_kpn",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://uchet.kz/tags/v/vychety-po-kpn.html",
+    "note": "КПН declaration form remains ФНО 100.00 for legal entities on general regime. No change identified for 2026. Form-code, not a tax rate."
+  },
+  {
+    "key": "tax_declaration_form_individual_ipn",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+    "note": "Individual ИПН/assets declaration remains ФНО 240.00. No change identified for 2026. Form-code, not a tax rate."
+  },
+  {
+    "key": "ipn_declaration_deadline_fno240",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+    "note": "ФНО 240.00 filing deadline = 31 March of the year following the reporting year. Standard, unchanged. Procedural, not a rate."
+  },
+  {
+    "key": "simplified_rate_local_adjustment_range_pct",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://mybuh.kz/useful/nalogovyy-kodeks-2026-polnyy-razbor-izmeneniy-dlya-biznesa-rk-.html",
+    "note": "Local executive bodies/maslikhat may adjust the 4% simplified rate by +/-50% (effective 2%-6%). Confirmed for 2026."
+  },
+  {
+    "key": "snr_simplified_maslikhat_rate_adjustment_range",
+    "verdict": "current",
+    "official_value": null,
+    "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+    "note": "Duplicate: maslikhat may change the simplified rate +/-50%, range 2-6%. Confirmed (Law 214-VIII of 18.07.2025)."
+  },
+  {
+    "key": "vat_threshold_display_constant_undefined",
+    "verdict": "uncertain",
+    "official_value": null,
+    "source_url": "",
+    "note": "Not a tax constant: this entry flags a code-level bug (undefined identifier VAT_THRESHOLD_MRP / ReferenceError). Out of scope for legal verification; the correct underlying value is 10000 MRP (see nds_threshold_mrp). Fix in code, not a stale tax figure."
+  }
+]

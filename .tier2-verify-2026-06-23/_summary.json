@@ -1,0 +1,30 @@
+{
+ "checked": 254,
+ "current": 197,
+ "stale": 22,
+ "uncertain": 35,
+ "stale_keys": [
+  "pension_annuity_sufficient_amount_mrp",
+  "snr_simplified_semiannual_limit_mrp",
+  "snr_retail_tax_rate",
+  "patent_tax_rate",
+  "patent_income_limit_halfyear_mrp",
+  "ipn_90pct_reduction_abolished_2026",
+  "tax_patent_rate",
+  "gov_duty_plate_fee_mrp_table",
+  "ogpo_vehicle_type_coeff",
+  "gov_duty_court_nonproperty_mrp_table",
+  "inheritance_notary_cert_per_heir_mrp",
+  "notary_fee_agreement_certification",
+  "notary_fee_apartment_sale",
+  "notary_fee_car_sale",
+  "notary_fee_copy_certification",
+  "notary_fee_inheritance",
+  "notary_fee_marriage_contract",
+  "notary_fee_power_of_attorney",
+  "notary_fee_will",
+  "teacher_bdo_base_salary_2026",
+  "unemployment_min_experience_stale_12",
+  "traffic_fine_tint_mrp"
+ ]
+}

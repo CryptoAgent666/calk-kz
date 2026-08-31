@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Calk.kz - Калькуляторы</string>
+    <string name="title_activity_main">Calk.kz - Калькуляторы</string>
+    <string name="package_name">kz.calk.app</string>
+    <string name="custom_url_scheme">kz.calk.app</string>
+</resources>

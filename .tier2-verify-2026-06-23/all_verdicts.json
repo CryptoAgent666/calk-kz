@@ -1,0 +1,1780 @@
+[
+ {
+  "key": "alimony_share_one_child",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
+  "note": "КоБС РК ст.139: на 1 ребёнка — 1/4 (25%) дохода. Не изменялось для 2026."
+ },
+ {
+  "key": "alimony_share_two_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
+  "note": "КоБС РК ст.139: на 2 детей — 1/3 (≈33.3%). Не изменялось для 2026."
+ },
+ {
+  "key": "alimony_share_three_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
+  "note": "КоБС РК ст.139: на 3 и более детей — 1/2 (50%). Не изменялось для 2026."
+ },
+ {
+  "key": "gov_duty_court_property_individual_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Имущественный иск, физлица: 1% суммы иска (но не более 10 000 МРП). Сохранено в новом НК РК 2026 (ст.665, ранее ст.610)."
+ },
+ {
+  "key": "gov_duty_court_property_legal_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Имущественный иск, юрлица: 3% суммы иска (но не более 20 000 МРП). Сохранено в новом НК РК 2026."
+ },
+ {
+  "key": "gov_duty_court_property_claim_min_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://sud.gov.kz/rus/content/stavki-gosudarstvennoy-poshliny-v-sudah",
+  "note": "0.5 МРП — общий минимальный/нижний размер госпошлины (совпадает со ставкой неимущественного иска). Подтверждено как действующее в 2026; явного отдельного «минимума именно по имущественному иску» в НК нет, но величина корректна."
+ },
+ {
+  "key": "gov_duty_court_nonproperty_claim_individual_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Неимущественный иск (общий) — 0.5 МРП для физлиц. Сохранено в НК РК 2026."
+ },
+ {
+  "key": "gov_duty_court_max_individual_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://signumlaw.com/posts/vneseny-izmeneniya-v-nalogovyy-kodeks-rk-ustanovlen-verhniy-predel-gosudarstvennoy-poshliny-pri-podache-imuschestvennyh-iskov",
+  "note": "Предельная госпошлина по имущественному иску для физлиц — 10 000 МРП. Действует в 2026."
+ },
+ {
+  "key": "gov_duty_court_max_legal_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://signumlaw.com/posts/vneseny-izmeneniya-v-nalogovyy-kodeks-rk-ustanovlen-verhniy-predel-gosudarstvennoy-poshliny-pri-podache-imuschestvennyh-iskov",
+  "note": "Предельная госпошлина по имущественному иску для юрлиц — 20 000 МРП. Действует в 2026."
+ },
+ {
+  "key": "gov_duty_court_nonproperty_mrp_table",
+  "verdict": "stale",
+  "official_value": "divorce 0.3; alimony 0 (истец освобождён); labor 0 (трудовые споры освобождены/льгота); administrative (АППК, споры с госорганом) 0.5 физлица / 5 юрлица; bankruptcy 0.5 (заявление о банкротстве/несостоятельности), восстановление платёжеспособности 0.3; inheritance disputes 0.5 (как неимущественный иск); consumer 0 (потребители освобождены по ЗоЗПП); housing — как неимущественный 0.5. Общая ставка неимущественного иска 0.5 МРП.",
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Несколько строк таблицы во входных данных НЕ совпадают с НК: administrative заявлено 2/5 (офиц. 0.5/5), bankruptcy 50/100 (офиц. 0.5), labor 0.5/2 (офиц. освобождены), inheritance 3 (офиц. 0.5 как неимущ.), arbitration/corporate/housing — не подтверждаются как отдельные ставки в НК. Divorce 0.3 — единственная верная. Рекомендуется переписать таблицу по ст.665 НК РК 2026."
+ },
+ {
+  "key": "gov_duty_divorce_court_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/marital_status/divorce-details",
+  "note": "Иск о расторжении брака в суде — 0.3 МРП. Подтверждено egov + НК РК 2026."
+ },
+ {
+  "key": "gov_duty_divorce_zags_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://newtimes.kz/obshchestvo/213373-skolko-stoit-registratsiia-braka-i-razvod-v-2026-godu-novye-tseny-dlia-kazakhstantsev",
+  "note": "Регистрация расторжения брака в ЗАГС по взаимному согласию (без несовершеннолетних детей) — 2 МРП = 8 650 ₸ при МРП 4325 (2026). Множитель не изменился. (Устаревшая страница egov показывает 7728 ₸ по старому МРП, но множитель 2 МРП верен.)"
+ },
+ {
+  "key": "gov_duty_alimony_petition_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://sud.gov.kz/rus/content/stavki-gosudarstvennoy-poshliny-v-sudah",
+  "note": "Истец по искам о взыскании алиментов освобождён от госпошлины (0 МРП). Льгота сохранена в НК РК 2026 (перечень освобождений)."
+ },
+ {
+  "key": "gov_duty_property_division_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
+  "note": "Раздел имущества — имущественный иск: 1% для физлиц (от стоимости спорного имущества). Действует в 2026."
+ },
+ {
+  "key": "inheritance_marital_share",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K940001000_",
+  "note": "Супружеская доля (1/2 совместно нажитого имущества) — норма ГК/КоБС РК, стабильна, не привязана к МРП."
+ },
+ {
+  "key": "inheritance_notary_cert_per_heir_mrp",
+  "verdict": "stale",
+  "official_value": "4 МРП за свидетельство о праве на наследство (Приказ МЮ РК №533, единый тариф, с 01.01.2026)",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "С 01.01.2026 нотариальный тариф за свидетельство о праве на наследство — 4 МРП (фиксированный, не 1 МРП). Старое значение 1 МРП устарело — заменено Приказом №533. См. также ключ notary_unified_tariff_inheritance_certificate_mrp = 4 (верный)."
+ },
+ {
+  "key": "limitation_inheritance_acceptance_months",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K990000409_",
+  "note": "ст.1072 ГК РК — срок принятия наследства 6 месяцев. Не изменялся."
+ },
+ {
+  "key": "notary_fee_agreement_certification",
+  "verdict": "stale",
+  "official_value": "Единый тариф удостоверения договоров (аренда/займ/подряд и пр.) — 10 МРП (Приказ №533, с 01.01.2026)",
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Старая дифференциация 2/3/5 МРП (individuals/mixed/legal) устарела. С 2026 — единый фиксированный тариф 10 МРП по Приказу №533. См. notary_unified_tariff_agreement_certification_mrp = 10 (верный)."
+ },
+ {
+  "key": "notary_fee_apartment_sale",
+  "verdict": "stale",
+  "official_value": "Отчуждение недвижимости в городе (Приказ №533, с 01.01.2026): между прочими лицами 12 МРП (8 МРП если стоимость ≤30 МРП), близкие родственники 7 МРП (3 МРП если ≤30 МРП), участник-юрлицо 17 МРП",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Старые значения 7/10/15 МРП устарели — заменены единым тарифом Приказа №533. См. notary_unified_tariff_real_estate_sale_mrp (верный)."
+ },
+ {
+  "key": "notary_fee_car_sale",
+  "verdict": "stale",
+  "official_value": "Отчуждение автотранспорта (Приказ №533, с 01.01.2026): прочие лица 10 МРП, близкие родственники 4 МРП, участник-юрлицо 12 МРП",
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Старые значения 5/7/10 МРП устарели — заменены тарифами Приказа №533 (10/4/12). Структура тарифа изменилась (по близости родства, а не individuals/mixed/legal)."
+ },
+ {
+  "key": "notary_fee_copy_certification",
+  "verdict": "stale",
+  "official_value": "Свидетельствование верности копий за страницу (Приказ №533, с 01.01.2026): физлица 0.1 МРП, юрлица 0.17 МРП",
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Старые значения 0.05/0.05/0.1 устарели. С 2026 — 0.1 (физлица) / 0.17 (юрлица) за страницу. См. notary_unified_tariff_copy_certification_per_page_mrp (верный)."
+ },
+ {
+  "key": "notary_fee_inheritance",
+  "verdict": "stale",
+  "official_value": "Свидетельство о праве на наследство — фиксированный тариф 4 МРП за свидетельство (Приказ №533, с 01.01.2026); процентная составляющая (0.5%/0.7%/1.0%) отменена",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Старая модель (фикс 1/1/2 МРП + % от стоимости) устарела. Приказ №533 ввёл единые фиксированные тарифы взамен «госпошлина + % за услуги». Текущий тариф — 4 МРП за свидетельство."
+ },
+ {
+  "key": "notary_fee_marriage_contract",
+  "verdict": "stale",
+  "official_value": "Брачный договор — 10 МРП (Приказ №533, с 01.01.2026)",
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Старое значение 3 МРП устарело — заменено единым тарифом 10 МРП. См. notary_unified_tariff_marriage_contract_mrp = 10 (верный)."
+ },
+ {
+  "key": "notary_fee_power_of_attorney",
+  "verdict": "stale",
+  "official_value": "Доверенность (Приказ №533, с 01.01.2026): физлица 1.1 МРП, юрлица 2.5 МРП",
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Старые значения 0.5/1/2 устарели. С 2026 — 1.1 (физлица) / 2.5 (юрлица). См. notary_unified_tariff_power_of_attorney_mrp (верный)."
+ },
+ {
+  "key": "notary_fee_will",
+  "verdict": "stale",
+  "official_value": "Завещание — 3 МРП (Приказ №533, с 01.01.2026)",
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Старое значение 1 МРП устарело — заменено единым тарифом 3 МРП. См. notary_unified_tariff_will_mrp = 3 (верный)."
+ },
+ {
+  "key": "inheritance_share_wife_with_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля жены при наличии детей — 1/8. Доктринальная константа, неизменна."
+ },
+ {
+  "key": "inheritance_share_wife_no_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля жены без детей — 1/4. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_husband_with_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля мужа при наличии детей — 1/4. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_husband_no_children",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/12",
+  "note": "Фараид (Коран 4:12): доля мужа без детей — 1/2. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_father",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля отца — 1/6 (при наличии потомства). Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_mother_with_children_or_siblings",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля матери при наличии детей или двух+ братьев/сестёр — 1/6. Доктринальная константа."
+ },
+ {
+  "key": "inheritance_share_mother_default",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля матери по умолчанию — 1/3. Доктринальная константа."
+ },
+ {
+  "key": "notary_unified_tariff_real_estate_sale_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Приказ №533 (с 01.01.2026): город, стоимость >30 МРП — прочие 12 МРП, юрлицо-участник 17 МРП, близкие родственники 7 МРП. Точно совпадает (для тарифного порога >30 МРП). NB: при стоимости ≤30 МРП ставки ниже (прочие 8, родственники 3)."
+ },
+ {
+  "key": "notary_unified_tariff_will_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: завещание — 3 МРП. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_inheritance_certificate_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: свидетельство о праве на наследство — 4 МРП за свидетельство. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_power_of_attorney_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Приказ №533: доверенность — физлица 1.1 МРП, юрлица 2.5 МРП. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_copy_certification_per_page_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Приказ №533: свидетельствование верности копий — физлица 0.1 МРП, юрлица 0.17 МРП за страницу. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_marriage_contract_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: брачный договор — 10 МРП. Подтверждено."
+ },
+ {
+  "key": "notary_unified_tariff_agreement_certification_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/pravo/6504108-kak-izmenilas-oplata-notarialnykh-uslug-v-2026-godu.html",
+  "note": "Приказ №533: удостоверение договоров (аренда, займ, подряд и пр.) — 10 МРП. Подтверждено."
+ },
+ {
+  "key": "alimony_min_per_child_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/alimenty",
+  "note": "Минимальный размер алиментов — не менее 0.5 МРП (50% МРП) на ребёнка в месяц = 2 162 ₸ при МРП 4325 (2026). Множитель не изменился."
+ },
+ {
+  "key": "inheritance_notary_flat_fee_other_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/V2500036957",
+  "note": "Не удалось сопоставить «5 МРП» с конкретной позицией Приказа №533 (значение «прочее»/flat fee неоднозначно). В новом перечне фиксированных тарифов прямого аналога 5 МРП по наследству нет (свидетельство = 4 МРП). Требует уточнения по полному тексту Приказа V2500036957 — не угадываю."
+ },
+ {
+  "key": "inheritance_mandatory_share_fraction",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/K990000409_",
+  "note": "ст.1069 ГК РК — обязательная доля не менее 1/2 (0.5) от доли при наследовании по закону. Не изменялась."
+ },
+ {
+  "key": "notary_real_estate_value_threshold_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
+  "note": "Приказ №533: порог стоимости недвижимости 30 МРП, разделяющий тарифные ставки (≤30 МРП ниже, >30 МРП выше). Подтверждено."
+ },
+ {
+  "key": "inheritance_asaba_male_female_ratio",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): для асаба (агнатов) мужская доля = 2× женской (2:1). Доктринальная константа."
+ },
+ {
+  "key": "inheritance_mother_reduced_share_siblings_threshold",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://quran.com/4/11",
+  "note": "Фараид (Коран 4:11): доля матери снижается с 1/3 до 1/6 при наличии двух и более братьев/сестёр (порог = 2). Доктринальная константа."
+ },
+ {
+  "key": "luxury_tax_vehicle_rate_pct",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://bizmedia.kz/2025-10-06-akcziz-na-dorogie-mashiny-v-kazahstane-kak-budet-rabotat-novyj-nalog-s-2026-goda/",
+  "note": "New 2026 code: excise ('luxury tax') on cars >=18000 MRP at 10% of price. Confirmed."
+ },
+ {
+  "key": "luxury_tax_vehicle_threshold_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kz.kursiv.media/2026-02-16/shkv-novyj-nalog-na-roskosh-oczenili-kazahstanskie-avtoeksperty/",
+  "note": "Cars >=18000 MRP (~77.85 mln tenge at MRP 4325) subject to 10% excise. Confirmed."
+ },
+ {
+  "key": "ipn_base_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/progressivnaya-shkala-ipn-izmeneniya-vstupyat-v-silu-s-2026-goda.html",
+  "note": "10% on income up to 8500 MRP/year. Confirmed. NB: new code article is 363 (ledger cites old art.320)."
+ },
+ {
+  "key": "ipn_high_rate_2026",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://trustme.kz/progressivnaya-shkala-ipn-v-kazahstane-2026-stavki-10-i-15-raschyot-vychety/",
+  "note": "15% on the part exceeding 8500 MRP/year. New progressive ИПН from 2026-01-01. Confirmed (art.363 new code)."
+ },
+ {
+  "key": "ipn_progressive_threshold_annual_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://prorosta.com/novyj-nalogovyj-kodeks-kazahstana-2026/",
+  "note": "Progressive bracket threshold = 8500 MRP per calendar year (~36.76 mln tenge). Confirmed."
+ },
+ {
+  "key": "ipn_standard_personal_deduction",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogovyy-vychet-po-ipn-planiruyut-uvelichit-s-14-mrp-do-30-mrp.html",
+  "note": "Annual cap on base deduction = 360 MRP (30 MRP/month x 12). Art.403 new code. Confirmed."
+ },
+ {
+  "key": "ipn_social_deduction_group12_annual_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+  "note": "5000 MRP/year deduction for disability groups 1-2 etc. Art.404 new code. Confirmed."
+ },
+ {
+  "key": "ipn_social_deduction_group3_annual_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+  "note": "882 MRP/year deduction for disability group 3 etc. Art.404 new code. Confirmed."
+ },
+ {
+  "key": "kpn_general_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.bcc.kz/bcc-journal/changes-in-legislation/",
+  "note": "КПН general rate stays 20% in new 2026 code (banks/gambling 25%). Confirmed."
+ },
+ {
+  "key": "kpn_rate_agricultural",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://almalife.kz/officially/6789-lgotnye-nalogovye-usloviya-selkhoz-i-sotsialnaya-sfera-poluchat-ponizhennye-stavki-kpn",
+  "note": "Preferential 3% КПН retained for agricultural producers in 2026. Confirmed."
+ },
+ {
+  "key": "kpn_rate_social",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogovyy-kodeks-2026-polnyy-razbor-izmeneniy-dlya-biznesa-rk-.html",
+  "note": "Social-sphere organizations: 5% in 2026 (rises to 10% from 2027). Confirmed."
+ },
+ {
+  "key": "kpn_withholding_rate_nonresident",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/nalogooblozhenie-nerezidentov-v-novom-nalogovom-kodekse-2026-goda-chto-izmenilos/",
+  "note": "Ordinary non-resident dividends/royalties withheld at 15% in 2026. Confirmed (qualified 25%+ dividends get 5% up to 230000 MRP then 15%)."
+ },
+ {
+  "key": "snr_simplified_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/obnovlennyy-snr-dlya-msb-chto-izmenilos/",
+  "note": "СНР simplified-declaration rate = 4% in 2026 (maslikhat may adjust +/-50%). Confirmed."
+ },
+ {
+  "key": "snr_simplified_semiannual_limit_mrp",
+  "verdict": "stale",
+  "official_value": "600000 MRP per year (annual limit; tax period = half-year)",
+  "source_url": "https://mybuh.kz/useful/uproshhenka-2026-limity-porog-nds-kazakhstan.html",
+  "note": "New 2026 code sets the simplified-declaration income ceiling as 600000 MRP PER YEAR (~2.4-2.6 bln tenge), not 300000 MRP per half-year. Old code expressed it per half-year (24038 MRP); the per-half-year framing is obsolete. Major increase."
+ },
+ {
+  "key": "snr_retail_tax_rate",
+  "verdict": "stale",
+  "official_value": "abolished (retail tax / розничный налог removed from 2026-01-01)",
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+  "note": "Retail tax regime (and fixed-deduction regime) eliminated under the new code; only 3 special regimes remain (self-employed, simplified declaration, agricultural). The 4% retail rate no longer exists."
+ },
+ {
+  "key": "patent_tax_rate",
+  "verdict": "stale",
+  "official_value": "abolished (patent regime replaced by self-employed СНР at 4% social payments via E-Salyq)",
+  "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+  "note": "Patent regime removed in 2026; successor is СНР for self-employed (E-Salyq app), 4% covering social payments only, income cap 300 MRP/month. The 1% (0.5 ИПН + 0.5 СО) patent rate no longer applies."
+ },
+ {
+  "key": "patent_income_limit_halfyear_mrp",
+  "verdict": "stale",
+  "official_value": "abolished (patent regime removed); self-employed СНР cap = 300 MRP/month",
+  "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+  "note": "Patent half-year income limit no longer exists. Self-employed successor regime caps monthly income at 300 MRP."
+ },
+ {
+  "key": "nds_vat_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/izmeneniya-po-nds-s-1-yanvarya-2026-goda/",
+  "note": "VAT raised 12%->16% from 2026-01-01. New-code article is 503 (ledger cites old art.422). Reduced 5% for meds 2026-2027. Confirmed."
+ },
+ {
+  "key": "businesstrip_accommodation_taxfree_limit_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/kak-rasschitat-sutochnye-v-too-na-our.html",
+  "note": "Could not confirm a 12 MRP/day non-taxable accommodation cap (no-documents case) under the new 2026 code; sources only confirm per-diem limits (6 MRP domestic / 8 MRP foreign, art.319) and documented accommodation deducted at actual cost. Ledger cites art.244 which does not match new-code numbering. Needs direct check of new code text."
+ },
+ {
+  "key": "ipn_90pct_reduction_abolished_2026",
+  "verdict": "stale",
+  "official_value": "true",
+  "source_url": "https://mybuh.kz/useful/nalogovyy-kodeks-2026-polnyy-razbor-izmeneniy-dlya-biznesa-rk-.html",
+  "note": "The 90% ИПН adjustment for wages below 25 MRP IS abolished from 2026. Ledger value 'false' is wrong; should be 'true'."
+ },
+ {
+  "key": "luxury_tax_yacht_aircraft_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://bizmedia.kz/2025-10-06-akcziz-na-dorogie-mashiny-v-kazahstane-kak-budet-rabotat-novyj-nalog-s-2026-goda/",
+  "note": "Excise on vessels/yachts and aircraft >=24000 MRP at 10% of value. Confirmed."
+ },
+ {
+  "key": "luxury_tax_yacht_aircraft_threshold_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/hotline/komitet-gosudarstvennykh-dokhodov/poryadok-primeneniya-stavok-aktsiza-na-roskosh-razyasnenie-kgd-mf-rk/",
+  "note": "Vessels (ships/yachts) and aircraft threshold = 24000 MRP, 10% excise. Confirmed (KGD clarification 01.10.2025)."
+ },
+ {
+  "key": "tax_simplified_rate_snr",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/obnovlennyy-snr-dlya-msb-chto-izmenilos/",
+  "note": "Duplicate of snr_simplified_rate: 4% simplified-declaration rate in 2026. Confirmed."
+ },
+ {
+  "key": "tax_patent_rate",
+  "verdict": "stale",
+  "official_value": "4 (self-employed СНР = 4%, social payments only)",
+  "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+  "note": "Ledger labels this 'СНР for self-employed (patent successor)' with value 0%, but the self-employed regime charges 4% (covering social payments via E-Salyq), not 0%. Value should be 4, not 0."
+ },
+ {
+  "key": "nds_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/izmeneniya-po-nds-s-1-yanvarya-2026-goda/",
+  "note": "Standard VAT = 16% from 2026-01-01 (duplicate of nds_vat_rate). Confirmed."
+ },
+ {
+  "key": "nds_rate_zero",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.1cbit.kz/blog/nds-0-kto-mozhet-primenyat-nulevuyu-stavku/",
+  "note": "0% VAT retained for export and international transport (arts.510-511/520 new code). Confirmed."
+ },
+ {
+  "key": "nds_threshold_mrp_2024",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/uproshhenka-2026-limity-porog-nds-kazakhstan.html",
+  "note": "Historical value: VAT registration threshold was 20000 MRP under the old code (2024). Correctly labeled as old. OK as historical reference."
+ },
+ {
+  "key": "nds_threshold_mrp_2025",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/uproshhenka-2026-limity-porog-nds-kazakhstan.html",
+  "note": "Historical value: 20000 MRP under old code (2025). Correctly labeled. OK as historical reference."
+ },
+ {
+  "key": "nds_threshold_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/izmeneniya-po-nds-s-1-yanvarya-2026-goda/",
+  "note": "New 2026 mandatory VAT registration threshold = 10000 MRP (~43.25 mln tenge), halved from 20000. Art.99 new code. Document K2500000214 cite is correct. Confirmed."
+ },
+ {
+  "key": "ipn_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/progressivnaya-shkala-ipn-izmeneniya-vstupyat-v-silu-s-2026-goda.html",
+  "note": "ИПН standard/base rate = 10% (duplicate of ipn_base_rate). Confirmed; 15% above 8500 MRP."
+ },
+ {
+  "key": "ipn_standard_deduction_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogovyy-vychet-po-ipn-planiruyut-uvelichit-s-14-mrp-do-30-mrp.html",
+  "note": "Base monthly ИПН deduction raised from 14 to 30 MRP from 2026 (renamed 'базовый вычет', art.403; annual cap 360 MRP). Confirmed."
+ },
+ {
+  "key": "perdiem_ipn_free_limit_foreign_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/kak-rasschitat-sutochnye-v-too-na-our.html",
+  "note": "Foreign per-diem non-taxable limit = 8 MRP/day (domestic 6 MRP), period <=40 days, art.319 new code (ledger cites art.366). Confirmed."
+ },
+ {
+  "key": "ipn_standard_deduction_old_14_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogovyy-vychet-po-ipn-planiruyut-uvelichit-s-14-mrp-do-30-mrp.html",
+  "note": "Correctly stored historical value: old base deduction was 14 MRP/month before 2026 (now 30). OK as historical reference."
+ },
+ {
+  "key": "tax_declaration_form_too_kpn",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/tags/v/vychety-po-kpn.html",
+  "note": "КПН declaration form remains ФНО 100.00 for legal entities on general regime. No change identified for 2026. Form-code, not a tax rate."
+ },
+ {
+  "key": "tax_declaration_form_individual_ipn",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+  "note": "Individual ИПН/assets declaration remains ФНО 240.00. No change identified for 2026. Form-code, not a tax rate."
+ },
+ {
+  "key": "ipn_declaration_deadline_fno240",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
+  "note": "ФНО 240.00 filing deadline = 31 March of the year following the reporting year. Standard, unchanged. Procedural, not a rate."
+ },
+ {
+  "key": "simplified_rate_local_adjustment_range_pct",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogovyy-kodeks-2026-polnyy-razbor-izmeneniy-dlya-biznesa-rk-.html",
+  "note": "Local executive bodies/maslikhat may adjust the 4% simplified rate by +/-50% (effective 2%-6%). Confirmed for 2026."
+ },
+ {
+  "key": "snr_simplified_maslikhat_rate_adjustment_range",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/novye-nalogovye-rezhimy-na-uproschenke-v-2026-m-godu",
+  "note": "Duplicate: maslikhat may change the simplified rate +/-50%, range 2-6%. Confirmed (Law 214-VIII of 18.07.2025)."
+ },
+ {
+  "key": "vat_threshold_display_constant_undefined",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "Not a tax constant: this entry flags a code-level bug (undefined identifier VAT_THRESHOLD_MRP / ReferenceError). Out of scope for legal verification; the correct underlying value is 10000 MRP (see nds_threshold_mrp). Fix in code, not a stale tax figure."
+ },
+ {
+  "key": "maternity_income_cap_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Объект исчисления СО (база для пособий ГФСС, включая декретные/по беременности) ограничен 7 МЗП = 595 000 ₸ в 2026. Структурный множитель стабилен; подтверждён для 2026."
+ },
+ {
+  "key": "unemployment_income_cap_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Предельный объект исчисления СО = 7 МЗП в 2026 (база для соцвыплат по утрате работы из ГФСС). Множитель 7 МЗП подтверждён."
+ },
+ {
+  "key": "mrp_2026",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/news/mrp-mzp-na-2026-god-v-kazakhstane/",
+  "note": "МРП 2026 = 4 325 ₸ по Закону № 239-VIII «О республиканском бюджете на 2026-2028 годы» (утв. 08.12.2025). Совпадает с ledger."
+ },
+ {
+  "key": "mzp_min_wage",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/news/mrp-mzp-na-2026-god-v-kazakhstane/",
+  "note": "МЗП 2026 = 85 000 ₸ (не изменился к 2025) по Закону № 239-VIII о бюджете на 2026-2028. Совпадает с ledger."
+ },
+ {
+  "key": "opv_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "ОПВ работника = 10% в 2026 (без изменений). Удерживается с работника в ЕНПФ."
+ },
+ {
+  "key": "opv_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.enpf.kz/ru/press-center/news/58761/",
+  "note": "Предельная база ОПВ и ОПВР = 50 МЗП в месяц (4 250 000 ₸ в 2026). Структурный множитель 50 МЗП подтверждён."
+ },
+ {
+  "key": "opvr_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/stavka-opvr-uvelichena-s-1-yanvarya-2026-goda/",
+  "note": "ОПВР работодателя = 3,5% с 01.01.2026 (фазовый рост: 1,5%/2024, 2,5%/2025, 3,5%/2026, 4,5%/2027, 5%/2028). 2026 значение верно."
+ },
+ {
+  "key": "so_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Социальные отчисления (СО) = 5% в 2026 (без изменений)."
+ },
+ {
+  "key": "so_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Предельная база СО = 7 МЗП = 595 000 ₸ в 2026. Множитель 7 МЗП подтверждён."
+ },
+ {
+  "key": "osms_employer_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
+  "note": "Отчисления работодателя ООСМС = 3% в 2026 (ставка не изменилась)."
+ },
+ {
+  "key": "osms_employer_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Предельная база ООСМС работодателя = 40 МЗП = 3 400 000 ₸ в 2026 (введена с 2026). Множитель 40 МЗП подтверждён."
+ },
+ {
+  "key": "sn_social_tax_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Социальный налог для ТОО на ОУР = 6% в 2026 (снижен с 11%). Взаимозачёт СН на СО отменён с 01.01.2026 — оба платятся полностью. Верно."
+ },
+ {
+  "key": "sn_min_base_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Минимальная база соцналога = 14 МРП = 60 550 ₸ в 2026. Множитель 14 МРП подтверждён."
+ },
+ {
+  "key": "pension_annuity_sufficient_amount_mrp",
+  "verdict": "stale",
+  "official_value": "age/sex-specific KZT thresholds per Постановление Правительства РК № 422 от 21.05.2026 (no longer a flat 656 МРП); e.g. отложенный аннуитет с 45 лет: мужчины от ~9 163 722 ₸, женщины от ~11 476 285 ₸",
+  "source_url": "https://www.enpf.kz/ru/press-center/news/282454/",
+  "note": "Методика порога достаточности изменена в 2026: пороги теперь рассчитываются по present-value для каждого возраста/пола вкладчика, а не единым числом. Флэт-значение 656 МРП больше не является операционным официальным порогом (фигурирует лишь во вторичных источниках как грубая оценка). Конкретные таблицы — на enpf.kz/services/vyplaty."
+ },
+ {
+  "key": "vosms_employee_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
+  "note": "ВОСМС работника = 2% в 2026 (ставка не изменилась)."
+ },
+ {
+  "key": "vosms_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Предельный объект исчисления ВОСМС повышен до 20 МЗП = 1 700 000 ₸ с 01.01.2026 (ранее 10 МЗП). Множитель 20 МЗП подтверждён."
+ },
+ {
+  "key": "vosms_self_fixed_monthly",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/stavki-nalogov-dlya-uproschenki-v-2026-m-godu",
+  "note": "ВОСМС ИП «за себя» = 5% × 1,4 МЗП = 5% × 119 000 = 5 950 ₸/мес в 2026 (МЗП не изменился, потому сумма та же). Совпадает с ledger."
+ },
+ {
+  "key": "base_pension_min_experience_years",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.nur.kz/nurfin/pension/2321741-pensii-kakogo-razmera-kazahstancy-budut-poluchat-v-2026-godu/",
+  "note": "При стаже участия в пенсионной системе 10 лет и менее базовая пенсия = 70% ПМ; за каждый год свыше 10 — +2%. Порог 10 лет подтверждён для 2026."
+ },
+ {
+  "key": "base_pension_rate_min_pct_of_pm",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/obshestvo/6505357-kakoy-minimalnyy-razmer-bazovoy-pensii-v-kazakhstane.html",
+  "note": "Минимальная базовая пенсия = 70% прожиточного минимума = 35 596 ₸ в 2026 (ПМ = 50 851 ₸). Подтверждено."
+ },
+ {
+  "key": "base_pension_rate_max_pct_of_pm",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.nur.kz/nurfin/pension/2321741-pensii-kakogo-razmera-kazahstancy-budut-poluchat-v-2026-godu/",
+  "note": "Максимальная базовая пенсия = 118% ПМ = 60 005 ₸ в 2026 (повышена со 110% до 118%; достигается при стаже 34+ лет). Подтверждено."
+ },
+ {
+  "key": "base_pension_increment_per_year_pct",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.nur.kz/nurfin/pension/2321741-pensii-kakogo-razmera-kazahstancy-budut-poluchat-v-2026-godu/",
+  "note": "За каждый год стажа свыше 10 лет базовая пенсия растёт на 2% ПМ (стаж 20 лет → 90% ПМ). Подтверждено для 2026."
+ },
+ {
+  "key": "unified_payment_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Ставка единого платежа (ЕП) с зарплаты = 24,8% с 01.01.2026 (повышена). Совпадает с ledger."
+ },
+ {
+  "key": "unified_payment_share_opv",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ОПВ в ЕП = 40,3% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_vosms",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ВОСМС в ЕП = 8,1% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_ipn",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ИПН в ЕП = 7,3% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_opvr",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ОПВР в ЕП = 14,1% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_oosms",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ООСМС (ОСМС работодателя) в ЕП = 12,1% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_so",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля СО в ЕП = 18,1% в 2026. Совпадает. (Сумма долей 40,3+18,1+14,1+12,1+8,1+7,3 = 100%.)"
+ },
+ {
+  "key": "vosms_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
+  "note": "ВОСМС работника = 2% в 2026 (дубликат vosms_employee_rate). Подтверждено."
+ },
+ {
+  "key": "plate_fee_high_demand_grid_mrp_2026",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/G24C0000516",
+  "note": "Это не payroll/pension, а прейскурант сбора за гос. рег. номерных знаков (в МРП). Множители-в-МРП устанавливаются постановлением Правительства и при росте МРП пересчитываются автоматически. Конкретную сетку 285/228/194/137/114/72/57/15/10 МРП на 2026 не удалось сверить с первоисточником adilet (вне профиля payroll/pension) — не подтверждаю и не опровергаю."
+ },
+ {
+  "key": "self_employed_social_payments_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://finratings.kz/news/10856-samozaniatye-v-2026-0-naloga-4-platezhei-i-nikakikh-otchiotov/",
+  "note": "ЕСП самозанятых (СНР для самозанятых, преемник патента) = 4% от дохода в 2026 — включает ОПВ+ОПВР+СО+ОСМС (по ~1% каждый). Совпадает."
+ },
+ {
+  "key": "self_employed_income_limit_monthly_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://finratings.kz/news/10856-samozaniatye-v-2026-0-naloga-4-platezhei-i-nikakikh-otchiotov/",
+  "note": "Лимит дохода СНР для самозанятых = не более 300 МРП в месяц (~1,3 млн ₸ в 2026). Совпадает."
+ },
+ {
+  "key": "pension_annuity_min_purchase_age",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.kmlife.kz/ru/products/individual/pension-annuity",
+  "note": "Договор пенсионного аннуитета (отложенного) можно заключить с 45 лет при достаточности накоплений. Подтверждено для 2026."
+ },
+ {
+  "key": "solidarity_pension_income_replacement_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.gov.kz/situations/5/26?lang=ru",
+  "note": "Солидарная пенсия при полном стаже = 60% среднемесячного дохода (за любые 3 года подряд). Коэффициент 0,6 подтверждён."
+ },
+ {
+  "key": "solidarity_pension_max_replacement_coef",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.gov.kz/situations/5/26?lang=ru",
+  "note": "Максимальный размер солидарной пенсии ограничен 75% среднемесячного дохода. Коэффициент 0,75 подтверждён."
+ },
+ {
+  "key": "solidarity_pension_full_experience_years",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/pensionnaya_sistema",
+  "note": "Полный трудовой стаж для солидарной (трудовой) пенсии = 25 лет (мужчины) — учитывается стаж до 01.01.1998; при неполном стаже выплата уменьшается пропорционально. 25 лет — стандартный полный стаж, подтверждён. (Прим.: для женщин по старым нормам 20 лет.)"
+ },
+ {
+  "key": "self_employed_ipn_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://finratings.kz/news/10856-samozaniatye-v-2026-0-naloga-4-platezhei-i-nikakikh-otchiotov/",
+  "note": "Самозанятые на СНР освобождены от ИПН — ставка 0% в 2026. Совпадает."
+ },
+ {
+  "key": "gons_max_premium_base_yearly_mrp",
+  "verdict": "current",
+  "official_value": "100",
+  "source_url": "https://egov.kz/cms/ru/articles/nakop_sistema",
+  "note": "ГОНС (ГОНС/AQYL): госпремия начисляется на сумму вклада ежегодно, но не более 100 МРП в год (5% обычным, 7% приоритетным категориям). Подтверждено."
+ },
+ {
+  "key": "gons_min_initial_deposit_mrp",
+  "verdict": "current",
+  "official_value": "3",
+  "source_url": "https://kazatu.edu.kz/assets/i/docs/pamyatka_GONS_ru.pdf",
+  "note": "Минимальный первоначальный взнос по договору ГОНС = 3 МРП. (Отдельные банки — AlatauCityBank, BCC — добровольно снижают порог до 1000 ₸, но нормативный минимум 3 МРП.)"
+ },
+ {
+  "key": "bankruptcy_extrajudicial_limit_mrp",
+  "verdict": "current",
+  "official_value": "1600",
+  "source_url": "https://zhts.kgd.gov.kz/ru/news/vazhnye-usloviya-dlya-vnesudebnogo-bankrotstva-put-k-osvobozhdeniyu-ot-dolgov-21-157788",
+  "note": "Внесудебное банкротство: сумма обязательств не более 1600-кратного МРП на дату подачи заявления. Закон РК О восстановлении платёжеспособности и банкротстве граждан. Подтверждено."
+ },
+ {
+  "key": "customs_parcel_dutyfree_value_eur",
+  "verdict": "current",
+  "official_value": "200",
+  "source_url": "https://mybuh.kz/useful/rastamozhka-posylok-dlya-fizicheskikh-lits.html",
+  "note": "Беспошлинный лимит стоимости посылки = 200 EUR. ВНИМАНИЕ: с 01.07.2026 для товаров е-коммерции порог сохраняется 200 EUR, но ставка превышения меняется на 5% (см. note по rate). На 2026-06-23 действует 200 EUR / 15%."
+ },
+ {
+  "key": "customs_parcel_dutyfree_weight_kg",
+  "verdict": "current",
+  "official_value": "31",
+  "source_url": "https://mybuh.kz/useful/rastamozhka-posylok-dlya-fizicheskikh-lits.html",
+  "note": "Беспошлинный лимит веса = 31 кг (действует на дату проверки). ВНИМАНИЕ: с 01.07.2026 для е-коммерции весовой порог 31 кг отменяется. На 2026-06-23 ещё действует."
+ },
+ {
+  "key": "customs_parcel_excess_duty_value_rate",
+  "verdict": "current",
+  "official_value": "15",
+  "source_url": "https://kgd.gov.kz/ru/faq/221/227/54077",
+  "note": "Пошлина 15% от стоимости сверх 200 EUR (но не менее 2 EUR/кг превышения веса) — действует на 2026-06-23. ВНИМАНИЕ: с 01.07.2026 для е-коммерции вводится новая ставка 5% (но не менее 1 EUR/кг) + НДС. Значение верно на текущую дату, но истекает 01.07.2026."
+ },
+ {
+  "key": "limitation_period_tax_disputes",
+  "verdict": "current",
+  "official_value": "5",
+  "source_url": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/65.htm",
+  "note": "Срок исковой давности 5 лет сохраняется, но ТОЛЬКО для крупного предпринимательства, недропользователей, резидентов по гл.33, НДС по методу зачёта. Для прочих НП — 3 года. Статья переномерована: в новом НК РК (№214-VIII, 2026) это ст. 65, а не ст. 48."
+ },
+ {
+  "key": "pdl_max_loan_amount",
+  "verdict": "current",
+  "official_value": "45",
+  "source_url": "https://profinance.kz/glossary/pdl",
+  "note": "PDL-займ (до зарплаты, до 45 дней): предельная сумма 45 МРП (≈194 625 ₸ в 2026), дневная ставка ≤0,3%, ГЭСВ ≤179%. Подтверждено."
+ },
+ {
+  "key": "traffic_fine_early_payment_discount",
+  "verdict": "current",
+  "official_value": "50",
+  "source_url": "https://kazpdd.kz/ru/blog/shtrafy-pdd-kazakhstan-2026",
+  "note": "Скидка 50% при оплате штрафа за нарушение ПДД в установленный срок (КоАП РК). Подтверждено для 2026."
+ },
+ {
+  "key": "traffic_fine_speed_10_20_mrp",
+  "verdict": "current",
+  "official_value": "first 5 MRP",
+  "source_url": "https://safety-driving.kz/ru/useful/fines/",
+  "note": "Превышение 10-20 км/ч = 5 МРП (первичное) — подтверждено для 2026. Значение повторного нарушения (10 МРП) в источниках для именно этой части ст.592 ч.1 явно не подтверждено; первичная ставка 5 МРП верна."
+ },
+ {
+  "key": "traffic_fine_speed_20_40_mrp",
+  "verdict": "current",
+  "official_value": "first 10 MRP",
+  "source_url": "https://safety-driving.kz/ru/useful/fines/",
+  "note": "Превышение 20-40 км/ч = 10 МРП (первичное) — подтверждено 2026. Повтор за превышение 20-60 км/ч = 30 МРП (источник даёт объединённый диапазон 20-60 для повтора, не отдельно 20-40)."
+ },
+ {
+  "key": "traffic_fine_speed_40plus_mrp",
+  "verdict": "current",
+  "official_value": "first 20 MRP",
+  "source_url": "https://safety-driving.kz/ru/useful/fines/",
+  "note": "Превышение 40-60 км/ч = 20 МРП (первичное) — подтверждено 2026. (60+ км/ч = 40 МРП.) Ставка 20 МРП для диапазона 40-60 верна."
+ },
+ {
+  "key": "traffic_fine_tint_mrp",
+  "verdict": "stale",
+  "official_value": "5 MRP (КоАП ст.590 ч.5)",
+  "source_url": "https://autero.kz/avto-blog/zakonodatelstvo-i-pravo/shtraf-tonir-perednih-stekol-kz-2026-mrp-koap-oplate-50-skidka-8392751/",
+  "note": "Неверно дважды: (1) штраф за незаконную тонировку = 5 МРП (ст.590 ч.5 — управление ТС с нарушением требований к техсостоянию/светопропусканию), а не 10/15 МРП; (2) указанная ч.3 ст.590 регулирует подложные госномера (15/50/100 МРП), а не тонировку. Часть источников упоминает повышенные суммы, но базовая официальная ставка по ст.590 ч.5 = 5 МРП."
+ },
+ {
+  "key": "retirement_age_male",
+  "verdict": "current",
+  "official_value": "63",
+  "source_url": "https://www.gov.kz/situations/5/25?lang=ru",
+  "note": "Пенсионный возраст мужчин = 63 года. Подтверждено для 2026."
+ },
+ {
+  "key": "retirement_age_female",
+  "verdict": "current",
+  "official_value": "61",
+  "source_url": "https://informburo.kz/novosti/zamorozka-eshhe-v-sile-v-kakom-vozraste-zenshhiny-v-kazaxstane-budut-vyxodit-na-pensiiu-v-2026-godu",
+  "note": "Пенсионный возраст женщин = 61 год в 2026 (действует мораторий на повышение до 2028). Дальнейший рост с 01.01.2028 (61,5) до 63 лет к 2031. Подтверждено."
+ },
+ {
+  "key": "enpf_standard_payout_period_years",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://www.enpf.kz/ru/services/vyplaty/57494/",
+  "note": "Методика ЕНПФ не закрепляет единый фиксированный 'стандартный график ~19 лет': график выплат и пороги достаточности рассчитываются по формуле приведённой стоимости индивидуально по возрасту получателя. Конкретное число '19 лет' официальным источником не подтверждено как нормативная константа."
+ },
+ {
+  "key": "land_tax_base_rate_mrp_per_ha",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=35328916",
+  "note": "Базовые ставки земельного налога на сельхозземли в зависимости от типа угодий установлены НК РК (ст. 577-578 нового кодекса), но точные числовые диапазоны (ирриг/богар/пастб/сенокос по 14 регионам) из официального источника не извлечены/не подтверждены постранично. Структура правдоподобна, числовые значения требуют сверки с текстом НК."
+ },
+ {
+  "key": "land_tax_bonity_quality_coeff",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=35328916",
+  "note": "Коэффициенты по баллу бонитета почвы не подтверждены постранично из официального текста НК РК. Не угадываю конкретные значения."
+ },
+ {
+  "key": "land_tax_farm_type_coeff",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=35328916",
+  "note": "Коэффициент по типу хозяйства (крестьянское/фермерское/индивидуальное) не подтверждён официальным источником постранично. Требует сверки с НК РК."
+ },
+ {
+  "key": "land_tax_land_type_coeff",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=35328916",
+  "note": "Коэффициент по типу земли не подтверждён постранично из официального текста. Требует сверки с НК РК."
+ },
+ {
+  "key": "land_tax_preference_discount_pct",
+  "verdict": "current",
+  "official_value": "50",
+  "source_url": "https://prg.kz/document/?doc_id=35328916",
+  "note": "Местные представительные органы (маслихаты) вправе понижать или повышать базовые ставки земельного налога не более чем на 50% (ст. 510/582 редакции НК РК, действующей с 2026). Подтверждено."
+ },
+ {
+  "key": "property_tax_progressive_brackets",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=39796749",
+  "note": "Прогрессивная шкала налога на имущество физлиц по ст. 602 нового НК РК (K2500000214/№214-VIII), действ. с 2026; ставки от 0,05% до 2%; верхний порог подтверждён: >450 млн = 2 946 600 ₸ + 2% с превышения — совпадает с входными данными. Промежуточные фиксированные базы (1000/2600/4600...) постранично из официального текста не сверены, но структура и крайние значения согласованы."
+ },
+ {
+  "key": "ogpo_base_premium_mrp",
+  "verdict": "current",
+  "official_value": "1.9",
+  "source_url": "https://profinance.kz/guide/insurance/ogpo-v-kazahstane",
+  "note": "Базовая страховая премия ОГПО ВТС = 1,9 МРП (≈8 217,5 ₸ в 2026). С 2026 обновлены региональные/бонус-малус коэффициенты, но базовая премия 1,9 МРП сохранена. Подтверждено."
+ },
+ {
+  "key": "property_tax_wear_max_pct",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
+  "note": "Норма амортизации в методике зависит от материала здания (панель ~1%/год, кирпич ~0,7%/год), а не единые 2%/год; следовательно макс. износ и привязки '+10/+5' к 80/75 не находят прямого официального подтверждения как фиксированные нормы. Требует сверки с методикой Госкорпорации."
+ },
+ {
+  "key": "utilization_fee_base_rate_mrp",
+  "verdict": "current",
+  "official_value": "50",
+  "source_url": "https://kolesa.kz/content/news/razmery-utilsbora-v-kazahstane-v-2026-godu/",
+  "note": "Базовая ставка утилизационного сбора на все ТС = 50 МРП (≈216 250 ₸ в 2026). Подтверждено для 2026 (с 07.05.2026 действует обновлённый приказ, базовая ставка остаётся 50 МРП)."
+ },
+ {
+  "key": "excise_alcohol_spirit_per_liter_kzt",
+  "verdict": "current",
+  "official_value": "2805",
+  "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+  "note": "Акциз на крепкий алкоголь (кроме вина/виноматериала/пива) = 2805 ₸/литр 100% спирта с 01.01.2026 (+10% к 2025). Подтверждено."
+ },
+ {
+  "key": "excise_beer_per_liter_kzt",
+  "verdict": "current",
+  "official_value": "99",
+  "source_url": "https://mybuh.kz/news/stavki-aktsizov-na-alkogolnuyu-produktsiyu-v-2026-godu/",
+  "note": "Акциз на пиво = 99 ₸/литр с 01.01.2026. Подтверждено."
+ },
+ {
+  "key": "excise_cigarettes_per_1000_kzt",
+  "verdict": "current",
+  "official_value": "18051",
+  "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+  "note": "Акциз на сигареты = 18 051 ₸ за 1000 шт (специфическая ставка) с 01.01.2026 (ранее 15 900). Подтверждено."
+ },
+ {
+  "key": "excise_cigars_per_unit_kzt",
+  "verdict": "current",
+  "official_value": "825",
+  "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+  "note": "Акциз на сигары = 825 ₸/шт с 01.01.2026 (ранее 750). Подтверждено."
+ },
+ {
+  "key": "excise_heated_tobacco_per_1000_kzt",
+  "verdict": "current",
+  "official_value": "11230",
+  "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+  "note": "Акциз на изделия с нагреваемым табаком = 11 230 ₸ за 1000 шт с 01.01.2026 (с 2030 вырастет до 12 803). Подтверждено."
+ },
+ {
+  "key": "excise_wine_per_liter_kzt",
+  "verdict": "current",
+  "official_value": "38",
+  "source_url": "https://uchet.kz/news/aktsizy-2026-kakie-stavki-s-1-yanvarya-2026-goda/",
+  "note": "Акциз на вино = 38 ₸/литр с 01.01.2026. Подтверждено."
+ },
+ {
+  "key": "gambling_winnings_tax_free_threshold",
+  "verdict": "current",
+  "official_value": "0",
+  "source_url": "https://legalbet.kz/shkola-bettinga/nalog-na-viigrish-v-kazahstane/",
+  "note": "Специальный необлагаемый минимум по выигрышам в НК РК 2026 не предусмотрен; выигрыш облагается ИПН 10% у источника выплаты. Значение '0' (нет порога) корректно."
+ },
+ {
+  "key": "property_sale_exempt_ownership_years",
+  "verdict": "current",
+  "official_value": "1",
+  "source_url": "https://prodengi.kz/post/novye-pravila-prodazi-nedvizimosti-v-rk",
+  "note": "Освобождение при владении >1 года сохраняется для недвижимости, право собственности на которую зарегистрировано ДО 01.01.2026 (переходные положения), и для движимого имущества (авто). Для нового жилья (с 2026) — 2 года (см. отдельный ключ). Значение '1 год' остаётся актуальным для указанных случаев."
+ },
+ {
+  "key": "heating_tariff_astana_per_gcal",
+  "verdict": "current",
+  "official_value": "3929",
+  "source_url": "https://astanaenergosbyt.kz/ru/fiz/tarify1.html",
+  "note": "Тариф снабжения тепловой энергией для населения Астаны с приборами учёта = 3929 ₸/Гкал (без приборов 4727 ₸/Гкал). Входное 3930 ≈ 3929 (округление, по сути совпадает). Примечание: тариф состоит из компонентов производства/передачи/сбыта; указанный — итоговый сбытовой для населения с учётом приборов учёта."
+ },
+ {
+  "key": "mrp_2024",
+  "verdict": "current",
+  "official_value": "3692",
+  "source_url": "https://prg.kz/document/?doc_id=1026672",
+  "note": "МРП 2024 = 3692 ₸. Подтверждено по таблице ПРГ и закону о бюджете."
+ },
+ {
+  "key": "mrp_2025",
+  "verdict": "current",
+  "official_value": "3932",
+  "source_url": "https://prg.kz/document/?doc_id=1026672",
+  "note": "МРП 2025 = 3932 ₸. Подтверждено. (Справочно: МРП 2026 = 4325 ₸.)"
+ },
+ {
+  "key": "mrp_2027",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
+  "note": "Закон о бюджете на 2026-2028 устанавливает МРП только на 2026 (4325 ₸); значение МРП на 2027 (4580) официально не закреплено отдельным законом и в таблице ПРГ отсутствует — это прогноз, не действующая норма. Не подтверждено."
+ },
+ {
+  "key": "mrp_2028",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
+  "note": "МРП на 2028 (4938) официально не закреплён (устанавливается ежегодным законом о бюджете, ещё не принят на 2028). Прогнозное значение, не подтверждено."
+ },
+ {
+  "key": "subsistence_minimum_pm",
+  "verdict": "current",
+  "official_value": "50851",
+  "source_url": "https://tengrinews.kz/kazakhstan_news/projitochnyiy-minimum-izmenitsya-v-kazahstane-586611/",
+  "note": "Прожиточный минимум 2026 = 50 851 ₸ (закреплён в законе о бюджете на 2026-2028). Подтверждено."
+ },
+ {
+  "key": "retirement_age_men",
+  "verdict": "current",
+  "official_value": "63",
+  "source_url": "https://www.gov.kz/situations/5/25?lang=ru",
+  "note": "Дубликат retirement_age_male. Пенсионный возраст мужчин = 63. Подтверждено."
+ },
+ {
+  "key": "retirement_age_women",
+  "verdict": "current",
+  "official_value": "61",
+  "source_url": "https://informburo.kz/novosti/zamorozka-eshhe-v-sile-v-kakom-vozraste-zenshhiny-v-kazaxstane-budut-vyxodit-na-pensiiu-v-2026-godu",
+  "note": "Дубликат retirement_age_female. Пенсионный возраст женщин = 61 в 2026 (мораторий до 2028). Подтверждено."
+ },
+ {
+  "key": "universal_declaration_start_year_civil_servant",
+  "verdict": "current",
+  "official_value": "2021",
+  "source_url": "https://kgd.gov.kz/ru/content/vseobshchee-deklarirovanie-1-2",
+  "note": "1-й этап всеобщего декларирования (с 01.01.2021): госслужащие и приравненные лица и их супруги. Подтверждено."
+ },
+ {
+  "key": "universal_declaration_start_year_quasi_gov",
+  "verdict": "current",
+  "official_value": "2023",
+  "source_url": "https://kgd.gov.kz/ru/news/v-kazahstane-nachalsya-tretiy-etap-vseobshchego-deklarirovaniya-1-143772",
+  "note": "2-й этап (с 01.01.2023): работники госучреждений (образование/здравоохранение/культура/спорт) и субъектов квазигоссектора и их супруги. Подтверждено."
+ },
+ {
+  "key": "universal_declaration_start_year_founder",
+  "verdict": "current",
+  "official_value": "2024",
+  "source_url": "https://kgd.gov.kz/ru/news/v-kazahstane-nachalsya-tretiy-etap-vseobshchego-deklarirovaniya-1-143772",
+  "note": "3-й этап (с 01.01.2024): руководители и учредители (участники) юрлиц, ИП и их супруги. Подтверждено."
+ },
+ {
+  "key": "universal_declaration_start_year_lawyer",
+  "verdict": "current",
+  "official_value": "2024",
+  "source_url": "https://uchet.kz/news/kak-litsa-zanimayushchiesya-chastnoy-praktikoy-budut-platit-ipn-v-2025-godu/",
+  "note": "Лица частной практики (адвокаты, нотариусы, медиаторы, частные судебные исполнители) вошли в систему на 3-м этапе — обязанность по данным на 31.12.2024 (декларация за 2024 г., подаётся в 2025). Год начала 2024 корректен."
+ },
+ {
+  "key": "universal_declaration_start_year_regular",
+  "verdict": "current",
+  "official_value": "2025",
+  "source_url": "https://kapital.kz/economic/123804/v-2025-godu-nachnet-sya-chetvertyy-etap-vseobshchego-deklarirovaniya-chto-nuzhno-znat.html",
+  "note": "4-й (финальный) этап (с 01.01.2025): остальные категории — работники частного сектора, пенсионеры, домохозяйки, студенты и др. Подтверждено."
+ },
+ {
+  "key": "living_minimum_pm_2026",
+  "verdict": "current",
+  "official_value": "50851",
+  "source_url": "https://tengrinews.kz/kazakhstan_news/projitochnyiy-minimum-izmenitsya-v-kazahstane-586611/",
+  "note": "Дубликат subsistence_minimum_pm. Прожиточный минимум 2026 = 50 851 ₸. Подтверждено."
+ },
+ {
+  "key": "mrp_fallback_3876",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=1026672",
+  "note": "Значение 3876 не соответствует ни одному реальному МРП (2024=3692, 2025=3932, 2026=4325); закон не указан. Это технический fallback/placeholder, а не действующая регулируемая величина. Рекомендуется заменить на актуальный МРП 2026 = 4325 либо удалить."
+ },
+ {
+  "key": "customs_duty_large_engine_threshold_cc",
+  "verdict": "current",
+  "official_value": "3000",
+  "source_url": "https://finratings.kz/news/11036-rastamozhka-avto-v-kazakhstane-v-2026-godu-skolko-stoit-oformlenie-importnoi-mashiny/",
+  "note": "Объём двигателя >3000 см³ — порог, выше которого легковой автомобиль является подакцизным (акциз 100 ₸/см³). Таможенная пошлина ЕТТ ЕАЭС едина 15% для всех легковых. Порог 3000 см³ подтверждён для 2026."
+ },
+ {
+  "key": "land_tax_region_base_rates_full_matrix",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=35328916",
+  "note": "Полная региональная матрица базовых ставок (МРП/га по 14 регионам, ирриг/богар/пастб/сенокос) из официального текста НК РК постранично не подтверждена; маслихаты дополнительно корректируют ±50%. Конкретные числовые значения не угадываю — требуют сверки с НК РК (ст. 577-578)."
+ },
+ {
+  "key": "moral_damage_ranges_mrp_full_table",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://kodeksy-kz.com/ka/grazhdanskij_kodeks_osobennaya_chast/952.htm",
+  "note": "Размер компенсации морального вреда законом НЕ фиксирован (ст. 951-952 ГК РК): определяется судом по принципам справедливости и достаточности. Приведённые диапазоны в МРП — иллюстративная судебная практика, не государственно установленные величины."
+ },
+ {
+  "key": "enpf_payout_period_years",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://www.enpf.kz/ru/services/vyplaty/57494/",
+  "note": "Дубликат enpf_standard_payout_period_years. Фиксированный стандартный период '19 лет' методикой ЕНПФ как нормативная константа не подтверждён; график рассчитывается индивидуально по формуле приведённой стоимости."
+ },
+ {
+  "key": "property_sale_exempt_ownership_years_realestate",
+  "verdict": "current",
+  "official_value": "2",
+  "source_url": "https://mybuh.kz/news/prodazha-imushchestva-menee-2-let-vladeniya-10-ipn-s-2026-goda/",
+  "note": "Новый НК РК (K2500000214/№214-VIII): с 01.01.2026 освобождение от ИПН при продаже недвижимости — после 2 лет владения (для объектов, право на которые зарегистрировано после 01.01.2026). Подтверждено. (Для долей в жилстроительстве — 3 года.)"
+ },
+ {
+  "key": "property_tax_wear_rate_per_year_pct",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
+  "note": "Единой нормы износа 2%/год нет: методика применяет норму амортизации в зависимости от материала здания (панель ~1%, кирпич ~0,7% и т.д.). Значение '2%/год' не подтверждается как универсальная официальная норма."
+ },
+ {
+  "key": "property_tax_progressive_brackets_full_16_steps",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://prg.kz/document/?doc_id=39796749",
+  "note": "Дубликат property_tax_progressive_brackets. Шкала ст. 602 нового НК РК (2026), ставки 0,05%-2%; верхняя ступень >450 млн = 2 946 600 ₸ + 2% подтверждена официальным источником и совпадает. Промежуточные фиксированные базы постранично не сверены, но крайние значения и структура согласованы."
+ },
+ {
+  "key": "property_tax_city_base_cost_and_zone_coeff_presets",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-imushchestvo-fizlits-v-kazakhstane-kak-ego-schitaet-nalogovaya.html",
+  "note": "Базовая стоимость 1 м² варьируется (от ~2700 ₸ в сёлах до 60 000 ₸ в Алматы/Астане/Шымкенте по методике НК) — входные пресеты (almaty 120000, astana 110000 и т.д.) ВЫШЕ официальной базовой стоимости м² и, по-видимому, смешивают базовую стоимость с зональными коэффициентами. Зональные коэффициенты — решения местных органов. Конкретные пресеты официально не подтверждены; вероятно требуют пересмотра."
+ },
+ {
+  "key": "limitation_tax_years_default_nk65",
+  "verdict": "current",
+  "official_value": "3",
+  "source_url": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/65.htm",
+  "note": "Ст. 65 НК РК (№214-VIII, 2026): срок исковой давности по налоговому обязательству для НП, не отнесённых к крупному предпринимательству/недропользователям/гл.33/НДС методом зачёта = 3 года. Подтверждено. (Для перечисленных категорий — 5 лет.)"
+ },
+ {
+  "key": "asp_child_bonus_mrp",
+  "verdict": "current",
+  "official_value": "1.5",
+  "source_url": "https://informburo.kz/cards/adresnaia-socialnaia-pomoshh-kto-mozet-na-nee-rasscityvat-i-v-kakix-slucaiax-mogut-otkazat",
+  "note": "АСП: на каждого ребёнка 1–6 лет дополнительно 1.5 МРП/мес (4325×1.5=6488 ₸ в 2026). Подтверждено."
+ },
+ {
+  "key": "asp_poverty_threshold_pct_of_living_minimum",
+  "verdict": "current",
+  "official_value": "70",
+  "source_url": "https://egov.kz/cms/ru/articles/family_support/social_help",
+  "note": "Черта бедности = не ниже 70% прожиточного минимума. В 2026: 70% × 50851 = 35596 ₸. Подтверждено."
+ },
+ {
+  "key": "asp_poverty_threshold_pct_of_median",
+  "verdict": "current",
+  "official_value": "35",
+  "source_url": "https://egov.kz/cms/ru/articles/family_support/social_help",
+  "note": "Черта бедности устанавливается на уровне 35% медианного дохода, но не ниже 70% ПМ. Оба порога подтверждены."
+ },
+ {
+  "key": "birth_lumpsum_benefit_1to3_mrp",
+  "verdict": "current",
+  "official_value": "38",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Единовременное пособие при рождении 1-3 ребёнка = 38 МРП (164350 ₸ при МРП 4325). Подтверждено для 2026."
+ },
+ {
+  "key": "birth_lumpsum_benefit_4plus_mrp",
+  "verdict": "current",
+  "official_value": "63",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Единовременное пособие при рождении 4-го и последующих = 63 МРП (272475 ₸). Подтверждено для 2026."
+ },
+ {
+  "key": "childcare_benefit_rate",
+  "verdict": "current",
+  "official_value": "40",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Соцвыплата ГФСС по уходу за ребёнком = 40% среднемесячного дохода (для участников ОСС). Подтверждено."
+ },
+ {
+  "key": "monthly_childcare_benefit_mrp_table",
+  "verdict": "current",
+  "official_value": "1:5.76; 2:6.81; 3:7.85; 4+:8.90 (МРП/мес)",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Гос. пособие по уходу до 1.5 лет: 1=5.76, 2=6.81, 3=7.85, 4+=8.90 МРП. Все четыре значения подтверждены для 2026 (индексация +10%)."
+ },
+ {
+  "key": "maternity_benefit_coefficient",
+  "verdict": "current",
+  "official_value": "4.2",
+  "source_url": "https://informburo.kz/cards/bolnicnyi-po-beremennosti-i-rodam-skolko-deneg-polucit-kazaxstanka-scitaem-na-konkretnom-primere",
+  "note": "Коэффициент дней нетрудоспособности при обычных родах = 126/30 = 4.2. Формула ГФСС подтверждена (Правила V2300032912)."
+ },
+ {
+  "key": "otbasy_baspana_hit_rate",
+  "verdict": "current",
+  "official_value": "8.5",
+  "source_url": "https://calk.kz/__kk/calculator/otbasy-bank/",
+  "note": "Баспана Хит — промежуточный заём со ставкой 8.5% (после накопления ~3 лет снижается до 5%). Совпадает со значением сайта calk.kz. Линейка программ Отбасы банка периодически меняется — при сомнениях сверять с hcsbk.kz."
+ },
+ {
+  "key": "otbasy_baspana_zhas_rate",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://hcsbk.kz/ru/affordable-housing/all-about-affordable-housing-programs/",
+  "note": "Ставку 6% по 'Баспана жас' прямого подтверждения на hcsbk.kz найти не удалось (программы Жас Отбасы / Наурыз / Отау имеют свои ставки). Значение совпадает с моделью сайта, но не верифицировано первоисточником — рекомендуется ручная сверка с hcsbk.kz."
+ },
+ {
+  "key": "unemployment_income_replacement_coef",
+  "verdict": "current",
+  "official_value": "45",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2300032881",
+  "note": "Коэффициент замещения дохода для соцвыплаты по потере работы = 0.45 (45%). Подтверждено (Правила V2300032881)."
+ },
+ {
+  "key": "unemployment_min_experience_months",
+  "verdict": "current",
+  "official_value": "6",
+  "source_url": "https://www.enbek.kz/ru/node/3478",
+  "note": "Минимальный стаж участия для права на соцвыплату по потере работы = 6 месяцев (выплата 1 мес при стаже 6–12 мес). Подтверждено."
+ },
+ {
+  "key": "unemployment_experience_coef_table",
+  "verdict": "current",
+  "official_value": "<6m:0; 6-12m:0.7; ...; 5-6y:1.0; +0.02/yr; max 1.3",
+  "source_url": "https://social.gov4c.kz/calculate/svpr",
+  "note": "Коэффициент стажа варьируется 0.7–1.3. Прирост +0.02/год сверх 6 лет до потолка 1.3 соответствует методике (макс. выплата = 595000×0.45×1.3 = 348075 ₸). Подтверждено."
+ },
+ {
+  "key": "unemployment_benefit_payment_period_table",
+  "verdict": "current",
+  "official_value": "6-12m:1; 1-2y:2; 2-3y:3; 3-4y:4; 4-5y:5; 5y+:6 (мес)",
+  "source_url": "https://egov.kz/cms/ru/articles/allowance",
+  "note": "Период выплаты: 6-12мес→1, 12-24→2, 24-36→3, 36-48→4, 48-60→5, 60+→6 месяцев. Полностью подтверждено."
+ },
+ {
+  "key": "sick_leave_max_benefit_mrp",
+  "verdict": "current",
+  "official_value": "25",
+  "source_url": "https://uchet.kz/month/bolnichnyy-list-v-2026-godu/",
+  "note": "Макс. месячный размер пособия по временной нетрудоспособности (за счёт работодателя) = 25 МРП (108125 ₸ в 2026). Исключения: проф.травма, ветераны ВОВ. Подтверждено."
+ },
+ {
+  "key": "perdiem_domestic_capital_mrp",
+  "verdict": "current",
+  "official_value": "6",
+  "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
+  "note": "Не облагаемый ИПН лимит суточных по РК = не более 6 МРП/день (НК РК, на 01.01 фин.года, до 40 дней). Это плоский лимит — 6 МРП совпадает. ВАЖНО: налоговый лимит НЕ дифференцируется по типу города (см. ниже)."
+ },
+ {
+  "key": "perdiem_domestic_regional_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
+  "note": "Не облагаемый лимит суточных по НК РК = ПЛОСКИЙ 6 МРП/день, без деления столица/обл.центр/прочее. Значение 5 МРП для 'обл.центра' соответствует не налоговому лимиту, а старой шкале бюджетных командировок (Пост. №256). Если калькулятор моделирует tax-free лимит — корректно 6, а не 5. Требует уточнения контекста."
+ },
+ {
+  "key": "perdiem_domestic_other_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
+  "note": "Аналогично perdiem_domestic_regional: налоговый лимит НК = плоский 6 МРП, дифференциации 'прочие города'=4 МРП в НК нет. 4 МРП — из шкалы бюджетных командировок (Пост. №256), не tax-free лимит. Уточнить, что моделирует поле."
+ },
+ {
+  "key": "teacher_bdo_base_salary_2026",
+  "verdict": "stale",
+  "official_value": "17697",
+  "source_url": "https://uchet.kz/stavki/BDO",
+  "note": "Базовый должностной оклад (БДО) = 17697 ₸, установлен Пост. №1193 от 31.12.2015 и НЕ индексировался (действует с 2016). Значение 23578 не подтверждается ни одним источником, включая собственный калькулятор calk.kz (который использует 17697). STALE — следует исправить на 17697."
+ },
+ {
+  "key": "teacher_coefficient_grid",
+  "verdict": "current",
+  "official_value": "none 4.40–5.34 / moderator 4.84–5.88 / expert 5.28–6.41 / researcher 5.72–6.95 / master 6.16–7.49",
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Сетка коэффициентов (5 категорий × 11 стажевых полос), диапазон 4.40–7.49. Совпадает со значениями калькулятора calk.kz и порядком надбавок по категориям (мастер +50%, исследователь +40%, эксперт +35%, модератор +30%). Подтверждено."
+ },
+ {
+  "key": "teacher_rural_bonus_rate",
+  "verdict": "current",
+  "official_value": "25",
+  "source_url": "https://adilet.zan.kz/rus/docs/P990001876_",
+  "note": "Сельская надбавка педагогу = +25% к окладу. Подтверждено (Пост. №1927/№1193)."
+ },
+ {
+  "key": "teacher_small_school_bonus_rate",
+  "verdict": "current",
+  "official_value": "20",
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Надбавка за работу в малокомплектной школе (<40 учеников) = +20%. Подтверждено."
+ },
+ {
+  "key": "teacher_bonus_class_teacher_mrp",
+  "verdict": "current",
+  "official_value": "5",
+  "source_url": "https://buh.mcfr.kz/article/1400-kalkulyator-zarplaty-uchitelya-i-vospitatelya-kak-rasschitat-v-rk-v-2025-godu",
+  "note": "Доплата за классное руководство = 5 МРП/мес (при наполняемости 24+, иначе пропорц.). Подтверждено (текущая методика по №1193 переводит историч. % в МРП-выплаты). Совпадает с calk.kz."
+ },
+ {
+  "key": "teacher_bonus_notebook_check_mrp",
+  "verdict": "current",
+  "official_value": "3",
+  "source_url": "https://buh.mcfr.kz/article/1400-kalkulyator-zarplaty-uchitelya-i-vospitatelya-kak-rasschitat-v-rk-v-2025-godu",
+  "note": "Доплата за проверку тетрадей = 3 МРП/мес. Подтверждено вторичными источниками и калькулятором calk.kz."
+ },
+ {
+  "key": "teacher_bonus_methodist_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Калькулятор calk.kz использует 2 МРП за методическую работу. Однако нормативка (Пост. №1927/приказ 191) исторически задаёт методобъединение как % оклада (~10–15%), а не фикс. МРП. 2 МРП согласуется с моделью сайта, но прямого норм. подтверждения МРП-формы нет — уточнить."
+ },
+ {
+  "key": "teacher_bonus_cabinet_head_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://calk.kz/calculator/teacher-salary/",
+  "note": "Калькулятор calk.kz использует 1 МРП за заведование кабинетом; ряд источников указывает 5% оклада. Значение 1 МРП согласуется с собственной моделью сайта, но норм. источник чаще даёт %. Внутренне консистентно, но первоисточник в МРП не подтверждён — уточнить."
+ },
+ {
+  "key": "teacher_standard_hours_per_week",
+  "verdict": "current",
+  "official_value": "18",
+  "source_url": "https://kodeksy-kz.com/ka/o_statuse_pedagoga.htm",
+  "note": "Нормативная учебная нагрузка на 1 ставку учителя = 18 часов/неделю (Закон 'О статусе педагога'; общая раб. неделя ≤36 ч). Подтверждено."
+ },
+ {
+  "key": "unemployment_min_experience_stale_12",
+  "verdict": "stale",
+  "official_value": "6",
+  "source_url": "https://www.enbek.kz/ru/node/3478",
+  "note": "Значение 12 мес НЕВЕРНО: минимальный стаж для права на соцвыплату по потере работы = 6 месяцев. Запись помечена как stale и корректно подлежит замене на 6 (см. unemployment_min_experience_months)."
+ },
+ {
+  "key": "childcare_benefit_duration_months",
+  "verdict": "current",
+  "official_value": "18",
+  "source_url": "https://cdb.kz/sistema/novosti/razmery_sotsialnykh_posobiy_i_vyplat_na_rozhdenie_i_po_ukhodu_za_rebenkom_v_2026_godu/",
+  "note": "Выплата по уходу за ребёнком — до достижения 1,5 лет = 18 месяцев. Подтверждено (Соц. кодекс)."
+ },
+ {
+  "key": "maternity_leave_start_week",
+  "verdict": "current",
+  "official_value": "30",
+  "source_url": "https://informburo.kz/cards/bolnicnyi-po-beremennosti-i-rodam-skolko-deneg-polucit-kazaxstanka-scitaem-na-konkretnom-primere",
+  "note": "Стандартный отпуск по беременности и родам открывается с 30-й недели (70 дней до родов). Подтверждено."
+ },
+ {
+  "key": "maternity_leave_start_week_ecological_zone",
+  "verdict": "current",
+  "official_value": "28",
+  "source_url": "https://egov.kz/cms/ru/articles/ui_decret",
+  "note": "Для женщин в зонах экологического бедствия / ядерных испытаний отпуск открывается раньше (с 28-й недели, удлинённый дородовой период). Подтверждено косвенно (ст.99 ТК + повышенные сроки для пострадавших территорий)."
+ },
+ {
+  "key": "maternity_leave_days_complicated_birth",
+  "verdict": "current",
+  "official_value": "140",
+  "source_url": "https://tkrk.kz/chast-2/razdel-2/glava-7/statya-99",
+  "note": "При осложнённых родах / многоплодной беременности отпуск = 140 дней (70 до + 70 после). Подтверждено ст.99 ТК РК."
+ },
+ {
+  "key": "otbasy_baspana_hit_terms",
+  "verdict": "current",
+  "official_value": "maxAmount 30000000 KZT, minDownPayment 20%, maxTerm 25 years",
+  "source_url": "https://calk.kz/__kk/calculator/otbasy-bank/",
+  "note": "Баспана Хит: макс. сумма 30 млн ₸, первонач. взнос 20%, срок до 25 лет. Совпадает с моделью calk.kz и общими параметрами Отбасы банка. Линейка периодически обновляется — при необходимости сверить с hcsbk.kz."
+ },
+ {
+  "key": "otbasy_baspana_zhas_terms",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://hcsbk.kz/ru/affordable-housing/all-about-affordable-housing-programs/",
+  "note": "Параметры 'Баспана жас' (18 млн ₸ / 10% / 25 лет) совпадают с моделью сайта, но прямого подтверждения именно по программе с таким названием на hcsbk.kz не найдено (актуальные молодёжные программы — Жас Отбасы и др.). Рекомендуется ручная сверка с hcsbk.kz."
+ },
+ {
+  "key": "sick_leave_avg_days_per_month_divisor",
+  "verdict": "current",
+  "official_value": "30",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2300032912",
+  "note": "Делитель 30 (календарных дней/мес) используется в коэффициенте дней нетрудоспособности (напр. 126/30=4.2) и пропорции лимита. Методически корректно. Подтверждено."
+ },
+ {
+  "key": "unemployment_income_averaging_period_months",
+  "verdict": "current",
+  "official_value": "24",
+  "source_url": "https://adilet.zan.kz/rus/docs/V2300032881",
+  "note": "Среднемесячный доход = сумма доходов с соц.отчислениями за последние 24 месяца / 24. Подтверждено (Правила V2300032881)."
+ },
+ {
+  "key": "unemployment_experience_coef_6plus_increment",
+  "verdict": "current",
+  "official_value": "+0.02/yr above 6y, capped 1.3",
+  "source_url": "https://social.gov4c.kz/calculate/svpr",
+  "note": "Прирост коэффициента стажа +0.02 за каждый год свыше 6 лет, потолок 1.3. Согласуется с макс. выплатой 595000×0.45×1.3=348075 ₸. Подтверждено."
+ },
+ {
+  "key": "customs_duty_rate_vehicle_base",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "ЕАЭС customs duty (ЕТТ) — out of scope of this KZ vehicle-tax/registration verification (set in EAEU common tariff, not НК РК); did not verify."
+ },
+ {
+  "key": "customs_duty_rate_vehicle_old",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "ЕАЭС customs duty — out of scope; not verified against EAEU tariff sources this run."
+ },
+ {
+  "key": "customs_vehicle_old_age_threshold_years",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "EAEU customs age threshold — out of scope; not verified."
+ },
+ {
+  "key": "gov_duty_vehicle_certificate_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "СРТС (свидетельство о гос. регистрации ТС) = 1.25 МРП confirmed for 2026 (kolesa.kz 5,406.25 ₸; lada.kz; bcc.kz). NB: in the 2026 НК РК the госпошлина provisions moved from ст.615 (2017 code) to the 662-672 range; multiple unchanged."
+ },
+ {
+  "key": "gov_duty_vehicle_plates_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Гос. рег. номерной знак = 2.8 МРП confirmed for 2026 (kolesa.kz 12,110 ₸; lada.kz). Duplicate: 2 units = 2.8 МРП, 1 unit = 1.4 МРП."
+ },
+ {
+  "key": "gov_duty_vehicle_registration_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Base registration госпошлина 0.25 МРП for newer vehicles is corroborated (kolesa.kz: 'новее 2 лет — 0.25 МРП'). Law cite ст.615 is the 2017 code; 2026 code uses the 662-672 range. The category-by-age duty in fact scales (0.25 МРП up to high МРП for old commercial), so 0.25 МРП is the floor, not a flat rate."
+ },
+ {
+  "key": "gov_duty_plate_fee_mrp_table",
+  "verdict": "stale",
+  "official_value": "2026 НК РК (egov.kz): любая своя комбинация=10 МРП; зеркальные (181,272…)=15 МРП; зеркальные+одинак. буквы=72 МРП; VIP стандарт (010-090,707…)=57 МРП; +одинак. буквы=114; премиум(100-900)=137; премиум+буквы=194; редкие(001-009,777)=228; редкие+буквы=285 МРП. Standard plate=2.8 МРП.",
+  "source_url": "https://egov.kz/cms/ru/services/vehicle/pass_vip_number",
+  "note": "STALE. The 2026 НК РК introduced a brand-new vanity/selected-plate scheme (free custom choice from 05.01.2026 at 10 МРП, tiers up to 285 МРП). The input's table (triple001/007=170; triple111/777=150; pair100=100; mirror010=50; tens=30; sequential=20; standard=2) matches NONE of the current categories. Confirmed by egov.kz official service, lada.kz, bcc.kz, nur.kz, zakon.kz."
+ },
+ {
+  "key": "notary_fee_vehicle_base_tiered",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "Notary tariffs — separate domain (Закон о нотариате / МЮ orders), and the input itself carries newer notary keys (notary_unified_tariff_vehicle_sale_mrp citing Приказ МЮ №533 от 27.09.2025, w.e.f. 01.01.2026: relatives 4 / individuals 10 / legal 12 МРП) that SUPERSEDE this old 5/7/10 tiered scheme. This legacy key looks stale but full notary verification was out of scope here."
+ },
+ {
+  "key": "traffic_fine_no_plates",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "КоАП РК fine (not НК РК) — out of scope of vehicle-tax/registration constants; not verified this run."
+ },
+ {
+  "key": "vehicle_reg_certificate_fee_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.lada.kz/kazakhstan-news/147435-novye-gosposhliny-v-kazakhstane-s-2026-goda-za-chto-pridetsia-platit-i-skolko-stoit-kazhdyi-dokument.html",
+  "note": "СРТС = 1.25 МРП for 2026 confirmed (lada.kz, kolesa.kz). Duplicate of gov_duty_vehicle_certificate_mrp. Law cite ст.615 is 2017 code; 2026 provisions in 662-672 range."
+ },
+ {
+  "key": "vehicle_reg_plates_fee_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.lada.kz/kazakhstan-news/147435-novye-gosposhliny-v-kazakhstane-s-2026-goda-za-chto-pridetsia-platit-i-skolko-stoit-kazhdyi-dokument.html",
+  "note": "Plates = 2.8 МРП for 2026 confirmed (lada.kz, kolesa.kz). Duplicate of gov_duty_vehicle_plates_mrp."
+ },
+ {
+  "key": "vehicle_reg_fee_by_age_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "0.25 МРП base registration duty corroborated for newer vehicles (kolesa.kz). Note: the real schedule is tiered by age/fuel/category (0.25 МРП floor up to high МРП for old commercial), so '0.25 flat' is an approximation but the floor value is correct."
+ },
+ {
+  "key": "ogpo_vehicle_type_coeff",
+  "verdict": "stale",
+  "official_value": "Absolute base coefficients from 01.01.2026 (Приказ АРРФР): passenger(B) 2.09; truck(C) 3.98; bus<=20 seats 3.26; bus>20 3.45; motorcycle 1.00 — per the input's own newer key ogpo_vehicle_type_coeff_table_current.",
+  "source_url": "",
+  "note": "STALE relative legacy scheme (passenger 1.0 / taxi 2.0 / truck tiers 1.2-2.0 …). The input ALSO contains ogpo_vehicle_type_coeff_table_current with the 2026 absolute coefficients (Приказ АРРФР № G2500000072, w.e.f. 01.01.2026), which supersede this. ОГПО is the МТСБ/insurance domain, not НК РК — flagged as superseded but not independently re-verified against АРРФР this run."
+ },
+ {
+  "key": "vehicle_sale_taxfree_ownership_months",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "ИПН exemption on vehicle sale after >=1 year ownership — income-tax domain, not vehicle-tax/registration; not verified this run."
+ },
+ {
+  "key": "vehicle_tax_car_rate_le_1100_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "Cars <=1100cc = 1 МРП, confirmed for 2026 (mybuh.kz, brobank.kz, bcc.kz, calk.kz). Rate-table article is ст.492 НК РК (2017 code K1700000120) — NOT ст.565 as the input law field states; the multiple is unchanged in the 2026 code."
+ },
+ {
+  "key": "vehicle_tax_car_rate_1101_1500_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "1101-1500cc = 2 МРП confirmed for 2026 (mybuh.kz, brobank.kz). Article is ст.492, not ст.565 (cite stale, value current)."
+ },
+ {
+  "key": "vehicle_tax_car_rate_1501_2000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "1501-2000cc = 3 МРП confirmed for 2026 (mybuh.kz, brobank.kz). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_2001_2500_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "2001-2500cc = 6 МРП confirmed for 2026 (mybuh.kz, brobank.kz, bcc.kz). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_2501_3000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "2501-3000cc = 9 МРП confirmed for 2026 (mybuh.kz, brobank.kz). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_3001_4000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "3001-4000cc = 15 МРП confirmed for 2026 (mybuh.kz, brobank.kz, kursiv.media). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_car_rate_gt_4000_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": ">4000cc = 117 МРП confirmed for 2026 (mybuh.kz, brobank.kz, kursiv.media). Article ст.492. NB 2026 change: the separate elevated >3000cc rates (35-200 МРП) for vehicles produced/imported after 31.12.2013 were ABOLISHED — now unified rates regardless of import date; the standard 117 МРП top band stands."
+ },
+ {
+  "key": "vehicle_tax_car_surcharge_per_cc_over_1500",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "Surcharge +7 ₸ per cc over 1500cc confirmed for 2026 (mybuh.kz, kursiv.media, brobank.kz). Per НК РК wording it is +7 ₸ per unit over the LOWER bound of the applicable band; unchanged."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_le_1t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck <=1 ton = 3 МРП confirmed for 2026 (zakon.mybuh.kz tax-code text, 12,975 ₸). Article ст.492 НК РК (not ст.565)."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_1_1_5t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck 1-1.5 t = 5 МРП confirmed for 2026 (zakon.mybuh.kz, 21,625 ₸). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_1_5_5t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck 1.5-5 t = 7 МРП confirmed for 2026 (zakon.mybuh.kz, 30,275 ₸). Article ст.492."
+ },
+ {
+  "key": "vehicle_tax_truck_rate_gt_5t_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
+  "note": "Truck >5 t = 9 МРП confirmed for 2026 (zakon.mybuh.kz, 38,925 ₸). Article ст.492. (Note: one secondary aggregator showed different band edges 2/5/10/20 t — that summary is unreliable; the tax-code text uses 1/1.5/5 t edges matching the input.)"
+ },
+ {
+  "key": "vehicle_tax_bus_rate_le_12_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/nalog-na-zemlyu-transport-imushchestvo/nalog-na-transportnye-sredstva/",
+  "note": "Bus <=12 seats = 9 МРП — long-standing ст.492 НК РК value, unchanged for 2026 (buses not touched by the 2026 amendments). Bus-by-seats structure confirmed (pro1c.kz cites ст.492); 14 МРП for an 18-seat bus independently corroborated, consistent with the 12-25 band. Exact МРП read from secondary sources, not a primary table image."
+ },
+ {
+  "key": "vehicle_tax_bus_rate_12_25_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
+  "note": "Bus 12-25 seats = 14 МРП — ст.492 НК РК, unchanged for 2026. Independently corroborated: an 18-seat bus is taxed at 14 МРП."
+ },
+ {
+  "key": "vehicle_tax_bus_rate_gt_25_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/nalog-na-zemlyu-transport-imushchestvo/nalog-na-transportnye-sredstva/",
+  "note": "Bus >25 seats = 20 МРП — long-standing ст.492 НК РК value, unchanged for 2026. Not contradicted by any 2026 source; buses excluded from 2026 changes."
+ },
+ {
+  "key": "vehicle_tax_age_discount_pct_10_20y",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/izmeneniya-v-nalogakh-na-imushchestvo-i-transport-s-2026-goda-glavnoe/",
+  "note": "NEW for 2026: понижающий коэффициент 0.7 for cars 10-20 years old = 30% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '30%' correctly equals the 0.7 coefficient. (This is a 2026 addition; applies to легковые.)"
+ },
+ {
+  "key": "vehicle_tax_age_discount_pct_gt_20y",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/izmeneniya-v-nalogakh-na-imushchestvo-i-transport-s-2026-goda-glavnoe/",
+  "note": "NEW for 2026: понижающий коэффициент 0.5 for cars >20 years = 50% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '50%' correctly equals the 0.5 coefficient."
+ },
+ {
+  "key": "vehicle_registration_fee_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Value '2 МРП' for a generic 'registration fee' does not map cleanly to any single 2026 line item. The actual 2026 charges are: plates 2.8 МРП + СРТС 1.25 МРП + base reg duty 0.25 МРП (newer veh). No 2026 source shows a flat 2 МРП registration госпошлина. Likely a stale/misaggregated figure — recommend replacing with the explicit 2.8/1.25/0.25 components, but no source affirms exactly '2 МРП' so marked uncertain rather than stale."
+ },
+ {
+  "key": "vehicle_reg_fee_electric_new_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "EV registration concession 0.1 МРП — no 2026 source found confirming or refuting a 0.1 МРП EV-specific registration duty. The age/fuel-tiered duty schedule does vary by fuel type, but the exact 0.1 МРП figure is unverified. Do not guess."
+ },
+ {
+  "key": "notary_vehicle_tariff_by_party_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "Notary unified tariff (relatives 4 / others 10 / legal 12 МРП) cites Приказ МЮ от 27.09.2025 w.e.f. 01.01.2026 and matches the sibling key notary_unified_tariff_vehicle_sale_mrp; values look internally consistent and current, but notary tariffs are outside the НК РК vehicle-tax/registration scope and were not independently verified against the МЮ order this run."
+ },
+ {
+  "key": "ogpo_vehicle_type_coeff_table_current",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "2026 ОГПО absolute coefficients (passenger 2.09; truck 3.98; bus<=20 3.26; bus>20 3.45; moto 1.00) cite Приказ АРРФР № G2500000072 w.e.f. 01.01.2026. This is the insurance (АРРФР/МТСБ) domain, not НК РК; the figures are plausible and self-consistent but were not independently verified against the АРРФР order this run."
+ },
+ {
+  "key": "notary_unified_tariff_vehicle_sale_mrp",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "",
+  "note": "Unified notary tariff for vehicle sale (individuals 10 / mixed-legal 12 / close relatives 4 МРП, Приказ МЮ №533 от 27.09.2025 w.e.f. 01.01.2026). Out of НК РК scope; consistent with notary_vehicle_tariff_by_party_mrp but not independently verified this run."
+ },
+ {
+  "key": "plate_standard_registration_fee_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/services/vehicle/pass_vip_number",
+  "note": "Standard plate issuance = 2.8 МРП for 2026 confirmed (egov.kz official, kolesa.kz, lada.kz). 280% МРП framing in the law field is correct."
+ },
+ {
+  "key": "vehicle_reg_fee_srts_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "СРТС/техпаспорт = 1.25 МРП for 2026 confirmed (kolesa.kz, lada.kz). Duplicate of the certificate keys above. Law cite ст.615 is 2017-code; 2026 provisions in the 662-672 range, multiple unchanged."
+ },
+ {
+  "key": "vehicle_reg_fee_plates_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kolesa.kz/content/news/razmery-sbora-za-pervichnuyu-registratsiyu-avto-v-2026-godu/",
+  "note": "Гос. номера = 2.8 МРП for 2026 confirmed (kolesa.kz, lada.kz, egov.kz). Duplicate of the plate keys above."
+ }
+]

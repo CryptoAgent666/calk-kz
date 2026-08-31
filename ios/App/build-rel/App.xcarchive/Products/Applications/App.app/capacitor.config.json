@@ -1,0 +1,55 @@
+{
+	"appId": "kz.calk.app",
+	"appName": "Calk.kz - Калькуляторы",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https",
+		"iosScheme": "https",
+		"hostname": "calk.kz"
+	},
+	"ios": {
+		"contentInset": "always",
+		"backgroundColor": "#1e40af",
+		"limitsNavigationsToAppBoundDomains": false,
+		"scrollEnabled": true,
+		"preferredContentMode": "mobile"
+	},
+	"plugins": {
+		"CapacitorUpdater": {
+			"autoUpdate": false,
+			"resetWhenUpdate": true
+		},
+		"SplashScreen": {
+			"launchAutoHide": true,
+			"launchShowDuration": 1500,
+			"launchFadeOutDuration": 300,
+			"backgroundColor": "#1e40af",
+			"showSpinner": false,
+			"splashImmersive": true
+		},
+		"StatusBar": {
+			"style": "LIGHT",
+			"backgroundColor": "#1e40af",
+			"overlaysWebView": false
+		},
+		"LocalNotifications": {
+			"smallIcon": "ic_stat_icon_config_sample",
+			"iconColor": "#1e40af",
+			"sound": "default"
+		}
+	},
+	"packageClassList": [
+		"AdMobPlugin",
+		"AppPlugin",
+		"CAPBrowserPlugin",
+		"ClipboardPlugin",
+		"FilesystemPlugin",
+		"HapticsPlugin",
+		"LocalNotificationsPlugin",
+		"CAPNetworkPlugin",
+		"SharePlugin",
+		"SplashScreenPlugin",
+		"StatusBarPlugin",
+		"CapacitorUpdaterPlugin"
+	]
+}

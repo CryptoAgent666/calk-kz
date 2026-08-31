@@ -1,0 +1,111 @@
+# =============================================================================
+# NGINX Configuration for calk.kz on Plesk
+# =============================================================================
+#
+# PURPOSE: Fix "soft 404" problem. Without this config, nginx serves
+# index.html with HTTP 200 for ANY URL (including /asdfasdf123),
+# making Google treat all pages as "soft 404s".
+#
+# With this config:
+#   - Known prerendered routes -> served from their index.html (HTTP 200)
+#   - Static files (.js, .css, .png, etc.) -> served directly (HTTP 200)
+#   - Unknown routes -> served from /404.html with HTTP 404 status
+#
+# HOW TO INSTALL on Plesk:
+#   1. Log in to Plesk panel
+#   2. Go to: Domains -> calk.kz -> Apache & nginx Settings
+#   3. Scroll to "Additional nginx directives" textarea
+#   4. Paste the directives below (without the comment block)
+#   5. Click "OK" or "Apply"
+#   6. Test with: curl -s -o /dev/null -w "%{http_code}" https://calk.kz/asdfasdf123
+#      Expected: 404
+#   7. Test with: curl -s -o /dev/null -w "%{http_code}" https://calk.kz/calculator/salary/
+#      Expected: 200
+#
+# IMPORTANT: This replaces the default SPA fallback behavior.
+# The default Plesk/nginx SPA config usually does:
+#   try_files $uri $uri/ /index.html;
+# which serves index.html for ALL unknown routes with HTTP 200.
+# We replace it with the logic below.
+# =============================================================================
+
+# --- START: Paste everything below into Plesk "Additional nginx directives" ---
+
+# ===================== SECURITY HEADERS =====================
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://adservice.google.com https://www.googletagservices.com https://tpc.googlesyndication.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co https://pagead2.googlesyndication.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google; frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com; object-src 'none'; base-uri 'self'" always;
+
+# ===================== CUSTOM 404 PAGE =====================
+error_page 404 /404.html;
+location = /404.html {
+    internal;
+}
+
+# ===================== STATIC ASSETS (1 year cache) =====================
+location /assets/ {
+    try_files $uri =404;
+    expires 1y;
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    add_header X-Content-Type-Options "nosniff" always;
+}
+
+# ===================== REDIRECT index.html to clean URL =====================
+# Prevents duplicate content: /calculator/credit/index.html -> /calculator/credit/
+location ~ /index\.html$ {
+    if ($request_uri ~ ^(.*/)index\.html$) {
+        return 301 $1;
+    }
+}
+
+# ===================== MAIN LOCATION (prerendered SPA) =====================
+# 1. $uri          - exact file (e.g. /robots.txt, /sitemap.xml)
+# 2. $uri/         - directory index.html (e.g. /calculator/salary/)
+# 3. $uri/index.html - clean URL (/calculator/salary -> .../index.html)
+# 4. =404          - unknown routes -> HTTP 404 -> /404.html
+location / {
+    try_files $uri $uri/ $uri/index.html =404;
+}
+
+# --- END: Paste above into Plesk "Additional nginx directives" ---
+
+
+# =============================================================================
+# KAZAKH LANGUAGE ROUTES (__kk prefix)
+# =============================================================================
+# The prerendered site has duplicate pages under /__kk/ for Kazakh language.
+# These are handled automatically by the try_files directive since
+# /__kk/calculator/salary/index.html exists as a real file.
+#
+# No special nginx config is needed for __kk routes.
+# =============================================================================
+
+
+# =============================================================================
+# VERIFICATION AFTER SETUP
+# =============================================================================
+# Run these commands to verify the config works:
+#
+# Should return HTTP 200:
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/calculator/salary/
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/category/tax/
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/legal/about/
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/__kk/
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/__kk/calculator/salary/
+#
+# Should return HTTP 404:
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/asdfasdf123
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/nonexistent-page
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/calculator/does-not-exist/
+#   curl -s -o /dev/null -w "%{http_code}" https://calk.kz/random/deep/path
+#
+# The 404 responses should contain the content of /404.html (check with curl without -o).
+#
+# Also verify in Google Search Console after a few days:
+#   - "Soft 404" errors should start decreasing
+#   - The /404.html page itself should be excluded (noindex)
+# =============================================================================

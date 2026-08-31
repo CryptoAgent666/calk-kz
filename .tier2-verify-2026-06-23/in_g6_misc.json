@@ -1,0 +1,344 @@
+[
+ {
+  "key": "gons_max_premium_base_yearly_mrp",
+  "value": "100",
+  "unit": "MRP",
+  "law": "Закон РК об образовании — ГОНС (госпремия по образовательному накопительному вкладу), макс. база премирования"
+ },
+ {
+  "key": "gons_min_initial_deposit_mrp",
+  "value": "3",
+  "unit": "MRP",
+  "law": "Закон РК об образовании — ГОНС, минимальный первоначальный взнос"
+ },
+ {
+  "key": "bankruptcy_extrajudicial_limit_mrp",
+  "value": "1600",
+  "unit": "MRP",
+  "law": "Закон РК О восстановлении платёжеспособности и банкротстве граждан (внесудебное банкротство)"
+ },
+ {
+  "key": "customs_parcel_dutyfree_value_eur",
+  "value": "200",
+  "unit": "factor",
+  "law": "Решение Совета ЕЭК / ТК ЕАЭС (беспошлинный лимит стоимости посылки, EUR)"
+ },
+ {
+  "key": "customs_parcel_dutyfree_weight_kg",
+  "value": "31",
+  "unit": "factor",
+  "law": "ТК ЕАЭС (беспошлинный лимит веса посылки, кг)"
+ },
+ {
+  "key": "customs_parcel_excess_duty_value_rate",
+  "value": "15",
+  "unit": "percent",
+  "law": "ТК ЕАЭС (пошлина 15% от стоимости сверх лимита)"
+ },
+ {
+  "key": "limitation_period_tax_disputes",
+  "value": "5",
+  "unit": "years",
+  "law": "НК РК ст. 48"
+ },
+ {
+  "key": "pdl_max_loan_amount",
+  "value": "45",
+  "unit": "MRP",
+  "law": "Закон РК О микрофинансовой деятельности (лимит PDL-займа 45 МРП с 2026)"
+ },
+ {
+  "key": "traffic_fine_early_payment_discount",
+  "value": "50",
+  "unit": "percent",
+  "law": "КоАП РК (скидка 50% при оплате штрафа в установленный срок)"
+ },
+ {
+  "key": "traffic_fine_speed_10_20_mrp",
+  "value": "first 5 MRP / repeat 10 MRP",
+  "unit": "MRP",
+  "law": "КоАП РК ст.592 ч.1 (превышение скорости 10-20 км/ч)"
+ },
+ {
+  "key": "traffic_fine_speed_20_40_mrp",
+  "value": "first 10 MRP / repeat 20 MRP",
+  "unit": "MRP",
+  "law": "КоАП РК ст.592 ч.2 (превышение скорости 20-40 км/ч)"
+ },
+ {
+  "key": "traffic_fine_speed_40plus_mrp",
+  "value": "first 20 MRP",
+  "unit": "MRP",
+  "law": "КоАП РК ст.592 ч.3 (превышение скорости 40+ км/ч)"
+ },
+ {
+  "key": "traffic_fine_tint_mrp",
+  "value": "first 10 MRP / repeat 15 MRP",
+  "unit": "MRP",
+  "law": "КоАП РК ст.590 ч.3 (незаконная тонировка)"
+ },
+ {
+  "key": "retirement_age_male",
+  "value": "63",
+  "unit": "years",
+  "law": "Закон РК «О пенсионном обеспечении в РК» ст.11 (пенсионный возраст мужчины 63)"
+ },
+ {
+  "key": "retirement_age_female",
+  "value": "61",
+  "unit": "years",
+  "law": "Закон РК «О пенсионном обеспечении в РК» ст.11 (переходный график; 2026 — 61 год)"
+ },
+ {
+  "key": "enpf_standard_payout_period_years",
+  "value": "19",
+  "unit": "years",
+  "law": "Правила осуществления выплат за счёт пенсионных накоплений ЕНПФ (стандартный график ~19 лет)"
+ },
+ {
+  "key": "land_tax_base_rate_mrp_per_ha",
+  "value": "irrigated 0.42-0.80; rainfed 0.28-0.60; pasture 0.07-0.30; hayfield 0.13-0.40 (по 14 регионам)",
+  "unit": "MRP",
+  "law": "Земельный кодекс РК / НК РК (земельный налог)"
+ },
+ {
+  "key": "land_tax_bonity_quality_coeff",
+  "value": "<=20:0.5; <=40:0.7; <=60:1.0; <=80:1.3; <=100:1.6",
+  "unit": "factor",
+  "law": "НК РК (балл бонитета — коэффициент качества почвы)"
+ },
+ {
+  "key": "land_tax_farm_type_coeff",
+  "value": "peasant 0.5; farm 0.7; individual 1.0",
+  "unit": "factor",
+  "law": "НК РК (коэффициент по типу хозяйства)"
+ },
+ {
+  "key": "land_tax_land_type_coeff",
+  "value": "irrigated 1.0; rainfed 0.8; pasture 0.3; hayfield 0.4",
+  "unit": "factor",
+  "law": "НК РК (коэффициент по типу земли)"
+ },
+ {
+  "key": "land_tax_preference_discount_pct",
+  "value": "50",
+  "unit": "percent",
+  "law": "НК РК (льготы по земельному налогу)"
+ },
+ {
+  "key": "property_tax_progressive_brackets",
+  "value": "16 marginal steps (fixed base ₸ + rate% over min): <=2M:0.05%; 2-4M base 1000 @0.08%; 4-6M base 2600 @0.1%; 6-8M base 4600 @0.15%; 8-10M base 7600 @0.2%; 10-12M base 11600 @0.25%; 12-14M base 16600 @0.3%; 14-16M base 22600 @0.35%; 16-18M base 29600 @0.4%; 18-20M base 37600 @0.45%; 20-75M base 46600 @0.5%; 75-100M base 321600 @0.6%; 100-150M base 471600 @0.65%; 150-350M base 796600 @0.7%; 350-450M base 2196600 @0.75%; >450M base 2946600 @2.0%",
+  "unit": "table",
+  "law": "ст. 602 НК РК (новый Налоговый кодекс K2500000214, действ. 2026)"
+ },
+ {
+  "key": "ogpo_base_premium_mrp",
+  "value": "1.9",
+  "unit": "MRP",
+  "law": "Закон РК Об обязательном страховании ГПО владельцев ТС (ОГПО ВТС)"
+ },
+ {
+  "key": "property_tax_wear_max_pct",
+  "value": "70",
+  "unit": "percent",
+  "law": "методика оценки НК РК — макс. износ (2% в год; коттедж +10 до 80, гараж +5 до 75)"
+ },
+ {
+  "key": "utilization_fee_base_rate_mrp",
+  "value": "50",
+  "unit": "MRP",
+  "law": "Постановление Правительства РК — утилизационный сбор (базовая ставка)"
+ },
+ {
+  "key": "excise_alcohol_spirit_per_liter_kzt",
+  "value": "2805",
+  "unit": "KZT",
+  "law": "НК РК ст. 537 (акциз — крепкий алкоголь, ₸ за литр безводного спирта)"
+ },
+ {
+  "key": "excise_beer_per_liter_kzt",
+  "value": "99",
+  "unit": "KZT",
+  "law": "НК РК ст. 537 (акциз — пиво, ₸/литр)"
+ },
+ {
+  "key": "excise_cigarettes_per_1000_kzt",
+  "value": "18051",
+  "unit": "KZT",
+  "law": "НК РК ст. 537 (акциз — сигареты, ₸ за 1000 шт, специфическая ставка)"
+ },
+ {
+  "key": "excise_cigars_per_unit_kzt",
+  "value": "825",
+  "unit": "KZT",
+  "law": "НК РК ст. 537 (акциз — сигары, ₸/шт)"
+ },
+ {
+  "key": "excise_heated_tobacco_per_1000_kzt",
+  "value": "11230",
+  "unit": "KZT",
+  "law": "НК РК ст. 537 (акциз — нагреваемый табак, ₸ за 1000 шт)"
+ },
+ {
+  "key": "excise_wine_per_liter_kzt",
+  "value": "38",
+  "unit": "KZT",
+  "law": "НК РК ст. 537 (акциз — вино/игристое, ₸/литр)"
+ },
+ {
+  "key": "gambling_winnings_tax_free_threshold",
+  "value": "0",
+  "unit": "KZT",
+  "law": "НК РК 2026 (специальный необлагаемый минимум по выигрышам не предусмотрен)"
+ },
+ {
+  "key": "property_sale_exempt_ownership_years",
+  "value": "1",
+  "unit": "factor",
+  "law": "НК РК ст. 331 (освобождение от ИПН при владении >1 года — жильё/земля/авто)"
+ },
+ {
+  "key": "heating_tariff_astana_per_gcal",
+  "value": "3930",
+  "unit": "KZT",
+  "law": "АО «Астана-Теплотранзит» — тариф на тепловую энергию (Астана), с 01.04.2026, с НДС 16%"
+ },
+ {
+  "key": "mrp_2024",
+  "value": "3692",
+  "unit": "KZT",
+  "law": "Закон о республиканском бюджете"
+ },
+ {
+  "key": "mrp_2025",
+  "value": "3932",
+  "unit": "KZT",
+  "law": "Закон о республиканском бюджете"
+ },
+ {
+  "key": "mrp_2027",
+  "value": "4580",
+  "unit": "KZT",
+  "law": "Закон о республиканском бюджете"
+ },
+ {
+  "key": "mrp_2028",
+  "value": "4938",
+  "unit": "KZT",
+  "law": "Закон о республиканском бюджете"
+ },
+ {
+  "key": "subsistence_minimum_pm",
+  "value": "50851",
+  "unit": "KZT",
+  "law": "Закон о республиканском бюджете (прожиточный минимум)"
+ },
+ {
+  "key": "retirement_age_men",
+  "value": "63",
+  "unit": "years",
+  "law": "ст. 11 Закона о пенсионном обеспечении РК"
+ },
+ {
+  "key": "retirement_age_women",
+  "value": "61",
+  "unit": "years",
+  "law": "ст. 11 Закона о пенсионном обеспечении РК"
+ },
+ {
+  "key": "universal_declaration_start_year_civil_servant",
+  "value": "2021",
+  "unit": "year",
+  "law": "НК РК (всеобщее декларирование, этапы)"
+ },
+ {
+  "key": "universal_declaration_start_year_quasi_gov",
+  "value": "2023",
+  "unit": "year",
+  "law": "НК РК (всеобщее декларирование, этапы)"
+ },
+ {
+  "key": "universal_declaration_start_year_founder",
+  "value": "2024",
+  "unit": "year",
+  "law": "НК РК (всеобщее декларирование, этапы)"
+ },
+ {
+  "key": "universal_declaration_start_year_lawyer",
+  "value": "2024",
+  "unit": "year",
+  "law": "НК РК (всеобщее декларирование, этапы)"
+ },
+ {
+  "key": "universal_declaration_start_year_regular",
+  "value": "2025",
+  "unit": "year",
+  "law": "НК РК (всеобщее декларирование, этапы)"
+ },
+ {
+  "key": "living_minimum_pm_2026",
+  "value": "50851",
+  "unit": "KZT",
+  "law": "Прожиточный минимум РК 2026"
+ },
+ {
+  "key": "mrp_fallback_3876",
+  "value": "3876",
+  "unit": "KZT",
+  "law": ""
+ },
+ {
+  "key": "customs_duty_large_engine_threshold_cc",
+  "value": "3000",
+  "unit": "см³",
+  "law": "ТК ЕАЭС / ставки пошлин на авто"
+ },
+ {
+  "key": "land_tax_region_base_rates_full_matrix",
+  "value": "МРП/га (ирриг/богар/пастб/сенокос): Алматинская 0.68/0.45/0.15/0.25; Жамбылская 0.65/0.42/0.12/0.22; Туркестанская 0.70/0.48/0.18/0.28; Кызылординская 0.72/0.50/0.20/0.30; Актюбинская 0.60/0.38/0.10/0.18; ЗКО 0.58/0.35/0.08/0.15; СКО 0.55/0.40/0.12/0.20; Костанайская 0.52/0.38/0.11/0.19; Акмолинская 0.50/0.35/0.10/0.17; Карагандинская 0.48/0.32/0.09/0.16; Павлодарская 0.45/0.30/0.08/0.14; ВКО 0.42/0.28/0.07/0.13; Атырауская 0.75/0.55/0.25/0.35; Мангистауская 0.80/0.60/0.30/0.40",
+  "unit": "МРП/га",
+  "law": "НК РК — земельный налог / ЕЗН"
+ },
+ {
+  "key": "moral_damage_ranges_mrp_full_table",
+  "value": "lightInjury:50-200(avg100), mediumInjury:200-500(300), severeInjury:500-2000(1000), death:1000-5000(2500), honor:30-200(80), privacy:20-150(50), consumer:10-100(30), labor:20-200(70), illegalArrest:500-3000(1500)",
+  "unit": "МРП",
+  "law": "ст. 951-952 ГК РК (суммы законом не фиксированы — судебная практика)"
+ },
+ {
+  "key": "enpf_payout_period_years",
+  "value": "19",
+  "unit": "years",
+  "law": "Методика ЕНПФ — стандартный период выплат"
+ },
+ {
+  "key": "property_sale_exempt_ownership_years_realestate",
+  "value": "2",
+  "unit": "years",
+  "law": "Новый НК РК K2500000214, ст. 331/363 + переходная ст. 842 — с 01.01.2026 для нед"
+ },
+ {
+  "key": "property_tax_wear_rate_per_year_pct",
+  "value": "2",
+  "unit": "% per year of building age",
+  "law": "Методика определения стоимости (НК РК / Госкорпорация) — износ 2%/год"
+ },
+ {
+  "key": "property_tax_progressive_brackets_full_16_steps",
+  "value": "0-2M:0.05%; 2-4M:1000+0.08%; 4-6M:2600+0.1%; 6-8M:4600+0.15%; 8-10M:7600+0.2%; 10-12M:11600+0.25%; 12-14M:16600+0.3%; 14-16M:22600+0.35%; 16-18M:29600+0.4%; 18-20M:37600+0.45%; 20-75M:46600+0.5%; 75-100M:321600+0.6%; 100-150M:471600+0.65%; 150-350M:796600+0.7%; 350-450M:2196600+0.75%; >450M:2946600+2.0%",
+  "unit": "₸ base + % marginal rate",
+  "law": "ст. 602 НК РК (новый НК K2500000214, 2026)"
+ },
+ {
+  "key": "property_tax_city_base_cost_and_zone_coeff_presets",
+  "value": "almaty:120000@1.5; astana:110000@1.4; shymkent:80000@1.2; karaganda:75000@1.1; aktobe:70000@1.0; other:60000@1.0 (mrpCoeff 1.0 all)",
+  "unit": "₸/m² @ zone coefficient",
+  "law": "Базовая стоимость 1 м² — НК РК; зональные коэффициенты — решения местных органов"
+ },
+ {
+  "key": "limitation_tax_years_default_nk65",
+  "value": "3",
+  "unit": "years",
+  "law": "ст. 65 НК РК 2026 (№214-VIII)"
+ }
+]

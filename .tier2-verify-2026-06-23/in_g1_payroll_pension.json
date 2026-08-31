@@ -1,0 +1,224 @@
+[
+ {
+  "key": "maternity_income_cap_mzp",
+  "value": "7",
+  "unit": "MZP",
+  "law": "Закон РК об обязательном социальном страховании / ГФСС — предел дохода для исчисления выплат"
+ },
+ {
+  "key": "unemployment_income_cap_mzp",
+  "value": "7",
+  "unit": "MZP",
+  "law": "Закон РК об обязательном социальном страховании / ГФСС — объект исчисления СО ограничен 7 МЗП"
+ },
+ {
+  "key": "mrp_2026",
+  "value": "4325",
+  "unit": "KZT",
+  "law": "Закон РК «О республиканском бюджете на 2026 год» (МРП)"
+ },
+ {
+  "key": "mzp_min_wage",
+  "value": "85000",
+  "unit": "KZT",
+  "law": "Закон РК о республиканском бюджете на 2026 (МЗП)"
+ },
+ {
+  "key": "opv_rate",
+  "value": "10",
+  "unit": "percent",
+  "law": "Закон РК «О пенсионном обеспечении в РК» ст.25 / НК РК"
+ },
+ {
+  "key": "opv_max_base_mzp",
+  "value": "50",
+  "unit": "MZP",
+  "law": "Закон РК «О пенсионном обеспечении в РК» (предельная база ОПВ/ОПВР = 50 МЗП)"
+ },
+ {
+  "key": "opvr_rate",
+  "value": "3.5",
+  "unit": "percent",
+  "law": "Закон РК «О пенсионном обеспечении в РК» — ОПВР работодателя (с 2024, 3.5% в 2026)"
+ },
+ {
+  "key": "so_rate",
+  "value": "5",
+  "unit": "percent",
+  "law": "Закон РК «Об обязательном социальном страховании» (СО = 5%)"
+ },
+ {
+  "key": "so_max_base_mzp",
+  "value": "7",
+  "unit": "MZP",
+  "law": "Закон РК «Об обязательном социальном страховании» (предельная база СО = 7 МЗП)"
+ },
+ {
+  "key": "osms_employer_rate",
+  "value": "3",
+  "unit": "percent",
+  "law": "Закон РК «Об обязательном социальном медицинском страховании» (отчисления работодателя ООСМС = 3%)"
+ },
+ {
+  "key": "osms_employer_max_base_mzp",
+  "value": "40",
+  "unit": "MZP",
+  "law": "Закон РК «Об обязательном социальном медицинском страховании» (предельная база отчислений работодателя ООСМС = 40 МЗП, введена с 2026)"
+ },
+ {
+  "key": "sn_social_tax_rate",
+  "value": "6",
+  "unit": "percent",
+  "law": "НК РК 2026 (социальный налог 6%; взаимозачёт с СО отменён с 01.01.2026)"
+ },
+ {
+  "key": "sn_min_base_mrp",
+  "value": "14",
+  "unit": "MRP",
+  "law": "ст.485 НК РК (минимальная база социального налога = 14 МРП)"
+ },
+ {
+  "key": "pension_annuity_sufficient_amount_mrp",
+  "value": "656",
+  "unit": "MRP",
+  "law": "Постановление АРРФР / Закон РК «О пенсионном обеспечении» — достаточность накоплений для пенсионного аннуитета"
+ },
+ {
+  "key": "vosms_employee_rate",
+  "value": "2",
+  "unit": "percent",
+  "law": "Закон РК «Об обязательном социальном медицинском страховании» (ст. 28); ставка ВОСМС работника 2% в 2026"
+ },
+ {
+  "key": "vosms_max_base_mzp",
+  "value": "20",
+  "unit": "MZP",
+  "law": "Закон РК «Об обязательном социальном медицинском страховании» — предельный объект исчисления ВОСМС повышен с 10 до 20 МЗП с 01.01.2026"
+ },
+ {
+  "key": "vosms_self_fixed_monthly",
+  "value": "5950",
+  "unit": "KZT",
+  "law": "Закон РК «Об обязательном социальном медицинском страховании» — взнос ВОСМС ИП/частной практики «за себя» = 5% × 1.4 МЗП"
+ },
+ {
+  "key": "base_pension_min_experience_years",
+  "value": "10",
+  "unit": "years",
+  "law": "Закон о пенсионном обеспечении РК"
+ },
+ {
+  "key": "base_pension_rate_min_pct_of_pm",
+  "value": "70",
+  "unit": "% от ПМ",
+  "law": "Закон о пенсионном обеспечении РК"
+ },
+ {
+  "key": "base_pension_rate_max_pct_of_pm",
+  "value": "118",
+  "unit": "% от ПМ",
+  "law": "Закон о пенсионном обеспечении РК"
+ },
+ {
+  "key": "base_pension_increment_per_year_pct",
+  "value": "2",
+  "unit": "% за год",
+  "law": "Закон о пенсионном обеспечении РК"
+ },
+ {
+  "key": "unified_payment_rate",
+  "value": "24.8",
+  "unit": "%",
+  "law": "НК РК (единый платёж с ФОТ)"
+ },
+ {
+  "key": "unified_payment_share_opv",
+  "value": "40.3",
+  "unit": "% от ЕП",
+  "law": "НК РК (распределение ЕП)"
+ },
+ {
+  "key": "unified_payment_share_vosms",
+  "value": "8.1",
+  "unit": "% от ЕП",
+  "law": "НК РК (распределение ЕП)"
+ },
+ {
+  "key": "unified_payment_share_ipn",
+  "value": "7.3",
+  "unit": "% от ЕП",
+  "law": "НК РК (распределение ЕП)"
+ },
+ {
+  "key": "unified_payment_share_opvr",
+  "value": "14.1",
+  "unit": "% от ЕП",
+  "law": "НК РК (распределение ЕП)"
+ },
+ {
+  "key": "unified_payment_share_oosms",
+  "value": "12.1",
+  "unit": "% от ЕП",
+  "law": "НК РК (распределение ЕП)"
+ },
+ {
+  "key": "unified_payment_share_so",
+  "value": "18.1",
+  "unit": "% от ЕП",
+  "law": "НК РК (распределение ЕП)"
+ },
+ {
+  "key": "vosms_rate",
+  "value": "2",
+  "unit": "%",
+  "law": "Закон об ОСМС"
+ },
+ {
+  "key": "plate_fee_high_demand_grid_mrp_2026",
+  "value": "premiumLetters(001 AAA) 285; premium(007) 228; roundLetters(100 BBB) 194; round(777) 137; popularLetters(070) 114; mirrorLetters(101 AAA) 72; triplet(TTT) 57; mirror(121) 15; custom 10",
+  "unit": "МРП",
+  "law": "Пост. Правительства РК, adilet.zan.kz G24C0000516 (прейскурант с 2026)"
+ },
+ {
+  "key": "self_employed_social_payments_rate",
+  "value": "4",
+  "unit": "% of income",
+  "law": "НК РК 2026 — СНР для самозанятых (преемник упразднённого патента)"
+ },
+ {
+  "key": "self_employed_income_limit_monthly_mrp",
+  "value": "300",
+  "unit": "МРП per MONTH",
+  "law": "НК РК 2026 — лимит дохода СНР для самозанятых"
+ },
+ {
+  "key": "pension_annuity_min_purchase_age",
+  "value": "45",
+  "unit": "years",
+  "law": "Социальный кодекс РК — договор пенсионного аннуитета можно заключить с 45 лет"
+ },
+ {
+  "key": "solidarity_pension_income_replacement_rate",
+  "value": "0.6",
+  "unit": "fraction of avg income",
+  "law": "Закон РК «О пенсионном обеспечении» — солидарная пенсия 60% среднемесячного дохо"
+ },
+ {
+  "key": "solidarity_pension_max_replacement_coef",
+  "value": "0.75",
+  "unit": "fraction (75%)",
+  "law": "Закон РК «О пенсионном обеспечении» — максимальный коэффициент замещения 75%"
+ },
+ {
+  "key": "solidarity_pension_full_experience_years",
+  "value": "25",
+  "unit": "years (до 1998)",
+  "law": "Закон РК «О пенсионном обеспечении» — полный стаж для солидарной пенсии 25 лет ("
+ },
+ {
+  "key": "self_employed_ipn_rate",
+  "value": "0",
+  "unit": "%",
+  "law": "НК РК 2026 — СНР для самозанятых"
+ }
+]

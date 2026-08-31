@@ -1,0 +1,4 @@
+/* App display name in Russian */
+CFBundleDisplayName = "Calk.kz";
+CFBundleName = "Calk.kz - Калькуляторы";
+NSUserActivityTypes = "Calk.kz";

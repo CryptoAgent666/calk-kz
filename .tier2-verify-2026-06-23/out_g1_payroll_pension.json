@@ -1,0 +1,261 @@
+[
+ {
+  "key": "maternity_income_cap_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Объект исчисления СО (база для пособий ГФСС, включая декретные/по беременности) ограничен 7 МЗП = 595 000 ₸ в 2026. Структурный множитель стабилен; подтверждён для 2026."
+ },
+ {
+  "key": "unemployment_income_cap_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Предельный объект исчисления СО = 7 МЗП в 2026 (база для соцвыплат по утрате работы из ГФСС). Множитель 7 МЗП подтверждён."
+ },
+ {
+  "key": "mrp_2026",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/news/mrp-mzp-na-2026-god-v-kazakhstane/",
+  "note": "МРП 2026 = 4 325 ₸ по Закону № 239-VIII «О республиканском бюджете на 2026-2028 годы» (утв. 08.12.2025). Совпадает с ledger."
+ },
+ {
+  "key": "mzp_min_wage",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/news/mrp-mzp-na-2026-god-v-kazakhstane/",
+  "note": "МЗП 2026 = 85 000 ₸ (не изменился к 2025) по Закону № 239-VIII о бюджете на 2026-2028. Совпадает с ledger."
+ },
+ {
+  "key": "opv_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "ОПВ работника = 10% в 2026 (без изменений). Удерживается с работника в ЕНПФ."
+ },
+ {
+  "key": "opv_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.enpf.kz/ru/press-center/news/58761/",
+  "note": "Предельная база ОПВ и ОПВР = 50 МЗП в месяц (4 250 000 ₸ в 2026). Структурный множитель 50 МЗП подтверждён."
+ },
+ {
+  "key": "opvr_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://uchet.kz/news/stavka-opvr-uvelichena-s-1-yanvarya-2026-goda/",
+  "note": "ОПВР работодателя = 3,5% с 01.01.2026 (фазовый рост: 1,5%/2024, 2,5%/2025, 3,5%/2026, 4,5%/2027, 5%/2028). 2026 значение верно."
+ },
+ {
+  "key": "so_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Социальные отчисления (СО) = 5% в 2026 (без изменений)."
+ },
+ {
+  "key": "so_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Предельная база СО = 7 МЗП = 595 000 ₸ в 2026. Множитель 7 МЗП подтверждён."
+ },
+ {
+  "key": "osms_employer_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
+  "note": "Отчисления работодателя ООСМС = 3% в 2026 (ставка не изменилась)."
+ },
+ {
+  "key": "osms_employer_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Предельная база ООСМС работодателя = 40 МЗП = 3 400 000 ₸ в 2026 (введена с 2026). Множитель 40 МЗП подтверждён."
+ },
+ {
+  "key": "sn_social_tax_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Социальный налог для ТОО на ОУР = 6% в 2026 (снижен с 11%). Взаимозачёт СН на СО отменён с 01.01.2026 — оба платятся полностью. Верно."
+ },
+ {
+  "key": "sn_min_base_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/predelnye-summy-dlya-nalogov-i-socplatezhey-v-2026-godu",
+  "note": "Минимальная база соцналога = 14 МРП = 60 550 ₸ в 2026. Множитель 14 МРП подтверждён."
+ },
+ {
+  "key": "pension_annuity_sufficient_amount_mrp",
+  "verdict": "stale",
+  "official_value": "age/sex-specific KZT thresholds per Постановление Правительства РК № 422 от 21.05.2026 (no longer a flat 656 МРП); e.g. отложенный аннуитет с 45 лет: мужчины от ~9 163 722 ₸, женщины от ~11 476 285 ₸",
+  "source_url": "https://www.enpf.kz/ru/press-center/news/282454/",
+  "note": "Методика порога достаточности изменена в 2026: пороги теперь рассчитываются по present-value для каждого возраста/пола вкладчика, а не единым числом. Флэт-значение 656 МРП больше не является операционным официальным порогом (фигурирует лишь во вторичных источниках как грубая оценка). Конкретные таблицы — на enpf.kz/services/vyplaty."
+ },
+ {
+  "key": "vosms_employee_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
+  "note": "ВОСМС работника = 2% в 2026 (ставка не изменилась)."
+ },
+ {
+  "key": "vosms_max_base_mzp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
+  "note": "Предельный объект исчисления ВОСМС повышен до 20 МЗП = 1 700 000 ₸ с 01.01.2026 (ранее 10 МЗП). Множитель 20 МЗП подтверждён."
+ },
+ {
+  "key": "vosms_self_fixed_monthly",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://asistent.kz/ru/article/stavki-nalogov-dlya-uproschenki-v-2026-m-godu",
+  "note": "ВОСМС ИП «за себя» = 5% × 1,4 МЗП = 5% × 119 000 = 5 950 ₸/мес в 2026 (МЗП не изменился, потому сумма та же). Совпадает с ledger."
+ },
+ {
+  "key": "base_pension_min_experience_years",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.nur.kz/nurfin/pension/2321741-pensii-kakogo-razmera-kazahstancy-budut-poluchat-v-2026-godu/",
+  "note": "При стаже участия в пенсионной системе 10 лет и менее базовая пенсия = 70% ПМ; за каждый год свыше 10 — +2%. Порог 10 лет подтверждён для 2026."
+ },
+ {
+  "key": "base_pension_rate_min_pct_of_pm",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.zakon.kz/obshestvo/6505357-kakoy-minimalnyy-razmer-bazovoy-pensii-v-kazakhstane.html",
+  "note": "Минимальная базовая пенсия = 70% прожиточного минимума = 35 596 ₸ в 2026 (ПМ = 50 851 ₸). Подтверждено."
+ },
+ {
+  "key": "base_pension_rate_max_pct_of_pm",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.nur.kz/nurfin/pension/2321741-pensii-kakogo-razmera-kazahstancy-budut-poluchat-v-2026-godu/",
+  "note": "Максимальная базовая пенсия = 118% ПМ = 60 005 ₸ в 2026 (повышена со 110% до 118%; достигается при стаже 34+ лет). Подтверждено."
+ },
+ {
+  "key": "base_pension_increment_per_year_pct",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.nur.kz/nurfin/pension/2321741-pensii-kakogo-razmera-kazahstancy-budut-poluchat-v-2026-godu/",
+  "note": "За каждый год стажа свыше 10 лет базовая пенсия растёт на 2% ПМ (стаж 20 лет → 90% ПМ). Подтверждено для 2026."
+ },
+ {
+  "key": "unified_payment_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Ставка единого платежа (ЕП) с зарплаты = 24,8% с 01.01.2026 (повышена). Совпадает с ledger."
+ },
+ {
+  "key": "unified_payment_share_opv",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ОПВ в ЕП = 40,3% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_vosms",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ВОСМС в ЕП = 8,1% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_ipn",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ИПН в ЕП = 7,3% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_opvr",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ОПВР в ЕП = 14,1% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_oosms",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля ООСМС (ОСМС работодателя) в ЕП = 12,1% в 2026. Совпадает."
+ },
+ {
+  "key": "unified_payment_share_so",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
+  "note": "Доля СО в ЕП = 18,1% в 2026. Совпадает. (Сумма долей 40,3+18,1+14,1+12,1+8,1+7,3 = 100%.)"
+ },
+ {
+  "key": "vosms_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
+  "note": "ВОСМС работника = 2% в 2026 (дубликат vosms_employee_rate). Подтверждено."
+ },
+ {
+  "key": "plate_fee_high_demand_grid_mrp_2026",
+  "verdict": "uncertain",
+  "official_value": null,
+  "source_url": "https://adilet.zan.kz/rus/docs/G24C0000516",
+  "note": "Это не payroll/pension, а прейскурант сбора за гос. рег. номерных знаков (в МРП). Множители-в-МРП устанавливаются постановлением Правительства и при росте МРП пересчитываются автоматически. Конкретную сетку 285/228/194/137/114/72/57/15/10 МРП на 2026 не удалось сверить с первоисточником adilet (вне профиля payroll/pension) — не подтверждаю и не опровергаю."
+ },
+ {
+  "key": "self_employed_social_payments_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://finratings.kz/news/10856-samozaniatye-v-2026-0-naloga-4-platezhei-i-nikakikh-otchiotov/",
+  "note": "ЕСП самозанятых (СНР для самозанятых, преемник патента) = 4% от дохода в 2026 — включает ОПВ+ОПВР+СО+ОСМС (по ~1% каждый). Совпадает."
+ },
+ {
+  "key": "self_employed_income_limit_monthly_mrp",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://finratings.kz/news/10856-samozaniatye-v-2026-0-naloga-4-platezhei-i-nikakikh-otchiotov/",
+  "note": "Лимит дохода СНР для самозанятых = не более 300 МРП в месяц (~1,3 млн ₸ в 2026). Совпадает."
+ },
+ {
+  "key": "pension_annuity_min_purchase_age",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.kmlife.kz/ru/products/individual/pension-annuity",
+  "note": "Договор пенсионного аннуитета (отложенного) можно заключить с 45 лет при достаточности накоплений. Подтверждено для 2026."
+ },
+ {
+  "key": "solidarity_pension_income_replacement_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.gov.kz/situations/5/26?lang=ru",
+  "note": "Солидарная пенсия при полном стаже = 60% среднемесячного дохода (за любые 3 года подряд). Коэффициент 0,6 подтверждён."
+ },
+ {
+  "key": "solidarity_pension_max_replacement_coef",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://www.gov.kz/situations/5/26?lang=ru",
+  "note": "Максимальный размер солидарной пенсии ограничен 75% среднемесячного дохода. Коэффициент 0,75 подтверждён."
+ },
+ {
+  "key": "solidarity_pension_full_experience_years",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://egov.kz/cms/ru/articles/pensionnaya_sistema",
+  "note": "Полный трудовой стаж для солидарной (трудовой) пенсии = 25 лет (мужчины) — учитывается стаж до 01.01.1998; при неполном стаже выплата уменьшается пропорционально. 25 лет — стандартный полный стаж, подтверждён. (Прим.: для женщин по старым нормам 20 лет.)"
+ },
+ {
+  "key": "self_employed_ipn_rate",
+  "verdict": "current",
+  "official_value": null,
+  "source_url": "https://finratings.kz/news/10856-samozaniatye-v-2026-0-naloga-4-platezhei-i-nikakikh-otchiotov/",
+  "note": "Самозанятые на СНР освобождены от ИПН — ставка 0% в 2026. Совпадает."
+ }
+]
