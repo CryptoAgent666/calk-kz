@@ -85,6 +85,18 @@ function rcErrorCode(e: unknown): string {
   return String(err?.message ?? e).slice(0, 64);
 }
 
+/** Отмена пользователем. У Capacitor-плагина RevenueCat поля `userCancelled` НЕТ
+ *  ни на iOS (reject без словаря данных), ни на Android (в `error.data` только
+ *  readableErrorCode/underlyingErrorMessage) — это флаг React-Native-SDK. Отмена
+ *  приходит как `code === "1"` (PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR);
+ *  проверка сообщения — страховка на случай смены кодов. До 02.09.2026 здесь
+ *  читался `e.userCancelled`, и каждая отмена уходила в воронку как purchase_failed. */
+function isUserCancelled(e: unknown): boolean {
+  const err = e as { code?: unknown; message?: unknown } | null;
+  if (String(err?.code ?? '') === '1') return true;
+  return /cancel/i.test(String(err?.message ?? ''));
+}
+
 /** Диагностика стора в консоль (порт с calk.kg, b13): молчаливый провал для
  *  пользователя правилен, но при отладке «продукт не разъехался по трекам»,
  *  «поставлено не из стора» и «SDK не сконфигурен» неотличимы без следа.
@@ -208,7 +220,7 @@ export async function buyRemoveAds(): Promise<BuyResult> {
     return ok ? 'ok' : 'failed';
   } catch (e) {
     // Отмена пользователем — не ошибка; для воронки различаем отмену и сбой.
-    const cancelled = !!(e as { userCancelled?: boolean })?.userCancelled;
+    const cancelled = isUserCancelled(e);
     if (!cancelled) logStoreIssue('покупка сорвалась', e);
     emitIap(cancelled ? 'purchase_cancelled' : 'purchase_failed',
       { platform, code: cancelled ? undefined : rcErrorCode(e) });
