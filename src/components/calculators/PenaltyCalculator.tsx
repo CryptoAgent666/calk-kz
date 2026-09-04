@@ -357,10 +357,10 @@ export default function PenaltyCalculator() {
             <div className="text-sm text-gray-700 space-y-2">
               <div><strong>{t('penalty.taxDebtIPNLabel')}</strong> 100,000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 30 {t('penalty.days')}</div>
-              <div><strong>{t('penalty.rateLabel')}</strong> 0.0574{t('penalty.perDay')}</div>
+              <div><strong>{t('penalty.rateLabel')}</strong> 0.0557{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 100,000 × 0.0574% × 30 = 1,722 ₸</div>
-                <div><strong>{t('penalty.toPayLabel')}</strong> 101,722 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 100,000 × 0.0557% × 30 = 1,671 ₸</div>
+                <div><strong>{t('penalty.toPayLabel')}</strong> 101,671 ₸</div>
               </div>
             </div>
           </div>
