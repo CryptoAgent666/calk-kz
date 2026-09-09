@@ -42,10 +42,13 @@ export default function InsuranceCalculator() {
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
+  // Базовая страховая премия — Закон № 446-II, ст. 19 п. 2 (1,9 МРП).
   const BASE_PREMIUM_MRP = 1.9;
   const CURRENT_YEAR = 2026;
 
-  // Территориальные коэффициенты ОГПО ВТС — утверждены АРФР с 01.01.2026
+  // Территориальные ПОПРАВОЧНЫЕ коэффициенты — постановление Правления АРРФР № 72
+  // от 13.11.2025 (G2500000072), действуют с 01.01.2026. Это единственное, что задаёт
+  // постановление: базовая премия и коэффициенты по типу ТС живут в Законе № 446-II ст. 19.
   const territoryCoefficients = [
     { id: 'kyzylorda-region', name: t('insurance-premium.regions.kyzylordaRegion'), coefficient: 1.85 },
     { id: 'zhambyl-region', name: t('insurance-premium.regions.zhambylRegion'), coefficient: 1.74 },
@@ -69,20 +72,26 @@ export default function InsuranceCalculator() {
     { id: 'atyrau-region', name: t('insurance-premium.regions.atyrauRegion'), coefficient: 0.48 }
   ];
 
-  // Коэффициенты по типам ТС — официальные абсолютные значения АРРФР
-  // (Приказ G2500000072, действ. с 01.01.2026): мото/прицеп 1.00, легковой(B) 2.09,
-  // троллейбус/трамвай 2.33, автобус ≤16 мест 3.26, автобус 16+ мест 3.45, грузовой(C) 3.98.
-  // Прежняя относительная нормировка (легковой=1.0, мото=0.7) заменена на абсолютную сетку.
+  // Коэффициенты по типу ТС и базовая премия 1,9 МРП — Закон РК от 01.07.2003 № 446-II
+  // «Об обязательном страховании ГПО владельцев транспортных средств», ст. 19 п. 6 и п. 2.
+  // В постановлении Правления АРРФР № 72 от 13.11.2025 (G2500000072) этих величин НЕТ —
+  // там только территориальные поправочные коэффициенты (0,48–1,85), см. выше.
+  // Градация закона: «В» (полная масса ≤ 3500 кг, ≤ 8 сидячих мест кроме водителя) — 2,09;
+  // «С» (полная масса СВЫШЕ 3500 кг) — 3,98; автобусы ДО 16 пассажирских мест включительно —
+  // 3,26, СВЫШЕ 16 мест — 3,45; троллейбусы и трамваи — 2,33; «А» (мото) — 1,00;
+  // «Е» (прицепы и полуприцепы) — 1,00. До 09.09.2026 код делил автобусы по 20 и 35 местам
+  // (автобус на 17–20 мест недосчитывался), а лёгкий грузовик до 3,5 т считал по «С» = 3,98,
+  // хотя по классификации он относится к «В» = 2,09.
   const vehicleTypeCoefficients = [
     { id: 'passenger-car', name: t('insurance-premium.vehicleTypes.passengerCar'), coefficient: 2.09 },
     { id: 'taxi', name: t('insurance-premium.vehicleTypes.taxi'), coefficient: 2.09 },
-    { id: 'truck-up-to-3.5t', name: t('insurance-premium.vehicleTypes.truckUpTo35t'), coefficient: 3.98 },
-    { id: 'truck-3.5-12t', name: t('insurance-premium.vehicleTypes.truck35To12t'), coefficient: 3.98 },
-    { id: 'truck-over-12t', name: t('insurance-premium.vehicleTypes.truckOver12t'), coefficient: 3.98 },
-    { id: 'bus-up-to-20', name: t('insurance-premium.vehicleTypes.busUpTo20'), coefficient: 3.26 },
-    { id: 'bus-20-35', name: t('insurance-premium.vehicleTypes.bus20To35'), coefficient: 3.45 },
-    { id: 'bus-over-35', name: t('insurance-premium.vehicleTypes.busOver35'), coefficient: 3.45 },
-    { id: 'motorcycle', name: t('insurance-premium.vehicleTypes.motorcycle'), coefficient: 1.0 }
+    { id: 'light-truck-up-to-3.5t', name: t('insurance-premium.vehicleTypes.lightTruckUpTo35t'), coefficient: 2.09 },
+    { id: 'truck-over-3.5t', name: t('insurance-premium.vehicleTypes.truckOver35t'), coefficient: 3.98 },
+    { id: 'bus-up-to-16', name: t('insurance-premium.vehicleTypes.busUpTo16'), coefficient: 3.26 },
+    { id: 'bus-over-16', name: t('insurance-premium.vehicleTypes.busOver16'), coefficient: 3.45 },
+    { id: 'trolleybus-tram', name: t('insurance-premium.vehicleTypes.trolleybusTram'), coefficient: 2.33 },
+    { id: 'motorcycle', name: t('insurance-premium.vehicleTypes.motorcycle'), coefficient: 1.0 },
+    { id: 'trailer', name: t('insurance-premium.vehicleTypes.trailer'), coefficient: 1.0 }
   ];
 
   // Система бонус-малус — пересмотрена с 07.04.2025 (действует и в 2026).

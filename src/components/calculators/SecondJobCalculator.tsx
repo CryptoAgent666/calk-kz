@@ -16,6 +16,10 @@ const MZP_2026 = 85000;
 const STANDARD_DEDUCTION = 30 * MRP_2026; // 129 750 ₸
 const OPV_MAX_BASE = 50 * MZP_2026;
 const VOSMS_MAX_BASE = 20 * MZP_2026;
+// Норма ежедневной работы (ТК РК ст. 71 п. 4) — 8 часов; ст. 68 п. 3 разрешает
+// превысить её по совместительству не более чем на 4 часа. Итого 12 часов в сутки.
+const DAILY_NORM_HOURS = 8;
+const DAILY_HOURS_LIMIT = DAILY_NORM_HOURS + 4;
 
 // ИПН здесь — плоские 10%. Ставка 15% применяется к облагаемому доходу свыше
 // 8500 МРП/год (36 762 500 ₸, ~3.06 млн ₸/мес) у одного налогового агента.
@@ -54,7 +58,14 @@ export default function SecondJobCalculator() {
   const [primary, setPrimary] = useState<string>('400000');
   const [secondary, setSecondary] = useState<string>('200000');
   const [type, setType] = useState<'internal' | 'external'>('external');
-  const [weeklyHours, setWeeklyHours] = useState<string>('15');
+  // ТК РК ст. 68 п. 3: суммарная продолжительность ЕЖЕДНЕВНОЙ работы по основному
+  // месту и по совместительству не может превышать норму ежедневной работы
+  // (ст. 71 п. 4 — 8 часов) более чем на 4 часа, т.е. 12 часов в сутки. Недельного
+  // лимита для совместительства кодекс не устанавливает: до 09.09.2026 здесь стоял
+  // порог «20 часов в неделю (ст. 196)» — выдуманная норма, ст. 196 регулирует
+  // взаимодействие государственной инспекции труда с другими госорганами.
+  const [primaryDailyHours, setPrimaryDailyHours] = useState<string>('8');
+  const [secondaryDailyHours, setSecondaryDailyHours] = useState<string>('4');
 
   const results = useMemo(() => {
     const p = calcPrimary(parseFloat(primary) || 0);
@@ -63,9 +74,10 @@ export default function SecondJobCalculator() {
     const totalNet = p.net + s.net;
     const totalTax = p.opv + p.vosms + p.ipn + s.opv + s.vosms + s.ipn;
     const effectiveRate = totalGross > 0 ? (totalTax / totalGross) * 100 : 0;
-    const hoursExceeded = (parseFloat(weeklyHours) || 0) > 20;
-    return { p, s, totalGross, totalNet, totalTax, effectiveRate, hoursExceeded };
-  }, [primary, secondary, type, weeklyHours]);
+    const totalDailyHours = (parseFloat(primaryDailyHours) || 0) + (parseFloat(secondaryDailyHours) || 0);
+    const hoursExceeded = totalDailyHours > DAILY_HOURS_LIMIT;
+    return { p, s, totalGross, totalNet, totalTax, effectiveRate, totalDailyHours, hoursExceeded };
+  }, [primary, secondary, type, primaryDailyHours, secondaryDailyHours]);
 
   const formatNumber = (n: number) => Math.round(n).toLocaleString('ru-KZ') + ' ₸';
 
@@ -106,13 +118,20 @@ export default function SecondJobCalculator() {
             </div>
           </div>
 
-          <RangeSlider label={t('second-job.weeklyHours')} value={parseFloat(weeklyHours) || 0}
-            onChange={v => setWeeklyHours(String(v))} min={1} max={30} step={1} formatValue={v => `${v} ч/нед`} />
+          <RangeSlider label={t('second-job.primaryDailyHours')} value={parseFloat(primaryDailyHours) || 0}
+            onChange={v => setPrimaryDailyHours(String(v))} min={1} max={8} step={1} formatValue={v => `${v} ${tCommon('units.hoursPerDay')}`} />
+
+          <RangeSlider label={t('second-job.secondaryDailyHours')} value={parseFloat(secondaryDailyHours) || 0}
+            onChange={v => setSecondaryDailyHours(String(v))} min={1} max={8} step={1} formatValue={v => `${v} ${tCommon('units.hoursPerDay')}`} />
+
+          <p className="text-xs text-gray-500">{t('second-job.dailyHoursHint')}</p>
 
           {results.hoursExceeded && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-amber-900">{t('second-job.hoursWarning')}</div>
+              <div className="text-sm text-amber-900">
+                {t('second-job.hoursWarning', { total: results.totalDailyHours, limit: DAILY_HOURS_LIMIT })}
+              </div>
             </div>
           )}
         </div>

@@ -614,7 +614,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'second-job',
         title: 'Калькулятор совместительства',
-        description: 'Зарплата на двух работах: основная + внешняя без вычета 30 МРП (ТК РК ст. 196)',
+        description: 'Зарплата на двух работах: основная + внешняя без вычета 30 МРП',
         category: 'social',
         icon: 'Briefcase',
         component: React.lazy(() => import('../components/calculators/SecondJobCalculator'))
