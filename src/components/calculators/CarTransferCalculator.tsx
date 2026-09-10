@@ -1,5 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  OGPO_BASE_PREMIUM_MRP,
+  OGPO_REGIONS,
+  OGPO_VEHICLE_TYPES,
+  findOgpoRegion,
+  ogpoAgeExperienceCoeff,
+  ogpoTerritoryCoeff
+} from '../../data/ogpoCoefficients';
 import { Car, Calculator, FileCheck, Users, AlertTriangle, Info, ShieldCheck, Receipt } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -35,37 +43,18 @@ export default function CarTransferCalculator() {
     others: 10,    // прочие физлица
     legal: 12,     // одна из сторон — юридическое лицо
   };
-  const OGPO_BASE_MRP = 1.9;
   const INSPECTION_COST = 7000;
 
-  // Территориальные коэффициенты ОГПО ВТС — официальная пер-региональная таблица
-  // АРРФР (Пост. Правления Агентства №72 от 13.11.2025), действ. с 01.01.2026.
-  // Тот же справочник регионов, что и в калькуляторе ОГПО (InsuranceCalculator);
-  // прежняя грубая схема (Алматы/Астана 2.96, прочие 1.86) упразднена.
-  const TERRITORY_COEFFICIENTS: { id: Region; labelKey: string; coef: number }[] = [
-    { id: 'kyzylorda-region', labelKey: 'insurance-premium.regions.kyzylordaRegion', coef: 1.85 },
-    { id: 'zhambyl-region', labelKey: 'insurance-premium.regions.zhambylRegion', coef: 1.74 },
-    { id: 'turkestan-region', labelKey: 'insurance-premium.regions.turkestanRegion', coef: 1.69 },
-    { id: 'shymkent-city', labelKey: 'insurance-premium.regions.shymkentCity', coef: 1.61 },
-    { id: 'astana-city', labelKey: 'insurance-premium.regions.astanaCity', coef: 1.44 },
-    { id: 'almaty-region', labelKey: 'insurance-premium.regions.almatyRegion', coef: 1.44 },
-    { id: 'zhetysu-region', labelKey: 'insurance-premium.regions.zhetysuRegion', coef: 1.20 },
-    { id: 'west-kazakhstan', labelKey: 'insurance-premium.regions.westKazakhstan', coef: 1.19 },
-    { id: 'karaganda-region', labelKey: 'insurance-premium.regions.karagandaRegion', coef: 1.18 },
-    { id: 'kostanay-region', labelKey: 'insurance-premium.regions.kostanayRegion', coef: 1.11 },
-    { id: 'akmola-region', labelKey: 'insurance-premium.regions.akmolaRegion', coef: 1.08 },
-    { id: 'aktobe-region', labelKey: 'insurance-premium.regions.aktobeRegion', coef: 1.02 },
-    { id: 'ulytau-region', labelKey: 'insurance-premium.regions.ulytauRegion', coef: 0.99 },
-    { id: 'pavlodar-region', labelKey: 'insurance-premium.regions.pavlodarRegion', coef: 0.82 },
-    { id: 'abay-region', labelKey: 'insurance-premium.regions.abayRegion', coef: 0.80 },
-    { id: 'mangystau-region', labelKey: 'insurance-premium.regions.mangystauRegion', coef: 0.79 },
-    { id: 'east-kazakhstan', labelKey: 'insurance-premium.regions.eastKazakhstan', coef: 0.72 },
-    { id: 'almaty-city', labelKey: 'insurance-premium.regions.almatyCity', coef: 0.71 },
-    { id: 'north-kazakhstan', labelKey: 'insurance-premium.regions.northKazakhstan', coef: 0.67 },
-    { id: 'atyrau-region', labelKey: 'insurance-premium.regions.atyrauRegion', coef: 0.48 },
-  ];
-  const regionCoef = (r: Region) => TERRITORY_COEFFICIENTS.find((x) => x.id === r)?.coef ?? 1;
-  const regionLabelKey = (r: Region) => TERRITORY_COEFFICIENTS.find((x) => x.id === r)?.labelKey ?? '';
+  // Территориальная часть ОГПО — два коэффициента ст. 19 Закона № 446-II:
+  // п. 3 (по территории регистрации, в самом Законе) и п. 3-1 (поправочный,
+  // пост. Правления АРРФР № 72 от 13.11.2025). Справочник общий с
+  // InsuranceCalculator — src/data/ogpoCoefficients.ts.
+  const TERRITORY_COEFFICIENTS = OGPO_REGIONS;
+  const regionCoef = (r: Region) => {
+    const found = findOgpoRegion(r);
+    return found ? ogpoTerritoryCoeff(found) : 1;
+  };
+  const regionLabelKey = (r: Region) => findOgpoRegion(r)?.labelKey ?? '';
 
   // Входные параметры
   const [salePrice, setSalePrice] = useState<string>('5000000');
@@ -96,18 +85,17 @@ export default function CarTransferCalculator() {
     const notaryMRP = NOTARY_MRP[notaryParty];
     const notaryFee = Math.round(notaryMRP * MRP_2026);
 
-    // ОГПО расчёт: базовая 1.9 МРП × территориальный × возраст × стаж
-    let ageCoef = 1.1;
-    if (age >= 25 && age <= 65) ageCoef = 1.0;
-    if (age < 25) ageCoef = 1.1;
-    if (age > 65) ageCoef = 1.15;
+    // ОГПО: базовая 1,9 МРП × территориальный (п. 3 × п. 3-1) × тип ТС × возраст/стаж.
+    // Возраст и стаж — ОДНА комбинированная таблица п. 7, а не два множителя;
+    // отдельной надбавки для водителей старше 65 лет в Законе нет.
+    // Калькулятор про переоформление легкового авто, поэтому тип ТС — «В» (2,09):
+    // без него строка ОГПО расходилась бы с калькулятором ОГПО в 2 раза.
+    const ageExpCoef = ogpoAgeExperienceCoeff(age, experience);
+    const vehicleTypeCoef = OGPO_VEHICLE_TYPES.find((v) => v.id === 'passenger-car')!.coefficient;
 
-    let expCoef = 1.1;
-    if (experience >= 2 && experience < 7) expCoef = 1.05;
-    if (experience >= 7) expCoef = 1.0;
-    if (experience < 2) expCoef = 1.1;
-
-    const ogpoFee = Math.round(OGPO_BASE_MRP * MRP_2026 * regionCoef(region) * ageCoef * expCoef);
+    const ogpoFee = Math.round(
+      OGPO_BASE_PREMIUM_MRP * MRP_2026 * regionCoef(region) * vehicleTypeCoef * ageExpCoef
+    );
 
     // Техосмотр
     const inspectionFee = needInspection ? INSPECTION_COST : 0;

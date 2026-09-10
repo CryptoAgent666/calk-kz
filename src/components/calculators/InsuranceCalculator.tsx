@@ -1,14 +1,25 @@
 import React, { useState, useMemo } from 'react';
-import { Shield, Calculator, ChevronRight, ChevronLeft, Users, MapPin, Car, Award, Info, AlertTriangle, BarChart3 } from 'lucide-react';
+import { Shield, Calculator, ChevronRight, ChevronLeft, Users, MapPin, Car, Award, Info, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { FAQSection } from '../ui/FAQSection';
+import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
-import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
+import { TaxPieChart } from '../ui/ChartComponents';
+import {
+  OGPO_BASE_PREMIUM_MRP,
+  OGPO_EXPLOITATION_OVER_7Y_COEFF,
+  OGPO_EXPLOITATION_THRESHOLD_YEARS,
+  OGPO_OTHER_SETTLEMENT_COEFF,
+  OGPO_REGIONS,
+  OGPO_VEHICLE_TYPES,
+  findOgpoRegion,
+  ogpoAgeExperienceCoeff,
+  ogpoTerritoryCoeff
+} from '../../data/ogpoCoefficients';
 
 interface Driver {
   id: string;
@@ -22,6 +33,7 @@ export default function InsuranceCalculator() {
   const [region, setRegion] = useState<string>('astana-city');
   const [vehicleType, setVehicleType] = useState<string>('passenger-car');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
+  const [settlementType, setSettlementType] = useState<'city' | 'other'>('city');
   const [drivers, setDrivers] = useState<Driver[]>([{ id: '1', age: 30, experience: 5 }]);
   const [bonusMalusClass, setBonusMalusClass] = useState<string>('A');
 
@@ -30,7 +42,10 @@ export default function InsuranceCalculator() {
   // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
   const EMPTY_RESULTS = {
     basePremium: 0,
+    registrationCoeff: 0,
+    correctionCoeff: 0,
     territoryCoeff: 0,
+    settlementCoeff: 1,
     vehicleTypeCoeff: 0,
     ageExperienceCoeff: 0,
     exploitationCoeff: 0,
@@ -42,48 +57,25 @@ export default function InsuranceCalculator() {
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
-  const BASE_PREMIUM_MRP = 1.9;
+  const BASE_PREMIUM_MRP = OGPO_BASE_PREMIUM_MRP;
   const CURRENT_YEAR = 2026;
 
-  // Территориальные коэффициенты ОГПО ВТС — утверждены АРФР с 01.01.2026
-  const territoryCoefficients = [
-    { id: 'kyzylorda-region', name: t('insurance-premium.regions.kyzylordaRegion'), coefficient: 1.85 },
-    { id: 'zhambyl-region', name: t('insurance-premium.regions.zhambylRegion'), coefficient: 1.74 },
-    { id: 'turkestan-region', name: t('insurance-premium.regions.turkestanRegion'), coefficient: 1.69 },
-    { id: 'shymkent-city', name: t('insurance-premium.regions.shymkentCity'), coefficient: 1.61 },
-    { id: 'astana-city', name: t('insurance-premium.regions.astanaCity'), coefficient: 1.44 },
-    { id: 'almaty-region', name: t('insurance-premium.regions.almatyRegion'), coefficient: 1.44 },
-    { id: 'zhetysu-region', name: t('insurance-premium.regions.zhetysuRegion'), coefficient: 1.20 },
-    { id: 'west-kazakhstan', name: t('insurance-premium.regions.westKazakhstan'), coefficient: 1.19 },
-    { id: 'karaganda-region', name: t('insurance-premium.regions.karagandaRegion'), coefficient: 1.18 },
-    { id: 'kostanay-region', name: t('insurance-premium.regions.kostanayRegion'), coefficient: 1.11 },
-    { id: 'akmola-region', name: t('insurance-premium.regions.akmolaRegion'), coefficient: 1.08 },
-    { id: 'aktobe-region', name: t('insurance-premium.regions.aktobeRegion'), coefficient: 1.02 },
-    { id: 'ulytau-region', name: t('insurance-premium.regions.ulytauRegion'), coefficient: 0.99 },
-    { id: 'pavlodar-region', name: t('insurance-premium.regions.pavlodarRegion'), coefficient: 0.82 },
-    { id: 'abay-region', name: t('insurance-premium.regions.abayRegion'), coefficient: 0.80 },
-    { id: 'mangystau-region', name: t('insurance-premium.regions.mangystauRegion'), coefficient: 0.79 },
-    { id: 'east-kazakhstan', name: t('insurance-premium.regions.eastKazakhstan'), coefficient: 0.72 },
-    { id: 'almaty-city', name: t('insurance-premium.regions.almatyCity'), coefficient: 0.71 },
-    { id: 'north-kazakhstan', name: t('insurance-premium.regions.northKazakhstan'), coefficient: 0.67 },
-    { id: 'atyrau-region', name: t('insurance-premium.regions.atyrauRegion'), coefficient: 0.48 }
-  ];
+  // Территориальная часть премии — ДВА сомножителя (ст. 19 п. 3 и п. 3-1
+  // Закона № 446-II): коэффициент по территории регистрации из самого Закона
+  // и поправочный коэффициент АРРФР (пост. Правления № 72 от 13.11.2025),
+  // который «дополнительно применяется» к первому. Таблицы — в
+  // src/data/ogpoCoefficients.ts, общие с CarTransferCalculator.
+  const territoryCoefficients = OGPO_REGIONS.map((r) => ({
+    ...r,
+    name: t(r.labelKey),
+    coefficient: ogpoTerritoryCoeff(r)
+  }));
 
-  // Коэффициенты по типам ТС — официальные абсолютные значения АРРФР
-  // (Приказ G2500000072, действ. с 01.01.2026): мото/прицеп 1.00, легковой(B) 2.09,
-  // троллейбус/трамвай 2.33, автобус ≤16 мест 3.26, автобус 16+ мест 3.45, грузовой(C) 3.98.
-  // Прежняя относительная нормировка (легковой=1.0, мото=0.7) заменена на абсолютную сетку.
-  const vehicleTypeCoefficients = [
-    { id: 'passenger-car', name: t('insurance-premium.vehicleTypes.passengerCar'), coefficient: 2.09 },
-    { id: 'taxi', name: t('insurance-premium.vehicleTypes.taxi'), coefficient: 2.09 },
-    { id: 'truck-up-to-3.5t', name: t('insurance-premium.vehicleTypes.truckUpTo35t'), coefficient: 3.98 },
-    { id: 'truck-3.5-12t', name: t('insurance-premium.vehicleTypes.truck35To12t'), coefficient: 3.98 },
-    { id: 'truck-over-12t', name: t('insurance-premium.vehicleTypes.truckOver12t'), coefficient: 3.98 },
-    { id: 'bus-up-to-20', name: t('insurance-premium.vehicleTypes.busUpTo20'), coefficient: 3.26 },
-    { id: 'bus-20-35', name: t('insurance-premium.vehicleTypes.bus20To35'), coefficient: 3.45 },
-    { id: 'bus-over-35', name: t('insurance-premium.vehicleTypes.busOver35'), coefficient: 3.45 },
-    { id: 'motorcycle', name: t('insurance-premium.vehicleTypes.motorcycle'), coefficient: 1.0 }
-  ];
+  // Коэффициенты по типу ТС — ст. 19 п. 6 Закона № 446-II.
+  const vehicleTypeCoefficients = OGPO_VEHICLE_TYPES.map((v) => ({
+    ...v,
+    name: t(v.labelKey)
+  }));
 
   // Система бонус-малус — пересмотрена с 07.04.2025 (действует и в 2026).
   // Добавлены 3 новых класса: A (новички, было 0.50→стартовый класс A=1.8),
@@ -116,7 +108,7 @@ export default function InsuranceCalculator() {
       return EMPTY_RESULTS;
     }
 
-    const selectedRegion = territoryCoefficients.find(r => r.id === region);
+    const selectedRegion = findOgpoRegion(region);
     const selectedVehicleType = vehicleTypeCoefficients.find(v => v.id === vehicleType);
     const selectedBonusMalus = bonusMalusClasses.find(b => b.class === bonusMalusClass);
 
@@ -125,52 +117,52 @@ export default function InsuranceCalculator() {
     }
 
     const basePremium = BASE_PREMIUM_MRP * MRP_2026;
-    const territoryCoeff = selectedRegion.coefficient;
+
+    // Территория: коэффициент регистрации (п. 3) × поправочный АРРФР (п. 3-1).
+    const registrationCoeff = selectedRegion.registrationCoeff;
+    const correctionCoeff = selectedRegion.correctionCoeff;
+    const territoryCoeff = ogpoTerritoryCoeff(selectedRegion);
+
+    // П. 4: для иных городов и населённых пунктов области — ещё ×0,8.
+    // Для столицы и городов республиканского значения неприменимо.
+    const settlementCoeff = !selectedRegion.isCity && settlementType === 'other'
+      ? OGPO_OTHER_SETTLEMENT_COEFF
+      : 1.0;
+
     const vehicleTypeCoeff = selectedVehicleType.coefficient;
 
-    // Определение коэффициента возраст/стаж (берем худшего водителя)
+    // Возраст/стаж — одна комбинированная таблица (п. 7); в полис вписывают
+    // несколько водителей, премию считают по наихудшему из них.
     let ageExperienceCoeff = 1.0;
-    let worstDriver = null;
+    let worstDriver = null as { age: number; experience: number } | null;
 
-    if (drivers.length > 0) {
-      // Логика определения коэффициента по возрасту и стажу
-      let maxCoeff = 1.0;
+    drivers.forEach(driver => {
+      const driverCoeff = ogpoAgeExperienceCoeff(driver.age, driver.experience);
+      if (driverCoeff > ageExperienceCoeff) {
+        ageExperienceCoeff = driverCoeff;
+        worstDriver = { age: driver.age, experience: driver.experience };
+      }
+    });
 
-      drivers.forEach(driver => {
-        let driverCoeff = 1.0;
-
-        if (driver.age < 25 && driver.experience < 2) {
-          driverCoeff = 1.10; // Молодой и неопытный (обновлено с 2026)
-        } else if (driver.age < 25 && driver.experience >= 2) {
-          driverCoeff = 1.05; // Молодой но опытный (обновлено с 2026)
-        } else if (driver.age >= 25 && driver.experience < 2) {
-          driverCoeff = 1.05; // Взрослый но неопытный (обновлено с 2026)
-        } else {
-          driverCoeff = 1.0; // Взрослый и опытный
-        }
-
-        if (driverCoeff > maxCoeff) {
-          maxCoeff = driverCoeff;
-          worstDriver = { age: driver.age, experience: driver.experience };
-        }
-      });
-
-      ageExperienceCoeff = maxCoeff;
-    }
-
-    // Коэффициент срока эксплуатации
+    // Коэффициент срока эксплуатации (п. 9): до 7 лет включительно — 1,00.
     const year = parseInt(manufactureYear) || CURRENT_YEAR;
     const vehicleAge = Math.max(0, CURRENT_YEAR - year);
-    const exploitationCoeff = vehicleAge > 7 ? 1.1 : 1.0;
+    const exploitationCoeff = vehicleAge > OGPO_EXPLOITATION_THRESHOLD_YEARS
+      ? OGPO_EXPLOITATION_OVER_7Y_COEFF
+      : 1.0;
 
     const bonusMalusCoeff = selectedBonusMalus.coefficient;
 
-    const finalPremium = basePremium * territoryCoeff * vehicleTypeCoeff *
-                        ageExperienceCoeff * exploitationCoeff * bonusMalusCoeff;
+    const finalPremium = basePremium * territoryCoeff * settlementCoeff *
+                        vehicleTypeCoeff * ageExperienceCoeff * exploitationCoeff *
+                        bonusMalusCoeff;
 
     return {
       basePremium: Math.round(basePremium),
+      registrationCoeff,
+      correctionCoeff,
       territoryCoeff,
+      settlementCoeff,
       vehicleTypeCoeff,
       ageExperienceCoeff,
       exploitationCoeff,
@@ -186,7 +178,7 @@ export default function InsuranceCalculator() {
   const results = useMemo(
     calculatePremium,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [region, vehicleType, manufactureYear, drivers, bonusMalusClass]
+    [region, vehicleType, manufactureYear, settlementType, drivers, bonusMalusClass]
   );
 
   const formatNumber = (num: number) => {
@@ -217,6 +209,8 @@ export default function InsuranceCalculator() {
   const prevStep = () => {
     setCurrentStep(prev => Math.max(prev - 1, 1));
   };
+
+  const selectedRegionData = findOgpoRegion(region);
 
   const steps = [
     t('insurance-premium.steps.territory'),
@@ -255,8 +249,8 @@ export default function InsuranceCalculator() {
           <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
           <p className="text-amber-800">
             {i18n.language === 'kk'
-              ? '2026 аудиті бойынша бұл ОСГПО калькуляторы анықтамалық ретінде қарастырылады: аумақтық және тәуекел коэффициенттерін сақтандырушының ресми тарифімен қолмен салыстырыңыз.'
-              : 'По аудиту 2026 этот калькулятор ОГПО стоит использовать как справочный: территориальные и риск-коэффициенты нужно вручную сверять с официальным тарифом страховщика.'}
+              ? 'Есеп № 446-II Заңның 19-бабы бойынша жүргізіледі. Сақтандырушы өңірдің түзету коэффициентін ±10%-ға өзгертуге құқылы (3-1-тармақ), сондықтан нақты полистің бағасы есептелгеннен осы шекте өзгеше болуы мүмкін.'
+              : 'Расчёт ведётся по ст. 19 Закона № 446-II. Страховщик вправе отклонить поправочный коэффициент региона на ±10% (п. 3-1), поэтому цена конкретного полиса может отличаться от расчётной в этих пределах.'}
           </p>
         </div>
       </div>
@@ -316,9 +310,43 @@ export default function InsuranceCalculator() {
                   <div className="text-sm text-gray-600">
                     {t('insurance-premium.coefficient')}: {territory.coefficient}
                   </div>
+                  <div className="text-xs text-gray-500">
+                    {territory.registrationCoeff} × {territory.correctionCoeff}
+                  </div>
                 </button>
               ))}
             </div>
+
+            {selectedRegionData && !selectedRegionData.isCity && (
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">
+                  {t('insurance-premium.settlementTitle')}
+                </h3>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {(['city', 'other'] as const).map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => setSettlementType(option)}
+                      className={`p-3 rounded-lg border-2 transition-all text-left ${
+                        settlementType === option
+                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      <div className="font-medium">
+                        {option === 'city'
+                          ? t('insurance-premium.settlementCity')
+                          : t('insurance-premium.settlementOther')}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {t('insurance-premium.coefficient')}: {option === 'city' ? 1 : OGPO_OTHER_SETTLEMENT_COEFF}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">{t('insurance-premium.settlementNote')}</p>
+              </div>
+            )}
           </div>
         )}
 
@@ -540,9 +568,23 @@ export default function InsuranceCalculator() {
                     <span>{formatNumber(results.basePremium)}</span>
                   </div>
                   <div className="flex justify-between">
+                    <span>{t('insurance-premium.registrationCoefficient')}</span>
+                    <span>×{results.registrationCoeff}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>{t('insurance-premium.correctionCoefficient')}</span>
+                    <span>×{results.correctionCoeff}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-500">
                     <span>{t('insurance-premium.territoryCoefficient')}</span>
                     <span>×{results.territoryCoeff}</span>
                   </div>
+                  {results.settlementCoeff !== 1 && (
+                    <div className="flex justify-between">
+                      <span>{t('insurance-premium.settlementCoefficient')}</span>
+                      <span>×{results.settlementCoeff}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span>{t('insurance-premium.vehicleTypeCoefficient')}</span>
                     <span>×{results.vehicleTypeCoeff}</span>
@@ -685,6 +727,8 @@ export default function InsuranceCalculator() {
           />
         </div>
       )}
+
+      <MethodologySection calculatorId="insurance-premium" />
 
       {/* FAQ */}
       <FAQSection

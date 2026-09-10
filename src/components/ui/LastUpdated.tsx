@@ -44,7 +44,7 @@ const LAST_UPDATED: Record<string, string> = {
   'customs-clearance': '2026-01-01',
   'recycling-fee': '2026-01-01',
   'registration-fee': '2026-01-01',
-  'insurance-premium': '2026-01-01',
+  'insurance-premium': '2026-09-10',
   'kasko': '2026-01-01',
   'parcel-customs': '2026-01-01',
   'vehicle-tco': '2026-05-01',  // топливо + Отау 1 мая
