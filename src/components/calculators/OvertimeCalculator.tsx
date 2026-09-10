@@ -12,16 +12,20 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-type WorkType = 'weekend' | 'holiday' | 'night' | 'overtime12' | 'overtime3plus';
+type WorkType = 'weekend' | 'holiday' | 'night' | 'overtime';
 
-// ст.109 ТК РК (№414-V, ред. 2026): оплата за работу в праздничные/выходные дни —
-// не ниже чем в ПОЛУТОРНОМ размере (1.5×) дневной/часовой ставки. Прежняя норма 2× отменена.
+// ТК РК (№414-V, ред. 2026) даёт ОДИН полуторный минимум на все четыре случая:
+//  ст. 108 — сверхурочная работа, ст. 109 — праздничные и выходные дни, ст. 110 —
+//  ночное время: «не ниже чем в полуторном размере исходя из дневной (часовой) ставки».
+// До 09.09.2026 здесь стояла ступень overtime3plus = 2.0 («с 3-го часа — двойной размер»)
+// со ссылкой на ст. 108. Такой ступени в праве РК нет — это ст. 152 ТК РФ; ст. 108
+// ступеней по числу часов не содержит. Ступень убрана, тип свёрнут в единый 'overtime'.
+// Больший размер, чем полуторный, может установить трудовой или коллективный договор.
 const MULTIPLIERS: Record<WorkType, number> = {
   weekend: 1.5,
   holiday: 1.5,
   night: 1.5,
-  overtime12: 1.5,
-  overtime3plus: 2.0,
+  overtime: 1.5,
 };
 
 export default function OvertimeCalculator() {
@@ -92,7 +96,7 @@ export default function OvertimeCalculator() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">{t('overtime.workType')}</label>
             <div className="space-y-2">
-              {(['weekend', 'holiday', 'night', 'overtime12', 'overtime3plus'] as WorkType[]).map(wt => (
+              {(['weekend', 'holiday', 'night', 'overtime'] as WorkType[]).map(wt => (
                 <button key={wt} onClick={() => setWorkType(wt)}
                   className={`w-full p-3 rounded-lg border text-left ${workType === wt ? 'bg-red-50 border-red-500' : 'bg-white border-gray-300'}`}>
                   <div className="flex justify-between items-center">

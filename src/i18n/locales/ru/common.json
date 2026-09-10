@@ -125,7 +125,8 @@
     "percent": "%",
     "years": "лет",
     "months": "месяцев",
-    "days": "дней"
+    "days": "дней",
+    "hoursPerDay": "ч/день"
   },
   "validation": {
     "required": "Обязательное поле",

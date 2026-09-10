@@ -68,7 +68,18 @@ quit
 LFTP_UPLOAD
 
 echo "[3/4] Распаковка на сервере..."
-RESP=$(curl -sS -m 300 -X POST --data-urlencode "token=$TOKEN" "https://calk.kz/$EXTRACT_NAME")
+# Пакет заливается по IP ($FTP_HOST), а экстрактор дёргается по имени — если
+# резолвер на машине отдаёт по calk.kz что-то другое, POST уходит на ЧУЖОЙ хост
+# и возвращает мусор (09.09.2026 локальный DNS отдавал малформед-пакет, запрос
+# ушёл на датахаб и вернул nginx 405 — деплой встал, хотя прод был цел).
+# Прибиваем имя к тому же адресу, куда только что залили пакет.
+# Без массива: /bin/bash на macOS — 3.2, где "${arr[@]}" на пустом массиве
+# падает по set -u. Значение проверено как IPv4, поэтому словоделение безопасно.
+RESOLVE_OPT=""
+if printf '%s' "$FTP_HOST" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'; then
+  RESOLVE_OPT="--resolve calk.kz:443:$FTP_HOST"
+fi
+RESP=$(curl -sS -m 300 $RESOLVE_OPT -X POST --data-urlencode "token=$TOKEN" "https://calk.kz/$EXTRACT_NAME")
 echo "      ответ: $RESP"
 echo "$RESP" | grep -q '"ok":true' || { echo "ОШИБКА распаковки — прод НЕ обновлён консистентно, прогоните ./deploy.sh"; exit 1; }
 

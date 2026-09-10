@@ -18,7 +18,12 @@ export default function PropertyTaxCalculator() {
   const [city, setCity] = useState<string>('almaty');
   const [area, setArea] = useState<string>('60');
   const [buildYear, setBuildYear] = useState<string>('2010');
-  // Материал стен определяет и норму амортизации, и предельный износ (НК РК ст.600).
+  // НК РК ст. 600 п. 4 разводит два параметра, которые до 09.09.2026 были склеены
+  // в один «материал стен»:
+  //  — норму амортизации задаёт ГРУППА КАПИТАЛЬНОСТИ жилища (шесть групп);
+  //  — материал стен определяет только ПОРОГ износа: каменное или из несущих
+  //    панелей — 70 %, из иных материалов — 65 %.
+  const [capitalityGroup, setCapitalityGroup] = useState<string>('3');
   const [wallMaterial, setWallMaterial] = useState<string>('stone');
   const [useCustomCoefficients, setUseCustomCoefficients] = useState<boolean>(false);
   const [baseCost, setBaseCost] = useState<string>('');
@@ -33,6 +38,8 @@ export default function PropertyTaxCalculator() {
     zoneCoeff: 0,
     mrpCoeff: 0,
     wearPercent: 0,
+    wearCoeff: 0,
+    wearExceeded: false,
     taxBase: 0,
     taxRate: 0,
     taxAmount: 0,
@@ -43,14 +50,27 @@ export default function PropertyTaxCalculator() {
   const CURRENT_YEAR = 2026;
   const MRP_2026 = 4325;
 
-  // Норма амортизации и порог износа по материалу стен.
-  // Раньше в коде стояли плоские 2%/год и порог 70% для всего подряд, плюс
-  // надбавки «коттедж +10 / гараж +5» без правового основания. Сверка Tier-2
-  // 23.08.2026: 2% — норма для деревянных/смешанных стен, для каменных и
-  // панельных она ниже, а порог износа для иных материалов 65%, а не 70%.
+  // Нормы амортизации по группам капитальности — НК РК ст. 600 п. 4.
+  // Прежняя двухматериальная шкала (1 %/год для каменных, 2 % для иных) покрывала
+  // лишь 3-ю и 4-ю группы из шести и подменяла собой группу капитальности.
+  const capitalityGroups = [
+    { id: '1', rate: 0.7, nameKey: 'calculators:property-tax.capitalityGroup1' },
+    { id: '2', rate: 0.8, nameKey: 'calculators:property-tax.capitalityGroup2' },
+    { id: '3', rate: 1.0, nameKey: 'calculators:property-tax.capitalityGroup3' },
+    { id: '4', rate: 2.0, nameKey: 'calculators:property-tax.capitalityGroup4' },
+    { id: '5', rate: 3.3, nameKey: 'calculators:property-tax.capitalityGroup5' },
+    { id: '6', rate: 6.6, nameKey: 'calculators:property-tax.capitalityGroup6' }
+  ];
+
+  // Порог физического износа по материалу стен — НК РК ст. 600 п. 4: «Если
+  // физический износ каменного или из несущих панелей жилища, дачной постройки
+  // превышает 70 процентов, из иных материалов – 65 процентов, то коэффициент
+  // физического износа принимается равным 0,2». До 09.09.2026 код вместо этого
+  // обрезал сам износ (Math.min) и упирался в К физ 0,30/0,35.
+  const WEAR_EXCEEDED_COEFF = 0.2;
   const wallMaterials = [
-    { id: 'stone', rate: 1.0, maxWear: 70, nameKey: 'calculators:property-tax.wallStone' },
-    { id: 'other', rate: 2.0, maxWear: 65, nameKey: 'calculators:property-tax.wallOther' }
+    { id: 'stone', maxWear: 70, nameKey: 'calculators:property-tax.wallStone' },
+    { id: 'other', maxWear: 65, nameKey: 'calculators:property-tax.wallOther' }
   ];
 
   const propertyTypes = [
@@ -116,10 +136,17 @@ export default function PropertyTaxCalculator() {
 
     const yearBuilt = parseInt(buildYear) || CURRENT_YEAR;
     const age = Math.max(0, CURRENT_YEAR - yearBuilt);
+    const group = capitalityGroups.find(g => g.id === capitalityGroup) || capitalityGroups[2];
     const material = wallMaterials.find(m => m.id === wallMaterial) || wallMaterials[0];
-    const wearPercent = Math.min(age * material.rate, material.maxWear);
+    // Износ НЕ обрезаем ни порогом, ни сотней: показываем ту же величину, с которой
+    // норма сравнивает порог (для дома 1960 г. по 4-й группе это 132 %). Порог из
+    // ст. 600 п. 4 переключает коэффициент физического износа на фиксированные 0,2,
+    // поэтому К физ отрицательным стать не может: без превышения износ ≤ 70 %.
+    const wearPercent = age * group.rate;
+    const wearExceeded = wearPercent > material.maxWear;
+    const wearCoeff = wearExceeded ? WEAR_EXCEEDED_COEFF : 1 - wearPercent / 100;
 
-    const taxBase = baseCostPerSqm * propertyArea * (1 - wearPercent / 100) * zoneCoeff * mrpCoeff;
+    const taxBase = baseCostPerSqm * propertyArea * wearCoeff * zoneCoeff * mrpCoeff;
 
     const applicableRate = taxRates.find(rate => taxBase >= rate.min && taxBase <= rate.max) || taxRates[taxRates.length - 1];
     const taxRate = applicableRate.rate;
@@ -140,7 +167,9 @@ export default function PropertyTaxCalculator() {
       baseCostPerSqm: Math.round(baseCostPerSqm),
       zoneCoeff,
       mrpCoeff,
-      wearPercent,
+      wearPercent: Math.round(wearPercent * 10) / 10,
+      wearCoeff: Math.round(wearCoeff * 1000) / 1000,
+      wearExceeded,
       taxBase: Math.round(taxBase),
       taxRate,
       taxAmount: Math.round(taxAmount + exemptionAmount),
@@ -154,7 +183,7 @@ export default function PropertyTaxCalculator() {
   const results = useMemo(
     calculatePropertyTax,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [propertyType, wallMaterial, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]
+    [propertyType, capitalityGroup, wallMaterial, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]
   );
 
   const formatNumber = (num: number) => {
@@ -289,6 +318,22 @@ export default function PropertyTaxCalculator() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('property-tax.capitalityGroup')}
+              </label>
+              <select
+                value={capitalityGroup}
+                onChange={(e) => setCapitalityGroup(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              >
+                {capitalityGroups.map((g) => (
+                  <option key={g.id} value={g.id}>{t(g.nameKey)}</option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-2">{t('property-tax.capitalityGroupHint')}</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('property-tax.wallMaterial')}
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -391,8 +436,11 @@ export default function PropertyTaxCalculator() {
                 </span>
               </div>
               <div className="text-xs text-blue-700">
-                {t('property-tax.wear')}: {results.wearPercent}% • {t('property-tax.zoneCoeff')}: {results.zoneCoeff}
+                {t('property-tax.wear')}: {results.wearPercent}% • {t('property-tax.wearCoeff')}: {results.wearCoeff} • {t('property-tax.zoneCoeff')}: {results.zoneCoeff}
               </div>
+              {results.wearExceeded && (
+                <div className="text-xs text-blue-700 mt-1">{t('property-tax.wearExceededNote')}</div>
+              )}
             </div>
 
             <div className="space-y-3">

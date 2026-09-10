@@ -40,18 +40,30 @@ export default function VATThresholdCalculator() {
     december: ''
   });
 
-  const MRP_VALUES = {
+  // МРП по годам. 2024–2026 установлены законами о республиканском бюджете.
+  // 2027 — величина из ПРОЕКТА закона о республиканском бюджете на 2027–2029 годы,
+  // одобренного Правительством 31.08.2026: закон ещё не подписан (ожидается ~декабрь
+  // 2026), поэтому год помечен в интерфейсе как проект. Закон о бюджете на 2026–2028
+  // МРП на 2027 год не устанавливает вовсе — прежние 4580 ₸ не подтверждались ничем.
+  // 2028 из выбора убран: ни закона, ни проекта с величиной на 2028 год не опубликовано,
+  // а прежние 4938 ₸ были интерполяцией и подавались пользователю как норма.
+  const MRP_VALUES: Record<number, number> = {
     2024: 3692,
     2025: 3932,
     2026: 4325,
-    2027: 4580,
-    2028: 4938
+    2027: 4693
   };
+
+  const AVAILABLE_YEARS = [2024, 2025, 2026, 2027];
+  // Годы, для которых МРП взят из проекта бюджета, а не из подписанного закона.
+  const DRAFT_MRP_YEARS = [2027];
+  // Последний УТВЕРЖДЁННЫЙ законом МРП — фолбэк, если год почему-то вне таблицы.
+  const LAST_ENACTED_MRP = MRP_VALUES[2026];
 
   // Порог обязательной постановки на учёт по НДС, в МРП.
   // С 2026 (новый НК РК K2500000214) снижен с 20 000 до 10 000 МРП.
   const VAT_THRESHOLD_MRP_BY_YEAR: Record<number, number> = {
-    2024: 20000, 2025: 20000, 2026: 10000, 2027: 10000, 2028: 10000
+    2024: 20000, 2025: 20000, 2026: 10000, 2027: 10000
   };
 
   // Порог для выбранного года, в МРП. Используется и в расчёте, и в выводе/шеринге.
@@ -73,7 +85,7 @@ export default function VATThresholdCalculator() {
   ];
 
   const computeVATThreshold = () => {
-    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 4938 /* последний известный МРП (2028) для будущих лет */;
+    const mrpValue = MRP_VALUES[calculationYear] || LAST_ENACTED_MRP;
     const thresholdAmount = thresholdMrpForYear * mrpValue;
 
     let runningTotal = 0;
@@ -156,9 +168,9 @@ export default function VATThresholdCalculator() {
   };
 
   const formatMRP = (mrpAmount: number) => {
-    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 4938 /* последний известный МРП (2028) для будущих лет */;
+    const mrpValue = MRP_VALUES[calculationYear] || LAST_ENACTED_MRP;
     return t('vat-threshold.mrpFormat', {
-      amount: mrpAmount.toLocaleString(),
+      amount: mrpAmount.toLocaleString('ru-KZ'),
       tenge: formatNumber(mrpAmount * mrpValue)
     });
   };
@@ -186,7 +198,7 @@ export default function VATThresholdCalculator() {
   };
 
   const getShareData = () => {
-    const mrpValue = MRP_VALUES[calculationYear as keyof typeof MRP_VALUES] || 4938 /* последний известный МРП (2028) для будущих лет */;
+    const mrpValue = MRP_VALUES[calculationYear] || LAST_ENACTED_MRP;
 
     const title = t('vat-threshold.shareTitle', { year: calculationYear });
     const description = t('vat-threshold.shareDescription', { threshold: formatMRP(thresholdMrpForYear) });
@@ -262,8 +274,8 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('vat-threshold.calculationYear')}</h2>
 
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-              {[2024, 2025, 2026, 2027, 2028].map((year) => (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {AVAILABLE_YEARS.map((year) => (
                 <button
                   key={year}
                   onClick={() => setCalculationYear(year)}
@@ -275,8 +287,11 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
                 >
                   <div className="font-semibold">{year}</div>
                   <div className="text-xs text-gray-600">
-                    {t('vat-threshold.mrpLabel')}: {MRP_VALUES[year as keyof typeof MRP_VALUES] || '?'}
+                    {t('vat-threshold.mrpLabel')}: {MRP_VALUES[year] || '?'}
                   </div>
+                  {DRAFT_MRP_YEARS.includes(year) && (
+                    <div className="text-[10px] text-amber-700 mt-1">{t('vat-threshold.mrpDraftBadge')}</div>
+                  )}
                 </button>
               ))}
             </div>
@@ -289,6 +304,12 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
                 <strong>{formatMRP(thresholdMrpForYear)}</strong>
               </div>
             </div>
+
+            {DRAFT_MRP_YEARS.includes(calculationYear) && (
+              <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900">
+                {t('vat-threshold.mrpDraftNote', { year: calculationYear, mrp: formatNumber(MRP_VALUES[calculationYear]) })}
+              </div>
+            )}
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">

@@ -125,7 +125,8 @@
     "percent": "%",
     "years": "жыл",
     "months": "ай",
-    "days": "күн"
+    "days": "күн",
+    "hoursPerDay": "сағ/күн"
   },
   "validation": {
     "required": "Міндетті өріс",
