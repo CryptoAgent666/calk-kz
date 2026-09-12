@@ -54,7 +54,11 @@ export default function HeatingBillCalculator() {
     {
       id: 'astana',
       nameKey: 'calculators:heating.cityAstana',
-      tariffPerGcal: 3930.00, // АО «Астана-Теплотранзит» с 01.04.2026, с НДС 16%
+      // АО «Астана-Теплотранзит» (сбыт населению с 01.07.2025), приказ ДКРЕМ по г. Астане от 10.07.2026
+      // № 23-НҚ, с 16.07.2026: средний по населению 4 130,00 без НДС (с приборами учёта 4 061,11 /
+      // без приборов 4 956,00) → 4 790,80 с НДС 16 %. Прежние 3 930 — тариф ТОО «Астанаэнергосбыт»
+      // от 01.01.2025 при НДС 12 %, компания тепло уже не продаёт (сверка 13.09.2026, a-tranzit.kz).
+      tariffPerGcal: 4790.80,
       averageNorm: 0.0185,
       monthlyNorms: [
         { month: 'october', norm: 0.015, descriptionKey: 'calculators:heating.octoberStart' },
@@ -112,7 +116,10 @@ export default function HeatingBillCalculator() {
     {
       id: 'other',
       nameKey: 'calculators:heating.otherRegions',
-      tariffPerGcal: 6565.24, // единого тарифа «по РК» не публикуется — среднее по четырём городам выше
+      // Единого тарифа «по РК» нет — ДКРЕМ утверждает по каждому субъекту. Здесь среднее по четырём
+      // городам выше ((4 790,80 + 9 139,07 + 7 456,61 + 5 735,27) / 4). Официальная статистика цен БНС
+      // даёт по РК ≈ 6 200 ₸/Гкал (май 2026) — того же порядка. Пересчитано 13.09.2026.
+      tariffPerGcal: 6780.44,
       averageNorm: 0.017,
       monthlyNorms: [
         { month: 'october', norm: 0.014, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -585,8 +592,8 @@ export default function HeatingBillCalculator() {
           { question: t('heating.faq.q5'), answer: t('heating.faq.a5') }
         ]}
         sources={[
-          { title: 'Алматинские тепловые сети', url: 'https://alatau.kz/' },
-          { title: 'Астана-Теплотранзит', url: 'https://astana-teplo.kz/' },
+          { title: 'Алматинские тепловые сети — тарифы', url: 'https://alts.kz/tarify/' },
+          { title: 'Астана-Теплотранзит — тарифы', url: 'https://a-tranzit.kz/tarif-i-tarifnaya-smeta' },
         ]}
       />
 

@@ -20,6 +20,8 @@ interface MortgageProgram {
   minDownPaymentPercent: number;
   maxTermYears: number;
   maxLoanAmount: { [region: string]: number };
+  // Лимит СТОИМОСТИ жилья (7-20-25): отдельно от лимита займа.
+  maxPropertyPrice?: { [region: string]: number };
   additionalFees: {
     applicationFee?: number;
     evaluationFee?: number;
@@ -65,16 +67,21 @@ export default function MortgageCalculator() {
       nominalRate: 7.0,
       minDownPaymentPercent: 20,
       maxTermYears: 25,
-      // Лимиты повышены с 26.09.2025 (источник: kfu.kz, оператор программы):
-      // Астана/Алматы (+пригороды), Актау, Атырау, Шымкент — 30 млн; Караганда — 25 млн; прочие регионы — 20 млн.
-      maxLoanAmount: {
-        'almaty': 30000000,
-        'astana': 30000000,
-        'shymkent': 30000000,
-        'other': 20000000
+      // Оператор — АО «Казахстанский фонд устойчивости» (kfu.kz), не Отбасы банк.
+      // Ограничена СТОИМОСТЬ жилья (пост. НБ РК № 59 от 26.09.2025): Астана/Алматы (+пригороды),
+      // Актау, Атырау, Шымкент — 30 млн; Караганда — 25 млн; прочие регионы — 20 млн.
+      // Заём при минимальном взносе 20 % — не более 80 % от этого потолка.
+      maxPropertyPrice: {
+        'almaty': 30000000, 'astana': 30000000, 'shymkent': 30000000, 'aktau': 30000000, 'atyrau': 30000000,
+        'karaganda': 25000000, 'other': 20000000
       },
+      maxLoanAmount: {
+        'almaty': 24000000, 'astana': 24000000, 'shymkent': 24000000, 'aktau': 24000000, 'atyrau': 24000000,
+        'karaganda': 20000000, 'other': 16000000
+      },
+      // Комиссии за предоставление и обслуживание займа у оператора запрещены (baspana72025.kz, FAQ) —
+      // комиссии за выдачу нет. Оценка и страховка — как у банка-участника.
       additionalFees: {
-        applicationFee: 15000,
         evaluationFee: 25000,
         yearlyInsurance: 0.3
       },
@@ -171,6 +178,9 @@ export default function MortgageCalculator() {
     { id: 'almaty', nameKey: 'calculators:mortgage.regionAlmaty' },
     { id: 'astana', nameKey: 'calculators:mortgage.regionAstana' },
     { id: 'shymkent', nameKey: 'calculators:mortgage.regionShymkent' },
+    { id: 'aktau', nameKey: 'calculators:mortgage.regionAktau' },
+    { id: 'atyrau', nameKey: 'calculators:mortgage.regionAtyrau' },
+    { id: 'karaganda', nameKey: 'calculators:mortgage.regionKaraganda' },
     { id: 'other', nameKey: 'calculators:mortgage.regionOther' }
   ];
 
@@ -205,8 +215,16 @@ export default function MortgageCalculator() {
       isEligible = false;
     }
 
-    if (loanAmount > program.maxLoanAmount[region]) {
-      eligibilityIssues.push(`${t('mortgage.maxLoanAmountFor')} ${t(regions.find(r => r.id === region)?.nameKey || '')}: ${formatNumber(program.maxLoanAmount[region])}`);
+    // У банковских программ лимиты заданы не для всех регионов — новые регионы падают в «прочие».
+    const regionName = t(regions.find(r => r.id === region)?.nameKey || '');
+    const loanCap = program.maxLoanAmount[region] ?? program.maxLoanAmount.other;
+    const priceCap = program.maxPropertyPrice ? (program.maxPropertyPrice[region] ?? program.maxPropertyPrice.other) : undefined;
+    if (priceCap !== undefined && propertyPrice > priceCap) {
+      eligibilityIssues.push(`${t('mortgage.maxPropertyPriceFor')} ${regionName}: ${formatNumber(priceCap)}`);
+      isEligible = false;
+    }
+    if (loanAmount > loanCap) {
+      eligibilityIssues.push(`${t('mortgage.maxLoanAmountFor')} ${regionName}: ${formatNumber(loanCap)}`);
       isEligible = false;
     }
 
@@ -387,7 +405,9 @@ export default function MortgageCalculator() {
                   <div className="flex flex-wrap gap-4 text-xs text-gray-500">
                     <span>• {t('mortgage.downPaymentFrom')} {program.minDownPaymentPercent}%</span>
                     <span>• {t('mortgage.termUpTo')} {program.maxTermYears} {t('mortgage.years')}</span>
-                    <span>• {t('mortgage.upTo')} {formatNumber(program.maxLoanAmount.almaty)} {t('mortgage.inAlmaty')}</span>
+                    {program.maxPropertyPrice
+                      ? <span>• {t('mortgage.priceUpTo')} {formatNumber(program.maxPropertyPrice.almaty)} {t('mortgage.inAlmaty')}</span>
+                      : <span>• {t('mortgage.upTo')} {formatNumber(program.maxLoanAmount.almaty)} {t('mortgage.inAlmaty')}</span>}
                   </div>
                   {program.restrictionsKey && (
                     <div className="mt-2 text-xs text-amber-600 bg-amber-50 p-2 rounded">

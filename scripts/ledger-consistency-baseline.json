@@ -1,9 +1,6 @@
 {
- "generated": "2026-09-09",
+ "generated": "2026-09-13",
  "note": "Расхождения value vs official_value, существовавшие на момент внедрения гарда. Печатаются предупреждением и деплой НЕ блокируют. Разобрал запись — удали ключ отсюда, дальше она охраняется блокирующе. НОВЫЕ расхождения блокируют сразу.",
- "known_mismatches": [
-  "heating_tariff_astana_per_gcal",
-  "heating_tariff_other_regions_per_gcal"
- ],
+ "known_mismatches": [],
  "pending_fix_notes": {}
 }

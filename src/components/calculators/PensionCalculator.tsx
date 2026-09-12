@@ -38,6 +38,11 @@ export default function PensionCalculator() {
 
   // Константы на 2026 год
   const PM = 50851; // Прожиточный минимум
+  const MIN_PENSION = 69049; // минимальная пенсия 2026 — Закон о респ. бюджете № 239-VIII, ст. 7
+  // График выплат ЕНПФ (ПП РК от 30.06.2023 № 521, Методика п. 4–6, приложение): в первый год —
+  // 6,5 % накоплений в год, далее +5 % ежегодно, до исчерпания счёта; не менее 70 % ПМ; при
+  // накоплениях ≤ 12 минимальных пенсий — единовременно. Никаких «19 лет» в правилах нет.
+  const ENPF_PAYOUT_RATE_FIRST_YEAR = 0.065;
   const CURRENT_YEAR = 2026;
   const AVERAGE_RETURN_RATE = 0.06; // 6% годовых доходность ЕНПФ
   const MONTHLY_CONTRIBUTION_RATE = 0.10; // 10% ОПВ
@@ -103,9 +108,10 @@ export default function PensionCalculator() {
       estimatedAccumulationsAtRetirement += futureContributionsWithReturn;
     }
 
-    // Расчет ежемесячной накопительной пенсии (средний период выплат 19 лет)
-    const averagePayoutPeriodMonths = 19 * 12;
-    const accumulativePension = estimatedAccumulationsAtRetirement / averagePayoutPeriodMonths;
+    // Ежемесячная выплата из ЕНПФ по графику первого года (Методика к ПП № 521).
+    const accumulativePension = estimatedAccumulationsAtRetirement <= 12 * MIN_PENSION
+      ? estimatedAccumulationsAtRetirement / 12 // единовременная выплата, показана помесячно условно
+      : Math.max(estimatedAccumulationsAtRetirement * ENPF_PAYOUT_RATE_FIRST_YEAR / 12, 0.7 * PM);
 
     const totalMonthlyPension = basePension + solidarityPension + accumulativePension;
 

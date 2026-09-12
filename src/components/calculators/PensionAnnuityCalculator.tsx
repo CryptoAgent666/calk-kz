@@ -78,6 +78,36 @@ export default function PensionAnnuityCalculator() {
     return SUFFICIENCY_THRESHOLD_BY_AGE[clamped] ?? 0;
   };
   const CURRENT_YEAR = 2026;
+  const PM_2026 = 50851;      // прожиточный минимум
+  const MIN_PENSION_2026 = 69049; // Закон о респ. бюджете № 239-VIII, ст. 7
+  // График выплат ЕНПФ (ПП РК от 30.06.2023 № 521, Методика п. 4–6, приложение): первый год —
+  // 6,5 % накоплений, далее +5 % ежегодно, до исчерпания счёта (не менее 70 % ПМ). Срок выплат
+  // не задан правилами — он зависит от доходности счёта; для ориентира считаем при 6 % годовых
+  // (то же допущение, что в PensionCalculator). Прежняя модель «накопления / 19 лет» в правилах отсутствует.
+  const ENPF_PAYOUT_RATE_FIRST_YEAR = 0.065;
+  const ENPF_INDEXATION = 0.05;
+  const ENPF_ASSUMED_RETURN = 0.06;
+
+  /** Симуляция графика ЕНПФ: годы до исчерпания и сумма выплат. */
+  const simulateEnpf = (accumulations: number) => {
+    if (accumulations <= 12 * MIN_PENSION_2026) {
+      return { monthlyFirstYear: accumulations / 12, years: 1, total: accumulations };
+    }
+    const monthlyFirstYear = Math.max(accumulations * ENPF_PAYOUT_RATE_FIRST_YEAR / 12, 0.7 * PM_2026);
+    let balance = accumulations;
+    let total = 0;
+    let years = 0;
+    let monthly = monthlyFirstYear;
+    while (balance > 0 && years < 60) {
+      const yearly = Math.min(monthly * 12, balance);
+      total += yearly;
+      balance = (balance - yearly) * (1 + ENPF_ASSUMED_RETURN);
+      years += 1;
+      monthly *= 1 + ENPF_INDEXATION;
+      if (balance < 0.7 * PM_2026) { total += balance; balance = 0; }
+    }
+    return { monthlyFirstYear, years, total };
+  };
 
   // Пенсионный возраст по гендеру (РК 2026)
   // Мужчины: 63 (с 2023)
@@ -194,9 +224,10 @@ export default function PensionAnnuityCalculator() {
     const totalPayoutsLifetime = monthlyAnnuityPayment * remainingLifeMonths;
 
     // Сравнение с ЕНПФ (стандартная выплата в течение 19 лет)
-    const enpfPayoutPeriod = 19; // лет
-    const enpfMonthlyPayment = accumulations / (enpfPayoutPeriod * 12);
-    const enpfTotalPayouts = enpfMonthlyPayment * enpfPayoutPeriod * 12;
+    const enpf = simulateEnpf(accumulations);
+    const enpfPayoutPeriod = enpf.years;           // лет до исчерпания при допущении доходности
+    const enpfMonthlyPayment = enpf.monthlyFirstYear; // выплата первого года (далее +5 %/год)
+    const enpfTotalPayouts = enpf.total;
 
     // Анализ эффективности
     const annuityAdvantage = totalPayoutsLifetime - enpfTotalPayouts;

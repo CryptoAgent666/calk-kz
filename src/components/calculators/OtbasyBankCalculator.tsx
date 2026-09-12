@@ -12,29 +12,41 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-// Программы Отбасы банк 2026
+// Госипотеки 2026. Сверка 13.09.2026 по первоисточникам (kfu.kz, baspana72025.kz, hcsbk.kz):
+// - «7-20-25» — НЕ продукт Отбасы банка: оператор АО «Казахстанский фонд устойчивости»
+//   (КФУ), Отбасы среди банков-участников нет. 7 %, взнос от 20 %, до 25 лет, только
+//   новостройки. Ограничена СТОИМОСТЬ ЖИЛЬЯ (не заём): 30 млн Астана/Алматы/Актау/Атырау/
+//   Шымкент, 25 млн Караганда, 20 млн прочие (пост. НБ РК № 59 от 26.09.2025). Комиссии
+//   за выдачу и обслуживание у оператора запрещены.
+// - «Наурыз» и «Отау» (Отбасы банк): ДВЕ ставки — 7 % для состоящих на учёте по категории
+//   СУСН, 9 % для остальных очередников; взнос от 20 %; до 19 лет; лимит ЗАЙМА 36 млн
+//   в Астане/Алматы и 30 млн в регионах. «Наурыз» — заявки кампаниями.
+// «Баспана хит» и «Баспана/Жас Отбасы» как ипотечные продукты не существуют — убраны.
+type CityTier = 'capital' | 'big' | 'karaganda' | 'other';
+const CITY_TIERS: CityTier[] = ['capital', 'big', 'karaganda', 'other'];
+
 interface Program {
   id: string;
   labelKey: string;
-  rate: number;           // годовая ставка %
-  maxTerm: number;        // макс. срок (лет)
-  downPaymentMin: number; // мин. первоначальный взнос %
-  maxAmount: number;      // макс. сумма кредита
+  operatorKey: string;    // кто выдаёт: КФУ или Отбасы банк
+  rate: number;           // базовая годовая ставка, %
+  vulnerableRate?: number;// ставка для СУСН-очередников (двухуровневая шкала)
+  maxTerm: number;        // макс. срок, лет
+  downPaymentMin: number; // мин. первоначальный взнос, %
+  capKind: 'price' | 'loan'; // что ограничено: стоимость жилья или сумма займа
+  cap: Record<CityTier, number>;
 }
 
-// Действующие государственные программы Отбасы банк на июль 2026 (источник: hcsbk.kz).
-// «Баспана хит» и «Баспана/Жас Отбасы» как отдельные ипотечные продукты с низким взносом
-//   закрыты для новых займов (промежуточный заём теперь требует накопления ~50%) — убраны,
-//   чтобы не показывать неактуальные условия.
-// 7-20-25 (КФУ/Нацбанк): 7%, взнос от 20%, до 25 лет, только первичка; лимит жилья 30М
-//   (Астана/Алматы/Актау/Атырау/Шымкент), 25М (Караганда), 20М (прочие).
-// Наурыз (Отбасы): 9% (соц. уязвимые очередники — 7%); взнос от 20% (10% на первичку в чистовой
-//   отделке); лимит займа 36М (Астана/Алматы), 30М (регионы); до 19 лет; заявки — кампаниями.
-// Отау (Отбасы): 9% через систему жилстройсбережений; взнос от 20%; лимит 36М/30М; до 19 лет.
 const programs: Program[] = [
-  { id: '7-20-25', labelKey: 'otbasy-bank.programs.program72025', rate: 7, maxTerm: 25, downPaymentMin: 20, maxAmount: 30_000_000 },
-  { id: 'nauryz', labelKey: 'otbasy-bank.programs.nauryz', rate: 9, maxTerm: 19, downPaymentMin: 20, maxAmount: 36_000_000 },
-  { id: 'otau', labelKey: 'otbasy-bank.programs.otau', rate: 9, maxTerm: 19, downPaymentMin: 20, maxAmount: 36_000_000 },
+  { id: '7-20-25', labelKey: 'otbasy-bank.programs.program72025', operatorKey: 'otbasy-bank.operatorKfu',
+    rate: 7, maxTerm: 25, downPaymentMin: 20, capKind: 'price',
+    cap: { capital: 30_000_000, big: 30_000_000, karaganda: 25_000_000, other: 20_000_000 } },
+  { id: 'nauryz', labelKey: 'otbasy-bank.programs.nauryz', operatorKey: 'otbasy-bank.operatorOtbasy',
+    rate: 9, vulnerableRate: 7, maxTerm: 19, downPaymentMin: 20, capKind: 'loan',
+    cap: { capital: 36_000_000, big: 30_000_000, karaganda: 30_000_000, other: 30_000_000 } },
+  { id: 'otau', labelKey: 'otbasy-bank.programs.otau', operatorKey: 'otbasy-bank.operatorOtbasy',
+    rate: 9, vulnerableRate: 7, maxTerm: 19, downPaymentMin: 20, capKind: 'loan',
+    cap: { capital: 36_000_000, big: 30_000_000, karaganda: 30_000_000, other: 30_000_000 } },
 ];
 
 function calcAnnuity(principal: number, annualRate: number, termYears: number): number {
@@ -51,6 +63,8 @@ export default function OtbasyBankCalculator() {
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
   const [term, setTerm] = useState<string>('20');
+  const [city, setCity] = useState<CityTier>('capital');
+  const [vulnerable, setVulnerable] = useState(false);
 
   const program = programs.find((p) => p.id === selectedProgram)!;
 
@@ -62,19 +76,23 @@ export default function OtbasyBankCalculator() {
     if (price <= 0 || termYears <= 0) return null;
 
     const downPayment = Math.round(price * (dpPercent / 100));
-    const loanAmount = Math.min(price - downPayment, program.maxAmount);
-    const actualLoan = Math.max(0, loanAmount);
+    const actualLoan = Math.max(0, price - downPayment);
+    const rate = vulnerable && program.vulnerableRate ? program.vulnerableRate : program.rate;
+    const capValue = program.cap[city];
 
-    const monthlyPayment = calcAnnuity(actualLoan, program.rate, termYears);
+    const monthlyPayment = calcAnnuity(actualLoan, rate, termYears);
     const totalPayments = monthlyPayment * termYears * 12;
     const overpayment = totalPayments - actualLoan;
     const requiredIncome = Math.round(monthlyPayment / 0.5); // DTI не более 50%
 
     const isDownPaymentOk = dpPercent >= program.downPaymentMin;
     const isTermOk = termYears <= program.maxTerm;
-    const isAmountOk = actualLoan <= program.maxAmount;
+    // 7-20-25 ограничивает стоимость жилья, Наурыз/Отау — сумму займа.
+    const isAmountOk = program.capKind === 'price' ? price <= capValue : actualLoan <= capValue;
 
     return {
+      rate,
+      capValue,
       downPayment,
       loanAmount: actualLoan,
       monthlyPayment,
@@ -86,7 +104,7 @@ export default function OtbasyBankCalculator() {
       isAmountOk,
       isEligible: isDownPaymentOk && isTermOk && isAmountOk,
     };
-  }, [propertyPrice, downPaymentPercent, term, program]);
+  }, [propertyPrice, downPaymentPercent, term, program, city, vulnerable]);
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
@@ -171,16 +189,49 @@ export default function OtbasyBankCalculator() {
                     }`}
                   >
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-gray-900">{t(p.labelKey)}</span>
-                      <span className="text-sm text-sky-700 font-bold">{p.rate}%</span>
+                      <span className="text-sm font-medium text-gray-900">{t(p.labelKey)} <span className="font-normal text-gray-500">· {t(p.operatorKey)}</span></span>
+                      <span className="text-sm text-sky-700 font-bold">{p.vulnerableRate ? `${p.vulnerableRate}–${p.rate}` : p.rate}%</span>
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
-                      {t('otbasy-bank.downPaymentFrom')} {p.downPaymentMin}% · {t('otbasy-bank.upTo')} {p.maxTerm} {t('otbasy-bank.years')} · {t('otbasy-bank.maxLabel')} {formatCurrency(p.maxAmount)}
+                      {t('otbasy-bank.downPaymentFrom')} {p.downPaymentMin}% · {t('otbasy-bank.upTo')} {p.maxTerm} {t('otbasy-bank.years')} · {t(p.capKind === 'price' ? 'otbasy-bank.capPrice' : 'otbasy-bank.capLoan')} {formatCurrency(p.cap[city])}
                     </div>
                   </button>
                 ))}
               </div>
             </div>
+
+            {/* Регион: у 7-20-25 лимит стоимости жилья, у Наурыз/Отау лимит займа — оба региональные */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('otbasy-bank.cityLabel')}</label>
+              <div className="grid grid-cols-2 gap-2">
+                {CITY_TIERS.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setCity(c)}
+                    className={`px-3 py-2 rounded-lg border text-sm transition-all ${
+                      city === c ? 'border-sky-500 bg-sky-50 text-sky-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {t(`otbasy-bank.city_${c}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* СУСН-очередники: по «Наурыз» и «Отау» ставка 7 % вместо 9 % */}
+            <label className="flex items-start gap-3 text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                checked={vulnerable}
+                onChange={(e) => setVulnerable(e.target.checked)}
+                className="mt-1 h-4 w-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
+              />
+              <span>
+                <span className="font-medium text-gray-900">{t('otbasy-bank.vulnerableLabel')}</span>
+                <br /><span className="text-gray-500">{t('otbasy-bank.vulnerableHint')}</span>
+              </span>
+            </label>
 
             {/* Property price */}
             <div>
@@ -262,7 +313,7 @@ export default function OtbasyBankCalculator() {
                   <p className="text-xs text-red-600 mt-1">{t('otbasy-bank.errorDownPayment')} {program.downPaymentMin}%</p>
                 )}
                 {!results.isAmountOk && (
-                  <p className="text-xs text-red-600 mt-1">{t('otbasy-bank.errorMaxAmount')} {formatCurrency(program.maxAmount)}</p>
+                  <p className="text-xs text-red-600 mt-1">{t(program.capKind === 'price' ? 'otbasy-bank.errorMaxPrice' : 'otbasy-bank.errorMaxAmount')} {formatCurrency(results.capValue)}</p>
                 )}
               </div>
 
@@ -286,7 +337,7 @@ export default function OtbasyBankCalculator() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">{t('otbasy-bank.rate')}</span>
-                  <span className="font-medium">{program.rate}% {t('otbasy-bank.annual')}</span>
+                  <span className="font-medium">{results.rate}% {t('otbasy-bank.annual')}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">{t('otbasy-bank.totalPayments')}</span>

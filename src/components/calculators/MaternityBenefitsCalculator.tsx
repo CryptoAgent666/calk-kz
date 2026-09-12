@@ -56,8 +56,11 @@ export default function MaternityBenefitsCalculator() {
       const maternityOPV = grossMaternityBenefit * OPV_RATE;
       const netMaternityBenefit = grossMaternityBenefit - maternityOPV;
 
-      // Ежемесячная выплата по уходу за ребенком
-      const grossChildcareBenefit = childcareIncome * CHILDCARE_RATE;
+      // Ежемесячная выплата по уходу за ребенком — Социальный кодекс ст. 85 п. 1: доход × 0,40;
+      // п. 2: не менее пособия по уходу для неработающих (ст. 82) с ОПВ сверху, не более 40 % от 7 МЗП
+      // (потолок реализован обрезкой дохода до 7 МЗП выше).
+      const childcareFloorGross = (monthlyChildcareBenefitMRP[Math.min(childNumber, 4) as 1 | 2 | 3 | 4] * MRP) / (1 - OPV_RATE);
+      const grossChildcareBenefit = Math.max(childcareIncome * CHILDCARE_RATE, childcareFloorGross);
       const childcareOPV = grossChildcareBenefit * OPV_RATE;
       const netChildcareBenefit = grossChildcareBenefit - childcareOPV;
 

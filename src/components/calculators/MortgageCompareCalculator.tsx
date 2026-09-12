@@ -16,7 +16,7 @@ import LocalizedLink from '../LocalizedLink';
 /**
  * Сравнитель госипотек 07.2026: 7-20-25 (7%, ≤25 лет, лимит цены 30/25/20 млн
  * по городам, только первичка), Наурыз (7% соц.уязвимые / 9% остальные,
- * ≤19 лет, лимит 36/30 млн, заявки — кампаниями), Отау (9%, ≤19 лет, 36/30 млн),
+ * ≤19 лет, лимит 36/30 млн, заявки — кампаниями), Отау (7% соц.уязвимые / 9%, ≤19 лет, 36/30 млн),
  * рыночная (ГЭСВ ~23–25%, дефолт 23,5%). Базовая ставка НБРК 16,25% (07.09.2026).
  */
 type CityTier = 'capital' | 'big' | 'karaganda' | 'other';
@@ -66,15 +66,16 @@ export default function MortgageCompareCalculator() {
       return { id, rate, term: tEff, monthly: Math.round(monthly), overpay: Math.round(monthly * tEff * 12 - loan), eligible, reasonKey };
     };
 
-    const nauryzRate = vulnerable ? 7 : 9;
+    // Наурыз и Отау: 7 % для СУСН-очередников, 9 % остальным (hcsbk.kz, сверка 13.09.2026).
+    const otbasyRate = vulnerable ? 7 : 9;
     return [
       mk('72025', 7, 25,
         p <= CAP_72025[city] && dp >= 20,
         p > CAP_72025[city] ? 'mortgage-compare.reasonPriceCap' : dp < 20 ? 'mortgage-compare.reasonDown20' : undefined),
-      mk('nauryz', nauryzRate, 19,
+      mk('nauryz', otbasyRate, 19,
         loan <= CAP_OTBASY[city] && dp >= 10,
         loan > CAP_OTBASY[city] ? 'mortgage-compare.reasonLoanCap' : dp < 10 ? 'mortgage-compare.reasonDown10' : undefined),
-      mk('otau', 9, 19,
+      mk('otau', otbasyRate, 19,
         loan <= CAP_OTBASY[city] && dp >= 20,
         loan > CAP_OTBASY[city] ? 'mortgage-compare.reasonLoanCap' : dp < 20 ? 'mortgage-compare.reasonDown20' : undefined),
       mk('market', mkt, 25, true),

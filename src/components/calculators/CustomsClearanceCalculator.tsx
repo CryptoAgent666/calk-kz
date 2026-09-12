@@ -18,13 +18,17 @@ export default function CustomsClearanceCalculator() {
   const [engineVolume, setEngineVolume] = useState<string>('2000');
   const [customsValue, setCustomsValue] = useState<string>('15000');
   const [currency, setCurrency] = useState<'USD' | 'KZT'>('USD');
-  const [exchangeRate, setExchangeRate] = useState<string>('470');
+  const [exchangeRate, setExchangeRate] = useState<string>('451'); // НБРК 13.09.2026: 450,91
+  const [fuel, setFuel] = useState<'petrol' | 'diesel'>('petrol');
+  const [eurRate, setEurRate] = useState<string>('523'); // НБРК 13.09.2026: 522,69 — минимальные ставки пошлины заданы в €/см³
   const [isElectric, setIsElectric] = useState<boolean>(false); // электромобиль (растаможка ВТО 0%)
 
   const EMPTY_RESULTS = {
     customsValueKZT: 0,
     customsFee: 0,
     customsDuty: 0,
+    dutyLabel: '',
+    excise: 0,
     vat: 0,
     totalPayments: 0,
     vehicleAge: 0,
@@ -39,12 +43,15 @@ export default function CustomsClearanceCalculator() {
   // Источник: https://adilet.zan.kz/rus/docs/P1800000171
   const MRP_2026 = 4325;
   const CUSTOMS_FEE_MRP = 6;
+  // Акциз на легковые авто с объёмом двигателя свыше 3 000 см³ — НК РК ст. 537, строка 21: 100 ₸ за 1 см³.
+  const EXCISE_OVER_3000_KZT_PER_CC = 100;
 
   const calculateCustomsPayments = () => {
     const value = parseFloat(customsValue) || 0;
     const volume = parseInt(engineVolume) || 0;
     const year = parseInt(manufactureYear) || new Date().getFullYear();
-    const rate = parseFloat(exchangeRate) || 470;
+    const rate = parseFloat(exchangeRate) || 451;
+    const eur = parseFloat(eurRate) || 523;
 
     if (value <= 0) {
       return EMPTY_RESULTS;
@@ -56,31 +63,41 @@ export default function CustomsClearanceCalculator() {
     const vehicleAge = Math.max(0, currentYear - year);
     const isOldVehicle = vehicleAge > 7;
 
-    let customsDutyRate = 0.15;
     const vatRate = 0.16;
 
-    // Электромобиль: ввоз по ставкам ВТО — пошлина 0%, НДС 16% (с 01.01.2026),
-    // утильсбор и транспортный налог не платятся. Объём двигателя не влияет.
+    // Пошлина — Перечень изъятий РК из ЕТТ ЕАЭС (Решение Совета ЕЭК от 14.10.2015 № 59, ред. от
+    // 20.05.2026 № 58), группа 8703. До 7 лет включительно — 15 % таможенной стоимости. Старше 7 лет —
+    // те же 15 %, но не менее минимальной ставки в евро за 1 см³: 0,6 €/см³ (бензин ≤ 1 500 и > 3 000 см³,
+    // дизель любого объёма); бензин 1 500–3 000 см³ — 0,5 €/см³ в коридоре 15–18 %. Прежние «25 %» и
+    // «+5 п.п. за объём > 3 000» ни в ЕТТ, ни в перечне не существуют (сверка 13.09.2026). Электромобиль —
+    // ввоз по ставкам ВТО: пошлина 0 %, НДС 16 %, утильсбор и транспортный налог не платятся.
+    let customsDuty = 0;
+    let dutyLabel = '15%';
     if (isElectric) {
-      customsDutyRate = 0;
+      customsDuty = 0;
+      dutyLabel = '0%';
+    } else if (!isOldVehicle) {
+      customsDuty = customsValueKZT * 0.15;
+    } else if (fuel === 'petrol' && volume > 1500 && volume <= 3000) {
+      const specific = 0.5 * volume * eur;
+      customsDuty = Math.min(Math.max(specific, customsValueKZT * 0.15), customsValueKZT * 0.18);
+      dutyLabel = '0,5 €/см³, 15–18%';
     } else {
-      if (isOldVehicle) {
-        customsDutyRate = 0.25;
-      }
-      if (volume > 3000) {
-        customsDutyRate += 0.05;
-      }
+      customsDuty = Math.max(customsValueKZT * 0.15, 0.6 * volume * eur);
+      dutyLabel = '15%, мин. 0,6 €/см³';
     }
 
-    // Фиксированный таможенный сбор за декларирование: 6 МРП за декларацию
-    // (не процент от стоимости).
-    const customsFee = CUSTOMS_FEE_MRP * MRP_2026;
-    const customsDuty = customsValueKZT * customsDutyRate;
+    // Акциз — только на легковые с двигателем свыше 3 000 см³ (НК РК ст. 537, строка 21).
+    const excise = !isElectric && volume > 3000 ? volume * EXCISE_OVER_3000_KZT_PER_CC : 0;
 
-    const taxBase = customsValueKZT + customsDuty + customsFee;
+    // Фиксированный таможенный сбор за декларирование: 6 МРП за декларацию
+    // (не процент от стоимости). В базу импортного НДС сбор не входит.
+    const customsFee = CUSTOMS_FEE_MRP * MRP_2026;
+
+    const taxBase = customsValueKZT + customsDuty + excise;
     const vat = taxBase * vatRate;
 
-    const totalPayments = customsFee + customsDuty + vat;
+    const totalPayments = customsFee + customsDuty + excise + vat;
 
     let additionalRestrictions = '';
     if (isElectric) {
@@ -95,6 +112,8 @@ export default function CustomsClearanceCalculator() {
       customsValueKZT: Math.round(customsValueKZT),
       customsFee: Math.round(customsFee),
       customsDuty: Math.round(customsDuty),
+      dutyLabel,
+      excise: Math.round(excise),
       vat: Math.round(vat),
       totalPayments: Math.round(totalPayments),
       vehicleAge,
@@ -109,7 +128,7 @@ export default function CustomsClearanceCalculator() {
   const results = useMemo(
     calculateCustomsPayments,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [manufactureYear, engineVolume, customsValue, currency, exchangeRate, isElectric, i18n.language]
+    [manufactureYear, engineVolume, customsValue, currency, exchangeRate, fuel, eurRate, isElectric, i18n.language]
   );
 
   const formatNumber = (num: number) => {
@@ -263,6 +282,44 @@ export default function CustomsClearanceCalculator() {
               </div>
             </div>
 
+            {!isElectric && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('customs-clearance.fuelType')}</label>
+                <div className="flex">
+                  {(['petrol', 'diesel'] as const).map((f, i) => (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => setFuel(f)}
+                      className={`flex-1 px-4 py-3 border border-gray-300 transition-colors ${
+                        fuel === f ? 'bg-blue-500 text-white' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                      } ${i === 0 ? 'rounded-l-lg' : 'rounded-r-lg'}`}
+                    >
+                      {t(`customs-clearance.fuel_${f}`)}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{t('customs-clearance.fuelHint')}</p>
+              </div>
+            )}
+
+            {!isElectric && results.isOldVehicle && (
+              <div>
+                <label htmlFor="eurRate" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('customs-clearance.eurRate')}
+                </label>
+                <input
+                  type="number"
+                  id="eurRate"
+                  value={eurRate}
+                  onChange={(e) => setEurRate(e.target.value)}
+                  step="0.01"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                />
+                <p className="text-xs text-gray-500 mt-1">{t('customs-clearance.eurRateHint')}</p>
+              </div>
+            )}
+
             {currency === 'USD' && (
               <div>
                 <label htmlFor="exchangeRate" className="block text-sm font-medium text-gray-700 mb-2">
@@ -329,10 +386,17 @@ export default function CustomsClearanceCalculator() {
 
               <div className="flex justify-between items-center py-3 border-b border-gray-100">
                 <span className="text-gray-600">
-                  {t('customs-clearance.customsDuty')} {results.isOldVehicle ? '(25%)' : '(15%)'}
+                  {t('customs-clearance.customsDuty')} ({results.dutyLabel})
                 </span>
                 <span className="font-semibold text-gray-900">{formatNumber(results.customsDuty)}</span>
               </div>
+
+              {results.excise > 0 && (
+                <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <span className="text-gray-600">{t('customs-clearance.excise')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.excise)}</span>
+                </div>
+              )}
 
               <div className="flex justify-between items-center py-3 border-b border-gray-100">
                 <span className="text-gray-600">{t('customs-clearance.vat')}</span>

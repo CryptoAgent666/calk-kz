@@ -35,7 +35,7 @@ export default function InsuranceCalculator() {
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
   const [settlementType, setSettlementType] = useState<'city' | 'other'>('city');
   const [drivers, setDrivers] = useState<Driver[]>([{ id: '1', age: 30, experience: 5 }]);
-  const [bonusMalusClass, setBonusMalusClass] = useState<string>('A');
+  const [bonusMalusClass, setBonusMalusClass] = useState<string>('3');
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
@@ -77,19 +77,20 @@ export default function InsuranceCalculator() {
     name: t(v.labelKey)
   }));
 
-  // Система бонус-малус — пересмотрена с 07.04.2025 (действует и в 2026).
-  // Добавлены 3 новых класса: A (новички, было 0.50→стартовый класс A=1.8),
-  // M1=3.0 и M2=3.5 (верхний малус вместо прежнего M=2.45). Всего 18 классов.
-  // Порядок: от худшего малуса (M2=3.5) к лучшему бонусу (класс 13=0.5).
-  // Источник: приказ АРРФР, разъяснения (Банк. омбудсман, nur.kz, lada.kz).
+  // Правила расчёта бонус-малус (V1600013928) в ред. пост. Правления АРРФР от 23.12.2025 № 82,
+  // действует с января 2026: 17 классов M2…13, класса «A» больше нет. Впервые заключающим
+  // договор присваивается класс 3 с надбавкой 20 % (п. 4); аренда/лизинг легковых, автобусы,
+  // такси — класс 3 + 80 % (п. 9); юрлица — класс 3 (п. 8). Сверка 13.09.2026.
+  // ⚠️ На октябрь 2026 АРРФР готовит новую шкалу (без M1/M2, классы 4–13 выше) — перепроверить.
   const bonusMalusClasses = [
     { class: 'M2', coefficient: 3.50, description: t('insurance-premium.bonusMalus.classM2') },
     { class: 'M1', coefficient: 3.00, description: t('insurance-premium.bonusMalus.classM1') },
     { class: 'M', coefficient: 2.45, description: t('insurance-premium.bonusMalus.classM') },
     { class: '0', coefficient: 2.30, description: t('insurance-premium.bonusMalus.class0') },
-    { class: 'A', coefficient: 1.80, description: t('insurance-premium.bonusMalus.classA') },
+    { class: '3taxi', coefficient: 1.80, description: t('insurance-premium.bonusMalus.class3taxi') },
     { class: '1', coefficient: 1.55, description: t('insurance-premium.bonusMalus.class1') },
     { class: '2', coefficient: 1.40, description: t('insurance-premium.bonusMalus.class2') },
+    { class: '3first', coefficient: 1.20, description: t('insurance-premium.bonusMalus.class3first') },
     { class: '3', coefficient: 1.00, description: t('insurance-premium.bonusMalus.class3') },
     { class: '4', coefficient: 0.95, description: t('insurance-premium.bonusMalus.class4') },
     { class: '5', coefficient: 0.90, description: t('insurance-premium.bonusMalus.class5') },
@@ -100,7 +101,7 @@ export default function InsuranceCalculator() {
     { class: '10', coefficient: 0.65, description: t('insurance-premium.bonusMalus.class10') },
     { class: '11', coefficient: 0.60, description: t('insurance-premium.bonusMalus.class11') },
     { class: '12', coefficient: 0.55, description: t('insurance-premium.bonusMalus.class12') },
-    { class: '13', coefficient: 0.50, description: t('insurance-premium.bonusMalus.class13') }
+    { class: '13', coefficient: 0.50, description: t('insurance-premium.bonusMalus.class13') },
   ];
 
   const calculatePremium = () => {
