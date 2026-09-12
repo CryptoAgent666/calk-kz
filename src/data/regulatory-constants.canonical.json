@@ -8799,7 +8799,7 @@
         "RegistrationFeeCalculator (электро 25/250)",
         "MaternityBenefitsCalculator (пол по ст. 85 п. 2)"
       ],
-      "deploy": "см. коммит"
+      "deploy": "13.09.2026: deploy-fast ×2 (бандл 20260912232602 → 20260912233348 с фиксом методологии ЕНПФ), OTA опубликован, check:ota ok; прод проверен по 6 страницам + sitemap 21/21; loop_closer --apply: calk.kz 442/412/0"
     }
   },
   "completeness_audit": {
