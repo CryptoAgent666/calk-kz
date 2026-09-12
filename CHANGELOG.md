@@ -1,5 +1,58 @@
 # Changelog — Calk.kz
 
+## [2026-09-13] OTA приложения не применялся с релиза 1.4 — манифест не доходил до сети
+
+### Как нашлось
+
+Разбор воронки покупок «Убрать рекламу» (16 тапов → 15 «неудач» → 0 покупок за 28 дней
+на calk.kz). Ни одно из 691 события calk.kz в `events_raw` не несёт поле `platform`,
+которое шлёт каждый `paywall_shown` в любом бандле от 17.08 (48aea15). По неделям с 16.08 —
+везде ноль. Вывод однозначный: ни один клиент не запускал ничего новее вшитого бандла
+20260816111817. Месяц JS-правок (детект отмены покупки, нормы ТК, ОГПО, МРП-2027) в
+приложении не действовал, а «15 неудач» — отмены на старом детекте, не сломанная покупка:
+конфиг RevenueCat цел, покупка 13.08 прошла.
+
+### Причина
+
+`capacitor.config.ts`: `server.hostname: 'calk.kz'`. Манифест `https://calk.kz/app-updates/latest.json`
+запрашивался `fetch()` из webview:
+- **Android** — приложение выдаёт себя за `https://calk.kz`; `WebViewLocalServer.isLocalFile()`
+  (`host == bridge.getHost()`) перехватывает любой запрос к этому хосту и отдаёт из вшитого
+  бандла, где `app-updates/` нет. До сети запрос не доходит.
+- **iOS** — `iosScheme: 'https'` не применяется, origin `capacitor://calk.kz` (stdout:
+  «Loading app at capacitor://calk.kz»). Запрос cross-origin, сайт не отдавал
+  `Access-Control-Allow-Origin` — CORS.
+
+Оба пути → `manifest = null` → тихий `return`. Скачивание zip у Capgo нативное, там всё цело.
+`check:ota` этого не ловит: он проверяет свежесть манифеста на сервере, не применение на клиентах.
+
+### Что исправлено
+
+- `src/liveUpdates.ts`: манифест читается `CapacitorHttp.get()` из `@capacitor/core` — нативный
+  URLSession/OkHttp, мимо перехвата и мимо CORS. Гард `isPluginAvailable('CapacitorUpdater')`,
+  диагностика `[ota]` в консоль.
+- `src/main.tsx`: `initLiveUpdates()` перенесён до старта гидратации — внутри `notifyAppReady()`,
+  и если он не успеет за `appReadyTimeout` (10 с), Capgo откатит бандл.
+- `public/.htaccess`: CORS-блок для `latest.json` / `bundle-*.zip` (append) — страховка.
+
+### Проверка
+
+С подменой вшитой версии на 20260816111817 (как у реальных пользователей):
+- **iOS-симулятор** (iPhone 17): `CapacitorHttp get` → скачивание 11 МБ → резюме → `set` →
+  «Reloading c99segWGYo» → «Version successfully loaded: 20260910013228», отката нет.
+- **Android-эмулятор** (Pixel 7): отрицательный контроль на старом коде — Capgo инициализируется,
+  `CapacitorHttp`/`download` не вызываются ни разу; с правкой — `CapacitorHttp get` → 200 с
+  `Access-Control-Allow-Origin: *` → `CapacitorUpdater download`.
+
+Сайт и OTA-бандл 20260912123637 с правкой выложены 13.09; после правки `.htaccess` sitemap
+(51 из 51 выборочно) и ассеты — 200 с верными content-type.
+
+### Следствие
+
+Вшитый 1.4 этот манифест не прочитает никогда — правка доедет до пользователей только
+**новым бинарём 1.5**. С него OTA заработает. После релиза первый сигнал успеха — появление
+`platform` в событиях `paywall_shown` calk.kz.
+
 ## [2026-09-10] ОГПО — премия считалась без коэффициента территории регистрации (ст. 19 п. 3)
 
 ### Контекст
