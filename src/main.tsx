@@ -108,14 +108,17 @@ function routeCalculatorId(): string | null {
 // Сигнал app:hydrated для AdSense-лоадера уходит из App.tsx (useEffect после
 // первого commit) — здесь его давать рано: hydrateRoot возвращается ДО конца
 // конкурентной гидратации.
+// OTA-обновление веб-бандла в нативном приложении (no-op на сайте). Ставим ДО
+// старта гидратации: внутри — notifyAppReady(), и если он не успеет за
+// appReadyTimeout (10 с) на слабом устройстве, Capgo откатит бандл.
+void initLiveUpdates();
+
 if (container.hasChildNodes() && !VOLATILE_IDS.has(routeCalculatorId() ?? '')) {
   void primeRouteChunk().then(() => hydrateRoot(container, app));
 } else {
   createRoot(container).render(app);
 }
 
-// OTA-обновление веб-бандла в нативном приложении (no-op на сайте).
-void initLiveUpdates();
 
 // Покупки RevenueCat (entitlement ad_free). Инициализируем ДО рекламы, чтобы
 // у купивших баннер не мелькал (isAdFree() читает кэш синхронно).

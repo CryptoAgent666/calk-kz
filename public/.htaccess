@@ -64,3 +64,13 @@ ErrorDocument 404 /index.html
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
+
+# CORS для OTA приложения (app-updates/latest.json и bundle-*.zip): манифест
+# запрашивает нативное приложение с origin, отличным от сайта. Основной путь
+# в клиенте — нативный HTTP (мимо CORS), заголовок — страховка для webview-fetch.
+# Файлы с такими именами существуют только в app-updates/.
+<IfModule mod_headers.c>
+  <FilesMatch "^(latest\.json|bundle-[0-9]+\.zip)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>
