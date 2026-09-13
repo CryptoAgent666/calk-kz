@@ -3429,7 +3429,7 @@
       "key": "utilization_fee_base_rate_mrp",
       "value": 50,
       "unit": "MRP",
-      "law": "Постановление Правительства РК — утилизационный сбор (базовая ставка)",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
       "year": "2026",
       "change_frequency": "annual",
       "aliases": [
@@ -3440,16 +3440,19 @@
         "RecyclingFeeCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://kolesa.kz/content/news/razmery-utilsbora-v-kazahstane-v-2026-godu/",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
       "official_value": "50",
-      "verify_note": "Базовая ставка утилизационного сбора на все ТС = 50 МРП (≈216 250 ₸ в 2026). Подтверждено для 2026 (с 07.05.2026 действует обновлённый приказ, базовая ставка остаётся 50 МРП).",
-      "reverified": "2026-06-23"
+      "verify_note": "Базовая ставка утилизационного сбора на все ТС = 50 МРП (≈216 250 ₸ в 2026). Подтверждено для 2026 (с 07.05.2026 действует обновлённый приказ, базовая ставка остаётся 50 МРП). | 13.09.2026: дословно по adilet V2100025100, прил. 4 (ред. № 54) — «50 МРП» во всех строках, одинаково для коэф. 1 и коэф. 2. «Льготных коэффициентов 0,17 и 0,26 для физлиц» ни в Методике, ни в приказе № 54 нет — по поиску это коэффициенты российского утильсбора. Прежний law «Постановление Правительства» неверен: база — приказ министра.",
+      "reverified": "2026-09-13",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     },
     {
       "key": "utilization_fee_car_coeff",
-      "value": "engine cm3: <=1000:1.5; 1001-2000:3.5; 2001-3000:5.0; >3000:11.5",
+      "value": "engine cm3 (коэф. 1 — РК / не из РФ и РБ): <=1000:1.5; 1001-2000:3.5; 2001-3000:5; >3000:11.5; EV:0",
       "unit": "factor",
-      "law": "Постановление Правительства РК — утильсбор, коэффициенты для легковых авто",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -3459,13 +3462,20 @@
       "used_by": [
         "RecyclingFeeCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "engine cm3 (коэф. 1 — РК / не из РФ и РБ): <=1000:1.5; 1001-2000:3.5; 2001-3000:5; >3000:11.5; EV:0",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "13.09.2026: п. 1 прил. 4 (ред. № 54), коэф. 1 дословно: «до 1 000 см3 50 МРП 1,5 … от 1 001 см3 до 2 000 см3 3,5 … от 2 001 см3 до 3 000 см3 5 … свыше 3 001 см3 11,5»; электро (не гибрид) — 0. Код совпадал. Коэф. 2 — utilization_fee_car_coeff2_rf_rb.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     },
     {
       "key": "utilization_fee_truck_coeff",
-      "value": "mass t: <=2.5:3.5; 2.6-3.5:7.5; 20.1-50:20.5",
+      "value": "mass t (коэф. 1): <=2.5:3.5; 2.501-3.5:7.5; 3.501-5:7.5; 5.01-8:8; 8.01-12:9.5; 12.01-20:10.5; 20.01-50:20.5; седельные тягачи 12-50:11; EV:0",
       "unit": "factor",
-      "law": "Постановление Правительства РК — утильсбор, коэффициенты для грузовых ТС",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -3475,13 +3485,20 @@
       "used_by": [
         "RecyclingFeeCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "mass t (коэф. 1): <=2.5:3.5; 2.501-3.5:7.5; 3.501-5:7.5; 5.01-8:8; 8.01-12:9.5; 12.01-20:10.5; 20.01-50:20.5; седельные тягачи 12-50:11; EV:0",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "Phase-4 13.09.2026: в коде было 3 группы из 8 (масса 3,5–20 т не давала коэффициента, у 20,5 подпись «Свыше 3,5 тонн»), седельных тягачей не было. Применён п. 2 прил. 4 (ред. № 54) целиком.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     },
     {
       "key": "utilization_fee_bus_coeff",
-      "value": "cm3: <=2500:4.0; >10000:13.5",
+      "value": "cm3 (коэф. 1): <=2500:4; 2501-5000:8; 5001-10000:10.5; >10000:13.5; EV:0",
       "unit": "factor",
-      "law": "Постановление Правительства РК — утильсбор, коэффициенты для автобусов",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -3491,13 +3508,20 @@
       "used_by": [
         "RecyclingFeeCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "cm3 (коэф. 1): <=2500:4; 2501-5000:8; 5001-10000:10.5; >10000:13.5; EV:0",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "Phase-4 13.09.2026: в коде было 2 группы из 4 (2501–10 000 см³ не давали коэффициента). Применён п. 3 прил. 4 (ред. № 54).",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     },
     {
       "key": "utilization_fee_electric_exempt",
       "value": 0,
       "unit": "factor",
-      "law": "Постановление Правительства РК — утильсбор, освобождение электромобилей (коэф. 0)",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -3507,7 +3531,98 @@
       "used_by": [
         "RecyclingFeeCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "0",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "Phase-4 13.09.2026: 0 — только коэф. 1 (РК / ввоз не из РФ и РБ), строка «с электродвигателями, за исключением транспортных средств с гибридной силовой установкой 50 МРП 0 60» в п. 1–3. При ввозе из РФ/РБ — 60 (utilization_fee_electric_coeff2_rf_rb). Тексты «освобождены полностью» и «с 2024 г.» исправлены.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "utilization_fee_car_coeff2_rf_rb",
+      "value": "engine cm3 (коэф. 2 — ввоз из РФ/РБ): <=1000:22; 1001-2000:136; 2001-3000:164; >3000:246",
+      "unit": "factor",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "RecyclingFeeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_value": "engine cm3 (коэф. 2 — ввоз из РФ/РБ): <=1000:22; 1001-2000:136; 2001-3000:164; >3000:246",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "Новое с 07.05.2026 (приказ № 54, п. 8 и прил. 4): коэф. 2 — ТС, ввозимые из Республики Беларусь или Российской Федерации. Сверено дословно 13.09.2026; вторичные uchet.kz/autero.kz давали те же числа, сомнение в правдоподобии снято первоисточником. Дословно: «до 1 000 см3 50 МРП 1,5 22; от 1 001 см3 до 2 000 см3 50 МРП 3,5 136; от 2 001 см3 до 3 000 см3 50 МРП 5 164; свыше 3 001 см3 50 МРП 11,5 246».",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "utilization_fee_truck_coeff2_rf_rb",
+      "value": "mass t (коэф. 2 — ввоз из РФ/РБ): все группы до 50 т и седельные тягачи:164",
+      "unit": "factor",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "RecyclingFeeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_value": "mass t (коэф. 2 — ввоз из РФ/РБ): все группы до 50 т и седельные тягачи:164",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "Новое с 07.05.2026 (приказ № 54, п. 8 и прил. 4): коэф. 2 — ТС, ввозимые из Республики Беларусь или Российской Федерации. Сверено дословно 13.09.2026; вторичные uchet.kz/autero.kz давали те же числа, сомнение в правдоподобии снято первоисточником. В п. 2 прил. 4 у всех восьми строк по массе коэф. 2 = 164.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "utilization_fee_bus_coeff2_rf_rb",
+      "value": "cm3 (коэф. 2 — ввоз из РФ/РБ): <=2500:164; >2500:246",
+      "unit": "factor",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "RecyclingFeeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_value": "cm3 (коэф. 2 — ввоз из РФ/РБ): <=2500:164; >2500:246",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "Новое с 07.05.2026 (приказ № 54, п. 8 и прил. 4): коэф. 2 — ТС, ввозимые из Республики Беларусь или Российской Федерации. Сверено дословно 13.09.2026; вторичные uchet.kz/autero.kz давали те же числа, сомнение в правдоподобии снято первоисточником. П. 3 прил. 4: до 2 500 см3 — 164; 2 501–5 000, 5 001–10 000 и свыше 10 001 см3 — 246.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "utilization_fee_electric_coeff2_rf_rb",
+      "value": 60,
+      "unit": "factor",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "RecyclingFeeCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_value": "60",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "Новое с 07.05.2026 (приказ № 54, п. 8 и прил. 4): коэф. 2 — ТС, ввозимые из Республики Беларусь или Российской Федерации. Сверено дословно 13.09.2026; вторичные uchet.kz/autero.kz давали те же числа, сомнение в правдоподобии снято первоисточником. Строка «с электродвигателями, за исключением транспортных средств с гибридной силовой установкой 50 МРП 0 60» — в п. 1, 2 и 3 одинаково.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     },
     {
       "key": "ipn_base_rate",
@@ -6269,7 +6384,7 @@
       "key": "utilization_fee_car_coefficient_over_3000cc",
       "value": 11.5,
       "unit": "x base rate (50 МРП)",
-      "law": "Ставки утилизационного сбора РК (РОП) — легковые >3000 см³",
+      "law": "Методика расчёта утилизационного платежа (приказ и.о. МЭГПР РК от 02.11.2021 № 448), прил. 4 в ред. приказа МЭПР РК от 20.03.2026 № 54 (с 07.05.2026)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -6277,8 +6392,14 @@
       "used_by": [
         "RecyclingFeeCalculator"
       ],
-      "note_deep": "Line 40: { minVolume: 3001, coefficient: 11.5 }. First-sweep aggregate for car coefficients was truncated after '2001-3000:5' — the 4th brac",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "11.5",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2100025100",
+      "official_source": "https://adilet.zan.kz/rus/docs/V2600038306",
+      "verify_note": "13.09.2026: п. 1 прил. 4 (ред. № 54) — «свыше 3 001 см3 50 МРП 11,5 246». Совпадает.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     },
     {
       "key": "self_employed_social_payments_rate",
