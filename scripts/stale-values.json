@@ -44,6 +44,26 @@
       "was": "3876",
       "now": "4325",
       "what": "mrp_fallback_3876"
+    },
+    {
+      "was": "12-25%",
+      "now": "15% по ДТ / ЕТП по ПТД",
+      "what": "customs_duty_rate_vehicle_fake_range",
+      "only": [
+        "calculatorMethodology"
+      ]
+    },
+    {
+      "was": "1000-5000",
+      "now": "700–5000",
+      "what": "moral_damage_death_range_2026_04",
+      "ctx": "МРП|АЕК"
+    },
+    {
+      "was": "500-3000",
+      "now": "300–2500",
+      "what": "moral_damage_illegal_arrest_range_2026_04",
+      "ctx": "МРП|АЕК"
     }
   ]
 }

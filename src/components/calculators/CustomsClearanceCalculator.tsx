@@ -12,8 +12,27 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 
+// Единые ставки для легковых авто — товаров для личного пользования (ПТД, ТК ЕАЭС ст. 260, 266):
+// Решение Совета ЕЭК от 20.12.2017 № 107, прил. 2, табл. 2, п. 3 (ред. 24.02.2026 № 35). Единый платёж
+// заменяет пошлину, НДС и акциз. Возраст — «с момента выпуска».
+const ETP_UP_TO_3Y = [
+  { maxEur: 8500, pct: 0.54, minEurPerCc: 2.5 },
+  { maxEur: 16700, pct: 0.48, minEurPerCc: 3.5 },
+  { maxEur: 42300, pct: 0.48, minEurPerCc: 5.5 },
+  { maxEur: 84500, pct: 0.48, minEurPerCc: 7.5 },
+  { maxEur: 169000, pct: 0.48, minEurPerCc: 15 },
+  { maxEur: Infinity, pct: 0.48, minEurPerCc: 20 },
+];
+const ETP_VOLUME_BANDS_CC = [1000, 1500, 1800, 2300, 3000, Infinity];
+const ETP_EUR_PER_CC_3_TO_5Y = [1.5, 1.7, 2.5, 2.7, 3, 3.6];
+const ETP_EUR_PER_CC_OVER_5Y = [3, 3.2, 3.5, 4.8, 5, 5.7];
+
+type Regime = 'dt' | 'personal';
+
 export default function CustomsClearanceCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  // dt — декларация на товары по ставкам перечня изъятий РК; personal — ПТД по единым ставкам ЕАЭС
+  const [regime, setRegime] = useState<Regime>('dt');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
   const [engineVolume, setEngineVolume] = useState<string>('2000');
   const [customsValue, setCustomsValue] = useState<string>('15000');
@@ -30,6 +49,9 @@ export default function CustomsClearanceCalculator() {
     dutyLabel: '',
     excise: 0,
     vat: 0,
+    etp: 0,
+    etpLabel: '',
+    isPersonal: false,
     totalPayments: 0,
     vehicleAge: 0,
     isOldVehicle: false,
@@ -43,8 +65,12 @@ export default function CustomsClearanceCalculator() {
   // Источник: https://adilet.zan.kz/rus/docs/P1800000171
   const MRP_2026 = 4325;
   const CUSTOMS_FEE_MRP = 6;
-  // Акциз на легковые авто с объёмом двигателя свыше 3 000 см³ — НК РК ст. 537, строка 21: 100 ₸ за 1 см³.
+  // Акциз на легковые авто — НК РК ст. 537: строка 21 — свыше 3 000 см³, 100 ₸ за 1 см³; строка 24 —
+  // стоимость от 18 000 МРП (на 1 января), 10 % стоимости; при ввозе база — таможенная стоимость.
+  // Строки независимы: авто с большим объёмом и высокой стоимостью платит по обеим.
   const EXCISE_OVER_3000_KZT_PER_CC = 100;
+  const EXCISE_LUXURY_THRESHOLD_MRP = 18000;
+  const EXCISE_LUXURY_RATE = 0.10;
 
   const calculateCustomsPayments = () => {
     const value = parseFloat(customsValue) || 0;
@@ -65,6 +91,35 @@ export default function CustomsClearanceCalculator() {
 
     const vatRate = 0.16;
 
+    // ПТД: товар для личного пользования — один единый платёж, без сбора, НДС и акциза.
+    // Электромобили по ПТД идут совокупным платежом (п. 4 табл. 2) — здесь считаются только по ДТ.
+    if (regime === 'personal' && !isElectric) {
+      let etp: number;
+      let etpLabel: string;
+      if (vehicleAge <= 3) {
+        const valueEur = customsValueKZT / eur;
+        const tier = ETP_UP_TO_3Y.find((row) => valueEur <= row.maxEur)!;
+        etp = Math.max(customsValueKZT * tier.pct, tier.minEurPerCc * volume * eur);
+        etpLabel = `${Math.round(tier.pct * 100)}% / ≥ ${String(tier.minEurPerCc).replace('.', ',')} €/см³`;
+      } else {
+        const band = ETP_VOLUME_BANDS_CC.findIndex((max) => volume <= max);
+        const perCc = (vehicleAge <= 5 ? ETP_EUR_PER_CC_3_TO_5Y : ETP_EUR_PER_CC_OVER_5Y)[band];
+        etp = perCc * volume * eur;
+        etpLabel = `${String(perCc).replace('.', ',')} €/см³`;
+      }
+      return {
+        ...EMPTY_RESULTS,
+        customsValueKZT: Math.round(customsValueKZT),
+        etp: Math.round(etp),
+        etpLabel,
+        isPersonal: true,
+        totalPayments: Math.round(etp),
+        vehicleAge,
+        isOldVehicle,
+        additionalRestrictions: vehicleAge <= 3 ? t('customs-clearance.youngCarNote') : t('customs-clearance.personalNote'),
+      };
+    }
+
     // Пошлина — Перечень изъятий РК из ЕТТ ЕАЭС (Решение Совета ЕЭК от 14.10.2015 № 59, ред. от
     // 20.05.2026 № 58), группа 8703. До 7 лет включительно — 15 % таможенной стоимости. Старше 7 лет —
     // те же 15 %, но не менее минимальной ставки в евро за 1 см³: 0,6 €/см³ (бензин ≤ 1 500 и > 3 000 см³,
@@ -84,11 +139,12 @@ export default function CustomsClearanceCalculator() {
       dutyLabel = '0,5 €/см³, 15–18%';
     } else {
       customsDuty = Math.max(customsValueKZT * 0.15, 0.6 * volume * eur);
-      dutyLabel = '15%, мин. 0,6 €/см³';
+      dutyLabel = '15% / ≥ 0,6 €/см³';
     }
 
-    // Акциз — только на легковые с двигателем свыше 3 000 см³ (НК РК ст. 537, строка 21).
-    const excise = !isElectric && volume > 3000 ? volume * EXCISE_OVER_3000_KZT_PER_CC : 0;
+    // Акциз (НК РК ст. 537): объём свыше 3 000 см³ и/или стоимость от 18 000 МРП.
+    const excise = (!isElectric && volume > 3000 ? volume * EXCISE_OVER_3000_KZT_PER_CC : 0)
+      + (customsValueKZT >= EXCISE_LUXURY_THRESHOLD_MRP * MRP_2026 ? customsValueKZT * EXCISE_LUXURY_RATE : 0);
 
     // Фиксированный таможенный сбор за декларирование: 6 МРП за декларацию
     // (не процент от стоимости). В базу импортного НДС сбор не входит.
@@ -99,16 +155,16 @@ export default function CustomsClearanceCalculator() {
 
     const totalPayments = customsFee + customsDuty + excise + vat;
 
-    let additionalRestrictions = '';
+    // «Экологического сбора» для авто старше 7 лет с объёмом > 2 500 см³ в актах нет — предупреждение снято.
+    let additionalRestrictions = t('customs-clearance.dtNote');
     if (isElectric) {
       additionalRestrictions = t('customs-clearance.electricNote');
-    } else if (isOldVehicle && volume > 2500) {
-      additionalRestrictions = t('customs-clearance.oldVehicleEcoFee');
     } else if (isOldVehicle) {
-      additionalRestrictions = t('customs-clearance.oldVehicleHigherRates');
+      additionalRestrictions = `${t('customs-clearance.oldVehicleHigherRates')} ${t('customs-clearance.dtNote')}`;
     }
 
     return {
+      ...EMPTY_RESULTS,
       customsValueKZT: Math.round(customsValueKZT),
       customsFee: Math.round(customsFee),
       customsDuty: Math.round(customsDuty),
@@ -128,7 +184,7 @@ export default function CustomsClearanceCalculator() {
   const results = useMemo(
     calculateCustomsPayments,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [manufactureYear, engineVolume, customsValue, currency, exchangeRate, fuel, eurRate, isElectric, i18n.language]
+    [regime, manufactureYear, engineVolume, customsValue, currency, exchangeRate, fuel, eurRate, isElectric, i18n.language]
   );
 
   const formatNumber = (num: number) => {
@@ -183,6 +239,27 @@ export default function CustomsClearanceCalculator() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('customs-clearance.vehicleParameters')}</h2>
 
           <div className="space-y-6">
+            {!isElectric && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('customs-clearance.regimeLabel')}</label>
+                <div className="grid grid-cols-2">
+                  {(['dt', 'personal'] as const).map((r, i) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRegime(r)}
+                      className={`px-3 py-3 text-sm border border-gray-300 transition-colors ${
+                        regime === r ? 'bg-blue-500 text-white' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                      } ${i === 0 ? 'rounded-l-lg' : 'rounded-r-lg'}`}
+                    >
+                      {t(`customs-clearance.regime_${r}`)}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{t(`customs-clearance.regimeHint_${regime}`)}</p>
+              </div>
+            )}
+
             <label className="flex items-center gap-3 cursor-pointer rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3">
               <input
                 type="checkbox"
@@ -207,6 +284,7 @@ export default function CustomsClearanceCalculator() {
                 max={currentYear}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
               />
+              <p className="text-xs text-gray-500 mt-1">{t('customs-clearance.ageHint')}</p>
             </div>
 
             {!isElectric && (
@@ -282,7 +360,7 @@ export default function CustomsClearanceCalculator() {
               </div>
             </div>
 
-            {!isElectric && (
+            {!isElectric && regime === 'dt' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{t('customs-clearance.fuelType')}</label>
                 <div className="flex">
@@ -303,7 +381,7 @@ export default function CustomsClearanceCalculator() {
               </div>
             )}
 
-            {!isElectric && results.isOldVehicle && (
+            {!isElectric && (results.isOldVehicle || regime === 'personal') && (
               <div>
                 <label htmlFor="eurRate" className="block text-sm font-medium text-gray-700 mb-2">
                   {t('customs-clearance.eurRate')}
@@ -346,6 +424,7 @@ export default function CustomsClearanceCalculator() {
                 <li>{t('customs-clearance.customsFeeRate')}</li>
                 <li>{t('customs-clearance.customsDutyRate')}</li>
                 <li>{t('customs-clearance.vatRate')}</li>
+                <li>{t('customs-clearance.etpRate')}</li>
               </ul>
             </div>
           </div>
@@ -365,7 +444,7 @@ export default function CustomsClearanceCalculator() {
                 <div className="text-lg font-semibold text-gray-900">
                   {results.vehicleAge} {results.vehicleAge === 1 ? t('customs-clearance.year') : results.vehicleAge < 5 ? t('customs-clearance.years2to4') : t('customs-clearance.years5plus')}
                 </div>
-                {results.isOldVehicle && (
+                {results.isOldVehicle && !results.isPersonal && (
                   <div className="text-xs text-orange-600 mt-1">
                     {t('customs-clearance.higherRatesApplied')}
                   </div>
@@ -379,6 +458,15 @@ export default function CustomsClearanceCalculator() {
                 <span className="font-semibold text-gray-900">{formatNumber(results.customsValueKZT)}</span>
               </div>
 
+              {results.isPersonal ? (
+                <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <span className="text-gray-600">
+                    {t('customs-clearance.etp')} ({results.etpLabel})
+                  </span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.etp)}</span>
+                </div>
+              ) : (
+              <>
               <div className="flex justify-between items-center py-3 border-b border-gray-100">
                 <span className="text-gray-600">{t('customs-clearance.customsFee')}</span>
                 <span className="font-semibold text-gray-900">{formatNumber(results.customsFee)}</span>
@@ -402,6 +490,8 @@ export default function CustomsClearanceCalculator() {
                 <span className="text-gray-600">{t('customs-clearance.vat')}</span>
                 <span className="font-semibold text-gray-900">{formatNumber(results.vat)}</span>
               </div>
+              </>
+              )}
             </div>
 
             <div className="flex justify-between items-center py-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg px-4 mt-6">
@@ -480,17 +570,21 @@ export default function CustomsClearanceCalculator() {
           { question: t('customs-clearance.faq.q5'), answer: t('customs-clearance.faq.a5') }
         ]}
         sources={[
+          { title: t('customs-clearance.sources.exemptionList'), url: 'https://www.alta.ru/tamdoc/15sr0059/' },
+          { title: t('customs-clearance.sources.personalUse'), url: 'https://www.alta.ru/tamdoc/17sr0107/' },
+          { title: t('customs-clearance.sources.excise'), url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: t('customs-clearance.sources.kgd'), url: 'https://kgd.gov.kz/' },
           { title: t('customs-clearance.sources.customsCode'), url: 'https://online.zakon.kz/document/?doc_id=37508292' },
         ]}
       />
 
-      {/* Диаграмма структуры платежей */}
-      {results && results.totalPayments > 0 && results.customsDuty && (
+      {/* Диаграмма структуры платежей — только для ДТ: по ПТД платёж один */}
+      {results && results.totalPayments > 0 && !results.isPersonal && results.customsDuty > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
               { name: t('customs-clearance.chart.customsDuty'), value: results.customsDuty },
+              { name: t('customs-clearance.chart.excise'), value: results.excise },
               { name: t('customs-clearance.chart.vat'), value: results.vat || 0 },
             ].filter(item => item.value > 0)}
             title={t('customs-clearance.chart.title')}
@@ -508,9 +602,14 @@ export default function CustomsClearanceCalculator() {
               sections: [
                 {
                   title: t('customs-clearance.export.results'),
-                  data: [
+                  data: results.isPersonal ? [
+                    { label: `${t('customs-clearance.etp')} (${results.etpLabel})`, value: `${results.etp.toLocaleString()} ₸` },
+                    { label: t('customs-clearance.export.total'), value: `${results.totalPayments.toLocaleString()} ₸` },
+                  ] : [
                     { label: t('customs-clearance.chart.customsDuty'), value: `${results.customsDuty?.toLocaleString()} ₸` },
+                    ...(results.excise > 0 ? [{ label: t('customs-clearance.chart.excise'), value: `${results.excise.toLocaleString()} ₸` }] : []),
                     { label: t('customs-clearance.chart.vat'), value: `${results.vat?.toLocaleString()} ₸` },
+                    { label: t('customs-clearance.customsFee'), value: `${results.customsFee.toLocaleString()} ₸` },
                     { label: t('customs-clearance.export.total'), value: `${results.totalPayments.toLocaleString()} ₸` },
                   ]
                 }

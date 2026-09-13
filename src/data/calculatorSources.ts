@@ -251,6 +251,9 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   ],
   'moral-damage': [
     { title: 'ГК РК, ст. 951-952', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
+    { title: 'НП ВС РК от 27.11.2015 № 7 о возмещении морального вреда', url: 'https://adilet.zan.kz/rus/docs/P150000007S' },
+    { title: 'НП ВС РК от 20.05.2026 № 3 о защите чести, достоинства и деловой репутации', url: 'https://adilet.zan.kz/rus/docs/P260000003S' },
+    { title: 'НК РК, ст. 665 и 668 (госпошлина в судах)', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
   ],
 
   // === СТРОИТЕЛЬСТВО ===

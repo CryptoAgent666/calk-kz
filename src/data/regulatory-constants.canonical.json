@@ -679,25 +679,25 @@
       "key": "customs_duty_rate_vehicle_base",
       "value": 15,
       "unit": "percent",
-      "law": "ЕТТ ЕАЭС (единый таможенный тариф)",
+      "law": "Перечень изъятий РК из ЕТТ ЕАЭС — Решение Совета ЕЭК от 14.10.2015 № 59 (ред. 20.05.2026 № 58), 8703, «прочие»/«более 5, но не более 7 лет»; режим ДТ",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [
         "customs_duty_rate_vehicle"
       ],
       "status": "current",
-      "conflict": "Base EAEU customs duty rate for a vehicle (<=7 years). Distinct from the old-vehicle rate (25%) and the large-engine surcharge (5%).",
+      "conflict": "Базовая ставка по ДТ для авто ≤ 7 лет. Старше 7 лет — customs_duty_rate_vehicle_old; товар для личного пользования (ПТД) — customs_etp_personal_use_car_rates.",
       "used_by": [
         "CustomsClearanceCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "Tier-2 2026-08-23: Базовая ставка 15% подтверждается официальной позицией КГД (июль 2026) и детальной тарифной разбивкой по объёмам двигателя. Прямой первоисточник (текст Решения Совета ЕЭК №107 / ЕТТ) не вычитан — поэтому confidence medium, а не high. Электромобили 0% в нашем калькуляторе стоят верно.",
-      "reverified": "2026-08-23",
-      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/",
+      "verify_note": "Tier-2 2026-08-23: Базовая ставка 15% подтверждается официальной позицией КГД (июль 2026) и детальной тарифной разбивкой по объёмам двигателя. Прямой первоисточник (текст Решения Совета ЕЭК №107 / ЕТТ) не вычитан — поэтому confidence medium, а не high. Электромобили 0% в нашем калькуляторе стоят верно. | 13.09.2026: 15 % подтверждено дословно по тексту перечня (alta.ru/tamdoc/15sr0059); применяется к ДТ, не к ПТД.",
+      "reverified": "2026-09-13",
+      "source_url": "https://www.alta.ru/tamdoc/15sr0059/",
       "official_value": "15",
-      "official_source": "https://www.tks.ru/auto/2000000008/",
-      "verified_date": "2026-07-08",
-      "verify_method": "tier2-llm"
+      "official_source": "https://www.alta.ru/tamdoc/15sr0059/",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     },
     {
       "key": "customs_duty_rate_vehicle_old",
@@ -715,13 +715,13 @@
         "CustomsClearanceCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "Tier-2 2026-08-23: ВЫСОКИЙ ПРИОРИТЕТ ПЕРЕПРОВЕРКИ. Наши 25% не подтверждаются ни одним найденным источником; по разъяснению КГД повышение для ТС старше 7 лет реализовано не как ad valorem 25%, а как минимальная специфическая ставка (€/см³) при той же адвалорной 15%. Вердикт оставлен uncertain, т.к. первоисточник (ЕТТ ЕАЭС / Решение Совета ЕЭК №107, приложение по ТС) вычитать не удалось, а официального «другого числа» в виде одной ставки нет. Правку боевого калькулятора делать только после сверки с ЕТТ. | Phase-4 2026-09-13: ставки 25 % нет ни в ЕТТ (Решение № 80), ни в перечне. Применено в CustomsClearanceCalculator: max(15 % ТС, 0,6 €/см³ × курс) и clamp(0,5 €/см³, 15 %, 18 %) для бензина 1500–3000; добавлены выбор топлива и курс евро (НБРК 13.09.2026: 522,69). Оговорка: режим для физлиц (перечень № 59 vs единые ставки Решения № 107) по первоисточникам не разрешён — КГД в разъяснении 02.07.2026 называет именно 15 % / минимум на см³.",
+      "verify_note": "Tier-2 2026-08-23: ВЫСОКИЙ ПРИОРИТЕТ ПЕРЕПРОВЕРКИ. Наши 25% не подтверждаются ни одним найденным источником; по разъяснению КГД повышение для ТС старше 7 лет реализовано не как ad valorem 25%, а как минимальная специфическая ставка (€/см³) при той же адвалорной 15%. Вердикт оставлен uncertain, т.к. первоисточник (ЕТТ ЕАЭС / Решение Совета ЕЭК №107, приложение по ТС) вычитать не удалось, а официального «другого числа» в виде одной ставки нет. Правку боевого калькулятора делать только после сверки с ЕТТ. | Phase-4 2026-09-13: ставки 25 % нет ни в ЕТТ (Решение № 80), ни в перечне. Применено в CustomsClearanceCalculator: max(15 % ТС, 0,6 €/см³ × курс) и clamp(0,5 €/см³, 15 %, 18 %) для бензина 1500–3000; добавлены выбор топлива и курс евро (НБРК 13.09.2026: 522,69). Оговорка: режим для физлиц (перечень № 59 vs единые ставки Решения № 107) по первоисточникам не разрешён — КГД в разъяснении 02.07.2026 называет именно 15 % / минимум на см³. | 13.09.2026 (хвост Phase-4): режим разрешён первоисточниками. Перечень № 59 — выпуск для внутреннего потребления по ДТ (Решение ВЕЭС № 22 п. 3: авто только в РК; ТК ЕАЭС ст. 256 п. 6: задекларированное под процедуру — не товар для личного пользования). Товар для личного пользования по ПТД (ТК ЕАЭС ст. 260, 266) платит ЕТП Решения № 107 (см. customs_etp_personal_use_car_rates). КГД 02.07.2026 дословно ссылается на № 107; «15 %» в kursiv/el.kz — слова журналистов. Нормы, прямо закрепляющей за физлицом путь ДТ, не найдено — калькулятор показывает оба режима.",
       "reverified": "2026-09-13",
       "source_url": "https://adilet.zan.kz/rus/docs/H15EV000059",
       "official_value": "15 %, но не менее 0,6 €/см³; бензин 1500–3000 — 0,5 €/см³, не менее 15 и не более 18 %",
       "official_source": "https://www.tks.ru/auto/2000000008/",
       "verified_date": "2026-09-13",
-      "verify_method": "tier2-llm"
+      "verify_method": "primary-text"
     },
     {
       "key": "customs_duty_surcharge_large_engine",
@@ -782,18 +782,18 @@
         "CustomsClearanceCalculator"
       ],
       "audit_status": "clean",
-      "verify_note": "Tier-2 2026-08-23: Сам порог 7 лет подтверждён и актуален. Спорным остаётся не порог, а то, ЧТО меняется при его превышении (см. customs_duty_rate_vehicle_old).",
-      "reverified": "2026-08-23",
-      "source_url": "https://kz.kursiv.media/2026-07-03/cntr-stavki-tamozhennykh-poshlin-na-avtomobili-dlya-fizicheskikh-lits-v-kazakhstane-ne-izmenilis/",
+      "verify_note": "Tier-2 2026-08-23: Сам порог 7 лет подтверждён и актуален. Спорным остаётся не порог, а то, ЧТО меняется при его превышении (см. customs_duty_rate_vehicle_old). | 13.09.2026: в перечне № 59 и Решении № 107 возраст — «с момента выпуска»; калькулятор считает разностью лет, рядом с годом выпуска добавлена подсказка про месяц у порогов 3/5/7 лет.",
+      "reverified": "2026-09-13",
+      "source_url": "https://www.alta.ru/tamdoc/15sr0059/",
       "official_value": "7",
       "official_source": "https://www.tks.ru/auto/2000000008/",
-      "verified_date": "2026-07-08",
+      "verified_date": "2026-09-13",
       "verify_method": "tier2-llm"
     },
     {
       "key": "customs_fee_rate",
       "value": 6,
-      "unit": "percent",
+      "unit": "MRP",
       "law": "ПП РК от 05.04.2018 № 171 (ред. ПП № 631 от 02.08.2023)",
       "year": "2026",
       "change_frequency": "occasional",
@@ -802,12 +802,17 @@
         "customs_declaration_fee_mrp"
       ],
       "status": "current",
-      "conflict": "Captured as 0.4 (percent) which equals the code constant 0.004 (fraction). Same constant, percent encoding chosen as canonical (0.4% of customs value).",
+      "conflict": "6 МРП за таможенное декларирование с использованием декларации на товары. Строки для пассажирской таможенной декларации в акте нет — в режиме ПТД калькулятор сбор не начисляет.",
       "used_by": [
         "CustomsClearanceCalculator"
       ],
-      "note_deep": "operative value per 2nd-pass diff-sweep; STALE EXTRACTION: list has customs_fee_rate=0.4 (% от стоимости), но файл (строки 35-41, 77) считае",
-      "audit_status": "representation_variants"
+      "audit_status": "clean",
+      "official_value": 6,
+      "source_url": "https://adilet.zan.kz/rus/docs/P1800000171",
+      "verify_note": "13.09.2026: ПП РК № 171 (ред. № 631 от 02.08.2023): «с использованием декларации на товары; 6 МРП». Единица исправлена percent → MRP (значение всегда было 6 МРП, не процент).",
+      "verify_method": "primary-text",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13"
     },
     {
       "key": "customs_parcel_dutyfree_value_eur",
@@ -978,21 +983,24 @@
       "key": "gov_duty_court_nonproperty_claim_individual_mrp",
       "value": 0.5,
       "unit": "MRP",
-      "law": "ст. 610 НК РК (госпошлина по неимущественному иску, физлица)",
+      "law": "НК РК № 214-VIII ст. 665 п. 1 пп. 7) «с других исков неимущественного характера … – 0,5 МРП»",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
         "gov_duty_nonproperty_claim_mrp"
       ],
       "status": "current",
-      "conflict": "Flat non-property claim fee for individuals (0.5 МРП). Shares the value 0.5 МРП with the property-claim minimum but is a different rule — kept separate.",
+      "conflict": "В MoralDamageCalculator — только для категорий death/privacy/consumer: честь — 1 % иска (gov_duty_court_moral_damage_honor_pct), вред здоровью/трудовые/реабилитация освобождены (gov_duty_court_exemptions_moral_damage).",
       "used_by": [
         "MoralDamageCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
-      "verify_note": "Неимущественный иск (общий) — 0.5 МРП для физлиц. Сохранено в НК РК 2026.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Неимущественный иск (общий) — 0.5 МРП для физлиц. Сохранено в НК РК 2026. | 13.09.2026: номер статьи в новом НК — 665 (старый — 610); ст. 616/«без госпошлины» в методологии и QuickAnswer была ошибкой.",
+      "reverified": "2026-09-13",
+      "official_value": 0.5,
+      "verify_method": "primary-text",
+      "verified_date": "2026-09-13"
     },
     {
       "key": "gov_duty_court_max_individual_mrp",
@@ -6588,19 +6596,22 @@
     },
     {
       "key": "customs_eco_restriction_engine_threshold_cc",
-      "value": 2500,
+      "value": null,
       "unit": "см³",
       "law": "экологические требования к ввозу авто старше 7 лет",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "CustomsClearanceCalculator"
       ],
       "note": "строка 86: isOldVehicle && volume > 2500 включает предупреждение об эко-сборе/ограничениях (влияет только на UI-текст, не на сумму)",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "13.09.2026: «экологического сбора» для авто старше 7 лет с объёмом > 2500 см³ нет ни в перечне № 59, ни в Решении № 107, ни в НК РК — предупреждение удалено из CustomsClearanceCalculator.",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13"
     },
     {
       "key": "tax_declaration_form_too_kpn",
@@ -7231,13 +7242,13 @@
     },
     {
       "key": "moral_damage_ranges_mrp_full_table",
-      "value": "lightInjury:50-200(avg100), mediumInjury:200-500(300), severeInjury:500-2000(1000), death:1000-5000(2500), honor:30-200(80), privacy:20-150(50), consumer:10-100(30), labor:20-200(70), illegalArrest:500-3000(1500)",
+      "value": "lightInjury:25-150(avg70), mediumInjury:50-250(110), severeInjury:500-2500(900), death:700-5000(1800), honor:5-150(25), privacy:20-250(50), consumer:10-100(25), labor:5-70(23), adminArrest:30-120(60), illegalArrest:300-2500(700)",
       "unit": "МРП",
       "law": "ст. 951–952 ГК РК (сумм нет); НП ВС РК от 27.11.2015 № 7 (ред. 07.12.2023) п. 7–8 — «критерии разумности и справедливости», числовых диапазонов нет",
       "year": "2026",
-      "change_frequency": "annual",
+      "change_frequency": "occasional",
       "aliases": [],
-      "status": "uncertain",
+      "status": "current",
       "used_by": [
         "MoralDamageCalculator"
       ],
@@ -7245,9 +7256,11 @@
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/P150000007S",
-      "verify_note": "Tier-2 2026-08-23: Вердикт uncertain по правилу консервативности: официального значения для сравнения не существует, значит stale_confirmed поставить нельзя. Два риска для редактуры (не подтверждены первоисточником, но требуют проверки в отдельной задаче): (1) сама структура таблицы выглядит сгенерированной — круглые ступени 10/20/30/50/200/500/1000/2000/3000/5000, avg почти всегда посередине диапазона; (2) death avg 2500 МРП × 4325 ₸ ≈ 10,8 млн ₸ и illegalArrest до 3000 МРП ≈ 13 млн ₸ выглядят завышенными относительно реальной практики РК, а для реабилитированных по уголовным делам в законодательстве есть отдельный порядок возмещения с ограничением в МРП (норму первоисточником не подтвердил — банк источников  | Phase-4 2026-09-13: подтверждено: официальных диапазонов не существует. Дисклеймер усилен в subtitle (ru/kk). Единственный предел в МРП — 100 МРП для жертв политических репрессий (Закон 1993 г. ст. 22), к обычной реабилитации не относится. Порядок величин, вероятно, завышен относительно практики (справка КМБПЧ 2017: 50–500 тыс. ₸) — проверить по актуальным решениям отдельной задачей.",
+      "verify_note": "Tier-2 2026-08-23: Вердикт uncertain по правилу консервативности: официального значения для сравнения не существует, значит stale_confirmed поставить нельзя. Два риска для редактуры (не подтверждены первоисточником, но требуют проверки в отдельной задаче): (1) сама структура таблицы выглядит сгенерированной — круглые ступени 10/20/30/50/200/500/1000/2000/3000/5000, avg почти всегда посередине диапазона; (2) death avg 2500 МРП × 4325 ₸ ≈ 10,8 млн ₸ и illegalArrest до 3000 МРП ≈ 13 млн ₸ выглядят завышенными относительно реальной практики РК, а для реабилитированных по уголовным делам в законодательстве есть отдельный порядок возмещения с ограничением в МРП (норму первоисточником не подтвердил — банк источников  | Phase-4 2026-09-13: подтверждено: официальных диапазонов не существует. Дисклеймер усилен в subtitle (ru/kk). Единственный предел в МРП — 100 МРП для жертв политических репрессий (Закон 1993 г. ст. 22), к обычной реабилитации не относится. Порядок величин, вероятно, завышен относительно практики (справка КМБПЧ 2017: 50–500 тыс. ₸) — проверить по актуальным решениям отдельной задачей. | 13.09.2026: откалибровано по ~60 решениям 2023–2026 (пресс-службы судов, СМИ). Смерть (3–11,7 млн ₸ на истца) и тяжкий вред (2,5–10 млн) были примерно верны; средний вред (200–750 тыс.), честь частных лиц (20–200 тыс.), трудовые (восстановление — стабильно 100 тыс.) и задержание завышены в 2,5–3 раза. illegalArrest разделён: adminArrest (сутки ареста, 200–300 тыс.) и уголовное преследование/стража (1,5–10 млн). Выборка смещена к резонансным делам; справка КМБПЧ 2017 для смерти/увечий устарела (тогда 100–500 тыс.). Законов о минимальных суммах нет; Фонд компенсации потерпевшим (30/40/50 МРП) и страхование медиков (смерть от 3 000 МРП) — не моральный вред.",
       "reverified": "2026-09-13",
-      "verified_date": "2026-09-13"
+      "verified_date": "2026-09-13",
+      "official_value": "нормативных сумм нет; ориентир — опубликованные решения 2023–2026 (~60)",
+      "verify_method": "court-practice-sample"
     },
     {
       "key": "otbasy_baspana_hit_terms",
@@ -8637,6 +8650,111 @@
       "official_source": "НБРК, пресс-релиз «О снижении базовой ставки до 16,25% по итогам прогнозного раунда» (04.09.2026)",
       "verified_date": "2026-09-04",
       "verify_method": "tier2-primary-source"
+    },
+    {
+      "key": "customs_etp_personal_use_car_rates",
+      "value": "≤ 3 лет: ≤ 8 500 € — 54 %, не менее 2,5 €/см³; ≤ 16 700/42 300/84 500/169 000/выше — 48 %, не менее 3,5/5,5/7,5/15/20 €/см³. 3–5 лет: 1,5/1,7/2,5/2,7/3/3,6 €/см³; > 5 лет: 3/3,2/3,5/4,8/5/5,7 €/см³ (объём ≤ 1000/1500/1800/2300/3000/выше)",
+      "official_value": "≤ 3 лет: ≤ 8 500 € — 54 %, не менее 2,5 €/см³; ≤ 16 700/42 300/84 500/169 000/выше — 48 %, не менее 3,5/5,5/7,5/15/20 €/см³. 3–5 лет: 1,5/1,7/2,5/2,7/3/3,6 €/см³; > 5 лет: 3/3,2/3,5/4,8/5/5,7 €/см³ (объём ≤ 1000/1500/1800/2300/3000/выше)",
+      "unit": "EUR per cm³ / percent",
+      "law": "Решение Совета ЕЭК от 20.12.2017 № 107, прил. 2, табл. 2, п. 3 (ред. 24.02.2026 № 35)",
+      "change_frequency": "occasional",
+      "status": "current",
+      "used_by": [
+        "CustomsClearanceCalculator"
+      ],
+      "source_url": "https://www.alta.ru/tamdoc/17sr0107/",
+      "verify_note": "13.09.2026: сверено дословно с текстом alta.ru (ред. № 35); с 2022 авто с ДВС не менялось. Единый платёж заменяет пошлину, НДС и акциз (пп. «б» п. 1). Исключение пп. «к» п. 1 касалось только Армении и Киргизии, исключено Решением № 123 с 08.10.2022. Электромобили (8703 80) — п. 4, совокупный платёж, в калькуляторе не считается.",
+      "year": "2026",
+      "aliases": [],
+      "origin": "phase4_2026-09-13",
+      "audit_status": "clean",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "excise_car_luxury_value_threshold_mrp",
+      "value": 18000,
+      "official_value": 18000,
+      "unit": "MRP",
+      "law": "НК РК № 214-VIII ст. 537, строка 24 («стоимость приобретения … 18 000-кратный МРП, действующий на 1 января»)",
+      "change_frequency": "rare",
+      "status": "current",
+      "used_by": [
+        "CustomsClearanceCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "13.09.2026: при ввозе база — таможенная стоимость (сноска к ст. 537). Строки 21 и 24 независимы.",
+      "year": "2026",
+      "aliases": [],
+      "origin": "phase4_2026-09-13",
+      "audit_status": "clean",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "excise_car_luxury_rate_pct",
+      "value": 10,
+      "official_value": 10,
+      "unit": "percent",
+      "law": "НК РК № 214-VIII ст. 537, строка 24: «10% от стоимости приобретенного транспортного средства»",
+      "change_frequency": "rare",
+      "status": "current",
+      "used_by": [
+        "CustomsClearanceCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "13.09.2026: применено в режиме ДТ; в ЕТП по ПТД акциз уже включён.",
+      "year": "2026",
+      "aliases": [],
+      "origin": "phase4_2026-09-13",
+      "audit_status": "clean",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "gov_duty_court_moral_damage_honor_pct",
+      "value": 1,
+      "official_value": 1,
+      "unit": "percent",
+      "law": "НК РК № 214-VIII ст. 665 п. 1 пп. 15): «с исков физических лиц о взыскании в денежном выражении компенсации морального вреда, причиненного распространением сведений, порочащих честь, достоинство и деловую репутацию, – 1 процент от суммы иска»",
+      "change_frequency": "rare",
+      "status": "current",
+      "used_by": [
+        "MoralDamageCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "13.09.2026: прежде калькулятор брал 0,5 МРП и для чести.",
+      "year": "2026",
+      "aliases": [],
+      "origin": "phase4_2026-09-13",
+      "audit_status": "clean",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "gov_duty_court_exemptions_moral_damage",
+      "value": "трудовые (пп. 1); вред увечьем/здоровью и смерть кормильца (пп. 5); незаконное осуждение, стража, административный арест (пп. 20)",
+      "official_value": "ст. 668 пп. 1, 5, 20",
+      "unit": "list",
+      "law": "НК РК № 214-VIII ст. 668 «Освобождение от уплаты государственной пошлины … в судах»",
+      "change_frequency": "rare",
+      "status": "current",
+      "used_by": [
+        "MoralDamageCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "13.09.2026: «потребител» и «моральный вред» в ст. 668 не встречаются — потребительские иски платят 0,5 МРП (пп. 7 ст. 665).",
+      "year": "2026",
+      "aliases": [],
+      "origin": "phase4_2026-09-13",
+      "audit_status": "clean",
+      "reverified": "2026-09-13",
+      "verified_date": "2026-09-13",
+      "verify_method": "primary-text"
     }
   ],
   "estimates_excluded": [

@@ -734,7 +734,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'moral-damage',
         title: 'Компенсация морального вреда РК',
-        description: '9 категорий по ст. 951-952 ГК РК с ориентирами судебной практики',
+        description: '10 категорий по ст. 951-952 ГК РК с ориентирами по решениям судов 2023–2026',
         category: 'legal',
         icon: 'HandHeart',
         component: React.lazy(() => import('../components/calculators/MoralDamageCalculator'))

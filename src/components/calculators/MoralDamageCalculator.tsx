@@ -13,30 +13,51 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 
 const MRP_2026 = 4325;
 
-// Ориентировочные размеры компенсации морального вреда в РК (ст. 951-952 ГК РК)
-// по категориям (в МРП). Суд имеет широкую дискрецию, но есть устоявшаяся практика
+// Ориентиры компенсации морального вреда в РК (ст. 951–952 ГК РК) по категориям, в МРП.
+// Закон и НП ВС РК № 7 сумм не устанавливают — только разумность и справедливость (п. 7–8).
+// Диапазоны откалиброваны 13.09.2026 по ~60 решениям 2023–2026 гг. из пресс-релизов судов и СМИ
+// (прежняя таблица завышала средний вред, честь, трудовые споры и задержание в 2,5–3 раза).
+// Выборка смещена к резонансным делам, поэтому это ориентир, а не статистика.
 
 type Category =
   | 'lightInjury'  // лёгкий вред здоровью
   | 'mediumInjury' // средний вред
-  | 'severeInjury' // тяжёлый вред
+  | 'severeInjury' // тяжкий вред
   | 'death'        // смерть близкого
   | 'honor'        // честь и достоинство (клевета)
-  | 'privacy'      // нарушение неприкосновенности
+  | 'privacy'      // нарушение неприкосновенности частной жизни
   | 'consumer'     // защита прав потребителей
   | 'labor'        // трудовой спор (увольнение, задержка)
-  | 'illegalArrest'; // незаконное задержание
+  | 'adminArrest'  // незаконный административный арест (сутки)
+  | 'illegalArrest'; // незаконное уголовное преследование, содержание под стражей
 
 const CATEGORY_RANGES: Record<Category, { min: number; max: number; avg: number }> = {
-  lightInjury:   { min: 50,   max: 200,   avg: 100 },
-  mediumInjury:  { min: 200,  max: 500,   avg: 300 },
-  severeInjury:  { min: 500,  max: 2000,  avg: 1000 },
-  death:         { min: 1000, max: 5000,  avg: 2500 },
-  honor:         { min: 30,   max: 200,   avg: 80 },
-  privacy:       { min: 20,   max: 150,   avg: 50 },
-  consumer:      { min: 10,   max: 100,   avg: 30 },
-  labor:         { min: 20,   max: 200,   avg: 70 },
-  illegalArrest: { min: 500,  max: 3000,  avg: 1500 },
+  lightInjury:   { min: 25,  max: 150,  avg: 70 },   // 100–500 тыс ₸
+  mediumInjury:  { min: 50,  max: 250,  avg: 110 },  // 200–750 тыс ₸
+  severeInjury:  { min: 500, max: 2500, avg: 900 },  // 2,5–10 млн ₸ (II–III группа инвалидности)
+  death:         { min: 700, max: 5000, avg: 1800 }, // 3–11,7 млн ₸ на истца
+  honor:         { min: 5,   max: 150,  avg: 25 },   // 20–200 тыс ₸, частные лица
+  privacy:       { min: 20,  max: 250,  avg: 50 },   // 80 тыс – 1 млн ₸
+  consumer:      { min: 10,  max: 100,  avg: 25 },   // 50–250 тыс ₸
+  labor:         { min: 5,   max: 70,   avg: 23 },   // восстановление на работе — стабильно 100 тыс ₸
+  adminArrest:   { min: 30,  max: 120,  avg: 60 },   // 200–300 тыс ₸ за несколько суток
+  illegalArrest: { min: 300, max: 2500, avg: 700 },  // 1,5–10 млн ₸, зависит от срока под стражей
+};
+
+// Госпошлина по НК РК 2026 (ст. 665, 668): освобождены иски о вреде здоровью, трудовые
+// и о незаконном осуждении/аресте; по чести и достоинству — 1 % от суммы иска.
+type FeeRule = 'exempt' | 'nonProperty' | 'percentOfClaim';
+const COURT_FEE_RULE: Record<Category, FeeRule> = {
+  lightInjury: 'exempt',
+  mediumInjury: 'exempt',
+  severeInjury: 'exempt',
+  death: 'nonProperty',
+  honor: 'percentOfClaim',
+  privacy: 'nonProperty',
+  consumer: 'nonProperty',
+  labor: 'exempt',
+  adminArrest: 'exempt',
+  illegalArrest: 'exempt',
 };
 
 export default function MoralDamageCalculator() {
@@ -49,27 +70,31 @@ export default function MoralDamageCalculator() {
 
   const results = useMemo(() => {
     const range = CATEGORY_RANGES[category];
-    // Базовая сумма в зависимости от severity (0-100)
-    const severityFactor = severity / 100;
-    let baseMRP = range.min + (range.max - range.min) * severityFactor;
+    // Кусочно-линейно через среднее: 0 % → min, 50 % → avg, 100 % → max. Суммы в практике
+    // скошены к низу диапазона, и прямая min→max ставила бы середину слайдера сильно выше типичной.
+    let baseMRP = severity <= 50
+      ? range.min + (range.avg - range.min) * (severity / 50)
+      : range.avg + (range.max - range.avg) * ((severity - 50) / 50);
 
     // Модификаторы
     if (hasEvidence) baseMRP *= 1.15; // +15%
     if (hasWitnesses) baseMRP *= 1.10; // +10%
     if (longTermEffect) baseMRP *= 1.25; // +25%
 
-    // Не превышает max × 1.5
-    const maxAllowed = range.max * 1.5;
-    baseMRP = Math.min(baseMRP, maxAllowed);
+    // Не выше верхней границы наблюдаемой практики
+    baseMRP = Math.min(baseMRP, range.max);
 
     const amountKZT = baseMRP * MRP_2026;
 
-    // Госпошлина для подачи иска — 50% МРП (неимущественный иск)
-    const courtFee = 0.5 * MRP_2026;
+    const feeRule = COURT_FEE_RULE[category];
+    const courtFee = feeRule === 'exempt' ? 0
+      : feeRule === 'percentOfClaim' ? amountKZT * 0.01
+      : 0.5 * MRP_2026;
 
     // Гонорар юриста — обычно 10-20% от суммы удовлетворённого иска или фикс
+    // Верх не ниже фиксированного минимума: у малых категорий 20 % суммы меньше 100 000 ₸.
     const lawyerFeeMin = 100000;
-    const lawyerFeeMax = Math.round(amountKZT * 0.2);
+    const lawyerFeeMax = Math.max(lawyerFeeMin, Math.round(amountKZT * 0.2));
 
     return {
       estimatedMRP: Math.round(baseMRP),
@@ -78,6 +103,7 @@ export default function MoralDamageCalculator() {
       rangeMax: range.max,
       rangeAvg: range.avg,
       courtFee: Math.round(courtFee),
+      feeRule,
       lawyerFeeMin,
       lawyerFeeMax,
     };
@@ -87,7 +113,7 @@ export default function MoralDamageCalculator() {
 
   const categories: Category[] = [
     'lightInjury', 'mediumInjury', 'severeInjury', 'death',
-    'honor', 'privacy', 'consumer', 'labor', 'illegalArrest'
+    'honor', 'privacy', 'consumer', 'labor', 'adminArrest', 'illegalArrest'
   ];
 
   return (
@@ -170,7 +196,7 @@ export default function MoralDamageCalculator() {
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <div className="text-sm font-medium text-amber-900 mb-2">{t('moral-damage.courtCosts')}</div>
             <div className="text-xs space-y-1 text-amber-800">
-              <div>{t('moral-damage.courtFee')}: {formatNumber(results.courtFee)} (0.5 МРП)</div>
+              <div>{t('moral-damage.courtFee')}: {formatNumber(results.courtFee)} ({t(`moral-damage.feeRule_${results.feeRule}`)})</div>
               <div>{t('moral-damage.lawyerFee')}: {formatNumber(results.lawyerFeeMin)} — {formatNumber(results.lawyerFeeMax)}</div>
             </div>
           </div>

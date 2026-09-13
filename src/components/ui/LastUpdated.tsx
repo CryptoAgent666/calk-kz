@@ -41,7 +41,7 @@ const LAST_UPDATED: Record<string, string> = {
   'excise-tax': '2026-01-01',
 
   // === АВТО ===
-  'customs-clearance': '2026-01-01',
+  'customs-clearance': '2026-09-13',
   'recycling-fee': '2026-01-01',
   'registration-fee': '2026-01-01',
   'insurance-premium': '2026-09-10',
@@ -104,7 +104,7 @@ const LAST_UPDATED: Record<string, string> = {
   'property-division': '2026-04-19',
   'statute-limitations': '2026-04-19',
   'bankruptcy': '2026-04-19',
-  'moral-damage': '2026-04-19',
+  'moral-damage': '2026-09-13',
 
   // === СТРОИТЕЛЬСТВО ===
   'concrete-volume': '2026-04-19',
