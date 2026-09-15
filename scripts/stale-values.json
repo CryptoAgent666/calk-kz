@@ -64,6 +64,17 @@
       "now": "300–2500",
       "what": "moral_damage_illegal_arrest_range_2026_04",
       "ctx": "МРП|АЕК"
+    },
+    {
+      "was": "3 825",
+      "now": "4 250",
+      "what": "so_1mzp_example_without_floor",
+      "ctx": "СО|ӘА"
+    },
+    {
+      "was": "98 838",
+      "now": "99 263",
+      "what": "labor_cost_1mzp_example_without_so_floor"
     }
   ]
 }

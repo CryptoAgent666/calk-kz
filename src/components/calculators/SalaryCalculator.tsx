@@ -13,12 +13,17 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 
+// Социальный вычет по ИПН (НК РК 2026 ст. 404): 5 000 МРП/год — инвалидность I–II группы;
+// 882 МРП/год — III группа, дети с инвалидностью, участники ВОВ, родители и опекуны детей с инвалидностью.
+type SocialDeduction = 'none' | '882' | '5000';
+
 export default function SalaryCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [grossSalary, setGrossSalary] = useState<string>('300000');
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
+  const [socialDeduction, setSocialDeduction] = useState<SocialDeduction>('none');
 
   const MZP = 85000;
   const MRP = 4325;
@@ -37,13 +42,18 @@ export default function SalaryCalculator() {
   const OPV_MAX_BASE = 50 * MZP;
   const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
   const SO_MAX_BASE = 7 * MZP;
+  // Соцкодекс ст. 245 п. 1: объект СО за календарный месяц ниже МЗП → СО считаются с МЗП.
+  // Для работников; по ГПХ минимум с 01.01.2026 не применяется (приказ Минтруда № 299 от 30.09.2025).
+  const SO_MIN_BASE = MZP;
   const OOSMS_MAX_BASE = 40 * MZP; // С 2026: макс. база ООСМС = 40 МЗП
+  const SOCIAL_DEDUCTION_ANNUAL: Record<SocialDeduction, number> = { none: 0, '882': 882 * MRP, '5000': 5000 * MRP };
 
   const calculateSalary = (gross: number) => {
     if (gross <= 0) {
       return {
-        opv: 0, vosms: 0, standardDeduction: 0, taxableIncome: 0, incomeTax: 0,
-        totalEmployeeDeductions: 0, sn: 0, so: 0, oosms: 0, opvr: 0, totalEmployerContributions: 0,
+        opv: 0, vosms: 0, standardDeduction: 0, socialDeduction: 0, socialDeductionMonths: 0,
+        taxableIncome: 0, incomeTax: 0, incomeTaxWithoutSocial: 0,
+        totalEmployeeDeductions: 0, sn: 0, so: 0, soFloorApplied: false, oosms: 0, opvr: 0, totalEmployerContributions: 0,
         netSalary: 0, totalLaborCost: 0,
         effectiveEmployeeTaxRate: 0, effectiveEmployerRate: 0
       };
@@ -57,18 +67,25 @@ export default function SalaryCalculator() {
 
     const standardDeduction = (isResident && isPrimaryJob) ? STANDARD_DEDUCTION : 0;
 
-    let taxableIncome = gross - opv - vosms - standardDeduction;
-    taxableIncome = Math.max(0, taxableIncome);
+    const taxableBeforeSocial = Math.max(0, gross - opv - vosms - standardDeduction);
+
+    // Социальный вычет — годовой лимит, применяется к доходу до исчерпания (ст. 404 НК РК):
+    // в месяц берётся не больше облагаемого дохода, поэтому первые месяцы ИПН = 0.
+    const socialAnnual = isResident ? SOCIAL_DEDUCTION_ANNUAL[socialDeduction] : 0;
+    const socialDeductionMonth = Math.min(taxableBeforeSocial, socialAnnual);
+    const taxableIncome = taxableBeforeSocial - socialDeductionMonth;
+    const socialDeductionMonths = socialAnnual > 0 && taxableBeforeSocial > 0
+      ? Math.min(12, Math.max(1, Math.floor(socialAnnual / taxableBeforeSocial)))
+      : 0;
 
     // С 01.01.2026 90%-корректировка ИПН для дохода ≤25 МРП ОТМЕНЕНА: новый НК РК
     // (ст. 401 содержит исчерпывающий перечень вычетов и этой нормы не содержит),
     // вместо неё действует единый базовый вычет 30 МРП (STANDARD_DEDUCTION выше).
-    let incomeTax: number;
-    if (taxableIncome <= IPN_MONTHLY_THRESHOLD) {
-      incomeTax = taxableIncome * IPN_RATE_BASE;
-    } else {
-      incomeTax = IPN_MONTHLY_THRESHOLD * IPN_RATE_BASE + (taxableIncome - IPN_MONTHLY_THRESHOLD) * IPN_RATE_HIGH;
-    }
+    const ipnOf = (base: number) => base <= IPN_MONTHLY_THRESHOLD
+      ? base * IPN_RATE_BASE
+      : IPN_MONTHLY_THRESHOLD * IPN_RATE_BASE + (base - IPN_MONTHLY_THRESHOLD) * IPN_RATE_HIGH;
+    const incomeTax = ipnOf(taxableIncome);
+    const incomeTaxWithoutSocial = ipnOf(taxableBeforeSocial);
     const totalEmployeeDeductions = opv + vosms + incomeTax;
 
     // СН 6% (новый НК РК 2026): база = доход − ОПВ − ВОСМС, но не менее 14 МРП.
@@ -76,7 +93,10 @@ export default function SalaryCalculator() {
     const snBase = Math.max(gross - opv - vosms, SN_MIN_BASE);
     const sn = snBase * SN_RATE;
 
-    const soBase = Math.min(gross - opv, SO_MAX_BASE);
+    // СО 5 % с дохода за минусом ОПВ, но не ниже 1 МЗП и не выше 7 МЗП (Соцкодекс ст. 245 п. 1).
+    // Пол действует на календарный месяц целиком — и при неполном месяце (5 дней из 21).
+    const soFloorApplied = !isSpecialCategory && gross - opv < SO_MIN_BASE;
+    const soBase = Math.min(Math.max(gross - opv, SO_MIN_BASE), SO_MAX_BASE);
     const so = isSpecialCategory ? 0 : soBase * SO_RATE;
 
     // За пенсионеров и лиц с инвалидностью работодатель ООСМС не платит
@@ -98,11 +118,15 @@ export default function SalaryCalculator() {
       opv: Math.round(opv),
       vosms: Math.round(vosms),
       standardDeduction: Math.round(standardDeduction),
+      socialDeduction: Math.round(socialDeductionMonth),
+      socialDeductionMonths,
       taxableIncome: Math.round(taxableIncome),
       incomeTax: Math.round(incomeTax),
+      incomeTaxWithoutSocial: Math.round(incomeTaxWithoutSocial),
       totalEmployeeDeductions: Math.round(totalEmployeeDeductions),
       sn: Math.round(sn),
       so: Math.round(so),
+      soFloorApplied,
       oosms: Math.round(oosms),
       opvr: Math.round(opvr),
       totalEmployerContributions: Math.round(totalEmployerContributions),
@@ -119,7 +143,7 @@ export default function SalaryCalculator() {
   const results = useMemo(
     () => calculateSalary(parseFloat(grossSalary) || 0),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [grossSalary, isResident, isPrimaryJob, isSpecialCategory]
+    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, socialDeduction]
   );
 
   const formatNumber = (num: number) => {
@@ -137,7 +161,7 @@ export default function SalaryCalculator() {
 
 ${t('salary.employeeDeductions')}:
 - ${t('salary.opv')}: ${formatNumber(results.opv)}
-- ${t('salary.vosms')}: ${formatNumber(results.vosms)}
+- ${t('salary.vosms')}: ${formatNumber(results.vosms)}${results.socialDeduction > 0 ? `\n- ${t('salary.socialDeductionRow')}: -${formatNumber(results.socialDeduction)}` : ''}
 - ${t('salary.ipn')}: ${formatNumber(results.incomeTax)}
 - ${t('salary.totalDeducted')}: ${formatNumber(results.totalEmployeeDeductions)}
 - ${t('salary.netSalary')}: ${formatNumber(results.netSalary)}
@@ -238,6 +262,22 @@ ${t('salary.effectiveTaxRate')}:
                   {t('salary.isSpecialCategory')}
                 </label>
               </div>
+
+              <div>
+                <label htmlFor="socialDeduction" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('salary.socialDeductionLabel')}
+                </label>
+                <select
+                  id="socialDeduction"
+                  value={socialDeduction}
+                  onChange={(e) => setSocialDeduction(e.target.value as SocialDeduction)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {(['none', '882', '5000'] as const).map((opt) => (
+                    <option key={opt} value={opt}>{t(`salary.socialDeduction_${opt}`)}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="bg-blue-50 rounded-lg p-4">
@@ -272,6 +312,24 @@ ${t('salary.effectiveTaxRate')}:
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">{t('salary.standardDeduction')}</span>
                 <span className="font-semibold text-green-600">-{formatNumber(results.standardDeduction)}</span>
+              </div>
+            )}
+
+            {results.socialDeduction > 0 && (
+              <div className="py-2 border-b border-gray-100">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">{t('salary.socialDeductionRow')}</span>
+                  <span className="font-semibold text-green-600">-{formatNumber(results.socialDeduction)}</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {results.socialDeductionMonths >= 12
+                    ? t('salary.socialDeductionHintFull', { limit: formatNumber(SOCIAL_DEDUCTION_ANNUAL[socialDeduction]) })
+                    : t('salary.socialDeductionHintPartial', {
+                        limit: formatNumber(SOCIAL_DEDUCTION_ANNUAL[socialDeduction]),
+                        months: results.socialDeductionMonths,
+                        ipn: formatNumber(results.incomeTaxWithoutSocial),
+                      })}
+                </p>
               </div>
             )}
 
@@ -311,9 +369,14 @@ ${t('salary.effectiveTaxRate')}:
               <span className="font-semibold text-gray-900">{formatNumber(results.sn)}</span>
             </div>
 
-            <div className="flex justify-between items-center py-2 border-b border-gray-100">
-              <span className="text-gray-600">{t('salary.so')}</span>
-              <span className="font-semibold text-gray-900">{formatNumber(results.so)}</span>
+            <div className="py-2 border-b border-gray-100">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">{t('salary.so')}</span>
+                <span className="font-semibold text-gray-900">{formatNumber(results.so)}</span>
+              </div>
+              {results.soFloorApplied && (
+                <p className="text-xs text-amber-700 mt-1">{t('salary.soFloorNote')}</p>
+              )}
             </div>
 
             <div className="flex justify-between items-center py-2 border-b border-gray-100">

@@ -66,7 +66,7 @@ export default function SalaryReverseCalculator() {
       return {
         grossSalary: 0, opv: 0, vosms: 0, standardDeduction: 0, taxableIncome: 0,
         incomeTax: 0, totalEmployeeDeductions: 0, netSalary: 0,
-        sn: 0, so: 0, oosms: 0, opvr: 0, totalEmployerContributions: 0,
+        sn: 0, so: 0, soFloorApplied: false, oosms: 0, opvr: 0, totalEmployerContributions: 0,
         totalLaborCost: 0, effectiveEmployeeTaxRate: 0, effectiveEmployerRate: 0,
       };
     }
@@ -97,7 +97,9 @@ export default function SalaryReverseCalculator() {
     const snBase = Math.max(gross - opv - vosms, SN_MIN_BASE);
     const sn = snBase * SN_RATE;
 
-    const soBase = Math.min(Math.max(gross - opv, 0), SO_MAX_BASE);
+    // СО: доход − ОПВ, но не ниже 1 МЗП и не выше 7 МЗП (Соцкодекс ст. 245 п. 1); пол — на весь месяц
+    const soFloorApplied = gross - opv < MZP;
+    const soBase = Math.min(Math.max(gross - opv, MZP), SO_MAX_BASE);
     const so = soBase * SO_RATE;
 
     const oosmsBase = Math.min(gross, OOSMS_MAX_BASE);
@@ -123,6 +125,7 @@ export default function SalaryReverseCalculator() {
       netSalary: Math.round(netSalary),
       sn: Math.round(sn),
       so: Math.round(so),
+      soFloorApplied,
       oosms: Math.round(oosms),
       opvr: Math.round(opvr),
       totalEmployerContributions: Math.round(totalEmployerContributions),
@@ -363,9 +366,14 @@ ${t('salary-reverse.employerCosts')}:
                 <span className="font-semibold text-gray-900">{formatNumber(results.sn)}</span>
               </div>
 
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">{t('salary-reverse.so')}</span>
-                <span className="font-semibold text-gray-900">{formatNumber(results.so)}</span>
+              <div className="py-2 border-b border-gray-100">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">{t('salary-reverse.so')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.so)}</span>
+                </div>
+                {results.soFloorApplied && (
+                  <p className="text-xs text-amber-700 mt-1">{t('salary-reverse.soFloorNote')}</p>
+                )}
               </div>
 
               <div className="flex justify-between items-center py-2 border-b border-gray-100">

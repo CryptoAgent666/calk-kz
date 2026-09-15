@@ -8755,6 +8755,70 @@
       "reverified": "2026-09-13",
       "verified_date": "2026-09-13",
       "verify_method": "primary-text"
+    },
+    {
+      "key": "so_min_base_mzp",
+      "value": 1,
+      "official_value": 1,
+      "unit": "MZP",
+      "change_frequency": "rare",
+      "status": "current",
+      "law": "Социальный кодекс РК № 224-VII, ст. 245 п. 1: «В случае если объект исчисления социальных отчислений от одного плательщика за календарный месяц составляет менее минимального размера заработной платы…, то социальные отчисления исчисляются, уплачиваются исходя из минимального размера заработной платы»",
+      "used_by": [
+        "SalaryCalculator",
+        "SalaryReverseCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "15.09.2026, по письму читателя (5 дней из 21, 23 810 ₸ → СО считались 5 % от факта). Пол 1 МЗП для работников подтверждён дословно (зеркало kodeksy-kz, ред. на 18.07.2025); объект — доход минус ОПВ, поэтому пол срабатывает при брутто < 94 444 ₸. По договорам ГПХ, самозанятым, интернет-платформам и единому платежу минимум с 01.01.2026 НЕ применяется (приказ Минтруда № 299 от 30.09.2025 к Правилам № 229) — GphTaxCalculator без пола, верно.",
+      "year": "2026",
+      "aliases": [],
+      "origin": "user_report_2026-09-15",
+      "audit_status": "clean",
+      "reverified": "2026-09-15",
+      "verified_date": "2026-09-15",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "ipn_social_deduction_group3_mrp",
+      "value": 882,
+      "official_value": 882,
+      "unit": "MRP per year",
+      "change_frequency": "rare",
+      "status": "current",
+      "law": "НК РК № 214-VIII ст. 404 «Социальные налоговые вычеты» п. 1 пп. 2), 3): 882-кратный МРП за календарный год — лица с инвалидностью III группы, дети с инвалидностью, участники ВОВ и приравненные; родители, опекуны, попечители, приёмные родители детей с инвалидностью",
+      "used_by": [
+        "SalaryCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "15.09.2026: применяется в том календарном году, в котором возникло основание; в калькуляторе — помесячно до исчерпания лимита (min(облагаемый доход, лимит)), с подсказкой о числе месяцев.",
+      "year": "2026",
+      "aliases": [],
+      "origin": "user_report_2026-09-15",
+      "audit_status": "clean",
+      "reverified": "2026-09-15",
+      "verified_date": "2026-09-15",
+      "verify_method": "primary-text"
+    },
+    {
+      "key": "ipn_social_deduction_group1_2_mrp",
+      "value": 5000,
+      "official_value": 5000,
+      "unit": "MRP per year",
+      "change_frequency": "rare",
+      "status": "current",
+      "law": "НК РК № 214-VIII ст. 404 п. 1 пп. 1): «5000-кратный размер месячного расчетного показателя… за календарный год» — лица с инвалидностью первой, второй группы",
+      "used_by": [
+        "SalaryCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "15.09.2026: новое в НК-2026 (в старом кодексе ст. 346 — 882 МРП для всех групп). Подтверждено по тексту зеркала kodeksy-kz и обзору uchet.kz.",
+      "year": "2026",
+      "aliases": [],
+      "origin": "user_report_2026-09-15",
+      "audit_status": "clean",
+      "reverified": "2026-09-15",
+      "verified_date": "2026-09-15",
+      "verify_method": "primary-text"
     }
   ],
   "estimates_excluded": [
