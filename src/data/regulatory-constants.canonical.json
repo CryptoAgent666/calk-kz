@@ -9117,7 +9117,7 @@
         "sn_min_base_mrp: ссылка «ст. 485» — нумерация старого НК, статью НК-2026 переуточнить",
         "расчёт зарплаты по списку сотрудников — отдельная задача (в работе)"
       ],
-      "deploy": "15.09.2026: deploy-fast (коммиты dabf7ad + 5d95425, бандл 20260915102844), гейты 570/0, OTA опубликован, check:ota ok; прод проверен по 5 страницам (salary ru/kk, customs-clearance, moral-damage ru/kk), MIME бандла application/javascript | 15.09.2026 (2-й): merge утильсбора (edb8520 → 1b34b56), бандл 20260915105126; первая пересборка выпала 569/570 (margin-markup, таймаут при load 8) — пересобрано с PRERENDER_CONCURRENCY=3, 570/0; OTA опубликован, check:ota ok"
+      "deploy": "15.09.2026: deploy-fast (коммиты dabf7ad + 5d95425, бандл 20260915102844), гейты 570/0, OTA опубликован, check:ota ok; прод проверен по 5 страницам (salary ru/kk, customs-clearance, moral-damage ru/kk), MIME бандла application/javascript | 15.09.2026 (2-й): merge утильсбора (edb8520 → 1b34b56), бандл 20260915105126; первая пересборка выпала 569/570 (margin-markup, таймаут при load 8) — пересобрано с PRERENDER_CONCURRENCY=3, 570/0; OTA опубликован, check:ota ok | 15.09.2026 (3-й): режим «Несколько сотрудников» в зарплате (6f8662d, ребейз на f3a2631), бандл 20260915110955, гейты 570/0 с первого прогона (concurrency 4), OTA опубликован, check:ota ok; прод проверен: salary ru/kk (переключатель есть, 250 575 / 13 500 без изменений), единый хэш index-Da11Q1dr на 4 маршрутах, MIME application/javascript, /updates с новой записью"
     }
   },
   "completeness_audit": {
