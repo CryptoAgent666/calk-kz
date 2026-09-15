@@ -42,7 +42,7 @@ const LAST_UPDATED: Record<string, string> = {
 
   // === АВТО ===
   'customs-clearance': '2026-09-13',
-  'recycling-fee': '2026-01-01',
+  'recycling-fee': '2026-09-13',
   'registration-fee': '2026-01-01',
   'insurance-premium': '2026-09-10',
   'kasko': '2026-01-01',

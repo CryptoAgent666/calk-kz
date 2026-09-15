@@ -75,6 +75,52 @@
       "was": "98 838",
       "now": "99 263",
       "what": "labor_cost_1mzp_example_without_so_floor"
+    },
+    {
+      "was": "757000",
+      "now": "756 875 ₸ (216 250 × 3,5)",
+      "what": "recycling_fee_car_1500cc_example_rounding",
+      "only": [
+        "calculatorExamples",
+        "QuickAnswer",
+        "RecyclingFee"
+      ]
+    },
+    {
+      "was": "2024",
+      "now": "без даты: коэффициент нуль только не из России и Беларуси",
+      "what": "recycling_fee_ev_exempt_since_2024_fake",
+      "ctx": "утильсбор|кәдеге жарату",
+      "only": [
+        "calculatorExamples",
+        "calculatorMethodology",
+        "RecyclingFee",
+        "QuickAnswer",
+        "calculators.json"
+      ]
+    },
+    {
+      "was": "полностью освобождены от утилизационного сбора",
+      "now": "коэффициент нуль только не из России и Беларуси, из РФ/РБ — шестьдесят",
+      "what": "recycling_fee_ev_full_exemption_ru"
+    },
+    {
+      "was": "кәдеге жарату алымынан толық босатылған",
+      "now": "нөл коэффициенті тек Ресей мен Беларусьтен басқа елден",
+      "what": "recycling_fee_ev_full_exemption_kk"
+    },
+    {
+      "was": "от года выпуска и типа транспорта",
+      "now": "от категории, объёма или массы и страны ввоза",
+      "what": "recycling_fee_seo_fake_year_factor",
+      "only": [
+        "seoData"
+      ]
+    },
+    {
+      "was": "Z1600000505",
+      "now": "adilet V2100025100 (Методика, приказ № 448)",
+      "what": "recycling_fee_wrong_law_link_z1600000505"
     }
   ]
 }
