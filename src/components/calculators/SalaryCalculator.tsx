@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react';
-import { Wallet, Calculator, TrendingUp, Users, Info, Building, DollarSign, Percent, BarChart3 } from 'lucide-react';
+import React, { useState, useMemo, useRef } from 'react';
+import { Wallet, Users, Info, Building, DollarSign, Percent, Plus, Trash2, ClipboardPaste } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { useTranslation } from 'react-i18next';
-import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
+import { TaxPieChart } from '../ui/ChartComponents';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
@@ -12,143 +12,108 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import {
+  calculateSalary2026,
+  sumSalaryRows,
+  parseSalaryLines,
+  SOCIAL_DEDUCTION_ANNUAL,
+  type SocialDeduction,
+  type SalaryRow,
+  type SalaryResult,
+  type SalaryTotals,
+} from '../../utils/salary2026';
 
-// Социальный вычет по ИПН (НК РК 2026 ст. 404): 5 000 МРП/год — инвалидность I–II группы;
-// 882 МРП/год — III группа, дети с инвалидностью, участники ВОВ, родители и опекуны детей с инвалидностью.
-type SocialDeduction = 'none' | '882' | '5000';
+// Константы и формула расчёта (МЗП, МРП, пол СО 1 МЗП по ст. 245 СК, вычеты ст. 403/404 НК)
+// живут в utils/salary2026.ts — одна функция считает и одиночный расчёт, и таблицу сотрудников.
+
+type CalcMode = 'single' | 'multi';
+const SOCIAL_OPTIONS = ['none', '882', '5000'] as const;
+
+const newRow = (id: number, patch: Partial<SalaryRow> = {}): SalaryRow => ({
+  id, name: '', gross: '', isPrimaryJob: true, isSpecialCategory: false, socialDeduction: 'none', ...patch,
+});
+
+// Колонки денежных итогов таблицы — общий список для строк, итога и экспорта.
+type MoneyLine = Pick<SalaryResult,
+  'opv' | 'vosms' | 'incomeTax' | 'totalEmployeeDeductions' | 'netSalary'
+  | 'sn' | 'so' | 'oosms' | 'opvr' | 'totalEmployerContributions' | 'totalLaborCost'>;
+const MONEY_COLUMNS: { key: keyof MoneyLine; label: string; strong?: 'red' | 'green' | 'orange' | 'blue' }[] = [
+  { key: 'opv', label: 'colOpv' },
+  { key: 'vosms', label: 'colVosms' },
+  { key: 'incomeTax', label: 'colIpn' },
+  { key: 'totalEmployeeDeductions', label: 'colDeductions', strong: 'red' },
+  { key: 'netSalary', label: 'colNet', strong: 'green' },
+  { key: 'sn', label: 'colSn' },
+  { key: 'so', label: 'colSo' },
+  { key: 'oosms', label: 'colOosms' },
+  { key: 'opvr', label: 'colOpvr' },
+  { key: 'totalEmployerContributions', label: 'colEmployer', strong: 'orange' },
+  { key: 'totalLaborCost', label: 'colLaborCost', strong: 'blue' },
+];
+const STRONG_CLASS: Record<NonNullable<typeof MONEY_COLUMNS[number]['strong']>, string> = {
+  red: 'font-semibold text-red-700',
+  green: 'font-semibold text-green-700',
+  orange: 'font-semibold text-orange-700',
+  blue: 'font-semibold text-blue-700',
+};
 
 export default function SalaryCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  const [mode, setMode] = useState<CalcMode>('single');
   const [grossSalary, setGrossSalary] = useState<string>('300000');
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
   const [socialDeduction, setSocialDeduction] = useState<SocialDeduction>('none');
 
-  const MZP = 85000;
-  const MRP = 4325;
-  const OPV_RATE = 0.10;
-  const VOSMS_RATE = 0.02;
-  const IPN_RATE_BASE = 0.10;
-  const IPN_RATE_HIGH = 0.15;
-  const IPN_ANNUAL_THRESHOLD = 8500 * MRP; // 36,762,500 тенге/год
-  const IPN_MONTHLY_THRESHOLD = IPN_ANNUAL_THRESHOLD / 12; // ~3,063,542 тенге/мес
-  const SO_RATE = 0.05;
-  const OOSMS_RATE = 0.03;
-  const OPVR_RATE = 0.035;
-  const SN_RATE = 0.06; // СН с 2026: 6%, взаимозачёт с СО отменён (новый НК РК)
-  const SN_MIN_BASE = 14 * MRP; // минимальный объект СН = 14 МРП
-  const STANDARD_DEDUCTION = 30 * MRP;
-  const OPV_MAX_BASE = 50 * MZP;
-  const VOSMS_MAX_BASE = 20 * MZP; // С 2026: макс. база ВОСМС = 20 МЗП
-  const SO_MAX_BASE = 7 * MZP;
-  // Соцкодекс ст. 245 п. 1: объект СО за календарный месяц ниже МЗП → СО считаются с МЗП.
-  // Для работников; по ГПХ минимум с 01.01.2026 не применяется (приказ Минтруда № 299 от 30.09.2025).
-  const SO_MIN_BASE = MZP;
-  const OOSMS_MAX_BASE = 40 * MZP; // С 2026: макс. база ООСМС = 40 МЗП
-  const SOCIAL_DEDUCTION_ANNUAL: Record<SocialDeduction, number> = { none: 0, '882': 882 * MRP, '5000': 5000 * MRP };
-
-  const calculateSalary = (gross: number) => {
-    if (gross <= 0) {
-      return {
-        opv: 0, vosms: 0, standardDeduction: 0, socialDeduction: 0, socialDeductionMonths: 0,
-        taxableIncome: 0, incomeTax: 0, incomeTaxWithoutSocial: 0,
-        totalEmployeeDeductions: 0, sn: 0, so: 0, soFloorApplied: false, oosms: 0, opvr: 0, totalEmployerContributions: 0,
-        netSalary: 0, totalLaborCost: 0,
-        effectiveEmployeeTaxRate: 0, effectiveEmployerRate: 0
-      };
-    }
-
-    const opvBase = Math.min(gross, OPV_MAX_BASE);
-    const opv = isSpecialCategory ? 0 : opvBase * OPV_RATE;
-
-    const vosmsBase = Math.min(gross, VOSMS_MAX_BASE);
-    const vosms = isSpecialCategory ? 0 : vosmsBase * VOSMS_RATE;
-
-    const standardDeduction = (isResident && isPrimaryJob) ? STANDARD_DEDUCTION : 0;
-
-    const taxableBeforeSocial = Math.max(0, gross - opv - vosms - standardDeduction);
-
-    // Социальный вычет — годовой лимит, применяется к доходу до исчерпания (ст. 404 НК РК):
-    // в месяц берётся не больше облагаемого дохода, поэтому первые месяцы ИПН = 0.
-    const socialAnnual = isResident ? SOCIAL_DEDUCTION_ANNUAL[socialDeduction] : 0;
-    const socialDeductionMonth = Math.min(taxableBeforeSocial, socialAnnual);
-    const taxableIncome = taxableBeforeSocial - socialDeductionMonth;
-    const socialDeductionMonths = socialAnnual > 0 && taxableBeforeSocial > 0
-      ? Math.min(12, Math.max(1, Math.floor(socialAnnual / taxableBeforeSocial)))
-      : 0;
-
-    // С 01.01.2026 90%-корректировка ИПН для дохода ≤25 МРП ОТМЕНЕНА: новый НК РК
-    // (ст. 401 содержит исчерпывающий перечень вычетов и этой нормы не содержит),
-    // вместо неё действует единый базовый вычет 30 МРП (STANDARD_DEDUCTION выше).
-    const ipnOf = (base: number) => base <= IPN_MONTHLY_THRESHOLD
-      ? base * IPN_RATE_BASE
-      : IPN_MONTHLY_THRESHOLD * IPN_RATE_BASE + (base - IPN_MONTHLY_THRESHOLD) * IPN_RATE_HIGH;
-    const incomeTax = ipnOf(taxableIncome);
-    const incomeTaxWithoutSocial = ipnOf(taxableBeforeSocial);
-    const totalEmployeeDeductions = opv + vosms + incomeTax;
-
-    // СН 6% (новый НК РК 2026): база = доход − ОПВ − ВОСМС, но не менее 14 МРП.
-    // Уплачивается в т.ч. за особые категории (пенсионеров, лиц с инвалидностью).
-    const snBase = Math.max(gross - opv - vosms, SN_MIN_BASE);
-    const sn = snBase * SN_RATE;
-
-    // СО 5 % с дохода за минусом ОПВ, но не ниже 1 МЗП и не выше 7 МЗП (Соцкодекс ст. 245 п. 1).
-    // Пол действует на календарный месяц целиком — и при неполном месяце (5 дней из 21).
-    const soFloorApplied = !isSpecialCategory && gross - opv < SO_MIN_BASE;
-    const soBase = Math.min(Math.max(gross - opv, SO_MIN_BASE), SO_MAX_BASE);
-    const so = isSpecialCategory ? 0 : soBase * SO_RATE;
-
-    // За пенсионеров и лиц с инвалидностью работодатель ООСМС не платит
-    // (взносы за них уплачивает государство — ст. 26, 27 Закона об ОСМС)
-    const oosmsBase = Math.min(gross, OOSMS_MAX_BASE);
-    const oosms = isSpecialCategory ? 0 : oosmsBase * OOSMS_RATE;
-
-    const opvrBase = Math.min(gross, OPV_MAX_BASE);
-    const opvr = isSpecialCategory ? 0 : opvrBase * OPVR_RATE;
-
-    const totalEmployerContributions = sn + so + oosms + opvr;
-    const netSalary = gross - totalEmployeeDeductions;
-    const totalLaborCost = gross + totalEmployerContributions;
-
-    const effectiveEmployeeTaxRate = gross > 0 ? (totalEmployeeDeductions / gross) * 100 : 0;
-    const effectiveEmployerRate = gross > 0 ? (totalEmployerContributions / gross) * 100 : 0;
-
-    return {
-      opv: Math.round(opv),
-      vosms: Math.round(vosms),
-      standardDeduction: Math.round(standardDeduction),
-      socialDeduction: Math.round(socialDeductionMonth),
-      socialDeductionMonths,
-      taxableIncome: Math.round(taxableIncome),
-      incomeTax: Math.round(incomeTax),
-      incomeTaxWithoutSocial: Math.round(incomeTaxWithoutSocial),
-      totalEmployeeDeductions: Math.round(totalEmployeeDeductions),
-      sn: Math.round(sn),
-      so: Math.round(so),
-      soFloorApplied,
-      oosms: Math.round(oosms),
-      opvr: Math.round(opvr),
-      totalEmployerContributions: Math.round(totalEmployerContributions),
-      netSalary: Math.round(netSalary),
-      totalLaborCost: Math.round(totalLaborCost),
-      effectiveEmployeeTaxRate: Number(effectiveEmployeeTaxRate.toFixed(2)),
-      effectiveEmployerRate: Number(effectiveEmployerRate.toFixed(2))
-    };
-  };
+  // Режим «несколько сотрудников»: строки таблицы + текстовое быстрое заполнение.
+  // Резидентство — общий флаг на всю таблицу (isResident выше).
+  const [rows, setRows] = useState<SalaryRow[]>(() => [newRow(1, { gross: '300000' }), newRow(2), newRow(3)]);
+  const nextRowId = useRef(4);
+  const [pasteText, setPasteText] = useState('');
 
   // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
   // числами, и первый клиентский рендер обязан выдать те же числа — иначе
   // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
   const results = useMemo(
-    () => calculateSalary(parseFloat(grossSalary) || 0),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    () => calculateSalary2026({ gross: parseFloat(grossSalary) || 0, isResident, isPrimaryJob, isSpecialCategory, socialDeduction }),
     [grossSalary, isResident, isPrimaryJob, isSpecialCategory, socialDeduction]
   );
+
+  const multiRows = useMemo(
+    () => rows.map((row, idx) => {
+      const gross = parseFloat(row.gross) || 0;
+      const result = calculateSalary2026({
+        gross, isResident, isPrimaryJob: row.isPrimaryJob, isSpecialCategory: row.isSpecialCategory, socialDeduction: row.socialDeduction,
+      });
+      return { row, idx, gross, result };
+    }),
+    [rows, isResident]
+  );
+  const totals: SalaryTotals = useMemo(() => sumSalaryRows(multiRows), [multiRows]);
+  const filledRows = multiRows.filter((r) => r.gross > 0);
+  const anySoFloor = filledRows.some((r) => r.result.soFloorApplied);
+
+  const updateRow = (id: number, patch: Partial<SalaryRow>) =>
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  const addRow = () => setRows((prev) => [...prev, newRow(nextRowId.current++)]);
+  const removeRow = (id: number) => setRows((prev) => (prev.length > 1 ? prev.filter((r) => r.id !== id) : prev));
+  const applyPaste = () => {
+    const parsed = parseSalaryLines(pasteText);
+    if (!parsed.length) return;
+    // Пустые строки-заготовки уходят, заполненные остаются, вставленные добавляются в конец.
+    setRows((prev) => [
+      ...prev.filter((r) => (parseFloat(r.gross) || 0) > 0),
+      ...parsed.map((p) => newRow(nextRowId.current++, { name: p.name, gross: String(p.gross) })),
+    ]);
+    setPasteText('');
+  };
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
   };
+  const fmtCell = (num: number) => num.toLocaleString('ru-KZ');
+  const employeeLabel = (row: SalaryRow, idx: number) => row.name.trim() || t('salary.multi.exportEmployee', { n: idx + 1 });
 
   const generateExportData = () => {
     if (!grossSalary || parseFloat(grossSalary) <= 0) return '';
@@ -179,6 +144,59 @@ ${t('salary.effectiveTaxRate')}:
 - ${t('salary.employerSurcharge')}: ${results.effectiveEmployerRate}%`;
   };
 
+  const moneyLines = (gross: number, line: MoneyLine) => [
+    { label: t('salary.multi.colGross'), value: formatNumber(gross) },
+    ...MONEY_COLUMNS.map((c) => ({ label: t(`salary.multi.${c.label}`), value: formatNumber(line[c.key]) })),
+  ];
+
+  const generateMultiExportData = () => {
+    if (!filledRows.length) return '';
+    const rowsText = filledRows.map((r) =>
+      `${r.idx + 1}. ${employeeLabel(r.row, r.idx)}: ${moneyLines(r.gross, r.result).map((l) => `${l.label} ${l.value}`).join('; ')}`
+    ).join('\n');
+    const totalsText = moneyLines(totals.gross, totals).map((l) => `- ${l.label}: ${l.value}`).join('\n');
+    return `${t('salary.multi.title')} (${t('salary.multi.employeesCount', { count: totals.count })}):
+- ${t('salary.isResident')}: ${isResident ? t('common.yes') : t('common.no')}
+
+${rowsText}
+
+${t('salary.multi.totals')}:
+${totalsText}`;
+  };
+
+  const exportText = mode === 'multi' ? generateMultiExportData() : generateExportData();
+  const hasResult = mode === 'multi' ? totals.count > 0 : results.netSalary > 0;
+  const chartSource: MoneyLine = mode === 'multi' ? totals : results;
+
+  const exportButtonsData = mode === 'multi'
+    ? {
+        title: t('salary.export.title'),
+        subtitle: t('salary.multi.exportSubtitle', { net: totals.netSalary.toLocaleString(), count: totals.count }),
+        sections: [
+          ...filledRows.map((r) => ({ title: `${r.idx + 1}. ${employeeLabel(r.row, r.idx)}`, data: moneyLines(r.gross, r.result) })),
+          { title: t('salary.multi.totals'), data: moneyLines(totals.gross, totals) },
+        ],
+        footer: t('salary.export.footer'),
+      }
+    : {
+        title: t('salary.export.title'),
+        subtitle: `${results.netSalary.toLocaleString()} ₸ ${t('salary.export.netSalaryLabel')}`,
+        sections: [
+          {
+            title: t('salary.export.results'),
+            data: [
+              { label: t('salary.accrued'), value: `${parseFloat(grossSalary || '0').toLocaleString()} ₸` },
+              { label: t('salary.incomeTax'), value: `${results.incomeTax.toLocaleString()} ₸` },
+              { label: t('salary.opv'), value: `${results.opv.toLocaleString()} ₸` },
+              { label: t('salary.netSalary'), value: `${results.netSalary.toLocaleString()} ₸` },
+            ]
+          }
+        ],
+        footer: t('salary.export.footer')
+      };
+
+  const cellInput = 'px-2 py-1.5 border border-gray-300 rounded-md text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent';
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
@@ -195,6 +213,27 @@ ${t('salary.effectiveTaxRate')}:
 
       <QuickAnswer calculatorId="salary" />
 
+      <div className="mb-6 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t('salary.modeLabel')}</label>
+        <div className="grid grid-cols-2 gap-2 max-w-md">
+          {(['single', 'multi'] as CalcMode[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              aria-pressed={mode === m}
+              className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
+                mode === m ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              {t(`salary.mode_${m}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {mode === 'single' && (
+      <>
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('salary.parameters')}</h2>
@@ -273,7 +312,7 @@ ${t('salary.effectiveTaxRate')}:
                   onChange={(e) => setSocialDeduction(e.target.value as SocialDeduction)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  {(['none', '882', '5000'] as const).map((opt) => (
+                  {SOCIAL_OPTIONS.map((opt) => (
                     <option key={opt} value={opt}>{t(`salary.socialDeduction_${opt}`)}</option>
                   ))}
                 </select>
@@ -464,14 +503,233 @@ ${t('salary.effectiveTaxRate')}:
           </div>
         </div>
       </div>
+      </>
+      )}
 
-      {parseFloat(grossSalary) > 0 && (
+      {mode === 'multi' && (
+      <>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+          <div className="min-w-0">
+            <h2 className="text-xl font-semibold text-gray-900">{t('salary.multi.title')}</h2>
+            <p className="text-sm text-gray-600 mt-1">{t('salary.multi.hint')}</p>
+          </div>
+          <label className="flex items-center text-sm text-gray-700 whitespace-nowrap">
+            <input
+              type="checkbox"
+              id="isResidentAll"
+              checked={isResident}
+              onChange={(e) => setIsResident(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <span className="ml-2">{t('salary.multi.residentAll')}</span>
+          </label>
+        </div>
+
+        <div className="overflow-x-auto -mx-6 px-6">
+          <table className="min-w-full text-sm" id="salaryMultiTable">
+            <thead>
+              <tr className="text-xs text-gray-500 border-b border-gray-200">
+                <th className="py-2 pr-2 text-left font-medium">{t('salary.multi.colNo')}</th>
+                <th className="py-2 pr-2 text-left font-medium">{t('salary.multi.colName')}</th>
+                <th className="py-2 pr-2 text-left font-medium">{t('salary.multi.colGross')}</th>
+                <th className="py-2 px-2 text-center font-medium">{t('salary.multi.colPrimary')}</th>
+                <th className="py-2 px-2 text-center font-medium">{t('salary.multi.colSpecial')}</th>
+                <th className="py-2 pr-2 text-left font-medium">{t('salary.multi.colSocial')}</th>
+                {MONEY_COLUMNS.map((c) => (
+                  <th key={c.key} className="py-2 px-2 text-right font-medium whitespace-nowrap">{t(`salary.multi.${c.label}`)}</th>
+                ))}
+                <th className="py-2 pl-2" />
+              </tr>
+            </thead>
+            <tbody>
+              {multiRows.map(({ row, idx, gross, result }) => (
+                <tr key={row.id} className="border-b border-gray-100 align-middle">
+                  <td className="py-2 pr-2 text-gray-500">{idx + 1}</td>
+                  <td className="py-2 pr-2">
+                    <input
+                      type="text"
+                      value={row.name}
+                      onChange={(e) => updateRow(row.id, { name: e.target.value })}
+                      placeholder={t('salary.multi.namePlaceholder')}
+                      aria-label={`${t('salary.multi.colName')} ${idx + 1}`}
+                      className={`${cellInput} w-36`}
+                    />
+                  </td>
+                  <td className="py-2 pr-2">
+                    <input
+                      type="number"
+                      min={0}
+                      value={row.gross}
+                      onChange={(e) => updateRow(row.id, { gross: e.target.value })}
+                      placeholder="0"
+                      aria-label={`${t('salary.multi.colGross')} ${idx + 1}`}
+                      className={`${cellInput} w-32`}
+                    />
+                  </td>
+                  <td className="py-2 px-2 text-center">
+                    <input
+                      type="checkbox"
+                      checked={row.isPrimaryJob}
+                      onChange={(e) => updateRow(row.id, { isPrimaryJob: e.target.checked })}
+                      aria-label={`${t('salary.isPrimaryJob')} ${idx + 1}`}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </td>
+                  <td className="py-2 px-2 text-center">
+                    <input
+                      type="checkbox"
+                      checked={row.isSpecialCategory}
+                      onChange={(e) => updateRow(row.id, { isSpecialCategory: e.target.checked })}
+                      aria-label={`${t('salary.isSpecialCategory')} ${idx + 1}`}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </td>
+                  <td className="py-2 pr-2">
+                    <select
+                      value={row.socialDeduction}
+                      onChange={(e) => updateRow(row.id, { socialDeduction: e.target.value as SocialDeduction })}
+                      aria-label={`${t('salary.socialDeductionLabel')} ${idx + 1}`}
+                      className={`${cellInput} w-28`}
+                    >
+                      {SOCIAL_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt} title={t(`salary.socialDeduction_${opt}`)}>{t(`salary.multi.socialShort_${opt}`)}</option>
+                      ))}
+                    </select>
+                  </td>
+                  {MONEY_COLUMNS.map((c) => (
+                    <td key={c.key} className={`py-2 px-2 text-right whitespace-nowrap tabular-nums ${c.strong ? STRONG_CLASS[c.strong] : 'text-gray-900'}`}>
+                      {gross > 0 ? fmtCell(result[c.key]) : '—'}
+                      {c.key === 'so' && gross > 0 && result.soFloorApplied && <span className="text-amber-700">*</span>}
+                    </td>
+                  ))}
+                  <td className="py-2 pl-2 text-right">
+                    <button
+                      type="button"
+                      onClick={() => removeRow(row.id)}
+                      disabled={rows.length === 1}
+                      aria-label={t('salary.multi.removeRow')}
+                      title={t('salary.multi.removeRow')}
+                      className="p-1.5 rounded-md text-gray-400 hover:text-red-600 hover:bg-red-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="bg-gray-50 font-semibold text-gray-900" id="salaryMultiTotals">
+                <td className="py-3 pr-2" colSpan={2}>
+                  {t('salary.multi.totals')}
+                  <span className="block text-xs font-normal text-gray-500">{t('salary.multi.employeesCount', { count: totals.count })}</span>
+                </td>
+                <td className="py-3 pr-2 whitespace-nowrap tabular-nums">{fmtCell(totals.gross)}</td>
+                <td colSpan={3} />
+                {MONEY_COLUMNS.map((c) => (
+                  <td key={c.key} className={`py-3 px-2 text-right whitespace-nowrap tabular-nums ${c.strong ? STRONG_CLASS[c.strong] : ''}`}>
+                    {fmtCell(totals[c.key])}
+                  </td>
+                ))}
+                <td />
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <p className="text-xs text-gray-500 mt-2">{t('salary.multi.unitsNote')}</p>
+        {anySoFloor && (
+          <p className="text-xs text-amber-700 mt-1">* {t('salary.soFloorNote')}</p>
+        )}
+
+        <div className="flex flex-wrap gap-3 mt-4">
+          <button
+            type="button"
+            onClick={addRow}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 text-sm font-medium hover:bg-blue-100 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            {t('salary.multi.addRow')}
+          </button>
+        </div>
+
+        <div className="mt-6 border-t border-gray-100 pt-4">
+          <label htmlFor="salaryPaste" className="block text-sm font-medium text-gray-700 mb-2">
+            {t('salary.multi.pasteLabel')}
+          </label>
+          <textarea
+            id="salaryPaste"
+            rows={4}
+            value={pasteText}
+            onChange={(e) => setPasteText(e.target.value)}
+            placeholder={t('salary.multi.pastePlaceholder')}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <button
+            type="button"
+            onClick={applyPaste}
+            disabled={!pasteText.trim()}
+            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-40 disabled:hover:bg-blue-600 transition-colors"
+          >
+            <ClipboardPaste className="w-4 h-4" />
+            {t('salary.multi.pasteButton')}
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('salary.expensesSummary')}</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="text-center p-6 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <Users className="w-6 h-6 text-gray-600" />
+              <span className="text-lg font-semibold text-gray-900">{t('salary.multi.summaryGross')}</span>
+            </div>
+            <div className="text-2xl font-bold text-gray-900 mb-1">{formatNumber(totals.gross)}</div>
+            <div className="text-sm text-gray-600">{t('salary.multi.employeesCount', { count: totals.count })}</div>
+          </div>
+
+          <div className="text-center p-6 bg-green-50 rounded-lg">
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <DollarSign className="w-6 h-6 text-green-600" />
+              <span className="text-lg font-semibold text-gray-900">{t('salary.multi.summaryNet')}</span>
+            </div>
+            <div className="text-2xl font-bold text-green-600 mb-1">{formatNumber(totals.netSalary)}</div>
+            <div className="text-sm text-gray-600">{t('salary.totalDeducted')}: {formatNumber(totals.totalEmployeeDeductions)}</div>
+          </div>
+
+          <div className="text-center p-6 bg-orange-50 rounded-lg">
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <Building className="w-6 h-6 text-orange-600" />
+              <span className="text-lg font-semibold text-gray-900">{t('salary.employer')}</span>
+            </div>
+            <div className="text-2xl font-bold text-orange-600 mb-1">{formatNumber(totals.totalEmployerContributions)}</div>
+            <div className="text-sm text-gray-600">{t('salary.totalEmployerPays')}</div>
+          </div>
+
+          <div className="text-center p-6 bg-blue-50 rounded-lg">
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <Percent className="w-6 h-6 text-blue-600" />
+              <span className="text-lg font-semibold text-gray-900">{t('salary.totalLaborCost')}</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-600 mb-1">{formatNumber(totals.totalLaborCost)}</div>
+            <div className="text-sm text-gray-600">
+              {t('salary.totalToBudget')}: {formatNumber(totals.totalEmployeeDeductions + totals.totalEmployerContributions)}
+            </div>
+          </div>
+        </div>
+      </div>
+      </>
+      )}
+
+      {exportText && (
         <div className="mt-8">
           <SharePrintButtons
             title={t('salary.exportTitle')}
             description={t('salary.exportDescription')}
-            results={generateExportData()}
-            disabled={!generateExportData()}
+            results={exportText}
+            disabled={!exportText}
           />
         </div>
       )}
@@ -493,15 +751,15 @@ ${t('salary.effectiveTaxRate')}:
         ]}
       />
 
-      {/* Диаграмма структуры зарплаты */}
-      {results && results.netSalary > 0 && (
+      {/* Диаграмма структуры зарплаты (в режиме списка — по итогам таблицы) */}
+      {hasResult && chartSource.netSalary > 0 && (
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: t('salary.chart.netSalary'), value: results.netSalary },
-              { name: t('salary.chart.opv'), value: results.opv },
-              { name: t('salary.chart.ipn'), value: results.incomeTax },
-              { name: t('salary.chart.vosms'), value: results.vosms },
+              { name: t('salary.chart.netSalary'), value: chartSource.netSalary },
+              { name: t('salary.chart.opv'), value: chartSource.opv },
+              { name: t('salary.chart.ipn'), value: chartSource.incomeTax },
+              { name: t('salary.chart.vosms'), value: chartSource.vosms },
             ].filter(item => item.value > 0)}
             title={t('salary.chart.title')}
           />
@@ -509,26 +767,11 @@ ${t('salary.effectiveTaxRate')}:
       )}
 
       {/* Экспорт результатов */}
-      {results && results.netSalary > 0 && (
+      {hasResult && (
         <div className="mt-8">
           <ExportButtons
-            data={{
-              title: t('salary.export.title'),
-              subtitle: `${results.netSalary.toLocaleString()} ₸ ${t('salary.export.netSalaryLabel')}`,
-              sections: [
-                {
-                  title: t('salary.export.results'),
-                  data: [
-                    { label: t('salary.accrued'), value: `${parseFloat(grossSalary || '0').toLocaleString()} ₸` },
-                    { label: t('salary.incomeTax'), value: `${results.incomeTax.toLocaleString()} ₸` },
-                    { label: t('salary.opv'), value: `${results.opv.toLocaleString()} ₸` },
-                    { label: t('salary.netSalary'), value: `${results.netSalary.toLocaleString()} ₸` },
-                  ]
-                }
-              ],
-              footer: t('salary.export.footer')
-            }}
-            filename="salary-calculation"
+            data={exportButtonsData}
+            filename={mode === 'multi' ? 'salary-multi' : 'salary-calculation'}
           />
         </div>
       )}
