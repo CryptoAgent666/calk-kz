@@ -8982,6 +8982,22 @@
         "MaternityBenefitsCalculator (пол по ст. 85 п. 2)"
       ],
       "deploy": "13.09.2026: deploy-fast ×2 (бандл 20260912232602 → 20260912233348 с фиксом методологии ЕНПФ), OTA опубликован, check:ota ok; прод проверен по 6 страницам + sitemap 21/21; loop_closer --apply: calk.kz 442/412/0"
+    },
+    "tails_2026_09_13_15": {
+      "trigger": "хвосты Phase-4 13.09 (растаможка: режим для физлиц; моральный вред: порядок величин) + письмо читателя 15.09 (СО при малой зарплате, вычеты)",
+      "status": "applied",
+      "applied_to_code": [
+        "CustomsClearanceCalculator (режимы ДТ/ПТД, ЕТП Решения № 107, акциз 10 % от 18 000 МРП, снят «экосбор»)",
+        "MoralDamageCalculator (диапазоны по ~60 решениям 2023–2026, adminArrest, госпошлина по ст. 665/668)",
+        "SalaryCalculator + SalaryReverseCalculator (СО не ниже 1 МЗП — ст. 245 п. 1 СК; социальный вычет ст. 404: 882/5000 МРП)"
+      ],
+      "registry": "+8 записей (customs_etp_personal_use_car_rates, excise_car_luxury_*, gov_duty_court_*, so_min_base_mzp, ipn_social_deduction_*); customs_fee_rate unit percent → MRP",
+      "open_tails": [
+        "sn_min_base_mrp: ссылка «ст. 485» — нумерация старого НК, статью НК-2026 переуточнить",
+        "утильсбор: коэффициент 2 для РФ/РБ сделан в отдельной сессии (ветка claude/vigilant-perlman-4c6ace, edb8520) — не влит в main на момент выкладки",
+        "расчёт зарплаты по списку сотрудников — отдельная задача (в работе)"
+      ],
+      "deploy": "15.09.2026: deploy-fast (коммиты dabf7ad + 5d95425, бандл 20260915102844), гейты 570/0, OTA опубликован, check:ota ok; прод проверен по 5 страницам (salary ru/kk, customs-clearance, moral-damage ru/kk), MIME бандла application/javascript"
     }
   },
   "completeness_audit": {
