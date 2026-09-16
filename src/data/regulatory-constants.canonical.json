@@ -9118,6 +9118,13 @@
         "расчёт зарплаты по списку сотрудников — отдельная задача (в работе)"
       ],
       "deploy": "15.09.2026: deploy-fast (коммиты dabf7ad + 5d95425, бандл 20260915102844), гейты 570/0, OTA опубликован, check:ota ok; прод проверен по 5 страницам (salary ru/kk, customs-clearance, moral-damage ru/kk), MIME бандла application/javascript | 15.09.2026 (2-й): merge утильсбора (edb8520 → 1b34b56), бандл 20260915105126; первая пересборка выпала 569/570 (margin-markup, таймаут при load 8) — пересобрано с PRERENDER_CONCURRENCY=3, 570/0; OTA опубликован, check:ota ok | 15.09.2026 (3-й): режим «Несколько сотрудников» в зарплате (6f8662d, ребейз на f3a2631), бандл 20260915110955, гейты 570/0 с первого прогона (concurrency 4), OTA опубликован, check:ota ok; прод проверен: salary ru/kk (переключатель есть, 250 575 / 13 500 без изменений), единый хэш index-Da11Q1dr на 4 маршрутах, MIME application/javascript, /updates с новой записью"
+    },
+    "cls_2026_09_16": {
+      "trigger": "GSC Core Web Vitals (mobile): CLS > 0,25 на 136 URL, группы number-to-words (123) и category/tax (13) по 0,48; валидация 03.09 провалена",
+      "root_cause": "сироты Auto ads (div.google-auto-placed в постоянных контейнерах Layout) при SPA-переходе: один сдвиг 0,4568 = 418/915 px; загрузка/скролл/ввод — < 0,011",
+      "fix": "App.tsx: useLayoutEffect на location.pathname удаляет .google-auto-placed до отрисовки нового маршрута (коммит 7c3a662); pre-flight на проде перехватом pushState — 0 сдвигов",
+      "residual": "0,97 на history.back() один раз при показе vignette, 0/2 без него — наблюдать; опционально отключить vignette в AdSense",
+      "deploy": "16.09.2026: deploy-fast, бандл 20260916074416 (PRERENDER_PORT=4180 — 4173 держал turbomany), гейты 570/0, OTA ok; прод: SPA-клик без сирот, сдвигов 0. GSC: нажать Validate fix, окно CrUX 28 дней"
     }
   },
   "completeness_audit": {
