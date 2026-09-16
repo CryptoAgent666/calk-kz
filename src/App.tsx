@@ -1,4 +1,4 @@
-import React, { useEffect, lazy } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, lazy } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { maybeShowInterstitial } from './ads';
 import { trackCalculatorVisitForReview } from './appReview';
@@ -67,6 +67,21 @@ function App() {
 
   // Применяем SEO-теги
   useSEO(getCurrentSEO());
+
+  // CLS при SPA-переходе (GSC 16.09.2026: 136 мобильных URL с CLS > 0,25, группы 0,48).
+  // Auto ads вставляет блоки не только внутрь страницы, но и в постоянные контейнеры
+  // (main, обёртка Layout, body) — ниже контента. При смене маршрута React
+  // размонтирует старую страницу, «сирота» подтягивается к шапке и сталкивает новую
+  // страницу вниз на свою высоту: замер — один сдвиг 0,4568 на клик (418/915 px),
+  // CrUX пишет его на URL приземления. Чистим сирот синхронно, до первой отрисовки
+  // нового маршрута: с useEffect кадр с блоком успевает показаться. Auto ads после
+  // SPA-перехода сам ничего не вставляет, на маунте чистить нечего.
+  const prevPathnameRef = useRef(location.pathname);
+  useLayoutEffect(() => {
+    if (prevPathnameRef.current === location.pathname) return;
+    prevPathnameRef.current = location.pathname;
+    document.querySelectorAll('.google-auto-placed').forEach((node) => node.remove());
+  }, [location.pathname]);
 
   // Прокрутка вверх при смене маршрута
   useEffect(() => {
