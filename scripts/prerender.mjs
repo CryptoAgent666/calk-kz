@@ -137,7 +137,9 @@ async function setupPage(context, langCode) {
 }
 
 async function prerenderRoute(page, distPath, lang, route) {
-  const port = 4173;
+  // Порт preview-сервера: PRERENDER_PORT, чтобы не упираться в чужой dev-сервер на 4173
+  // (16.09.2026 порт держал turbomany/redesign/server.py — сборка не стартовала).
+  const port = parseInt(process.env.PRERENDER_PORT || '4173', 10);
   const url = `http://localhost:${port}${route}${lang.query}`;
 
   await page.goto(url, {

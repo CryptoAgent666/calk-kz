@@ -8,7 +8,7 @@
     "generate:llms": "node scripts/generate-llms.mjs",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "build": "node scripts/generate-build-version.mjs && vite build",
-    "build:prerender": "node scripts/generate-build-version.mjs && node scripts/generate-llms.mjs && vite build && (npx vite preview --port 4173 &) && (until curl -sf http://localhost:4173/ > /dev/null 2>&1; do sleep 1; done) && node scripts/prerender.mjs && pkill -f 'vite preview'",
+    "build:prerender": "node scripts/generate-build-version.mjs && node scripts/generate-llms.mjs && vite build && (npx vite preview --port ${PRERENDER_PORT:-4173} &) && (until curl -sf http://localhost:${PRERENDER_PORT:-4173}/ > /dev/null 2>&1; do sleep 1; done) && node scripts/prerender.mjs && pkill -f \"vite preview --port ${PRERENDER_PORT:-4173}\"",
     "prepublish:app": "npm run check:stale",
     "publish:app": "node scripts/publish-app-bundle.mjs",
     "check:ota": "node scripts/check-ota-health.mjs",
