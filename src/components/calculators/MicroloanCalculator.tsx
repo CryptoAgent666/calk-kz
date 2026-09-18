@@ -14,6 +14,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // МРП 2026 (Закон о республиканском бюджете). Лимиты микрофинансирования
 // заданы в МРП, поэтому держим множитель, а не плоские тенге.
@@ -351,7 +352,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                 min={10000}
                 max={currentLoanType.maxAmount}
                 step={5000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#f97316"
               />
             </div>
@@ -465,7 +466,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                     {
                       title: 'Параметры',
                       data: [
-                        { label: 'Сумма займа', value: `${parseFloat(amount).toLocaleString()} ₸` },
+                        { label: 'Сумма займа', value: `${parseFloat(amount).toLocaleString(NUMBER_LOCALE)} ₸` },
                         { label: 'Ставка', value: `${rate}%` },
                         { label: 'Срок', value: `${term} ${currentLoanType.termUnit === 'days' ? 'дней' : 'мес.'}` },
                       ]
@@ -473,8 +474,8 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                     {
                       title: 'Результаты',
                       data: [
-                        { label: 'К возврату', value: `${results.totalPayment.toLocaleString()} ₸` },
-                        { label: 'Переплата', value: `${results.totalInterest.toLocaleString()} ₸` },
+                        { label: 'К возврату', value: `${results.totalPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
+                        { label: 'Переплата', value: `${results.totalInterest.toLocaleString(NUMBER_LOCALE)} ₸` },
                         { label: 'Эффективная ставка', value: `${results.effectiveRate.toFixed(1)}%` },
                       ]
                     }

@@ -9,6 +9,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { formatLongDate } from '../../utils/localeFormat';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type Gender = 'male' | 'female';
 
@@ -259,19 +260,19 @@ export default function AgeCalculator() {
                 <div className="space-y-2">
                   <div className="flex justify-between py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('age.totalDays')}</span>
-                    <span className="font-semibold text-gray-900">{results.totalDays.toLocaleString()}</span>
+                    <span className="font-semibold text-gray-900">{results.totalDays.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('age.totalHours')}</span>
-                    <span className="font-semibold text-gray-900">{results.totalHours.toLocaleString()}</span>
+                    <span className="font-semibold text-gray-900">{results.totalHours.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('age.totalMinutes')}</span>
-                    <span className="font-semibold text-gray-900">{results.totalMinutes.toLocaleString()}</span>
+                    <span className="font-semibold text-gray-900">{results.totalMinutes.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('age.totalSeconds')}</span>
-                    <span className="font-semibold text-gray-900">{results.totalSeconds.toLocaleString()}</span>
+                    <span className="font-semibold text-gray-900">{results.totalSeconds.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('age.leapYearsLived')}</span>
@@ -367,8 +368,8 @@ export default function AgeCalculator() {
                   title: t('age.exactAgeTitle'),
                   data: [
                     { label: t('age.exactAgeTitle'), value: `${results.years} / ${results.months} / ${results.days}` },
-                    { label: t('age.totalDays'), value: results.totalDays.toLocaleString() },
-                    { label: t('age.totalHours'), value: results.totalHours.toLocaleString() },
+                    { label: t('age.totalDays'), value: results.totalDays.toLocaleString(NUMBER_LOCALE) },
+                    { label: t('age.totalHours'), value: results.totalHours.toLocaleString(NUMBER_LOCALE) },
                     { label: t('age.birthWeekDay'), value: results.birthWeekDay },
                     { label: t('age.leapYearsLived'), value: String(results.leapYearsLived) },
                     { label: t('age.daysUntilBirthday'), value: String(results.daysUntilNextBirthday) },

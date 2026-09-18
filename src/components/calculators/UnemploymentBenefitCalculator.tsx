@@ -204,7 +204,7 @@ export default function UnemploymentBenefitCalculator() {
                 min={0}
                 max={2000000}
                 step={50000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#8b5cf6"
               />
               <div className="relative mt-3">
@@ -412,9 +412,9 @@ export default function UnemploymentBenefitCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Ежемесячное пособие', value: `${results.monthlyBenefit.toLocaleString()} ₸` },
+                    { label: 'Ежемесячное пособие', value: `${results.monthlyBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: 'Период выплат', value: `${results.paymentPeriodMonths} мес.` },
-                    { label: 'Общая сумма', value: `${results.totalBenefit.toLocaleString()} ₸` },
+                    { label: 'Общая сумма', value: `${results.totalBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

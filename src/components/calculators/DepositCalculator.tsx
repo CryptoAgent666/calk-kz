@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function DepositCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -241,7 +242,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
                 min={100000}
                 max={50000000}
                 step={100000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#3b82f6"
               />
               <div className="relative mt-3">
@@ -580,10 +581,10 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Начальная сумма', value: `${parseFloat(initialAmount).toLocaleString()} ₸` },
+                    { label: 'Начальная сумма', value: `${parseFloat(initialAmount).toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: 'Срок', value: `${termValue} мес.` },
-                    { label: 'Начисленные проценты', value: `${results.totalEarningsWithContributions.toLocaleString()} ₸` },
-                    { label: 'Итого', value: `${results.finalAmountWithContributions.toLocaleString()} ₸` },
+                    { label: 'Начисленные проценты', value: `${results.totalEarningsWithContributions.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Итого', value: `${results.finalAmountWithContributions.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

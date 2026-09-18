@@ -11,6 +11,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 /**
  * Чаевые и сплит счёта. KZ-контекст: во многих заведениях сервисный сбор
@@ -81,7 +82,7 @@ ${t('tip-split.results')}:
                 value={parseFloat(bill) || 0}
                 onChange={(v) => setBill(String(v))}
                 min={1000} max={200000} step={500}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#ec4899"
               />
               <input

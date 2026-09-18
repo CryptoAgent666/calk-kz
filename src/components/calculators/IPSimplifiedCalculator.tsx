@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function IPSimplifiedCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -168,7 +169,7 @@ export default function IPSimplifiedCalculator() {
                   min={500000}
                   max={50000000}
                   step={500000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#3b82f6"
                 />
                 <div className="relative mt-3">
@@ -480,16 +481,16 @@ export default function IPSimplifiedCalculator() {
                 {
                   title: t('ip-simplified.incomeAndEmployees'),
                   data: [
-                    { label: t('ip-simplified.semiannualIncome'), value: `${parseFloat(semiannualIncome || '0').toLocaleString()} ₸` },
+                    { label: t('ip-simplified.semiannualIncome'), value: `${parseFloat(semiannualIncome || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: t('ip-simplified.numberOfEmployees'), value: hasEmployees ? numberOfEmployees : '0' },
                   ]
                 },
                 {
                   title: t('ip-simplified.yearlyTotals'),
                   data: [
-                    { label: t('ip-simplified.ipnTax'), value: `${results.ipnTax.toLocaleString()} ₸` },
-                    { label: t('ip-simplified.socialTax'), value: `${results.socialTax.toLocaleString()} ₸` },
-                    { label: t('ip-simplified.totalTax'), value: `${results.totalTax.toLocaleString()} ₸` },
+                    { label: t('ip-simplified.ipnTax'), value: `${results.ipnTax.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('ip-simplified.socialTax'), value: `${results.socialTax.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('ip-simplified.totalTax'), value: `${results.totalTax.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

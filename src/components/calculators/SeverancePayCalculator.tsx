@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function SeverancePayCalculator() {
   const { t } = useTranslation('calculators');
@@ -234,7 +235,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                 min={100000}
                 max={3000000}
                 step={50000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#f97316"
               />
               <input
@@ -593,23 +594,23 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                 {
                   title: t('severance-pay.exportAccruals'),
                   data: [
-                    { label: t('severance-pay.vacationCompensation'), value: `${results.vacationCompensation.toLocaleString()} ₸` },
-                    { label: t('severance-pay.severancePay'), value: `${results.severancePay.toLocaleString()} ₸` },
-                    { label: t('severance-pay.grossTotal'), value: `${results.grossTotal.toLocaleString()} ₸` },
+                    { label: t('severance-pay.vacationCompensation'), value: `${results.vacationCompensation.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('severance-pay.severancePay'), value: `${results.severancePay.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('severance-pay.grossTotal'), value: `${results.grossTotal.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 },
                 {
                   title: t('severance-pay.deductionsTitle'),
                   data: [
-                    { label: t('severance-pay.opv'), value: `${results.opv.toLocaleString()} ₸` },
-                    { label: t('severance-pay.vosms'), value: `${results.vosms.toLocaleString()} ₸` },
-                    { label: t('severance-pay.ipn'), value: `${results.ipn.toLocaleString()} ₸` },
+                    { label: t('severance-pay.opv'), value: `${results.opv.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('severance-pay.vosms'), value: `${results.vosms.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('severance-pay.ipn'), value: `${results.ipn.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 },
                 {
                   title: t('severance-pay.finalPayment'),
                   data: [
-                    { label: t('severance-pay.netTotal'), value: `${results.netTotal.toLocaleString()} ₸` },
+                    { label: t('severance-pay.netTotal'), value: `${results.netTotal.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

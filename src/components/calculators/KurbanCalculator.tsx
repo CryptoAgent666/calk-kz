@@ -11,6 +11,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface RegionalPrices {
   id: string;
@@ -1267,7 +1268,7 @@ export default function KurbanCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Стоимость', value: `${results.totalCost.max.toLocaleString()} ₸` },
+                    { label: 'Стоимость', value: `${results.totalCost.max.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

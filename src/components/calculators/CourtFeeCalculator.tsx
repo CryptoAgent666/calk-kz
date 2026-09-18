@@ -11,6 +11,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function CourtFeeCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -213,7 +214,7 @@ export default function CourtFeeCalculator() {
                   min={100000}
                   max={100000000}
                   step={500000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#6366f1"
                 />
                 <div className="relative mt-3">
@@ -428,8 +429,8 @@ export default function CourtFeeCalculator() {
                   title: 'Результаты',
                   data: [
                     { label: 'Тип дела', value: claimType === 'property' ? 'Имущественный' : 'Неимущественный' },
-                    { label: 'Сумма иска', value: `${parseFloat(claimAmount || '0').toLocaleString()} ₸` },
-                    { label: 'Госпошлина', value: `${results.feeAmount.toLocaleString()} ₸` },
+                    { label: 'Сумма иска', value: `${parseFloat(claimAmount || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Госпошлина', value: `${results.feeAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

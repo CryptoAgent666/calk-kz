@@ -12,6 +12,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 /**
  * ИПН с дивидендов 2026 (новый НК РК от 18.07.2025 № 214-VIII).
@@ -141,7 +142,7 @@ ${t('dividend-tax.results')}:
                 min={100000}
                 max={20000000}
                 step={100000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#10b981"
               />
               <input

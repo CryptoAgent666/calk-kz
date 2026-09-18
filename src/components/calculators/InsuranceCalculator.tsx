@@ -20,6 +20,7 @@ import {
   ogpoAgeExperienceCoeff,
   ogpoTerritoryCoeff
 } from '../../data/ogpoCoefficients';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface Driver {
   id: string;
@@ -717,7 +718,7 @@ export default function InsuranceCalculator() {
                 {
                   title: t('insurance-premium.export.results'),
                   data: [
-                    { label: t('insurance-premium.export.premium'), value: `${results.finalPremium.toLocaleString()} ₸` },
+                    { label: t('insurance-premium.export.premium'), value: `${results.finalPremium.toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: t('insurance-premium.export.bonusMalusClass'), value: bonusMalusClass },
                   ]
                 }

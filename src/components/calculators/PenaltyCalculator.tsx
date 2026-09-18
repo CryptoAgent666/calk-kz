@@ -11,6 +11,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function PenaltyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -190,7 +191,7 @@ export default function PenaltyCalculator() {
                 min={10000}
                 max={10000000}
                 step={10000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#ef4444"
               />
               <div className="relative mt-3">
@@ -609,10 +610,10 @@ export default function PenaltyCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Сумма долга', value: `${(parseFloat(debtAmount) || 0).toLocaleString()} ₸` },
+                    { label: 'Сумма долга', value: `${(parseFloat(debtAmount) || 0).toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: 'Дней просрочки', value: daysOverdue },
-                    { label: 'Пеня', value: `${results.totalPenalty.toLocaleString()} ₸` },
-                    { label: 'Итого к оплате', value: `${results.totalToPay.toLocaleString()} ₸` },
+                    { label: 'Пеня', value: `${results.totalPenalty.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Итого к оплате', value: `${results.totalToPay.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

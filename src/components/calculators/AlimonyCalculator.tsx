@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function AlimonyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -184,7 +185,7 @@ ${t('alimony.exportAlimonyCalc')}
                 min={100000}
                 max={2000000}
                 step={50000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#ec4899"
               />
               <div className="relative mt-3">
@@ -600,9 +601,9 @@ ${t('alimony.exportAlimonyCalc')}
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Доход', value: `${results.netIncome.toLocaleString()} ₸` },
+                    { label: 'Доход', value: `${results.netIncome.toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: 'Процент', value: `${(results.alimonyRate * 100).toFixed(0)}%` },
-                    { label: 'Ежемесячные алименты', value: `${results.alimonyAmount.toLocaleString()} ₸` },
+                    { label: 'Ежемесячные алименты', value: `${results.alimonyAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart, ProgressBar } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface MonthlyTurnover {
   month: string;
@@ -709,9 +710,9 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Общий оборот', value: `${results.currentTotal.toLocaleString()} ₸` },
-                    { label: 'Порог НДС', value: `${results.thresholdAmount.toLocaleString()} ₸` },
-                    { label: 'До порога', value: `${results.remainingToThreshold.toLocaleString()} ₸` },
+                    { label: 'Общий оборот', value: `${results.currentTotal.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Порог НДС', value: `${results.thresholdAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'До порога', value: `${results.remainingToThreshold.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

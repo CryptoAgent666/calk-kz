@@ -234,7 +234,7 @@ export default function MaternityBenefitsCalculator() {
                   min={100000}
                   max={2000000}
                   step={50000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#ec4899"
                 />
                 <div className="relative mt-3">
@@ -799,9 +799,9 @@ export default function MaternityBenefitsCalculator() {
                 {
                   title: t('maternity-benefits.results'),
                   data: [
-                    { label: t('maternity-benefits.maternityLumpSum'), value: `${results.maternityBenefit.toLocaleString()} ₸` },
-                    { label: t('maternity-benefits.birthLumpSumBenefit'), value: `${results.birthBenefit.toLocaleString()} ₸` },
-                    { label: t('maternity-benefits.totalFirst15Years'), value: `${results.totalFirstYearBenefits.toLocaleString()} ₸` },
+                    { label: t('maternity-benefits.maternityLumpSum'), value: `${results.maternityBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('maternity-benefits.birthLumpSumBenefit'), value: `${results.birthBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('maternity-benefits.totalFirst15Years'), value: `${results.totalFirstYearBenefits.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

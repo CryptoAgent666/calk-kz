@@ -13,6 +13,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 /**
  * Платежи ИП «за себя» 2026 (упрощёнка):
@@ -136,7 +137,7 @@ ${t('ip-payments.results')}:
                 min={MZP_2026}
                 max={1000000}
                 step={5000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#10b981"
               />
               <input
@@ -156,7 +157,7 @@ ${t('ip-payments.results')}:
                 min={0}
                 max={5000000}
                 step={50000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#10b981"
               />
               <input

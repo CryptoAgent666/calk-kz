@@ -12,6 +12,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function VacationPayCalculator() {
   const { t } = useTranslation('calculators');
@@ -153,7 +154,7 @@ export default function VacationPayCalculator() {
                 min={100000}
                 max={3000000}
                 step={50000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#10b981"
               />
               <input
@@ -455,12 +456,12 @@ export default function VacationPayCalculator() {
           <ExportButtons
             data={{
               title: t('vacation-pay.export.title'),
-              subtitle: `${results.netVacationPay.toLocaleString()} ₸ ${t('vacation-pay.export.netLabel')}`,
+              subtitle: `${results.netVacationPay.toLocaleString(NUMBER_LOCALE)} ₸ ${t('vacation-pay.export.netLabel')}`,
               sections: [
                 {
                   title: t('vacation-pay.export.inputSection'),
                   data: [
-                    { label: t('vacation-pay.monthlyIncome'), value: `${(parseFloat(monthlyIncome) || 0).toLocaleString()} ₸` },
+                    { label: t('vacation-pay.monthlyIncome'), value: `${(parseFloat(monthlyIncome) || 0).toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: t('vacation-pay.workMonths'), value: `${workMonths}` },
                     { label: t('vacation-pay.vacationDays'), value: `${vacationDays}` },
                   ]
@@ -468,13 +469,13 @@ export default function VacationPayCalculator() {
                 {
                   title: t('vacation-pay.export.resultSection'),
                   data: [
-                    { label: t('vacation-pay.averageDailyPay'), value: `${results.averageDailyPay.toLocaleString()} ₸` },
-                    { label: t('vacation-pay.grossVacationPay'), value: `${results.grossVacationPay.toLocaleString()} ₸` },
-                    { label: t('vacation-pay.opv'), value: `${results.opv.toLocaleString()} ₸` },
-                    { label: t('vacation-pay.vosms'), value: `${results.vosms.toLocaleString()} ₸` },
-                    { label: t('vacation-pay.ipn'), value: `${results.ipn.toLocaleString()} ₸` },
-                    { label: t('vacation-pay.totalDeductions'), value: `${results.totalDeductions.toLocaleString()} ₸` },
-                    { label: t('vacation-pay.netVacationPay'), value: `${results.netVacationPay.toLocaleString()} ₸` },
+                    { label: t('vacation-pay.averageDailyPay'), value: `${results.averageDailyPay.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vacation-pay.grossVacationPay'), value: `${results.grossVacationPay.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vacation-pay.opv'), value: `${results.opv.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vacation-pay.vosms'), value: `${results.vosms.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vacation-pay.ipn'), value: `${results.ipn.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vacation-pay.totalDeductions'), value: `${results.totalDeductions.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vacation-pay.netVacationPay'), value: `${results.netVacationPay.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

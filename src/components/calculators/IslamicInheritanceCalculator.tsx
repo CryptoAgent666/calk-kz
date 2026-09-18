@@ -11,6 +11,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface Heir {
   type: string;
@@ -447,7 +448,7 @@ export default function IslamicInheritanceCalculator() {
                   min={1000000}
                   max={500000000}
                   step={5000000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#10b981"
                 />
                 <div className="relative mt-3">
@@ -1201,7 +1202,7 @@ export default function IslamicInheritanceCalculator() {
                   title: 'Наследство',
                   data: results.heirs.map(heir => ({
                     label: heir.name,
-                    value: `${heir.amount.toLocaleString()} ₸ (${heir.percentage.toFixed(1)}%)`
+                    value: `${heir.amount.toLocaleString(NUMBER_LOCALE)} ₸ (${heir.percentage.toFixed(1)}%)`
                   }))
                 }
               ],

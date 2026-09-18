@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type RollSize = '0.53x10' | '0.53x15' | '1.06x10' | '1.06x25';
 const ROLLS: Record<RollSize, { width: number; length: number; label: string }> = {
@@ -176,7 +177,7 @@ export default function WallpaperCalculator() {
               sections: [{ title: t('wallpaper.resultsTitle'), data: [
                 { label: t('wallpaper.rollsNeeded'), value: `${results.rollsNeeded} рулонов` },
                 { label: t('wallpaper.wallArea'), value: `${results.wallArea} м²` },
-                { label: t('wallpaper.totalCost'), value: `${results.totalCost.toLocaleString()} ₸` },
+                { label: t('wallpaper.totalCost'), value: `${results.totalCost.toLocaleString(NUMBER_LOCALE)} ₸` },
               ]}],
               footer: 'Calk.kz'
             }}

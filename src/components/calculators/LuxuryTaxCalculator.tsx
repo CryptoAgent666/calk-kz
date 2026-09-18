@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function LuxuryTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -127,9 +128,9 @@ export default function LuxuryTaxCalculator() {
 
           luxuryTax = value * VEHICLE_LUXURY_RATE;
 
-          description = t('luxury-tax.results.vehicleExceedsMRP', { mrp: VEHICLE_THRESHOLD_MRP.toLocaleString() });
+          description = t('luxury-tax.results.vehicleExceedsMRP', { mrp: VEHICLE_THRESHOLD_MRP.toLocaleString(NUMBER_LOCALE) });
         } else {
-          description = t('luxury-tax.results.vehicleBelowMRP', { mrp: VEHICLE_THRESHOLD_MRP.toLocaleString() });
+          description = t('luxury-tax.results.vehicleBelowMRP', { mrp: VEHICLE_THRESHOLD_MRP.toLocaleString(NUMBER_LOCALE) });
         }
         break;
 
@@ -143,9 +144,9 @@ export default function LuxuryTaxCalculator() {
 
           luxuryTax = value * YACHT_AIRCRAFT_LUXURY_RATE;
 
-          description = t('luxury-tax.results.yachtExceedsMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString() });
+          description = t('luxury-tax.results.yachtExceedsMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString(NUMBER_LOCALE) });
         } else {
-          description = t('luxury-tax.results.yachtBelowMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString() });
+          description = t('luxury-tax.results.yachtBelowMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString(NUMBER_LOCALE) });
         }
         break;
 
@@ -159,9 +160,9 @@ export default function LuxuryTaxCalculator() {
 
           luxuryTax = value * YACHT_AIRCRAFT_LUXURY_RATE;
 
-          description = t('luxury-tax.results.aircraftExceedsMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString() });
+          description = t('luxury-tax.results.aircraftExceedsMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString(NUMBER_LOCALE) });
         } else {
-          description = t('luxury-tax.results.aircraftBelowMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString() });
+          description = t('luxury-tax.results.aircraftBelowMRP', { mrp: YACHT_AIRCRAFT_THRESHOLD_MRP.toLocaleString(NUMBER_LOCALE) });
         }
         break;
     }
@@ -196,7 +197,7 @@ export default function LuxuryTaxCalculator() {
   );
 
   const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount.toLocaleString()} ${t('luxury-tax.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
+    return `${mrpAmount.toLocaleString(NUMBER_LOCALE)} ${t('luxury-tax.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
   const selectedAssetType = assetTypes.find(type => type.id === assetType);
@@ -267,7 +268,7 @@ export default function LuxuryTaxCalculator() {
                 min={50000000}
                 max={500000000}
                 step={10000000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#eab308"
               />
               <div className="relative mt-3">
@@ -745,15 +746,15 @@ export default function LuxuryTaxCalculator() {
                   title: t('luxury-tax.export.parameters'),
                   data: [
                     { label: t('luxury-tax.export.assetType'), value: assetType },
-                    { label: t('luxury-tax.export.cost'), value: `${parseFloat(assetValue || '0').toLocaleString()} ₸` },
+                    { label: t('luxury-tax.export.cost'), value: `${parseFloat(assetValue || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 },
                 {
                   title: t('luxury-tax.export.results'),
                   data: [
-                    { label: t('luxury-tax.chart.regularTax'), value: `${results.regularTax.toLocaleString()} ₸` },
-                    { label: t('luxury-tax.chart.luxuryTax'), value: `${results.luxuryTax.toLocaleString()} ₸` },
-                    { label: t('luxury-tax.export.total'), value: `${results.totalTax.toLocaleString()} ₸` },
+                    { label: t('luxury-tax.chart.regularTax'), value: `${results.regularTax.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('luxury-tax.chart.luxuryTax'), value: `${results.luxuryTax.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('luxury-tax.export.total'), value: `${results.totalTax.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

@@ -12,6 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function CaloriesCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -368,7 +369,7 @@ export default function CaloriesCalculator() {
                     <Zap className="w-5 h-5 text-blue-600" />
                     <span className="text-sm font-medium text-blue-900">{t('calories.bmr')}</span>
                   </div>
-                  <div className="text-2xl font-bold text-blue-700">{results.bmr.toLocaleString()} {t('calories.kcal')}</div>
+                  <div className="text-2xl font-bold text-blue-700">{results.bmr.toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')}</div>
                   <div className="text-xs text-blue-600">{t('calories.bmrDescription')}</div>
                 </div>
 
@@ -377,7 +378,7 @@ export default function CaloriesCalculator() {
                     <Activity className="w-5 h-5 text-gray-600" />
                     <span className="text-sm font-medium text-gray-900">{t('calories.maintenance')}</span>
                   </div>
-                  <div className="text-xl font-bold text-gray-700">{results.maintenanceCalories.toLocaleString()} {t('calories.kcal')}</div>
+                  <div className="text-xl font-bold text-gray-700">{results.maintenanceCalories.toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')}</div>
                   <div className="text-xs text-gray-600">{t('calories.maintenanceDescription')} ({t(`calculators:calories.activityLevels.${selectedActivity?.id}.name`)})</div>
                 </div>
 
@@ -386,10 +387,10 @@ export default function CaloriesCalculator() {
                     <Target className="w-5 h-5 text-green-600" />
                     <span className="text-sm font-medium text-green-900">{t('calories.targetGoal')} {t(`calculators:calories.goals.${goal}.name`)}</span>
                   </div>
-                  <div className="text-2xl font-bold text-green-700">{results.targetCalories.toLocaleString()} {t('calories.kcal')}</div>
+                  <div className="text-2xl font-bold text-green-700">{results.targetCalories.toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')}</div>
                   {results.calorieAdjustment !== 0 && (
                     <div className="text-xs text-green-600">
-                      {results.calorieAdjustment > 0 ? '+' : ''}{results.calorieAdjustment.toLocaleString()} {t('calories.kcal')} {t('calories.fromMaintenance')}
+                      {results.calorieAdjustment > 0 ? '+' : ''}{results.calorieAdjustment.toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')} {t('calories.fromMaintenance')}
                     </div>
                   )}
                 </div>
@@ -417,7 +418,7 @@ export default function CaloriesCalculator() {
                       <span className="font-medium text-red-900">{t('calories.protein')} ({results.macros.protein.percentage}%)</span>
                       <span className="text-lg font-bold text-red-700">{results.macros.protein.grams}г</span>
                     </div>
-                    <div className="text-xs text-red-600">{results.macros.protein.calories.toLocaleString()} {t('calories.kcal')}</div>
+                    <div className="text-xs text-red-600">{results.macros.protein.calories.toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')}</div>
                   </div>
 
                   <div className="bg-yellow-50 rounded-lg p-4">
@@ -425,7 +426,7 @@ export default function CaloriesCalculator() {
                       <span className="font-medium text-yellow-900">{t('calories.fats')} ({results.macros.fats.percentage}%)</span>
                       <span className="text-lg font-bold text-yellow-700">{results.macros.fats.grams}г</span>
                     </div>
-                    <div className="text-xs text-yellow-600">{results.macros.fats.calories.toLocaleString()} {t('calories.kcal')}</div>
+                    <div className="text-xs text-yellow-600">{results.macros.fats.calories.toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')}</div>
                   </div>
 
                   <div className="bg-green-50 rounded-lg p-4">
@@ -433,7 +434,7 @@ export default function CaloriesCalculator() {
                       <span className="font-medium text-green-900">{t('calories.carbs')} ({results.macros.carbs.percentage}%)</span>
                       <span className="text-lg font-bold text-green-700">{results.macros.carbs.grams}г</span>
                     </div>
-                    <div className="text-xs text-green-600">{results.macros.carbs.calories.toLocaleString()} {t('calories.kcal')}</div>
+                    <div className="text-xs text-green-600">{results.macros.carbs.calories.toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')}</div>
                   </div>
                 </div>
 
@@ -441,7 +442,7 @@ export default function CaloriesCalculator() {
                   <h3 className="text-sm font-medium text-teal-900 mb-2">{t('calories.total')}</h3>
                   <div className="text-teal-800 text-sm space-y-1">
                     <div>{results.macros.protein.grams + results.macros.fats.grams + results.macros.carbs.grams}г {t('calories.totalMacros')}</div>
-                    <div>{(results.macros.protein.calories + results.macros.fats.calories + results.macros.carbs.calories).toLocaleString()} {t('calories.kcal')}</div>
+                    <div>{(results.macros.protein.calories + results.macros.fats.calories + results.macros.carbs.calories).toLocaleString(NUMBER_LOCALE)} {t('calories.kcal')}</div>
                   </div>
                 </div>
               </div>

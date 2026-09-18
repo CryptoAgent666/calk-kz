@@ -10,6 +10,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function SocialAssistanceCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -168,7 +169,7 @@ export default function SocialAssistanceCalculator() {
                 min={0}
                 max={500000}
                 step={10000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#10b981"
               />
               <div className="relative mt-3">
@@ -617,15 +618,15 @@ export default function SocialAssistanceCalculator() {
                 {
                   title: 'Параметры',
                   data: [
-                    { label: 'Доход на человека', value: `${results.averageMonthlyIncomePerPerson.toLocaleString()} ₸` },
-                    { label: 'Черта бедности', value: `${results.povertyThreshold.toLocaleString()} ₸` },
+                    { label: 'Доход на человека', value: `${results.averageMonthlyIncomePerPerson.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Черта бедности', value: `${results.povertyThreshold.toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: 'Членов семьи', value: familyMembers },
                   ]
                 },
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Размер АСП', value: `${results.aspAmount.toLocaleString()} ₸` },
+                    { label: 'Размер АСП', value: `${results.aspAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

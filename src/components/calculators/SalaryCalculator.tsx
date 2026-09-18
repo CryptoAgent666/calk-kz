@@ -22,6 +22,7 @@ import {
   type SalaryResult,
   type SalaryTotals,
 } from '../../utils/salary2026';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // Константы и формула расчёта (МЗП, МРП, пол СО 1 МЗП по ст. 245 СК, вычеты ст. 403/404 НК)
 // живут в utils/salary2026.ts — одна функция считает и одиночный расчёт, и таблицу сотрудников.
@@ -171,7 +172,7 @@ ${totalsText}`;
   const exportButtonsData = mode === 'multi'
     ? {
         title: t('salary.export.title'),
-        subtitle: t('salary.multi.exportSubtitle', { net: totals.netSalary.toLocaleString(), count: totals.count }),
+        subtitle: t('salary.multi.exportSubtitle', { net: totals.netSalary.toLocaleString(NUMBER_LOCALE), count: totals.count }),
         sections: [
           ...filledRows.map((r) => ({ title: `${r.idx + 1}. ${employeeLabel(r.row, r.idx)}`, data: moneyLines(r.gross, r.result) })),
           { title: t('salary.multi.totals'), data: moneyLines(totals.gross, totals) },
@@ -180,15 +181,15 @@ ${totalsText}`;
       }
     : {
         title: t('salary.export.title'),
-        subtitle: `${results.netSalary.toLocaleString()} ₸ ${t('salary.export.netSalaryLabel')}`,
+        subtitle: `${results.netSalary.toLocaleString(NUMBER_LOCALE)} ₸ ${t('salary.export.netSalaryLabel')}`,
         sections: [
           {
             title: t('salary.export.results'),
             data: [
-              { label: t('salary.accrued'), value: `${parseFloat(grossSalary || '0').toLocaleString()} ₸` },
-              { label: t('salary.incomeTax'), value: `${results.incomeTax.toLocaleString()} ₸` },
-              { label: t('salary.opv'), value: `${results.opv.toLocaleString()} ₸` },
-              { label: t('salary.netSalary'), value: `${results.netSalary.toLocaleString()} ₸` },
+              { label: t('salary.accrued'), value: `${parseFloat(grossSalary || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
+              { label: t('salary.incomeTax'), value: `${results.incomeTax.toLocaleString(NUMBER_LOCALE)} ₸` },
+              { label: t('salary.opv'), value: `${results.opv.toLocaleString(NUMBER_LOCALE)} ₸` },
+              { label: t('salary.netSalary'), value: `${results.netSalary.toLocaleString(NUMBER_LOCALE)} ₸` },
             ]
           }
         ],
@@ -249,7 +250,7 @@ ${totalsText}`;
                 min={100000}
                 max={3000000}
                 step={50000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#3b82f6"
               />
               <input

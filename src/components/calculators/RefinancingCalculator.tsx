@@ -14,6 +14,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface CalculationResults {
   currentMonthlyPayment: number;
@@ -589,15 +590,15 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
                 {
                   title: t('refinancing.chart.currentLoan'),
                   data: [
-                    { label: t('refinancing.chart.monthlyPayment'), value: `${results.currentMonthlyPayment.toLocaleString()} ₸` },
-                    { label: t('refinancing.chart.totalInterest'), value: `${results.currentTotalInterest.toLocaleString()} ₸` },
+                    { label: t('refinancing.chart.monthlyPayment'), value: `${results.currentMonthlyPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('refinancing.chart.totalInterest'), value: `${results.currentTotalInterest.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 },
                 {
                   title: t('refinancing.chart.refinancing'),
                   data: [
-                    { label: t('refinancing.chart.newPayment'), value: `${results.newMonthlyPayment.toLocaleString()} ₸` },
-                    { label: t('refinancing.chart.savings'), value: `${results.totalSavings.toLocaleString()} ₸` },
+                    { label: t('refinancing.chart.newPayment'), value: `${results.newMonthlyPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('refinancing.chart.savings'), value: `${results.totalSavings.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

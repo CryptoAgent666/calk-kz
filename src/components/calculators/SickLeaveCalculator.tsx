@@ -12,6 +12,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function SickLeaveCalculator() {
   const { t } = useTranslation('calculators');
@@ -203,7 +204,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                   min={100000}
                   max={2000000}
                   step={50000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#ef4444"
                 />
                 <input
@@ -575,8 +576,8 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                   title: t('sick-leave.resultsTitle'),
                   data: [
                     { label: t('sick-leave.daysOfSickness'), value: sickDays },
-                    { label: t('sick-leave.averageDailyWage'), value: `${results.averageDailyIncome.toLocaleString()} ₸` },
-                    { label: t('sick-leave.finalPayment'), value: `${results.netBenefit.toLocaleString()} ₸` },
+                    { label: t('sick-leave.averageDailyWage'), value: `${results.averageDailyIncome.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('sick-leave.finalPayment'), value: `${results.netBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

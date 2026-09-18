@@ -13,6 +13,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import LocalizedLink from '../LocalizedLink';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 /**
  * СНР для самозанятых 2026 (гл. 77, ст. 718–721 нового НК РК, с 01.01.2026).
@@ -149,7 +150,7 @@ ${t('self-employed.results')}:
                 min={50000}
                 max={2000000}
                 step={10000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#0ea5e9"
               />
               <input

@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface YearlyData {
   year: number;
@@ -771,9 +772,9 @@ ${results.yearlyData.map(data =>
                 {
                   title: t('compound-interest.results'),
                   data: [
-                    { label: t('compound-interest.initialDeposit'), value: `${initialDeposit.toLocaleString()} ₸` },
-                    { label: t('compound-interest.finalAmount'), value: `${results.finalAmount.toLocaleString()} ₸` },
-                    { label: t('compound-interest.interestEarned'), value: `${results.totalInterestEarned.toLocaleString()} ₸` },
+                    { label: t('compound-interest.initialDeposit'), value: `${initialDeposit.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('compound-interest.finalAmount'), value: `${results.finalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('compound-interest.interestEarned'), value: `${results.totalInterestEarned.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

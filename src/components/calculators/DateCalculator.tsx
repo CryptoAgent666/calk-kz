@@ -6,6 +6,7 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface DateCalculation {
   startDate: Date;
@@ -693,7 +694,7 @@ export default function DateCalculator() {
                       <div className="flex items-center space-x-2">
                         <Calculator className="w-6 h-6 text-green-600" />
                         <span className="text-lg sm:text-xl lg:text-2xl font-bold text-green-700">
-                          {results.daysDifference.toLocaleString()} {t('date-calculator.daysText')}
+                          {results.daysDifference.toLocaleString(NUMBER_LOCALE)} {t('date-calculator.daysText')}
                         </span>
                       </div>
                     </div>

@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function RamadanSadaqahCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -1003,9 +1004,9 @@ export default function RamadanSadaqahCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Фитр-садака', value: `${results.fitrSadaqahAmount.toLocaleString()} ₸` },
-                    { label: 'Фидия', value: `${results.fidyaSadaqahAmount.toLocaleString()} ₸` },
-                    { label: 'Итого', value: `${results.totalSadaqahAmount.toLocaleString()} ₸` },
+                    { label: 'Фитр-садака', value: `${results.fitrSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Фидия', value: `${results.fidyaSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Итого', value: `${results.totalSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

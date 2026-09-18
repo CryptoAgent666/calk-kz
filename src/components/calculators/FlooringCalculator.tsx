@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type Material = 'laminate' | 'parquet' | 'tile' | 'linoleum' | 'vinyl';
 
@@ -110,7 +111,7 @@ export default function FlooringCalculator() {
                 <button key={m} onClick={() => setMaterial(m)}
                   className={`p-3 rounded-lg border text-sm text-left ${material === m ? 'bg-amber-50 border-amber-500' : 'bg-white border-gray-300'}`}>
                   <div className="font-medium">{t(`flooring.materials.${m}`)}</div>
-                  <div className="text-xs text-gray-500">~{MATERIALS[m].pricePerM2.toLocaleString()} ₸/м²</div>
+                  <div className="text-xs text-gray-500">~{MATERIALS[m].pricePerM2.toLocaleString(NUMBER_LOCALE)} ₸/м²</div>
                 </button>
               ))}
             </div>
@@ -175,12 +176,12 @@ export default function FlooringCalculator() {
                 {results.needsUnderlay && (
                   <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                     <span>🟦 {t('flooring.underlay')}</span>
-                    <span className="font-semibold">{results.underlayPrice.toLocaleString()} ₸</span>
+                    <span className="font-semibold">{results.underlayPrice.toLocaleString(NUMBER_LOCALE)} ₸</span>
                   </div>
                 )}
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>🧰 {t('flooring.skirting')}</span>
-                  <span className="font-semibold">{results.skirtingLength} м • {results.skirtingPrice.toLocaleString()} ₸</span>
+                  <span className="font-semibold">{results.skirtingLength} м • {results.skirtingPrice.toLocaleString(NUMBER_LOCALE)} ₸</span>
                 </div>
               </div>
 
@@ -203,8 +204,8 @@ export default function FlooringCalculator() {
               sections: [{ title: t('flooring.resultsTitle'), data: [
                 { label: t('flooring.area'), value: `${results.actualArea} м²` },
                 { label: t('flooring.packs'), value: `${results.packs} шт.` },
-                { label: t('flooring.materialCost'), value: `${results.totalCost.toLocaleString()} ₸` },
-                { label: t('flooring.grandTotal'), value: `${results.grandTotal.toLocaleString()} ₸` },
+                { label: t('flooring.materialCost'), value: `${results.totalCost.toLocaleString(NUMBER_LOCALE)} ₸` },
+                { label: t('flooring.grandTotal'), value: `${results.grandTotal.toLocaleString(NUMBER_LOCALE)} ₸` },
               ]}],
               footer: 'Calk.kz'
             }}

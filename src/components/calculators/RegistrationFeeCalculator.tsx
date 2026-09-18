@@ -10,6 +10,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function RegistrationFeeCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -381,10 +382,10 @@ export default function RegistrationFeeCalculator() {
                 {
                   title: t('registration-fee.export.results'),
                   data: [
-                    { label: t('registration-fee.chart.registrationFee'), value: `${results.registrationFee.toLocaleString()} ₸` },
-                    { label: t('registration-fee.chart.certificate'), value: `${results.certificateFee.toLocaleString()} ₸` },
-                    { label: t('registration-fee.chart.plates'), value: `${results.platesFee.toLocaleString()} ₸` },
-                    { label: t('registration-fee.export.total'), value: `${results.totalFee.toLocaleString()} ₸` },
+                    { label: t('registration-fee.chart.registrationFee'), value: `${results.registrationFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('registration-fee.chart.certificate'), value: `${results.certificateFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('registration-fee.chart.plates'), value: `${results.platesFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('registration-fee.export.total'), value: `${results.totalFee.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 const VALUE_LIMIT_EUR = 200;
 // Classic regime (обычные МПО, физлицо → физлицо)
@@ -159,9 +160,9 @@ export default function ParcelCustomsCalculator() {
   };
 
   const getSliderFormat = () => {
-    if (currency === 'KZT') return (v: number) => `${v.toLocaleString()} ₸`;
-    if (currency === 'USD') return (v: number) => `$${v.toLocaleString()}`;
-    return (v: number) => `€${v.toLocaleString()}`;
+    if (currency === 'KZT') return (v: number) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`;
+    if (currency === 'USD') return (v: number) => `$${v.toLocaleString(NUMBER_LOCALE)}`;
+    return (v: number) => `€${v.toLocaleString(NUMBER_LOCALE)}`;
   };
 
   const getCurrencySymbol = () => {
@@ -691,9 +692,9 @@ export default function ParcelCustomsCalculator() {
                 {
                   title: t('parcel-customs.export.parameters'),
                   data: [
-                    { label: t('parcel-customs.itemValue'), value: `${getCurrencySymbol()}${parseFloat(itemValue || '0').toLocaleString()}` },
+                    { label: t('parcel-customs.itemValue'), value: `${getCurrencySymbol()}${parseFloat(itemValue || '0').toLocaleString(NUMBER_LOCALE)}` },
                     { label: t('parcel-customs.itemWeight'), value: `${itemWeight || '0'} ${t('parcel-customs.kg')}` },
-                    { label: t('parcel-customs.deliveryCost'), value: `${getCurrencySymbol()}${parseFloat(deliveryCost || '0').toLocaleString()}` },
+                    { label: t('parcel-customs.deliveryCost'), value: `${getCurrencySymbol()}${parseFloat(deliveryCost || '0').toLocaleString(NUMBER_LOCALE)}` },
                     { label: t('parcel-customs.valueInEur'), value: formatEur(results.valueInEur) },
                   ]
                 },

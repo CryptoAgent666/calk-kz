@@ -10,6 +10,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface TariffTier {
   min: number;
@@ -474,7 +475,7 @@ export default function ElectricityBillCalculator() {
                   title: 'Результаты',
                   data: [
                     { label: 'Потребление', value: `${consumption} кВт·ч` },
-                    { label: 'К оплате', value: `${results.totalAmount.toLocaleString()} ₸` },
+                    { label: 'К оплате', value: `${results.totalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

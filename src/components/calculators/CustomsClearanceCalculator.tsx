@@ -11,6 +11,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // Единые ставки для легковых авто — товаров для личного пользования (ПТД, ТК ЕАЭС ст. 260, 266):
 // Решение Совета ЕЭК от 20.12.2017 № 107, прил. 2, табл. 2, п. 3 (ред. 24.02.2026 № 35). Единый платёж
@@ -603,14 +604,14 @@ export default function CustomsClearanceCalculator() {
                 {
                   title: t('customs-clearance.export.results'),
                   data: results.isPersonal ? [
-                    { label: `${t('customs-clearance.etp')} (${results.etpLabel})`, value: `${results.etp.toLocaleString()} ₸` },
-                    { label: t('customs-clearance.export.total'), value: `${results.totalPayments.toLocaleString()} ₸` },
+                    { label: `${t('customs-clearance.etp')} (${results.etpLabel})`, value: `${results.etp.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('customs-clearance.export.total'), value: `${results.totalPayments.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ] : [
-                    { label: t('customs-clearance.chart.customsDuty'), value: `${results.customsDuty?.toLocaleString()} ₸` },
-                    ...(results.excise > 0 ? [{ label: t('customs-clearance.chart.excise'), value: `${results.excise.toLocaleString()} ₸` }] : []),
-                    { label: t('customs-clearance.chart.vat'), value: `${results.vat?.toLocaleString()} ₸` },
-                    { label: t('customs-clearance.customsFee'), value: `${results.customsFee.toLocaleString()} ₸` },
-                    { label: t('customs-clearance.export.total'), value: `${results.totalPayments.toLocaleString()} ₸` },
+                    { label: t('customs-clearance.chart.customsDuty'), value: `${results.customsDuty?.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    ...(results.excise > 0 ? [{ label: t('customs-clearance.chart.excise'), value: `${results.excise.toLocaleString(NUMBER_LOCALE)} ₸` }] : []),
+                    { label: t('customs-clearance.chart.vat'), value: `${results.vat?.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('customs-clearance.customsFee'), value: `${results.customsFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('customs-clearance.export.total'), value: `${results.totalPayments.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

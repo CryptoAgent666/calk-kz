@@ -10,6 +10,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type BrickType = 'single' | 'oneAndHalf' | 'double' | 'block' | 'gasBlock';
 
@@ -155,14 +156,14 @@ export default function BrickCalculator() {
             <>
               <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-6 border border-orange-200">
                 <div className="text-sm text-gray-600">{t('brick.brickCount')}</div>
-                <div className="text-4xl font-bold text-orange-700">{results.brickCount.toLocaleString()}</div>
+                <div className="text-4xl font-bold text-orange-700">{results.brickCount.toLocaleString(NUMBER_LOCALE)}</div>
                 <div className="text-xs text-gray-500 mt-1">{t('brick.wallArea')}: {results.wallArea} м² • {t('brick.volume')}: {results.volume} м³</div>
               </div>
 
               <div className="space-y-2 text-sm">
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>🧱 {t('brick.bricks')}</span>
-                  <span className="font-semibold">{results.brickPrice.toLocaleString()} ₸</span>
+                  <span className="font-semibold">{results.brickPrice.toLocaleString(NUMBER_LOCALE)} ₸</span>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>🥣 {t('brick.mortar')}</span>
@@ -180,7 +181,7 @@ export default function BrickCalculator() {
 
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div className="text-sm text-amber-900">{t('brick.estimatedCost')}</div>
-                <div className="text-2xl font-bold text-amber-700">{results.totalPrice.toLocaleString()} ₸</div>
+                <div className="text-2xl font-bold text-amber-700">{results.totalPrice.toLocaleString(NUMBER_LOCALE)} ₸</div>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-900">
@@ -201,7 +202,7 @@ export default function BrickCalculator() {
                 { label: t('brick.brickCount'), value: `${results.brickCount} шт.` },
                 { label: t('brick.cement'), value: `${results.cementKg} кг` },
                 { label: t('brick.sand'), value: `${results.sandKg} кг` },
-                { label: t('brick.estimatedCost'), value: `${results.totalPrice.toLocaleString()} ₸` },
+                { label: t('brick.estimatedCost'), value: `${results.totalPrice.toLocaleString(NUMBER_LOCALE)} ₸` },
               ]}],
               footer: 'Calk.kz'
             }}

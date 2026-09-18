@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type Insulation = 'mineralWool' | 'foam' | 'xps' | 'pir' | 'ecowool';
 
@@ -126,7 +127,7 @@ export default function InsulationCalculator() {
                 <button key={m} onClick={() => setInsulation(m)}
                   className={`w-full p-3 rounded-lg border text-left ${insulation === m ? 'bg-cyan-50 border-cyan-500' : 'bg-white border-gray-300'}`}>
                   <div className="text-sm font-medium">{t(`insulation.materials.${m}`)}</div>
-                  <div className="text-xs text-gray-500">λ = {INSULATIONS[m].lambda} Вт/(м·К) • ~{INSULATIONS[m].pricePerM3.toLocaleString()} ₸/м³</div>
+                  <div className="text-xs text-gray-500">λ = {INSULATIONS[m].lambda} Вт/(м·К) • ~{INSULATIONS[m].pricePerM3.toLocaleString(NUMBER_LOCALE)} ₸/м³</div>
                 </button>
               ))}
             </div>
@@ -176,11 +177,11 @@ export default function InsulationCalculator() {
                 <div className="font-medium text-gray-900 mb-1">{t('insulation.heatLoss')}</div>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex justify-between">
                   <span>{t('insulation.without')}</span>
-                  <span className="font-semibold text-red-700">{results.costWithout.toLocaleString()} ₸/год</span>
+                  <span className="font-semibold text-red-700">{results.costWithout.toLocaleString(NUMBER_LOCALE)} ₸/год</span>
                 </div>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex justify-between">
                   <span>{t('insulation.with')}</span>
-                  <span className="font-semibold text-green-700">{results.costWith.toLocaleString()} ₸/год</span>
+                  <span className="font-semibold text-green-700">{results.costWith.toLocaleString(NUMBER_LOCALE)} ₸/год</span>
                 </div>
               </div>
 
@@ -209,8 +210,8 @@ export default function InsulationCalculator() {
               subtitle: t(`insulation.materials.${insulation}`),
               sections: [{ title: t('insulation.resultsTitle'), data: [
                 { label: t('insulation.thickness'), value: `${results.thicknessCm} см` },
-                { label: t('insulation.materialCost'), value: `${results.materialCost.toLocaleString()} ₸` },
-                { label: t('insulation.savings'), value: `${results.savingsPerYear.toLocaleString()} ₸/год` },
+                { label: t('insulation.materialCost'), value: `${results.materialCost.toLocaleString(NUMBER_LOCALE)} ₸` },
+                { label: t('insulation.savings'), value: `${results.savingsPerYear.toLocaleString(NUMBER_LOCALE)} ₸/год` },
                 { label: t('insulation.payback'), value: `${results.payback} ${pluralize(i18n.language, parseFloat(results.payback as any), 'год', 'года', 'лет')}` },
               ]}],
               footer: 'Calk.kz'

@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function GONSCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -130,7 +131,7 @@ export default function GONSCalculator() {
   };
 
   const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount.toLocaleString()} ${t('gons.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
+    return `${mrpAmount.toLocaleString(NUMBER_LOCALE)} ${t('gons.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
   const formatPercent = (num: number) => {
@@ -208,7 +209,7 @@ export default function GONSCalculator() {
                 min={10000}
                 max={5000000}
                 step={10000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#14b8a6"
               />
               <div className="relative mt-3">
@@ -791,17 +792,17 @@ export default function GONSCalculator() {
                 {
                   title: t('gons.parameters'),
                   data: [
-                    { label: t('gons.initialDeposit'), value: `${parseFloat(initialDeposit || '0').toLocaleString()} ₸` },
-                    { label: t('gons.monthlyContribution'), value: `${parseFloat(monthlyContribution || '0').toLocaleString()} ₸` },
+                    { label: t('gons.initialDeposit'), value: `${parseFloat(initialDeposit || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('gons.monthlyContribution'), value: `${parseFloat(monthlyContribution || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: t('gons.bankRateLabel'), value: `${bankRate}%` },
                   ]
                 },
                 {
                   title: t('gons.results'),
                   data: [
-                    { label: t('gons.totalContributions'), value: `${results.totalContributions.toLocaleString()} ₸` },
-                    { label: t('gons.statePremiumTitle'), value: `${results.totalStatePremium.toLocaleString()} ₸` },
-                    { label: t('gons.finalAmount'), value: `${results.finalAmount.toLocaleString()} ₸` },
+                    { label: t('gons.totalContributions'), value: `${results.totalContributions.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('gons.statePremiumTitle'), value: `${results.totalStatePremium.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('gons.finalAmount'), value: `${results.finalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

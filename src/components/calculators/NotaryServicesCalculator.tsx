@@ -10,6 +10,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function NotaryServicesCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -355,7 +356,7 @@ export default function NotaryServicesCalculator() {
                   min={100000}
                   max={100000000}
                   step={100000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#8b5cf6"
                 />
                 <div className="relative mt-3">
@@ -533,15 +534,15 @@ export default function NotaryServicesCalculator() {
                   title: 'Параметры',
                   data: [
                     { label: 'Услуга', value: serviceType },
-                    { label: 'Стоимость объекта', value: `${parseFloat(propertyValue || '0').toLocaleString()} ₸` },
+                    { label: 'Стоимость объекта', value: `${parseFloat(propertyValue || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 },
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Госпошлина', value: `${results.stateFee.toLocaleString()} ₸` },
-                    { label: 'Технические услуги', value: `${results.technicalServiceFee.toLocaleString()} ₸` },
-                    { label: 'Итого', value: `${results.totalCost.toLocaleString()} ₸` },
+                    { label: 'Госпошлина', value: `${results.stateFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Технические услуги', value: `${results.technicalServiceFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Итого', value: `${results.totalCost.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

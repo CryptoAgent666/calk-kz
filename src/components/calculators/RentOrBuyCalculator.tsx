@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function RentOrBuyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -331,7 +332,7 @@ export default function RentOrBuyCalculator() {
                   min={10000000}
                   max={200000000}
                   step={5000000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#3b82f6"
                 />
                 <div className="relative mt-3">
@@ -918,17 +919,17 @@ export default function RentOrBuyCalculator() {
                 {
                   title: 'Параметры',
                   data: [
-                    { label: 'Стоимость недвижимости', value: `${parseFloat(propertyPrice).toLocaleString()} ₸` },
-                    { label: 'Ежемесячная аренда', value: `${parseFloat(monthlyRent).toLocaleString()} ₸` },
+                    { label: 'Стоимость недвижимости', value: `${parseFloat(propertyPrice).toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Ежемесячная аренда', value: `${parseFloat(monthlyRent).toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: 'Период анализа', value: `${analysisYears} ${pluralize(i18n.language, parseInt(analysisYears) || 0, 'год', 'года', 'лет')}` },
                   ]
                 },
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Общая стоимость покупки', value: `${results.netOwnershipCost.toLocaleString()} ₸` },
-                    { label: 'Общая стоимость аренды', value: `${results.totalRentingCost.toLocaleString()} ₸` },
-                    { label: 'Разница', value: `${results.difference.toLocaleString()} ₸` },
+                    { label: 'Общая стоимость покупки', value: `${results.netOwnershipCost.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Общая стоимость аренды', value: `${results.totalRentingCost.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Разница', value: `${results.difference.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

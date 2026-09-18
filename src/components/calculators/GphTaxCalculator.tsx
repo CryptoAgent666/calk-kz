@@ -12,6 +12,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 /**
  * Налоги по договору ГПХ 2026 (физлицо-исполнитель без ИП).
@@ -130,7 +131,7 @@ ${t('gph-tax.results')}:
                 min={50000}
                 max={3000000}
                 step={10000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#6366f1"
               />
               <input

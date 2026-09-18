@@ -12,6 +12,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface ConversionHistory {
   id: string;
@@ -197,7 +198,7 @@ ${t('currency-converter.exportSource')}`;
                 min={100}
                 max={10000000}
                 step={1000}
-                formatValue={(v) => v.toLocaleString()}
+                formatValue={(v) => v.toLocaleString(NUMBER_LOCALE)}
                 color="#3b82f6"
               />
               <input
@@ -268,7 +269,7 @@ ${t('currency-converter.exportSource')}`;
                     onClick={() => setQuickAmount(value)}
                     className="p-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-blue-100 hover:text-blue-700 transition-colors"
                   >
-                    {parseInt(value).toLocaleString()}
+                    {parseInt(value).toLocaleString(NUMBER_LOCALE)}
                   </button>
                 ))}
               </div>
@@ -583,7 +584,7 @@ ${t('currency-converter.exportSource')}`;
                   title: 'Результат',
                   data: [
                     { label: 'Исходная сумма', value: `${amount} ${fromCurrency}` },
-                    { label: 'Результат', value: `${results.convertedAmount.toLocaleString()} ${toCurrency}` },
+                    { label: 'Результат', value: `${results.convertedAmount.toLocaleString(NUMBER_LOCALE)} ${toCurrency}` },
                   ]
                 }
               ],

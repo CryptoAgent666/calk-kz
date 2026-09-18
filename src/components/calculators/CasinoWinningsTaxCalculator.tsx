@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface WinningEntry {
   id: string;
@@ -295,7 +296,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
                     min={10000}
                     max={10000000}
                     step={50000}
-                    formatValue={(v) => `${v.toLocaleString()} ₸`}
+                    formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                     color="#f59e0b"
                   />
                   <input
@@ -722,9 +723,9 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
                 {
                   title: t('casino-winnings-tax.calculationResults'),
                   data: [
-                    { label: t('casino-winnings-tax.grossWinning'), value: `${results.grossWinning.toLocaleString()} ₸` },
-                    { label: t('casino-winnings-tax.netAmount'), value: `${results.netAmount.toLocaleString()} ₸` },
-                    { label: t('casino-winnings-tax.tax'), value: `${results.taxAmount.toLocaleString()} ₸` },
+                    { label: t('casino-winnings-tax.grossWinning'), value: `${results.grossWinning.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('casino-winnings-tax.netAmount'), value: `${results.netAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('casino-winnings-tax.tax'), value: `${results.taxAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

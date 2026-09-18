@@ -504,7 +504,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
                       min={1000}
                       max={1000000}
                       step={1000}
-                      formatValue={(v) => `${v.toLocaleString()} ₸`}
+                      formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                       color="#3b82f6"
                     />
                   </div>

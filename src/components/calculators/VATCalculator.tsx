@@ -13,6 +13,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface VATItem {
   id: string;
@@ -418,7 +419,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
                     min={1000}
                     max={10000000}
                     step={10000}
-                    formatValue={(v) => `${v.toLocaleString()} ₸`}
+                    formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                     color="#22c55e"
                   />
                 </div>
@@ -937,9 +938,9 @@ ${t('vat.export.formula')}: ${results.formula}`;
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Сумма без НДС', value: `${results.amountWithoutVat.toLocaleString()} ₸` },
-                    { label: 'НДС', value: `${results.vatAmount.toLocaleString()} ₸` },
-                    { label: 'Сумма с НДС', value: `${results.amountWithVat.toLocaleString()} ₸` },
+                    { label: 'Сумма без НДС', value: `${results.amountWithoutVat.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'НДС', value: `${results.vatAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Сумма с НДС', value: `${results.amountWithVat.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

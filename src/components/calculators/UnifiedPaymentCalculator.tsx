@@ -12,6 +12,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function UnifiedPaymentCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -126,7 +127,7 @@ ${t('unified-payment.breakdown')}:
                 min={100000}
                 max={3000000}
                 step={50000}
-                formatValue={(v) => `${v.toLocaleString()} \u20B8`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} \u20B8`}
                 color="#6366f1"
               />
               <input

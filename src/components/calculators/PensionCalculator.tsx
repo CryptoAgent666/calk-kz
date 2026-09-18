@@ -12,6 +12,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function PensionCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -473,10 +474,10 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Базовая пенсия', value: `${results.basePension.toLocaleString()} ₸` },
-                    { label: 'Солидарная', value: `${results.solidarityPension.toLocaleString()} ₸` },
-                    { label: 'Накопительная', value: `${results.accumulativePension.toLocaleString()} ₸` },
-                    { label: 'Итого', value: `${results.totalMonthlyPension.toLocaleString()} ₸` },
+                    { label: 'Базовая пенсия', value: `${results.basePension.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Солидарная', value: `${results.solidarityPension.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Накопительная', value: `${results.accumulativePension.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Итого', value: `${results.totalMonthlyPension.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

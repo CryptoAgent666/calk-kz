@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function PensionAnnuityCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -378,7 +379,7 @@ export default function PensionAnnuityCalculator() {
                 min={1000000}
                 max={50000000}
                 step={500000}
-                formatValue={(v) => `${v.toLocaleString()} ₸`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                 color="#3b82f6"
               />
               <div className="relative mt-3">
@@ -880,15 +881,15 @@ export default function PensionAnnuityCalculator() {
                   title: 'Параметры',
                   data: [
                     { label: 'Возраст', value: `${age} лет` },
-                    { label: 'Накопления', value: `${parseFloat(currentAccumulations || '0').toLocaleString()} ₸` },
+                    { label: 'Накопления', value: `${parseFloat(currentAccumulations || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: 'Страховая компания', value: insuranceCompany },
                   ]
                 },
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Ежемесячная выплата', value: `${results.monthlyAnnuityPayment.toLocaleString()} ₸` },
-                    { label: 'Годовая выплата', value: `${(results.monthlyAnnuityPayment * 12).toLocaleString()} ₸` },
+                    { label: 'Ежемесячная выплата', value: `${results.monthlyAnnuityPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Годовая выплата', value: `${(results.monthlyAnnuityPayment * 12).toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function VehicleTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -462,7 +463,7 @@ export default function VehicleTaxCalculator() {
                   data: [
                     { label: t('vehicle-tax.vehicleType'), value: t(`vehicle-tax.vehicleType_${vehicleType}`) },
                     ...(vehicleType === 'car' ? [{ label: t('vehicle-tax.engineVolume'), value: `${engineVolume} ${t('vehicle-tax.engineVolumeUnit')}` }] : []),
-                    { label: t('vehicle-tax.toPayBy'), value: `${results.finalAmount.toLocaleString()} ₸` },
+                    { label: t('vehicle-tax.toPayBy'), value: `${results.finalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

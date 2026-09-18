@@ -11,6 +11,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function PropertyTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -578,8 +579,8 @@ export default function PropertyTaxCalculator() {
                   title: 'Результаты',
                   data: [
                     { label: 'Тип имущества', value: propertyType },
-                    { label: 'Оценочная стоимость', value: `${results.taxBase?.toLocaleString()} ₸` },
-                    { label: 'Годовой налог', value: `${results.finalAmount.toLocaleString()} ₸` },
+                    { label: 'Оценочная стоимость', value: `${results.taxBase?.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Годовой налог', value: `${results.finalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],

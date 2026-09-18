@@ -10,6 +10,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function SalaryReverseCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -247,7 +248,7 @@ ${t('salary-reverse.employerCosts')}:
                 min={50000}
                 max={2000000}
                 step={10000}
-                formatValue={(v) => `${v.toLocaleString()} \u20B8`}
+                formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} \u20B8`}
                 color="#10b981"
               />
               <input
@@ -421,18 +422,18 @@ ${t('salary-reverse.employerCosts')}:
           <ExportButtons
             data={{
               title: t('salary-reverse.export.title'),
-              subtitle: `${results.grossSalary.toLocaleString()} \u20B8 ${t('salary-reverse.export.grossLabel')}`,
+              subtitle: `${results.grossSalary.toLocaleString(NUMBER_LOCALE)} \u20B8 ${t('salary-reverse.export.grossLabel')}`,
               sections: [
                 {
                   title: t('salary-reverse.export.results'),
                   data: [
-                    { label: t('salary-reverse.desiredNet'), value: `${(parseFloat(desiredNet) || 0).toLocaleString()} \u20B8` },
-                    { label: t('salary-reverse.requiredGross'), value: `${results.grossSalary.toLocaleString()} \u20B8` },
-                    { label: t('salary-reverse.opv'), value: `${results.opv.toLocaleString()} \u20B8` },
-                    { label: t('salary-reverse.vosms'), value: `${results.vosms.toLocaleString()} \u20B8` },
-                    { label: t('salary-reverse.ipn'), value: `${results.incomeTax.toLocaleString()} \u20B8` },
-                    { label: t('salary-reverse.netConfirm'), value: `${results.netSalary.toLocaleString()} \u20B8` },
-                    { label: t('salary-reverse.totalLaborCost'), value: `${results.totalLaborCost.toLocaleString()} \u20B8` },
+                    { label: t('salary-reverse.desiredNet'), value: `${(parseFloat(desiredNet) || 0).toLocaleString(NUMBER_LOCALE)} \u20B8` },
+                    { label: t('salary-reverse.requiredGross'), value: `${results.grossSalary.toLocaleString(NUMBER_LOCALE)} \u20B8` },
+                    { label: t('salary-reverse.opv'), value: `${results.opv.toLocaleString(NUMBER_LOCALE)} \u20B8` },
+                    { label: t('salary-reverse.vosms'), value: `${results.vosms.toLocaleString(NUMBER_LOCALE)} \u20B8` },
+                    { label: t('salary-reverse.ipn'), value: `${results.incomeTax.toLocaleString(NUMBER_LOCALE)} \u20B8` },
+                    { label: t('salary-reverse.netConfirm'), value: `${results.netSalary.toLocaleString(NUMBER_LOCALE)} \u20B8` },
+                    { label: t('salary-reverse.totalLaborCost'), value: `${results.totalLaborCost.toLocaleString(NUMBER_LOCALE)} \u20B8` },
                   ]
                 }
               ],

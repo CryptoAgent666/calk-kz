@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function ZakatCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -173,7 +174,7 @@ export default function ZakatCalculator() {
                   min={0}
                   max={50000000}
                   step={100000}
-                  formatValue={(v) => `${v.toLocaleString()} ₸`}
+                  formatValue={(v) => `${v.toLocaleString(NUMBER_LOCALE)} ₸`}
                   color="#10b981"
                 />
                 <div className="relative mt-3">
@@ -1043,9 +1044,9 @@ export default function ZakatCalculator() {
                 {
                   title: 'Результаты',
                   data: [
-                    { label: 'Общее имущество', value: `${results.totalAssets.toLocaleString()} ₸` },
-                    { label: 'Нисаб (порог)', value: `${results.applicableNisab.toLocaleString()} ₸` },
-                    { label: 'Закят (2.5%)', value: `${results.zakatAmount.toLocaleString()} ₸` },
+                    { label: 'Общее имущество', value: `${results.totalAssets.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Нисаб (порог)', value: `${results.applicableNisab.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: 'Закят (2.5%)', value: `${results.zakatAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
