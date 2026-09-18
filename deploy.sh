@@ -24,6 +24,9 @@ if [ ! -d "$DIST_DIR" ]; then
   exit 1
 fi
 
+# Гард сборки без .env (заглушки RevenueCat, нет Supabase) — инцидент 18.09.2026
+node "$SCRIPT_DIR/scripts/check-dist-env.mjs" "$DIST_DIR" || { echo "деплой остановлен: dist собран без .env"; exit 1; }
+
 echo "Deploying dist/ to $FTP_HOST:$FTP_REMOTE_DIR ..."
 echo "User: $FTP_USER"
 

@@ -18,6 +18,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { execFileSync } from 'child_process';
 import { tmpdir } from 'os';
+import { findDistEnvProblems, distEnvErrorMessage } from './check-dist-env.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -28,6 +29,13 @@ const BASE_URL = 'https://calk.kz';
 function die(msg) {
   console.error(`❌ ${msg}`);
   process.exit(1);
+}
+
+// --- 0. env-гейт: бандл без .env ломает покупки во ВСЕХ приложениях, что его скачают ---
+const envProblems = findDistEnvProblems(DIST);
+if (envProblems.length) {
+  console.error(distEnvErrorMessage(envProblems));
+  die('OTA-бандл НЕ опубликован.');
 }
 
 // --- 1. версия ---
