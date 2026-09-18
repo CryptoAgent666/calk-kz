@@ -10,6 +10,7 @@ import {
   HISTORY_CHANGED_EVENT,
   type HistoryEntry,
 } from '../utils/calcHistory';
+import { formatDayMonth, toUiLang } from '../utils/localeFormat';
 
 /**
  * /history — журнал последних расчётов (до 50): что считали, когда, ключевые
@@ -45,10 +46,12 @@ export default function HistoryPage() {
     setTimeout(() => setCopiedTs(null), 2000);
   };
 
-  const formatDate = (ts: number) =>
-    new Date(ts).toLocaleString(i18n.language === 'kk' ? 'kk-KZ' : 'ru-RU', {
-      day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
-    });
+  // Не toLocaleString('kk-KZ'): Chrome 152+ даёт «M09» вместо месяца, см. utils/localeFormat.
+  const formatDate = (ts: number) => {
+    const d = new Date(ts);
+    const hm = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    return `${formatDayMonth(d, toUiLang(i18n.language))}, ${hm}`;
+  };
 
   return (
     <div className="max-w-3xl mx-auto">

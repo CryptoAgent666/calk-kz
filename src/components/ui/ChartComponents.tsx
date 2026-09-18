@@ -1,27 +1,7 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
+import { useMounted } from '../../hooks/useMounted';
 import type { BarChartProps, LineChartProps, PieChartProps } from './ChartComponentsImpl';
 
-/**
- * Хук "после монтирования". Возвращает false на сервере/первом рендере,
- * true — после useEffect. Нужен для recharts: ResponsiveContainer измеряет
- * ширину контейнера, которая отличается в puppeteer (718px) и в реальном
- * браузере (1087px+). Это вызывало React hydration errors #418/423/425.
- *
- * КРИТИЧНО: в пререндере (scripts/prerender.mjs) эффекты успевают отработать
- * ДО снятия HTML, поэтому в статику попадал уже отрендеренный SVG чарта, а
- * клиент на ПЕРВОМ рендере рисует плейсхолдер → structural mismatch и падение
- * всей гидратации (#423, «server HTML was replaced with client content»).
- * Флаг window.__PRERENDER__ держит чарт незамонтированным на время снимка,
- * чтобы статика и первый клиентский рендер совпадали байт в байт.
- */
-function useMounted(): boolean {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return;
-    setMounted(true);
-  }, []);
-  return mounted;
-}
 
 // Цветовая палитра
 const COLORS = [

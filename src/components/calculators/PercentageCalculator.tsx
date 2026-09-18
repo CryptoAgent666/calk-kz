@@ -22,6 +22,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type CalculationType = 'percentOf' | 'percentFrom' | 'percentChange' | 'findBase';
 
@@ -39,8 +40,8 @@ interface ResultInfo {
 }
 
 export default function PercentageCalculator() {
-  const { t, i18n } = useTranslation(['calculators', 'common']);
-  const locale = i18n.language === 'kk' ? 'kk-KZ' : 'ru-KZ';
+  const { t } = useTranslation(['calculators', 'common']);
+  const locale = NUMBER_LOCALE; // не 'kk-KZ': ICU браузера → разный текст, см. utils/localeFormat
 
   const [calculationType, setCalculationType] = useState<CalculationType>('percentOf');
   const [percentOfBase, setPercentOfBase] = useState('1000');

@@ -8,6 +8,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
+import { formatLongDate } from '../../utils/localeFormat';
 
 type Gender = 'male' | 'female';
 
@@ -125,9 +126,8 @@ export default function AgeCalculator() {
     setTargetDate(new Date().toISOString().split('T')[0]);
   }, []);
 
-  const formatDate = (d: Date) => d.toLocaleDateString(isKazakh ? 'kk-KZ' : 'ru-RU', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
+  // Не toLocaleDateString('kk-KZ'): текст зависит от ICU браузера, см. utils/localeFormat.
+  const formatDate = (d: Date) => formatLongDate(d, isKazakh ? 'kk' : 'ru');
 
   return (
     <div className="max-w-6xl mx-auto">

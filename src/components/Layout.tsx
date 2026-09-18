@@ -16,6 +16,7 @@ import { purchasesAvailable } from '../purchases';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
 import { pluralize } from '../utils/pluralize';
+import { formatMonthYear, toUiLang } from '../utils/localeFormat';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -311,7 +312,7 @@ export default function Layout({
               <div className="border-t border-gray-100 p-4">
                 <div className="text-center">
                   <p className="text-xs text-gray-500">
-                    {t('common:footer.copyright', { year: new Date().getFullYear() })}
+                    {t('common:footer.copyright', { year: __BUILD_DATE__.slice(0, 4) })}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
                     {t('common:footer.description')}
@@ -414,7 +415,7 @@ export default function Layout({
               </div>
 
               <p className="text-gray-500 text-xs mt-4">
-                {t('common:footer.copyright', { year: new Date().getFullYear() })}
+                {t('common:footer.copyright', { year: __BUILD_DATE__.slice(0, 4) })}
               </p>
             </div>
 
@@ -482,7 +483,7 @@ export default function Layout({
                 {t('common:footer.disclaimer')}
               </p>
               <p className="text-xs text-gray-500">
-                {t('common:footer.updated')}: {new Date().toLocaleDateString(i18n.language === 'kk' ? 'kk-KZ' : 'ru-RU', { month: 'long', year: 'numeric' })}
+                {t('common:footer.updated')}: {formatMonthYear(__BUILD_DATE__, toUiLang(i18n.language))}
               </p>
             </div>
           </div>

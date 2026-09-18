@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Shield, FileText, AlertTriangle, Phone, Mail, MapPin, Globe, Calculator, CheckCircle, Info, Sparkles } from 'lucide-react';
 import { generateFAQSchema } from '../utils/faqSchema';
+import { formatShortDate } from '../utils/localeFormat';
 
 /**
  * Дата последнего содержательного изменения правовых документов.
@@ -12,10 +13,6 @@ import { generateFAQSchema } from '../utils/faqSchema';
  */
 const LEGAL_LAST_UPDATED = '2026-08-17';
 
-function formatLegalDate(lang: string): string {
-  const [y, m, d] = LEGAL_LAST_UPDATED.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(lang === 'kk' ? 'kk-KZ' : 'ru-RU');
-}
 
 interface LegalPagesProps {
   pageId: string;
@@ -23,7 +20,7 @@ interface LegalPagesProps {
 }
 
 export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
-  const { t, i18n } = useTranslation('legal');
+  const { t } = useTranslation('legal');
 
   useEffect(() => {
     if (pageId === 'contact') {
@@ -306,7 +303,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
+                  <strong>{t('lastUpdated')}:</strong> {formatShortDate(LEGAL_LAST_UPDATED)}
                 </p>
               </div>
             </div>
@@ -392,7 +389,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
+                  <strong>{t('lastUpdated')}:</strong> {formatShortDate(LEGAL_LAST_UPDATED)}
                 </p>
               </div>
             </div>
@@ -501,7 +498,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
+                  <strong>{t('lastUpdated')}:</strong> {formatShortDate(LEGAL_LAST_UPDATED)}
                 </p>
               </div>
             </div>
@@ -547,7 +544,7 @@ export default function LegalPages({ pageId, onBackClick }: LegalPagesProps) {
 
               <div className="bg-gray-50 rounded-lg p-6 mt-6">
                 <p className="text-sm text-gray-600">
-                  <strong>{t('lastUpdated')}:</strong> {formatLegalDate(i18n.language)}
+                  <strong>{t('lastUpdated')}:</strong> {formatShortDate(LEGAL_LAST_UPDATED)}
                 </p>
               </div>
             </div>

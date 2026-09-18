@@ -1,6 +1,7 @@
 import { calculatorCategories } from '../data/calculators';
 import i18n from '../i18n/config';
 import { localizeUrl } from './localizedRouting';
+import { NUMBER_LOCALE } from './localeFormat';
 
 interface BreadcrumbItem {
   name: string;
@@ -262,7 +263,7 @@ export function generateStructuredData(options: StructuredDataOptions): string {
 
         if (calculator.id === 'casino-winnings-tax' && match[1] === '1') {
           const taxFreeThreshold = 12 * 4325;
-          const formattedThreshold = new Intl.NumberFormat(currentLang === 'kk' ? 'kk-KZ' : 'ru-KZ')
+          const formattedThreshold = new Intl.NumberFormat(NUMBER_LOCALE)
             .format(taxFreeThreshold);
           answerParts.push(formattedThreshold);
         }

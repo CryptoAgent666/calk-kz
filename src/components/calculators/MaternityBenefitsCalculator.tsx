@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // Продолжительность отпуска по беременности и родам, ст. 99 ТК РК (дни / 30 = коэффициент):
 //   обычные — 126 (70+56); осложнённые/оперативные или 2+ детей — 140 (+14);
@@ -20,7 +21,7 @@ const BIRTH_DAYS: Record<BirthType, number> = { normal: 126, complicated: 140, z
 const BIRTH_TYPE_ORDER: BirthType[] = ['normal', 'complicated', 'zone', 'zoneComplicated'];
 
 export default function MaternityBenefitsCalculator() {
-  const { t, i18n } = useTranslation('calculators');
+  const { t } = useTranslation('calculators');
   const [isEmployed, setIsEmployed] = useState<boolean>(true);
   const [averageIncomeForMaternity, setAverageIncomeForMaternity] = useState<string>('300000');
   const [averageIncomeForChildcare, setAverageIncomeForChildcare] = useState<string>('300000');
@@ -115,7 +116,7 @@ export default function MaternityBenefitsCalculator() {
   );
 
   const formatNumber = (num: number) => {
-    const locale = i18n.language === 'kk' ? 'kk-KZ' : 'ru-KZ';
+    const locale = NUMBER_LOCALE; // не 'kk-KZ': ICU браузера → разный текст, см. utils/localeFormat
     return num.toLocaleString(locale) + ' ₸';
   };
 

@@ -1,5 +1,6 @@
 import { Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { formatLongDate } from '../../utils/localeFormat';
 
 /**
  * Per-page lastUpdated date. Maps calculatorId → last meaningful update.
@@ -167,17 +168,6 @@ const LAST_UPDATED: Record<string, string> = {
   'cost-of-living': '2026-04-19',
 };
 
-const MONTHS_RU = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-                   'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-const MONTHS_KK = ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым',
-                   'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан'];
-
-function formatDate(iso: string, lang: 'ru' | 'kk'): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  const months = lang === 'kk' ? MONTHS_KK : MONTHS_RU;
-  return `${d} ${months[m - 1]} ${y}`;
-}
-
 interface LastUpdatedProps {
   calculatorId: string;
 }
@@ -187,7 +177,7 @@ export function LastUpdated({ calculatorId }: LastUpdatedProps) {
   const lang = i18n.language === 'kk' ? 'kk' : 'ru';
   const iso = LAST_UPDATED[calculatorId];
   if (!iso) return null;
-  const formatted = formatDate(iso, lang);
+  const formatted = formatLongDate(iso, lang);
   const label = lang === 'kk' ? 'Жаңартылды' : 'Обновлено';
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Scale, ArrowRightLeft } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -60,12 +60,16 @@ export default function UnitConverterCalculator() {
   const [toUnit, setToUnit] = useState<string>('centimeter');
   const [value, setValue] = useState<string>('1');
 
-  // Reset units when category changes
-  React.useEffect(() => {
-    const keys = Object.keys(UNITS[category].units);
+  // Сброс единиц при смене категории — в обработчике, не в эффекте: эффект на
+  // маунте менял meter→centimeter на millimeter→centimeter уже после рендера,
+  // пререндер снимал «0,1», а первый клиентский рендер давал «100» (#425 + #423).
+  const selectCategory = (next: Category) => {
+    if (next === category) return;
+    const keys = Object.keys(UNITS[next].units);
+    setCategory(next);
     setFromUnit(keys[0]);
     setToUnit(keys[1] || keys[0]);
-  }, [category]);
+  };
 
   const result = useMemo(() => {
     const n = parseFloat(value);
@@ -115,7 +119,7 @@ export default function UnitConverterCalculator() {
           <label className="block text-sm font-medium text-gray-700 mb-2">{t('unit-converter.category')}</label>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
             {categories.map(c => (
-              <button key={c.id} onClick={() => setCategory(c.id)}
+              <button key={c.id} onClick={() => selectCategory(c.id)}
                 className={`p-3 rounded-lg border text-sm ${category === c.id ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-700 border-gray-300'}`}>
                 <div className="text-2xl mb-1">{c.icon}</div>
                 <div className="text-xs">{t(`unit-converter.categories.${c.id}`)}</div>

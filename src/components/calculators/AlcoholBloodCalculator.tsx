@@ -11,6 +11,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { useMounted } from '../../hooks/useMounted';
 
 /**
  * Алкоголь в крови (формула Видмарка) — ОЦЕНКА, не измерение.
@@ -37,6 +38,9 @@ export default function AlcoholBloodCalculator() {
   const [weight, setWeight] = useState<string>('80');
   const [hours, setHours] = useState<string>('0');
   const [drinks, setDrinks] = useState<Drink[]>([{ volume: '500', abv: '5' }]);
+  // «около HH:MM» считается от времени визита — до маунта не показываем, иначе
+  // статика (время пререндера) ≠ первого клиентского рендера → #425 + #423.
+  const mounted = useMounted();
 
   const EMPTY_RESULTS = { grams: 0, peak: 0, now: 0, hoursToZero: 0, zeroTime: '' };
 
@@ -212,7 +216,7 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-600">{t('alcohol-blood.zeroLabel')}</span>
               <span className="font-semibold text-gray-900">
-                {results.hoursToZero > 0 ? `~${results.hoursToZero} ${t('alcohol-blood.hoursShort')}${results.zeroTime ? ` (${t('alcohol-blood.around')} ${results.zeroTime})` : ''}` : '—'}
+                {results.hoursToZero > 0 ? `~${results.hoursToZero} ${t('alcohol-blood.hoursShort')}${mounted && results.zeroTime ? ` (${t('alcohol-blood.around')} ${results.zeroTime})` : ''}` : '—'}
               </span>
             </div>
             <div className="mt-2 rounded-lg bg-amber-50 p-3">

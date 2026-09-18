@@ -12,6 +12,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface DiscountCalculation {
   originalPrice: number;
@@ -396,7 +397,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
 
   const formatNumber = (num: number) => {
     const safeValue = Number.isFinite(num) ? num : 0;
-    const locale = i18n.language === 'kk' ? 'kk-KZ' : 'ru-KZ';
+    const locale = NUMBER_LOCALE; // не 'kk-KZ': ICU браузера → разный текст, см. utils/localeFormat
     return safeValue.toLocaleString(locale) + ' ₸';
   };
 

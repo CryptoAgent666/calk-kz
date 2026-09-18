@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // Накопленный ИПЦ (база 2015 = 100) по ОФИЦИАЛЬНЫМ СРЕДНЕГОДОВЫМ индексам БНС
 // (stat.gov.kz, таблица «ИПЦ по основным группам», ряд «янв–дек к янв–дек пред. года»):
@@ -53,8 +54,8 @@ const MIN_YEAR = YEARS[0];
 const MAX_YEAR = YEARS[YEARS.length - 1];
 
 export default function InflationCalculator() {
-  const { t, i18n } = useTranslation('calculators');
-  const locale = i18n.language === 'kk' ? 'kk-KZ' : 'ru-KZ';
+  const { t } = useTranslation('calculators');
+  const locale = NUMBER_LOCALE; // не 'kk-KZ': ICU браузера → разный текст, см. utils/localeFormat
 
   const [amount, setAmount] = useState<number>(100000);
   const [yearFrom, setYearFrom] = useState<number>(2015);

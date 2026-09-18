@@ -7,6 +7,7 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { useMounted } from '../../hooks/useMounted';
 
 interface TimezoneInfo {
   id: string;
@@ -53,6 +54,9 @@ function getOffset(tz: string, now: Date): string {
 
 export default function TimezoneCalculator() {
   const { t } = useTranslation('calculators');
+  // Живые часы: до маунта — плейсхолдеры, иначе статика (время пререндера) ≠
+  // первого клиентского рендера (время визита) → #425 + #423 на каждом визите.
+  const mounted = useMounted();
   const [now, setNow] = useState(new Date());
   const [selected, setSelected] = useState<string[]>(['almaty', 'moscow', 'london', 'newyork']);
   const [baseTz, setBaseTz] = useState<string>('almaty');
@@ -116,11 +120,11 @@ export default function TimezoneCalculator() {
                 <span className="text-2xl">{tz.emoji}</span>
                 <div>
                   <div className="font-semibold text-gray-900">{tz.name}</div>
-                  <div className="text-xs text-gray-500">{getOffset(tz.tz, displayDate)}</div>
+                  <div className="text-xs text-gray-500">{mounted ? getOffset(tz.tz, displayDate) : 'UTC'}</div>
                 </div>
               </div>
-              <div className="text-3xl font-bold text-sky-700 font-mono">{formatTime(displayDate, tz.tz)}</div>
-              <div className="text-sm text-gray-600">{formatDate(displayDate, tz.tz)}</div>
+              <div className="text-3xl font-bold text-sky-700 font-mono">{mounted ? formatTime(displayDate, tz.tz) : '--:--:--'}</div>
+              <div className="text-sm text-gray-600">{mounted ? formatDate(displayDate, tz.tz) : '\u00a0'}</div>
             </div>
           );
         })}

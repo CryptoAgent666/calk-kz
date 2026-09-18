@@ -9,6 +9,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 /** МЗП 2026 (закон о республиканском бюджете). Именованной константой, а не
  *  литералом в выражении: при смене МЗП поиск по MZP_2026 обязан находить
@@ -130,7 +131,7 @@ export default function UnemploymentBenefitCalculator() {
 
   const formatNumber = (num: number) => {
     const safeValue = Number.isFinite(num) ? num : 0;
-    const locale = i18n.language === 'kk' ? 'kk-KZ' : 'ru-KZ';
+    const locale = NUMBER_LOCALE; // не 'kk-KZ': ICU браузера → разный текст, см. utils/localeFormat
     return safeValue.toLocaleString(locale) + ' ₸';
   };
 
