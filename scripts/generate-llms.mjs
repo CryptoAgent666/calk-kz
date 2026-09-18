@@ -12,7 +12,36 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA = path.join(__dirname, '..', 'src', 'data', 'calculators.ts');
+const LEDGER = path.join(__dirname, '..', 'src', 'data', 'regulatory-constants.canonical.json');
 const OUT = path.join(__dirname, '..', 'public', 'llms.txt');
+
+const YEAR = 2026;
+
+/**
+ * Константы шапки берутся из реестра, а не хардкодом: реестр сверяется с
+ * первоисточниками, а хардкод здесь не видел никто — до 18.09.2026 в llms.txt
+ * висели ставка НБРК 15.25% (нижняя граница коридора, действовала 16,25%),
+ * СО 3.5% (5% с 2025) и «НДС 16% с 1 января 2025» (с 2026).
+ * Нет ключа или статус не current — сборка падает, а не пишет старое число.
+ */
+function loadLedger() {
+  const entries = JSON.parse(fs.readFileSync(LEDGER, 'utf-8')).hardcoded_canonical;
+  const byKey = new Map(entries.map((e) => [e.key, e]));
+  return (key) => {
+    const e = byKey.get(key);
+    if (!e) throw new Error(`llms.txt: в реестре нет константы ${key}`);
+    if (e.status !== 'current') throw new Error(`llms.txt: ${key} в реестре со статусом ${e.status}`);
+    if (e.value === null || e.value === undefined) throw new Error(`llms.txt: у ${key} пустое value`);
+    return e;
+  };
+}
+
+/** 4325 → «4 325», 3.5 → «3,5» */
+const fmt = (n) => {
+  if (typeof n !== 'number') throw new Error(`llms.txt: ожидалось число, получено ${JSON.stringify(n)}`);
+  const [int, frac] = String(n).split('.');
+  return int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + (frac ? `,${frac}` : '');
+};
 
 /** Парсит calculators.ts → [{ id, title, calculators: [{ id, title }] }] по отступам. */
 function loadCategories() {
@@ -49,9 +78,20 @@ function loadCategories() {
   return categories;
 }
 
-const HEADER = `# Calk.kz
+function buildHeader() {
+  const c = loadLedger();
+  const v = (key) => fmt(c(key).value);
+  const mrp = c(`mrp_${YEAR}`).value;
+  const deductionMrp = c('ipn_standard_deduction_mrp').value;
+  const nbrk = c('nbrk_base_rate');
+  // Дата установления ставки живёт только в тексте law («…ставка установлена с 07.09.2026»);
+  // не распознали — пишем ставку без даты, но не чужую дату.
+  const nbrkSince = nbrk.law.match(/установлена с (\d{2}\.\d{2}\.\d{4})/)?.[1];
+  if (!nbrkSince) console.warn('⚠️  llms.txt: не нашёл дату установления базовой ставки в nbrk_base_rate.law');
 
-> Бесплатные онлайн-калькуляторы для жителей Казахстана. Все расчёты по актуальному законодательству РК 2026 года.
+  return `# Calk.kz
+
+> Бесплатные онлайн-калькуляторы для жителей Казахстана. Все расчёты по актуальному законодательству РК ${YEAR} года.
 
 Calk.kz — платформа с онлайн-калькуляторами, охватывающими налоги, финансы, автомобили, социальные выплаты, коммунальные услуги, недвижимость, строительство, образование, религиозные расчёты и другие сферы жизни в Казахстане. Все расчёты выполняются локально в браузере — данные пользователей не передаются на сервер.
 
@@ -59,16 +99,17 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 
 Константин Яковлев — основатель Calk.kz, Zanimaem.kz и Profinance.kz. Более 14 лет в маркетинге, свыше 8 лет в финансовой аналитике.
 
-## Актуальные данные на 2026 год
+## Актуальные данные на ${YEAR} год
 
-- МРП (Месячный расчётный показатель): 4 325 тенге
-- МЗП (Минимальная заработная плата): 85 000 тенге
-- НДС: 16% (с 1 января 2025)
-- Базовый налоговый вычет по ИПН: 30 МРП (129 750 тенге) в месяц
-- ОПВ: 10% · ОПВР: 3.5% · ВОСМС: 2% · СО: 3.5%
-- Упрощёнка ИП: 4% ИПН (социальный налог отменён с 2026)
-- Пенсионный возраст: мужчины 63, женщины 61
-- Базовая ставка НБРК: 15.25%`;
+- МРП (Месячный расчётный показатель): ${fmt(mrp)} тенге
+- МЗП (Минимальная заработная плата): ${v('mzp_min_wage')} тенге
+- НДС: ${v('nds_vat_rate')}% (с 1 января 2026 года, новый Налоговый кодекс)
+- Базовый налоговый вычет по ИПН: ${fmt(deductionMrp)} МРП (${fmt(deductionMrp * mrp)} тенге) в месяц
+- ОПВ: ${v('opv_rate')}% · ОПВР: ${v('opvr_rate')}% · ВОСМС: ${v('vosms_employee_rate')}% · СО: ${v('so_rate')}%
+- Упрощёнка (ИП и ТОО): ${v('snr_simplified_rate')}% ИПН/КПН с дохода, маслихат может менять ставку в пределах ${c('simplified_rate_local_adjustment_range_pct').value}%; социальный налог на упрощёнке не уплачивается
+- Пенсионный возраст: мужчины ${v('retirement_age_male')}, женщины ${v('retirement_age_female')}
+- Базовая ставка НБРК: ${v('nbrk_base_rate')}%${nbrkSince ? ` (с ${nbrkSince})` : ''}`;
+}
 
 const FOOTER = `## Языки
 
@@ -76,11 +117,12 @@ const FOOTER = `## Языки
 
 ## Источники данных
 
-- Налоговый кодекс Республики Казахстан (adilet.zan.kz)
+- Налоговый кодекс Республики Казахстан от 18.07.2025 № 214-VIII, действует с 01.01.2026 (adilet.zan.kz)
+- Социальный кодекс РК от 20.04.2023 № 224-VII — пенсионные взносы, социальные отчисления, пенсионный возраст (adilet.zan.kz)
 - Трудовой кодекс РК (adilet.zan.kz)
+- Закон РК «Об обязательном социальном медицинском страховании»
+- Закон о республиканском бюджете (МРП, МЗП)
 - Данные Национального банка РК (НБРК)
-- Закон РК «О пенсионном обеспечении»
-- Закон РК «Об обязательном социальном страховании»
 - eGov.kz, КГД МФ РК, ЕНПФ, ГФСС
 
 ## Контакты
@@ -103,7 +145,7 @@ function build() {
     })
     .join('\n\n');
 
-  const body = `${HEADER}
+  const body = `${buildHeader()}
 
 ## Категории калькуляторов (${totalCalcs} калькуляторов в ${categories.length} категориях)
 

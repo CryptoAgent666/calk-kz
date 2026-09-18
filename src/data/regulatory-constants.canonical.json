@@ -2240,7 +2240,7 @@
       "key": "opv_rate",
       "value": 10,
       "unit": "percent",
-      "law": "Закон РК «О пенсионном обеспечении в РК» ст.25 / НК РК",
+      "law": "Социальный кодекс РК от 20.04.2023 № 224-VII, ст. 249 п. 1 пп. 1) (10% ежемесячного дохода, потолок 50 МЗП)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -2263,9 +2263,11 @@
         "SickLeaveCalculator"
       ],
       "audit_status": "representation_variants",
-      "source_url": "https://mybuh.kz/useful/nalogi-s-zarplaty-2026-v-kazakhstane.html",
-      "verify_note": "ОПВ работника = 10% в 2026 (без изменений). Удерживается с работника в ЕНПФ.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "ОПВ работника = 10% в 2026 (без изменений). Удерживается с работника в ЕНПФ. | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 249 п. 1 пп. 1) дословно: «в размере 10 процентов от ежемесячного дохода», потолок 50-кратная МЗП. Прежняя ссылка на Закон «О пенсионном обеспечении» устарела: закон утратил силу с 01.07.2023 (Соцкодекс ст. 263 п. 7 пп. 7)).",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "opv_max_base_mzp",
@@ -2301,7 +2303,7 @@
       "key": "opvr_rate",
       "value": 3.5,
       "unit": "percent",
-      "law": "Закон РК «О пенсионном обеспечении в РК» — ОПВР работодателя (с 2024, 3.5% в 2026)",
+      "law": "Социальный кодекс РК № 224-VII, ст. 251 п. 1 (1,5% с 2024 → 2,5% 2025 → 3,5% 2026 → 4,5% 2027 → 5% 2028)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [
@@ -2318,9 +2320,11 @@
         "IpPaymentsCalculator"
       ],
       "audit_status": "representation_variants",
-      "source_url": "https://uchet.kz/news/stavka-opvr-uvelichena-s-1-yanvarya-2026-goda/",
-      "verify_note": "ОПВР работодателя = 3,5% с 01.01.2026 (фазовый рост: 1,5%/2024, 2,5%/2025, 3,5%/2026, 4,5%/2027, 5%/2028). 2026 значение верно.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "ОПВР работодателя = 3,5% с 01.01.2026 (фазовый рост: 1,5%/2024, 2,5%/2025, 3,5%/2026, 4,5%/2027, 5%/2028). 2026 значение верно. | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 251 п. 1 дословно: «с 1 января 2026 года – в размере 3,5 процента». Закон «О пенсионном обеспечении» утратил силу с 01.07.2023.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "so_rate",
@@ -2345,8 +2349,10 @@
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
-      "verify_note": "Tier-2 31.08.2026 по алерту монитора. ⚠️ ПРЕЖНЯЯ ССЫЛКА БЫЛА НА УТРАТИВШИЙ СИЛУ ЗАКОН: Закон РК от 26.12.2019 № 286-VI «Об обязательном социальном страховании» отменён Кодексом РК от 20.04.2023 № 224-VII с 01.07.2023 (отметка об утрате силы проверена лично на adilet). Действующий первоисточник — Социальный кодекс РК № 224-VII. Ставка СО 5 % действует с 01.01.2025. С 01.01.2026 изменилась только доля СО в ставке единого платежа: 18,9 % → 18,1 % (ст. 244 п. 3).",
-      "reverified": "2026-08-31"
+      "verify_note": "Tier-2 31.08.2026 по алерту монитора. ⚠️ ПРЕЖНЯЯ ССЫЛКА БЫЛА НА УТРАТИВШИЙ СИЛУ ЗАКОН: Закон РК от 26.12.2019 № 286-VI «Об обязательном социальном страховании» отменён Кодексом РК от 20.04.2023 № 224-VII с 01.07.2023 (отметка об утрате силы проверена лично на adilet). Действующий первоисточник — Социальный кодекс РК № 224-VII. Ставка СО 5 % действует с 01.01.2025. С 01.01.2026 изменилась только доля СО в ставке единого платежа: 18,9 % → 18,1 % (ст. 244 п. 3). | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 244 п. 1 перепроверена дословно: «с 1 января 2025 года – 5 процентов». В llms.txt висело 3,5% — исправлено.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "so_max_base_mzp",
@@ -2456,7 +2462,7 @@
       "key": "retirement_age_male",
       "value": 63,
       "unit": "years",
-      "law": "Закон РК «О пенсионном обеспечении в РК» ст.11 (пенсионный возраст мужчины 63)",
+      "law": "Социальный кодекс РК № 224-VII, ст. 207 п. 1 (мужчины — 63 года)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -2468,16 +2474,18 @@
         "PensionAnnuityCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://www.gov.kz/situations/5/25?lang=ru",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
       "official_value": "63",
-      "verify_note": "Пенсионный возраст мужчин = 63 года. Подтверждено для 2026.",
-      "reverified": "2026-06-23"
+      "verify_note": "Пенсионный возраст мужчин = 63 года. Подтверждено для 2026. | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 207 п. 1 дословно: «мужчинам по достижении 63 лет». Закон «О пенсионном обеспечении» (ст. 11) утратил силу с 01.07.2023.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "retirement_age_female",
       "value": 61,
       "unit": "years",
-      "law": "Закон РК «О пенсионном обеспечении в РК» ст.11 (переходный график; 2026 — 61 год)",
+      "law": "Социальный кодекс РК № 224-VII, ст. 207 п. 1 (женщины — 61 год с 01.01.2023; 61,5 с 2028 … 63 с 2031)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [
@@ -2490,10 +2498,12 @@
         "PensionAnnuityCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://informburo.kz/novosti/zamorozka-eshhe-v-sile-v-kakom-vozraste-zenshhiny-v-kazaxstane-budut-vyxodit-na-pensiiu-v-2026-godu",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
       "official_value": "61",
-      "verify_note": "Пенсионный возраст женщин = 61 год в 2026 (действует мораторий на повышение до 2028). Дальнейший рост с 01.01.2028 (61,5) до 63 лет к 2031. Подтверждено.",
-      "reverified": "2026-06-23"
+      "verify_note": "Пенсионный возраст женщин = 61 год в 2026 (действует мораторий на повышение до 2028). Дальнейший рост с 01.01.2028 (61,5) до 63 лет к 2031. Подтверждено. | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 207 п. 1 дословно: «с 1 января 2023 года – по достижении 61 года; с 1 января 2028 года – по достижении 61,5 года», далее +0,5 в год до 63 с 01.01.2031. На 2026 — 61. Закон «О пенсионном обеспечении» утратил силу с 01.07.2023.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "enpf_standard_payout_period_years",
@@ -3031,9 +3041,11 @@
         "TeacherSalaryCalculator"
       ],
       "audit_status": "representation_variants",
-      "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
-      "verify_note": "ВОСМС работника = 2% в 2026 (ставка не изменилась).",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/Z1500000405",
+      "verify_note": "ВОСМС работника = 2% в 2026 (ставка не изменилась). | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): Закон об ОСМС ст. 28 п. 1 дословно: «с 1 января 2021 года – 2 процентов от объекта исчисления взносов»; более поздних ступеней нет.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "vosms_max_base_mzp",
@@ -3878,7 +3890,7 @@
       "key": "snr_simplified_rate",
       "value": 4,
       "unit": "percent",
-      "law": "НК РК ст. 687 (СНР на основе упрощённой декларации, 4% с оборота с 01.01.2026)",
+      "law": "НК РК (K2500000214) ст. 726 (4%, маслихат ±50%); ст. 722 п. 4 (не плательщики социального налога и НДС)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [
@@ -3898,9 +3910,11 @@
         "TaxRegimeComparisonCalculator"
       ],
       "audit_status": "representation_variants",
-      "source_url": "https://uchet.kz/news/obnovlennyy-snr-dlya-msb-chto-izmenilos/",
-      "verify_note": "СНР simplified-declaration rate = 4% in 2026 (maslikhat may adjust +/-50%). Confirmed.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "СНР simplified-declaration rate = 4% in 2026 (maslikhat may adjust +/-50%). Confirmed. | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 726 дословно: «ставки в размере 4 процентов», маслихат вправе менять «не более чем на 50 процентов»; ст. 722 п. 4 пп. 1): применяющие упрощёнку «не являются плательщиками социального налога». Прежняя ссылка «ст. 687» неверна.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "snr_simplified_semiannual_limit_mrp",
@@ -4012,9 +4026,11 @@
         "ElectricityBillCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://pro1c.kz/news/zakonodatelstvo/izmeneniya-po-nds-s-1-yanvarya-2026-goda/",
-      "verify_note": "VAT raised 12%->16% from 2026-01-01. New-code article is 503 (ledger cites old art.422). Reduced 5% for meds 2026-2027. Confirmed.",
-      "reverified": "2026-06-27"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "VAT raised 12%->16% from 2026-01-01. New-code article is 503 (ledger cites old art.422). Reduced 5% for meds 2026-2027. Confirmed. | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 503 п. 1 дословно: «ставка налога на добавленную стоимость составляет 16 процентов»; кодекс введён в действие с 01.01.2026 (ст. 848 п. 1). В llms.txt было «с 1 января 2025» — исправлено.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "businesstrip_accommodation_taxfree_limit_mrp",
@@ -5075,7 +5091,7 @@
       "key": "ipn_standard_deduction_mrp",
       "value": 30,
       "unit": "МРП",
-      "law": "НК РК (стандартный вычет по ИПН)",
+      "law": "НК РК (K2500000214) ст. 403 «Базовый налоговый вычет» (30 МРП за месяц, не более 360 МРП за год)",
       "year": "2026",
       "change_frequency": "annual",
       "aliases": [],
@@ -5084,9 +5100,11 @@
         "VacationPayCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://mybuh.kz/useful/nalogovyy-vychet-po-ipn-planiruyut-uvelichit-s-14-mrp-do-30-mrp.html",
-      "verify_note": "Base monthly ИПН deduction raised from 14 to 30 MRP from 2026 (renamed 'базовый вычет', art.403; annual cap 360 MRP). Confirmed.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Base monthly ИПН deduction raised from 14 to 30 MRP from 2026 (renamed 'базовый вычет', art.403; annual cap 360 MRP). Confirmed. | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): ст. 403 дословно: «30-кратный размер месячного расчетного показателя … за каждый календарный месяц», за год — не более 360 МРП.",
+      "reverified": "2026-09-18",
+      "verified_date": "2026-09-18",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "vacation_avg_working_days_per_month",
@@ -8765,11 +8783,11 @@
       ],
       "audit_status": "clean",
       "source_url": "https://nationalbank.kz/ru/news/press-relizy/20266",
-      "verify_note": "Tier-2 2026-09-04 (verify-first по nationalbank.kz): решение Комитета по ДКП от 04.09.2026 — ставка снижена с 16,75% до 16,25%, коридор ±1 п.п. (15,25–17,25%), дата установления по графику НБРК — 07.09.2026. Годовая инфляция в августе 2026 — 9,8% (11-й месяц замедления). Синхронно пересчитаны производные: penalty_tax_daily_rate_example 0,0574% → 0,0557%/день (1,25 × 16,25% / 365), ru/kk-локали (taxRate, taxDescription, taxLaw1, faq a2, business-roi a1, mortgage-compare a3), QuickAnswer, calculatorMethodology, calculatorExamples, PenaltyCalculator и шапка MortgageCompareCalculator. MARKET_RATE_DEFAULT (23,5%) НЕ трогали — рыночная ГЭСВ не производная от ставки. Следующее плановое решение — 23.10.2026, 12:00 по Астане (далее 04.12.2026).",
-      "reverified": "2026-09-04",
+      "verify_note": "Tier-2 2026-09-04 (verify-first по nationalbank.kz): решение Комитета по ДКП от 04.09.2026 — ставка снижена с 16,75% до 16,25%, коридор ±1 п.п. (15,25–17,25%), дата установления по графику НБРК — 07.09.2026. Годовая инфляция в августе 2026 — 9,8% (11-й месяц замедления). Синхронно пересчитаны производные: penalty_tax_daily_rate_example 0,0574% → 0,0557%/день (1,25 × 16,25% / 365), ru/kk-локали (taxRate, taxDescription, taxLaw1, faq a2, business-roi a1, mortgage-compare a3), QuickAnswer, calculatorMethodology, calculatorExamples, PenaltyCalculator и шапка MortgageCompareCalculator. MARKET_RATE_DEFAULT (23,5%) НЕ трогали — рыночная ГЭСВ не производная от ставки. Следующее плановое решение — 23.10.2026, 12:00 по Астане (далее 04.12.2026). | Tier-2 2026-09-18 (сверка шапки llms.txt, old.adilet.zan.kz): график НБРК (nationalbank.kz/ru/news/grafik-prinyatiya-resheniy-po-bazovoy-stavke): последняя запись 07.09.2026 — 16,25%, коридор 15,25–17,25; следующее решение 23.10.2026. В llms.txt висело 15.25% (нижняя граница коридора) — исправлено, шапка теперь читает реестр.",
+      "reverified": "2026-09-18",
       "official_value": 16.25,
       "official_source": "НБРК, пресс-релиз «О снижении базовой ставки до 16,25% по итогам прогнозного раунда» (04.09.2026)",
-      "verified_date": "2026-09-04",
+      "verified_date": "2026-09-18",
       "verify_method": "tier2-primary-source"
     },
     {
