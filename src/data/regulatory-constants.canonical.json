@@ -9143,6 +9143,12 @@
       "fix": "App.tsx: useLayoutEffect на location.pathname удаляет .google-auto-placed до отрисовки нового маршрута (коммит 7c3a662); pre-flight на проде перехватом pushState — 0 сдвигов",
       "residual": "0,97 на history.back() один раз при показе vignette, 0/2 без него — наблюдать; опционально отключить vignette в AdSense",
       "deploy": "16.09.2026: deploy-fast, бандл 20260916074416 (PRERENDER_PORT=4180 — 4173 держал turbomany), гейты 570/0, OTA ok; прод: SPA-клик без сирот, сдвигов 0. GSC: нажать Validate fix, окно CrUX 28 дней"
+    },
+    "llms_header_2026_09_18": {
+      "trigger": "шапка public/llms.txt «Актуальные данные на 2026 год» — хардкод в scripts/generate-llms.mjs, реестром не охвачен",
+      "found": "НБРК 15.25% (нижняя граница коридора; действует 16,25% с 07.09.2026), СО 3.5% (5% с 01.01.2025, Соцкодекс ст. 244), «НДС 16% с 1 января 2025» (с 01.01.2026, НК ст. 503); в источниках — законы «О пенсионном обеспечении» и «Об ОСС», утратившие силу 01.07.2023",
+      "fix": "генератор читает значения из реестра (mrp_2026, mzp_min_wage, nds_vat_rate, ipn_standard_deduction_mrp, opv/opvr/vosms_employee/so_rate, snr_simplified_rate, retirement_age_*, nbrk_base_rate + дата из law); нет ключа или статус не current → сборка падает (коммит 164f242)",
+      "deploy": "18.09.2026: deploy-fast, бандл 20260918082602 — объединённая сборка 32e1647 (поиск/«Популярные», параллельная сессия) + 164f242; первая попытка параллельной сессии упала на FTP put (max-retries), через 12 мин вход восстановился; гейты 570/0, OTA ok, check:ota ok; прод: llms.txt == репо, единый хэш index-CL4n9MMm на 4 маршрутах, MIME application/javascript, sitemap 302 URL"
     }
   },
   "completeness_audit": {
