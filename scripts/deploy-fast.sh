@@ -19,6 +19,9 @@ DIST=dist
 [ -f "$DIST/prerender-errors.json" ] && { echo "ОШИБКА: dist/prerender-errors.json существует — пререндер битый, деплой запрещён"; exit 1; }
 HTML_COUNT=$(find "$DIST" -name index.html | wc -l | tr -d ' ')
 [ "$HTML_COUNT" -ge 570 ] || { echo "ОШИБКА: в dist только $HTML_COUNT index.html (гейт 570)"; exit 1; }
+# Сборка без .env проходит оба гейта выше, но несёт заглушки RevenueCat и не
+# знает Supabase (18.09.2026 так ушёл бандл 20260918082602 — и сайтом, и OTA).
+node scripts/check-dist-env.mjs "$DIST" || { echo "ОШИБКА: env-гейт — деплой запрещён"; exit 1; }
 
 # Транспорт: TLS обязателен, включая канал данных (сервер поддерживает AUTH TLS).
 # Проверка сертификата отключена осознанно — хост задан голым IP, имя в серте
