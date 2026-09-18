@@ -137,10 +137,12 @@ function App() {
   };
 
   const handleSearchChange = (term: string) => {
+    // Уточнение запроса заменяет запись в истории: «назад» ведёт туда, откуда начали искать
+    const replace = Boolean(new URLSearchParams(location.search).get('q'));
     if (term.trim()) {
-      navigate(`/?q=${encodeURIComponent(term)}`);
+      navigate(`/?q=${encodeURIComponent(term)}`, { replace });
     } else {
-      navigate('/');
+      navigate('/', { replace });
     }
   };
 

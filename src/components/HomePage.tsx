@@ -1,5 +1,4 @@
-import React from 'react';
-import { CalculatorCategory } from '../types/calculator';
+import { useMemo } from 'react';
 import { searchCalculators } from '../utils/search';
 import { calculatorCategories } from '../data/calculators';
 import CategoryList from './CategoryList';
@@ -19,12 +18,12 @@ export default function HomePage({
   onClearRecent,
   searchTerm 
 }: HomePageProps) {
-  // Фильтруем категории по поисковому запросу
-  const filteredCategories = searchCalculators(calculatorCategories, searchTerm);
+  const searchHits = useMemo(() => searchCalculators(searchTerm), [searchTerm]);
 
   return (
-    <CategoryList 
-      categories={filteredCategories}
+    <CategoryList
+      categories={calculatorCategories}
+      searchHits={searchHits}
       onCategoryClick={onCategoryClick}
       recentCalculators={recentCalculators}
       onRecentCalculatorClick={onRecentCalculatorClick}

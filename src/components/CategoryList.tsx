@@ -1,12 +1,16 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CalculatorCategory } from '../types/calculator';
+import type { SearchHit } from '../utils/search';
 import CategoryCard from './CategoryCard';
 import RecentCalculators from './RecentCalculators';
+import PopularCalculators from './PopularCalculators';
+import SearchResults from './SearchResults';
+import LocalizedLink from './LocalizedLink';
 import { Search, Calculator as CalculatorIcon } from 'lucide-react';
 
 interface CategoryListProps {
   categories: CalculatorCategory[];
+  searchHits: SearchHit[];
   onCategoryClick: (categoryId: string) => void;
   recentCalculators: string[];
   onRecentCalculatorClick: (calculatorId: string) => void;
@@ -16,6 +20,7 @@ interface CategoryListProps {
 
 export default function CategoryList({
   categories,
+  searchHits,
   onCategoryClick,
   recentCalculators,
   onRecentCalculatorClick,
@@ -24,36 +29,12 @@ export default function CategoryList({
 }: CategoryListProps) {
   const { t } = useTranslation('common');
   const isSearching = searchTerm.trim().length > 0;
-  const hasResults = categories.length > 0;
+  const hasResults = searchHits.length > 0;
+  // Без поиска и при пустой выдаче показываем популярные и все категории
+  const showCatalog = !isSearching || !hasResults;
 
   return (
     <div>
-      {/* Search Results - No Results Message */}
-      {isSearching && !hasResults && (
-        <div className="mb-8">
-          {!hasResults && (
-            <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {t('search.noResults')}
-              </h3>
-              <p className="text-gray-600 mb-4">
-                {t('search.noResultsDesc')}
-              </p>
-              <button
-                onClick={() => window.location.reload()}
-                className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                <CalculatorIcon className="w-4 h-4" />
-                <span>{t('search.showAll')}</span>
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* Main Header */}
       {!isSearching ? (
         <div className="text-center mb-8 sm:mb-12">
@@ -74,6 +55,37 @@ export default function CategoryList({
           </p>
         </div>
       )}
+
+      {/* Search Results */}
+      {isSearching && hasResults && (
+        <div className="mb-12">
+          <SearchResults hits={searchHits} onCalculatorClick={onRecentCalculatorClick} />
+        </div>
+      )}
+
+      {/* Search Results - No Results Message */}
+      {isSearching && !hasResults && (
+        <div className="mb-8 text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="w-8 h-8 text-gray-400" />
+          </div>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            {t('search.noResults')}
+          </h2>
+          <p className="text-gray-600 mb-4">
+            {t('search.noResultsDesc')}
+          </p>
+          <LocalizedLink
+            to="/"
+            className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            <CalculatorIcon className="w-4 h-4" />
+            <span>{t('search.showAll')}</span>
+          </LocalizedLink>
+        </div>
+      )}
+
+      {showCatalog && <PopularCalculators onCalculatorClick={onRecentCalculatorClick} />}
 
       {/* Recent Calculators (только если не поиск и есть недавние) */}
       {!isSearching && recentCalculators.length > 0 && (
@@ -96,29 +108,16 @@ export default function CategoryList({
       )}
 
       {/* Categories Grid */}
-      {hasResults && (
-        <>
-          {isSearching && (
-            <div className="mb-6">
-              <p className="text-gray-600">
-                {t('search.foundCalculators', {
-                  count: categories.reduce((total, cat) => total + cat.calculators.length, 0),
-                  categories: categories.length
-                })}
-              </p>
-            </div>
-          )}
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-h-[600px]">
-            {categories.map((category) => (
-          <CategoryCard
-            key={category.id}
-            category={category}
-            onCategoryClick={onCategoryClick}
-          />
-        ))}
-          </div>
-        </>
+      {showCatalog && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 min-h-[600px]">
+          {categories.map((category) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onCategoryClick={onCategoryClick}
+            />
+          ))}
+        </div>
       )}
 
       {/* Features Section (только если не поиск) */}

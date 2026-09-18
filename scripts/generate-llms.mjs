@@ -91,7 +91,8 @@ const FOOTER = `## Языки
 
 function build() {
   const categories = loadCategories();
-  const totalCalcs = categories.reduce((n, c) => n + c.calculators.length, 0);
+  // Уникальные id: vehicle-tax и teacher-salary кросс-листятся в две категории
+  const totalCalcs = new Set(categories.flatMap((c) => c.calculators.map((calc) => calc.id))).size;
 
   const sections = categories
     .map((cat) => {

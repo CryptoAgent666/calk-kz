@@ -1121,9 +1121,18 @@ export const calculatorCategories: CalculatorCategory[] = [
   {
     id: 'education',
     title: 'Образование',
-    description: 'Калькуляторы для абитуриентов и студентов',
+    description: 'Калькуляторы для абитуриентов, студентов и учителей',
     icon: 'GraduationCap',
     calculators: [
+      {
+        // Кросс-листинг из «Социальных выплат»: 17.09.2026 учителя (2 231 чел.) искали его здесь
+        id: 'teacher-salary',
+        title: 'Калькулятор зарплаты учителя 2026',
+        description: 'БДО × коэффициент (ступень × стаж) × 2,0 + доплата за педагогическую категорию, классное руководство, сельские школы',
+        category: 'education',
+        icon: 'GraduationCap',
+        component: React.lazy(() => import('../components/calculators/TeacherSalaryCalculator'))
+      },
       {
         id: 'ent-score',
         title: 'Калькулятор баллов ЕНТ',

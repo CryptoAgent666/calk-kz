@@ -282,7 +282,10 @@ async function prerender() {
 
   await ensureBrowser();
 
-  const routes = generateRoutes();
+  // Дорендер выпавших по таймауту страниц без полного прогона (~8 мин):
+  // PRERENDER_ONLY=/calculator/bad-habits-cost node scripts/prerender.mjs (dist и preview уже есть)
+  const only = (process.env.PRERENDER_ONLY || '').split(',').map(r => r.trim()).filter(Boolean);
+  const routes = only.length > 0 ? generateRoutes().filter(route => only.includes(route)) : generateRoutes();
 
   // Build job queue: each job = { route, lang }
   const jobs = [];
