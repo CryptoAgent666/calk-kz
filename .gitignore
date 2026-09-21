@@ -63,6 +63,7 @@ gen-lang-client-*.json
 
 # Нативные build-артефакты (не для коммита)
 ios/App/build/
+ios/build/
 ios/App/build-admob/
 ios/App/Pods/
 ios/DerivedData/
