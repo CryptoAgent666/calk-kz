@@ -74,6 +74,58 @@ export const MAX_WORKING_DAYS_IN_MONTH = Math.max(
   ...Array.from({ length: 12 }, (_, m) => countWorkingDays(new Date(2026, m, 1), new Date(2026, m + 1, 0)))
 );
 
+export interface MonthWorkingDays {
+  /** 'YYYY-MM' */
+  month: string;
+  /** рабочих дней события в этом месяце */
+  days: number;
+  /** всего рабочих дней в месяце по календарю */
+  monthWorkingDays: number;
+}
+
+/** 'YYYY-MM-DD' → локальная дата без сдвига часового пояса (new Date('2026-09-28')
+ *  читается как полночь UTC и западнее Гринвича уезжает на день назад). */
+export function parseIsoDate(value: string): Date | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || '');
+  if (!m) return null;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return isNaN(+d) ? null : d;
+}
+
+/**
+ * Раскладывает N рабочих дней подряд, начиная с даты start, по календарным месяцам.
+ * Нужна больничному: лимит 25 МРП действует на пособие за каждый месяц отдельно
+ * (ст. 133 п. 4-1 ТК РК). Праздники известны только на 2026 — хвост в 2027 году
+ * считается по одной пятидневке.
+ */
+export function splitWorkingDaysByMonth(start: Date, workingDays: number): MonthWorkingDays[] {
+  const out: MonthWorkingDays[] = [];
+  if (isNaN(+start) || !Number.isFinite(workingDays) || workingDays <= 0) return out;
+  const cur = new Date(start);
+  let left = Math.round(workingDays);
+  for (let guard = 0; left > 0 && guard < 800; guard++) {
+    if (isWorkingDay(cur)) {
+      const month = iso(cur).slice(0, 7);
+      let last = out[out.length - 1];
+      if (!last || last.month !== month) {
+        last = {
+          month,
+          days: 0,
+          monthWorkingDays: countWorkingDays(
+            new Date(cur.getFullYear(), cur.getMonth(), 1),
+            new Date(cur.getFullYear(), cur.getMonth() + 1, 0)
+          ),
+        };
+        out.push(last);
+      }
+      last.days++;
+      left--;
+    }
+    cur.setDate(cur.getDate() + 1);
+  }
+  return out;
+}
+
 /**
  * Рабочие дни, приходящиеся на период события, заданный ЧИСЛОМ КАЛЕНДАРНЫХ ДНЕЙ.
  *

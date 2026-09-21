@@ -13,7 +13,13 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
-import { AVG_WORKING_DAYS_PER_MONTH, MAX_WORKING_DAYS_IN_MONTH } from '../../utils/workingTime';
+import {
+  AVG_WORKING_DAYS_PER_MONTH,
+  MAX_WORKING_DAYS_IN_MONTH,
+  parseIsoDate,
+  splitWorkingDaysByMonth,
+  type MonthWorkingDays,
+} from '../../utils/workingTime';
 
 export default function SickLeaveCalculator() {
   const { t } = useTranslation('calculators');
@@ -22,6 +28,9 @@ export default function SickLeaveCalculator() {
   const [monthsWorked, setMonthsWorked] = useState<string>('12');
   const [sickLeaveType, setSickLeaveType] = useState<'regular' | 'occupational'>('regular');
   const [hasLessThanYear, setHasLessThanYear] = useState<boolean>(false);
+  // Необязательная дата начала: с ней рабочие дни раскладываются по календарным месяцам,
+  // и лимит 25 МРП считается по каждому месяцу точно, а не по оценке.
+  const [startDate, setStartDate] = useState<string>('');
 
   const MRP = 4325;
   const MAX_BENEFIT_MRP = 25;
@@ -46,7 +55,8 @@ export default function SickLeaveCalculator() {
     monthlyLimit: MONTHLY_LIMIT,
     effectiveRate: 0,
     limitMonths: 1,
-    benefitLimit: MONTHLY_LIMIT
+    benefitLimit: MONTHLY_LIMIT,
+    perMonth: [] as MonthWorkingDays[]
   };
 
   const computeSickLeave = () => {
@@ -71,26 +81,44 @@ export default function SickLeaveCalculator() {
     let grossBenefit = averageDailyIncome * days;
 
     // Лимит 25 МРП — на пособие за КАЖДЫЙ календарный месяц, а не пропорция по дням
-    // (раньше 25 МРП ÷ 30 × дни резали 5-дневный больничный до 18 021 ₸). Дат нет,
-    // поэтому берём наименьшее число месяцев, на которое может прийтись период.
-    const limitMonths = Math.max(1, Math.ceil(days / MAX_WORKING_DAYS_IN_MONTH));
-    const benefitLimit = MONTHLY_LIMIT * limitMonths;
+    // (раньше 25 МРП ÷ 30 × дни резали 5-дневный больничный до 18 021 ₸).
+    const start = parseIsoDate(startDate);
+    const perMonth = start ? splitWorkingDaysByMonth(start, days) : [];
 
+    let limitMonths: number;
+    let benefitLimit: number;
     let isAtLimit = false;
+    // Базовый вычет 30 МРП (ст. 403 НК РК) даётся раз в месяц на весь доход: в месяц,
+    // который частично отработан, его забирает зарплата. Поэтому к пособию он идёт только
+    // за месяцы, целиком проведённые на больничном.
+    let fullSickMonths: number;
 
-    if (sickLeaveType === 'regular') {
-      if (grossBenefit > benefitLimit) {
+    if (perMonth.length > 0) {
+      // Дата известна: лимит применяется к пособию за каждый месяц отдельно.
+      limitMonths = perMonth.length;
+      benefitLimit = MONTHLY_LIMIT * limitMonths;
+      grossBenefit = perMonth.reduce((sum, m) => {
+        const monthBenefit = averageDailyIncome * m.days;
+        if (sickLeaveType === 'regular' && monthBenefit > MONTHLY_LIMIT) {
+          isAtLimit = true;
+          return sum + MONTHLY_LIMIT;
+        }
+        return sum + monthBenefit;
+      }, 0);
+      fullSickMonths = perMonth.filter(m => m.days >= m.monthWorkingDays).length;
+    } else {
+      // Дат нет: берём наименьшее число месяцев, на которое может прийтись период.
+      limitMonths = Math.max(1, Math.ceil(days / MAX_WORKING_DAYS_IN_MONTH));
+      benefitLimit = MONTHLY_LIMIT * limitMonths;
+      if (sickLeaveType === 'regular' && grossBenefit > benefitLimit) {
         grossBenefit = benefitLimit;
         isAtLimit = true;
       }
+      fullSickMonths = Math.floor(days / AVG_WORKING_DAYS_PER_MONTH);
     }
 
     const opv = grossBenefit * OPV_RATE;
     const vosms = grossBenefit * VOSMS_RATE;
-    // База ИПН: пособие − ОПВ − ВОСМС. Базовый вычет 30 МРП (ст. 403 НК РК) даётся раз
-    // в месяц на весь доход: в месяц, который частично отработан, его забирает зарплата.
-    // Поэтому вычитаем его только за месяцы, целиком проведённые на больничном.
-    const fullSickMonths = Math.floor(days / AVG_WORKING_DAYS_PER_MONTH);
     const ipnBase = Math.max(0, grossBenefit - opv - vosms - IPN_DEDUCTION * fullSickMonths);
     const ipn = ipnBase * IPN_RATE;
     const totalDeductions = opv + ipn + vosms;
@@ -110,7 +138,8 @@ export default function SickLeaveCalculator() {
       monthlyLimit: MONTHLY_LIMIT,
       effectiveRate: Number(effectiveRate.toFixed(2)),
       limitMonths,
-      benefitLimit: Math.round(benefitLimit)
+      benefitLimit: Math.round(benefitLimit),
+      perMonth
     };
   };
 
@@ -119,7 +148,7 @@ export default function SickLeaveCalculator() {
   const results = useMemo(
     computeSickLeave,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [averageMonthlyIncome, sickDays, monthsWorked, sickLeaveType, hasLessThanYear]
+    [averageMonthlyIncome, sickDays, monthsWorked, sickLeaveType, hasLessThanYear, startDate]
   );
 
   const formatNumber = (num: number) => {
@@ -137,7 +166,7 @@ ${t('sick-leave.exportInputData')}:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • ${t('sick-leave.averageMonthlyIncome')}: ${formatNumber(parseFloat(averageMonthlyIncome))}
 • ${t('sick-leave.sickDaysCount')}: ${sickDays} ${t('sick-leave.days')}
-• ${t('sick-leave.monthsWorked')}: ${monthsWorked} ${t('sick-leave.months')}
+${startDate ? `• ${t('sick-leave.startDateShort')}: ${startDate}\n` : ''}• ${t('sick-leave.monthsWorked')}: ${monthsWorked} ${t('sick-leave.months')}
 • ${t('sick-leave.sickLeaveType')}: ${sickLeaveType === 'regular' ? t('sick-leave.regularDisease') : t('sick-leave.occupationalDisease')}
 
 ${t('sick-leave.benefitCalculation')}:
@@ -282,6 +311,23 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                 <p className="text-xs text-gray-500 mt-1">{t('sick-leave.daysHint')}</p>
               </div>
 
+              {/* Дата начала — необязательна. С ней рабочие дни раскладываются по месяцам
+                  производственного календаря, и лимит 25 МРП считается по каждому месяцу. */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('sick-leave.startDateLabel')}
+                </label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  min="2026-01-01"
+                  max="2026-12-31"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                />
+                <p className="text-xs text-gray-500 mt-1">{t('sick-leave.startDateHint')}</p>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   {t('sick-leave.sickLeaveTypeLabel')}
@@ -351,6 +397,14 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                       {formatNumber(results.averageDailyIncome)} × {sickDays} {t('sick-leave.days')}
                       {results.isAtLimit && ` (${t('sick-leave.limitAppliedShort')})`}
                     </p>
+                    {results.perMonth.length > 1 && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {t('sick-leave.byMonths')}:{' '}
+                        {results.perMonth
+                          .map(m => `${m.month.slice(5)}.${m.month.slice(0, 4)} — ${m.days} ${t('sick-leave.workDaysShort')}`)
+                          .join(' · ')}
+                      </p>
+                    )}
                   </div>
 
                   {results.isAtLimit && (
