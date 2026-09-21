@@ -2710,7 +2710,7 @@
       "key": "sick_leave_max_benefit_mrp",
       "value": 25,
       "unit": "MRP",
-      "law": "Постановление Правительства РК — максимальный размер месячного пособия по временной нетрудоспособности = 25 МРП",
+      "law": "ТК РК ст. 133 п. 4-1 ч. 4 — «Размер социального пособия по временной нетрудоспособности, выплачиваемого за один месяц, не может превышать двадцатипятикратную величину МРП» (кроме трудового увечья/профзаболевания, ветеранов, дипслужбы); на каждый календарный месяц отдельно, при переходе года — МРП каждого года",
       "year": "2026",
       "change_frequency": "annual",
       "aliases": [
@@ -2721,10 +2721,11 @@
         "SickLeaveCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://uchet.kz/month/bolnichnyy-list-v-2026-godu/",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1500000414",
       "official_value": "25",
-      "verify_note": "Макс. месячный размер пособия по временной нетрудоспособности (за счёт работодателя) = 25 МРП (108125 ₸ в 2026). Исключения: проф.травма, ветераны ВОВ. Подтверждено.",
-      "reverified": "2026-06-23"
+      "verify_note": "Макс. месячный размер пособия по временной нетрудоспособности (за счёт работодателя) = 25 МРП (108125 ₸ в 2026). Исключения: проф.травма, ветераны ВОВ. Подтверждено. | Phase-4 2026-09-21: Норма — ТК РК ст. 133 п. 4-1 (не «Постановление Правительства»). Лимит на пособие за КАЖДЫЙ календарный месяц, без деления по дням: калькулятор применял 25 МРП ÷ 30 × дни и резал 5-дневный больничный до 18 021 ₸ (верно — 73 171 ₸ при 300 000/мес). Практика: uchet.kz «Больничный лист в 2026 году» — 8 дней × 22 000 = 176 000 → к начислению 108 125.",
+      "reverified": "2026-09-21",
+      "verified_date": "2026-09-21"
     },
     {
       "key": "debt_burden_pdn_limit_pct",
@@ -6570,9 +6571,9 @@
     },
     {
       "key": "average_earnings_period_months_by_purpose",
-      "value": "vacation:13; sickLeave:12; businessTrip:12; dismissal:24; maternity:12",
+      "value": "vacation:12; sickLeave:12; businessTrip:12; dismissal:12; maternity:12",
       "unit": "months",
-      "law": "Единые правила исчисления средней заработной платы (приказ МЗСР РК № 1022 от 30.",
+      "law": "ТК РК ст. 114 п. 2; Единые правила исчисления средней ЗП (приказ МЗСР № 908 от 30.11.2015, рег. 12533) п. 2 пп. 2 — 12 календарных месяцев для любого события, при стаже < 12 мес — отработанное время; декретные ГФСС — 12 мес (п. 40 Правил V2300032912), 24 мес только для выплаты по уходу (п. 41)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -6582,13 +6583,18 @@
       ],
       "note": "PURPOSE_MONTHS table lines 18-24, caps the averaging window in the calculation. Entirely absent from list (only МЗП extracted). Values 13 (v",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "vacation:12; sickLeave:12; businessTrip:12; dismissal:12; maternity:12",
+      "source_url": "https://adilet.zan.kz/rus/docs/V1500012533",
+      "verify_note": "Phase-4 2026-09-21: Было vacation:13, dismissal:24 и ссылка на «приказ № 1022» — неверно: № 908, период 12 для всех (п. 2 пп. 2, редакция на 08.06.2026 по prg.kz). В детальном режиме значения по умолчанию (7,2 млн / 504 дня = 24 мес) давали для отпуска 553 846 ₸ вместо 300 000 — дефолты переведены на 12 мес (3 600 000 / 246 / 1 968).",
+      "reverified": "2026-09-21",
+      "verified_date": "2026-09-21"
     },
     {
       "key": "standard_working_time_conversion",
-      "value": "8 h/day; 5 days/week; 21 раб.дн./мес",
+      "value": "8 h/day; 5 days/week; 20,5 раб.дн./мес (246/12, баланс 2026)",
       "unit": "",
-      "law": "ТК РК ст. 68-69 (норма 40-часовой рабочей недели)",
+      "law": "ТК РК ст. 68–69 (40-часовая неделя); баланс рабочего времени 2026 — 246 рабочих дней / 1 968 ч при 5-дневке (utils/workingTime.ts)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -6598,7 +6604,11 @@
       ],
       "note": "Lines 51-52, 62: days = months*21, hours = days*8, avgWeek = avgDay*5 drive per-day/hour/week results in simple mode. 8h/5d derive from the ",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "official_value": "8 h/day; 5 days/week; 20,5 раб.дн./мес (246/12, баланс 2026)",
+      "verify_note": "Phase-4 2026-09-21: 21 раб.дн./мес заменено на 20,5 = 246/12 — так уже считают AverageEarnings/VacationPay/SeverancePay/SickLeave (AVG_WORKING_DAYS_PER_MONTH).",
+      "reverified": "2026-09-21",
+      "verified_date": "2026-09-21"
     },
     {
       "key": "bankruptcy_extrajudicial_min_overdue_months",
@@ -7913,9 +7923,9 @@
     },
     {
       "key": "sick_leave_avg_days_per_month_divisor",
-      "value": 30,
+      "value": 20.5,
       "unit": "days/month",
-      "law": "методика расчёта среднедневного заработка / пропорции лимита 25 МРП",
+      "law": "ТК РК ст. 133 п. 4-1 и ст. 114 п. 3; Единые правила исчисления средней ЗП (приказ № 908 от 30.11.2015, рег. 12533) п. 8 — средний дневной = доход расчётного периода ÷ РАБОЧИЕ дни этого периода; 20,5 = 246/12 (баланс рабочего времени 2026, 5-дневка)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -7926,10 +7936,11 @@
       "note": "AVERAGE_DAYS_IN_MONTH = 30 (line 46) drives both the average daily income and the proration of the statutory 25 МРП monthly cap (lines 72-78",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://adilet.zan.kz/rus/docs/V2300032912",
-      "official_value": "30",
-      "verify_note": "Делитель 30 (календарных дней/мес) используется в коэффициенте дней нетрудоспособности (напр. 126/30=4.2) и пропорции лимита. Методически корректно. Подтверждено.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K1500000414",
+      "official_value": "20.5",
+      "verify_note": "Делитель 30 (календарных дней/мес) используется в коэффициенте дней нетрудоспособности (напр. 126/30=4.2) и пропорции лимита. Методически корректно. Подтверждено. | Phase-4 2026-09-21: Делитель был 30 календарных дней со ссылкой на V2300032912 — но там «30» только в коэффициенте дней для ДЕКРЕТНЫХ (п. 47: 126/30 = 4,2), к больничному от работодателя не относится. Средний дневной был занижен на ~32 % (10 000 вместо 14 634 ₸ при 300 000/мес). Теперь SickLeaveCalculator делит на AVG_WORKING_DAYS_PER_MONTH из utils/workingTime.ts.",
+      "reverified": "2026-09-21",
+      "verified_date": "2026-09-21"
     },
     {
       "key": "limitation_tax_years_default_nk65",

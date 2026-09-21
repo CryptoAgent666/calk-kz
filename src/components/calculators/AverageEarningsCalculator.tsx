@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { AVG_WORKING_DAYS_PER_MONTH } from '../../utils/workingTime';
 import { useTranslation } from 'react-i18next';
-import { Calculator, Clock, Info } from 'lucide-react';
+import { Calculator, Info } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -15,30 +15,30 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 
 type Purpose = 'vacation' | 'sickLeave' | 'businessTrip' | 'dismissal' | 'maternity';
 
-const PURPOSE_MONTHS: Record<Purpose, number> = {
-  vacation: 13,
-  sickLeave: 12,
-  businessTrip: 12,
-  dismissal: 24,
-  maternity: 12,
-};
+const PURPOSES: Purpose[] = ['vacation', 'sickLeave', 'businessTrip', 'dismissal', 'maternity'];
+
+// Расчётный период — 12 календарных месяцев для ЛЮБОГО события (ст. 114 п. 2 ТК РК,
+// п. 2 пп. 2 Единых правил № 908), при стаже меньше года — отработанное время.
+// Декретные ГФСС тоже берут 12 месяцев (п. 40 Правил V2300032912; 24 — только
+// выплата по уходу за ребёнком, п. 41). До 21.09.2026 для отпуска стояло 13, для увольнения 24.
+const PERIOD_MONTHS = 12;
 
 export default function AverageEarningsCalculator() {
   const { t } = useTranslation('calculators');
   const [purpose, setPurpose] = useState<Purpose>('vacation');
   const [mode, setMode] = useState<'simple' | 'detailed'>('simple');
   const [monthlySalary, setMonthlySalary] = useState<string>('300000');
-  const [workMonths, setWorkMonths] = useState<string>('24');
+  const [workMonths, setWorkMonths] = useState<string>('12');
   const [yearlyBonus, setYearlyBonus] = useState<string>('100000');
   const [allowances, setAllowances] = useState<string>('0');
-  const [totalPayments, setTotalPayments] = useState<string>('7200000');
-  const [workedDays, setWorkedDays] = useState<string>('504');
-  const [workedHours, setWorkedHours] = useState<string>('4032');
+  const [totalPayments, setTotalPayments] = useState<string>('3600000');
+  const [workedDays, setWorkedDays] = useState<string>('246');
+  const [workedHours, setWorkedHours] = useState<string>('1968');
 
   const MZP_2026 = 85000;
 
   const results = useMemo(() => {
-    const months = Math.min(parseFloat(workMonths) || 0, PURPOSE_MONTHS[purpose]);
+    const months = Math.min(parseFloat(workMonths) || 0, PERIOD_MONTHS);
     let totalPay = 0;
     let days = 0;
     let hours = 0;
@@ -75,7 +75,7 @@ export default function AverageEarningsCalculator() {
       days,
       vsMzp: avgMonth > 0 ? (avgMonth / MZP_2026).toFixed(1) : '0',
     };
-  }, [purpose, mode, monthlySalary, workMonths, yearlyBonus, allowances, totalPayments, workedDays, workedHours]);
+  }, [mode, monthlySalary, workMonths, yearlyBonus, allowances, totalPayments, workedDays, workedHours]);
 
   const formatNumber = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 
@@ -101,7 +101,7 @@ export default function AverageEarningsCalculator() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">{t('average-earnings.purpose')}</label>
             <div className="grid grid-cols-2 gap-2">
-              {(Object.keys(PURPOSE_MONTHS) as Purpose[]).map(p => (
+              {PURPOSES.map(p => (
                 <button key={p} onClick={() => setPurpose(p)}
                   className={`p-3 rounded-lg text-sm font-medium border transition ${
                     purpose === p ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
@@ -127,15 +127,16 @@ export default function AverageEarningsCalculator() {
             </div>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('average-earnings.workMonths')}</label>
+            <input type="number" value={workMonths} onChange={e => setWorkMonths(e.target.value)} min="1" max="12"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+          </div>
+
           {mode === 'simple' ? (
             <>
               <RangeSlider label={t('average-earnings.monthlySalary')} value={parseFloat(monthlySalary) || 0}
                 onChange={v => setMonthlySalary(String(v))} min={85000} max={5000000} step={5000} formatValue={formatNumber} />
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('average-earnings.workMonths')}</label>
-                <input type="number" value={workMonths} onChange={e => setWorkMonths(e.target.value)} min="1" max="24"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-              </div>
               <RangeSlider label={t('average-earnings.yearlyBonus')} value={parseFloat(yearlyBonus) || 0}
                 onChange={v => setYearlyBonus(String(v))} min={0} max={2000000} step={10000} formatValue={formatNumber} />
               <RangeSlider label={t('average-earnings.allowances')} value={parseFloat(allowances) || 0}

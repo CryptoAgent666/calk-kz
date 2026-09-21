@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { HeartPulse, Calculator, Wallet, AlertTriangle, Info, TrendingDown, FileText, CheckCircle, Clock, BarChart3 } from 'lucide-react';
+import { HeartPulse, Calculator, Wallet, AlertTriangle, Info, TrendingDown, FileText, CheckCircle, Clock } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { AVG_WORKING_DAYS_PER_MONTH, MAX_WORKING_DAYS_IN_MONTH } from '../../utils/workingTime';
 
 export default function SickLeaveCalculator() {
   const { t } = useTranslation('calculators');
@@ -28,7 +29,7 @@ export default function SickLeaveCalculator() {
   const OPV_RATE = 0.10;
   const IPN_RATE = 0.10;
   const VOSMS_RATE = 0.02;
-  const AVERAGE_DAYS_IN_MONTH = 30;
+  const IPN_DEDUCTION = 30 * MRP;
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
@@ -44,8 +45,8 @@ export default function SickLeaveCalculator() {
     isAtLimit: false,
     monthlyLimit: MONTHLY_LIMIT,
     effectiveRate: 0,
-    daysInMonth: 0,
-    proportionalLimit: 0
+    limitMonths: 1,
+    benefitLimit: MONTHLY_LIMIT
   };
 
   const computeSickLeave = () => {
@@ -57,28 +58,40 @@ export default function SickLeaveCalculator() {
       return EMPTY_RESULTS;
     }
 
-    const totalIncome = income * Math.min(months, 12);
-    const totalDaysWorked = Math.min(months, 12) * AVERAGE_DAYS_IN_MONTH;
-    const averageDailyIncome = totalIncome / totalDaysWorked;
+    // Средний дневной — доход расчётного периода ÷ РАБОЧИЕ дни этого периода
+    // (ст. 133 п. 4-1 и ст. 114 ТК РК, п. 8 Единых правил № 908). До 21.09.2026 делили
+    // на 30 календарных дней — число из правил ГФСС для декретных (п. 47), не для
+    // больничного; средний дневной выходил заниженным на ~32 %.
+    const periodMonths = Math.min(months, 12);
+    const totalIncome = income * periodMonths;
+    const periodWorkingDays = periodMonths * AVG_WORKING_DAYS_PER_MONTH;
+    const averageDailyIncome = totalIncome / periodWorkingDays;
 
+    // Пособие = средний дневной × рабочие дни нетрудоспособности (ст. 133 п. 4-1 ТК РК).
     let grossBenefit = averageDailyIncome * days;
 
-    const daysInMonth = Math.ceil(days / AVERAGE_DAYS_IN_MONTH * AVERAGE_DAYS_IN_MONTH);
-    const proportionalLimit = (MONTHLY_LIMIT / AVERAGE_DAYS_IN_MONTH) * days;
+    // Лимит 25 МРП — на пособие за КАЖДЫЙ календарный месяц, а не пропорция по дням
+    // (раньше 25 МРП ÷ 30 × дни резали 5-дневный больничный до 18 021 ₸). Дат нет,
+    // поэтому берём наименьшее число месяцев, на которое может прийтись период.
+    const limitMonths = Math.max(1, Math.ceil(days / MAX_WORKING_DAYS_IN_MONTH));
+    const benefitLimit = MONTHLY_LIMIT * limitMonths;
 
     let isAtLimit = false;
 
     if (sickLeaveType === 'regular') {
-      if (grossBenefit > proportionalLimit) {
-        grossBenefit = proportionalLimit;
+      if (grossBenefit > benefitLimit) {
+        grossBenefit = benefitLimit;
         isAtLimit = true;
       }
     }
 
     const opv = grossBenefit * OPV_RATE;
     const vosms = grossBenefit * VOSMS_RATE;
-    // База ИПН: пособие за вычетом ОПВ, ВОСМС и базового вычета 30 МРП (ст. 353 НК РК 2026).
-    const ipnBase = Math.max(0, grossBenefit - opv - vosms - 30 * MRP);
+    // База ИПН: пособие − ОПВ − ВОСМС. Базовый вычет 30 МРП (ст. 403 НК РК) даётся раз
+    // в месяц на весь доход: в месяц, который частично отработан, его забирает зарплата.
+    // Поэтому вычитаем его только за месяцы, целиком проведённые на больничном.
+    const fullSickMonths = Math.floor(days / AVG_WORKING_DAYS_PER_MONTH);
+    const ipnBase = Math.max(0, grossBenefit - opv - vosms - IPN_DEDUCTION * fullSickMonths);
     const ipn = ipnBase * IPN_RATE;
     const totalDeductions = opv + ipn + vosms;
     const netBenefit = grossBenefit - totalDeductions;
@@ -96,8 +109,8 @@ export default function SickLeaveCalculator() {
       isAtLimit,
       monthlyLimit: MONTHLY_LIMIT,
       effectiveRate: Number(effectiveRate.toFixed(2)),
-      daysInMonth,
-      proportionalLimit: Math.round(proportionalLimit)
+      limitMonths,
+      benefitLimit: Math.round(benefitLimit)
     };
   };
 
@@ -131,7 +144,7 @@ ${t('sick-leave.benefitCalculation')}:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • ${t('sick-leave.averageDailyIncome')}: ${formatNumber(results.averageDailyIncome)}
 • ${t('sick-leave.grossBenefit')}: ${formatNumber(results.grossBenefit)}
-${results.isAtLimit ? `⚠ ${t('sick-leave.limitApplied')} ${formatNumber(results.proportionalLimit)} (${sickDays} ${t('sick-leave.days')} × ${formatNumber(Math.round(MONTHLY_LIMIT / AVERAGE_DAYS_IN_MONTH))}/${t('sick-leave.day')})` : ''}
+${results.isAtLimit ? `⚠ ${t('sick-leave.limitApplied')} ${formatNumber(results.benefitLimit)} (${results.limitMonths} × ${formatNumber(MONTHLY_LIMIT)})` : ''}
 
 ${t('sick-leave.deductions')}:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -348,7 +361,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                           <p className="font-semibold mb-1">{t('sick-leave.legislativeLimitApplied')}</p>
                           <p>
                             {t('sick-leave.maxPaymentIs')} {MAX_BENEFIT_MRP} {t('sick-leave.mrp')} {t('sick-leave.perMonth')} ({formatNumber(MONTHLY_LIMIT)}).{' '}
-                            {t('sick-leave.limitForDays', { days: sickDays, amount: formatNumber(results.proportionalLimit) })}
+                            {t('sick-leave.limitForDays', { months: results.limitMonths, monthly: formatNumber(MONTHLY_LIMIT), amount: formatNumber(results.benefitLimit) })}
                           </p>
                         </div>
                       </div>
