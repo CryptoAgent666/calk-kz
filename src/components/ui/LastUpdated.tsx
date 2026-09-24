@@ -38,7 +38,7 @@ const LAST_UPDATED: Record<string, string> = {
   'mobile-transfers': '2026-07-10',
   'tax-regime-comparison': '2026-09-24', // соцплатежи ИП за себя 21 675 ₸ (было 17 000)
   'universal-declaration': '2026-01-01',
-  'ip-simplified': '2026-01-01',
+  'ip-simplified': '2026-09-24', // платежи за сотрудников: ИПН/ОПВ/ВОСМС из зарплаты, ОПВР/СО/ООСМС за счёт ИП, без СН
   'excise-tax': '2026-01-01',
 
   // === АВТО ===

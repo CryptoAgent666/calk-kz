@@ -13,15 +13,36 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { calculateSalary2026 } from '../../utils/salary2026';
 
 export default function IPSimplifiedCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [semiannualIncome, setSemiannualIncome] = useState<string>('3000000');
   const [hasEmployees, setHasEmployees] = useState<boolean>(false);
-  const [numberOfEmployees, setNumberOfEmployees] = useState<string>('');
+  const [numberOfEmployees, setNumberOfEmployees] = useState<string>('1');
   const [totalEmployeeSalaries, setTotalEmployeeSalaries] = useState<string>('');
-  const [paidSocialContributions, setPaidSocialContributions] = useState<string>('');
   const [declaredIncome, setDeclaredIncome] = useState<number>(85000); // Минимум 1 МЗП
+
+  // Платежи за сотрудников — за месяц, по всем сотрудникам вместе
+  const EMPTY_EMPLOYEES = {
+    count: 0,
+    payroll: 0,
+    averageSalary: 0,
+
+    // Удерживаются из зарплаты
+    ipn: 0,
+    opv: 0,
+    vosms: 0,
+    withheld: 0,
+
+    // За счёт ИП
+    opvr: 0,
+    so: 0,
+    oosms: 0,
+    employerContributions: 0,
+
+    totalMonthly: 0
+  };
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
@@ -38,6 +59,10 @@ export default function IPSimplifiedCalculator() {
     vosmsSelf: 0,
     totalMonthlySelf: 0,
     totalYearlySelf: 0,
+
+    // Сотрудники
+    employees: EMPTY_EMPLOYEES,
+    yearlyEmployerContributions: 0,
 
     // Сводка
     semiannualTotalTax: 0,
@@ -56,9 +81,59 @@ export default function IPSimplifiedCalculator() {
   const VOSMS_FIXED = 5950; // Фиксированная сумма
   const SIMPLIFIED_LIMIT_YEAR = 600_000 * MRP; // 600 000 МРП/год — годовой лимит дохода упрощёнки (НК РК 2026, № 214-VIII); налоговый период — полугодие
 
+  // Платежи за сотрудников. Из зарплаты ИП удерживает ИПН, ОПВ и ВОСМС, за свой
+  // счёт платит ОПВР, СО и ООСМС — ставки, базы и вычет 30 МРП те же, что в
+  // калькуляторе зарплаты (utils/salary2026). Социальный налог упрощенцы не платят
+  // ни за себя, ни за работников (п. 4 ст. 722 НК РК), поэтому sn оттуда не берём.
+  // Считаем по средней зарплате: ФОТ ÷ число сотрудников.
+  const calculateEmployees = () => {
+    const count = Math.floor(parseFloat(numberOfEmployees) || 0);
+    const payroll = parseFloat(totalEmployeeSalaries) || 0;
+
+    if (!hasEmployees || count <= 0 || payroll <= 0) {
+      return EMPTY_EMPLOYEES;
+    }
+
+    const perEmployee = calculateSalary2026({
+      gross: payroll / count,
+      isResident: true,
+      isPrimaryJob: true, // вычет 30 МРП — по основному месту работы
+      isSpecialCategory: false,
+      socialDeduction: 'none'
+    });
+
+    // Значения на одного сотрудника уже округлены до тенге, поэтому строки
+    // карточки в сумме дают ровно итог.
+    const ipn = perEmployee.incomeTax * count;
+    const opv = perEmployee.opv * count;
+    const vosms = perEmployee.vosms * count;
+    const opvr = perEmployee.opvr * count;
+    const so = perEmployee.so * count;
+    const oosms = perEmployee.oosms * count;
+    const withheld = ipn + opv + vosms;
+    const employerContributions = opvr + so + oosms;
+
+    return {
+      count,
+      payroll: Math.round(payroll),
+      averageSalary: Math.round(payroll / count),
+
+      ipn,
+      opv,
+      vosms,
+      withheld,
+
+      opvr,
+      so,
+      oosms,
+      employerContributions,
+
+      totalMonthly: withheld + employerContributions
+    };
+  };
+
   const calculateTaxes = () => {
     const income = parseFloat(semiannualIncome) || 0;
-    const socialContributions = parseFloat(paidSocialContributions) || 0;
 
     if (income <= 0) {
       return EMPTY_RESULTS;
@@ -82,11 +157,16 @@ export default function IPSimplifiedCalculator() {
     const totalMonthlySelf = opvSelf + opvrSelf + soSelf + vosmsSelf;
     const totalYearlySelf = totalMonthlySelf * 12;
 
-    // 3. Общие расчеты
-    const semiannualTotalTax = ipnTax + socialTax;
-    const yearlyTotalPayments = (semiannualTotalTax * 2) + totalYearlySelf;
+    // 3. Сотрудники (ежемесячно). В годовую нагрузку ИП идут только взносы за его
+    // счёт: удержанные ИПН, ОПВ и ВОСМС — часть зарплаты сотрудников.
+    const employees = calculateEmployees();
+    const yearlyEmployerContributions = employees.employerContributions * 12;
 
-    // 4. Проекции
+    // 4. Общие расчеты
+    const semiannualTotalTax = ipnTax + socialTax;
+    const yearlyTotalPayments = (semiannualTotalTax * 2) + totalYearlySelf + yearlyEmployerContributions;
+
+    // 5. Проекции
     const yearlyPensionContributions = (opvSelf + opvrSelf) * 12;
     const effectiveMonthlyBurden = yearlyTotalPayments / 12;
 
@@ -102,6 +182,9 @@ export default function IPSimplifiedCalculator() {
       totalMonthlySelf: Math.round(totalMonthlySelf),
       totalYearlySelf: Math.round(totalYearlySelf),
 
+      employees,
+      yearlyEmployerContributions,
+
       semiannualTotalTax: Math.round(semiannualTotalTax),
       yearlyTotalPayments: Math.round(yearlyTotalPayments),
 
@@ -115,7 +198,7 @@ export default function IPSimplifiedCalculator() {
   const results = useMemo(
     calculateTaxes,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [semiannualIncome, hasEmployees, paidSocialContributions, declaredIncome]
+    [semiannualIncome, hasEmployees, numberOfEmployees, totalEmployeeSalaries, declaredIncome]
   );
 
   const formatNumber = (num: number) => {
@@ -209,6 +292,8 @@ export default function IPSimplifiedCalculator() {
                     <input
                       type="number"
                       id="numberOfEmployees"
+                      min={1}
+                      step={1}
                       value={numberOfEmployees}
                       onChange={(e) => setNumberOfEmployees(e.target.value)}
                       placeholder={t('ip-simplified.numberOfEmployeesPlaceholder')}
@@ -223,6 +308,7 @@ export default function IPSimplifiedCalculator() {
                       <input
                         type="number"
                         id="totalEmployeeSalaries"
+                        min={0}
                         value={totalEmployeeSalaries}
                         onChange={(e) => setTotalEmployeeSalaries(e.target.value)}
                         placeholder={t('ip-simplified.totalEmployeeSalariesPlaceholder')}
@@ -233,27 +319,13 @@ export default function IPSimplifiedCalculator() {
                       </div>
                     </div>
                   </div>
+                  {(parseFloat(totalEmployeeSalaries) || 0) > 0 && Math.floor(parseFloat(numberOfEmployees) || 0) <= 0 && (
+                    <p className="col-span-2 text-xs text-amber-700">
+                      {t('ip-simplified.employees.countHint')}
+                    </p>
+                  )}
                 </div>
               )}
-
-              <div>
-                <label htmlFor="paidSocialContributions" className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('ip-simplified.paidSocialContributions')}
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    id="paidSocialContributions"
-                    value={paidSocialContributions}
-                    onChange={(e) => setPaidSocialContributions(e.target.value)}
-                    placeholder={t('ip-simplified.paidSocialContributionsPlaceholder')}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500 text-sm">₸</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -398,6 +470,76 @@ export default function IPSimplifiedCalculator() {
             </div>
           </div>
 
+          {/* За сотрудников */}
+          {results.employees.count > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-1">
+                {t('ip-simplified.employees.title')}
+              </h2>
+              <p className="text-sm text-gray-500 mb-6">
+                {t('ip-simplified.employees.summary', {
+                  n: results.employees.count,
+                  payroll: formatNumber(results.employees.payroll),
+                  average: formatNumber(results.employees.averageSalary)
+                })}
+              </p>
+
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium text-gray-900">{t('ip-simplified.employees.withheldTitle')}</h3>
+
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">{t('ip-simplified.employees.ipn')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.employees.ipn)}</span>
+                </div>
+
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">{t('ip-simplified.employees.opv')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.employees.opv)}</span>
+                </div>
+
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">{t('ip-simplified.employees.vosms')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.employees.vosms)}</span>
+                </div>
+
+                <h3 className="text-sm font-medium text-gray-900 pt-2">{t('ip-simplified.employees.employerTitle')}</h3>
+
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">{t('ip-simplified.employees.opvr')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.employees.opvr)}</span>
+                </div>
+
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">{t('ip-simplified.employees.so')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.employees.so)}</span>
+                </div>
+
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">{t('ip-simplified.employees.oosms')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.employees.oosms)}</span>
+                </div>
+
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">{t('ip-simplified.employees.socialTax')}</span>
+                  <span className="text-gray-500">{t('ip-simplified.employees.socialTaxValue')}</span>
+                </div>
+
+                <div className="flex justify-between items-center py-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg px-3">
+                  <span className="font-semibold text-gray-900">{t('ip-simplified.employees.total')}</span>
+                  <span className="text-lg font-bold text-amber-700">{formatNumber(results.employees.totalMonthly)}</span>
+                </div>
+
+                <p className="text-xs text-gray-500">{t('ip-simplified.employees.note')}</p>
+                <p className="text-xs text-gray-500">
+                  {t('ip-simplified.employees.averageNote')}{' '}
+                  <LocalizedLink to="/calculator/salary/" className="underline hover:text-gray-700">
+                    {t('ip-simplified.employees.salaryLink')} →
+                  </LocalizedLink>
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Годовая сводка */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('ip-simplified.yearlyTotals')}</h2>
@@ -412,6 +554,13 @@ export default function IPSimplifiedCalculator() {
                 <span className="text-gray-600">{t('ip-simplified.yearlyContributions')}</span>
                 <span className="font-semibold text-gray-900">{formatNumber(results.totalYearlySelf)}</span>
               </div>
+
+              {results.yearlyEmployerContributions > 0 && (
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600">{t('ip-simplified.employees.yearlyEmployer')}</span>
+                  <span className="font-semibold text-gray-900">{formatNumber(results.yearlyEmployerContributions)}</span>
+                </div>
+              )}
 
               <div className="flex justify-between items-center py-3 bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg px-3 border-t border-gray-200">
                 <span className="font-semibold text-gray-900">{t('ip-simplified.totalYearlyBurden')}</span>
@@ -470,6 +619,7 @@ export default function IPSimplifiedCalculator() {
               { name: t('ip-simplified.opvr'), value: results.opvrSelf * 12 },
               { name: t('ip-simplified.so'), value: results.soSelf * 12 },
               { name: t('ip-simplified.vosms'), value: results.vosmsSelf * 12 },
+              { name: t('ip-simplified.employees.chartLabel'), value: results.yearlyEmployerContributions },
             ].filter(item => item.value > 0)}
             title={t('ip-simplified.taxStructure')}
           />
@@ -482,15 +632,43 @@ export default function IPSimplifiedCalculator() {
                   title: t('ip-simplified.incomeAndEmployees'),
                   data: [
                     { label: t('ip-simplified.semiannualIncome'), value: `${parseFloat(semiannualIncome || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: t('ip-simplified.numberOfEmployees'), value: hasEmployees ? numberOfEmployees : '0' },
+                    { label: t('ip-simplified.numberOfEmployees'), value: results.employees.count },
+                    ...(results.employees.count > 0 ? [
+                      { label: t('ip-simplified.totalEmployeeSalaries'), value: formatNumber(results.employees.payroll) },
+                    ] : []),
                   ]
                 },
                 {
-                  title: t('ip-simplified.yearlyTotals'),
+                  // Налог 4% платится за полугодие — раньше эта секция ошибочно
+                  // называлась «Годовые итоги».
+                  title: t('ip-simplified.incomeTaxes'),
                   data: [
                     { label: t('ip-simplified.ipnTax'), value: `${results.ipnTax.toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: t('ip-simplified.socialTax'), value: `${results.socialTax.toLocaleString(NUMBER_LOCALE)} ₸` },
                     { label: t('ip-simplified.totalTax'), value: `${results.totalTax.toLocaleString(NUMBER_LOCALE)} ₸` },
+                  ]
+                },
+                ...(results.employees.count > 0 ? [{
+                  title: t('ip-simplified.employees.title'),
+                  data: [
+                    { label: t('ip-simplified.employees.ipn'), value: formatNumber(results.employees.ipn) },
+                    { label: t('ip-simplified.employees.opv'), value: formatNumber(results.employees.opv) },
+                    { label: t('ip-simplified.employees.vosms'), value: formatNumber(results.employees.vosms) },
+                    { label: t('ip-simplified.employees.opvr'), value: formatNumber(results.employees.opvr) },
+                    { label: t('ip-simplified.employees.so'), value: formatNumber(results.employees.so) },
+                    { label: t('ip-simplified.employees.oosms'), value: formatNumber(results.employees.oosms) },
+                    { label: t('ip-simplified.employees.socialTax'), value: t('ip-simplified.employees.socialTaxValue') },
+                    { label: t('ip-simplified.employees.total'), value: formatNumber(results.employees.totalMonthly) },
+                  ]
+                }] : []),
+                {
+                  title: t('ip-simplified.yearlyTotals'),
+                  data: [
+                    { label: t('ip-simplified.yearlyContributions'), value: formatNumber(results.totalYearlySelf) },
+                    ...(results.yearlyEmployerContributions > 0 ? [
+                      { label: t('ip-simplified.employees.yearlyEmployer'), value: formatNumber(results.yearlyEmployerContributions) },
+                    ] : []),
+                    { label: t('ip-simplified.totalYearlyBurden'), value: formatNumber(results.yearlyTotalPayments) },
                   ]
                 }
               ],
