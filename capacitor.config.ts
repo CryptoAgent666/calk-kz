@@ -27,6 +27,13 @@ const config: CapacitorConfig = {
       autoUpdate: false,
       // При обновлении самого приложения из стора — сбросить на свежий вшитый бандл.
       resetWhenUpdate: true,
+      // Секунды. На iOS это потолок ВСЕГО скачивания zip, а не только ответа:
+      // Capgo ждёт max(responseTimeout + 5, 10) с — по умолчанию 25 с, а бандл
+      // ~12 МБ на медленной сети качается дольше, и OTA молча не применялся.
+      // Читается нативно из вшитого capacitor.config.json — действует только
+      // с нового бинаря. Манифест сюда не относится: его читает CapacitorHttp
+      // со своими 10 с (src/liveUpdates.ts).
+      responseTimeout: 120,
     },
     SplashScreen: {
       launchAutoHide: true,
