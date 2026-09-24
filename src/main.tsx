@@ -110,6 +110,16 @@ function routeCalculatorId(): string | null {
   return match ? match[1] : null;
 }
 
+/**
+ * Клиентские страницы без пререндера (история, избранное, напоминания): сервер
+ * отдаёт на них index.html — статику ГЛАВНОЙ, и гидратировать её другим
+ * маршрутом нельзя (React выбросил бы её с каскадом #418). Рисуем с нуля.
+ */
+function isClientOnlyRoute(): boolean {
+  const pathname = stripLocalePrefix(window.location.pathname).replace(/\/+$/, '');
+  return /^\/(?:history|favorites|reminders)$/.test(pathname);
+}
+
 // Сигнал app:hydrated для AdSense-лоадера уходит из App.tsx (useEffect после
 // первого commit) — здесь его давать рано: hydrateRoot возвращается ДО конца
 // конкурентной гидратации.
@@ -118,7 +128,7 @@ function routeCalculatorId(): string | null {
 // appReadyTimeout (10 с) на слабом устройстве, Capgo откатит бандл.
 void initLiveUpdates();
 
-if (container.hasChildNodes() && !VOLATILE_IDS.has(routeCalculatorId() ?? '')) {
+if (container.hasChildNodes() && !VOLATILE_IDS.has(routeCalculatorId() ?? '') && !isClientOnlyRoute()) {
   void primeRouteChunk().then(() => hydrateRoot(container, app));
 } else {
   // Чанк маршрута — тоже до первого рендера: иначе первый коммит createRoot

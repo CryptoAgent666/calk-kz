@@ -7,10 +7,11 @@ import { emitIap } from '../../telemetry';
 import {
   isAdFree,
   onAdFreeChange,
-  buyRemoveAds,
   purchasesAvailable,
 } from '../../purchases';
 import { useRemoveAdsPrice } from '../../hooks/useRemoveAdsPrice';
+import { useMounted } from '../../hooks/useMounted';
+import { openRemoveAdsOffer } from '../../utils/removeAdsOffer';
 
 const DISMISS_KEY = 'calk_removeads_bar_dismissed';
 const VARIANT_KEY = 'calk_removeads_bar_variant';
@@ -40,6 +41,10 @@ function pickBarVariant(): 'price' | 'coffee' {
  * отступом от низа (высота баннера + safe-area). Ненавязчивая, с крестиком:
  * скрывается на текущую сессию (sessionStorage).
  *
+ * Тап открывает экран предложения (RemoveAdsOffer), а не сразу окно оплаты.
+ * Цена видна в обоих вариантах текста: «кофейный» без цены собирал тапы
+ * «узнать, сколько стоит», которые тут же отменялись в окне стора.
+ *
  * Рендерится ТОЛЬКО в приложении и пока реклама не отключена.
  */
 export function RemoveAdsBar() {
@@ -48,23 +53,28 @@ export function RemoveAdsBar() {
   const [dismissed, setDismissed] = useState(() => {
     try { return sessionStorage.getItem(DISMISS_KEY) === '1'; } catch { return false; }
   });
-  const [busy, setBusy] = useState(false);
   const [variant] = useState(pickBarVariant);
   const priceState = useRemoveAdsPrice();
+  // Статика пререндера снята как сайт (плашки нет) — в приложении первый
+  // рендер обязан с ней совпасть, поэтому плашка появляется после маунта.
+  const mounted = useMounted();
 
   useEffect(() => onAdFreeChange(setAdFree), []);
 
   // Воронка: один показ оффера при первом появлении плашки в сессии.
   const shownRef = useRef(false);
   useEffect(() => {
-    if (shownRef.current) return;
+    if (shownRef.current || !mounted) return;
     if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return;
-    if (priceState.status === 'unavailable') return; // покупать нечего — оффер не показан
+    // Показ засчитываем, когда стор подтвердил продукт: на 'loading' плашка
+    // мелькает с запасной ценой и на устройстве без биллинга тут же пропадает —
+    // такой «показ» раздувал знаменатель воронки.
+    if (priceState.status !== 'ready') return;
     shownRef.current = true;
-    emitIap('paywall_shown', { platform: Capacitor.getPlatform() });
-  }, [adFree, dismissed, priceState.status]);
+    emitIap('paywall_shown', { platform: Capacitor.getPlatform(), placement: 'bar', variant });
+  }, [mounted, adFree, dismissed, priceState.status, variant]);
 
-  if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return null;
+  if (!mounted || isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return null;
   // Стор ничего не отдал → плашку не рисуем совсем (тап вёл бы в тупик).
   if (priceState.status === 'unavailable') return null;
 
@@ -72,13 +82,9 @@ export function RemoveAdsBar() {
     try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* ignore */ }
     setDismissed(true);
   };
-  const buy = async () => {
-    setBusy(true);
-    try { await buyRemoveAds(); } finally { setBusy(false); }
-  };
 
   const label = variant === 'coffee'
-    ? t('removeAds.barCoffee')
+    ? t('removeAds.barCoffee', { price: priceState.price })
     : `${t('removeAds.remove')} — ${priceState.price}`;
 
   return (
@@ -93,12 +99,11 @@ export function RemoveAdsBar() {
       aria-label={t('removeAds.remove')}
     >
       <button
-        onClick={buy}
-        disabled={busy}
-        className="flex flex-1 items-center gap-2 text-sm font-medium disabled:opacity-70"
+        onClick={() => openRemoveAdsOffer('bar', variant)}
+        className="flex flex-1 items-center gap-2 text-left text-sm font-medium"
       >
         {variant === 'price' && <Sparkles className="h-4 w-4 flex-shrink-0" />}
-        <span>{busy ? t('removeAds.processing') : label}</span>
+        <span>{label}</span>
       </button>
       <button onClick={dismiss} aria-label={t('removeAds.hide')} className="p-1 opacity-80 hover:opacity-100">
         <X className="h-4 w-4" />

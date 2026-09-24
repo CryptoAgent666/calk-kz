@@ -46,7 +46,7 @@ export function RemoveAdsButton() {
 
   const buy = async () => {
     setBusy('buy');
-    try { await buyRemoveAds(); } finally { setBusy(null); }
+    try { await buyRemoveAds('menu'); } finally { setBusy(null); }
   };
   const restore = async () => {
     setBusy('restore');

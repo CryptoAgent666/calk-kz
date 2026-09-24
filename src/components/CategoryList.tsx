@@ -3,7 +3,9 @@ import { CalculatorCategory } from '../types/calculator';
 import type { SearchHit } from '../utils/search';
 import CategoryCard from './CategoryCard';
 import RecentCalculators from './RecentCalculators';
+import FavoriteCalculators from './FavoriteCalculators';
 import PopularCalculators from './PopularCalculators';
+import { useMounted } from '../hooks/useMounted';
 import SearchResults from './SearchResults';
 import LocalizedLink from './LocalizedLink';
 import { Search, Calculator as CalculatorIcon } from 'lucide-react';
@@ -28,6 +30,10 @@ export default function CategoryList({
   searchTerm
 }: CategoryListProps) {
   const { t } = useTranslation('common');
+  // Личные блоки (избранное, недавние) — из localStorage, их нет в статике
+  // пререндера: до маунта не рисуем, иначе у вернувшегося пользователя первый
+  // рендер главной не совпадал со статикой (гидратация падала целиком).
+  const mounted = useMounted();
   const isSearching = searchTerm.trim().length > 0;
   const hasResults = searchHits.length > 0;
   // Без поиска и при пустой выдаче показываем популярные и все категории
@@ -87,8 +93,11 @@ export default function CategoryList({
 
       {showCatalog && <PopularCalculators onCalculatorClick={onRecentCalculatorClick} />}
 
+      {/* Избранное (только если не поиск и что-то отмечено звёздочкой) */}
+      {mounted && !isSearching && <FavoriteCalculators onCalculatorClick={onRecentCalculatorClick} />}
+
       {/* Recent Calculators (только если не поиск и есть недавние) */}
-      {!isSearching && recentCalculators.length > 0 && (
+      {mounted && !isSearching && recentCalculators.length > 0 && (
         <div className="mb-12">
           <RecentCalculators
             recentCalculators={recentCalculators}

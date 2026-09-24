@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import LocalizedLink from './LocalizedLink';
 import { stripLocalePrefix } from '../utils/localizedRouting';
-import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info, History } from 'lucide-react';
+import { Calculator, Menu, X, Home, Search, ChevronRight, FileText, Phone, Shield, Info, History, Star, Bell } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SearchBar from './SearchBar';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -10,9 +10,12 @@ import { OfflineIndicator } from './OfflineIndicator';
 import { RemoveAdsButton } from './ui/RemoveAdsButton';
 import { RemoveAdsBar } from './ui/RemoveAdsBar';
 import { RemoveAdsToast } from './ui/RemoveAdsToast';
+import { RemoveAdsOffer } from './ui/RemoveAdsOffer';
 import { RateAppToast } from './ui/RateAppToast';
 import { AppInstallPrompt } from './ui/AppInstallPrompt';
 import { purchasesAvailable } from '../purchases';
+import { remindersAvailable } from '../utils/reminders';
+import { useMounted } from '../hooks/useMounted';
 import { calculatorCategories } from '../data/calculators';
 import { getIcon } from '../utils/iconMap';
 import { pluralize } from '../utils/pluralize';
@@ -36,6 +39,9 @@ export default function Layout({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { t, i18n } = useTranslation(['common', 'categories']);
+  // Нативные пункты меню — только после маунта: в статике пререндера (снятой
+  // как сайт) их нет, первый рендер в приложении обязан с ней совпасть.
+  const mounted = useMounted();
   
   // Определяем текущую страницу на основе URL.
   // Языковой префикс (/__kk/...) снимаем: без этого ЛЮБАЯ казахская страница
@@ -60,6 +66,8 @@ export default function Layout({
           место 2 — плашка над AdMob-баннером, место 3 — тост после интерстишелов */}
       <RemoveAdsBar />
       <RemoveAdsToast />
+      {/* Экран предложения — открывается из плашки и тоста (не сразу окно оплаты) */}
+      <RemoveAdsOffer />
       {/* Ненавязчивое «оцените приложение» (native-only, in-app review iOS/Android) */}
       <RateAppToast />
       {/* Предложение скачать приложение (web-only, мобильный браузер iOS/Android) */}
@@ -104,6 +112,26 @@ export default function Layout({
                 <Home className="w-4 h-4" />
                 <span>{t('common:navigation.home')}</span>
               </LocalizedLink>
+              {/* Избранное и напоминания: на широком экране бокового меню нет —
+                  без этих иконок до страниц не добраться (планшеты в приложении тоже). */}
+              <LocalizedLink
+                to="/favorites/"
+                aria-label={t('common:favorites.title')}
+                title={t('common:favorites.title')}
+                className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              >
+                <Star className="w-5 h-5" />
+              </LocalizedLink>
+              {mounted && remindersAvailable() && (
+                <LocalizedLink
+                  to="/reminders/"
+                  aria-label={t('common:reminders.title')}
+                  title={t('common:reminders.title')}
+                  className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <Bell className="w-5 h-5" />
+                </LocalizedLink>
+              )}
               <LanguageSwitcher />
             </nav>
 
@@ -188,7 +216,7 @@ export default function Layout({
               <div className="flex-1 overflow-y-auto">
                 {/* «Убрать рекламу» в меню (место 1 из 3). Гейт по доступности нативного
                     модуля покупок: скрыто на вебе И в старых бинарях без RevenueCat (OTA). */}
-                {purchasesAvailable() && (
+                {mounted && purchasesAvailable() && (
                   <div className="p-4 border-b border-gray-100">
                     <RemoveAdsButton />
                   </div>
@@ -222,6 +250,28 @@ export default function Layout({
                     <span className="font-medium">{t('common:history.title')}</span>
                     <ChevronRight className="w-4 h-4 ml-auto" />
                   </LocalizedLink>
+
+                  <LocalizedLink
+                    to="/favorites/"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                  >
+                    <Star className="w-5 h-5" />
+                    <span className="font-medium">{t('common:favorites.title')}</span>
+                    <ChevronRight className="w-4 h-4 ml-auto" />
+                  </LocalizedLink>
+
+                  {mounted && remindersAvailable() && (
+                    <LocalizedLink
+                      to="/reminders/"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                    >
+                      <Bell className="w-5 h-5" />
+                      <span className="font-medium">{t('common:reminders.title')}</span>
+                      <ChevronRight className="w-4 h-4 ml-auto" />
+                    </LocalizedLink>
+                  )}
                 </div>
 
                 {/* Categories */}

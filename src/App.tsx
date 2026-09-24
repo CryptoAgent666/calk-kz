@@ -3,6 +3,9 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { maybeShowInterstitial } from './ads';
 import { trackCalculatorVisitForReview } from './appReview';
 const HistoryPage = lazy(() => import('./components/HistoryPage'));
+const FavoritesPage = lazy(() => import('./components/FavoritesPage'));
+const RemindersPage = lazy(() => import('./components/RemindersPage'));
+import { listenReminderTaps, remindersAvailable, syncReminders } from './utils/reminders';
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useLocalizedNavigate } from './hooks/useLocalizedNavigate';
@@ -116,6 +119,28 @@ function App() {
     document.documentElement.lang = targetLang;
   }, [location.pathname, location.search, i18n]);
 
+  // Напоминания (только приложение): при старте и смене языка пересобираем
+  // расписание (тексты уведомлений — на языке интерфейса), тап по уведомлению
+  // открывает нужный калькулятор. navigate локализует путь по текущему языку.
+  const navigateRef = useRef(navigate);
+  navigateRef.current = navigate;
+  useEffect(() => {
+    if (!remindersAvailable()) return;
+    void syncReminders();
+    const onLanguage = () => { void syncReminders(); };
+    i18n.on('languageChanged', onLanguage);
+    let stop: (() => void) | undefined;
+    let cancelled = false;
+    void listenReminderTaps((path) => navigateRef.current(path)).then((off) => {
+      if (cancelled) off(); else stop = off;
+    });
+    return () => {
+      cancelled = true;
+      i18n.off('languageChanged', onLanguage);
+      stop?.();
+    };
+  }, [i18n]);
+
   const handleCategoryClick = (categoryId: string) => {
     navigate(`/category/${categoryId}/`);
   };
@@ -177,6 +202,16 @@ function App() {
         <Route path="/history/" element={<HistoryPage />} />
         <Route path="/__kk/history" element={<HistoryPage />} />
         <Route path="/__kk/history/" element={<HistoryPage />} />
+
+        {/* Избранное и напоминания — тоже клиентские страницы без пререндера */}
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/favorites/" element={<FavoritesPage />} />
+        <Route path="/__kk/favorites" element={<FavoritesPage />} />
+        <Route path="/__kk/favorites/" element={<FavoritesPage />} />
+        <Route path="/reminders" element={<RemindersPage />} />
+        <Route path="/reminders/" element={<RemindersPage />} />
+        <Route path="/__kk/reminders" element={<RemindersPage />} />
+        <Route path="/__kk/reminders/" element={<RemindersPage />} />
 
         {/* RU routes (default) */}
         <Route

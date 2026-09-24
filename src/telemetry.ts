@@ -14,17 +14,26 @@ const APP_ID = 'calk.kz'; // ← calk.nz / calk.uz в своих репо
 
 export type IapFunnelEvent =
   | 'paywall_shown'
+  | 'offer_shown'
   | 'purchase_tapped'
   | 'purchase_cancelled'
   | 'purchase_failed'
   | 'purchase_unavailable';
 
+/** Где пользователь увидел оффер или нажал «купить»:
+ *  bar — синяя плашка над баннером, toast — предложение после интерстишела,
+ *  menu — блок в боковом меню, offer — экран предложения (открывается из bar/toast). */
+export type IapPlacement = 'bar' | 'toast' | 'menu' | 'offer';
+
 /** Доп. поля события. Сервер принимает только allowlist (platform, store,
- *  product_id, code), каждое режется до 64 символов — длинное сообщение об
- *  ошибке ужимаем до кода сами. */
+ *  product_id, code, placement, variant, bundle), каждое режется до 64 символов —
+ *  длинное сообщение об ошибке ужимаем до кода сами. */
 export interface IapEventDetail {
   platform?: string;
   code?: string;
+  placement?: IapPlacement;
+  /** Вариант текста плашки (price / coffee) — чтобы сравнивать, что продаёт. */
+  variant?: string;
 }
 
 function uuid(): string {
@@ -37,7 +46,9 @@ function uuid(): string {
 /** Отправить один шаг воронки. Никогда не бросает и не блокирует UI покупки.
  *  16.08.2026: 5/5 тапов ушли в purchase_failed в ту же секунду, а по голому
  *  типу события причину было не установить (гадали между старым OTA, девайсом
- *  без Play-сервисов и несконфигуренным SDK). Теперь шлём platform и code. */
+ *  без Play-сервисов и несконфигуренным SDK). Теперь шлём platform и code, а с
+ *  24.09.2026 ещё место показа, вариант текста и версию бандла (по ней видно,
+ *  дошёл ли OTA до устройств). */
 export function emitIap(type: IapFunnelEvent, detail?: IapEventDetail): void {
   // Во время съёмки скриншотов сторов промо-UI скрыт — не засоряем воронку.
   if (isScreenshotMode()) return;
@@ -46,9 +57,11 @@ export function emitIap(type: IapFunnelEvent, detail?: IapEventDetail): void {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ event: {
-        id: uuid(), type, app: APP_ID, ts: Date.now(),
+        id: uuid(), type, app: APP_ID, ts: Date.now(), bundle: __BUILD_VERSION__,
         ...(detail?.platform ? { platform: detail.platform } : {}),
         ...(detail?.code ? { code: String(detail.code).slice(0, 64) } : {}),
+        ...(detail?.placement ? { placement: detail.placement } : {}),
+        ...(detail?.variant ? { variant: detail.variant } : {}),
       } }),
       keepalive: true,
     }).catch(() => { /* никогда не мешать UI покупки */ });

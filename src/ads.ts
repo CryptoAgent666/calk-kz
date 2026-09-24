@@ -64,7 +64,8 @@ let interstitialReady = false;
 let tempUntilMem = 0;
 let adsReturnTimer: ReturnType<typeof setTimeout> | undefined;
 let navCount = 0;
-let interstitialShownCount = 0;
+// Предложение «убрать рекламу» уже показано в этой сессии (после первого интерстишела).
+let suggestedThisSession = false;
 
 function platformIds() {
   const p = Capacitor.getPlatform();
@@ -196,7 +197,10 @@ export async function initAds(): Promise<void> {
   } catch {
     return;
   }
-  const { AdMob, AdmobConsentStatus, BannerAdPosition, BannerAdSize, BannerAdPluginEvents } = mod;
+  const {
+    AdMob, AdmobConsentStatus, BannerAdPosition, BannerAdSize, BannerAdPluginEvents,
+    InterstitialAdPluginEvents,
+  } = mod;
 
   try {
     await AdMob.initialize({ initializeForTesting: IS_TESTING });
@@ -230,6 +234,20 @@ export async function initAds(): Promise<void> {
     // Фактическая высота баннера (приходит после загрузки и при поворотах).
     await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (info) => {
       setBannerHeightVar(info.height);
+    });
+
+    // Предложить убрать рекламу — когда первый за сессию интерстишал ЗАКРЫЛИ:
+    // реклама только что помешала, и пользователь снова видит приложение.
+    // Раньше сигнал уходил сразу после showInterstitial(), а он резолвится в
+    // момент ПОКАЗА ролика (AdInterstitialExecutor.present → resolve): тост
+    // рисовался под полноэкранной рекламой и гас через 6 с незамеченным.
+    // И ждал 3-го интерстишела — при сессии в 1–2 минуты это почти никогда.
+    // Частоту держит сам тост (не чаще раза в сутки). Строка события — та же,
+    // что SUGGEST_REMOVE_ADS_EVENT в RemoveAdsToast.
+    await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+      if (suggestedThisSession) return;
+      suggestedThisSession = true;
+      window.dispatchEvent(new CustomEvent('calk:suggest-remove-ads'));
     });
 
     // Баннер снизу (адаптивный).
@@ -270,13 +288,7 @@ export async function maybeShowInterstitial(): Promise<void> {
     await AdMob.showInterstitial();
     localStorage.setItem('ads_last_interstitial', String(Date.now()));
     interstitialReady = false;
-
-    // После каждого 3-го полноэкранного интерстишела — ненавязчиво предложить
-    // убрать рекламу (в момент, когда она только что помешала). RemoveAdsToast слушает.
-    interstitialShownCount += 1;
-    if (interstitialShownCount % 3 === 0) {
-      window.dispatchEvent(new CustomEvent('calk:suggest-remove-ads'));
-    }
+    // Предложение убрать рекламу — по событию Dismissed (слушатель в initAds).
 
     void prepareInterstitial(); // подготовить следующий
   } catch {

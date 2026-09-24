@@ -1,5 +1,5 @@
 import { Capacitor } from '@capacitor/core';
-import { emitIap } from './telemetry';
+import { emitIap, type IapPlacement } from './telemetry';
 
 /**
  * RevenueCat: разовая покупка «Убрать рекламу» (non-consumable / durable one-time).
@@ -199,31 +199,32 @@ export async function getRemoveAdsPrice(): Promise<string | null> {
  */
 export type BuyResult = 'ok' | 'cancelled' | 'unavailable' | 'failed';
 
-/** Купить «Убрать рекламу». */
-export async function buyRemoveAds(): Promise<BuyResult> {
+/** Купить «Убрать рекламу». `placement` — откуда нажали (экран предложения или
+ *  меню), `variant` — текст плашки, с которой пришли: всё уходит в воронку. */
+export async function buyRemoveAds(placement: IapPlacement, variant?: string): Promise<BuyResult> {
   if (!purchasesAvailable()) return 'unavailable';
   const platform = Capacitor.getPlatform();
-  emitIap('purchase_tapped', { platform });
+  emitIap('purchase_tapped', { platform, placement, variant });
   try {
     const { Purchases } = await loadSdk();
     const product = await fetchRemoveAdsProduct(Purchases);
     if (!product) {
       // Тап был, а покупать нечего — без события этот путь в воронке невидим.
       logStoreIssue('стор не отдал продукт (тап)');
-      emitIap('purchase_unavailable', { platform, code: 'product_not_found' });
+      emitIap('purchase_unavailable', { platform, placement, variant, code: 'product_not_found' });
       return 'unavailable';
     }
     const { customerInfo } = await Purchases.purchaseStoreProduct({ product });
     const ok = hasEntitlement(customerInfo);
     setAdFree(ok);
-    if (!ok) emitIap('purchase_failed', { platform, code: 'no_entitlement_after_purchase' });
+    if (!ok) emitIap('purchase_failed', { platform, placement, variant, code: 'no_entitlement_after_purchase' });
     return ok ? 'ok' : 'failed';
   } catch (e) {
     // Отмена пользователем — не ошибка; для воронки различаем отмену и сбой.
     const cancelled = isUserCancelled(e);
     if (!cancelled) logStoreIssue('покупка сорвалась', e);
     emitIap(cancelled ? 'purchase_cancelled' : 'purchase_failed',
-      { platform, code: cancelled ? undefined : rcErrorCode(e) });
+      { platform, placement, variant, code: cancelled ? undefined : rcErrorCode(e) });
     return cancelled ? 'cancelled' : 'failed';
   }
 }

@@ -7,27 +7,42 @@ import { emitIap } from '../../telemetry';
 import {
   isAdFree,
   onAdFreeChange,
-  buyRemoveAds,
   purchasesAvailable,
 } from '../../purchases';
 import { useRemoveAdsPrice } from '../../hooks/useRemoveAdsPrice';
+import { openRemoveAdsOffer } from '../../utils/removeAdsOffer';
 
-/** Событие «предложить убрать рекламу» — шлётся из ads.ts после каждого 3-го интерстишела. */
+/** Событие «предложить убрать рекламу» — шлётся из ads.ts, когда закрыли первый за сессию интерстишал. */
 export const SUGGEST_REMOVE_ADS_EVENT = 'calk:suggest-remove-ads';
 
-const AUTO_HIDE_MS = 6000;
+const AUTO_HIDE_MS = 8000;
+// Не чаще раза в сутки: регулярного пользователя — главного покупателя — не донимаем.
+const COOLDOWN_MS = 24 * 3600 * 1000;
+const LAST_SHOWN_KEY = 'calk_removeads_toast_ts';
+
+function cooledDown(): boolean {
+  try {
+    return Date.now() - Number(localStorage.getItem(LAST_SHOWN_KEY) || '0') >= COOLDOWN_MS;
+  } catch {
+    return true;
+  }
+}
+
+function markShown(): void {
+  try { localStorage.setItem(LAST_SHOWN_KEY, String(Date.now())); } catch { /* ignore */ }
+}
 
 /**
  * Маленький тост «Надоела реклама? Убрать за …» СВЕРХУ экрана (место 3 из 3).
- * Появляется после каждого 3-го полноэкранного интерстишела — в момент, когда
- * реклама только что помешала (лучшая конверсия), но не чаще и ненавязчиво.
- * Автоскрытие через 6 c. Рендерится только в приложении и пока есть реклама.
+ * Появляется, когда пользователь закрыл полноэкранную рекламу, — в момент,
+ * когда она только что помешала, — не чаще раза в сутки. Тап открывает экран
+ * предложения. Автоскрытие через 8 с. Рендерится только в приложении и пока
+ * есть реклама.
  */
 export function RemoveAdsToast() {
   const { t } = useTranslation('common');
   const [adFree, setAdFree] = useState(isAdFree());
   const [visible, setVisible] = useState(false);
-  const [busy, setBusy] = useState(false);
   const priceState = useRemoveAdsPrice();
 
   useEffect(() => onAdFreeChange(setAdFree), []);
@@ -40,10 +55,12 @@ export function RemoveAdsToast() {
     if (!purchasesAvailable()) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const onSuggest = () => {
-      if (isAdFree()) return;
+      if (isScreenshotMode() || isAdFree()) return;
       if (priceStatusRef.current === 'unavailable') return; // стор не отдал продукт
+      if (!cooledDown()) return;
+      markShown();
       setVisible(true);
-      emitIap('paywall_shown', { platform: Capacitor.getPlatform() }); // показ оффера (место 3 — тост после интерстишела)
+      emitIap('paywall_shown', { platform: Capacitor.getPlatform(), placement: 'toast' });
       clearTimeout(timer);
       timer = setTimeout(() => setVisible(false), AUTO_HIDE_MS);
     };
@@ -57,16 +74,9 @@ export function RemoveAdsToast() {
   if (isScreenshotMode() || !purchasesAvailable() || adFree || !visible) return null;
   if (priceState.status === 'unavailable') return null;
 
-  const buy = async () => {
-    setBusy(true);
-    try {
-      const result = await buyRemoveAds();
-      // Закрываем и при успехе, и когда покупать нечего: тост с мёртвой кнопкой
-      // висеть не должен. Отмену пользователя оставляем на экране.
-      if (result === 'ok' || result === 'unavailable') setVisible(false);
-    } finally {
-      setBusy(false);
-    }
+  const openOffer = () => {
+    setVisible(false);
+    openRemoveAdsOffer('toast');
   };
 
   return (
@@ -79,8 +89,8 @@ export function RemoveAdsToast() {
         <Sparkles className="h-5 w-5 flex-shrink-0 text-amber-400" />
         <div className="flex-1 text-sm">
           <div className="font-semibold">{t('removeAds.tired')}</div>
-          <button onClick={buy} disabled={busy} className="text-blue-300 underline disabled:opacity-70">
-            {busy ? t('removeAds.processing') : t('removeAds.removeForPrice', { price: priceState.price })}
+          <button onClick={openOffer} className="text-left text-blue-300 underline">
+            {t('removeAds.removeForPrice', { price: priceState.price })}
           </button>
         </div>
         <button onClick={() => setVisible(false)} aria-label={t('removeAds.close')} className="p-1 opacity-70 hover:opacity-100">

@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -5,6 +6,19 @@ import react from '@vitejs/plugin-react';
 // сборки, а не new Date() визита: статика пререндера и первый клиентский рендер
 // обязаны совпасть в любой день (иначе 1-го числа — #425 на всех страницах).
 const BUILD_DATE = new Date(Date.now() + 5 * 3600e3).toISOString().slice(0, 10);
+
+// Версия бандла — та же, что в build-version.json и OTA-манифесте (пишет
+// scripts/generate-build-version.mjs перед vite build). Уходит в телеметрию:
+// по событиям видно, какой бандл реально крутится у пользователей, то есть
+// применился ли OTA (в 16.08–13.09 он месяц не применялся, и это было не видно).
+function readBuildVersion(): string {
+  try {
+    const raw = fs.readFileSync(new URL('./public/build-version.json', import.meta.url), 'utf8');
+    return String(JSON.parse(raw).version || 'dev');
+  } catch {
+    return 'dev';
+  }
+}
 
 // Без этих переменных сборка проходит, но бандл молча ломается: заглушки
 // RevenueCat (покупки в приложениях), нет Supabase (конвертер валют падает).
@@ -46,6 +60,7 @@ export default defineConfig(({ command, mode }) => {
     plugins: [react()],
     define: {
       __BUILD_DATE__: JSON.stringify(BUILD_DATE),
+      __BUILD_VERSION__: JSON.stringify(readBuildVersion()),
     },
     build: {
       rollupOptions: {

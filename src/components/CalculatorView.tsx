@@ -8,6 +8,8 @@ import RelatedCalculators from './RelatedCalculators';
 import Breadcrumbs from './Breadcrumbs';
 import NotFoundPage from './NotFoundPage';
 import { DataFreshnessBadge } from './ui/DataFreshnessBadge';
+import { FavoriteButton } from './ui/FavoriteButton';
+import { ReminderButton } from './ui/ReminderButton';
 
 interface CalculatorViewProps {
   calculatorId: string;
@@ -76,6 +78,14 @@ export default function CalculatorView({ calculatorId, onBackClick, onCalculator
           />
         )}
 
+        {/* Поводы вернуться: избранное (сайт и приложение) и ежемесячное
+            напоминание (только приложение, появляется после маунта). Отдельной
+            строкой: рядом с «Назад» на узком экране кнопки переносились бы уже
+            после загрузки и сдвигали страницу. */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <FavoriteButton calculatorId={calculator.id} />
+          <ReminderButton calculatorId={calculator.id} />
+        </div>
       </div>
 
       {/* Бейдж актуальности данных (E-E-A-T) — на всех калькуляторах разом */}
