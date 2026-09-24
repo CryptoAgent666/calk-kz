@@ -31,7 +31,7 @@ const LAST_UPDATED: Record<string, string> = {
   'bad-habits-cost': '2026-07-11',
   'mortgage-compare': '2026-07-11',
   'mrp-converter': '2026-07-11',
-  'house-heating': '2026-07-11',
+  'house-heating': '2026-09-25', // пример 150 м²: 7,7 т угля
   'ip-payments': '2026-07-11',
   'dividend-tax': '2026-07-10',
   'self-employed': '2026-07-10',
@@ -54,7 +54,7 @@ const LAST_UPDATED: Record<string, string> = {
   'car-transfer': '2026-09-24', // ОГПО: диапазон по двум территориальным коэффициентам (15–54 тыс. ₸)
   'fuel-cost': '2026-05-01',     // обновили цены КМГ
   'traffic-fines': '2026-01-01',
-  'fancy-plates': '2026-01-01',
+  'fancy-plates': '2026-09-25', // быстрый ответ по прейскуранту 15–285 МРП
   'tire-size': '2026-04-19',
 
   // === ФИНАНСЫ ===
@@ -63,7 +63,7 @@ const LAST_UPDATED: Record<string, string> = {
   'mortgage-specialized': '2026-04-19',
   'rent-vs-buy': '2026-04-19',
   'compound-interest': '2026-04-19',
-  'refinancing': '2026-04-19',
+  'refinancing': '2026-09-25', // примеры пересчитаны по аннуитету
   'microloan': '2026-04-19',
   'early-repayment': '2026-04-19',
   'otbasy-bank': '2026-05-01',
@@ -105,7 +105,7 @@ const LAST_UPDATED: Record<string, string> = {
   'property-division': '2026-09-24', // госпошлина 1%, не более 10 000 МРП, без минимума
   'statute-limitations': '2026-04-19',
   'bankruptcy': '2026-04-19',
-  'moral-damage': '2026-09-13',
+  'moral-damage': '2026-09-25', // гонорар юриста 100–300 тыс. ₸
 
   // === СТРОИТЕЛЬСТВО ===
   'concrete-volume': '2026-04-19',
@@ -134,7 +134,7 @@ const LAST_UPDATED: Record<string, string> = {
   'qr-code-generator': '2026-04-19',
 
   // === РЕЛИГИОЗНЫЕ ===
-  'zakat': '2026-04-19',
+  'zakat': '2026-09-25', // примеры: нисаб 511 700 ₸ по текущей цене серебра
   'kurban-sacrifice': '2026-04-19',
   'ramadan-sadaqah': '2026-05-22',
   'islamic-inheritance': '2026-04-19',
@@ -156,7 +156,7 @@ const LAST_UPDATED: Record<string, string> = {
   'water-intake': '2026-04-19',
 
   // === ОБРАЗОВАНИЕ ===
-  'ent-score': '2026-04-19',
+  'ent-score': '2026-09-25', // пороги грантового конкурса 2026
   'gpa': '2026-04-19',
 
   // === СЕЛЬСКОЕ ХОЗЯЙСТВО ===

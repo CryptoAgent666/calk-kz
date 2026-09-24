@@ -356,12 +356,12 @@ export default function PenaltyCalculator() {
           <div className="border border-red-200 rounded-lg p-4">
             <h3 className="font-semibold text-red-900 mb-3">{t('penalty.taxDebtExample')}</h3>
             <div className="text-sm text-gray-700 space-y-2">
-              <div><strong>{t('penalty.taxDebtIPNLabel')}</strong> 100,000 ₸</div>
+              <div><strong>{t('penalty.taxDebtIPNLabel')}</strong> 100 000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 30 {t('penalty.days')}</div>
               <div><strong>{t('penalty.rateLabel')}</strong> 0.0557{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 100,000 × 0.0557% × 30 = 1,671 ₸</div>
-                <div><strong>{t('penalty.toPayLabel')}</strong> 101,671 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 100 000 × 0.0557% × 30 = 1 671 ₸</div>
+                <div><strong>{t('penalty.toPayLabel')}</strong> 101 671 ₸</div>
               </div>
             </div>
           </div>
@@ -369,12 +369,12 @@ export default function PenaltyCalculator() {
           <div className="border border-blue-200 rounded-lg p-4">
             <h3 className="font-semibold text-blue-900 mb-3">{t('penalty.utilitiesExample')}</h3>
             <div className="text-sm text-gray-700 space-y-2">
-              <div><strong>{t('penalty.electricityDebt')}</strong> 25,000 ₸</div>
+              <div><strong>{t('penalty.electricityDebt')}</strong> 25 000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 45 {t('penalty.days')}</div>
               <div><strong>{t('penalty.rateLabel')}</strong> 0.05{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 25,000 × 0.05% × 45 = 562 ₸</div>
-                <div><strong>{t('penalty.toPayLabel')}</strong> 25,562 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 25 000 × 0.05% × 45 = 562 ₸</div>
+                <div><strong>{t('penalty.toPayLabel')}</strong> 25 562 ₸</div>
               </div>
             </div>
           </div>
@@ -382,12 +382,12 @@ export default function PenaltyCalculator() {
           <div className="border border-green-200 rounded-lg p-4">
             <h3 className="font-semibold text-green-900 mb-3">{t('penalty.contractExample')}</h3>
             <div className="text-sm text-gray-700 space-y-2">
-              <div><strong>{t('penalty.contractDebt')}</strong> 500,000 ₸</div>
+              <div><strong>{t('penalty.contractDebt')}</strong> 500 000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 15 {t('penalty.days')}</div>
               <div><strong>{t('penalty.rateLabel')}</strong> 0.1{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 500,000 × 0.1% × 15 = 7,500 ₸</div>
-                <div><strong>{t('penalty.toPayLabel')}</strong> 507,500 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 500 000 × 0.1% × 15 = 7 500 ₸</div>
+                <div><strong>{t('penalty.toPayLabel')}</strong> 507 500 ₸</div>
               </div>
             </div>
           </div>
@@ -582,7 +582,7 @@ export default function PenaltyCalculator() {
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'ҚР Азаматтық кодексі, 353-бап' : 'Гражданский кодекс РК, ст. 353', url: 'https://online.zakon.kz/document/?doc_id=1006061' },
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 117-бап' : 'Налоговый кодекс РК, ст. 117', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 5-бап 2) тармақша және 85-бап — өсімпұл' : 'НК РК, ст. 5 пп. 2 и ст. 85 — пени', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
         ]}
       />
 

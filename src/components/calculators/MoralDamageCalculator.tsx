@@ -94,7 +94,10 @@ export default function MoralDamageCalculator() {
     // Гонорар юриста — обычно 10-20% от суммы удовлетворённого иска или фикс
     // Верх не ниже фиксированного минимума: у малых категорий 20 % суммы меньше 100 000 ₸.
     const lawyerFeeMin = 100000;
-    const lawyerFeeMax = Math.max(lawyerFeeMin, Math.round(amountKZT * 0.2));
+    // Верх — 300 000 ₸ или 20% суммы, если она больше (как в FAQ: «100 000–300 000 ₸
+    // за ведение дела или 10–20% от удовлетворённой суммы»); раньше на малых суммах
+    // выходило «100 000 ₸ — 100 000 ₸».
+    const lawyerFeeMax = Math.max(300000, Math.round(amountKZT * 0.2));
 
     return {
       estimatedMRP: Math.round(baseMRP),
