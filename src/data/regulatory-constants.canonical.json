@@ -2274,7 +2274,7 @@
       "key": "opv_max_base_mzp",
       "value": 50,
       "unit": "MZP",
-      "law": "Закон РК «О пенсионном обеспечении в РК» (предельная база ОПВ/ОПВР = 50 МЗП)",
+      "law": "Соцкодекс РК (K2300000224) ст. 249 п. 1 пп. 1–2 (доход для исчисления ОПВ — не более 50 МЗП в месяц, в т. ч. у ИП за себя); ст. 251 п. 2 (ОПВР — от 1 до 50 МЗП)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -2296,9 +2296,11 @@
         "VacationPayCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://www.enpf.kz/ru/press-center/news/58761/",
-      "verify_note": "Предельная база ОПВ и ОПВР = 50 МЗП в месяц (4 250 000 ₸ в 2026). Структурный множитель 50 МЗП подтверждён.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "Предельная база ОПВ и ОПВР = 50 МЗП в месяц (4 250 000 ₸ в 2026). Структурный множитель 50 МЗП подтверждён. | Tier-2 2026-09-24 (old.adilet.zan.kz, K2300000224): ст. 249 п. 1 пп. 1) (работники) и пп. 2) (ИП за себя: 10% от самостоятельно определяемого дохода) — доход «в месяц не должен превышать 50-кратный минимальный размер заработной платы»; ст. 251 п. 2 — для ОПВР «не менее минимального размера заработной платы и не должен превышать 50-кратный». Закон «О пенсионном обеспечении в РК» утратил силу с 01.07.2023 (заменён Соцкодексом) — прежняя ссылка устарела.",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "opvr_rate",
@@ -3922,7 +3924,7 @@
       "key": "snr_simplified_semiannual_limit_mrp",
       "value": 600000,
       "unit": "MRP",
-      "law": "НК РК ст. 683 (лимит дохода СНР упрощёнки, 300 000 МРП/полугодие)",
+      "law": "НК РК (K2500000214) ст. 723 п. 1 пп. 1 (предельный доход за календарный год — не более 600 000 МРП, действующего на 1 января); ст. 722 п. 3 (налоговый период — полугодие)",
       "year": "2026",
       "change_frequency": "annual",
       "aliases": [
@@ -3931,7 +3933,7 @@
         "snr_simplified_semiannual_limit_mrp"
       ],
       "status": "current",
-      "conflict": "All three agree on 300000 MRP per half-year as the upper income limit for the simplified regime. (Source law strings cited ст.715/683 inconsistently; the income limit for упрощёнка sits in the СНР chapter — does not affect the value.) KZT equivalent tracks MRP, so annual.",
+      "conflict": "Key and aliases still say semiannual/halfyear: under the 2017 code the limit was 300 000 MRP per half-year (ст. 683). Since 01.01.2026 it is annual — 600 000 MRP per calendar year (K2500000214 ст. 723 п. 1 пп. 1, MRP as of 1 January); the tax period stays a half-year (ст. 722 п. 3). Key name kept for compatibility; the value is the annual limit. KZT equivalent tracks MRP, so annual.",
       "used_by": [
         "IPSimplifiedCalculator",
         "RentalIncomeTaxCalculator",
@@ -3939,10 +3941,12 @@
       ],
       "audit_status": "clean",
       "official_value": "600000 МРП в ГОД (≈2.595 млрд ₸); налоговый период остаётся полугодие (новый НК K2500000214, ст.722-723)",
-      "source_url": "https://pro1c.kz/articles/spetsialnye-nalogovye-rezhimy/spets-nalogovye-rezhimy/",
-      "verify_note": "Прежняя формулировка «300000 МРП за полугодие» устарела — лимит годовой (600000 МРП/год).",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Прежняя формулировка «300000 МРП за полугодие» устарела — лимит годовой (600000 МРП/год). | Tier-2 2026-09-24 (old.adilet.zan.kz, K2500000214): ст. 723 п. 1 пп. 1) дословно — «предельный доход которых за календарный год не превышает 600 000-кратный размер месячного расчетного показателя, действующего на 1 января соответствующего финансового года»; ст. 722 п. 3 — налоговый и отчётный период «полугодие». Прежняя ссылка «ст. 683, 300 000 МРП/полугодие» — из НК-2017. Превышение: ст. 716 п. 11 — уведомление о режиме в течение 5 рабочих дней, ОУР с даты превышения; п. 12 — иначе переводит налоговый орган; п. 7 — возврат не ранее чем через календарный год.",
       "confidence": "high",
-      "reverified": "2026-06-27"
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "tier2-primary-source"
     },
     {
       "key": "snr_retail_tax_rate",
