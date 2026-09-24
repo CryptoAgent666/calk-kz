@@ -36,7 +36,7 @@ const LAST_UPDATED: Record<string, string> = {
   'dividend-tax': '2026-07-10',
   'self-employed': '2026-07-10',
   'mobile-transfers': '2026-07-10',
-  'tax-regime-comparison': '2026-01-01',
+  'tax-regime-comparison': '2026-09-24', // соцплатежи ИП за себя 21 675 ₸ (было 17 000)
   'universal-declaration': '2026-01-01',
   'ip-simplified': '2026-01-01',
   'excise-tax': '2026-01-01',

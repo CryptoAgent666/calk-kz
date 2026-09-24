@@ -2228,7 +2228,8 @@
         "MobileTransfersCalculator",
         "DataFreshnessBadge",
         "GphTaxCalculator",
-        "IpPaymentsCalculator"
+        "IpPaymentsCalculator",
+        "TaxRegimeComparisonCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/Z2500000239",
@@ -2261,7 +2262,8 @@
         "SalaryReverseCalculator",
         "SecondJobCalculator",
         "SeverancePayCalculator",
-        "SickLeaveCalculator"
+        "SickLeaveCalculator",
+        "TaxRegimeComparisonCalculator"
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
@@ -2320,7 +2322,8 @@
         "RentalIncomeTaxCalculator",
         "SalaryCalculator",
         "SalaryReverseCalculator",
-        "IpPaymentsCalculator"
+        "IpPaymentsCalculator",
+        "TaxRegimeComparisonCalculator"
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
@@ -2393,8 +2396,7 @@
       "status": "current",
       "used_by": [
         "SalaryCalculator",
-        "SalaryReverseCalculator",
-        "TaxRegimeComparisonCalculator"
+        "SalaryReverseCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://kadry.mcfr.kz/news/7058-vosms-i-oosms-v-2026-godu-kakie-stavki-i-limity-deystvuyut-dlya-rabotodateley-i-rabotnikov",
@@ -3041,7 +3043,6 @@
         "SeverancePayCalculator",
         "SickLeaveCalculator",
         "TaxDeductionsCalculator",
-        "TaxRegimeComparisonCalculator",
         "TeacherSalaryCalculator"
       ],
       "audit_status": "representation_variants",
@@ -8444,7 +8445,8 @@
       "aliases": [],
       "status": "current",
       "used_by": [
-        "IpPaymentsCalculator"
+        "IpPaymentsCalculator",
+        "TaxRegimeComparisonCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/Z1500000405",
@@ -8463,7 +8465,8 @@
       "aliases": [],
       "status": "current",
       "used_by": [
-        "IpPaymentsCalculator"
+        "IpPaymentsCalculator",
+        "TaxRegimeComparisonCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/platezhi-za-individualnogo-predprinimatelya-ip-za-sebya-kakie-vznosy-i-otchisleniya-nado-platit-kako/",

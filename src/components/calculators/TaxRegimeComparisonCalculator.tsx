@@ -10,9 +10,9 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ComparisonBarChart } from '../ui/ChartComponents';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { MZP_2026, calculateIpSelfPayments2026 } from '../../utils/ipSelfPayments2026';
 
 const MRP = 4_325;
-const MZP = 85_000;
 
 // Упрощёнка — 4% от дохода (ИПН/КПН) с 2026; социальный налог отменён, маслихат вправе изменить ставку ±50% (2–6%)
 // ОУР — ИПН 10%/15% от прибыли; все соцплатежи отдельно
@@ -48,12 +48,11 @@ export default function TaxRegimeComparisonCalculator() {
 
     const annualRevenue = revenue * 12;
 
-    // ИП — социальные платежи за себя (минимальная база)
-    const selfOPV = Math.round(MZP * 0.10);       // 8 500
-    const selfVOSMS = Math.round(MZP * 0.02);     // 1 700
-    const selfSO = Math.round(MZP * 0.05);        // 4 250
-    const selfOOSMS = Math.round(MZP * 0.03);     // 2 550
-    const baseSocialMonthly = selfOPV + selfVOSMS + selfSO + selfOOSMS; // 17 000
+    // ИП — соцплатежи «за себя» с минимальной базы 1 МЗП, тем же расчётом, что в ip-payments:
+    // ОПВ 10% 8 500 + ОПВР 3,5% 2 975 + СО 5% 4 250 + ВОСМС фикс 5% × 1,4 МЗП 5 950 = 21 675 ₸/мес.
+    // ООСМС — отчисления работодателя за наёмных работников, «за себя» не платится.
+    // ИП, родившиеся до 01.01.1975, ОПВР не платят (18 700 ₸) — это оговорено в infoNote.
+    const baseSocialMonthly = Math.round(calculateIpSelfPayments2026(MZP_2026).total); // 21 675
 
     // 1. Упрощёнка (СНР на основе упрощённой декларации)
     const simplifiedLimit = 600_000 * MRP; // 600 000 МРП/год = ~2.595 млрд ₸ — годовой лимит дохода упрощёнки (НК РК 2026, № 214-VIII); налоговый период — полугодие

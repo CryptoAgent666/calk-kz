@@ -14,28 +14,19 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { MZP_2026, calculateIpSelfPayments2026 } from '../../utils/ipSelfPayments2026';
 
 /**
  * Платежи ИП «за себя» 2026 (упрощёнка):
- *  - ОПВ 10% от заявляемого дохода (1–50 МЗП — ст. 248–249 Соцкодекса);
- *  - ОПВР 3,5% (2026, график ст. 251: →5% к 2028) с той же базы;
- *    НЕ платится, если ИП родился до 01.01.1975 (п. 6 ст. 248);
- *  - СО 5% от заявляемого дохода (1–7 МЗП — ст. 245; без вычета ОПВ у ИП);
- *  - ВОСМС фикс: 5% × 1,4 МЗП = 5 950 ₸/мес (ст. 28 Закона об ОСМС);
+ *  - соцплатежи ОПВ, ОПВР, СО, ВОСМС — calculateIpSelfPayments2026
+ *    (utils/ipSelfPayments2026.ts, там же ставки и статьи; тот же расчёт
+ *    использует сравнение налоговых режимов);
  *  - налог упрощёнки 4% от фактического дохода (ст. 726 НК-2026; СН отменён,
  *    деления 1,5+1,5 больше нет; маслихаты могут менять ставку ±50% → 2–6%).
  * Минимальный пакет при заявляемом доходе 1 МЗП: 21 675 ₸/мес
  * (8 500 + 2 975 + 4 250 + 5 950); без ОПВР (род. до 1975) — 18 700 ₸/мес.
  */
-const MZP_2026 = 85000;
-const OPV_RATE = 0.10;
-const OPVR_RATE_2026 = 0.035;
-const SO_RATE = 0.05;
-const VOSMS_FIXED = Math.round(0.05 * 1.4 * MZP_2026); // 5 950
 const TAX_RATE = 0.04;
-const BASE_MIN = MZP_2026;            // 85 000
-const BASE_MAX_OPV = 50 * MZP_2026;   // 4 250 000
-const BASE_MAX_SO = 7 * MZP_2026;     // 595 000
 
 export default function IpPaymentsCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -46,21 +37,16 @@ export default function IpPaymentsCalculator() {
   const computeResults = () => {
     const declared = Math.max(parseFloat(declaredIncome) || 0, 0);
     const actual = Math.max(parseFloat(actualIncome) || 0, 0);
-    const opvBase = Math.min(Math.max(declared, BASE_MIN), BASE_MAX_OPV);
-    const soBase = Math.min(Math.max(declared, BASE_MIN), BASE_MAX_SO);
-    const opv = opvBase * OPV_RATE;
-    const opvr = bornBefore1975 ? 0 : opvBase * OPVR_RATE_2026;
-    const so = soBase * SO_RATE;
-    const selfTotal = opv + opvr + so + VOSMS_FIXED;
+    const self = calculateIpSelfPayments2026(declared, bornBefore1975);
     const tax = actual * TAX_RATE;
     return {
-      opv: Math.round(opv),
-      opvr: Math.round(opvr),
-      so: Math.round(so),
-      vosms: VOSMS_FIXED,
-      selfTotal: Math.round(selfTotal),
+      opv: Math.round(self.opv),
+      opvr: Math.round(self.opvr),
+      so: Math.round(self.so),
+      vosms: self.vosms,
+      selfTotal: Math.round(self.total),
       tax: Math.round(tax),
-      grandTotal: Math.round(selfTotal + tax),
+      grandTotal: Math.round(self.total + tax),
     };
   };
 
