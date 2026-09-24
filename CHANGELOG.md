@@ -1,5 +1,16 @@
 # Changelog — Calk.kz
 
+## [2026-09-24] Приложение 1.6 (iOS build 14, Android versionCode 11)
+
+- В бинарь входят: UIScene lifecycle + Capacitor core/ios/cli 8.5.2 (сборки Xcode 27 запускаются на iOS 27),
+  Capgo `responseTimeout: 120` (OTA-скачивание на iOS больше не обрывается на 25 с), свежий вшитый бандл
+  (избранное, напоминания, экран «Убрать рекламу», упрощёнка/сравнение режимов по НК-2026).
+- Android: монохромная иконка уведомлений `res/drawable/ic_stat_calk.xml` (`LocalNotifications.smallIcon`);
+  раньше в конфиге стоял несуществующий `ic_stat_icon_config_sample`, и плагин ставил системную «i».
+- App Store 2.3.10: из политики конфиденциальности и двух старых записей «Обновлений» убраны упоминания
+  Google Play / Android (бейджи в футере в приложении и так скрыты `.store-badges`).
+- OTA для 1.5 оставлен на бандле с Capacitor 8.4.0 (20260924092417): сайт выложен ДО вливания 8.5.2.
+
 ## [2026-09-24] iOS: переход на UIScene lifecycle (Capacitor 8.5.2) — сборки Xcode 27 запускаются на iOS 27
 
 Сборка Xcode 27.0 (iOS 27 SDK) падала сразу на запуске на iOS 27: EXC_BREAKPOINT в UIKitCore

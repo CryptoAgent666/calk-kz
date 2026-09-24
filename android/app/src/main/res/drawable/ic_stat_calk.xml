@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Иконка уведомлений (напоминания о сроках). Статус-бар Android рисует только
+     альфа-канал, поэтому монохром: корпус калькулятора, дисплей и кнопки 3×3.
+     Подключена в capacitor.config.ts → plugins.LocalNotifications.smallIcon.
+     До 1.6 там стоял несуществующий ic_stat_icon_config_sample, и плагин
+     подставлял системный ic_dialog_info («i»). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M6,2h12a2,2 0,0 1,2 2v16a2,2 0,0 1,-2 2H6a2,2 0,0 1,-2 -2V4a2,2 0,0 1,2 -2z M6,4v16h12V4z M7.5,5.5h9v3.25h-9z M7.5,10.25h2v2h-2z M11,10.25h2v2h-2z M14.5,10.25h2v2h-2z M7.5,13.5h2v2h-2z M11,13.5h2v2h-2z M14.5,13.5h2v2h-2z M7.5,16.75h2v2h-2z M11,16.75h2v2h-2z M14.5,16.75h2v2h-2z" />
+</vector>

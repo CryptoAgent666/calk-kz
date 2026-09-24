@@ -49,7 +49,9 @@ const config: CapacitorConfig = {
       overlaysWebView: false,
     },
     LocalNotifications: {
-      smallIcon: 'ic_stat_icon_config_sample',
+      // res/drawable/ic_stat_calk.xml — монохромная иконка статус-бара Android.
+      // Был несуществующий ic_stat_icon_config_sample → системная «i».
+      smallIcon: 'ic_stat_calk',
       iconColor: '#1e40af',
       sound: 'default',
     },
