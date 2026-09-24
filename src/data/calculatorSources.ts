@@ -183,7 +183,9 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   ],
   'inflation': [STAT, NBK],
   'cash-flow-gap': [],
-  'franchise-payback': [],
+  'franchise-payback': [
+    { title: 'ГК РК (Особенная часть), глава 45 — комплексная предпринимательская лицензия (франчайзинг)', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
+  ],
 
   // === СОЦИАЛЬНЫЕ / ТРУДОВЫЕ ===
   'salary': [TK_RK, NK_RK, ENPF],
@@ -217,7 +219,11 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'vacation-pay': [TK_RK],
   'severance-pay': [TK_RK],
   'salary-reverse': [TK_RK, NK_RK],
-  'business-trip': [TK_RK],
+  'business-trip': [
+    { title: 'НК РК, ст. 366 пп. 2 — необлагаемые суточные (6 МРП по РК, 8 МРП за рубежом)', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
+    { title: 'ПП РК от 11.05.2018 № 256 — возмещение командировочных расходов за счёт бюджета', url: 'https://adilet.zan.kz/rus/docs/P1800000256' },
+    TK_RK,
+  ],
   'average-earnings': [TK_RK, GFSS],
   'overtime': [TK_RK],
   'second-job': [TK_RK, NK_RK],
@@ -276,8 +282,10 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'Астана Су Арнасы', url: 'https://astanasuarnasy.kz/' },
   ],
   'water': [
-    { title: 'Алматы Су', url: 'https://www.almatysu.kz/' },
-    { title: 'Астана Су Арнасы', url: 'https://astanasuarnasy.kz/' },
+    { title: 'ГКП «Алматы Су» — тарифы', url: 'https://almatysu.kz/tarify.html' },
+    { title: 'ГКП «Астана су арнасы» — тарифы', url: 'https://www.astanasu.kz/to-client/tariffs/' },
+    { title: 'ТОО «Водные ресурсы – Маркетинг» — тарифы', url: 'https://www.wrm.kz/rus/tariff.html' },
+    { title: 'Комитет по регулированию естественных монополий МНЭ РК', url: 'https://www.gov.kz/memleket/entities/krem?lang=ru' },
   ],
   'heating': [
     { title: 'Комитет по регулированию ЕРР', url: 'https://kremzk.gov.kz/' },
@@ -313,7 +321,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   ],
   'islamic-inheritance': [
     { title: 'ДУМК — наследство по шариату', url: 'https://www.muftyat.kz/' },
-    FAMILY_CODE,
+    { title: 'ГК РК (Особенная часть), раздел 6 — наследственное право', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
   ],
   'hajj': [
     { title: 'Хадж-комитет ДУМК', url: 'https://hajj.muftyat.kz/' },
@@ -402,7 +410,15 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 const SOURCE_TITLE_KK: Record<string, string> = {
   "Налоговый кодекс РК (adilet.zan.kz)": "ҚР Салық кодексі (adilet.zan.kz)",
   "Трудовой кодекс РК (adilet.zan.kz)": "ҚР Еңбек кодексі (adilet.zan.kz)",
+  "НК РК, ст. 366 пп. 2 — необлагаемые суточные (6 МРП по РК, 8 МРП за рубежом)": "ҚР СК, 366-бап 2) тармақша — салық салынбайтын тәуліктік (ҚР бойынша 6 АЕК, шетелде 8 АЕК)",
+  "ПП РК от 11.05.2018 № 256 — возмещение командировочных расходов за счёт бюджета": "ҚР ҮҚ 11.05.2018 № 256 — бюджет есебінен іссапар шығындарын өтеу",
   "Гражданский кодекс РК": "ҚР Азаматтық кодексі",
+  "ГК РК (Особенная часть), глава 45 — комплексная предпринимательская лицензия (франчайзинг)": "ҚР Азаматтық кодексі (Ерекше бөлім), 45-тарау — кешенді кәсіпкерлік лицензия (франчайзинг)",
+  "ГКП «Алматы Су» — тарифы": "«Алматы Су» МКК — тарифтер",
+  "ГКП «Астана су арнасы» — тарифы": "«Астана су арнасы» МКК — тарифтер",
+  "ТОО «Водные ресурсы – Маркетинг» — тарифы": "«Водные ресурсы – Маркетинг» ЖШС — тарифтер",
+  "Комитет по регулированию естественных монополий МНЭ РК": "ҚР ҰЭМ Табиғи монополияларды реттеу комитеті",
+  "ГК РК (Особенная часть), раздел 6 — наследственное право": "ҚР Азаматтық кодексі (Ерекше бөлім), 6-бөлім — мұрагерлік құқық",
   "Кодекс о браке и семье РК": "ҚР Неке және отбасы туралы кодексі",
   "КГД МФ РК": "ҚР ҚМ МКД",
   "ЕНПФ": "БЖЗҚ",

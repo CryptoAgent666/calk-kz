@@ -11,14 +11,14 @@ const LAST_UPDATED: Record<string, string> = {
   'income-tax': '2026-01-01',
   'vat': '2026-01-01',
   'vat-threshold': '2026-01-01',
-  'vehicle-tax': '2026-01-01',
+  'vehicle-tax': '2026-09-24', // срок уплаты налога за 2026 год — 1 апреля 2027
   'property-tax': '2026-01-01',
-  'property-sale-tax': '2026-01-01',
+  'property-sale-tax': '2026-09-24', // ФНО 270.00 до 15.09, уплата до 25.09; ИПН 15% сверх 8 500 МРП
   'luxury-tax': '2026-01-01',
   'casino-winnings-tax': '2026-01-01',
   'corporate-income-tax': '2026-01-01',
-  'crypto-tax': '2026-01-01',
-  'rental-income-tax': '2026-01-01',
+  'crypto-tax': '2026-09-24', // ФНО 270.00 до 15.09 вместо 240.00; ИПН 15% сверх 8 500 МРП
+  'rental-income-tax': '2026-09-24', // декларация 270.00 до 15.09 вместо 240.00
   'unified-payment': '2026-01-01',
   'tax-deductions': '2026-01-01',
   'enpf-threshold': '2026-07-11',
@@ -26,7 +26,7 @@ const LAST_UPDATED: Record<string, string> = {
   'production-calendar': '2026-07-11',
   'work-experience': '2026-07-11',
   'tip-split': '2026-07-11',
-  'alcohol-blood': '2026-07-11',
+  'alcohol-blood': '2026-09-24', // КоАП 608 ч. 3-1: повторно 20 суток + 8 лет; порог 0,3‰ приостановлен
   'kdif-guarantee': '2026-07-11',
   'bad-habits-cost': '2026-07-11',
   'mortgage-compare': '2026-07-11',
@@ -51,7 +51,7 @@ const LAST_UPDATED: Record<string, string> = {
   'vehicle-tco': '2026-05-01',  // топливо + Отау 1 мая
   'auto-leasing': '2026-01-01',
   'car-market-value': '2026-04-19',
-  'car-transfer': '2026-01-01',
+  'car-transfer': '2026-09-24', // ОГПО: диапазон по двум территориальным коэффициентам (15–54 тыс. ₸)
   'fuel-cost': '2026-05-01',     // обновили цены КМГ
   'traffic-fines': '2026-01-01',
   'fancy-plates': '2026-01-01',
@@ -90,10 +90,10 @@ const LAST_UPDATED: Record<string, string> = {
   'vacation-pay': '2026-04-19',
   'severance-pay': '2026-06-11',  // ИПН 15% свыше 8500 МРП/год; подтверждено: ОПВ+ВОСМС с обеих частей (ОСМС-льгота пособия отменена с 01.01.2026)
   'salary-reverse': '2026-09-15',  // СО не ниже 1 МЗП (ст. 245 СК)
-  'business-trip': '2026-04-19',
-  'average-earnings': '2026-04-19',
-  'overtime': '2026-04-19',
-  'second-job': '2026-04-19',
+  'business-trip': '2026-09-24', // суточные: НК ст. 366 + ПП № 256 вместо выдуманных 4–6 МРП
+  'average-earnings': '2026-09-24', // командировки убраны: ТК ст. 127 — зарплата за рабочие дни
+  'overtime': '2026-09-24', // норма 164 ч (1 968 ÷ 12), ставки работодателя 2026
+  'second-job': '2026-09-24', // ставки работодателя 2026 в FAQ
   'teacher-salary': '2026-05-22',  // hotfix VOSMS
 
   // === ЮРИДИЧЕСКИЕ ===
@@ -101,8 +101,8 @@ const LAST_UPDATED: Record<string, string> = {
   'penalty': '2026-05-03',  // обновили ставку пени
   'notary': '2026-05-22',  // hotfix расчёта
   'inheritance': '2026-04-19',
-  'divorce': '2026-04-19',
-  'property-division': '2026-04-19',
+  'divorce': '2026-09-24', // ЗАГС — плата 6 900 ₸ (приказ № 175/НҚ), без мин. 0,5 МРП
+  'property-division': '2026-09-24', // госпошлина 1%, не более 10 000 МРП, без минимума
   'statute-limitations': '2026-04-19',
   'bankruptcy': '2026-04-19',
   'moral-damage': '2026-09-13',
@@ -116,7 +116,7 @@ const LAST_UPDATED: Record<string, string> = {
 
   // === КОММУНАЛЬНЫЕ ===
   'electricity': '2026-01-01',
-  'water': '2026-01-01',
+  'water': '2026-09-24', // единые тарифы Алматы/Астаны/Шымкента по приказам ДКРЕМ
   'heating': '2026-01-01',
   'gas': '2026-01-01',
 

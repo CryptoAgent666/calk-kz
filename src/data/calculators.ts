@@ -590,7 +590,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'business-trip',
         title: 'Калькулятор командировочных',
-        description: 'Суточные по РК (4-6 МРП) и зарубеж (75-150 USD) + налогообложение сверхнорм',
+        description: 'Суточные: без ИПН до 6 МРП/сут по РК и 8 МРП за рубежом, нормы ПП № 256 для бюджетников',
         category: 'social',
         icon: 'Plane',
         component: React.lazy(() => import('../components/calculators/BusinessTripCalculator'))
@@ -598,7 +598,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'average-earnings',
         title: 'Калькулятор среднего заработка',
-        description: 'Расчёт среднего заработка для отпуска, больничного, декрета и командировок по ТК РК',
+        description: 'Расчёт среднего заработка для отпускных, больничного, декретных и выплат при увольнении по ТК РК',
         category: 'social',
         icon: 'TrendingUp',
         component: React.lazy(() => import('../components/calculators/AverageEarningsCalculator'))

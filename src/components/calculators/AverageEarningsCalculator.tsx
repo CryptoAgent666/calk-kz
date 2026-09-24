@@ -13,9 +13,11 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-type Purpose = 'vacation' | 'sickLeave' | 'businessTrip' | 'dismissal' | 'maternity';
+// Командировки здесь нет: за дни командировки сохраняется зарплата за рабочие
+// дни (ТК ст. 127 п. 1), а не средний заработок.
+type Purpose = 'vacation' | 'sickLeave' | 'dismissal' | 'maternity';
 
-const PURPOSES: Purpose[] = ['vacation', 'sickLeave', 'businessTrip', 'dismissal', 'maternity'];
+const PURPOSES: Purpose[] = ['vacation', 'sickLeave', 'dismissal', 'maternity'];
 
 // Расчётный период — 12 календарных месяцев для ЛЮБОГО события (ст. 114 п. 2 ТК РК,
 // п. 2 пп. 2 Единых правил № 908), при стаже меньше года — отработанное время.

@@ -1080,8 +1080,8 @@
       ],
       "audit_status": "clean",
       "source_url": "https://egov.kz/cms/ru/articles/marital_status/divorce-details",
-      "verify_note": "Иск о расторжении брака в суде — 0.3 МРП. Подтверждено egov + НК РК 2026.",
-      "reverified": "2026-06-23"
+      "verify_note": "Иск о расторжении брака в суде — 0.3 МРП. Подтверждено egov + НК РК 2026. | calkcheck 2026-09-24: ст. 665 п. 1 пп. 5 — «с исков о расторжении брака – 0,3 МРП» подтверждено агентом; раздел имущества — пп. 1 (1% цены иска, не более 10 000 МРП, без минимума).",
+      "reverified": "2026-09-24"
     },
     {
       "key": "gov_duty_divorce_zags_mrp",
@@ -1093,15 +1093,13 @@
       "aliases": [
         "gov_duty_divorce_zags_mrp"
       ],
-      "status": "current",
+      "status": "stale_confirmed",
       "conflict": "Administrative (ZAGS) divorce duty, distinct from the 0.3 МРП court divorce duty.",
-      "used_by": [
-        "DivorceCalculator"
-      ],
+      "used_by": [],
       "audit_status": "clean",
       "source_url": "https://newtimes.kz/obshchestvo/213373-skolko-stoit-registratsiia-braka-i-razvod-v-2026-godu-novye-tseny-dlia-kazakhstantsev",
-      "verify_note": "Регистрация расторжения брака в ЗАГС по взаимному согласию (без несовершеннолетних детей) — 2 МРП = 8 650 ₸ при МРП 4325 (2026). Множитель не изменился. (Устаревшая страница egov показывает 7728 ₸ по старому МРП, но множитель 2 МРП верен.)",
-      "reverified": "2026-06-23"
+      "verify_note": "Регистрация расторжения брака в ЗАГС по взаимному согласию (без несовершеннолетних детей) — 2 МРП = 8 650 ₸ при МРП 4325 (2026). Множитель не изменился. (Устаревшая страница egov показывает 7728 ₸ по старому МРП, но множитель 2 МРП верен.) | calkcheck 2026-09-24: «2 МРП» не подтверждено: ст. 664 НК-2026 не содержит актов гражданского состояния; регистрация развода по взаимному согласию — плата за услугу 6 900 ₸ (приказ № 175/НҚ в ред. 78/НҚ от 17.02.2026). См. zags_divorce_registration_fee_kzt.",
+      "reverified": "2026-09-24"
     },
     {
       "key": "gov_duty_alimony_petition_mrp",
@@ -2765,7 +2763,7 @@
       "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
       "official_value": 2,
       "verify_note": "Phase-4 29.08.2026: сверено по первоисточнику (ПП РК от 11.05.2018 № 256, глава 2, п. 3 пп. 1, дословно: «за каждый день нахождения в командировке выплачиваются суточные в размере ДВУХ месячных расчетных показателей»). Суточные за счёт бюджета — ПЛОСКИЕ 2 МРП, деления по городам у них НЕТ. Градация 7/6/4 МРП из того же пункта относится к НАЙМУ ЖИЛЬЯ (пп. 2) и была ошибочно приклеена к суточным. Для частных компаний суточные вообще не нормируются (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел ИПН — 6 МРП/сутки по РК, 8 за рубежом (НК ст. 366 пп. 2). ⚠️ Ключ с суффиксом города — легаси: различия по городу у суточных не существует. БЫЛО 6 МРП и в value, и в official_value — рассинхрон, который loop-closer НЕ ловит, потому что оба поля согласованы между собой и оба неверны относительно кода.",
-      "reverified": "2026-08-29"
+      "reverified": "2026-09-24"
     },
     {
       "key": "perdiem_domestic_regional_mrp",
@@ -2784,7 +2782,7 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
       "verify_note": "Phase-4 29.08.2026: сверено по первоисточнику (ПП РК от 11.05.2018 № 256, глава 2, п. 3 пп. 1, дословно: «за каждый день нахождения в командировке выплачиваются суточные в размере ДВУХ месячных расчетных показателей»). Суточные за счёт бюджета — ПЛОСКИЕ 2 МРП, деления по городам у них НЕТ. Градация 7/6/4 МРП из того же пункта относится к НАЙМУ ЖИЛЬЯ (пп. 2) и была ошибочно приклеена к суточным. Для частных компаний суточные вообще не нормируются (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел ИПН — 6 МРП/сутки по РК, 8 за рубежом (НК ст. 366 пп. 2). ⚠️ Ключ с суффиксом города — легаси: различия по городу у суточных не существует. official_value содержал 5 — значение из прежней выдуманной лесенки 6/5/4.",
-      "reverified": "2026-08-29",
+      "reverified": "2026-09-24",
       "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2).",
       "official_value": 2,
       "official_source": "https://adilet.zan.kz/rus/docs/P1800000256",
@@ -2808,7 +2806,7 @@
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
       "verify_note": "Phase-4 29.08.2026: сверено по первоисточнику (ПП РК от 11.05.2018 № 256, глава 2, п. 3 пп. 1, дословно: «за каждый день нахождения в командировке выплачиваются суточные в размере ДВУХ месячных расчетных показателей»). Суточные за счёт бюджета — ПЛОСКИЕ 2 МРП, деления по городам у них НЕТ. Градация 7/6/4 МРП из того же пункта относится к НАЙМУ ЖИЛЬЯ (пп. 2) и была ошибочно приклеена к суточным. Для частных компаний суточные вообще не нормируются (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел ИПН — 6 МРП/сутки по РК, 8 за рубежом (НК ст. 366 пп. 2). ⚠️ Ключ с суффиксом города — легаси: различия по городу у суточных не существует. official_value содержал 4 — значение из прежней выдуманной лесенки 6/5/4.",
-      "reverified": "2026-08-29",
+      "reverified": "2026-09-24",
       "conflict": "Прежние 5/4 МРП были градацией НАЙМА ЖИЛЬЯ (п. 3 пп. 2: 7/6/4/2 МРП), ошибочно применённой к суточным. Для частного сектора размер суточных не нормируется (НК ст. 260 пп. 3), ограничен лишь необлагаемый предел 6 МРП по РК / 8 МРП загран (НК ст. 366 пп. 2).",
       "official_value": 2,
       "official_source": "https://adilet.zan.kz/rus/docs/P1800000256",
@@ -3693,12 +3691,14 @@
         "SalaryCalculator",
         "SalaryReverseCalculator",
         "TaxDeductionsCalculator",
-        "TaxRegimeComparisonCalculator"
+        "TaxRegimeComparisonCalculator",
+        "CryptoTaxCalculator",
+        "PropertySaleTaxCalculator"
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
-      "verify_note": "15% on the part exceeding 8500 MRP/year. New progressive ИПН from 2026-01-01. Confirmed (art.363 new code). | Tier-2 2026-09-09: Ссылка перевешена со ст. 320 СТАРОГО НК (№ 120-VI) на ст. 363 подпункт 1) нового НК. В новом кодексе ст. 320 — «Доход от снижения размеров созданных провизий (резервов)», это КПН и к ИПН отношения не имеет. Расхождение было отмечено в note ещё Tier-2 2026-06-23, но поле law так и не поправили. Значения 10 / 15 / 8500 подтверждены дословно. Механика «нарастающим итогом» для дохода работника — ст. 441.",
-      "reverified": "2026-09-09",
+      "verify_note": "15% on the part exceeding 8500 MRP/year. New progressive ИПН from 2026-01-01. Confirmed (art.363 new code). | Tier-2 2026-09-09: Ссылка перевешена со ст. 320 СТАРОГО НК (№ 120-VI) на ст. 363 подпункт 1) нового НК. В новом кодексе ст. 320 — «Доход от снижения размеров созданных провизий (резервов)», это КПН и к ИПН отношения не имеет. Расхождение было отмечено в note ещё Tier-2 2026-06-23, но поле law так и не поправили. Значения 10 / 15 / 8500 подтверждены дословно. Механика «нарастающим итогом» для дохода работника — ст. 441. | calkcheck 2026-09-24: ст. 363 пп. 1 — имущественный доход (крипта, продажа имущества) из шкалы не выведен; шкала добавлена в CryptoTaxCalculator и PropertySaleTaxCalculator (по одной сделке; порог — по совокупному годовому доходу, ст. 411 п. 1).",
+      "reverified": "2026-09-24",
       "verified_date": "2026-09-09"
     },
     {
@@ -3721,12 +3721,14 @@
         "SalaryCalculator",
         "SalaryReverseCalculator",
         "TaxDeductionsCalculator",
-        "TaxRegimeComparisonCalculator"
+        "TaxRegimeComparisonCalculator",
+        "CryptoTaxCalculator",
+        "PropertySaleTaxCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
-      "verify_note": "Progressive bracket threshold = 8500 MRP per calendar year (~36.76 mln tenge). Confirmed. | Tier-2 2026-09-09: Ссылка перевешена со ст. 320 СТАРОГО НК (№ 120-VI) на ст. 363 подпункт 1) нового НК. В новом кодексе ст. 320 — «Доход от снижения размеров созданных провизий (резервов)», это КПН и к ИПН отношения не имеет. Расхождение было отмечено в note ещё Tier-2 2026-06-23, но поле law так и не поправили. Значения 10 / 15 / 8500 подтверждены дословно. Механика «нарастающим итогом» для дохода работника — ст. 441.",
-      "reverified": "2026-09-09",
+      "verify_note": "Progressive bracket threshold = 8500 MRP per calendar year (~36.76 mln tenge). Confirmed. | Tier-2 2026-09-09: Ссылка перевешена со ст. 320 СТАРОГО НК (№ 120-VI) на ст. 363 подпункт 1) нового НК. В новом кодексе ст. 320 — «Доход от снижения размеров созданных провизий (резервов)», это КПН и к ИПН отношения не имеет. Расхождение было отмечено в note ещё Tier-2 2026-06-23, но поле law так и не поправили. Значения 10 / 15 / 8500 подтверждены дословно. Механика «нарастающим итогом» для дохода работника — ст. 441. | calkcheck 2026-09-24: ст. 363 пп. 1 — имущественный доход (крипта, продажа имущества) из шкалы не выведен; шкала добавлена в CryptoTaxCalculator и PropertySaleTaxCalculator (по одной сделке; порог — по совокупному годовому доходу, ст. 411 п. 1).",
+      "reverified": "2026-09-24",
       "verified_date": "2026-09-09"
     },
     {
@@ -4049,15 +4051,15 @@
       "aliases": [
         "businesstrip_accommodation_taxfree_limit_mrp"
       ],
-      "status": "removed_from_code",
+      "status": "uncertain",
       "conflict": "Statutory 12 MRP/day tax-free accommodation limit on business trips (excess is taxable). This is a real legal limit, not a market/example value. KZT equivalent tracks MRP, so annual.",
       "used_by": [
         "BusinessTripCalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
-      "verify_note": "Phase-4 2026-08-23: Лимита 12 МРП в BusinessTripCalculator нет: там BUDGET_HOUSING_CAP_MRP 7/6/4 и PERDIEM_TAX_FREE_MRP 6/8. Константа в коде не используется. Реестровый хвост.",
-      "reverified": "2026-08-23",
+      "verify_note": "Phase-4 2026-08-23: Лимита 12 МРП в BusinessTripCalculator нет: там BUDGET_HOUSING_CAP_MRP 7/6/4 и PERDIEM_TAX_FREE_MRP 6/8. Константа в коде не используется. Реестровый хвост. | calkcheck 2026-09-24: в ст. 366 пп. 2 НК-2026 проживание — «расходы на проживание … на основании документов, подтверждающих расходы», лимита в МРП в тексте нет; 12 МРП не подтверждено.",
+      "reverified": "2026-09-24",
       "official_value": "12",
       "official_source": "https://kadry.mcfr.kz/article/505-komandirovochnye-rashody-rk",
       "verified_date": "2026-07-08",
@@ -4290,8 +4292,8 @@
       "audit_status": "clean",
       "source_url": "https://prodengi.kz/post/novye-pravila-prodazi-nedvizimosti-v-rk",
       "official_value": "1",
-      "verify_note": "Освобождение при владении >1 года сохраняется для недвижимости, право собственности на которую зарегистрировано ДО 01.01.2026 (переходные положения), и для движимого имущества (авто). Для нового жилья (с 2026) — 2 года (см. отдельный ключ). Значение '1 год' остаётся актуальным для указанных случаев.",
-      "reverified": "2026-06-23"
+      "verify_note": "Освобождение при владении >1 года сохраняется для недвижимости, право собственности на которую зарегистрировано ДО 01.01.2026 (переходные положения), и для движимого имущества (авто). Для нового жилья (с 2026) — 2 года (см. отдельный ключ). Значение '1 год' остаётся актуальным для указанных случаев. | calkcheck 2026-09-24: для недвижимости с 01.01.2026 — 2 года (property_sale_exempt_ownership_years_realestate); 1 год остаётся для ТС. FAQ/QuickAnswer PropertySaleTax приведены к 2 годам.",
+      "reverified": "2026-09-24"
     },
     {
       "key": "tax_simplified_rate_snr",
@@ -5506,11 +5508,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_almaty_flat). Прежние значения 103/123,6/154,49/205,99 + 51,5 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_almaty_tier2_3_5m3",
@@ -5520,11 +5524,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_almaty_flat). Прежние значения 103/123,6/154,49/205,99 + 51,5 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_almaty_tier3_5_10m3",
@@ -5534,11 +5540,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_almaty_flat). Прежние значения 103/123,6/154,49/205,99 + 51,5 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_almaty_tier4_gt_10m3",
@@ -5548,17 +5556,19 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_almaty_flat). Прежние значения 103/123,6/154,49/205,99 + 51,5 не совпадали с действующими приказами."
     },
     {
       "key": "water_sewerage_rate_almaty",
-      "value": 51.5,
-      "unit": "KZT/м³",
-      "law": "Тариф Алматы Су (водоотведение)",
+      "value": 47.5,
+      "unit": "KZT/м³ с НДС 16%",
+      "law": "ГКП «Алматы Су»: единый тариф 1 группы с 01.01.2026 (отчёт компании за 1-е полугодие 2026, https://almatysu.kz/uploads/2026/07/1-2026-c4131a00.pdf); дифференцированные ступени приостановлены с 01.09.2025 по 31.12.2026 — водоотведение",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -5566,7 +5576,14 @@
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://almatysu.kz/tarify.html",
+      "official_value": 47.5,
+      "official_source": "https://almatysu.kz/tarify.html",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck 2026-09-24: обновлено до действующего тарифа."
     },
     {
       "key": "water_tariff_astana_tier1_le_3m3",
@@ -5576,11 +5593,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_astana_flat). Прежние значения 98,5/118,2/147,75/197 + 49,25 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_astana_tier2_3_5m3",
@@ -5590,11 +5609,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_astana_flat). Прежние значения 98,5/118,2/147,75/197 + 49,25 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_astana_tier3_5_10m3",
@@ -5604,11 +5625,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_astana_flat). Прежние значения 98,5/118,2/147,75/197 + 49,25 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_astana_tier4_gt_10m3",
@@ -5618,17 +5641,19 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_astana_flat). Прежние значения 98,5/118,2/147,75/197 + 49,25 не совпадали с действующими приказами."
     },
     {
       "key": "water_sewerage_rate_astana",
-      "value": 49.25,
-      "unit": "KZT/м³",
-      "law": "Тариф Астана Су Арнасы (водоотведение)",
+      "value": 127.41,
+      "unit": "KZT/м³ с НДС 16%",
+      "law": "ГКП «Астана су арнасы»: с 01.04.2026 по 31.12.2026, приказы ДКРЕМ г. Астаны № 105-ОД от 25.11.2025 и № 21-ОД от 25.06.2026 — водоотведение",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -5636,7 +5661,14 @@
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://www.astanasu.kz/to-client/tariffs/",
+      "official_value": 127.41,
+      "official_source": "https://www.astanasu.kz/to-client/tariffs/",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck 2026-09-24: обновлено до действующего тарифа."
     },
     {
       "key": "water_tariff_shymkent_tier1_le_3m3",
@@ -5646,11 +5678,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_shymkent_flat). Прежние значения 89,4/107,28/134,1/178,8 + 44,7 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_shymkent_tier2_3_5m3",
@@ -5660,11 +5694,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_shymkent_flat). Прежние значения 89,4/107,28/134,1/178,8 + 44,7 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_shymkent_tier3_5_10m3",
@@ -5674,11 +5710,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_shymkent_flat). Прежние значения 89,4/107,28/134,1/178,8 + 44,7 не совпадали с действующими приказами."
     },
     {
       "key": "water_tariff_shymkent_tier4_gt_10m3",
@@ -5688,17 +5726,19 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: ступенчатая модель снята — в городе сейчас единый тариф (см. water_tariff_shymkent_flat). Прежние значения 89,4/107,28/134,1/178,8 + 44,7 не совпадали с действующими приказами."
     },
     {
       "key": "water_sewerage_rate_shymkent",
-      "value": 44.7,
-      "unit": "KZT/м³",
-      "law": "Тариф Шымкент (водоотведение)",
+      "value": 62.41,
+      "unit": "KZT/м³ с НДС 16%",
+      "law": "ТОО «Водные ресурсы – Маркетинг»: 01.07–31.12.2026, приказ ДКРЕМ г. Шымкента № 33 от 26.06.2026 (заменил № 26 от 26.05.2026); с 01.01.2027 — 106,87/63,15 без НДС — водоотведение",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -5706,7 +5746,14 @@
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://www.wrm.kz/rus/tariff.html",
+      "official_value": 62.41,
+      "official_source": "https://www.wrm.kz/rus/tariff.html",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck 2026-09-24: обновлено до действующего тарифа."
     },
     {
       "key": "water_tariff_other_tier1_le_3m3",
@@ -5716,11 +5763,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: «Другие регионы» — теперь ввод тарифа из квитанции (плейсхолдеры 100/60 ₸), не константа."
     },
     {
       "key": "water_tariff_other_tier2_3_5m3",
@@ -5730,11 +5779,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: «Другие регионы» — теперь ввод тарифа из квитанции (плейсхолдеры 100/60 ₸), не константа."
     },
     {
       "key": "water_tariff_other_tier3_5_10m3",
@@ -5744,11 +5795,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: «Другие регионы» — теперь ввод тарифа из квитанции (плейсхолдеры 100/60 ₸), не константа."
     },
     {
       "key": "water_tariff_other_tier4_gt_10m3",
@@ -5758,11 +5811,13 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verify_note": "calkcheck 2026-09-24: «Другие регионы» — теперь ввод тарифа из квитанции (плейсхолдеры 100/60 ₸), не константа."
     },
     {
       "key": "water_sewerage_rate_other",
@@ -5772,11 +5827,12 @@
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
-      "status": "current",
+      "status": "removed_from_code",
       "used_by": [
         "WaterBillCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "reverified": "2026-09-24"
     },
     {
       "key": "inheritance_share_wife_with_children",
@@ -6172,7 +6228,7 @@
       "key": "perdiem_ipn_free_limit_foreign_mrp",
       "value": 8,
       "unit": "МРП/сутки",
-      "law": "ст. 366 НК РК (2026)",
+      "law": "НК РК 2026 (K2500000214), ст. 366 пп. 2 — суточные за пределами РК не более 8 МРП за каждый день, не более 40 календарных дней командировки",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -6182,9 +6238,11 @@
       ],
       "note_deep": "Line 56: dailyTaxFreeLimit = (domestic ? 6 : 8) * MRP. Foreign 8 МРП absent from list (domestic 6 coincides by value with perdiem_domestic_c",
       "audit_status": "clean",
-      "source_url": "https://mybuh.kz/useful/kak-rasschitat-sutochnye-v-too-na-our.html",
-      "verify_note": "Foreign per-diem non-taxable limit = 8 MRP/day (domestic 6 MRP), period <=40 days, art.319 new code (ledger cites art.366). Confirmed.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Foreign per-diem non-taxable limit = 8 MRP/day (domestic 6 MRP), period <=40 days, art.319 new code (ledger cites art.366). Confirmed. | calkcheck 2026-09-24: ст. 366 пп. 2 сверена дословно (kodeksy-kz): «суточные не более 8-кратного МРП … в течение периода, не превышающего сорока календарных дней». В калькуляторе добавлен 40-дневный предел (PERDIEM_TAX_FREE_MAX_DAYS).",
+      "reverified": "2026-09-24",
+      "official_source": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/366.htm",
+      "official_value": 8
     },
     {
       "key": "notary_vehicle_tariff_by_party_mrp",
@@ -6442,8 +6500,8 @@
       "note_deep": "SELF_EMPLOYED_RATE = 0.04 (line 41), the only payment under the 'patent' regime option; comment breaks it down as ОПВ 1% + ОПВР 1% + СО 1% +",
       "audit_status": "clean",
       "source_url": "https://finratings.kz/news/10856-samozaniatye-v-2026-0-naloga-4-platezhei-i-nikakikh-otchiotov/",
-      "verify_note": "ЕСП самозанятых (СНР для самозанятых, преемник патента) = 4% от дохода в 2026 — включает ОПВ+ОПВР+СО+ОСМС (по ~1% каждый). Совпадает. 2026-07-10: сверено при создании SelfEmployedCalculator (гл. 77, ст. 718–721 НК РК; разбивка 4% = ОПВ 1% + ОПВР 1% + СО 1% + ВОСМС 1%).",
-      "reverified": "2026-07-10"
+      "verify_note": "ЕСП самозанятых (СНР для самозанятых, преемник патента) = 4% от дохода в 2026 — включает ОПВ+ОПВР+СО+ОСМС (по ~1% каждый). Совпадает. 2026-07-10: сверено при создании SelfEmployedCalculator (гл. 77, ст. 718–721 НК РК; разбивка 4% = ОПВ 1% + ОПВР 1% + СО 1% + ВОСМС 1%). | calkcheck 2026-09-24: 4% = СО 1% + ОПВ 1% + ОПВР 1% + ОСМС 1% (Соцкодекс ст. 101-1; КГД ВКО). Перечень ПП № 994: 40 кодов ОКЭД, аренда жилья — 68201, обучение — 85599.",
+      "reverified": "2026-09-24"
     },
     {
       "key": "self_employed_income_limit_monthly_mrp",
@@ -6576,7 +6634,7 @@
     },
     {
       "key": "average_earnings_period_months_by_purpose",
-      "value": "vacation:12; sickLeave:12; businessTrip:12; dismissal:12; maternity:12",
+      "value": "vacation:12; sickLeave:12; dismissal:12; maternity:12",
       "unit": "months",
       "law": "ТК РК ст. 114 п. 2; Единые правила исчисления средней ЗП (приказ МЗСР № 908 от 30.11.2015, рег. 12533) п. 2 пп. 2 — 12 календарных месяцев для любого события, при стаже < 12 мес — отработанное время; декретные ГФСС — 12 мес (п. 40 Правил V2300032912), 24 мес только для выплаты по уходу (п. 41)",
       "year": "2026",
@@ -6591,8 +6649,8 @@
       "audit_status": "clean",
       "official_value": "vacation:12; sickLeave:12; businessTrip:12; dismissal:12; maternity:12",
       "source_url": "https://adilet.zan.kz/rus/docs/V1500012533",
-      "verify_note": "Phase-4 2026-09-21: Было vacation:13, dismissal:24 и ссылка на «приказ № 1022» — неверно: № 908, период 12 для всех (п. 2 пп. 2, редакция на 08.06.2026 по prg.kz). В детальном режиме значения по умолчанию (7,2 млн / 504 дня = 24 мес) давали для отпуска 553 846 ₸ вместо 300 000 — дефолты переведены на 12 мес (3 600 000 / 246 / 1 968).",
-      "reverified": "2026-09-21",
+      "verify_note": "Phase-4 2026-09-21: Было vacation:13, dismissal:24 и ссылка на «приказ № 1022» — неверно: № 908, период 12 для всех (п. 2 пп. 2, редакция на 08.06.2026 по prg.kz). В детальном режиме значения по умолчанию (7,2 млн / 504 дня = 24 мес) давали для отпуска 553 846 ₸ вместо 300 000 — дефолты переведены на 12 мес (3 600 000 / 246 / 1 968). | calkcheck 2026-09-24: цель businessTrip убрана — ТК РК ст. 127 п. 1: на время командировки сохраняется «заработная плата за рабочие дни, приходящиеся на дни командировки», а не средняя (подтверждено kodeksy-kz 127 и разъяснением gos24).",
+      "reverified": "2026-09-24",
       "verified_date": "2026-09-21"
     },
     {
@@ -6605,14 +6663,15 @@
       "aliases": [],
       "status": "current",
       "used_by": [
-        "AverageEarningsCalculator"
+        "AverageEarningsCalculator",
+        "OvertimeCalculator"
       ],
       "note": "Lines 51-52, 62: days = months*21, hours = days*8, avgWeek = avgDay*5 drive per-day/hour/week results in simple mode. 8h/5d derive from the ",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
       "official_value": "8 h/day; 5 days/week; 20,5 раб.дн./мес (246/12, баланс 2026)",
-      "verify_note": "Phase-4 2026-09-21: 21 раб.дн./мес заменено на 20,5 = 246/12 — так уже считают AverageEarnings/VacationPay/SeverancePay/SickLeave (AVG_WORKING_DAYS_PER_MONTH).",
-      "reverified": "2026-09-21",
+      "verify_note": "Phase-4 2026-09-21: 21 раб.дн./мес заменено на 20,5 = 246/12 — так уже считают AverageEarnings/VacationPay/SeverancePay/SickLeave (AVG_WORKING_DAYS_PER_MONTH). | calkcheck 2026-09-24: OvertimeCalculator — среднемесячная норма 164 ч (1 968 ÷ 12); было 167 (баланс 2025) в виджете и 168 в примерах/методике.",
+      "reverified": "2026-09-24",
       "verified_date": "2026-09-21"
     },
     {
@@ -7711,16 +7770,14 @@
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
-      "status": "current",
-      "used_by": [
-        "PropertySaleTaxCalculator"
-      ],
+      "status": "stale_confirmed",
+      "used_by": [],
       "note": "Hardcoded in getDeclarationDeadline() line 63: `31.03.${nextYear}`.",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
       "source_url": "https://pro1c.kz/news/zakonodatelstvo/individualnyy-podokhodnyy-nalog-ipn-s-2025-goda-/",
-      "verify_note": "ФНО 240.00 filing deadline = 31 March of the year following the reporting year. Standard, unchanged. Procedural, not a rate.",
-      "reverified": "2026-06-23"
+      "verify_note": "ФНО 240.00 filing deadline = 31 March of the year following the reporting year. Standard, unchanged. Procedural, not a rate. | calkcheck 2026-09-24: ФНО 240.00 упразднена с 01.01.2025; имущественный доход физлица — в ФНО 270.00 до 15.09 (ст. 418 п. 1), уплата до 25.09 (ст. 419 п. 1). См. ipn_declaration_deadline_fno270.",
+      "reverified": "2026-09-24"
     },
     {
       "key": "property_tax_wear_rate_per_year_pct",
@@ -8625,8 +8682,8 @@
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
-      "verify_note": "Арест за управление в опьянении; повторно в течение года — 25 суток. ВАЖНО: порог 0,3‰ — только ПРОЕКТ приказа МЗ (не принят на 07.2026), в НПА нулевая терпимость.",
-      "reverified": "2026-07-11"
+      "verify_note": "Арест за управление в опьянении; повторно в течение года — 25 суток. ВАЖНО: порог 0,3‰ — только ПРОЕКТ приказа МЗ (не принят на 07.2026), в НПА нулевая терпимость. | calkcheck 2026-09-24: КоАП 608 ч. 1 сверено дословно (old.adilet): 15 суток + 7 лет. Повторно в течение года — ч. 3-1: 20 суток + 8 лет (на странице было 25/9 — это ч. 3-2). Отказ от освидетельствования — ст. 613 ч. 4: 15 суток + 8 лет. Проект порога 0,3‰ — согласование приостановлено 05.06.2026 (kolesa.kz со ссылкой на МЗ).",
+      "reverified": "2026-09-24"
     },
     {
       "key": "driving_dui_license_revoke_years",
@@ -8981,6 +9038,283 @@
       "reverified": "2026-09-15",
       "verified_date": "2026-09-15",
       "verify_method": "primary-text"
+    },
+    {
+      "key": "perdiem_ipn_free_limit_domestic_mrp",
+      "value": 6,
+      "unit": "МРП/сутки",
+      "law": "НК РК 2026 (K2500000214), ст. 366 пп. 2 — суточные в пределах РК не более 6 МРП за каждый день, не более 40 календарных дней командировки",
+      "change_frequency": "rare",
+      "used_by": [
+        "BusinessTripCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_value": 6,
+      "official_source": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/366.htm",
+      "verify_note": "calkcheck 2026-09-24: сверено дословно по ст. 366 пп. 2 (kodeksy-kz). Раньше на странице стояли выдуманные «нормы по городам 6/5/4 МРП» — удалены. Для частных компаний это только необлагаемый предел, размер суточных устанавливает работодатель.",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "perdiem_ipn_free_max_days",
+      "value": 40,
+      "unit": "календарных дней одной командировки",
+      "law": "НК РК 2026, ст. 366 пп. 2 — необлагаемые суточные только «в течение периода, не превышающего сорока календарных дней нахождения в командировке»",
+      "change_frequency": "rare",
+      "used_by": [
+        "BusinessTripCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_value": 40,
+      "official_source": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/366.htm",
+      "verify_note": "calkcheck 2026-09-24: добавлено в расчёт — после 40-го дня суточные целиком доход работника.",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "businesstrip_budget_housing_cap_mrp_table",
+      "value": "Астана, Алматы, Шымкент, Атырау, Актау, Байконыр 7; областные центры и города областного значения 6; районные центры, города районного значения, пос. Боровое 4; сельские округа 2",
+      "unit": "МРП/сутки",
+      "law": "Правила возмещения расходов на командировки за счёт бюджетных средств, утв. ПП РК от 11.05.2018 № 256, п. 3 пп. 2) (работники госучреждений)",
+      "change_frequency": "rare",
+      "used_by": [
+        "BusinessTripCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "official_source": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "verify_note": "calkcheck 2026-09-24: сверено дословно (r.jina.ai → adilet). В калькулятор добавлена 4-я категория «сельский округ» (2 МРП); потолок теперь реально ограничивает возмещение (раньше в итог шла полная цена гостиницы). Для руководителей госорганов свои потолки 10/7/5 МРП — в калькуляторе не моделируются.",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "businesstrip_budget_foreign_perdiem_table",
+      "value": "СНГ (РФ, Узбекистан, Кыргызстан, Таджикистан, Туркменистан, Армения, Азербайджан, Беларусь, Молдова) 80 USD; ОАЭ, Саудовская Аравия, Катар, Кувейт, Бахрейн, Оман, Израиль, Египет 90 USD; Китай, Турция, США, Япония, Канада 100 USD; Германия, Франция, Италия, Испания, Нидерланды, Австрия, Польша, Чехия, Великобритания 80 EUR",
+      "unit": "в сутки",
+      "law": "ПП РК от 11.05.2018 № 256, п. 7 пп. 7) — нормы суточных в краткосрочных загранкомандировках (госучреждения)",
+      "change_frequency": "rare",
+      "used_by": [
+        "BusinessTripCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "official_source": "https://adilet.zan.kz/rus/docs/P1800000256",
+      "verify_note": "calkcheck 2026-09-24: таблица снята из HTML (колонки USD/EUR). Заменила выдуманные пресеты 75/80/120/150 USD (бывшие estimates_excluded businesstrip_perdiem_foreign_*). В калькуляторе пресеты: cis 80 USD, china 100 USD, eu 80 EUR, uae 90 USD.",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "water_tariff_almaty_flat",
+      "value": 76.56,
+      "unit": "KZT/м³ с НДС 16%",
+      "law": "ГКП «Алматы Су»: единый тариф 1 группы с 01.01.2026 (отчёт компании за 1-е полугодие 2026, https://almatysu.kz/uploads/2026/07/1-2026-c4131a00.pdf); дифференцированные ступени приостановлены с 01.09.2025 по 31.12.2026",
+      "year": "2026",
+      "change_frequency": "annual",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "WaterBillCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://almatysu.kz/tarify.html",
+      "official_value": 76.56,
+      "official_source": "https://almatysu.kz/tarify.html",
+      "verify_note": "calkcheck 2026-09-24: сверено агентом по сайту водоканала и приказам ДКРЕМ (1 группа, население).",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary",
+      "changes_next_fy": "Ступени «Алматы Су» (с НДС: ≤3 м³/чел 118,89; 3–5 — 142,67; 5–10 — 178,34; >10 или без счётчика — 237,78) приостановлены до 31.12.2026 — перепроверить в январе 2027; компания планировала заявку на пересмотр тарифа."
+    },
+    {
+      "key": "water_tariff_astana_flat",
+      "value": 119.36,
+      "unit": "KZT/м³ с НДС 16%",
+      "law": "ГКП «Астана су арнасы»: с 01.04.2026 по 31.12.2026, приказы ДКРЕМ г. Астаны № 105-ОД от 25.11.2025 и № 21-ОД от 25.06.2026",
+      "year": "2026",
+      "change_frequency": "annual",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "WaterBillCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://www.astanasu.kz/to-client/tariffs/",
+      "official_value": 119.36,
+      "official_source": "https://www.astanasu.kz/to-client/tariffs/",
+      "verify_note": "calkcheck 2026-09-24: сверено агентом по сайту водоканала и приказам ДКРЕМ (1 группа, население).",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary",
+      "changes_next_fy": "Тариф утверждён до 31.12.2026 — перепроверить в январе 2027."
+    },
+    {
+      "key": "water_tariff_shymkent_flat",
+      "value": 111.44,
+      "unit": "KZT/м³ с НДС 16%",
+      "law": "ТОО «Водные ресурсы – Маркетинг»: 01.07–31.12.2026, приказ ДКРЕМ г. Шымкента № 33 от 26.06.2026 (заменил № 26 от 26.05.2026); с 01.01.2027 — 106,87/63,15 без НДС",
+      "year": "2026",
+      "change_frequency": "annual",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "WaterBillCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://www.wrm.kz/rus/tariff.html",
+      "official_value": 111.44,
+      "official_source": "https://www.wrm.kz/rus/tariff.html",
+      "verify_note": "calkcheck 2026-09-24: сверено агентом по сайту водоканала и приказам ДКРЕМ (1 группа, население).",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary",
+      "changes_next_fy": "С 01.01.2027: вода 106,87 / 123,97 с НДС, водоотведение 63,15 / 73,25 с НДС (приказ ДКРЕМ № 33)."
+    },
+    {
+      "key": "ipn_declaration_deadline_fno270",
+      "value": "15.09",
+      "unit": "date (DD.MM next year)",
+      "law": "НК РК 2026, ст. 412 п. 1 пп. 2 (имущественный доход — в декларации о доходах и имуществе), ст. 418 п. 1 («не позднее 15 сентября года, следующего за отчетным»)",
+      "change_frequency": "rare",
+      "used_by": [
+        "CryptoTaxCalculator",
+        "PropertySaleTaxCalculator",
+        "RentalIncomeTaxCalculator",
+        "CasinoWinningsTaxCalculator",
+        "CarTransferCalculator",
+        "FairRentalPriceCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_source": "https://uchet.kz/news/forma-240-uprazdnena-chto-dalshe/",
+      "verify_note": "calkcheck 2026-09-24: агент сверил ст. 412/418/419 по adilet; независимо подтверждено uchet.kz, pro1c.kz, tengrinews (КГД). Заменило «ФНО 240.00 до 31 марта / уплата до 10 апреля» на 6 калькуляторах.",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "ipn_payment_deadline_fno270",
+      "value": "25.09",
+      "unit": "date (DD.MM next year)",
+      "law": "НК РК 2026, ст. 419 п. 1 — «не позднее десяти календарных дней после срока, установленного для сдачи декларации о доходах и имуществе»",
+      "change_frequency": "rare",
+      "used_by": [
+        "CryptoTaxCalculator",
+        "PropertySaleTaxCalculator",
+        "RentalIncomeTaxCalculator",
+        "CasinoWinningsTaxCalculator",
+        "CarTransferCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-09-24: 15.09 + 10 календарных дней.",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "zags_divorce_registration_fee_kzt",
+      "value": 6900,
+      "unit": "KZT (без НДС, по приказу)",
+      "law": "Приказ МЦРИАП РК от 09.06.2023 № 175/НҚ «Об определении размера оплаты услуг государственной регистрации актов гражданского состояния», прил., п. 3 пп. 1) — в ред. приказа от 17.02.2026 № 78/НҚ",
+      "change_frequency": "rare",
+      "used_by": [
+        "DivorceCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/V2300032755",
+      "official_value": 6900,
+      "official_source": "https://old.adilet.zan.kz/rus/docs/V2300032755",
+      "verify_note": "calkcheck 2026-09-24: таблица приложения сверена дословно (old.adilet): «Государственная регистрация расторжения брака по взаимному согласию — 6 900,00». Колонка: «Стоимость для услугополучателя, без НДС».",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "gov_duty_property_claim_individual",
+      "value": "1% цены иска, не более 10 000 МРП; минимума нет",
+      "unit": "",
+      "law": "НК РК 2026, ст. 665 п. 1 пп. 1 (для физических лиц); при разделе имущества в бракоразводном иске — там же, пп. 5",
+      "change_frequency": "rare",
+      "used_by": [
+        "DivorceCalculator",
+        "PropertyDivisionCalculator",
+        "CourtFeeCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-09-24: «мин 0,5 МРП» в DivorceCalculator и PropertyDivisionCalculator убран (в статье нет минимума); методика CourtFee исправлена под код (там min уже не было).",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "driving_dui_repeat_within_year",
+      "value": "20 суток ареста + лишение прав на 8 лет",
+      "unit": "",
+      "law": "КоАП РК, ст. 608 ч. 3-1",
+      "change_frequency": "rare",
+      "used_by": [
+        "AlcoholBloodCalculator",
+        "TrafficFinesCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-24: сверено дословно по old.adilet.",
+      "year": "2026",
+      "aliases": [],
+      "status": "current",
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "diploma_honors_min_gpa",
+      "value": 3.5,
+      "unit": "GPA (шкала 4.0)",
+      "law": "Правила организации учебного процесса по кредитной технологии обучения (приказ МОН РК от 20.04.2011 № 152): диплом с отличием — оценки A/A− и B+/B/B−/C+, GPA не ниже 3,5, итоговая аттестация на A/A−, без пересдач",
+      "change_frequency": "rare",
+      "used_by": [
+        "GPACalculator"
+      ],
+      "source_url": "https://kazatu.edu.kz/ru/pages/coo/trebovania-k-vypusknikam",
+      "verify_note": "calkcheck 2026-09-24: на странице было «красный диплом — средний балл от 4.5» (российская 5-балльная логика). Подтверждено цитатами вузов из правил МОН; первичный текст приказа № 152 не открывался.",
+      "status": "uncertain",
+      "year": "2026",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-09-24",
+      "verify_method": "calkcheck-primary"
     }
   ],
   "estimates_excluded": [
@@ -8995,22 +9329,6 @@
     {
       "key": "lawyer_fee_divorce_example_kzt",
       "note": "Hardcoded example lawyer fee (lawyerFee=200000), a market price with no legal ba"
-    },
-    {
-      "key": "businesstrip_perdiem_foreign_eu_usd",
-      "note": "Example/illustrative foreign per-diem (EU 120 USD/day) hardcoded in BusinessTrip"
-    },
-    {
-      "key": "businesstrip_perdiem_foreign_uae_usd",
-      "note": "Example/illustrative foreign per-diem (UAE 150 USD/day) hardcoded as an employer"
-    },
-    {
-      "key": "businesstrip_perdiem_foreign_china_usd",
-      "note": "Example/illustrative foreign per-diem (China 80 USD/day) hardcoded as an employe"
-    },
-    {
-      "key": "businesstrip_perdiem_foreign_cis_usd",
-      "note": "Example/illustrative foreign per-diem (CIS 75 USD/day) hardcoded as an employer-"
     },
     {
       "key": "vehicle_inspection_cost_kzt",
@@ -9028,7 +9346,7 @@
   "summary": {
     "hardcoded_canonical": 418,
     "value_conflicts": 2,
-    "estimates_excluded": 10,
+    "estimates_excluded": 6,
     "recovered_from_estimates": 13,
     "diff_sweep_added": 86,
     "diff_sweep_corrected": 8,

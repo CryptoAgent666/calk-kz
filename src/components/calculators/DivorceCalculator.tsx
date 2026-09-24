@@ -13,6 +13,15 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 
 const MRP_2026 = 4325;
+/**
+ * Регистрация развода в ЗАГС по взаимному согласию — не госпошлина (в перечне
+ * ст. 664 НК-2026 актов гражданского состояния нет), а плата за услугу:
+ * 6 900 ₸ по приказу МЦРИАП от 09.06.2023 № 175/НҚ в ред. от 17.02.2026 № 78/НҚ.
+ * Прежние «2 МРП = 8 650 ₸» ни на чём не основаны.
+ */
+const ZAGS_DIVORCE_FEE = 6900;
+/** Госпошлина с имущественного иска физлица — 1% цены иска, не более 10 000 МРП (ст. 665 п. 1 пп. 1). */
+const PROPERTY_FEE_CAP = 10000 * MRP_2026;
 
 type Mode = 'zags' | 'court';
 
@@ -40,14 +49,15 @@ export default function DivorceCalculator() {
   }, [suggestedMode]);
 
   const results = useMemo(() => {
-    // Госпошлина за развод в ЗАГСе — 2 МРП = 8 650 ₸ (взаимное согласие)
-    // Госпошлина за иск о расторжении брака в суде — 0.3 МРП = 1 297,5 ₸ (ст. 665 НК РК)
-    // Госпошлина за раздел имущества — 1% от стоимости, мин 0.5 МРП
+    // ЗАГС — плата за регистрацию 6 900 ₸ (см. ZAGS_DIVORCE_FEE)
+    // Госпошлина за иск о расторжении брака в суде — 0.3 МРП = 1 297,5 ₸ (ст. 665 п. 1 пп. 5 НК РК)
+    // Госпошлина за раздел имущества — 1% от цены иска, не более 10 000 МРП; минимума
+    // в ст. 665 нет (прежний «мин 0,5 МРП» был выдуман)
     // Нотариус (по желанию) — 5-10 МРП
     // Юрист (по желанию) — от 100 000 ₸
-    const divorceFee = mode === 'zags' ? 2 * MRP_2026 : 0.3 * MRP_2026;
+    const divorceFee = mode === 'zags' ? ZAGS_DIVORCE_FEE : 0.3 * MRP_2026;
     const propValue = parseFloat(propertyValue) || 0;
-    const propertyFee = hasPropertyDispute ? Math.max(propValue * 0.01, 0.5 * MRP_2026) : 0;
+    const propertyFee = hasPropertyDispute ? Math.min(propValue * 0.01, PROPERTY_FEE_CAP) : 0;
     // Истец по иску о взыскании алиментов ОСВОБОЖДЁН от госпошлины (пп.4 ст.616 НК РК);
     // госпошлина взыскивается с ответчика. Поэтому для истца = 0.
     const alimonyPetitionFee = 0;
@@ -139,7 +149,7 @@ export default function DivorceCalculator() {
 
           <div className="space-y-2 text-sm">
             <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-              <span>{t('divorce.divorceFee')} ({mode === 'zags' ? `2 ${mrpUnit}` : `0,3 ${mrpUnit}`})</span>
+              <span>{mode === 'zags' ? t('divorce.zagsFee') : `${t('divorce.divorceFee')} (0,3 ${mrpUnit})`}</span>
               <span className="font-semibold">{formatNumber(results.divorceFee)}</span>
             </div>
             {results.propertyFee > 0 && (

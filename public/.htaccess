@@ -25,9 +25,14 @@ ErrorDocument 404 /index.html
 
   # Не трогаем реально существующие файлы и папки
   RewriteRule ^index\.html$ - [L]
+  # SPA-фолбэк — только для клиентских маршрутов без пререндера (история,
+  # избранное, напоминания; /search React сам уводит на главную). Всё прочее,
+  # чего нет на диске, получает ErrorDocument 404: ту же index.html, но со
+  # статусом 404. Раньше здесь стояло «RewriteRule . /index.html» — любой
+  # мусорный URL отвечал 200 (soft 404), и ErrorDocument выше не срабатывал.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule ^(__kk/)?(history|favorites|reminders|search)/?$ /index.html [L]
 </IfModule>
 
 # Заголовки безопасности
@@ -44,9 +49,17 @@ ErrorDocument 404 /index.html
   # Защита от кликджекинга — ТОЛЬКО вне /embed/. Виджеты в /embed/ существуют
   # именно ради встраивания на сторонние сайты (132 страницы), запрет фреймов
   # сломал бы продукт.
+  #
+  # CSP — минимальный, без списков источников скриптов (AdSense, GA, Supabase
+  # и шрифты не ломаются): запрет <object>/<embed>-плагинов и подмены <base>;
+  # вне /embed/ — ещё frame-ancestors как современная замена X-Frame-Options.
   <If "%{REQUEST_URI} !~ m#^/(__kk/)?embed/#">
     Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Content-Security-Policy "object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
   </If>
+  <Else>
+    Header always set Content-Security-Policy "object-src 'none'; base-uri 'self'"
+  </Else>
 </IfModule>
 
 # Кэширование статики

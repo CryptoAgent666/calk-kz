@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Droplets, Calculator, MapPin, Users, Info, AlertTriangle, TrendingUp, Waves, BarChart3 } from 'lucide-react';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { getSources } from '../../data/calculatorSources';
 import { FAQSection } from '../ui/FAQSection';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -10,17 +12,23 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 
-interface TariffTier {
-  min: number;
-  max: number;
-  rate: number;
-  descriptionKey: string;
-}
-
+/**
+ * Тарифы для населения (1 группа потребителей), ₸/м³ с НДС 16% — сверено
+ * 24.09.2026 по сайтам водоканалов и приказам ДКРЕМ:
+ * - Алматы («Алматы Су», almatysu.kz): вода 76,56, водоотведение 47,50 — единый
+ *   тариф; дифференцированные ступени утверждены, но приостановлены с 01.09.2025
+ *   по 31.12.2026 (отчёт компании за 1-е полугодие 2026).
+ * - Астана («Астана су арнасы», astanasu.kz): 119,36 и 127,41 с 01.04.2026
+ *   (приказ ДКРЕМ № 21-ОД от 25.06.2026 — до 31.12.2026).
+ * - Шымкент («Водные ресурсы – Маркетинг», wrm.kz): 111,44 и 62,41
+ *   (приказ ДКРЕМ № 33 от 26.06.2026 — до 31.12.2026).
+ * Прежние ступени 103/123,6/154,49/205,99 и 89,40…178,80 ₸ не совпадали ни с
+ * одним действующим приказом, водоотведение в Астане было занижено в 2,6 раза.
+ */
 interface CityTariff {
   id: string;
   nameKey: string;
-  coldWaterTiers: TariffTier[];
+  waterRate: number;
   sewerageRate: number;
 }
 
@@ -29,6 +37,9 @@ export default function WaterBillCalculator() {
   const [city, setCity] = useState<string>('almaty');
   const [waterConsumption, setWaterConsumption] = useState<string>('5');
   const [residentsCount, setResidentsCount] = useState<string>('1');
+  // «Другой город»: единого справочника нет — тариф берут из квитанции.
+  const [customWaterRate, setCustomWaterRate] = useState<string>('100');
+  const [customSewerageRate, setCustomSewerageRate] = useState<string>('60');
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState(нули) +
   // useEffect: пререндер сохраняет страницу с числами, и первый клиентский
@@ -38,56 +49,20 @@ export default function WaterBillCalculator() {
     sewerageAmount: 0,
     totalAmount: 0,
     consumptionPerPerson: 0,
-    breakdown: [] as Array<{tier: number, volume: number, rate: number, amount: number, descriptionKey: string}>,
     averageRate: 0,
     recommendationKey: ''
   };
 
   const cityTariffs: CityTariff[] = [
-    {
-      id: 'almaty',
-      nameKey: 'calculators:water.cityAlmaty',
-      coldWaterTiers: [
-        { min: 0, max: 3, rate: 103.00, descriptionKey: 'calculators:water.tierUpTo3' },
-        { min: 3, max: 5, rate: 123.60, descriptionKey: 'calculators:water.tier3To5' },
-        { min: 5, max: 10, rate: 154.49, descriptionKey: 'calculators:water.tier5To10' },
-        { min: 10, max: Infinity, rate: 205.99, descriptionKey: 'calculators:water.tierAbove10' }
-      ],
-      sewerageRate: 51.50
-    },
-    {
-      id: 'astana',
-      nameKey: 'calculators:water.cityAstana',
-      coldWaterTiers: [
-        { min: 0, max: 3, rate: 98.50, descriptionKey: 'calculators:water.tierUpTo3' },
-        { min: 3, max: 5, rate: 118.20, descriptionKey: 'calculators:water.tier3To5' },
-        { min: 5, max: 10, rate: 147.75, descriptionKey: 'calculators:water.tier5To10' },
-        { min: 10, max: Infinity, rate: 197.00, descriptionKey: 'calculators:water.tierAbove10' }
-      ],
-      sewerageRate: 49.25
-    },
-    {
-      id: 'shymkent',
-      nameKey: 'calculators:water.cityShymkent',
-      coldWaterTiers: [
-        { min: 0, max: 3, rate: 89.40, descriptionKey: 'calculators:water.tierUpTo3' },
-        { min: 3, max: 5, rate: 107.28, descriptionKey: 'calculators:water.tier3To5' },
-        { min: 5, max: 10, rate: 134.10, descriptionKey: 'calculators:water.tier5To10' },
-        { min: 10, max: Infinity, rate: 178.80, descriptionKey: 'calculators:water.tierAbove10' }
-      ],
-      sewerageRate: 44.70
-    },
+    { id: 'almaty', nameKey: 'calculators:water.cityAlmaty', waterRate: 76.56, sewerageRate: 47.50 },
+    { id: 'astana', nameKey: 'calculators:water.cityAstana', waterRate: 119.36, sewerageRate: 127.41 },
+    { id: 'shymkent', nameKey: 'calculators:water.cityShymkent', waterRate: 111.44, sewerageRate: 62.41 },
     {
       id: 'other',
       nameKey: 'calculators:water.otherRegions',
-      coldWaterTiers: [
-        { min: 0, max: 3, rate: 85.20, descriptionKey: 'calculators:water.tierUpTo3' },
-        { min: 3, max: 5, rate: 102.24, descriptionKey: 'calculators:water.tier3To5' },
-        { min: 5, max: 10, rate: 127.80, descriptionKey: 'calculators:water.tier5To10' },
-        { min: 10, max: Infinity, rate: 170.40, descriptionKey: 'calculators:water.tierAbove10' }
-      ],
-      sewerageRate: 42.60
-    }
+      waterRate: parseFloat(customWaterRate) || 0,
+      sewerageRate: parseFloat(customSewerageRate) || 0,
+    },
   ];
 
   const calculateWaterBill = () => {
@@ -102,36 +77,7 @@ export default function WaterBillCalculator() {
     if (!selectedCity) return EMPTY_RESULTS;
 
     const consumptionPerPerson = totalConsumption / residents;
-    const tariffs = selectedCity.coldWaterTiers;
-
-    let coldWaterAmount = 0;
-    let remainingConsumptionPerPerson = consumptionPerPerson;
-    const breakdown = [];
-
-    for (let i = 0; i < tariffs.length; i++) {
-      const tariff = tariffs[i];
-
-      if (remainingConsumptionPerPerson <= 0) break;
-
-      const tierMax = tariff.max === Infinity ? remainingConsumptionPerPerson : Math.min(tariff.max - tariff.min, remainingConsumptionPerPerson);
-      const tierConsumptionPerPerson = Math.min(tierMax, remainingConsumptionPerPerson);
-
-      if (tierConsumptionPerPerson > 0) {
-        const tierVolumeTotal = tierConsumptionPerPerson * residents;
-        const tierAmount = tierVolumeTotal * tariff.rate;
-        coldWaterAmount += tierAmount;
-
-        breakdown.push({
-          tier: i + 1,
-          volume: tierVolumeTotal,
-          rate: tariff.rate,
-          amount: tierAmount,
-          descriptionKey: tariff.descriptionKey
-        });
-
-        remainingConsumptionPerPerson -= tierConsumptionPerPerson;
-      }
-    }
+    const coldWaterAmount = totalConsumption * selectedCity.waterRate;
 
     const sewerageAmount = totalConsumption * selectedCity.sewerageRate;
 
@@ -154,7 +100,6 @@ export default function WaterBillCalculator() {
       sewerageAmount: Math.round(sewerageAmount),
       totalAmount: Math.round(totalAmount),
       consumptionPerPerson: Number(consumptionPerPerson.toFixed(2)),
-      breakdown,
       averageRate: Number(averageRate.toFixed(2)),
       recommendationKey
     };
@@ -165,7 +110,7 @@ export default function WaterBillCalculator() {
   const results = useMemo(
     calculateWaterBill,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [city, waterConsumption, residentsCount]
+    [city, waterConsumption, residentsCount, customWaterRate, customSewerageRate]
   );
 
   const formatNumber = (num: number) => {
@@ -180,6 +125,7 @@ export default function WaterBillCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="water" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
@@ -256,21 +202,54 @@ export default function WaterBillCalculator() {
               />
             </div>
 
-            <div className="bg-blue-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-blue-900 mb-2">
-                {t('water.tariffsFor')} {selectedCityData ? t(selectedCityData.nameKey) : ''}:
-              </h3>
-              <div className="space-y-1 text-xs text-blue-800">
-                {selectedCityData?.coldWaterTiers.map((tariff, index) => (
-                  <div key={index}>
-                    • {t(tariff.descriptionKey)}: <strong>{formatRate(tariff.rate)}</strong>
+            {city === 'other' ? (
+              <div className="bg-blue-50 rounded-lg p-4 space-y-3">
+                <p className="text-xs text-blue-800">{t('water.otherTariffHint')}</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="customWaterRate" className="block text-xs font-medium text-blue-900 mb-1">
+                      {t('water.waterSupply')}, ₸/м³
+                    </label>
+                    <input
+                      type="number"
+                      id="customWaterRate"
+                      value={customWaterRate}
+                      onChange={(e) => setCustomWaterRate(e.target.value)}
+                      min="0"
+                      step="0.01"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
                   </div>
-                ))}
-                <div className="mt-2">
-                  • {t('water.sewerage')}: <strong>{formatRate(selectedCityData?.sewerageRate || 0)}</strong>
+                  <div>
+                    <label htmlFor="customSewerageRate" className="block text-xs font-medium text-blue-900 mb-1">
+                      {t('water.sewerage')}, ₸/м³
+                    </label>
+                    <input
+                      type="number"
+                      id="customSewerageRate"
+                      value={customSewerageRate}
+                      onChange={(e) => setCustomSewerageRate(e.target.value)}
+                      min="0"
+                      step="0.01"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-blue-900 mb-2">
+                  {t('water.tariffsFor')} {selectedCityData ? t(selectedCityData.nameKey) : ''}:
+                </h3>
+                <div className="space-y-1 text-xs text-blue-800">
+                  <div>• {t('water.waterSupply')}: <strong>{formatRate(selectedCityData?.waterRate || 0)}</strong></div>
+                  <div>• {t('water.sewerage')}: <strong>{formatRate(selectedCityData?.sewerageRate || 0)}</strong></div>
+                  <div className="mt-2 text-blue-700">
+                    {t(city === 'almaty' ? 'water.almatyTiersSuspended' : 'water.flatTariffNote')}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -304,7 +283,7 @@ export default function WaterBillCalculator() {
               <div className="flex justify-between items-center py-3 bg-blue-50 rounded-lg px-4">
                 <div>
                   <span className="font-medium text-blue-900">{t('water.coldWater')}</span>
-                  <div className="text-xs text-blue-600">{t('water.differentiatedTariffs')}</div>
+                  <div className="text-xs text-blue-600">{results.totalAmount > 0 ? formatRate(selectedCityData?.waterRate || 0) : ''}</div>
                 </div>
                 <span className="text-lg font-bold text-blue-700">{formatNumber(results.coldWaterAmount)}</span>
               </div>
@@ -332,31 +311,6 @@ export default function WaterBillCalculator() {
                 </div>
               )}
             </div>
-
-            {results.breakdown.length > 0 && (
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4">{t('water.detailedBreakdown')}</h3>
-                <div className="space-y-3">
-                  {results.breakdown.map((item, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <div className="font-medium text-gray-900">
-                            {t('water.tierLevel')} {item.tier}: {t(item.descriptionKey)}
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            {item.volume.toFixed(1)} м³ × {formatRate(item.rate)}
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-bold text-gray-900">{formatNumber(item.amount)}</div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {results.recommendationKey && (
               <div className={`rounded-lg p-4 ${
@@ -434,22 +388,18 @@ export default function WaterBillCalculator() {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">{t('water.city')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('water.upTo3PerPerson')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('water.from3To5PerPerson')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('water.from5To10PerPerson')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('water.above10PerPerson')}</th>
+                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('water.waterSupply')}</th>
                 <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('water.sewerageLabel')}</th>
+                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('water.totalPerM3')}</th>
               </tr>
             </thead>
             <tbody>
               {cityTariffs.filter(city => city.id !== 'other').map((cityData) => (
                 <tr key={cityData.id} className="border-b border-gray-100">
                   <td className="py-3 px-4 font-medium text-gray-900">{t(cityData.nameKey)}</td>
-                  <td className="py-3 px-4 text-center text-sm">{formatRate(cityData.coldWaterTiers[0].rate)}</td>
-                  <td className="py-3 px-4 text-center text-sm">{formatRate(cityData.coldWaterTiers[1].rate)}</td>
-                  <td className="py-3 px-4 text-center text-sm">{formatRate(cityData.coldWaterTiers[2].rate)}</td>
-                  <td className="py-3 px-4 text-center text-sm">{formatRate(cityData.coldWaterTiers[3].rate)}</td>
-                  <td className="py-3 px-4 text-center text-sm font-semibold text-cyan-600">{formatRate(cityData.sewerageRate)}</td>
+                  <td className="py-3 px-4 text-center text-sm">{formatRate(cityData.waterRate)}</td>
+                  <td className="py-3 px-4 text-center text-sm">{formatRate(cityData.sewerageRate)}</td>
+                  <td className="py-3 px-4 text-center text-sm font-semibold text-cyan-600">{formatRate(cityData.waterRate + cityData.sewerageRate)}</td>
                 </tr>
               ))}
             </tbody>
@@ -461,12 +411,12 @@ export default function WaterBillCalculator() {
             <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="text-sm font-medium text-blue-900 mb-1">
-                {t('water.differentiatedTariffPrinciple')}
+                {t('water.tariffsHowTitle')}
               </h3>
               <div className="text-blue-800 text-sm space-y-1">
-                <p>• {t('water.principle1')}</p>
-                <p>• {t('water.principle2')}</p>
-                <p>• {t('water.principle3')}</p>
+                <p>• {t('water.tariffsHow1')}</p>
+                <p>• {t('water.tariffsHow2')}</p>
+                <p>• {t('water.tariffsHow3')}</p>
                 <p>• {t('water.principle4')}</p>
               </div>
             </div>
@@ -484,10 +434,7 @@ export default function WaterBillCalculator() {
           { question: t('water.faq.q4'), answer: t('water.faq.a4') },
           { question: t('water.faq.q5'), answer: t('water.faq.a5') }
         ]}
-        sources={[
-          { title: 'Алматы Су', url: 'https://almatysu.kz/' },
-          { title: 'Астана Су Арнасы', url: 'https://astana-su.kz/' },
-        ]}
+        sources={getSources('water')}
       />
 
       {/* Виджет для встраивания */}

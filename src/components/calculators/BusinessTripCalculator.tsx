@@ -14,10 +14,14 @@ import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type TripType = 'domestic' | 'foreign';
-type DomesticCity = 'capital' | 'regional' | 'other';
+type DomesticCity = 'capital' | 'regional' | 'other' | 'rural';
 type ForeignRegion = 'cis' | 'china' | 'eu' | 'uae';
+type Currency = 'USD' | 'EUR';
 
 const MRP_2026 = 4325;
+// Курсы НБРК на 24.09.2026: 445,65 ₸/$ и 508,71 ₸/€ — поле редактируемое.
+const USD_KZT_DEFAULT = 446;
+const EUR_KZT_DEFAULT = 509;
 
 /**
  * Суточные по РК за счёт БЮДЖЕТНЫХ средств — плоские 2 МРП, без деления по
@@ -32,12 +36,35 @@ const MRP_2026 = 4325;
  */
 const BUDGET_DOMESTIC_PERDIEM_MRP = 2;
 
-/** Потолок возмещения найма жилья за счёт бюджета, МРП/сутки (ПП № 256, п. 3 пп. 2). */
-const BUDGET_HOUSING_CAP_MRP: Record<DomesticCity, number> = { capital: 7, regional: 6, other: 4 };
+/**
+ * Потолок возмещения найма жилья за счёт бюджета, МРП/сутки (ПП № 256, п. 3 пп. 2):
+ * 7 — Астана, Алматы, Шымкент, Атырау, Актау, Байконыр; 6 — областные центры и
+ * города областного значения; 4 — районные центры, города районного значения,
+ * пос. Боровое; 2 — сельские округа. У частных компаний лимита нет.
+ */
+const BUDGET_HOUSING_CAP_MRP: Record<DomesticCity, number> = { capital: 7, regional: 6, other: 4, rural: 2 };
 
-/** Необлагаемый ИПН предел суточных, МРП/сутки (НК ст. 366 пп. 2). */
+/**
+ * Необлагаемый ИПН предел суточных, МРП/сутки (НК ст. 366 пп. 2) — действует
+ * только за первые 40 календарных дней одной командировки.
+ */
 const PERDIEM_TAX_FREE_MRP = { domestic: 6, foreign: 8 };
-const FOREIGN_DAILY_USD: Record<ForeignRegion, number> = { cis: 75, china: 80, eu: 120, uae: 150 };
+const PERDIEM_TAX_FREE_MAX_DAYS = 40;
+
+/**
+ * Суточные за рубежом — нормы для госучреждений (ПП № 256, п. 7 пп. 7):
+ * все страны СНГ — 80 $, Китай — 100 $, ОАЭ, Саудовская Аравия, Катар — 90 $,
+ * Германия, Франция, Италия, Польша, Великобритания — 80 €. Частная компания
+ * устанавливает суточные сама, для неё это ориентир.
+ * Прежние 75/80/120/150 $ не опирались ни на один документ.
+ */
+const FOREIGN_PERDIEM: Record<ForeignRegion, { amount: number; currency: Currency }> = {
+  cis: { amount: 80, currency: 'USD' },
+  china: { amount: 100, currency: 'USD' },
+  eu: { amount: 80, currency: 'EUR' },
+  uae: { amount: 90, currency: 'USD' },
+};
+const CURRENCY_SIGN: Record<Currency, string> = { USD: '$', EUR: '€' };
 
 export default function BusinessTripCalculator() {
   const { t } = useTranslation('calculators');
@@ -50,14 +77,19 @@ export default function BusinessTripCalculator() {
   const [customPerDiemMrp, setCustomPerDiemMrp] = useState<string>('6');
   const [foreignRegion, setForeignRegion] = useState<ForeignRegion>('cis');
   const [days, setDays] = useState<string>('5');
-  const [usdRate, setUsdRate] = useState<string>('470');
+  const [usdRate, setUsdRate] = useState<string>(String(USD_KZT_DEFAULT));
+  const [eurRate, setEurRate] = useState<string>(String(EUR_KZT_DEFAULT));
   const [accommodation, setAccommodation] = useState<string>('15000');
   const [transport, setTransport] = useState<string>('60000');
   const [avgDaySalary, setAvgDaySalary] = useState<string>('15000');
+  // Зарплата сохраняется за рабочие дни, приходящиеся на командировку
+  // (ТК ст. 127 п. 1), — выходные в пути суточные получают, а зарплату нет.
+  const [workDays, setWorkDays] = useState<string>('5');
+
+  const foreignNorm = FOREIGN_PERDIEM[foreignRegion];
 
   const results = useMemo(() => {
     const n = parseFloat(days) || 0;
-    const rate = parseFloat(usdRate) || 470;
     let dailyPerDay = 0;
 
     if (tripType === 'domestic') {
@@ -65,33 +97,43 @@ export default function BusinessTripCalculator() {
         ? BUDGET_DOMESTIC_PERDIEM_MRP * MRP_2026
         : (parseFloat(customPerDiemMrp) || 0) * MRP_2026;
     } else {
-      dailyPerDay = FOREIGN_DAILY_USD[foreignRegion] * rate;
+      const rate = foreignNorm.currency === 'EUR'
+        ? parseFloat(eurRate) || EUR_KZT_DEFAULT
+        : parseFloat(usdRate) || USD_KZT_DEFAULT;
+      dailyPerDay = foreignNorm.amount * rate;
     }
 
-    const dailyTotal = dailyPerDay * n;
-    const accTotal = (parseFloat(accommodation) || 0) * n;
-    const transTotal = parseFloat(transport) || 0;
-    const salaryTotal = (parseFloat(avgDaySalary) || 0) * n;
-    const total = dailyTotal + accTotal + transTotal + salaryTotal;
-    const advance = total * 0.75;
-
-    // Налогообложение сверхнормативных сумм (НК РК 2026, ст. 366): не облагаются ИПН суточные
-    // в пределах 6 МРП/сутки по РК и 8 МРП/сутки за рубежом. Превышение суточных — доход работника.
-    // Проживание и проезд (ст. 260) возмещаются по факту и НЕ ограничены лимитом в МРП.
-    const dailyTaxFreeLimit = (tripType === 'domestic'
-      ? PERDIEM_TAX_FREE_MRP.domestic
-      : PERDIEM_TAX_FREE_MRP.foreign) * MRP_2026; // per day
-    const overLimit = Math.max(0, dailyPerDay - dailyTaxFreeLimit) * n;
-    const taxOnOverLimit = overLimit * 0.10;
-
     // Бюджетникам наём жилья возмещается в пределах потолка по типу населённого
-    // пункта; разницу сотрудник платит сам.
+    // пункта; разницу сотрудник платит сам. Раньше потолок только считался, а в
+    // итог шла полная стоимость гостиницы.
+    const accPerDay = parseFloat(accommodation) || 0;
     const housingCapPerDay = budgetFunded && tripType === 'domestic'
       ? BUDGET_HOUSING_CAP_MRP[domesticCity] * MRP_2026
       : null;
     const housingOverCap = housingCapPerDay === null
       ? 0
-      : Math.max(0, (parseFloat(accommodation) || 0) - housingCapPerDay) * n;
+      : Math.max(0, accPerDay - housingCapPerDay) * n;
+
+    const dailyTotal = dailyPerDay * n;
+    const accTotal = (housingCapPerDay === null ? accPerDay : Math.min(accPerDay, housingCapPerDay)) * n;
+    const transTotal = parseFloat(transport) || 0;
+    const salaryTotal = (parseFloat(avgDaySalary) || 0) * Math.min(parseFloat(workDays) || 0, n);
+    const total = dailyTotal + accTotal + transTotal + salaryTotal;
+    // Перед отъездом выдаётся сумма на проезд, наём жилья и суточные (ПП № 256, п. 6);
+    // зарплата за дни командировки идёт в обычный срок выплаты.
+    const advance = dailyTotal + accTotal + transTotal;
+
+    // Налогообложение сверхнормативных сумм (НК РК 2026, ст. 366 пп. 2): не являются доходом
+    // суточные в пределах 6 МРП/сутки по РК и 8 МРП/сутки за рубежом — и только за первые
+    // 40 календарных дней командировки; сверх лимита и после 40-го дня — доход работника.
+    // Проживание и проезд по подтверждающим документам лимитом в МРП не ограничены.
+    const dailyTaxFreeLimit = (tripType === 'domestic'
+      ? PERDIEM_TAX_FREE_MRP.domestic
+      : PERDIEM_TAX_FREE_MRP.foreign) * MRP_2026; // per day
+    const taxFreeDays = Math.min(n, PERDIEM_TAX_FREE_MAX_DAYS);
+    const overLimit = Math.max(0, dailyPerDay - dailyTaxFreeLimit) * taxFreeDays
+      + dailyPerDay * Math.max(0, n - PERDIEM_TAX_FREE_MAX_DAYS);
+    const taxOnOverLimit = overLimit * 0.10;
 
     return {
       housingCapPerDay: housingCapPerDay === null ? null : Math.round(housingCapPerDay),
@@ -106,8 +148,8 @@ export default function BusinessTripCalculator() {
       overLimit: Math.round(overLimit),
       taxOnOverLimit: Math.round(taxOnOverLimit),
     };
-  }, [tripType, domesticCity, foreignRegion, days, usdRate, accommodation, transport, avgDaySalary,
-    budgetFunded, customPerDiemMrp]);
+  }, [tripType, domesticCity, foreignNorm, days, usdRate, eurRate, accommodation, transport, avgDaySalary,
+    workDays, budgetFunded, customPerDiemMrp]);
 
   const formatNumber = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 
@@ -176,21 +218,27 @@ export default function BusinessTripCalculator() {
                 />
               )}
 
-              <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.cityCategory')}</label>
-              <div className="space-y-2">
-                {(['capital', 'regional', 'other'] as DomesticCity[]).map(c => (
-                  <button key={c} onClick={() => setDomesticCity(c)}
-                    className={`w-full p-3 rounded-lg border text-left ${domesticCity === c ? 'bg-indigo-50 border-indigo-500' : 'bg-white border-gray-300'}`}>
-                    <div className="text-sm font-medium">{t(`business-trip.city.${c}`)}</div>
-                    <div className="text-xs text-gray-500">
-                      {t('business-trip.housingCapHint', {
-                        mrp: BUDGET_HOUSING_CAP_MRP[c],
-                        sum: formatNumber(BUDGET_HOUSING_CAP_MRP[c] * MRP_2026),
-                      })}
-                    </div>
-                  </button>
-                ))}
-              </div>
+              {budgetFunded ? (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.cityCategory')}</label>
+                  <div className="space-y-2">
+                    {(['capital', 'regional', 'other', 'rural'] as DomesticCity[]).map(c => (
+                      <button key={c} onClick={() => setDomesticCity(c)}
+                        className={`w-full p-3 rounded-lg border text-left ${domesticCity === c ? 'bg-indigo-50 border-indigo-500' : 'bg-white border-gray-300'}`}>
+                        <div className="text-sm font-medium">{t(`business-trip.city.${c}`)}</div>
+                        <div className="text-xs text-gray-500">
+                          {t('business-trip.housingCapHint', {
+                            mrp: BUDGET_HOUSING_CAP_MRP[c],
+                            sum: formatNumber(BUDGET_HOUSING_CAP_MRP[c] * MRP_2026),
+                          })}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs text-gray-500">{t('business-trip.privateHousingHint')}</p>
+              )}
             </div>
           ) : (
             <>
@@ -201,27 +249,45 @@ export default function BusinessTripCalculator() {
                     <button key={r} onClick={() => setForeignRegion(r)}
                       className={`p-3 rounded-lg border text-xs ${foreignRegion === r ? 'bg-indigo-50 border-indigo-500' : 'bg-white border-gray-300'}`}>
                       <div className="font-medium">{t(`business-trip.regions.${r}`)}</div>
-                      <div className="text-gray-500">{FOREIGN_DAILY_USD[r]} USD/сут</div>
+                      <div className="text-gray-500">
+                        {FOREIGN_PERDIEM[r].amount} {CURRENCY_SIGN[FOREIGN_PERDIEM[r].currency]}{t('business-trip.perDayShort')}
+                      </div>
                     </button>
                   ))}
                 </div>
+                <p className="mt-2 text-xs text-gray-500">
+                  {t('business-trip.foreignNormHint', {
+                    mrp: PERDIEM_TAX_FREE_MRP.foreign,
+                    sum: formatNumber(PERDIEM_TAX_FREE_MRP.foreign * MRP_2026),
+                  })}
+                </p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.usdRate')}</label>
-                <input type="number" value={usdRate} onChange={e => setUsdRate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-              </div>
+              {foreignNorm.currency === 'EUR' ? (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.eurRate')}</label>
+                  <input type="number" value={eurRate} onChange={e => setEurRate(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.usdRate')}</label>
+                  <input type="number" value={usdRate} onChange={e => setUsdRate(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+              )}
             </>
           )}
 
           <RangeSlider label={t('business-trip.days')} value={parseFloat(days) || 0}
-            onChange={v => setDays(String(v))} min={1} max={60} step={1} formatValue={v => `${v} дн.`} />
+            onChange={v => setDays(String(v))} min={1} max={60} step={1} formatValue={v => `${v} ${t('business-trip.daysShort')}`} />
           <RangeSlider label={t('business-trip.accommodation')} value={parseFloat(accommodation) || 0}
             onChange={v => setAccommodation(String(v))} min={0} max={100000} step={1000} formatValue={formatNumber} />
           <RangeSlider label={t('business-trip.transport')} value={parseFloat(transport) || 0}
             onChange={v => setTransport(String(v))} min={0} max={500000} step={5000} formatValue={formatNumber} />
           <RangeSlider label={t('business-trip.avgDaySalary')} value={parseFloat(avgDaySalary) || 0}
             onChange={v => setAvgDaySalary(String(v))} min={0} max={100000} step={1000} formatValue={formatNumber} />
+          <RangeSlider label={t('business-trip.workDays')} value={parseFloat(workDays) || 0}
+            onChange={v => setWorkDays(String(v))} min={0} max={60} step={1} formatValue={v => `${v} ${t('business-trip.daysShort')}`} />
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
@@ -238,6 +304,12 @@ export default function BusinessTripCalculator() {
             <div className="flex justify-between p-3 bg-gray-50 rounded"><span>{t('business-trip.accTotal')}</span><span className="font-semibold">{formatNumber(results.accTotal)}</span></div>
             <div className="flex justify-between p-3 bg-gray-50 rounded"><span>{t('business-trip.transTotal')}</span><span className="font-semibold">{formatNumber(results.transTotal)}</span></div>
             <div className="flex justify-between p-3 bg-gray-50 rounded"><span>{t('business-trip.salaryTotal')}</span><span className="font-semibold">{formatNumber(results.salaryTotal)}</span></div>
+            {results.housingOverCap > 0 && (
+              <div className="flex justify-between p-3 bg-amber-50 rounded text-amber-900">
+                <span>{t('business-trip.housingOverCap')}</span>
+                <span className="font-semibold">{formatNumber(results.housingOverCap)}</span>
+              </div>
+            )}
           </div>
 
           {results.taxOnOverLimit > 0 && (
@@ -263,7 +335,7 @@ export default function BusinessTripCalculator() {
         <ExportButtons
           data={{
             title: t('business-trip.title'),
-            subtitle: `${days} дн.`,
+            subtitle: `${days} ${t('business-trip.daysShort')}`,
             sections: [{ title: t('business-trip.resultsTitle'), data: [
               { label: t('business-trip.dailyTotal'), value: formatNumber(results.dailyTotal) },
               { label: t('business-trip.accTotal'), value: formatNumber(results.accTotal) },

@@ -34,13 +34,14 @@ export default function HajjCalculator() {
   const [tripType, setTripType] = useState<TripType>('umra');
   const [pkg, setPkg] = useState<Package>('standard');
   const [persons, setPersons] = useState<string>('1');
-  const [usdRate, setUsdRate] = useState<string>('470');
+  // Курс НБРК на 24.09.2026 — 445,65 ₸/$; поле редактируемое.
+  const [usdRate, setUsdRate] = useState<string>('446');
   const [addKurban, setAddKurban] = useState<boolean>(true);
   const [addSouvenirs, setAddSouvenirs] = useState<string>('300'); // USD на сувениры/еду
 
   const results = useMemo(() => {
     const p = parseFloat(persons) || 1;
-    const rate = parseFloat(usdRate) || 470;
+    const rate = parseFloat(usdRate) || 446;
     const basePriceUSD = PRICES[tripType][pkg];
 
     // Дополнительно

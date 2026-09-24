@@ -68,8 +68,9 @@ export default function PropertyDivisionCalculator() {
     const husbandDebts = debts * husbandShare;
     const wifeDebts = debts * wifeShare;
 
-    // Госпошлина при разделе в суде = 1% от стоимости иска, минимум 0.5 МРП
-    const courtFee = Math.max(assetsMarriage * 0.01, 0.5 * MRP_2026);
+    // Госпошлина при разделе в суде = 1% от цены иска, не более 10 000 МРП
+    // (ст. 665 п. 1 пп. 1 НК РК); минимума в кодексе нет — прежний «мин 0,5 МРП» убран.
+    const courtFee = Math.min(assetsMarriage * 0.01, 10000 * MRP_2026);
 
     // Юр. услуги — ориентировочно
     const lawyerFee = Math.min(Math.max(assetsMarriage * 0.02, 100000), 500000);

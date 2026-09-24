@@ -121,7 +121,7 @@ export function useNativeFeatures() {
     [isNative]
   );
 
-  // Lokalnye notifikacii dlia naloagovyh dat (FNO 270 — do 15.09, FNO 240 — do 31.03 i t.d.)
+  // Lokalnye notifikacii dlia naloagovyh dat (FNO 270 — do 15.09, FNO 910 — do 15.08/15.02 i t.d.)
   const scheduleTaxReminder = useCallback(
     async (params: { id: number; title: string; body: string; date: Date }) => {
       if (!isNative) return false;

@@ -33,13 +33,15 @@ export default function OvertimeCalculator() {
   const [monthlySalary, setMonthlySalary] = useState<string>('300000');
   const [workType, setWorkType] = useState<WorkType>('weekend');
   const [hours, setHours] = useState<string>('8');
-  const [monthHours, setMonthHours] = useState<string>('167');
+  // Среднемесячная норма 2026 при 40-часовой неделе: 1 968 ч ÷ 12 = 164 ч
+  // (производственный календарь, ProductionCalendarCalculator). Было 167 — от 2025 года.
+  const [monthHours, setMonthHours] = useState<string>('164');
   const [takeTimeOff, setTakeTimeOff] = useState<boolean>(false);
 
   const results = useMemo(() => {
     const salary = parseFloat(monthlySalary) || 0;
     const h = parseFloat(hours) || 0;
-    const mh = parseFloat(monthHours) || 167;
+    const mh = parseFloat(monthHours) || 164;
     const mult = MULTIPLIERS[workType];
 
     const hourlyRate = salary / mh;

@@ -35,6 +35,10 @@ export default function PropertySaleTaxCalculator() {
   ];
 
   const TAX_RATE = 0.10; // 10% ИПН
+  // Прогрессивная шкала ст. 363 пп. 1 НК РК: 15% с части годового дохода свыше
+  // 8 500 МРП. Порог — по совокупному доходу за год; здесь считаем по одной сделке.
+  const TAX_RATE_HIGH = 0.15;
+  const IPN_THRESHOLD = 8500 * 4325; // 36 762 500 ₸
 
   const [selectedType, setSelectedType] = useState<string>('apartment');
   const [salePrice, setSalePrice] = useState<string>('25000000');
@@ -44,11 +48,12 @@ export default function PropertySaleTaxCalculator() {
   const [isMainHome, setIsMainHome] = useState<boolean>(false);
   const [isInherited, setIsInherited] = useState<boolean>(false);
 
-  // Вычисление дедлайна декларации ФНО 240.00 — 31 марта следующего года
+  // Срок декларации о доходах и имуществе (ФНО 270.00) — 15 сентября следующего года
+  // (ст. 418 п. 1 НК РК); ФНО 240.00 с 01.01.2025 упразднена.
   const getDeclarationDeadline = (): string => {
     const now = new Date();
     const nextYear = now.getFullYear() + 1;
-    return `31.03.${nextYear}`;
+    return `15.09.${nextYear}`;
   };
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
@@ -115,7 +120,9 @@ export default function PropertySaleTaxCalculator() {
       reasonKey = 'property-sale-tax.exemptInherited';
     }
 
-    const tax = isTaxable ? Math.round(gain * TAX_RATE) : 0;
+    const tax = isTaxable
+      ? Math.round(Math.min(gain, IPN_THRESHOLD) * TAX_RATE + Math.max(0, gain - IPN_THRESHOLD) * TAX_RATE_HIGH)
+      : 0;
     const netProfit = sale - purchase - tax;
     const effectiveRate = sale > 0 ? (tax / sale) * 100 : 0;
 

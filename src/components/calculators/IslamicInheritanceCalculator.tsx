@@ -779,21 +779,21 @@ export default function IslamicInheritanceCalculator() {
             <div className="grid md:grid-cols-4 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.inheritance')}:</div>
-                <div>1,000,000 ₸</div>
+                <div>1 000 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.wife')}:</div>
-                <div>125,000 ₸ (1/8)</div>
+                <div>125 000 ₸ (1/8)</div>
                 <div className="text-xs text-emerald-700">{t('islamic-inheritance.withChildren')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.sons')}:</div>
-                <div>700,000 ₸ (350,000 ₸ {t('islamic-inheritance.each')})</div>
+                <div>700 000 ₸ (350 000 ₸ {t('islamic-inheritance.each')})</div>
                 <div className="text-xs text-emerald-700">{t('islamic-inheritance.remainderParts', { parts: '4/5' })}</div>
               </div>
               <div>
                 <div className="font-medium text-emerald-700">{t('islamic-inheritance.daughter')}:</div>
-                <div className="text-lg font-bold text-emerald-600">175,000 ₸</div>
+                <div className="text-lg font-bold text-emerald-600">175 000 ₸</div>
                 <div className="text-xs text-emerald-700">{t('islamic-inheritance.remainderParts', { parts: '1/5' })}</div>
               </div>
             </div>
@@ -805,21 +805,21 @@ export default function IslamicInheritanceCalculator() {
             <div className="grid md:grid-cols-4 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.inheritance')}:</div>
-                <div>800,000 ₸</div>
+                <div>800 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.husband')}:</div>
-                <div>200,000 ₸ (1/4)</div>
+                <div>200 000 ₸ (1/4)</div>
                 <div className="text-xs text-blue-700">{t('islamic-inheritance.withChildren')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.mother')}:</div>
-                <div>133,333 ₸ (1/6)</div>
+                <div>133 333 ₸ (1/6)</div>
                 <div className="text-xs text-blue-700">{t('islamic-inheritance.withChildren')}</div>
               </div>
               <div>
                 <div className="font-medium text-blue-700">{t('islamic-inheritance.sons')}:</div>
-                <div className="text-lg font-bold text-blue-600">466,667 ₸</div>
+                <div className="text-lg font-bold text-blue-600">466 667 ₸</div>
                 <div className="text-xs text-blue-700">{t('islamic-inheritance.remainderEqually')}</div>
               </div>
             </div>
@@ -831,16 +831,16 @@ export default function IslamicInheritanceCalculator() {
             <div className="grid md:grid-cols-3 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.inheritance')}:</div>
-                <div>500,000 ₸</div>
+                <div>500 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('islamic-inheritance.wife')}:</div>
-                <div>125,000 ₸ (1/4)</div>
+                <div>125 000 ₸ (1/4)</div>
                 <div className="text-xs text-teal-700">{t('islamic-inheritance.withoutChildren')}</div>
               </div>
               <div>
                 <div className="font-medium text-teal-700">{t('islamic-inheritance.remainder')}:</div>
-                <div className="text-lg font-bold text-teal-600">375,000 ₸</div>
+                <div className="text-lg font-bold text-teal-600">375 000 ₸</div>
                 <div className="text-xs text-teal-700">{t('islamic-inheritance.toNearestAsaba')}</div>
               </div>
             </div>
@@ -1226,7 +1226,7 @@ export default function IslamicInheritanceCalculator() {
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'ҚМДБ — Мұсылмандар діни басқармасы' : 'ДУМК — Духовное управление мусульман', url: 'https://muftyat.kz/' },
-          { title: i18n.language === 'kk' ? 'IslamQ&A — Мұра' : 'IslamQ&A — Наследство', url: 'https://islamqa.info/' },
+          { title: i18n.language === 'kk' ? 'ҚР Азаматтық кодексі (Ерекше бөлім), 6-бөлім — мұрагерлік құқық' : 'ГК РК (Особенная часть), раздел 6 — наследственное право', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
         ]}
       />
 

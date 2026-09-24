@@ -16,6 +16,10 @@ import { getSources } from '../../data/calculatorSources';
 type OperationType = 'trade' | 'mining' | 'staking' | 'swap';
 type PayerType = 'individual' | 'ip' | 'too';
 
+const MRP_2026 = 4325;
+/** Порог прогрессивной шкалы ИПН: 8 500 МРП совокупного годового дохода (ст. 363 пп. 1 НК РК). */
+const IPN_THRESHOLD = 8500 * MRP_2026; // 36 762 500 ₸
+
 export default function CryptoTaxCalculator() {
   const { t } = useTranslation('calculators');
 
@@ -36,11 +40,15 @@ export default function CryptoTaxCalculator() {
     const gainPerTx = operation === 'mining' || operation === 'staking' ? sell : sell - buy;
     const totalGain = Math.max(0, gainPerTx * txCount);
 
-    // Ставка: физлицо — 10% ИПН с прироста; ИП на упрощёнке — 4% с оборота (НК РК 2026); ТОО — 20% КПН с прироста
+    // Ставка: физлицо — 10% ИПН с прироста, с части годового дохода свыше 8 500 МРП —
+    // 15% (ст. 363 пп. 1 НК РК: имущественный доход из шкалы не выведен); ИП на
+    // упрощёнке — 4% с оборота; ТОО — 20% КПН с прироста
     const taxRate = payer === 'too' ? 20 : payer === 'ip' ? 4 : 10;
     const totalRevenue = Math.max(0, sell * txCount);
     const taxBase = payer === 'ip' ? totalRevenue : totalGain;
-    const taxAmount = Math.round((taxBase * taxRate) / 100);
+    const taxAmount = payer === 'individual'
+      ? Math.round(Math.min(taxBase, IPN_THRESHOLD) * 0.10 + Math.max(0, taxBase - IPN_THRESHOLD) * 0.15)
+      : Math.round((taxBase * taxRate) / 100);
     const netProfit = totalGain - taxAmount;
     const effectiveRate = totalGain > 0 ? (taxAmount / totalGain) * 100 : 0;
 
@@ -65,8 +73,11 @@ export default function CryptoTaxCalculator() {
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
-  const reportForm = payer === 'too' ? 'ФНО 100.00' : 'ФНО 240.00';
-  const reportDeadline = t('crypto-tax.deadlineValue');
+  // ФНО 240.00 упразднена с 01.01.2025: физлицо декларирует имущественный доход в
+  // форме 270.00 до 15 сентября (ст. 418 п. 1), платит до 25 сентября (ст. 419 п. 1).
+  const reportForm = payer === 'too' ? 'ФНО 100.00' : payer === 'ip' ? 'ФНО 910.00' : 'ФНО 270.00';
+  const reportDeadline = t(payer === 'too' ? 'crypto-tax.deadlineValueToo'
+    : payer === 'ip' ? 'crypto-tax.deadlineValueIp' : 'crypto-tax.deadlineValue');
 
   const generateExportData = () => {
     if (results.totalGain === 0) return null;
@@ -306,6 +317,9 @@ export default function CryptoTaxCalculator() {
                   <div className="text-xs text-purple-700 mt-1">
                     {t('crypto-tax.deadline')}: {reportDeadline}
                   </div>
+                  {payer === 'individual' && (
+                    <div className="text-xs text-purple-700 mt-1">{t('crypto-tax.progressiveHint')}</div>
+                  )}
                 </div>
               </div>
             </div>
