@@ -1,5 +1,30 @@
 # Changelog — Calk.kz
 
+## [2026-09-24] iOS: переход на UIScene lifecycle (Capacitor 8.5.2) — сборки Xcode 27 запускаются на iOS 27
+
+Сборка Xcode 27.0 (iOS 27 SDK) падала сразу на запуске на iOS 27: EXC_BREAKPOINT в UIKitCore
+`___UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption_block_invoke` — Apple требует UIScene от
+приложений, собранных новым SDK. Бинарь 1.5 (build 13, Xcode 26.6) в сторе не затронут, но на этом Маке стоит
+только Xcode 27, так что без миграции не запустился бы ЛЮБОЙ следующий бинарь.
+- `@capacitor/core` 8.4.0 → 8.5.2, `@capacitor/ios` / `@capacitor/cli` 8.3.4 → 8.5.2 (UIScene появился в 8.5.0;
+  `@capacitor/android` остаётся 8.4.0), CapApp-SPM → `capacitor-swift-pm` 8.5.2.
+- `Info.plist`: `UIApplicationSceneManifest` (одна сцена, `SceneDelegate`, storyboard `Main`).
+- `SceneDelegate.swift` (новый): URL, universal links и холодный старт — через `SceneDelegateProxy`
+  (события холодного старта отдаются после первого `viewDidAppear`, когда плагины уже загружены).
+- `AppDelegate.swift` = шаблон Capacitor 8.5.2: `configurationForConnecting` вместо
+  `application(_:open:)` / `application(_:continue:)` — при сценах UIKit их больше не вызывает.
+- Отличие от шаблона Capacitor: окно берётся из Main.storyboard. На iOS 27 проверено, что UIKit собирает
+  storyboard-окно ДО `willConnectTo`, а шаблон создаёт второе окно с новым `CAPBridgeViewController()` и
+  выбрасывает контроллер из storyboard (для приложений флота с подклассом `MainViewController` в storyboard
+  это ещё и потеря app-local плагинов).
+- `npx cap migrate` не запускался: это мажорный мигратор (npm install, AndroidManifest, gradle wrapper), а
+  Info.plist он переписывает через `plist.build` — комментарии AdMob/ATT пропали бы.
+- Мост 8.5: JS-события `pause`/`resume` идут от `UIScene`-нотификаций; `UIApplication.didEnterBackground`/
+  `willEnterForeground` по-прежнему приходят (на них висят Capgo и `App` → `resume`).
+- Проверено в симуляторах iOS 27.0 и 26.5 (Debug, Xcode 27): запуск, WebView, ATT-запрос, баннер AdMob,
+  цены RevenueCat, OTA (манифест → скачивание → применение на `resume` → `notifyAppReady`),
+  фон/возврат, запрос разрешения и планирование локальных уведомлений.
+
 ## [2026-09-24] Упрощёнка ИП: FAQ сверен с НК-2026 и Соцкодексом, казахский FAQ — перевод русского
 
 Сверено по первоисточникам (old.adilet.zan.kz): НК РК K2500000214 ст. 722, 723, 726, 727;
