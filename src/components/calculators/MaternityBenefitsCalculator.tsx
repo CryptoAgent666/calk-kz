@@ -525,7 +525,7 @@ export default function MaternityBenefitsCalculator() {
                 </div>
               </div>
               <div className="flex items-start space-x-2">
-                <div className="w-6 h-6 bg-pink-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-pink-700">28</div>
+                <div className="w-6 h-6 bg-pink-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-pink-700">27</div>
                 <div>
                   <strong>{t('maternity-benefits.week28')}</strong> - {t('maternity-benefits.week28Description')}
                 </div>

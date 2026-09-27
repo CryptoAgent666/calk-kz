@@ -564,9 +564,9 @@ export default function LuxuryTaxCalculator() {
               </div>
               <div>
                 <div className="font-medium text-orange-700">{t('luxury-tax.examples.toPay')}:</div>
-                <div>{t('luxury-tax.examples.example1.baseTax')}: 2,946,600 ₸</div>
-                <div>{t('luxury-tax.examples.example1.additionalTax')}: 2,000,000 ₸</div>
-                <div className="text-lg font-bold text-orange-600">{t('luxury-tax.examples.total')}: 4,946,600 ₸</div>
+                <div>{t('luxury-tax.examples.example1.baseTax')}: 2 946 600 ₸</div>
+                <div>{t('luxury-tax.examples.example1.additionalTax')}: 2 000 000 ₸</div>
+                <div className="text-lg font-bold text-orange-600">{t('luxury-tax.examples.total')}: 4 946 600 ₸</div>
               </div>
             </div>
           </div>
@@ -585,13 +585,13 @@ export default function LuxuryTaxCalculator() {
                 <div className="font-medium text-gray-700">{t('luxury-tax.examples.calculation')}:</div>
                 <div>{t('luxury-tax.examples.example2.exceedsThreshold')}</div>
                 <div>{t('luxury-tax.examples.example2.exciseRate')}: 10%</div>
-                <div>80,000,000 × 10% = 8,000,000 ₸</div>
+                <div>80 000 000 × 10% = 8 000 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-blue-700">{t('luxury-tax.examples.toPay')}:</div>
-                <div>{t('luxury-tax.examples.example2.luxuryExcise')}: 8,000,000 ₸</div>
+                <div>{t('luxury-tax.examples.example2.luxuryExcise')}: 8 000 000 ₸</div>
                 <div>+ {t('luxury-tax.examples.example2.regularTransportTax')}</div>
-                <div className="text-lg font-bold text-blue-600">{t('luxury-tax.examples.example2.excise')}: 8,000,000 ₸</div>
+                <div className="text-lg font-bold text-blue-600">{t('luxury-tax.examples.example2.excise')}: 8 000 000 ₸</div>
               </div>
             </div>
           </div>
@@ -611,12 +611,12 @@ export default function LuxuryTaxCalculator() {
               <div>
                 <div className="font-medium text-gray-700">{t('luxury-tax.examples.calculation')}:</div>
                 <div>{t('luxury-tax.examples.example3.exciseRate')}: 10%</div>
-                <div>120,000,000 × 10% = 12,000,000 ₸</div>
+                <div>120 000 000 × 10% = 12 000 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-teal-700">{t('luxury-tax.examples.toPay')}:</div>
-                <div>{t('luxury-tax.examples.example3.luxuryExcise')}: 12,000,000 ₸</div>
-                <div className="text-lg font-bold text-teal-600">{t('luxury-tax.examples.total')}: 12,000,000 ₸</div>
+                <div>{t('luxury-tax.examples.example3.luxuryExcise')}: 12 000 000 ₸</div>
+                <div className="text-lg font-bold text-teal-600">{t('luxury-tax.examples.total')}: 12 000 000 ₸</div>
               </div>
             </div>
           </div>

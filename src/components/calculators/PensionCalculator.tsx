@@ -13,9 +13,12 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { pluralizeRu } from '../../utils/pluralize';
 
 export default function PensionCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  // «61 год», «2 года», «35 лет»; в казахском форма одна — «жыл»
+  const yearsWord = (n: number) => (i18n.language === 'kk' ? t('pension.years') : pluralizeRu(n, 'год', 'года', 'лет'));
   const [birthYear, setBirthYear] = useState<string>('1965');
   const [workExperienceBefore1998, setWorkExperienceBefore1998] = useState<string>('15');
   const [workExperienceAfter1998, setWorkExperienceAfter1998] = useState<string>('20');
@@ -146,10 +149,10 @@ export default function PensionCalculator() {
 
     return `${t('pension.sourceData')}:
 - ${t('pension.birthYear')}: ${birthYear}
-- ${t('pension.age')}: ${results.age} ${t('pension.years')}
-- ${t('pension.workExperienceBefore1998')}: ${workExperienceBefore1998} ${t('pension.years')}
-- ${t('pension.workExperienceAfter1998')}: ${workExperienceAfter1998} ${t('pension.years')}
-- ${t('pension.totalWorkExperience')}: ${results.totalWorkExperience} ${t('pension.years')}
+- ${t('pension.age')}: ${results.age} ${yearsWord(results.age)}
+- ${t('pension.workExperienceBefore1998')}: ${workExperienceBefore1998} ${yearsWord(Number(workExperienceBefore1998))}
+- ${t('pension.workExperienceAfter1998')}: ${workExperienceAfter1998} ${yearsWord(Number(workExperienceAfter1998))}
+- ${t('pension.totalWorkExperience')}: ${results.totalWorkExperience} ${yearsWord(results.totalWorkExperience)}
 - ${t('pension.averageIncomeBefore1998')}: ${averageIncomeBefore1998 ? formatNumber(parseFloat(averageIncomeBefore1998)) : t('pension.notSpecified')}
 - ${t('pension.currentAccumulations')}: ${currentAccumulations ? formatNumber(parseFloat(currentAccumulations)) : t('pension.notSpecified')}
 
@@ -160,8 +163,8 @@ ${t('pension.pensionComponents')}:
 
 ${t('pension.result')}:
 - ${t('pension.totalPensionSize')}: ${formatNumber(results.totalMonthlyPension)} ${t('pension.perMonth')}
-- ${t('pension.retirementAge')}: ${results.retirementAge.men} ${t('pension.years')} (${t('pension.men')}) / ${results.retirementAge.women} ${t('pension.years')} (${t('pension.women')})
-- ${t('pension.untilRetirement')}: ${results.yearsToRetirement} ${t('pension.years')}
+- ${t('pension.retirementAge')}: ${results.retirementAge.men} ${yearsWord(results.retirementAge.men)} (${t('pension.men')}) / ${results.retirementAge.women} ${yearsWord(results.retirementAge.women)} (${t('pension.women')})
+- ${t('pension.untilRetirement')}: ${results.yearsToRetirement} ${yearsWord(results.yearsToRetirement)}
 ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccumulationsAtRetirement')}: ${formatNumber(results.estimatedAccumulationsAtRetirement)}` : ''}`;
   };
 
@@ -228,7 +231,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                 min={0}
                 max={40}
                 step={0.5}
-                formatValue={(v) => `${v} ${t('pension.years')}`}
+                formatValue={(v) => `${v} ${yearsWord(v)}`}
                 color="#3b82f6"
               />
               <div className="relative mt-3">
@@ -257,7 +260,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                 min={0}
                 max={30}
                 step={0.5}
-                formatValue={(v) => `${v} ${t('pension.years')}`}
+                formatValue={(v) => `${v} ${yearsWord(v)}`}
                 color="#10b981"
               />
               <div className="relative mt-3">
@@ -326,10 +329,10 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
               <div className="bg-blue-50 rounded-lg p-4">
                 <h3 className="font-semibold text-blue-900 mb-2">{t('pension.yourStatus')}</h3>
                 <div className="text-sm text-blue-800 space-y-1">
-                  <div>{t('pension.age')}: {results.age} {t('pension.years')}</div>
-                  <div>{t('pension.totalWorkExperience')}: {results.totalWorkExperience} {t('pension.years')}</div>
-                  <div>{t('pension.untilRetirement')}: {results.yearsToRetirement} {t('pension.years')}</div>
-                  <div>{t('pension.retirementAge')}: {results.retirementAge.men} {t('pension.years')} ({t('pension.men')}) / {results.retirementAge.women} {t('pension.years')} ({t('pension.women')})</div>
+                  <div>{t('pension.age')}: {results.age} {yearsWord(results.age)}</div>
+                  <div>{t('pension.totalWorkExperience')}: {results.totalWorkExperience} {yearsWord(results.totalWorkExperience)}</div>
+                  <div>{t('pension.untilRetirement')}: {results.yearsToRetirement} {yearsWord(results.yearsToRetirement)}</div>
+                  <div>{t('pension.retirementAge')}: {results.retirementAge.men} {yearsWord(results.retirementAge.men)} ({t('pension.men')}) / {results.retirementAge.women} {yearsWord(results.retirementAge.women)} ({t('pension.women')})</div>
                 </div>
               </div>
 
@@ -445,7 +448,8 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'БЖЗҚ — Зейнетақы калькуляторы' : 'ЕНПФ — Пенсионный калькулятор', url: 'https://enpf.kz/' },
-          { title: i18n.language === 'kk' ? 'Зейнетақымен қамсыздандыру туралы заң' : 'Закон о пенсионном обеспечении', url: 'https://online.zakon.kz/document/?doc_id=1005298' },
+          // Закон «О пенсионном обеспечении» утратил силу с 01.07.2023 — нормы перенесены в Социальный кодекс
+          { title: i18n.language === 'kk' ? 'ҚР Әлеуметтік кодексі (206-бап — базалық зейнетақы, 207-бап — зейнеткерлік жас)' : 'Социальный кодекс РК (ст. 206 — базовая пенсия, ст. 207 — пенсионный возраст)', url: 'https://adilet.zan.kz/rus/docs/K2300000224' },
         ]}
       />
 

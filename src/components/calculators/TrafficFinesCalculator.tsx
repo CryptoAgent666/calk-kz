@@ -27,20 +27,23 @@ interface Violation {
   repeatPenaltyKey?: string;
 }
 
+// Сверено с КоАП РК (old.adilet.zan.kz, K1400000235) 27.09.2026 — calkcheck, батч 3.
+// Повтор по ст. 592 ч.1 отдельно не усилен (ч.4 — только для ч.2 и ч.3), по ст. 230 ч.2 повтора нет.
 const violations: Violation[] = [
-  { id: 'speed10_20', labelKey: 'traffic-fines.v.speed10_20', articleRef: '592 ч.1', firstMRP: 5, repeatMRP: 10 },
-  { id: 'speed20_40', labelKey: 'traffic-fines.v.speed20_40', articleRef: '592 ч.2', firstMRP: 10, repeatMRP: 20 },
-  { id: 'speed40plus', labelKey: 'traffic-fines.v.speed40plus', articleRef: '592 ч.3', firstMRP: 20, repeatMRP: null, note: 'traffic-fines.noteLicense' },
-  { id: 'redLight', labelKey: 'traffic-fines.v.redLight', articleRef: '596', firstMRP: 10, repeatMRP: 20 },
-  { id: 'seatbelt', labelKey: 'traffic-fines.v.seatbelt', articleRef: '593 ч.1', firstMRP: 5, repeatMRP: 10 },
-  { id: 'phone', labelKey: 'traffic-fines.v.phone', articleRef: '593 ч.2', firstMRP: 5, repeatMRP: 10 },
+  { id: 'speed10_20', labelKey: 'traffic-fines.v.speed10_20', articleRef: '592 ч.1', firstMRP: 5, repeatMRP: null },
+  { id: 'speed20_40', labelKey: 'traffic-fines.v.speed20_40', articleRef: '592 ч.2, ч.4', firstMRP: 10, repeatMRP: 30 },
+  { id: 'speed40plus', labelKey: 'traffic-fines.v.speed40plus', articleRef: '592 ч.3, ч.4', firstMRP: 20, repeatMRP: 30 },
+  { id: 'speed60plus', labelKey: 'traffic-fines.v.speed60plus', articleRef: '592 ч.3-1, ч.5', firstMRP: 40, repeatMRP: 60 },
+  { id: 'redLight', labelKey: 'traffic-fines.v.redLight', articleRef: '599', firstMRP: 10, repeatMRP: 15 },
+  { id: 'seatbelt', labelKey: 'traffic-fines.v.seatbelt', articleRef: '593 ч.2, ч.3', firstMRP: 5, repeatMRP: 10 },
+  { id: 'phone', labelKey: 'traffic-fines.v.phone', articleRef: '591', firstMRP: 5, repeatMRP: 10 },
   { id: 'dui', labelKey: 'traffic-fines.v.dui', articleRef: '608 ч.1', firstMRP: 0, repeatMRP: null, noMonetaryFine: true, penaltyKey: 'traffic-fines.penaltyDui', repeatPenaltyKey: 'traffic-fines.penaltyDuiRepeat', note: 'traffic-fines.noteDui' },
-  { id: 'parking', labelKey: 'traffic-fines.v.parking', articleRef: '597 ч.1', firstMRP: 5, repeatMRP: 10 },
+  { id: 'parking', labelKey: 'traffic-fines.v.parking', articleRef: '597 ч.1, ч.5', firstMRP: 5, repeatMRP: 10 },
   { id: 'pedestrian', labelKey: 'traffic-fines.v.pedestrian', articleRef: '600', firstMRP: 10, repeatMRP: 15 },
   { id: 'oncoming', labelKey: 'traffic-fines.v.oncoming', articleRef: '596 ч.3', firstMRP: 0, repeatMRP: null, noMonetaryFine: true, penaltyKey: 'traffic-fines.penaltyOncoming', note: 'traffic-fines.noteOncoming' },
-  { id: 'tint', labelKey: 'traffic-fines.v.tint', articleRef: '590 ч.5', firstMRP: 5, repeatMRP: null },
-  { id: 'noInsurance', labelKey: 'traffic-fines.v.noInsurance', articleRef: '611', firstMRP: 10, repeatMRP: 20 },
-  { id: 'childSeat', labelKey: 'traffic-fines.v.childSeat', articleRef: '593 ч.1', firstMRP: 5, repeatMRP: 10, note: 'traffic-fines.noteChildSeat' },
+  { id: 'tint', labelKey: 'traffic-fines.v.tint', articleRef: '590 ч.5, ч.10', firstMRP: 5, repeatMRP: 20 },
+  { id: 'noInsurance', labelKey: 'traffic-fines.v.noInsurance', articleRef: '230 ч.2', firstMRP: 10, repeatMRP: null },
+  { id: 'childSeat', labelKey: 'traffic-fines.v.childSeat', articleRef: '593 ч.1, ч.3', firstMRP: 5, repeatMRP: 10, note: 'traffic-fines.noteChildSeat' },
   // Сверка Tier-2 23.08.2026: санкция 10/20 МРП верна, но стояла ссылка на ч.4 — фактически это ч.2 и ч.2-1.
   { id: 'noPlates', labelKey: 'traffic-fines.v.noPlates', articleRef: '590 ч.2, ч.2-1', firstMRP: 10, repeatMRP: 20 },
 ];
@@ -221,7 +224,7 @@ export default function TrafficFinesCalculator() {
 
               {selected.noMonetaryFine ? (
                 /* Non-monetary sanction: administrative arrest / licence deprivation.
-                   No tenge amount and no 50% discount apply (ст. 893 КоАП РК
+                   No tenge amount and no 50% discount apply (ст. 811 КоАП РК
                    скидка не распространяется на лишение прав). */
                 <div className="bg-red-50 rounded-lg p-6 border border-red-200">
                   <div className="flex items-center justify-between mb-2">

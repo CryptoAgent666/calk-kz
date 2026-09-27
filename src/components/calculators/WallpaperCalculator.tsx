@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { pluralizeRu } from '../../utils/pluralize';
 import { Layers } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
@@ -21,7 +22,7 @@ const ROLLS: Record<RollSize, { width: number; length: number; label: string }> 
 };
 
 export default function WallpaperCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [length, setLength] = useState<string>('5');
   const [width, setWidth] = useState<string>('4');
   const [height, setHeight] = useState<string>('2.7');
@@ -156,7 +157,7 @@ export default function WallpaperCalculator() {
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>🧪 {t('wallpaper.glue')}</span>
-                  <span className="font-semibold">{results.glueBags} {t('wallpaper.packs')}</span>
+                  <span className="font-semibold">{results.glueBags} {i18n.language === 'kk' ? t('wallpaper.packs') : pluralizeRu(results.glueBags, 'пачка', 'пачки', 'пачек')}</span>
                 </div>
               </div>
 

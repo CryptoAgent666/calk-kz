@@ -480,34 +480,25 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('deposit.examplesTitle')}</h2>
 
+       {/* Ориентиры на сентябрь 2026 (calkcheck 27.09.2026). Halyk и Freedom публикуют ГЭСВ —
+           номинальная пересчитана из неё при ежемесячной капитализации. Обновлять после решений НБРК. */}
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-2">{t('deposit.bank1')}</h3>
-            <div className="space-y-1 text-sm">
-              <div>{t('deposit.nominalShort')} <span className="font-medium">14.1%</span></div>
-              <div>{t('deposit.effectiveShort')} <span className="font-medium text-green-600">15.3%</span></div>
-              <div className="text-xs text-gray-500">{t('deposit.withMonthlyCapitalization')}</div>
+          {[
+            { name: 'deposit.bank1', nominal: '14,5%', effective: '15,5%', note: 'deposit.bank1Note' },
+            { name: 'deposit.bank2', nominal: '15,4%', effective: '16,54%', note: 'deposit.bank2Note' },
+            { name: 'deposit.bank3', nominal: '14,24%', effective: '15,3%', note: 'deposit.bank3Note' },
+          ].map((b) => (
+            <div key={b.name} className="p-4 border border-gray-200 rounded-lg">
+              <h3 className="font-semibold text-gray-900 mb-2">{t(b.name)}</h3>
+              <div className="space-y-1 text-sm">
+                <div>{t('deposit.nominalShort')} <span className="font-medium">{b.nominal}</span></div>
+                <div>{t('deposit.effectiveShort')} <span className="font-medium text-green-600">{b.effective}</span></div>
+                <div className="text-xs text-gray-500">{t(b.note)}</div>
+              </div>
             </div>
-          </div>
-
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-2">{t('deposit.bank2')}</h3>
-            <div className="space-y-1 text-sm">
-              <div>{t('deposit.nominalShort')} <span className="font-medium">13.5%</span></div>
-              <div>{t('deposit.effectiveShort')} <span className="font-medium text-green-600">14.4%</span></div>
-              <div className="text-xs text-gray-500">{t('deposit.withMonthlyCapitalization')}</div>
-            </div>
-          </div>
-
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-2">{t('deposit.bank3')}</h3>
-            <div className="space-y-1 text-sm">
-              <div>{t('deposit.nominalShort')} <span className="font-medium">12.8%</span></div>
-              <div>{t('deposit.effectiveShort')} <span className="font-medium text-green-600">13.6%</span></div>
-              <div className="text-xs text-gray-500">{t('deposit.withMonthlyCapitalization')}</div>
-            </div>
-          </div>
+          ))}
         </div>
+        <p className="mt-3 text-xs text-gray-500">{t('deposit.bankExamplesDisclaimer')}</p>
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <div className="flex items-start space-x-2">

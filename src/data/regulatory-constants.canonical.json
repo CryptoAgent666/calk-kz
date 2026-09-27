@@ -1764,9 +1764,9 @@
     },
     {
       "key": "traffic_fine_child_seat",
-      "value": "first 10 / repeat 20",
+      "value": "first 5 / repeat 10",
       "unit": "MRP",
-      "law": "КоАП РК ст. 593 ч.3",
+      "law": "КоАП РК ст. 593 ч.1, ч.3",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -1778,7 +1778,12 @@
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): перевозка детей — несоблюдение правил перевозки пассажиров, ч.1 — 5 МРП, повтор ч.3 — 10 МРП. Реестр держал ч.3 и 10/20 — неверно; калькулятор был прав.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_dui",
@@ -1800,9 +1805,9 @@
     },
     {
       "key": "traffic_fine_no_insurance",
-      "value": "first 10 / repeat 20",
+      "value": "first 10 / repeat — (нет)",
       "unit": "MRP",
-      "law": "КоАП РК ст. 611",
+      "law": "КоАП РК ст. 230 ч.2 (незаключение договора обязательного страхования)",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -1814,7 +1819,12 @@
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): ст. 611 — это обязанности водителя при ДТП. Незаключение ОГПО — ст. 230 ч.2: физлица 10 МРП; повторной части нет. Было 611 и 10/20.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_no_plates",
@@ -1898,7 +1908,7 @@
       "key": "traffic_fine_phone_use",
       "value": "first 5 / repeat 10",
       "unit": "MRP",
-      "law": "КоАП РК ст. 593 ч.2",
+      "law": "КоАП РК ст. 591 ч.1, ч.2",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -1910,13 +1920,18 @@
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): телефон — ст. 591 (не 593 ч.2): 5 / повтор 10 МРП.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_red_light",
-      "value": "first 10 / repeat 20",
+      "value": "first 10 / repeat 15",
       "unit": "MRP",
-      "law": "КоАП РК ст. 596",
+      "law": "КоАП РК ст. 599 ч.1, ч.2",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -1924,17 +1939,22 @@
         "traffic_fine_red_light_mrp",
         "traffic_fine_red_light_mrp_koap596"
       ],
-      "conflict": "Statute is cited as ст. 596 in both aliases; note ст. 596 ч.3 (oncoming) is a separate part of the same article tracked as traffic_fine_oncoming_lane — different parts, kept distinct.",
+      "conflict": "",
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): проезд на запрещающий сигнал — ст. 599 (не 596): ч.1 — 10 МРП, ч.2 повтор — 15 МРП. Было 596 и 20.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_seatbelt",
       "value": "first 5 / repeat 10",
       "unit": "MRP",
-      "law": "КоАП РК ст. 593 ч.1",
+      "law": "КоАП РК ст. 593 ч.2, ч.3",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -1946,13 +1966,18 @@
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): ремни — ст. 593 ч.2 (ч.1 — перевозка пассажиров и грузов), повтор — ч.3, 10 МРП.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_early_payment_discount",
       "value": 50,
       "unit": "percent",
-      "law": "КоАП РК (скидка 50% при оплате штрафа в установленный срок)",
+      "law": "КоАП РК ст. 811 ч.1, ч.2 (сокращённое производство)",
       "year": "2026",
       "change_frequency": "rare",
       "status": "current",
@@ -1964,14 +1989,16 @@
         "TrafficFinesCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://kazpdd.kz/ru/blog/shtrafy-pdd-kazakhstan-2026",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
       "official_value": "50",
-      "verify_note": "Скидка 50% при оплате штрафа за нарушение ПДД в установленный срок (КоАП РК). Подтверждено для 2026.",
-      "reverified": "2026-06-23"
+      "verify_note": "Скидка 50% при оплате штрафа за нарушение ПДД в установленный срок (КоАП РК). Подтверждено для 2026. | calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): 50% в течение 7 суток — ст. 811 (с момента возбуждения дела, при автофиксации — с доставки предписания); после оплаты дело пересмотру не подлежит. Ст. 893 — только общий срок уплаты 30 суток. Было «ст. 893» на странице.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_speeding_10_20",
-      "value": "first 5 / repeat 10",
+      "value": "first 5 / repeat 5 (повтор не усилен)",
       "unit": "MRP",
       "law": "КоАП РК ст. 592 ч.1",
       "year": "2026",
@@ -1984,13 +2011,18 @@
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): ст. 592 ч.4 усиливает повтор только для ч.2 и ч.3; повтор ч.1 — те же 5 МРП.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_speeding_20_40",
-      "value": "first 10 / repeat 20",
+      "value": "first 10 / repeat 30",
       "unit": "MRP",
-      "law": "КоАП РК ст. 592 ч.2",
+      "law": "КоАП РК ст. 592 ч.2, ч.4",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -2001,13 +2033,18 @@
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): повтор — ч.4, 30 МРП (было 20).",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_speeding_40_plus",
-      "value": "first 20 / repeat license deprivation",
+      "value": "40–60 км/ч: first 20 / repeat 30; 60+ км/ч: first 40 / repeat 60",
       "unit": "MRP",
-      "law": "КоАП РК ст. 592 ч.3",
+      "law": "КоАП РК ст. 592 ч.3, ч.3-1, ч.4, ч.5",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -2018,7 +2055,12 @@
       "used_by": [
         "TrafficFinesCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): ч.3 — 40–60 км/ч, 20 МРП; ч.3-1 — 60+ км/ч, 40 МРП; повторы ч.4 — 30, ч.5 — 60. Лишения прав в ст. 592 нет (калькулятор писал «лишение от 6 мес»).",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_speed_10_20_mrp",
@@ -2037,8 +2079,10 @@
       "audit_status": "clean",
       "source_url": "https://safety-driving.kz/ru/useful/fines/",
       "official_value": "first 5 MRP",
-      "verify_note": "Превышение 10-20 км/ч = 5 МРП (первичное) — подтверждено для 2026. Значение повторного нарушения (10 МРП) в источниках для именно этой части ст.592 ч.1 явно не подтверждено; первичная ставка 5 МРП верна.",
-      "reverified": "2026-06-23"
+      "verify_note": "Превышение 10-20 км/ч = 5 МРП (первичное) — подтверждено для 2026. Значение повторного нарушения (10 МРП) в источниках для именно этой части ст.592 ч.1 явно не подтверждено; первичная ставка 5 МРП верна. | calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): см. traffic_fine_speeding_* — повторы: ч.1 не усилен, ч.2/ч.3 — 30 МРП, ч.3-1 (60+) — 40/60 МРП.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_speed_20_40_mrp",
@@ -2057,8 +2101,10 @@
       "audit_status": "clean",
       "source_url": "https://safety-driving.kz/ru/useful/fines/",
       "official_value": "first 10 MRP",
-      "verify_note": "Превышение 20-40 км/ч = 10 МРП (первичное) — подтверждено 2026. Повтор за превышение 20-60 км/ч = 30 МРП (источник даёт объединённый диапазон 20-60 для повтора, не отдельно 20-40).",
-      "reverified": "2026-06-23"
+      "verify_note": "Превышение 20-40 км/ч = 10 МРП (первичное) — подтверждено 2026. Повтор за превышение 20-60 км/ч = 30 МРП (источник даёт объединённый диапазон 20-60 для повтора, не отдельно 20-40). | calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): см. traffic_fine_speeding_* — повторы: ч.1 не усилен, ч.2/ч.3 — 30 МРП, ч.3-1 (60+) — 40/60 МРП.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_speed_40plus_mrp",
@@ -2077,8 +2123,10 @@
       "audit_status": "clean",
       "source_url": "https://safety-driving.kz/ru/useful/fines/",
       "official_value": "first 20 MRP",
-      "verify_note": "Превышение 40-60 км/ч = 20 МРП (первичное) — подтверждено 2026. (60+ км/ч = 40 МРП.) Ставка 20 МРП для диапазона 40-60 верна.",
-      "reverified": "2026-06-23"
+      "verify_note": "Превышение 40-60 км/ч = 20 МРП (первичное) — подтверждено 2026. (60+ км/ч = 40 МРП.) Ставка 20 МРП для диапазона 40-60 верна. | calkcheck 2026-09-27 (КоАП, old.adilet K1400000235, дословно): см. traffic_fine_speeding_* — повторы: ч.1 не усилен, ч.2/ч.3 — 30 МРП, ч.3-1 (60+) — 40/60 МРП.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "traffic_fine_tint_mrp",
@@ -4822,7 +4870,7 @@
       "key": "base_pension_rate_max_pct_of_pm",
       "value": 118,
       "unit": "% от ПМ",
-      "law": "Закон о пенсионном обеспечении РК",
+      "law": "Социальный кодекс РК ст. 206",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -4832,9 +4880,12 @@
       ],
       "note_deep": "STALE EXTRACTION: first sweep lists 110, but code (line 77) uses Math.min(..., 118); file comment: потолок 118% достигается при стаже 34 год",
       "audit_status": "clean",
-      "source_url": "https://www.nur.kz/nurfin/pension/2321741-pensii-kakogo-razmera-kazahstancy-budut-poluchat-v-2026-godu/",
-      "verify_note": "Максимальная базовая пенсия = 118% ПМ = 60 005 ₸ в 2026 (повышена со 110% до 118%; достигается при стаже 34+ лет). Подтверждено.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "Максимальная базовая пенсия = 118% ПМ = 60 005 ₸ в 2026 (повышена со 110% до 118%; достигается при стаже 34+ лет). Подтверждено. | calkcheck 2026-09-27: ст. 206 дословно — с 01.01.2026 70% ПМ при стаже ≤10 лет, +2% за год сверх 10, не более 118%; с 01.01.2027 — не более 120%. Методика pension писала «стаж/33 × 100%» — исправлено.",
+      "reverified": "2026-09-27",
+      "changes_next_fy": "С 01.01.2027 максимум 120% ПМ (Социальный кодекс ст. 206, редакция «с 1 января 2027 года»).",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "base_pension_increment_per_year_pct",
@@ -7400,9 +7451,9 @@
     },
     {
       "key": "maternity_leave_start_week_ecological_zone",
-      "value": 28,
+      "value": 27,
       "unit": "недель беременности",
-      "law": "ТК РК — для проживающих в зонах экологического бедствия",
+      "law": "ТК РК ст. 99 п. 2 (зона ядерных испытаний: 91 день до родов)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -7413,10 +7464,14 @@
       "note": "Hardcoded '28' in JSX badge (line ~502). Not in list.",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://egov.kz/cms/ru/articles/ui_decret",
-      "official_value": "28",
-      "verify_note": "Для женщин в зонах экологического бедствия / ядерных испытаний отпуск открывается раньше (с 28-й недели, удлинённый дородовой период). Подтверждено косвенно (ст.99 ТК + повышенные сроки для пострадавших территорий).",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K1500000414",
+      "official_value": 27,
+      "verify_note": "Для женщин в зонах экологического бедствия / ядерных испытаний отпуск открывается раньше (с 28-й недели, удлинённый дородовой период). Подтверждено косвенно (ст.99 ТК + повышенные сроки для пострадавших территорий). | calkcheck 2026-09-27: ТК ст. 99 п. 2 дословно — 91 календарный день до родов (280 − 91 = 189 дней = 27 недель). Многоплодная беременность — те же 70 дней до родов (30 недель), страница ошибочно писала «28-я неделя — многоплодная».",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "official_checked": "2026-09-27",
+      "official_source": "https://old.adilet.zan.kz/rus/docs/K1500000414"
     },
     {
       "key": "maternity_leave_days_complicated_birth",
@@ -9336,6 +9391,88 @@
       "verified_date": "2026-09-25",
       "verify_method": "calkcheck-secondary",
       "changes_next_fy": "Пороги пересматриваются ежегодно (весной) — сверить перед ЕНТ-2027."
+    },
+    {
+      "key": "vat_reduced_rate_medical_2026",
+      "value": 5,
+      "unit": "percent",
+      "law": "НК РК (K2500000214) ст. 503 п. 2 — лекарства, медизделия, медуслуги",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "VATCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_source": "https://old.adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-09-27: ст. 503 п. 2 дословно — «с 1 января 2026 года – 5 процентов, с 1 января 2027 года – 10 процентов» для лекарств, медизделий и медуслуг; п. 3 — 10% для отечественной периодики; п. 4 — 0% по гл. 47 (экспорт). Страница vat писала «0% — медизделия, образование, соцуслуги».",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "changes_next_fy": "С 01.01.2027 — 10% (та же ст. 503 п. 2). Обновить vat QA, reference, FAQ."
+    },
+    {
+      "key": "deposit_interest_ipn_exempt",
+      "value": "не облагается",
+      "unit": "—",
+      "law": "НК РК (K2500000214) ст. 430 пп. 1 — вознаграждения физлицам по вкладам в БВУ исключаются из дохода, облагаемого у источника",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "DepositCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_source": "https://old.adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-09-27: быстрый ответ и методика deposit писали «ИПН 10%, освобождены проценты до 14 МРП/год» — такой нормы в НК-2026 нет; FAQ страницы был прав. Исправлено.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "transport_tax_car_over_4000cc",
+      "value": "117 МРП + 7 ₸ за каждый см³ сверх 4 000",
+      "unit": "MRP",
+      "law": "НК РК (K2500000214) ст. 565 п. 1 (строка «свыше 4 000» — 117 МРП), п. 4 (+7 ₸ за см³ сверх нижней границы градации), п. 8 (0,7 при 10–20 годах, 0,5 свыше 20)",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "LuxuryTaxCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_source": "https://old.adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-09-27: luxury-tax (примеры и методика) писал выдуманную шкалу 30/117/230/530 МРП по объёму и порог «5 000 МРП стоимости». Пример 4 800 см³: 117 × 4 325 + 800 × 7 = 511 625 ₸ (было ~150 000).",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
+    },
+    {
+      "key": "maternity_benefit_minimum",
+      "value": "нет минимума",
+      "unit": "—",
+      "law": "Социальный кодекс РК ст. 78 (размер = СМД по СО за 12 мес × дни/30, из активов ГФСС); ст. 76 п. 1 (удержание ОПВ 10%)",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "status": "current",
+      "used_by": [
+        "MaternityBenefitsCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "official_source": "https://old.adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "calkcheck 2026-09-27: быстрый ответ, методика и FAQ писали «минимум 1 МЗП/мес» и «получает работодатель из ГФСС» — в ст. 78 минимума нет, выплата из активов Фонда получателю. Минимум есть только у выплаты по уходу (ст. 85 п. 2). Виджет считал верно.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "changes_next_fy": "Закон РК от 11.06.2026 № 306-VIII с 01.01.2027 исключает процедурные ст. 72, 83, 86 и др. Социального кодекса — перепроверить порядок назначения в январе 2027."
     }
   ],
   "estimates_excluded": [

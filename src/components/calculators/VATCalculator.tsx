@@ -791,7 +791,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
             <div className="space-y-2">
               <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
                 <span className="text-gray-700">{t('vat.reference.russia')}</span>
-                <span className="font-medium">20%</span>
+                <span className="font-medium">22%</span>
               </div>
               <div className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
                 <span className="text-gray-700">{t('vat.reference.eu')}</span>

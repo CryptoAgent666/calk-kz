@@ -413,18 +413,18 @@ ${t('alimony.exportAlimonyCalc')}
             <div className="grid md:grid-cols-3 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('alimony.deductions')}</div>
-                <div>{t('alimony.opv')}: 25,000 ₸</div>
-                <div>{t('alimony.vosms')}: 5,000 ₸</div>
-                <div>{t('alimony.ipn')}: ≈ 9,025 ₸</div>
-                <div className="font-semibold">{t('alimony.total')} ≈ 39,025 ₸</div>
+                <div>{t('alimony.opv')}: 25 000 ₸</div>
+                <div>{t('alimony.vosms')}: 5 000 ₸</div>
+                <div>{t('alimony.ipn')}: ≈ 9 025 ₸</div>
+                <div className="font-semibold">{t('alimony.total')} ≈ 39 025 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('alimony.netIncomeLabel')}</div>
-                <div>250,000 - 39,025 = 210,975 ₸</div>
+                <div>250 000 - 39 025 = 210 975 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-pink-700">{t('alimony.alimonyPercentage')} (25%):</div>
-                <div className="text-lg font-bold text-pink-600">≈ 52,744 ₸</div>
+                <div className="text-lg font-bold text-pink-600">≈ 52 744 ₸</div>
               </div>
             </div>
           </div>
@@ -434,18 +434,18 @@ ${t('alimony.exportAlimonyCalc')}
             <div className="grid md:grid-cols-3 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('alimony.deductions')}</div>
-                <div>{t('alimony.opv')}: 40,000 ₸</div>
-                <div>{t('alimony.vosms')}: 8,000 ₸</div>
-                <div>{t('alimony.ipn')}: ≈ 22,225 ₸</div>
-                <div className="font-semibold">{t('alimony.total')} ≈ 70,225 ₸</div>
+                <div>{t('alimony.opv')}: 40 000 ₸</div>
+                <div>{t('alimony.vosms')}: 8 000 ₸</div>
+                <div>{t('alimony.ipn')}: ≈ 22 225 ₸</div>
+                <div className="font-semibold">{t('alimony.total')} ≈ 70 225 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('alimony.netIncomeLabel')}</div>
-                <div>400,000 - 70,225 = 329,775 ₸</div>
+                <div>400 000 - 70 225 = 329 775 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-teal-700">{t('alimony.alimonyPercentage')} (33.33%):</div>
-                <div className="text-lg font-bold text-teal-600">≈ 109,925 ₸</div>
+                <div className="text-lg font-bold text-teal-600">≈ 109 925 ₸</div>
               </div>
             </div>
           </div>
@@ -455,18 +455,18 @@ ${t('alimony.exportAlimonyCalc')}
             <div className="grid md:grid-cols-3 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('alimony.deductions')}</div>
-                <div>{t('alimony.opv')}: 15,000 ₸</div>
-                <div>{t('alimony.vosms')}: 3,000 ₸</div>
+                <div>{t('alimony.opv')}: 15 000 ₸</div>
+                <div>{t('alimony.vosms')}: 3 000 ₸</div>
                 <div>{t('alimony.ipn')}: ≈ 225 ₸</div>
-                <div className="font-semibold">{t('alimony.total')} ≈ 18,225 ₸</div>
+                <div className="font-semibold">{t('alimony.total')} ≈ 18 225 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('alimony.netIncomeLabel')}</div>
-                <div>150,000 - 18,225 = 131,775 ₸</div>
+                <div>150 000 - 18 225 = 131 775 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-orange-700">{t('alimony.alimonyPercentage')} (50%):</div>
-                <div className="text-lg font-bold text-orange-600">≈ 65,888 ₸</div>
+                <div className="text-lg font-bold text-orange-600">≈ 65 888 ₸</div>
               </div>
             </div>
           </div>

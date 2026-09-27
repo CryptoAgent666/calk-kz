@@ -122,8 +122,9 @@ export default function KaskoCalculator() {
     const monthlyPremium = finalPremium / 12;
     const percentOfValue = value > 0 ? (finalPremium / value) * 100 : 0;
 
-    // Примерная ОГПО для сравнения — фиксированная базовая премия ~12 000 ₸
-    const ogpoReference = 12000;
+    // ОГПО для сравнения — пример из калькулятора ОГПО: Алматы, водитель 30 лет, стаж 5 лет,
+    // класс 3: 8 217,5 × 2,1016 × 2,09 ≈ 36 094 ₸ (было 12 000 ₸ — втрое ниже реальной премии)
+    const ogpoReference = 36094;
 
     return {
       basePremium: Math.round(basePremium),
