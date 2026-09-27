@@ -21,6 +21,7 @@
   - исламская ипотека — взнос 20–30%;
   - калории — БЖУ по AMDR, казахские подписи источников.
 - **Реестр.** `pension_annuity_sufficient_amount_mrp` — условие по СК ст. 225 вместо ПМД; новые записи: `vat_registration_deadline_working_days`, `vat_registration_late_fine_mrp`, `vat_unregistered_turnover_fine_pct`, `kurban_sacrifice_period_days`; ОГПО и досрочка — `used_by`.
+- **Выложено 27.09.2026:** коммит `348ff20`, бандл `20260927103345`, deploy-fast + OTA. На проде: 570 страниц, sitemap 302/302 → 200, контрольные строки 16/16, гидратация без ошибок.
 
 ## [2026-09-27] CalkCheck, батч 4: ещё 20 страниц (AUDIT-2026-09-27-b4.md)
 
