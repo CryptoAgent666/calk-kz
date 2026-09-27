@@ -24,6 +24,58 @@ const COMMON_SIZES = [
   '215/55/R17', '225/45/R18', '235/55/R18', '265/65/R17',
 ];
 
+// На уровне модуля намеренно: объявленный внутри калькулятора компонент на каждом
+// рендере становился новым типом, React перемонтировал input — фокус терялся после первой цифры.
+function TireInput({ label, w, p, r, setW, setP, setR }: {
+  label: string; w: string; p: string; r: string;
+  setW: (v: string) => void; setP: (v: string) => void; setR: (v: string) => void;
+}) {
+  const { t } = useTranslation('calculators');
+  const applyPreset = (preset: string) => {
+    const parts = preset.split('/');
+    if (parts.length !== 3) return;
+    setW(parts[0]);
+    setP(parts[1]);
+    setR(parts[2].replace('R', ''));
+  };
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">{label}</h2>
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">{t('tire-size.width')}</label>
+          <input type="number" value={w} onChange={(e) => setW(e.target.value)} aria-label={`${label}: ${t('tire-size.width')}`}
+            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">{t('tire-size.profile')}</label>
+          <input type="number" value={p} onChange={(e) => setP(e.target.value)} aria-label={`${label}: ${t('tire-size.profile')}`}
+            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">{t('tire-size.rim')}</label>
+          <input type="number" value={r} onChange={(e) => setR(e.target.value)} aria-label={`${label}: ${t('tire-size.rim')}`}
+            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center" />
+        </div>
+      </div>
+      <div className="text-center font-mono text-lg text-gray-900 mb-3">
+        {w}/{p}/R{r}
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {COMMON_SIZES.map((size) => (
+          <button
+            key={size}
+            onClick={() => applyPreset(size)}
+            className="text-xs px-2 py-1 bg-gray-100 hover:bg-orange-100 rounded text-gray-600 hover:text-orange-700 transition-colors"
+          >
+            {size}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function TireSizeCalculator() {
   const { t } = useTranslation('calculators');
 
@@ -59,58 +111,6 @@ export default function TireSizeCalculator() {
     const speedoError = ((tire2.circumference - tire1.circumference) / tire1.circumference) * 100;
     return { diameterDiff, clearanceDiff, speedoError };
   }, [tire1, tire2]);
-
-  const applyPreset = (preset: string, target: 1 | 2) => {
-    const parts = preset.split('/');
-    if (parts.length !== 3) return;
-    const setW = target === 1 ? setWidth1 : setWidth2;
-    const setP = target === 1 ? setProfile1 : setProfile2;
-    const setR = target === 1 ? setRim1 : setRim2;
-    setW(parts[0]);
-    setP(parts[1]);
-    setR(parts[2].replace('R', ''));
-  };
-
-  const TireInput = ({ label, w, p, r, setW, setP, setR, target }: {
-    label: string; w: string; p: string; r: string;
-    setW: (v: string) => void; setP: (v: string) => void; setR: (v: string) => void;
-    target: 1 | 2;
-  }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">{label}</h2>
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div>
-          <label className="block text-xs text-gray-500 mb-1">{t('tire-size.width')}</label>
-          <input type="number" value={w} onChange={(e) => setW(e.target.value)}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center" />
-        </div>
-        <div>
-          <label className="block text-xs text-gray-500 mb-1">{t('tire-size.profile')}</label>
-          <input type="number" value={p} onChange={(e) => setP(e.target.value)}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center" />
-        </div>
-        <div>
-          <label className="block text-xs text-gray-500 mb-1">{t('tire-size.rim')}</label>
-          <input type="number" value={r} onChange={(e) => setR(e.target.value)}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center" />
-        </div>
-      </div>
-      <div className="text-center font-mono text-lg text-gray-900 mb-3">
-        {w}/{p}/R{r}
-      </div>
-      <div className="flex flex-wrap gap-1">
-        {COMMON_SIZES.map((size) => (
-          <button
-            key={size}
-            onClick={() => applyPreset(size, target)}
-            className="text-xs px-2 py-1 bg-gray-100 hover:bg-orange-100 rounded text-gray-600 hover:text-orange-700 transition-colors"
-          >
-            {size}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
 
   const formatMM = (val: number) => val.toFixed(1) + ' ' + t('tire-size.mm');
 
@@ -167,9 +167,9 @@ export default function TireSizeCalculator() {
       {/* Two tire inputs */}
       <div className="grid lg:grid-cols-2 gap-8 mb-8">
         <TireInput label={t('tire-size.originalTire')} w={width1} p={profile1} r={rim1}
-          setW={setWidth1} setP={setProfile1} setR={setRim1} target={1} />
+          setW={setWidth1} setP={setProfile1} setR={setRim1} />
         <TireInput label={t('tire-size.newTire')} w={width2} p={profile2} r={rim2}
-          setW={setWidth2} setP={setProfile2} setR={setRim2} target={2} />
+          setW={setWidth2} setP={setProfile2} setR={setRim2} />
       </div>
 
       {/* Comparison results */}
