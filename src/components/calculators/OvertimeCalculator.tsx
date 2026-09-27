@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
+import { pluralize } from '../../utils/pluralize';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type WorkType = 'weekend' | 'holiday' | 'night' | 'overtime';
@@ -29,7 +30,7 @@ const MULTIPLIERS: Record<WorkType, number> = {
 };
 
 export default function OvertimeCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [monthlySalary, setMonthlySalary] = useState<string>('300000');
   const [workType, setWorkType] = useState<WorkType>('weekend');
   const [hours, setHours] = useState<string>('8');
@@ -147,7 +148,9 @@ export default function OvertimeCalculator() {
 
           {takeTimeOff && results.daysOff > 0 && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-900">
-              {t('overtime.timeOffNote', { days: results.daysOff })}
+              {t('overtime.timeOffNote', {
+                days: `${results.daysOff} ${i18n.language === 'kk' ? 'күн' : pluralize(i18n.language, results.daysOff, 'день', 'дня', 'дней')}`,
+              })}
             </div>
           )}
 

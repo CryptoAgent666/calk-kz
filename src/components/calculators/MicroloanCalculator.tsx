@@ -157,8 +157,8 @@ ${t('microloan.export.results')}:
 ${results.monthlyPayment > 0 ? `- ${t('microloan.export.monthlyPayment')}: ${formatNumber(results.monthlyPayment)}` : ''}
 
 ${t('microloan.export.important')}:
-- ${t('microloan.export.maxRate')}
-- ${t('microloan.export.onlineLimit')}
+- ${t('microloan.legalRestrictions.rateRestrictions.maxRate')}
+- ${t('microloan.legalRestrictions.rateRestrictions.onlineLimit')}
 - ${t('microloan.export.readContract')}
 
 ${t('microloan.export.calculatedOn')} ${new Date().toLocaleDateString('ru-KZ')}

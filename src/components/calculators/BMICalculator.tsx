@@ -569,22 +569,30 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
           {
             title: 'WHO — A healthy lifestyle: BMI classification',
             url: 'https://www.who.int/europe/news-room/fact-sheets/item/a-healthy-lifestyle---who-recommendations',
-            description: 'World Health Organization. Официальные диапазоны ИМТ для классификации недостатка веса, нормы, избыточного веса и ожирения у взрослых.',
+            description: i18n.language === 'kk'
+              ? 'Дүниежүзілік денсаулық сақтау ұйымы. Ересектердегі салмақ тапшылығын, қалыпты салмақты, артық салмақты және семіздікті жіктеуге арналған ресми ДМИ ауқымдары.'
+              : 'World Health Organization. Официальные диапазоны ИМТ для классификации недостатка веса, нормы, избыточного веса и ожирения у взрослых.',
           },
           {
             title: 'CDC — About Adult BMI',
             url: 'https://www.cdc.gov/bmi/adult-calculator/index.html',
-            description: 'Centers for Disease Control and Prevention. Методология расчёта ИМТ и интерпретация результатов для взрослых старше 20 лет.',
+            description: i18n.language === 'kk'
+              ? 'Centers for Disease Control and Prevention. 20 жастан асқан ересектер үшін ДМИ есептеу әдістемесі және нәтижелерді түсіндіру.'
+              : 'Centers for Disease Control and Prevention. Методология расчёта ИМТ и интерпретация результатов для взрослых старше 20 лет.',
           },
           {
             title: 'NIH/NHLBI — Clinical Guidelines on the Identification, Evaluation, and Treatment of Overweight and Obesity in Adults',
             url: 'https://www.nhlbi.nih.gov/health-topics/managing-overweight-obesity-in-adults',
-            description: 'National Heart, Lung, and Blood Institute. Клинические рекомендации, на которых основаны категории риска и пороги ожирения 1–3 степени.',
+            description: i18n.language === 'kk'
+              ? 'National Heart, Lung, and Blood Institute. Қауіп санаттары мен 1–3 дәрежелі семіздік шектері негізделген клиникалық ұсынымдар.'
+              : 'National Heart, Lung, and Blood Institute. Клинические рекомендации, на которых основаны категории риска и пороги ожирения 1–3 степени.',
           },
           {
             title: 'NIH NLM — Body mass index: Considerations for practitioners',
             url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10484485/',
-            description: 'Рецензируемая статья о применимости и ограничениях ИМТ как метрики (мышцы vs жир, спортсмены, пожилые, беременные).',
+            description: i18n.language === 'kk'
+              ? 'Дене массасы индексінің (ДМИ) көрсеткіш ретінде қолданылуы мен шектеулері туралы рецензияланған мақала (бұлшықет пен май, спортшылар, егде адамдар, жүкті әйелдер).'
+              : 'Рецензируемая статья о применимости и ограничениях ИМТ как метрики (мышцы vs жир, спортсмены, пожилые, беременные).',
           },
         ]}
       />

@@ -47,7 +47,7 @@ const COLOR_MAP: Record<string, { bg: string; border: string; text: string }> = 
 };
 
 export default function BodyFatCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [height, setHeight] = useState<string>('175');
   const [weight, setWeight] = useState<string>('70');
@@ -208,17 +208,23 @@ export default function BodyFatCalculator() {
           {
             title: 'Hodgdon JA, Beckett MB. "Prediction of percent body fat for U.S. Navy men and women from body circumferences and height" (1984)',
             url: 'https://apps.dtic.mil/sti/citations/ADA143890',
-            description: 'Naval Health Research Center Reports 84-29 и 84-11. Оригинальная публикация формулы U.S. Navy для оценки процента жира по антропометрическим измерениям, используемой в этом калькуляторе.',
+            description: i18n.language === 'kk'
+              ? 'Naval Health Research Center Reports 84-29 және 84-11. Антропометриялық өлшемдер бойынша май пайызын бағалауға арналған U.S. Navy формуласының түпнұсқа жарияланымы — калькулятор осы формуламен есептейді.'
+              : 'Naval Health Research Center Reports 84-29 и 84-11. Оригинальная публикация формулы U.S. Navy для оценки процента жира по антропометрическим измерениям, используемой в этом калькуляторе.',
           },
           {
             title: 'ACE — Percent Body Fat Norms for Men and Women',
             url: 'https://www.acefitness.org/resources/everyone/tools-calculators/percent-body-fat-calculator/',
-            description: 'American Council on Exercise. Категории процента жира (essential, athletes, fitness, average, obese) для мужчин и женщин — официальные референсные диапазоны.',
+            description: i18n.language === 'kk'
+              ? 'American Council on Exercise. Ерлер мен әйелдерге арналған май пайызы санаттары (essential, athletes, fitness, average, obese) — ресми референстік ауқымдар.'
+              : 'American Council on Exercise. Категории процента жира (essential, athletes, fitness, average, obese) для мужчин и женщин — официальные референсные диапазоны.',
           },
           {
             title: 'NIH — Body Composition Assessment',
             url: 'https://www.ncbi.nlm.nih.gov/books/NBK547708/',
-            description: 'NCBI StatPearls. Обзор методов измерения состава тела (DEXA, гидростатика, биоимпеданс, антропометрия) и их сравнительная точность.',
+            description: i18n.language === 'kk'
+              ? 'NCBI StatPearls. Дене құрамын өлшеу әдістеріне (DEXA, гидростатикалық өлшеу, биоимпеданс, антропометрия) шолу және олардың салыстырмалы дәлдігі.'
+              : 'NCBI StatPearls. Обзор методов измерения состава тела (DEXA, гидростатика, биоимпеданс, антропометрия) и их сравнительная точность.',
           },
         ]}
       />

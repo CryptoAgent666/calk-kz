@@ -12,7 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 export default function WaterIntakeCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [weight, setWeight] = useState<string>('70');
   const [activity, setActivity] = useState<'low' | 'moderate' | 'high'>('moderate');
   const [climate, setClimate] = useState<'normal' | 'hot'>('normal');
@@ -183,22 +183,30 @@ export default function WaterIntakeCalculator() {
           {
             title: 'Institute of Medicine — Dietary Reference Intakes for Water, Potassium, Sodium, Chloride, and Sulfate (2005)',
             url: 'https://nap.nationalacademies.org/catalog/10925/dietary-reference-intakes-for-water-potassium-sodium-chloride-and-sulfate',
-            description: 'National Academies Press. Базовая публикация о суточной потребности в воде: 3.7 л для мужчин и 2.7 л для женщин общего потребления жидкости. Источник базовых норм калькулятора.',
+            description: i18n.language === 'kk'
+              ? 'National Academies Press. Тәуліктік су қажеттілігі туралы негізгі жарияланым: сұйықтықты жалпы тұтыну ерлер үшін 3,7 л, әйелдер үшін 2,7 л. Калькулятордың базалық нормаларының дереккөзі.'
+              : 'National Academies Press. Базовая публикация о суточной потребности в воде: 3.7 л для мужчин и 2.7 л для женщин общего потребления жидкости. Источник базовых норм калькулятора.',
           },
           {
             title: 'EFSA Panel on Dietetic Products — Scientific Opinion on Dietary Reference Values for water (2010)',
             url: 'https://www.efsa.europa.eu/en/efsajournal/pub/1459',
-            description: 'European Food Safety Authority. Европейские референсные значения потребления воды, использовались для калибровки коэффициента 30-35 мл/кг.',
+            description: i18n.language === 'kk'
+              ? 'European Food Safety Authority. Су тұтынудың еуропалық референстік мәндері — 30–35 мл/кг коэффициентін калибрлеу үшін пайдаланылды.'
+              : 'European Food Safety Authority. Европейские референсные значения потребления воды, использовались для калибровки коэффициента 30-35 мл/кг.',
           },
           {
             title: 'WHO — Drinking water requirements',
             url: 'https://www.who.int/teams/environment-climate-change-and-health/water-sanitation-and-health/water-safety-and-quality/drinking-water',
-            description: 'World Health Organization. Рекомендации по потреблению питьевой воды, поправки для жаркого климата и физической активности.',
+            description: i18n.language === 'kk'
+              ? 'Дүниежүзілік денсаулық сақтау ұйымы. Ауыз су тұтыну бойынша ұсынымдар, ыстық климат пен дене белсенділігіне арналған түзетулер.'
+              : 'World Health Organization. Рекомендации по потреблению питьевой воды, поправки для жаркого климата и физической активности.',
           },
           {
             title: 'NASEM — Nutrition During Pregnancy and Lactation',
             url: 'https://nap.nationalacademies.org/catalog/24960/nutrition-during-pregnancy-and-lactation-exploring-new-evidence-proceedings-of',
-            description: 'National Academies. Дополнительная потребность в воде при беременности (+300 мл) и грудном вскармливании (+700 мл).',
+            description: i18n.language === 'kk'
+              ? 'National Academies. Жүктілік (+300 мл) және емізу (+700 мл) кезіндегі суға қосымша қажеттілік.'
+              : 'National Academies. Дополнительная потребность в воде при беременности (+300 мл) и грудном вскармливании (+700 мл).',
           },
         ]}
       />

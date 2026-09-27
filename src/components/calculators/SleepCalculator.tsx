@@ -48,7 +48,7 @@ function subtractMinutes(hours: number, minutes: number, subMin: number): { h: n
 }
 
 export default function SleepCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [age, setAge] = useState<string>('30');
   const [mode, setMode] = useState<'wakeup' | 'bedtime'>('wakeup');
   const [wakeupTime, setWakeupTime] = useState<string>('07:00');
@@ -181,22 +181,30 @@ export default function SleepCalculator() {
           {
             title: 'Hirshkowitz M et al. "National Sleep Foundation\'s sleep time duration recommendations" (2015)',
             url: 'https://pubmed.ncbi.nlm.nih.gov/29073412/',
-            description: 'Sleep Health Journal. Рецензируемые рекомендации National Sleep Foundation по продолжительности сна для всех возрастных групп (новорождённые → пожилые) — основа таблицы норм в калькуляторе.',
+            description: i18n.language === 'kk'
+              ? 'Sleep Health Journal. National Sleep Foundation ұйымының барлық жас топтарына (жаңа туған нәрестелер → егде адамдар) арналған ұйқы ұзақтығы бойынша рецензияланған ұсынымдары — калькулятордағы нормалар кестесінің негізі.'
+              : 'Sleep Health Journal. Рецензируемые рекомендации National Sleep Foundation по продолжительности сна для всех возрастных групп (новорождённые → пожилые) — основа таблицы норм в калькуляторе.',
           },
           {
             title: 'American Academy of Sleep Medicine (AASM) — Sleep Education',
             url: 'https://sleepeducation.org/healthy-sleep/how-much-sleep/',
-            description: 'Профессиональная медицинская ассоциация. Данные о структуре циклов сна (90 минут, фазы NREM/REM) и оптимальном времени пробуждения.',
+            description: i18n.language === 'kk'
+              ? 'Кәсіби медициналық қауымдастық. Ұйқы циклдерінің құрылымы (90 минут, NREM/REM фазалары) және оянудың оңтайлы уақыты туралы деректер.'
+              : 'Профессиональная медицинская ассоциация. Данные о структуре циклов сна (90 минут, фазы NREM/REM) и оптимальном времени пробуждения.',
           },
           {
             title: 'CDC — Sleep and Sleep Disorders',
             url: 'https://www.cdc.gov/sleep/about/index.html',
-            description: 'Centers for Disease Control. Минимальные нормы сна для здоровья (7+ часов для взрослых), последствия недостатка сна.',
+            description: i18n.language === 'kk'
+              ? 'Centers for Disease Control. Денсаулық үшін ең аз ұйқы нормалары (ересектерге 7+ сағат), ұйқы жетіспеушілігінің салдары.'
+              : 'Centers for Disease Control. Минимальные нормы сна для здоровья (7+ часов для взрослых), последствия недостатка сна.',
           },
           {
             title: 'NIH NHLBI — How Sleep Works',
             url: 'https://www.nhlbi.nih.gov/health/sleep',
-            description: 'National Heart, Lung, and Blood Institute. Физиология сна, стадии, влияние на сердечно-сосудистую систему.',
+            description: i18n.language === 'kk'
+              ? 'National Heart, Lung, and Blood Institute. Ұйқы физиологиясы, кезеңдері, жүрек-қантамыр жүйесіне әсері.'
+              : 'National Heart, Lung, and Blood Institute. Физиология сна, стадии, влияние на сердечно-сосудистую систему.',
           },
         ]}
       />

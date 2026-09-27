@@ -19,9 +19,10 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { pluralize } from '../../utils/pluralize';
 
 export default function CashFlowGapCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [monthlyRevenue, setMonthlyRevenue] = useState<string>('15000000');
   const [monthlyExpenses, setMonthlyExpenses] = useState<string>('12000000');
@@ -92,9 +93,16 @@ export default function CashFlowGapCalculator() {
   const revenueNum = parseFloat(monthlyRevenue) || 0;
   const expensesNum = parseFloat(monthlyExpenses) || 0;
 
-  if (dsoNum > 30) tips.push(t('cash-flow-gap.tipDsoHigh', { days: dsoNum }));
-  if (dpoNum < 15) tips.push(t('cash-flow-gap.tipDpoLow', { days: dpoNum }));
-  if (dioNum > 45) tips.push(t('cash-flow-gap.tipDioHigh', { days: dioNum }));
+  // Пороги подсказок: они же подставляются в текст, чтобы текст не расходился с условием.
+  const DSO_HIGH = 30;
+  const DPO_LOW = 15;
+  const DIO_HIGH = 45;
+  const daysText = (n: number) =>
+    `${n.toLocaleString('ru-KZ')} ${i18n.language === 'kk' ? 'күн' : pluralize(i18n.language, n, 'день', 'дня', 'дней')}`;
+
+  if (dsoNum > DSO_HIGH) tips.push(t('cash-flow-gap.tipDsoHigh', { days: daysText(dsoNum), limit: DSO_HIGH }));
+  if (dpoNum < DPO_LOW) tips.push(t('cash-flow-gap.tipDpoLow', { days: daysText(dpoNum), limit: DPO_LOW }));
+  if (dioNum > DIO_HIGH) tips.push(t('cash-flow-gap.tipDioHigh', { days: daysText(dioNum), limit: DIO_HIGH }));
   if (expensesNum > revenueNum && revenueNum > 0) tips.push(t('cash-flow-gap.tipExpensesHigh'));
   if (tips.length === 0 && revenueNum > 0) tips.push(t('cash-flow-gap.tipAllGood'));
 

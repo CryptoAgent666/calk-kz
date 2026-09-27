@@ -14,6 +14,7 @@ import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { pluralize } from '../../utils/pluralize';
 
 export default function DepositCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -122,13 +123,19 @@ export default function DepositCalculator() {
     return t(`calculators:deposit.capitalizationOptions.${capitalizationPeriod}`);
   };
 
+  // «1 год / 2 года / 5 лет», «1 месяц / 3 месяца»; в kk одна форма (жыл, ай).
+  const termCount = parseFloat(termValue) || 0;
+  const termText = `${termValue} ${termUnit === 'years'
+    ? pluralize(i18n.language, termCount, t('deposit.termUnits.yearOne'), t('deposit.termUnits.yearFew'), t('deposit.termUnits.yearMany'))
+    : pluralize(i18n.language, termCount, t('deposit.termUnits.monthOne'), t('deposit.termUnits.monthFew'), t('deposit.termUnits.monthMany'))}`;
+
   const generateExportData = () => {
     if (results.finalAmountWithContributions === 0) return '';
 
     return `${t('deposit.exportParameters')}
 - ${t('deposit.initialAmount')}: ${formatNumber(parseFloat(initialAmount) || 0)}
 - ${t('deposit.monthlyContribution')}: ${formatNumber(parseFloat(monthlyContribution) || 0)}
-- ${t('deposit.termLabel')}: ${termValue} ${termUnit === 'years' ? t('deposit.termYears') : t('deposit.termMonths')}
+- ${t('deposit.termLabel')}: ${termText}
 - ${t('deposit.nominalRate')}: ${nominalRate}%
 - ${t('deposit.capitalizationPeriod')}: ${getCapitalizationPeriodText()}
 
@@ -176,8 +183,9 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
     return data;
   })();
 
-  // Данные для экспорта
-  const exportDataForPDF = {
+  // Данные для экспорта (PDF / Excel / копирование в Excel)
+  const contributionValue = parseFloat(monthlyContribution) || 0;
+  const exportData = {
     title: t('deposit.heading'),
     subtitle: t('deposit.subtitle'),
     sections: [
@@ -185,21 +193,27 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
         title: t('deposit.parametersTitle'),
         data: [
           { label: t('deposit.initialAmount'), value: formatNumber(parseFloat(initialAmount) || 0) },
-          { label: t('deposit.monthlyContribution'), value: formatNumber(parseFloat(monthlyContribution) || 0) },
-          { label: t('deposit.termLabel'), value: `${termValue} ${termUnit === 'years' ? 'лет' : 'мес.'}` },
+          ...(contributionValue > 0
+            ? [{ label: t('deposit.monthlyContributionShort'), value: formatNumber(contributionValue) }]
+            : []),
+          { label: t('deposit.termLabel'), value: termText },
           { label: t('deposit.nominalRate'), value: `${nominalRate}%` },
+          { label: t('deposit.capitalizationPeriod'), value: getCapitalizationPeriodText() },
         ]
       },
       {
         title: t('deposit.resultsTitle'),
         data: [
           { label: t('deposit.finalAmount'), value: formatNumber(results.finalAmountWithContributions) },
+          ...(results.totalContributions > 0
+            ? [{ label: t('deposit.totalContributions'), value: formatNumber(results.totalContributions) }]
+            : []),
           { label: t('deposit.earnedInterest'), value: formatNumber(results.totalEarningsWithContributions) },
           { label: t('deposit.effectiveRateLabel'), value: formatPercent(results.effectiveRate) },
         ]
       }
     ],
-    footer: 'calk.kz — Калькуляторы Казахстана'
+    footer: t('common:buttons.calculatedOn')
   };
 
   // FAQ данные
@@ -564,25 +578,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
       {/* Экспорт результатов */}
       {results && results.finalAmountWithContributions > 0 && (
         <div className="mt-8">
-          <ExportButtons
-            data={{
-              title: 'Расчёт депозита',
-              subtitle: `Ставка ${nominalRate}% годовых`,
-              sections: [
-                {
-                  title: 'Результаты',
-                  data: [
-                    { label: 'Начальная сумма', value: `${parseFloat(initialAmount).toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Срок', value: `${termValue} мес.` },
-                    { label: 'Начисленные проценты', value: `${results.totalEarningsWithContributions.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Итого', value: `${results.finalAmountWithContributions.toLocaleString(NUMBER_LOCALE)} ₸` },
-                  ]
-                }
-              ],
-              footer: 'Расчёт выполнен на calk.kz'
-            }}
-            filename="deposit-calculation"
-          />
+          <ExportButtons data={exportData} filename="deposit-calculation" />
         </div>
       )}
 

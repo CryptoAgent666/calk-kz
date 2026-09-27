@@ -387,20 +387,20 @@ export default function TimeConverter() {
                         style === 'colloquial' ? t('time-converter.styles.colloquial') :
                         t('time-converter.styles.both');
 
-      let content = `${t('time-converter.download.title')}\n\n`;
-      content += `${t('time-converter.download.originalTime')}: ${inputTime}\n`;
-      content += `${t('time-converter.download.language')}: ${languageName}\n`;
-      content += `${t('time-converter.download.format')}: ${formatName}\n`;
-      content += `${t('time-converter.download.style')}: ${styleName}\n\n`;
+      let content = `${t('time-converter.downloadFile.title')}\n\n`;
+      content += `${t('time-converter.downloadFile.originalTime')}: ${inputTime}\n`;
+      content += `${t('time-converter.downloadFile.language')}: ${languageName}\n`;
+      content += `${t('time-converter.downloadFile.format')}: ${formatName}\n`;
+      content += `${t('time-converter.downloadFile.style')}: ${styleName}\n\n`;
 
       if (style === 'both') {
         content += `${t('time-converter.styles.formal')}: ${results.formal}\n`;
         content += `${t('time-converter.styles.colloquial')}: ${results.colloquial}\n`;
       } else {
-        content += `${t('time-converter.download.result')}: ${results.words}\n`;
+        content += `${t('time-converter.downloadFile.result')}: ${results.words}\n`;
       }
 
-      content += `\n${t('time-converter.download.createdAt')}: ${new Date().toLocaleString('ru-RU')}`;
+      content += `\n${t('time-converter.downloadFile.createdAt')}: ${new Date().toLocaleString('ru-RU')}`;
 
       const blob = new Blob([content], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
@@ -424,7 +424,8 @@ export default function TimeConverter() {
   // Побочный эффект (накопление истории) остаётся в useEffect — в useMemo ему не место.
   useEffect(() => {
     if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return; // история не должна попадать в статику
-    if (results.words && !results.words.includes(t('time-converter.errors.invalid'))) {
+    // У ошибочного результата formal пустой — в историю попадают только удачные преобразования.
+    if (results.words && results.formal) {
       addToHistory(results);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

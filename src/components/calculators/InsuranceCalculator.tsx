@@ -21,6 +21,7 @@ import {
   ogpoTerritoryCoeff
 } from '../../data/ogpoCoefficients';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { pluralize } from '../../utils/pluralize';
 
 interface Driver {
   id: string;
@@ -213,6 +214,10 @@ export default function InsuranceCalculator() {
   };
 
   const selectedRegionData = findOgpoRegion(region);
+
+  // «22 года» / «22 жас»: возраст водителя, стаж и возраст ТС в подсказках результата.
+  const yearsText = (n: number, kkWord: string) =>
+    `${n} ${i18n.language === 'kk' ? kkWord : pluralize(i18n.language, n, 'год', 'года', 'лет')}`;
 
   const steps = [
     t('insurance-premium.steps.territory'),
@@ -616,8 +621,8 @@ export default function InsuranceCalculator() {
                       </h4>
                       <p className="text-amber-800 text-sm">
                         {t('insurance-premium.worstDriverInfo', {
-                          age: results.worstDriver.age,
-                          experience: results.worstDriver.experience,
+                          age: yearsText(results.worstDriver.age, 'жас'),
+                          experience: yearsText(results.worstDriver.experience, 'жыл'),
                           coefficient: results.ageExperienceCoeff
                         })}
                       </p>
@@ -629,7 +634,7 @@ export default function InsuranceCalculator() {
               {results.vehicleAge > 7 && (
                 <div className="bg-blue-50 rounded-lg p-4">
                   <p className="text-blue-800 text-sm">
-                    {t('insurance-premium.vehicleAgeInfo', { age: results.vehicleAge })}
+                    {t('insurance-premium.vehicleAgeInfo', { age: yearsText(results.vehicleAge, 'жыл'), coefficient: results.exploitationCoeff })}
                   </p>
                 </div>
               )}

@@ -617,27 +617,39 @@ export default function PregnancyCalculator() {
           {
             title: 'ACOG — Methods for Estimating the Due Date (Committee Opinion No. 700)',
             url: 'https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date',
-            description: 'American College of Obstetricians and Gynecologists. Официальная методология определения ПДР, включая правило Негеле, на котором основан этот калькулятор.',
+            description: i18n.language === 'kk'
+              ? 'American College of Obstetricians and Gynecologists. Болжамды босану күнін (ББК) анықтаудың ресми әдістемесі, соның ішінде калькулятор негізделген Негеле ережесі.'
+              : 'American College of Obstetricians and Gynecologists. Официальная методология определения ПДР, включая правило Негеле, на котором основан этот калькулятор.',
           },
           {
             title: 'WHO — Recommendations on antenatal care for a positive pregnancy experience',
             url: 'https://www.who.int/publications/i/item/9789241549912',
-            description: 'World Health Organization. Глобальные рекомендации по антенатальному наблюдению, использовавшиеся для рекомендаций по триместрам.',
+            description: i18n.language === 'kk'
+              ? 'Дүниежүзілік денсаулық сақтау ұйымы. Антенаталдық бақылау бойынша жаһандық ұсынымдар — триместрлер бойынша кеңестер осыларға сүйенеді.'
+              : 'World Health Organization. Глобальные рекомендации по антенатальному наблюдению, использовавшиеся для рекомендаций по триместрам.',
           },
           {
             title: 'NIH NICHD — Pregnancy Information',
             url: 'https://www.nichd.nih.gov/health/topics/pregnancy',
-            description: 'National Institute of Child Health and Human Development. Информация о развитии плода по неделям и норме изменений в каждом триместре.',
+            description: i18n.language === 'kk'
+              ? 'National Institute of Child Health and Human Development. Ұрықтың апта сайынғы дамуы және әр триместрдегі қалыпты өзгерістер туралы ақпарат.'
+              : 'National Institute of Child Health and Human Development. Информация о развитии плода по неделям и норме изменений в каждом триместре.',
           },
           {
             title: 'Mayo Clinic — Fetal development: The 1st trimester / 2nd trimester / 3rd trimester',
             url: 'https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/fetal-development/art-20045302',
-            description: 'Авторитетный медицинский ресурс. Описание этапов развития плода по неделям, используемое в графике беременности.',
+            description: i18n.language === 'kk'
+              ? 'Беделді медициналық ресурс. Жүктілік графигінде қолданылатын ұрық даму кезеңдерінің апта бойынша сипаттамасы.'
+              : 'Авторитетный медицинский ресурс. Описание этапов развития плода по неделям, используемое в графике беременности.',
           },
           {
-            title: 'Минздрав РК — Клинические протоколы (Физиологическая беременность)',
+            title: i18n.language === 'kk'
+              ? 'ҚР ДСМ — Клиникалық хаттамалар (Физиологиялық жүктілік)'
+              : 'Минздрав РК — Клинические протоколы (Физиологическая беременность)',
             url: 'https://www.rcrz.kz/index.php/ru/2017-03-12-10-50-44/klinicheskie-protokoly',
-            description: 'Республиканский центр развития здравоохранения МЗ РК. Локальные протоколы ведения беременности, применимые в Казахстане.',
+            description: i18n.language === 'kk'
+              ? 'ҚР ДСМ Республикалық денсаулық сақтауды дамыту орталығы. Қазақстанда қолданылатын жүктілікті жүргізудің жергілікті хаттамалары.'
+              : 'Республиканский центр развития здравоохранения МЗ РК. Локальные протоколы ведения беременности, применимые в Казахстане.',
           },
         ]}
       />
