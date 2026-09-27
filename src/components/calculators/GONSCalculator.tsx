@@ -13,6 +13,41 @@ import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
+// Та же модель, что и у основного расчёта ниже: вознаграждение банка на среднегодовой остаток,
+// госпремия = ставка × (взносы + вознаграждение банка), но не более 100 МРП за год.
+// Используется для примеров, чтобы их цифры не расходились с калькулятором.
+function simulateGONS(initial: number, monthly: number, years: number, bankRatePct: number, premiumRate: number) {
+  const maxPremium = 100 * 4325;
+  let balance = initial;
+  let premiumBase = initial;
+  let contributions = initial;
+  let bank = 0;
+  let premium = 0;
+  for (let y = 1; y <= years; y++) {
+    const yearly = monthly * 12;
+    contributions += yearly;
+    const reward = (balance + yearly / 2) * (bankRatePct / 100);
+    bank += reward;
+    premiumBase += yearly + reward;
+    const p = Math.min(premiumBase * premiumRate, maxPremium);
+    premium += p;
+    balance += yearly + reward + p;
+  }
+  return {
+    contributions: Math.round(contributions),
+    bank: Math.round(bank),
+    premium: Math.round(premium),
+    total: Math.round(balance),
+    profitPct: Math.round(((balance - contributions) / contributions) * 100),
+  };
+}
+
+const GONS_EXAMPLES = {
+  ex1: simulateGONS(50000, 10000, 10, 5.5, 0.05),
+  ex2: simulateGONS(30000, 15000, 8, 5.5, 0.07),
+  ex3: simulateGONS(100000, 50000, 5, 5.5, 0.05),
+};
+
 export default function GONSCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [initialDeposit, setInitialDeposit] = useState<string>('500000');
@@ -540,24 +575,24 @@ export default function GONSCalculator() {
             <div className="grid md:grid-cols-4 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('gons.parameters')}:</div>
-                <div className="text-gray-900">{t('gons.firstDeposit')}: 50,000 ₸</div>
-                <div className="text-gray-900">{t('gons.monthly')}: 10,000 ₸</div>
+                <div className="text-gray-900">{t('gons.firstDeposit')}: 50 000 ₸</div>
+                <div className="text-gray-900">{t('gons.monthly')}: 10 000 ₸</div>
                 <div className="text-gray-900">{t('gons.term')}: 10 {t('gons.years')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.yourContributions')}:</div>
-                <div className="text-gray-900">1,250,000 ₸</div>
-                <div className="text-xs text-gray-600">50,000 + (10,000 × 120)</div>
+                <div className="text-gray-900">{formatNumber(GONS_EXAMPLES.ex1.contributions)}</div>
+                <div className="text-xs text-gray-600">50 000 + (10 000 × 120)</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.income')}:</div>
-                <div className="text-gray-900">{t('gons.bank')} (5.5%): ~400,000 ₸</div>
-                <div className="text-gray-900">{t('gons.state')} (5%): ~62,500 ₸</div>
+                <div className="text-gray-900">{t('gons.bank')} (5,5%): ~{formatNumber(GONS_EXAMPLES.ex1.bank)}</div>
+                <div className="text-gray-900">{t('gons.state')} (5%): ~{formatNumber(GONS_EXAMPLES.ex1.premium)}</div>
               </div>
               <div>
                 <div className="font-medium text-blue-700">{t('gons.total')}:</div>
-                <div className="text-lg font-bold text-blue-600">~1,712,500 ₸</div>
-                <div className="text-xs text-blue-600">{t('gons.profitability')}: +37%</div>
+                <div className="text-lg font-bold text-blue-600">~{formatNumber(GONS_EXAMPLES.ex1.total)}</div>
+                <div className="text-xs text-blue-600">{t('gons.profitability')}: +{GONS_EXAMPLES.ex1.profitPct}%</div>
               </div>
             </div>
           </div>
@@ -568,24 +603,24 @@ export default function GONSCalculator() {
             <div className="grid md:grid-cols-4 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('gons.parameters')}:</div>
-                <div className="text-gray-900">{t('gons.firstDeposit')}: 30,000 ₸</div>
-                <div className="text-gray-900">{t('gons.monthly')}: 15,000 ₸</div>
+                <div className="text-gray-900">{t('gons.firstDeposit')}: 30 000 ₸</div>
+                <div className="text-gray-900">{t('gons.monthly')}: 15 000 ₸</div>
                 <div className="text-gray-900">{t('gons.term')}: 8 {t('gons.years')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.yourContributions')}:</div>
-                <div className="text-gray-900">1,470,000 ₸</div>
-                <div className="text-xs text-gray-600">30,000 + (15,000 × 96)</div>
+                <div className="text-gray-900">{formatNumber(GONS_EXAMPLES.ex2.contributions)}</div>
+                <div className="text-xs text-gray-600">30 000 + (15 000 × 96)</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.income')}:</div>
-                <div className="text-gray-900">{t('gons.bank')} (5.5%): ~450,000 ₸</div>
-                <div className="text-gray-900">{t('gons.state')} (7%): ~103,000 ₸</div>
+                <div className="text-gray-900">{t('gons.bank')} (5,5%): ~{formatNumber(GONS_EXAMPLES.ex2.bank)}</div>
+                <div className="text-gray-900">{t('gons.state')} (7%): ~{formatNumber(GONS_EXAMPLES.ex2.premium)}</div>
               </div>
               <div>
                 <div className="font-medium text-teal-700">{t('gons.total')}:</div>
-                <div className="text-lg font-bold text-teal-600">~2,023,000 ₸</div>
-                <div className="text-xs text-teal-600">{t('gons.profitability')}: +38%</div>
+                <div className="text-lg font-bold text-teal-600">~{formatNumber(GONS_EXAMPLES.ex2.total)}</div>
+                <div className="text-xs text-teal-600">{t('gons.profitability')}: +{GONS_EXAMPLES.ex2.profitPct}%</div>
               </div>
             </div>
           </div>
@@ -596,13 +631,13 @@ export default function GONSCalculator() {
             <div className="grid md:grid-cols-4 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('gons.parameters')}:</div>
-                <div className="text-gray-900">{t('gons.firstDeposit')}: 100,000 ₸</div>
-                <div className="text-gray-900">{t('gons.monthly')}: 50,000 ₸</div>
+                <div className="text-gray-900">{t('gons.firstDeposit')}: 100 000 ₸</div>
+                <div className="text-gray-900">{t('gons.monthly')}: 50 000 ₸</div>
                 <div className="text-gray-900">{t('gons.term')}: 5 {t('gons.years')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.yourContributions')}:</div>
-                <div className="text-gray-900">3,100,000 ₸</div>
+                <div className="text-gray-900">{formatNumber(GONS_EXAMPLES.ex3.contributions)}</div>
                 <div className="text-xs text-gray-600">{t('gons.veryLargeContributions')}</div>
               </div>
               <div>
@@ -612,8 +647,8 @@ export default function GONSCalculator() {
               </div>
               <div>
                 <div className="font-medium text-green-700">{t('gons.total')}:</div>
-                <div className="text-lg font-bold text-green-600">~4,050,000 ₸</div>
-                <div className="text-xs text-green-600">{t('gons.profitability')}: +31%</div>
+                <div className="text-lg font-bold text-green-600">~{formatNumber(GONS_EXAMPLES.ex3.total)}</div>
+                <div className="text-xs text-green-600">{t('gons.profitability')}: +{GONS_EXAMPLES.ex3.profitPct}%</div>
               </div>
             </div>
           </div>
@@ -633,7 +668,7 @@ export default function GONSCalculator() {
                   <li>{t('gons.condition1')}</li>
                   <li>{t('gons.condition2')}</li>
                   <li>{t('gons.condition3')}: {formatMRP(3)}</li>
-                  <li>{t('gons.condition4')}: 3 {t('gons.years')}</li>
+                  <li>{t('gons.condition4')}: 3 {i18n.language === 'kk' ? t('gons.years') : 'года'}</li>
                   <li>{t('gons.condition5')}: 20 {t('gons.years')}</li>
                 </ul>
               </div>
@@ -672,34 +707,7 @@ export default function GONSCalculator() {
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('gons.participatingBanks')}</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-2">Halyk Bank</h3>
-            <div className="space-y-1 text-sm">
-              <div>{t('gons.rate')}: <span className="font-medium text-green-600">5.5% {t('gons.perAnnum')}</span></div>
-              <div>{t('gons.capitalization')}: {t('gons.monthly')}</div>
-              <div className="text-xs text-gray-500">{t('gons.bank1Description')}</div>
-            </div>
-          </div>
-
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-2">Kaspi Bank</h3>
-            <div className="space-y-1 text-sm">
-              <div>{t('gons.rate')}: <span className="font-medium text-green-600">5.0% {t('gons.perAnnum')}</span></div>
-              <div>{t('gons.capitalization')}: {t('gons.monthly')}</div>
-              <div className="text-xs text-gray-500">{t('gons.bank2Description')}</div>
-            </div>
-          </div>
-
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <h3 className="font-semibold text-gray-900 mb-2">Forte Bank</h3>
-            <div className="space-y-1 text-sm">
-              <div>{t('gons.rate')}: <span className="font-medium text-green-600">6.0% {t('gons.perAnnum')}</span></div>
-              <div>{t('gons.capitalization')}: {t('gons.monthly')}</div>
-              <div className="text-xs text-gray-500">{t('gons.bank3Description')}</div>
-            </div>
-          </div>
-        </div>
+        <p className="text-sm text-gray-700">{t('gons.banksNote')}</p>
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-800">

@@ -16,8 +16,8 @@ const MRP_2026 = 4325;
 
 // Закон о банкротстве физлиц (введён с 03.03.2023)
 // 3 процедуры:
-// 1. Внесудебное банкротство — долг до 1600 МРП, нет имущества/доходов, срок просрочки ≥12 мес, через ЦОН бесплатно
-// 2. Судебное банкротство — долг от 1600 МРП, через суд
+// 1. Внесудебное банкротство — долг до 1600 МРП, нет имущества, 12 мес без погашения, через ЦОН/eGov бесплатно
+// 2. Судебное банкротство — долг свыше 1600 МРП или есть имущество, 12 мес без погашения, через суд
 // 3. Восстановление платёжеспособности — реструктуризация долга через суд
 // Последствия: 5 лет нельзя брать кредиты, 7 лет запись в КИП
 
@@ -48,10 +48,13 @@ export default function BankruptcyCalculator() {
 
     const EXTRA_JUDICIAL_LIMIT = 1600 * MRP_2026; // 6 920 000 ₸
 
-    if (debt > 0 && overdue >= 12 && debt <= EXTRA_JUDICIAL_LIMIT && !hasProperty && disposableIncome < 1 * MRP_2026) {
+    // Закон № 178-VII: внесудебное — долг ≤ 1600 МРП, никакого имущества в собственности, 12 месяцев
+    // без погашения (ст. 5); условия по доходу в законе нет. Судебное — долг > 1600 МРП либо есть
+    // имущество (тогда размер долга не важен), тоже 12 месяцев без погашения (ст. 6 п. 2).
+    if (debt > 0 && overdue >= 12 && debt <= EXTRA_JUDICIAL_LIMIT && !hasProperty) {
       procedure = 'extraJudicial';
       reason = t('bankruptcy.reasons.extraJudicial');
-    } else if (debt > EXTRA_JUDICIAL_LIMIT && overdue >= 3 && disposableIncome < debt / 60) {
+    } else if (debt > 0 && overdue >= 12 && (debt > EXTRA_JUDICIAL_LIMIT || hasProperty) && disposableIncome < debt / 60) {
       procedure = 'judicial';
       reason = t('bankruptcy.reasons.judicial');
     } else if (debt > 0 && disposableIncome >= debt / 60 && disposableIncome < debt / 12) {

@@ -54,12 +54,22 @@ export default function UniversalDeclarationCalculator() {
       regular: 2025,
     };
 
+    // С отчётного 2025 года (декларации подаются в 2026-м по новому НК) обычный гражданин подаёт
+    // ФНО 270 только при условиях ст. 417 п. 1 НК РК: доход, облагаемый самостоятельно; счета в
+    // иностранных банках > 1000 МРП; имущество за рубежом; доход > 8500 МРП и др. ФНО 250 — при
+    // зарубежных активах (ст. 422 п. 2 пп. 2). Госслужащие, квазигоссектор, учредители — как раньше.
+    const MRP_2026 = 4325;
+    const isOfficial = status === 'civilServant' || status === 'quasiGov' || status === 'founder';
+    const incomeNum = parseFloat(income) || 0;
+    const hasForeignAssets = hasForeignProperty || hasForeignAccounts;
+    const hasTriggers = hasOtherIncome || hasForeignAssets || incomeNum > 8500 * MRP_2026;
     const startYear = statusStartYear[status];
-    const mustDeclare = reportYear >= startYear;
-    const needsForm250 = mustDeclare && firstDeclaration;
+    const mustDeclare = isOfficial ? reportYear >= startYear : reportYear >= 2025 && hasTriggers;
+    const needsForm250 = firstDeclaration && (isOfficial ? mustDeclare : reportYear >= 2025 && hasForeignAssets);
     const needsForm270 = mustDeclare;
     const deadlineYear = reportYear + 1;
-    const explanationKey = statusOptions.find((s) => s.id === status)?.explKey || 'explRegular';
+    const baseExplKey = statusOptions.find((s) => s.id === status)?.explKey || 'explRegular';
+    const explanationKey = !isOfficial && !mustDeclare ? 'explRegularNo' : baseExplKey;
 
     return {
       mustDeclare,
@@ -73,7 +83,7 @@ export default function UniversalDeclarationCalculator() {
   const result = useMemo(
     computeResult,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [status, reportYear, firstDeclaration]
+    [status, reportYear, firstDeclaration, income, hasOtherIncome, hasForeignProperty, hasForeignAccounts]
   );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';

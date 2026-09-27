@@ -35,12 +35,34 @@ export default function RegistrationFeeCalculator() {
   const MRP_2026 = 4325;
   const CURRENT_YEAR = 2026;
 
-  // Ставки сбора за регистрацию (в МРП)
-  const registrationRates = [
-    { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
-    { maxAge: 3, rate: 50, description: t('registration-fee.from2To3Years') },
-    { maxAge: Infinity, rate: 500, description: t('registration-fee.over3Years') }
-  ];
+  // Ставки сбора за первичную регистрацию (в МРП), НК РК ст. 615 п. 4:
+  // 4.1 — М1 с электродвигателем: 0,25 / 25 / 250; 4.2 — прочие М1: 0,25 / 50 / 500;
+  // 4.3 — М2, М3, N1–N3 (автобусы и грузовые, кроме седельных тягачей): 0,25 / 240 / 350 / 2 500.
+  const ratesByType: Record<'car' | 'electric' | 'truck' | 'bus', { maxAge: number; rate: number; description: string }[]> = {
+    car: [
+      { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
+      { maxAge: 3, rate: 50, description: t('registration-fee.from2To3Years') },
+      { maxAge: Infinity, rate: 500, description: t('registration-fee.over3Years') }
+    ],
+    electric: [
+      { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
+      { maxAge: 3, rate: 25, description: t('registration-fee.from2To3Years') },
+      { maxAge: Infinity, rate: 250, description: t('registration-fee.over3Years') }
+    ],
+    truck: [
+      { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
+      { maxAge: 3, rate: 240, description: t('registration-fee.from2To3Years') },
+      { maxAge: 5, rate: 350, description: t('registration-fee.from3To5Years') },
+      { maxAge: Infinity, rate: 2500, description: t('registration-fee.over5Years') }
+    ],
+    bus: [
+      { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
+      { maxAge: 3, rate: 240, description: t('registration-fee.from2To3Years') },
+      { maxAge: 5, rate: 350, description: t('registration-fee.from3To5Years') },
+      { maxAge: Infinity, rate: 2500, description: t('registration-fee.over5Years') }
+    ]
+  };
+  const registrationRates = ratesByType[vehicleType];
 
   // Дополнительные сборы (в МРП)
   const CERTIFICATE_FEE_MRP = 1.25; // Свидетельство о регистрации
@@ -67,14 +89,8 @@ export default function RegistrationFeeCalculator() {
     const registrationRateMRP = rateInfo ? rateInfo.rate : registrationRates[registrationRates.length - 1].rate;
     const ageCategory = rateInfo ? rateInfo.description : registrationRates[registrationRates.length - 1].description;
 
-    // Особенности для электромобилей (могут быть льготы)
-    let actualRegistrationRate = registrationRateMRP;
-    if (vehicleType === 'electric') {
-      // НК РК ст. 615 п. 4.1 — первичная регистрация M1 с электродвигателем: до 2 лет включая год
-      // выпуска — 0,25 МРП; от 2 до 3 лет — 25 МРП; от 3 лет — 250 МРП (вдвое ниже общих 0,25/50/500
-      // по п. 4.2). До 13.09.2026 льгота применялась только к ≤ 2 годам.
-      actualRegistrationRate = vehicleAge <= 1 ? 0.25 : vehicleAge <= 3 ? 25 : 250;
-    }
+    // Ставка берётся из таблицы выбранного типа ТС (электромобили — п. 4.1, грузовые и автобусы — п. 4.3).
+    const actualRegistrationRate = registrationRateMRP;
 
     // Расчет сборов
     const registrationFee = actualRegistrationRate * MRP_2026;
@@ -83,10 +99,11 @@ export default function RegistrationFeeCalculator() {
     const totalFee = registrationFee + certificateFee + platesFee;
 
     // Определение высокого сбора и предупреждений
-    const isHighFee = registrationRateMRP >= 500;
+    const isHighFee = registrationRateMRP >= 250;
     let warning = '';
 
-    if (vehicleAge >= 2 && vehicleAge <= 4) {
+    // Предупреждения о переходе на следующую ставку — только для легковых с ДВС (их числа зашиты ниже)
+    if (vehicleType === 'car' && vehicleAge >= 2 && vehicleAge <= 4) {
       if (vehicleAge === 2) {
         warning = t('registration-fee.warning2Years', {
           currentFee: formatNumber(50 * MRP_2026),
@@ -310,8 +327,8 @@ export default function RegistrationFeeCalculator() {
             <div className="space-y-2">
               {registrationRates.map((rate, index) => (
                 <div key={index} className={`flex justify-between text-sm py-3 px-4 rounded ${
-                  rate.rate >= 500 ? 'bg-red-50 border border-red-200' :
-                  rate.rate >= 50 ? 'bg-amber-50 border border-amber-200' :
+                  rate.rate >= 250 ? 'bg-red-50 border border-red-200' :
+                  rate.rate >= 25 ? 'bg-amber-50 border border-amber-200' :
                   'bg-green-50 border border-green-200'
                 }`}>
                   <span className="text-gray-700">{rate.description}</span>

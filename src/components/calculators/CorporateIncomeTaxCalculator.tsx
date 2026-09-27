@@ -31,7 +31,11 @@ export default function CorporateIncomeTaxCalculator() {
     { id: 'social', labelKey: 'corporate-income-tax.activitySocial', rate: 5 },
   ];
 
-  const WITHHOLDING_RATE = 15;
+  const WITHHOLDING_RATE = 15; // у источника при выплате нерезиденту (ст. 357 п. 1, ст. 682 НК РК)
+  // Авансовые платежи не платят компании с совокупным годовым доходом за позапрошлый год
+  // не больше 600 000 МРП (ст. 348 п. 1 пп. 1 НК РК 2026); порог «КПН > 100 МРП» — из старого НК.
+  const ADVANCE_EXEMPT_INCOME_MRP = 600000;
+  const MRP_2026 = 4325;
 
   const [activity, setActivity] = useState<ActivityType>('standard');
   const [grossIncome, setGrossIncome] = useState<string>('50000000');
@@ -59,7 +63,7 @@ export default function CorporateIncomeTaxCalculator() {
     const withholdingTax = Math.round(((divs + roy) * WITHHOLDING_RATE) / 100);
     const totalTax = mainTax + withholdingTax;
     const effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
-    const monthlyAdvance = Math.round(mainTax / 12);
+    const monthlyAdvance = income > ADVANCE_EXEMPT_INCOME_MRP * MRP_2026 ? Math.round(mainTax / 12) : 0;
     const netProfit = taxableIncome - mainTax;
 
     return {

@@ -546,7 +546,7 @@ export default function TaxDeductionsCalculator() {
           { question: t('tax-deductions.faq.q5'), answer: t('tax-deductions.faq.a5') },
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — 401–404, 439-баптар' : 'Налоговый кодекс РК — ст. 401–404, 439', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — 363, 401–404-баптар' : 'Налоговый кодекс РК — ст. 363, 401–404', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'ҚР ҚМ МКД' : 'КГД МФ РК', url: 'https://kgd.gov.kz/' },
         ]}
       />

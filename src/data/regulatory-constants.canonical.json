@@ -129,8 +129,11 @@
       "audit_status": "clean",
       "source_url": "https://egov.kz/cms/ru/articles/family_support/social_help",
       "official_value": "35",
-      "verify_note": "Черта бедности устанавливается на уровне 35% медианного дохода, но не ниже 70% ПМ. Оба порога подтверждены.",
-      "reverified": "2026-06-23"
+      "verify_note": "Черта бедности устанавливается на уровне 35% медианного дохода, но не ниже 70% ПМ. Оба порога подтверждены. | calkcheck 2026-09-27: СК ст. 120 п. 3–4 — черту по РК определяет Минтруда от медианы, по регионам её ежеквартально рассчитывают МИО; фактически 70% регионального ПМ (Алматы, III кв. 2025 — 41 073,2 ₸, ctm-almaty.kz). В калькуляторе были выдуманные «медианы» (Алматы 180 000 → 63 000); заменено полем ввода с ориентиром 47 333 ₸ = 70% × 67 618 (ПМ РК II кв. 2026).",
+      "reverified": "2026-09-27",
+      "changes_next_fy": "С 01.01.2027 порядок расчёта черты бедности по регионам закрепляется приказом МТСЗН (Закон № 306-VIII исключает нормы из ст. 120) — перепроверить.",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "birth_lumpsum_benefit_1to3_mrp",
@@ -673,8 +676,10 @@
       "audit_status": "clean",
       "source_url": "https://zhts.kgd.gov.kz/ru/news/vazhnye-usloviya-dlya-vnesudebnogo-bankrotstva-put-k-osvobozhdeniyu-ot-dolgov-21-157788",
       "official_value": "1600",
-      "verify_note": "Tier-2 2026-08: подтверждено 1600 МРП (ст. 5 п. 1 Закона № 178-VII). Доп. условия: пп. 3) досудебное урегулирование ≤12 мес. (не применяется к договорам до 01.01.2025), п. 2 (получатели АСП), п. 3 (просрочка >5 лет).",
-      "reverified": "2026-08-06"
+      "verify_note": "Tier-2 2026-08: подтверждено 1600 МРП (ст. 5 п. 1 Закона № 178-VII). Доп. условия: пп. 3) досудебное урегулирование ≤12 мес. (не применяется к договорам до 01.01.2025), п. 2 (получатели АСП), п. 3 (просрочка >5 лет). | calkcheck 2026-09-27: ст. 5 п. 1 пп. 1 — «отсутствие на праве собственности имущества» без исключения для единственного жилья (исключение жилья — только в судебном, ст. 38 п. 3); условия по доходу в законе нет — калькулятор требовал доход < 1 МРП, убрано.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "customs_duty_rate_vehicle_base",
@@ -2781,7 +2786,7 @@
       "key": "debt_burden_pdn_limit_pct",
       "value": 50,
       "unit": "percent",
-      "law": "Постановление Правления НБ РК о коэффициенте долговой нагрузки заёмщика (ПДН, макс. 50%)",
+      "law": "Постановление Правления НБ РК о КДН (ред. от 31.07.2026, с 18.08.2026)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -2791,7 +2796,11 @@
       "used_by": [
         "DebtBurdenCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "calkcheck 2026-09-27: предел КДН 0,5 сохранён; дифференциация 70% для залоговых отменена регуляторами 09.07.2026 (kursiv.media); с 18.08.2026 КДН считается по видам займов и совокупно (пост. Правления НБ РК от 31.07.2026, zakon.kz). Страница писала «с июля 2024 — 50% беззалоговые / 70% залоговые».",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-secondary"
     },
     {
       "key": "perdiem_domestic_capital_mrp",
@@ -6743,9 +6752,9 @@
     },
     {
       "key": "bankruptcy_judicial_min_overdue_months",
-      "value": 3,
+      "value": 12,
       "unit": "months",
-      "law": "не подтверждено — гражданский закон использует 12-мес критерий неплатёжеспособно",
+      "law": "Закон РК от 30.12.2022 № 178-VII, ст. 6 п. 2 пп. 3",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -6755,7 +6764,13 @@
       ],
       "note": "Line 55: overdue >= 3 gates судебное банкротство. 3 months mirrors corporate bankruptcy practice; verify whether it is statutory for citizen",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/Z2200000178",
+      "official_checked": "2026-09-27",
+      "verify_note": "calkcheck 2026-09-27 (old.adilet, дословно): судебное банкротство — «отсутствие погашения обязательств ... в течение двенадцати последовательных месяцев» (ст. 6 п. 2 пп. 3). Было 3 — калькулятор предлагал судебное при 3 мес просрочки. Кроме того, при наличии имущества судебное доступно при любом размере долга (ст. 6 п. 2 пп. 1 ч. 2).",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "bankruptcy_restoration_plan_horizon_months",
@@ -9473,6 +9488,158 @@
       "verified_date": "2026-09-27",
       "verify_method": "calkcheck-primary",
       "changes_next_fy": "Закон РК от 11.06.2026 № 306-VIII с 01.01.2027 исключает процедурные ст. 72, 83, 86 и др. Социального кодекса — перепроверить порядок назначения в январе 2027."
+    },
+    {
+      "key": "registration_fee_first_trucks_buses_mrp",
+      "value": "до 2 лет 0,25; 2–3 года 240; 3–5 лет 350; старше 5 лет 2 500",
+      "unit": "MRP",
+      "law": "НК РК (K2500000214) ст. 615 п. 4.3 — М2, М3, N1–N3 (кроме седельных тягачей; тягачи — п. 4.4: 0,25/240/350 (3–7 лет)/2 500)",
+      "used_by": [
+        "RegistrationFeeCalculator"
+      ],
+      "verify_note": "calkcheck 2026-09-27: калькулятор считал грузовые и автобусы по ставкам легковых 0,25/50/500 — для авто старше 5 лет занижение в 5 раз (2 162 500 вместо 10 812 500 ₸).",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current"
+    },
+    {
+      "key": "cit_advance_payment_exempt_income_mrp",
+      "value": 600000,
+      "unit": "MRP (СГД за позапрошлый год)",
+      "law": "НК РК ст. 348 п. 1 пп. 1",
+      "used_by": [
+        "CorporateIncomeTaxCalculator"
+      ],
+      "verify_note": "calkcheck 2026-09-27: авансы по КПН не платят компании с СГД ≤ 600 000 МРП и новые компании; старый порог «КПН > 100 МРП» в калькуляторе давал авансы ТОО с доходом 50 млн ₸.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current"
+    },
+    {
+      "key": "otbasy_state_premium",
+      "value": "20% от поощряемой суммы, не более 200 МРП накоплений в год (премия до 40 МРП)",
+      "unit": "percent / MRP",
+      "law": "Закон РК «О жилищных строительных сбережениях» ст. 10 п. 3–4",
+      "used_by": [
+        "OtbasyBankCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/Z000000110_",
+      "verify_note": "calkcheck 2026-09-27: быстрый ответ писал «до 60 МРП/год».",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current"
+    },
+    {
+      "key": "tax_limitation_period_years",
+      "value": "3 (5 — крупный бизнес, недропользователи и др.)",
+      "unit": "years",
+      "law": "НК РК ст. 65 п. 2",
+      "used_by": [
+        "StatuteLimitationsCalculator"
+      ],
+      "verify_note": "calkcheck 2026-09-27: быстрый ответ и FAQ писали «5 лет (ст. 48 НК)»; также убраны выдуманные «10 лет по имуществу/виндикации».",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current"
+    },
+    {
+      "key": "severance_production_decline_months",
+      "value": 2,
+      "unit": "средних месячных зарплат",
+      "law": "ТК РК ст. 131 п. 2",
+      "used_by": [
+        "SeverancePayCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K1500000414",
+      "verify_note": "calkcheck 2026-09-27: опция «Инициатива работодателя» (1 оклад) заменена на «Спад производства» — 2 оклада; п. 1 (ликвидация, сокращение, нарушение работодателем договора) — 1.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current"
+    },
+    {
+      "key": "declaration_270_obligation_conditions",
+      "value": "ст. 417 п. 1: должностные лица; руководители/учредители >10%; доход, облагаемый самостоятельно; иностранные счета >1000 МРП; имущество за рубежом; покупки >20 000 МРП; цифровые активы; доход >8500 МРП; дивиденды >230 000 МРП",
+      "unit": "—",
+      "law": "НК РК ст. 417, 418 (срок 15 сентября), 422 (ФНО 250 — при зарубежных активах); КоАП ст. 272 (предупреждение, повторно 15 МРП)",
+      "used_by": [
+        "UniversalDeclarationCalculator"
+      ],
+      "verify_note": "calkcheck 2026-09-27: страница утверждала обязанность всех граждан ежегодно, «нулевую декларацию», сроки «15 июля / 31 марта» и штрафы 15/30 МРП.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current"
+    },
+    {
+      "key": "early_repayment_penalty_ban",
+      "value": "физлицам — без неустойки и штрафов; юрлицам — возможны в первые 6 мес (займ ≤1 года) / 1 год (>1 года)",
+      "unit": "—",
+      "law": "Закон РК «О банках и банковской деятельности» ст. 39 п. 5",
+      "used_by": [
+        "EarlyRepaymentCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/Z950002444_",
+      "verify_note": "calkcheck 2026-09-27: страница ссылалась на ГК ст. 723/727 и «ст. 36 закона о банках», требовала уведомление за 10 рабочих дней — в законе нет.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current"
+    },
+    {
+      "key": "parcel_ecommerce_vat_rate",
+      "value": 16,
+      "unit": "percent",
+      "law": "Решение ЕАЭС по товарам электронной торговли (с 01.07.2026): пошлина 5% сверх 200 € + НДС по национальной ставке; НК РК ст. 503",
+      "used_by": [
+        "ParcelCustomsCalculator"
+      ],
+      "source_url": "https://mybuh.kz/news/normy-vvoza-tovarov-s-inostrannykh-marketpleysov-dlya-fizlits-s-iyulya-2026-goda/",
+      "verify_note": "calkcheck 2026-09-27: калькулятор не прибавлял НДС к пошлине 5% по e-commerce. Номер решения Совета ЕЭК не установлен — вторичный источник.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-secondary",
+      "status": "current"
     }
   ],
   "estimates_excluded": [

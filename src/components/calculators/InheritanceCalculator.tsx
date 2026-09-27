@@ -11,6 +11,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
+import { pluralizeRu } from '../../utils/pluralize';
 
 const MRP_2026 = 4_325;
 
@@ -38,7 +39,7 @@ const heirTypes: Heir[] = [
 ];
 
 export default function InheritanceCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [estateValue, setEstateValue] = useState<string>('30000000');
   const [isMaritalProperty, setIsMaritalProperty] = useState(true); // совместно нажитое
@@ -286,7 +287,7 @@ export default function InheritanceCalculator() {
               <div className="bg-slate-50 rounded-lg p-4">
                 <div className="text-sm text-slate-600">{t('inheritance.activeQueue')}</div>
                 <div className="font-semibold text-slate-900">
-                  {t(`inheritance.queue${results.activeQueue}`)} ({results.totalHeirs} {t('inheritance.persons')})
+                  {t(`inheritance.queue${results.activeQueue}`)} ({results.totalHeirs} {i18n.language === 'kk' ? t('inheritance.persons') : pluralizeRu(results.totalHeirs, 'наследник', 'наследника', 'наследников')})
                 </div>
               </div>
 

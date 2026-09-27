@@ -16,7 +16,7 @@ const LAST_UPDATED: Record<string, string> = {
   'property-sale-tax': '2026-09-24', // ФНО 270.00 до 15.09, уплата до 25.09; ИПН 15% сверх 8 500 МРП
   'luxury-tax': '2026-09-27', // calkcheck 27.09: акциз 10% со всей стоимости, транспортный налог ст. 565
   'casino-winnings-tax': '2026-01-01',
-  'corporate-income-tax': '2026-01-01',
+  'corporate-income-tax': '2026-09-27', // calkcheck 27.09 б4: авансы по ст. 348 (порог 600 000 МРП), ставки ст. 357
   'crypto-tax': '2026-09-24', // ФНО 270.00 до 15.09 вместо 240.00; ИПН 15% сверх 8 500 МРП
   'rental-income-tax': '2026-09-24', // декларация 270.00 до 15.09 вместо 240.00
   'unified-payment': '2026-01-01',
@@ -37,17 +37,17 @@ const LAST_UPDATED: Record<string, string> = {
   'self-employed': '2026-07-10',
   'mobile-transfers': '2026-07-10',
   'tax-regime-comparison': '2026-09-24', // соцплатежи ИП за себя 21 675 ₸ (было 17 000)
-  'universal-declaration': '2026-01-01',
+  'universal-declaration': '2026-09-27', // calkcheck 27.09 б4: ФНО 270 по условиям ст. 417 НК
   'ip-simplified': '2026-09-24', // платежи за сотрудников: ИПН/ОПВ/ВОСМС из зарплаты, ОПВР/СО/ООСМС за счёт ИП, без СН
   'excise-tax': '2026-01-01',
 
   // === АВТО ===
   'customs-clearance': '2026-09-13',
   'recycling-fee': '2026-09-13',
-  'registration-fee': '2026-01-01',
+  'registration-fee': '2026-09-27', // calkcheck 27.09 б4: грузовые и автобусы по ст. 615 п. 4.3
   'insurance-premium': '2026-09-10',
   'kasko': '2026-09-27', // calkcheck 27.09: ОГПО для сравнения ~36 094 ₸
-  'parcel-customs': '2026-01-01',
+  'parcel-customs': '2026-09-27', // calkcheck 27.09 б4: НДС 16% для e-commerce
   'vehicle-tco': '2026-05-01',  // топливо + Отау 1 мая
   'auto-leasing': '2026-01-01',
   'car-market-value': '2026-04-19',
@@ -65,14 +65,14 @@ const LAST_UPDATED: Record<string, string> = {
   'compound-interest': '2026-04-19',
   'refinancing': '2026-09-25', // примеры пересчитаны по аннуитету
   'microloan': '2026-09-27', // calkcheck 27.09: пример сравнения — аннуитет
-  'early-repayment': '2026-04-19',
-  'otbasy-bank': '2026-05-01',
+  'early-repayment': '2026-09-27', // calkcheck 27.09 б4: ст. 39 п. 5 Закона о банках
+  'otbasy-bank': '2026-09-27', // calkcheck 27.09 б4: премия 20% от ≤200 МРП
   'fire': '2026-04-19',
   'business-roi': '2026-04-19',
   'break-even': '2026-04-19',
   'margin-markup': '2026-04-19',
   'cashback': '2026-04-19',
-  'debt-burden': '2026-04-19',
+  'debt-burden': '2026-09-27', // calkcheck 27.09 б4: КДН 0,5, расчёт по видам займов с 18.08.2026
   'inflation': '2026-04-19',
   'cash-flow-gap': '2026-04-19',
   'franchise-payback': '2026-04-19',
@@ -84,11 +84,11 @@ const LAST_UPDATED: Record<string, string> = {
   'pension': '2026-09-27', // calkcheck 27.09: базовая пенсия 70–118% ПМ (ст. 206 СК)
   'pension-annuity': '2026-04-19',
   'unemployment': '2026-09-27', // calkcheck 27.09: условия назначения по ст. 99, 113 СК
-  'social-assistance': '2026-01-01',
-  'gons': '2026-01-01',
+  'social-assistance': '2026-09-27', // calkcheck 27.09 б4: черта бедности региона вместо выдуманных медиан
+  'gons': '2026-09-27', // calkcheck 27.09 б4: примеры по формуле калькулятора
   'alimony': '2026-09-27', // calkcheck 27.09: примеры по налогам 2026
   'vacation-pay': '2026-09-27', // calkcheck 27.09: примеры по рабочим дням, а не 29,3
-  'severance-pay': '2026-06-11',  // ИПН 15% свыше 8500 МРП/год; подтверждено: ОПВ+ВОСМС с обеих частей (ОСМС-льгота пособия отменена с 01.01.2026)
+  'severance-pay': '2026-09-27', // calkcheck 27.09 б4: 2 оклада при спаде производства (ст. 131 п. 2 ТК)
   'salary-reverse': '2026-09-15',  // СО не ниже 1 МЗП (ст. 245 СК)
   'business-trip': '2026-09-24', // суточные: НК ст. 366 + ПП № 256 вместо выдуманных 4–6 МРП
   'average-earnings': '2026-09-24', // командировки убраны: ТК ст. 127 — зарплата за рабочие дни
@@ -100,11 +100,11 @@ const LAST_UPDATED: Record<string, string> = {
   'court-fee': '2026-01-01',
   'penalty': '2026-05-03',  // обновили ставку пени
   'notary': '2026-05-22',  // hotfix расчёта
-  'inheritance': '2026-04-19',
+  'inheritance': '2026-09-27', // calkcheck 27.09 б4: 7 очередей, тариф 4 МРП
   'divorce': '2026-09-24', // ЗАГС — плата 6 900 ₸ (приказ № 175/НҚ), без мин. 0,5 МРП
   'property-division': '2026-09-24', // госпошлина 1%, не более 10 000 МРП, без минимума
-  'statute-limitations': '2026-04-19',
-  'bankruptcy': '2026-04-19',
+  'statute-limitations': '2026-09-27', // calkcheck 27.09 б4: налоги 3 года (ст. 65 НК), трудовые споры ст. 160
+  'bankruptcy': '2026-09-27', // calkcheck 27.09 б4: условия по ст. 5–6 Закона № 178-VII
   'moral-damage': '2026-09-25', // гонорар юриста 100–300 тыс. ₸
 
   // === СТРОИТЕЛЬСТВО ===
@@ -150,7 +150,7 @@ const LAST_UPDATED: Record<string, string> = {
   // === ЗДОРОВЬЕ ===
   'bmi': '2026-04-19',
   'calories': '2026-04-19',
-  'pregnancy': '2026-04-19',
+  'pregnancy': '2026-09-27', // calkcheck 27.09 б4: декрет при двойне 140 дней
   'body-fat': '2026-04-19',
   'sleep': '2026-04-19',
   'water-intake': '2026-04-19',

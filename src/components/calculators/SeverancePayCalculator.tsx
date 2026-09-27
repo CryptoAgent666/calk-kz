@@ -79,7 +79,9 @@ export default function SeverancePayCalculator() {
     if (dismissalReason === 'reduction' || dismissalReason === 'liquidation') {
       severancePay = income * 1; // 1 month average salary (art. 131 TK RK)
     } else if (dismissalReason === 'employer') {
-      severancePay = income * 1; // 1 month compensation
+      // ст. 131 п. 2 ТК РК: расторжение по инициативе работодателя из-за снижения объёма производства,
+      // ухудшившего экономическое состояние работодателя, — 2 средние зарплаты
+      severancePay = income * 2;
     } else if (dismissalReason === 'agreement') {
       severancePay = income * 1; // Negotiable, default 1 month
     }
@@ -196,7 +198,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
     { key: 'agreement', icon: '🤝' },
     { key: 'reduction', icon: '📉' },
     { key: 'liquidation', icon: '🏚' },
-    { key: 'employer', icon: '👔' },
+    { key: 'employer', icon: '📊' },
   ];
 
   return (

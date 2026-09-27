@@ -12,11 +12,16 @@ import { TaxPieChart, ProgressBar } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
+// Ориентир по умолчанию: 70% среднего по РК прожиточного минимума за II квартал 2026
+// (67 618 ₸, Бюро национальной статистики) ≈ 47 333 ₸. Официальная черта в регионе — у акимата.
+const DEFAULT_POVERTY_LINE = 47333;
+
 export default function SocialAssistanceCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [quarterlyIncome, setQuarterlyIncome] = useState<string>('200000');
   const [familyMembers, setFamilyMembers] = useState<string>('4');
-  const [region, setRegion] = useState<string>('almaty');
+  // Черта бедности вводит пользователь: её ежеквартально рассчитывает акимат региона (ст. 120 п. 4 СК).
+  const [povertyLine, setPovertyLine] = useState<string>(String(DEFAULT_POVERTY_LINE));
   const [childrenAge1to6, setChildrenAge1to6] = useState<string>('1');
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
@@ -25,42 +30,17 @@ export default function SocialAssistanceCalculator() {
   const EMPTY_RESULTS = {
     averageMonthlyIncomePerPerson: 0,
     povertyThreshold: 0,
-    medianIncome: 0,
-    minPovertyThreshold: 0,
     isEligible: false,
     aspAmount: 0,
     childrenBonus: 0,
     totalAspAmount: 0,
-    incomeShortfall: 0,
-    regionName: ''
+    incomeShortfall: 0
   };
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
-  const LIVING_MINIMUM = 50851; // Примерный прожиточный минимум
-  const MIN_POVERTY_THRESHOLD = LIVING_MINIMUM * 0.7; // 70% от ПМ = 29,750 тенге
   const CHILD_BONUS_MRP = 1.5; // 1.5 МРП на ребенка 1-6 лет
-  const CHILD_BONUS_KZT = CHILD_BONUS_MRP * MRP_2026; // 5,898 тенге
-
-  // Медианные доходы по регионам (примерные значения на 2026 год)
-  const regionalData = [
-    { id: 'almaty', name: t('social-assistance.regions.almaty'), medianIncome: 180000 },
-    { id: 'astana', name: t('social-assistance.regions.astana'), medianIncome: 170000 },
-    { id: 'shymkent', name: t('social-assistance.regions.shymkent'), medianIncome: 130000 },
-    { id: 'almaty-region', name: t('social-assistance.regions.almatyRegion'), medianIncome: 120000 },
-    { id: 'karaganda', name: t('social-assistance.regions.karaganda'), medianIncome: 140000 },
-    { id: 'aktobe', name: t('social-assistance.regions.aktobe'), medianIncome: 125000 },
-    { id: 'atyrau', name: t('social-assistance.regions.atyrau'), medianIncome: 160000 },
-    { id: 'pavlodar', name: t('social-assistance.regions.pavlodar'), medianIncome: 135000 },
-    { id: 'kostanay', name: t('social-assistance.regions.kostanay'), medianIncome: 115000 },
-    { id: 'petropavl', name: t('social-assistance.regions.petropavl'), medianIncome: 110000 },
-    { id: 'kyzylorda', name: t('social-assistance.regions.kyzylorda'), medianIncome: 105000 },
-    { id: 'taraz', name: t('social-assistance.regions.taraz'), medianIncome: 108000 },
-    { id: 'oral', name: t('social-assistance.regions.oral'), medianIncome: 118000 },
-    { id: 'semey', name: t('social-assistance.regions.semey'), medianIncome: 112000 },
-    { id: 'taldykorgan', name: t('social-assistance.regions.taldykorgan'), medianIncome: 100000 },
-    { id: 'other', name: t('social-assistance.regions.other'), medianIncome: 95000 }
-  ];
+  const CHILD_BONUS_KZT = CHILD_BONUS_MRP * MRP_2026; // 6 487,5 тенге
 
   const calculateASP = () => {
     const totalIncome = parseFloat(quarterlyIncome) || 0;
@@ -71,17 +51,11 @@ export default function SocialAssistanceCalculator() {
       return EMPTY_RESULTS;
     }
 
-    // Найти данные региона
-    const selectedRegion = regionalData.find(r => r.id === region);
-    const medianIncome = selectedRegion?.medianIncome || 95000;
-    const regionName = selectedRegion?.name || t('social-assistance.unknownRegion');
-
     // Расчет среднедушевого месячного дохода
     const averageMonthlyIncomePerPerson = totalIncome / members / 3; // за квартал (3 месяца)
 
-    // Расчет черты бедности: 35% от медианного дохода, но не ниже 70% от ПМ
-    const povertyThresholdFromMedian = medianIncome * 0.35;
-    const povertyThreshold = Math.max(povertyThresholdFromMedian, MIN_POVERTY_THRESHOLD);
+    // Черта бедности региона (ст. 120 СК): её публикует акимат ежеквартально
+    const povertyThreshold = parseFloat(povertyLine) || 0;
 
     // Проверка права на АСП
     const isEligible = averageMonthlyIncomePerPerson < povertyThreshold;
@@ -108,14 +82,11 @@ export default function SocialAssistanceCalculator() {
     return {
       averageMonthlyIncomePerPerson: Math.round(averageMonthlyIncomePerPerson),
       povertyThreshold: Math.round(povertyThreshold),
-      medianIncome,
-      minPovertyThreshold: Math.round(MIN_POVERTY_THRESHOLD),
       isEligible,
       aspAmount: Math.round(aspAmount),
       childrenBonus: Math.round(childrenBonus),
       totalAspAmount: Math.round(totalAspAmount),
-      incomeShortfall: Math.round(incomeShortfall),
-      regionName
+      incomeShortfall: Math.round(incomeShortfall)
     };
   };
 
@@ -125,7 +96,7 @@ export default function SocialAssistanceCalculator() {
   const results = useMemo(
     calculateASP,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [quarterlyIncome, familyMembers, region, childrenAge1to6, i18n.language]
+    [quarterlyIncome, familyMembers, povertyLine, childrenAge1to6, i18n.language]
   );
 
   const formatNumber = (num: number) => {
@@ -136,7 +107,6 @@ export default function SocialAssistanceCalculator() {
     return `${mrpAmount} ${t('social-assistance.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
-  const selectedRegionData = regionalData.find(r => r.id === region);
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -207,27 +177,21 @@ export default function SocialAssistanceCalculator() {
             </div>
 
             <div>
-              <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="povertyLine" className="block text-sm font-medium text-gray-700 mb-2">
                 <MapPin className="w-4 h-4 inline mr-1" />
-                {t('social-assistance.region')}
+                {t('social-assistance.povertyLineInput')}
               </label>
-              <select
-                id="region"
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
+              <input
+                type="number"
+                id="povertyLine"
+                value={povertyLine}
+                onChange={(e) => setPovertyLine(e.target.value)}
+                min="0"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              >
-                {regionalData.map((regionOption) => (
-                  <option key={regionOption.id} value={regionOption.id}>
-                    {regionOption.name}
-                  </option>
-                ))}
-              </select>
-              {selectedRegionData && (
-                <p className="text-xs text-gray-500 mt-1">
-                  {t('social-assistance.medianIncomeInRegion')}: {formatNumber(selectedRegionData.medianIncome)}
-                </p>
-              )}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {t('social-assistance.povertyLineHint', { amount: formatNumber(DEFAULT_POVERTY_LINE) })}
+              </p>
             </div>
 
             <div>
@@ -253,7 +217,7 @@ export default function SocialAssistanceCalculator() {
               <h3 className="text-sm font-medium text-blue-900 mb-2">{t('social-assistance.criteria2026')}</h3>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>{t('social-assistance.criterion1')}</li>
-                <li>{t('social-assistance.criterion2', { amount: formatNumber(MIN_POVERTY_THRESHOLD) })}</li>
+                <li>{t('social-assistance.criterion2', { amount: formatNumber(DEFAULT_POVERTY_LINE) })}</li>
                 <li>{t('social-assistance.criterion3', { amount: formatMRP(CHILD_BONUS_MRP) })}</li>
                 <li>{t('social-assistance.criterion4', { amount: formatNumber(MRP_2026) })}</li>
               </ul>
@@ -303,16 +267,6 @@ export default function SocialAssistanceCalculator() {
                 <h3 className="font-semibold text-gray-900">{t('social-assistance.incomeAnalysis')}</h3>
 
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">{t('social-assistance.regionLabel')}</span>
-                    <span className="font-semibold text-gray-900">{results.regionName}</span>
-                  </div>
-
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">{t('social-assistance.medianIncomeLabel')}</span>
-                    <span className="font-semibold text-gray-900">{formatNumber(results.medianIncome)}</span>
-                  </div>
-
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('social-assistance.povertyThresholdLabel')}</span>
                     <span className="font-semibold text-gray-900">{formatNumber(results.povertyThreshold)}</span>
@@ -391,43 +345,16 @@ export default function SocialAssistanceCalculator() {
         </div>
       </div>
 
-      {/* Regional Poverty Thresholds */}
+      {/* Where to find the official poverty line */}
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('social-assistance.regionalThresholds')}</h2>
-
-        <div className="overflow-x-auto -mx-4 sm:mx-0">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">{t('social-assistance.regionColumn')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('social-assistance.medianIncomeColumn')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('social-assistance.percent35Column')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('social-assistance.povertyThresholdColumn')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {regionalData.filter(r => r.id !== 'other').map((regionData) => {
-                const thresholdFromMedian = regionData.medianIncome * 0.35;
-                const finalThreshold = Math.max(thresholdFromMedian, MIN_POVERTY_THRESHOLD);
-
-                return (
-                  <tr key={regionData.id} className={`border-b border-gray-100 ${region === regionData.id ? 'bg-blue-50' : ''}`}>
-                    <td className="py-3 px-4 font-medium text-gray-900">{regionData.name}</td>
-                    <td className="py-3 px-4 text-center text-sm text-gray-900">{formatNumber(regionData.medianIncome)}</td>
-                    <td className="py-3 px-4 text-center text-sm text-gray-900">{formatNumber(thresholdFromMedian)}</td>
-                    <td className="py-3 px-4 text-center text-sm font-semibold text-blue-600">
-                      {formatNumber(finalThreshold)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('social-assistance.regionalThresholds')}</h2>
+        <div className="space-y-3 text-sm text-gray-700">
+          <p>{t('social-assistance.povertyLineRule')}</p>
+          <p>{t('social-assistance.povertyLineWhere')}</p>
         </div>
-
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-800">
-            <strong>{t('social-assistance.important')}:</strong> {t('social-assistance.thresholdExplanation', { amount: formatNumber(MIN_POVERTY_THRESHOLD) })}
+            <strong>{t('social-assistance.important')}:</strong> {t('social-assistance.thresholdExplanation', { amount: formatNumber(DEFAULT_POVERTY_LINE) })}
           </p>
         </div>
       </div>

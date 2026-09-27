@@ -21,6 +21,9 @@ const DUTY_RATE_WEIGHT = 2; // не менее 2 EUR/кг превышения �
 // E-commerce regime (товары внешней электронной торговли, маркетплейсы) — Решение Совета ЕЭК, с 01.07.2026
 const ECOM_DUTY_RATE_VALUE = 0.05; // 5% от полной таможенной стоимости сверх порога
 const ECOM_DUTY_MIN_EUR_PER_KG = 1; // не менее 1 EUR/кг; весовой лимит 31 кг отменён
+// Сверх 200 € по товарам электронной торговли дополнительно взимается НДС по национальной ставке —
+// в РК 16% (ст. 503 НК РК) от таможенной стоимости с пошлиной.
+const ECOM_VAT_RATE = 0.16;
 const DEFAULT_EUR_RATE = 553.75;
 const DEFAULT_USD_RATE = 469.52;
 
@@ -51,6 +54,8 @@ export default function ParcelCustomsCalculator() {
     dutyByValue: 0,
     dutyByWeight: 0,
     totalDutyEur: 0,
+    vatEur: 0,
+    vatKzt: 0,
     totalDutyKzt: 0,
     totalCostKzt: 0,
     isDutyFree: true,
@@ -108,9 +113,12 @@ export default function ParcelCustomsCalculator() {
     const totalDutyEur = Math.max(dutyByValue, dutyByWeight);
     const totalDutyKzt = totalDutyEur * eurRate;
     const isDutyFree = totalDutyEur === 0;
+    // Личные посылки (физлицо → физлицо) облагаются единым платежом без отдельного НДС
+    const vatEur = shipmentType === 'ecommerce' && isValueExceeded ? (totalValueEur + totalDutyEur) * ECOM_VAT_RATE : 0;
+    const vatKzt = vatEur * eurRate;
 
     const valueInKzt = totalValueEur * eurRate;
-    const totalCostKzt = valueInKzt + totalDutyKzt;
+    const totalCostKzt = valueInKzt + totalDutyKzt + vatKzt;
     const effectiveDutyRate = valueInKzt > 0 ? (totalDutyKzt / valueInKzt) * 100 : 0;
 
     return {
@@ -126,6 +134,8 @@ export default function ParcelCustomsCalculator() {
       totalDutyEur: Math.round(totalDutyEur * 100) / 100,
       totalDutyKzt: Math.round(totalDutyKzt),
       totalCostKzt: Math.round(totalCostKzt),
+      vatEur: Math.round(vatEur * 100) / 100,
+      vatKzt: Math.round(vatKzt),
       isDutyFree,
       effectiveDutyRate: Number(effectiveDutyRate.toFixed(2))
     };
@@ -589,6 +599,14 @@ export default function ParcelCustomsCalculator() {
               )}
             </div>
 
+            {/* Import VAT (e-commerce above 200 EUR) */}
+            {results.vatKzt > 0 && (
+              <div className="flex justify-between items-center py-3 px-4 bg-orange-50 rounded-lg mt-4">
+                <span className="text-sm text-gray-700">{t('parcel-customs.importVat')}</span>
+                <span className="font-semibold text-gray-900">{formatNumber(results.vatKzt)} ({formatEur(results.vatEur)})</span>
+              </div>
+            )}
+
             {/* Total Cost */}
             <div className="flex justify-between items-center py-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg px-4 mt-4">
               <span className="text-lg font-semibold text-gray-900">{t('parcel-customs.totalCost')}</span>
@@ -704,6 +722,7 @@ export default function ParcelCustomsCalculator() {
                     { label: t('parcel-customs.dutyByValue'), value: formatEur(results.dutyByValue) },
                     { label: t('parcel-customs.dutyByWeight'), value: formatEur(results.dutyByWeight) },
                     { label: t('parcel-customs.customsDuty'), value: `${formatNumber(results.totalDutyKzt)} (${formatEur(results.totalDutyEur)})` },
+                    ...(results.vatKzt > 0 ? [{ label: t('parcel-customs.importVat'), value: `${formatNumber(results.vatKzt)} (${formatEur(results.vatEur)})` }] : []),
                     { label: t('parcel-customs.totalCost'), value: formatNumber(results.totalCostKzt) },
                   ]
                 }
