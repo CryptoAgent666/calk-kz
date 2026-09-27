@@ -131,6 +131,10 @@ export default function BusinessROICalculator() {
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
+  // «1 год», «3 года», «5 лет»: раньше подпись была фиксированной «лет» — «ROI (%) (3 лет)».
+  const yearsLabel = (n: number) =>
+    i18n.language === 'kk' ? t('business-roi.years') : pluralize(i18n.language, n, 'год', 'года', 'лет');
+
   const formatPayback = (months: number) => {
     if (months <= 0) return '—';
     const years = Math.floor(months / 12);
@@ -162,7 +166,7 @@ ${t('business-roi.avgCheck')}: ${formatCurrency(parseFloat(avgCheck) || 0)}
 ${t('business-roi.clientsPerMonth')}: ${clientsPerMonth}
 ${t('business-roi.monthlyExpenses')}: ${formatCurrency(parseFloat(monthlyExpenses) || 0)}
 ${t('business-roi.taxRegime')}: ${tax ? t(tax.labelKey) : ''}
-${t('business-roi.period')}: ${period} ${t('business-roi.years')}
+${t('business-roi.period')}: ${period} ${yearsLabel(period)}
 
 ${t('business-roi.resultsTitle')}:
 ─────────────────────────────
@@ -336,7 +340,7 @@ calk.kz`;
                         : 'border-gray-200 hover:border-gray-300 text-gray-600'
                     }`}
                   >
-                    {y} {t('business-roi.years')}
+                    {y} {yearsLabel(y)}
                   </button>
                 ))}
               </div>
@@ -397,7 +401,7 @@ calk.kz`;
             <div className="bg-blue-50 rounded-lg p-4 flex justify-between items-center">
               <div>
                 <div className="text-sm text-blue-600">
-                  {t('business-roi.roi')} ({period} {t('business-roi.years')})
+                  {t('business-roi.roi')} ({period} {yearsLabel(period)})
                 </div>
                 <div className="text-2xl font-bold text-blue-700">{results.roiPercent}%</div>
               </div>
@@ -444,7 +448,7 @@ calk.kz`;
               </div>
               <div className="bg-indigo-50 rounded-lg p-4">
                 <div className="text-xs text-indigo-600 mb-1">
-                  {t('business-roi.npv')} ({period} {t('business-roi.years')})
+                  {t('business-roi.npv')} ({period} {yearsLabel(period)})
                 </div>
                 <div
                   className={`text-base font-bold ${

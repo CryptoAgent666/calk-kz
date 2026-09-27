@@ -119,7 +119,7 @@ ${t('fuel-cost.resultsTitle')}:
 ─────────────────────────────
 ${t('fuel-cost.fuelNeeded')}: ${results.fuelNeeded} ${t('fuel-cost.liters')}
 ${t('fuel-cost.tripCost')}: ${formatCurrency(results.tripCost)}
-${t('fuel-cost.costPerKm')}: ${results.costPerKm} ₸/${t('fuel-cost.km')}
+${t('fuel-cost.costPerKm')}: ${results.costPerKm.toLocaleString('ru-KZ')} ₸/${t('fuel-cost.km')}
 ${t('fuel-cost.monthlyCost')} (22 ${t('fuel-cost.workDays')}): ${formatCurrency(results.monthlyCost)}
 ${t('fuel-cost.yearlyCost')}: ${formatCurrency(results.yearlyCost)}
 ─────────────────────────────
@@ -274,7 +274,7 @@ calk.kz`;
                     onClick={() => setDistance(String(route.distance))}
                     className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-xs font-medium text-green-700 hover:bg-green-100 transition-colors"
                   >
-                    {t(route.nameKey)} ({route.distance} {t('fuel-cost.km')})
+                    {t(route.nameKey)} ({route.distance.toLocaleString('ru-KZ')} {t('fuel-cost.km')})
                   </button>
                 ))}
               </div>
@@ -317,7 +317,7 @@ calk.kz`;
             <div className="bg-gray-50 rounded-lg p-4 flex justify-between items-center">
               <div>
                 <div className="text-sm text-gray-600">{t('fuel-cost.costPerKm')}</div>
-                <div className="text-lg font-bold text-gray-900">{results.costPerKm} ₸/{t('fuel-cost.km')}</div>
+                <div className="text-lg font-bold text-gray-900">{results.costPerKm.toLocaleString('ru-KZ')} ₸/{t('fuel-cost.km')}</div>
               </div>
               <Car className="w-8 h-8 text-gray-400" />
             </div>
@@ -327,7 +327,7 @@ calk.kz`;
               <div className="flex justify-between items-center">
                 <div>
                   <div className="text-sm text-blue-600">{t('fuel-cost.monthlyCost')}</div>
-                  <div className="text-xs text-blue-500">({distance} {t('fuel-cost.km')} x 22 {t('fuel-cost.workDays')})</div>
+                  <div className="text-xs text-blue-500">({distance} {t('fuel-cost.km')} × 22 {t('fuel-cost.workDays')})</div>
                 </div>
                 <span className="text-xl font-bold text-blue-700">{formatCurrency(results.monthlyCost)}</span>
               </div>

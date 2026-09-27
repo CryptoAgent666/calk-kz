@@ -118,7 +118,7 @@ export default function CompoundInterestCalculator() {
   };
 
   const formatPercent = (num: number) => {
-    return num.toFixed(2) + '%';
+    return num.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
   };
 
   const generateExportData = () => {
@@ -485,9 +485,9 @@ ${results.yearlyData.map(data =>
                   {t('compound-interest.compoundPowerTitle')}
                 </h3>
                 <div className="text-blue-800 text-xs sm:text-sm space-y-1">
-                  <div>• {t('compound-interest.capitalGrew')} {results.totalPersonalContributions > 0 ? (results.finalAmount / results.totalPersonalContributions).toFixed(1) : '0'} {t('compound-interest.times')}</div>
-                  <div>• {t('compound-interest.interestPercentage')} {results.finalAmount > 0 ? ((results.totalInterestEarned / results.finalAmount) * 100).toFixed(1) : '0'}% {t('compound-interest.ofTotal')}</div>
-                  <div>• {t('compound-interest.averageAnnualProfit')} {investmentYears > 0 ? formatNumber(results.totalInterestEarned / investmentYears) : formatNumber(0)}</div>
+                  <div>• {t('compound-interest.capitalGrew')} {results.totalPersonalContributions > 0 ? (results.finalAmount / results.totalPersonalContributions).toLocaleString('ru-KZ', { maximumFractionDigits: 1 }) : '0'} {t('compound-interest.times')}</div>
+                  <div>• {t('compound-interest.interestPercentage')} {results.finalAmount > 0 ? ((results.totalInterestEarned / results.finalAmount) * 100).toLocaleString('ru-KZ', { maximumFractionDigits: 1 }) : '0'}% {t('compound-interest.ofTotal')}</div>
+                  <div>• {t('compound-interest.averageAnnualProfit')} {investmentYears > 0 ? formatNumber(Math.round(results.totalInterestEarned / investmentYears)) : formatNumber(0)}</div>
                 </div>
               </div>
 
@@ -543,7 +543,7 @@ ${results.yearlyData.map(data =>
             </div>
             <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">{t('compound-interest.bankDeposits')}</h3>
             <div className="text-gray-600 text-xs sm:text-sm space-y-1">
-              <div>{t('compound-interest.yield')} <strong>13-15%</strong></div>
+              <div>{t('compound-interest.yield')} <strong>14–16,5%</strong></div>
               <div>{t('compound-interest.guarantees')}</div>
               <div>{t('compound-interest.risk')} {t('compound-interest.minimalRisk')}</div>
             </div>

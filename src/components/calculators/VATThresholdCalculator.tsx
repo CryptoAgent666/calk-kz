@@ -99,7 +99,8 @@ export default function VATThresholdCalculator() {
       const monthAmount = parseFloat(monthlyTurnovers[month.id]) || 0;
       runningTotal += monthAmount;
 
-      const isMonthExceeded = runningTotal >= thresholdAmount && !isExceeded;
+      // «превышает предельный порог» (ст. 101 п. 1) — строго больше
+      const isMonthExceeded = runningTotal > thresholdAmount && !isExceeded;
       if (isMonthExceeded) {
         isExceeded = true;
         exceedanceMonth = month.id;
@@ -111,29 +112,21 @@ export default function VATThresholdCalculator() {
         monthName: month.name,
         amount: monthAmount,
         runningTotal,
-        isExceeded: runningTotal >= thresholdAmount
+        isExceeded: runningTotal > thresholdAmount
       });
     }
 
     const remainingToThreshold = Math.max(0, thresholdAmount - runningTotal);
     const excessAmount = Math.max(0, runningTotal - thresholdAmount);
 
+    // НК РК ст. 101 п. 3: заявление — не позднее 5 рабочих дней со дня превышения порога.
+    // Раньше здесь был срок «10 рабочих дней после месяца превышения» — в НК-2026 его нет.
     let registrationDeadline = '';
-    if (isExceeded && exceedanceMonth) {
-      const monthIndex = months.findIndex(m => m.id === exceedanceMonth);
-      if (monthIndex !== -1) {
-        const nextMonth = months[monthIndex + 1];
-        if (nextMonth) {
-          registrationDeadline = t('vat-threshold.registrationDeadlineFormat', {
-            month: nextMonth.name.toLowerCase(),
-            year: calculationYear
-          });
-        } else {
-          registrationDeadline = t('vat-threshold.registrationDeadlineNextYear', {
-            year: calculationYear + 1
-          });
-        }
-      }
+    if (isExceeded && exceedanceMonthName) {
+      registrationDeadline = t('vat-threshold.registrationDeadlineFormat', {
+        month: exceedanceMonthName.toLowerCase(),
+        year: calculationYear
+      });
     }
 
     const filledMonths = monthlyBreakdown.filter(m => m.amount > 0).length;

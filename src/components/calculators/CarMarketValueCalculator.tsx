@@ -291,7 +291,7 @@ calk.kz`;
                 </div>
                 <div className="text-lg font-bold text-red-700">{formatCurrency(results.lossAmount)}</div>
               </div>
-              <div className="text-xl font-bold text-red-700">−{results.lossPercent}%</div>
+              <div className="text-xl font-bold text-red-700">−{results.lossPercent.toLocaleString('ru-KZ')}%</div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">

@@ -2626,9 +2626,9 @@
     },
     {
       "key": "pension_annuity_sufficient_amount_mrp",
-      "value": "age-specific present-value sufficiency thresholds (ЕНПФ ПМД, unisex), Пост.Прав.РК №422 от 21.05.2026 — not flat 656 МРП (e.g. age 45 ≈15.4 млн ₸, age 62 ≈23.57 млн ₸)",
+      "value": "достаточность = накоплений хватает на пожизненную выплату ≥ 70% ПМ (2026: 0,7 × 50 851 = 35 596 ₸/мес); сумму считает страховщик по тарифам",
       "unit": "MRP",
-      "law": "Постановление АРРФР / Закон РК «О пенсионном обеспечении» — достаточность накоплений для пенсионного аннуитета",
+      "law": "Социальный кодекс РК ст. 220 п. 1 пп. 4 (с 45 лет), ст. 225 п. 2 (выплата не ниже 70% ПМ)",
       "year": "2026",
       "change_frequency": "annual",
       "aliases": [
@@ -2639,11 +2639,12 @@
         "PensionAnnuityCalculator"
       ],
       "audit_status": "clean",
-      "official_value": "не плоские 656 МРП: возраст-зависимые пороги достаточности (ПМД) по present-value, Пост. Прав. РК №422 от 21.05.2026 (напр. 45 лет ≈15.4 млн ₸; 62 года ≈23.57 млн ₸)",
-      "source_url": "https://www.enpf.kz/ru/press-center/news/282454/",
-      "verify_note": "Флэт 656 МРП устарел (подтверждено уверенно). ПМД теперь возраст-зависимая present-value таблица (ЕНПФ, унисекс). Конкретные половозрастные суммы аннуитета НЕ подтверждены в открытых источниках — требуют отдельной сверки по полному тексту Пост. №422.",
-      "confidence": "medium",
-      "reverified": "2026-06-27"
+      "official_value": "достаточность = накоплений хватает на пожизненную выплату ≥ 70% ПМ (2026: 0,7 × 50 851 = 35 596 ₸/мес); сумму считает страховщик по тарифам",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "calkcheck 2026-09-27 б5: с 27.06 калькулятор брал за порог аннуитета таблицу ПМД ЕНПФ (ПП № 422), но ПМД по ст. 220 п. 3 СК — порог для единовременных выплат на жильё/лечение. Женщине 55 лет требовалось 19,95 млн вместо ~7,45 млн. Теперь минимум = 0,7 × ПМ × аннуитетный фактор калькулятора (оценка).",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "overtime_multiplier_night_overtime",
@@ -3355,7 +3356,8 @@
       "conflict": "Same base ОГПО premium (1.9 МРП) in CarTransferCalculator (year blank) and InsuranceCalculator (year 2026). Identical value; only name and year-tag differ. Expressed in МРП so the ₸ amount reindexes annually.",
       "used_by": [
         "CarTransferCalculator",
-        "InsuranceCalculator"
+        "InsuranceCalculator",
+        "VehicleTCOCalculator"
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/Z030000446_",
@@ -3423,7 +3425,8 @@
       ],
       "status": "current",
       "used_by": [
-        "InsuranceCalculator"
+        "InsuranceCalculator",
+        "VehicleTCOCalculator"
       ],
       "audit_status": "clean",
       "official_value": 1.1,
@@ -3445,7 +3448,8 @@
       ],
       "status": "current",
       "used_by": [
-        "InsuranceCalculator"
+        "InsuranceCalculator",
+        "VehicleTCOCalculator"
       ],
       "audit_status": "clean",
       "official_value": "Закон № 446-II ст. 19 п. 6: Легковые «В» (полная масса ≤ 3500 кг, ≤ 8 сидячих мест помимо водителя) 2,09; Автобусы ДО 16 пассажирских мест включительно 3,26; Автобусы СВЫШЕ 16 мест 3,45; Грузовые «С» (полная масса ПРЕВЫШАЕТ 3500 кг) 3,98; троллейбусы/трамваи 2,33; мото «А» 1,00; прицепы «Е» 1,00. Базовая премия 1,9 МРП — ст. 19 п. 2.",
@@ -6029,8 +6033,8 @@
       "audit_status": "clean",
       "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
       "official_value": "4000",
-      "verify_note": "ДУМК фидия-садака на Рамадан 2026 = 4 000 ₸/день (стоимость двухразового питания). Подтверждено muftyat.kz. Версия «3520» — неверна.",
-      "reverified": "2026-07-06"
+      "verify_note": "ДУМК фидия-садака на Рамадан 2026 = 4 000 ₸/день (стоимость двухразового питания). Подтверждено muftyat.kz. Версия «3520» — неверна. | calkcheck 2026-09-27 б5: быстрый ответ, методика и примеры писали «~700–1000 ₸», «~800 ₸ × 4», пример «46,310» — приведены к ставкам ДУМК.",
+      "reverified": "2026-09-27"
     },
     {
       "key": "dumk_fidya_rate_2025",
@@ -6070,8 +6074,8 @@
       "audit_status": "clean",
       "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
       "official_value": "735",
-      "verify_note": "ДУМК фитр-садака минимум (2 кг муки) на Рамадан 2026 = 735 ₸/чел. Подтверждено muftyat.kz.",
-      "reverified": "2026-07-06"
+      "verify_note": "ДУМК фитр-садака минимум (2 кг муки) на Рамадан 2026 = 735 ₸/чел. Подтверждено muftyat.kz. | calkcheck 2026-09-27 б5: быстрый ответ, методика и примеры писали «~700–1000 ₸», «~800 ₸ × 4», пример «46,310» — приведены к ставкам ДУМК.",
+      "reverified": "2026-09-27"
     },
     {
       "key": "dumk_fitr_dates_rate_2026",
@@ -6089,8 +6093,8 @@
       "audit_status": "clean",
       "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
       "official_value": "12400",
-      "verify_note": "ДУМК фитр-садака по финикам (4 кг) на Рамадан 2026 = 12 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 2200.",
-      "reverified": "2026-07-06",
+      "verify_note": "ДУМК фитр-садака по финикам (4 кг) на Рамадан 2026 = 12 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 2200. | calkcheck 2026-09-27 б5: быстрый ответ, методика и примеры писали «~700–1000 ₸», «~800 ₸ × 4», пример «46,310» — приведены к ставкам ДУМК.",
+      "reverified": "2026-09-27",
       "official_source": "muftyat.kz / tengrinews.kz (ДУМК 2026)",
       "verified_date": "2026-07-08",
       "verify_method": "tier2-llm"
@@ -6111,8 +6115,8 @@
       "audit_status": "clean",
       "source_url": "https://www.muftyat.kz/ru/quran-competition/qmdb/2026-02-11/47789-dumk-v-etom-godu-razmer-fitr-sadaka-ustanovlen-v-razmere-735-tenge/",
       "official_value": "6400",
-      "verify_note": "ДУМК фитр-садака по изюму (2 кг) на Рамадан 2026 = 6 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 1800.",
-      "reverified": "2026-07-06",
+      "verify_note": "ДУМК фитр-садака по изюму (2 кг) на Рамадан 2026 = 6 400 ₸. Подтверждено официальным объявлением ДУМК (muftyat.kz) + tengrinews. Было ошибочно 1800. | calkcheck 2026-09-27 б5: быстрый ответ, методика и примеры писали «~700–1000 ₸», «~800 ₸ × 4», пример «46,310» — приведены к ставкам ДУМК.",
+      "reverified": "2026-09-27",
       "official_source": "muftyat.kz / tengrinews.kz (ДУМК 2026)",
       "verified_date": "2026-07-08",
       "verify_method": "tier2-llm"
@@ -7717,7 +7721,7 @@
       "key": "pension_annuity_min_purchase_age",
       "value": 45,
       "unit": "years",
-      "law": "Социальный кодекс РК — договор пенсионного аннуитета можно заключить с 45 лет",
+      "law": "Социальный кодекс РК ст. 220 п. 1 пп. 4 — с 45 лет при достаточности накоплений",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -7728,9 +7732,12 @@
       "note": "Encoded as min=\"45\" attribute on the age input (~line 314) — a validation bound reflecting the legal minimum age, not a user-input default (",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://www.kmlife.kz/ru/products/individual/pension-annuity",
-      "verify_note": "Договор пенсионного аннуитета (отложенного) можно заключить с 45 лет при достаточности накоплений. Подтверждено для 2026.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2300000224",
+      "verify_note": "calkcheck 2026-09-27 б5: сверено дословно по СК ст. 220 п. 1 пп. 4 (old.adilet). Быстрый ответ говорил «с 50/55 лет» — исправлено.",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "official_value": 45
     },
     {
       "key": "solidarity_pension_income_replacement_rate",
@@ -8310,8 +8317,9 @@
       "audit_status": "clean",
       "official_value": 2.96,
       "source_url": "https://adilet.zan.kz/rus/docs/Z030000446_",
-      "verify_note": "2026-09-10: значение 2,96 соответствует ст. 19 п. 3 для г. Алматы (для Астаны — 2,2, а в VehicleTCOCalculator 2,96 стоит для обеих столиц). ОТДЕЛЬНЫЙ ОТКРЫТЫЙ ДЕФЕКТ: VehicleTCO считает ОГПО не по Закону вообще — берёт выдуманную базу 30 000–78 000 ₸ по объёму двигателя и делит на 2,5; ни базовой премии 1,9 МРП, ни поправочного коэффициента АРРФР там нет. Кандидат в Phase-4 отдельной задачей.",
-      "verified_date": "2026-09-10"
+      "verify_note": "2026-09-10: значение 2,96 соответствует ст. 19 п. 3 для г. Алматы (для Астаны — 2,2, а в VehicleTCOCalculator 2,96 стоит для обеих столиц). ОТДЕЛЬНЫЙ ОТКРЫТЫЙ ДЕФЕКТ: VehicleTCO считает ОГПО не по Закону вообще — берёт выдуманную базу 30 000–78 000 ₸ по объёму двигателя и делит на 2,5; ни базовой премии 1,9 МРП, ни поправочного коэффициента АРРФР там нет. Кандидат в Phase-4 отдельной задачей. | calkcheck 2026-09-27 б5: VehicleTCO больше не держит свою модель ОГПО (база 30–78 тыс. по объёму двигателя × 2,96/2,5) — берёт ogpoCoefficients: 1,9 МРП × территория × 2,09 × 1,1 (>7 лет).",
+      "verified_date": "2026-09-10",
+      "reverified": "2026-09-27"
     },
     {
       "key": "ogpo_registration_territory_coeff",
@@ -8326,7 +8334,8 @@
       "status": "current",
       "used_by": [
         "InsuranceCalculator",
-        "CarTransferCalculator"
+        "CarTransferCalculator",
+        "VehicleTCOCalculator"
       ],
       "audit_status": "clean",
       "official_value": "Закон № 446-II ст. 19 п. 3: Алматы 2,96; Атырауская 2,69; Астана 2,2; ВКО 1,96; Абай 1,96; Костанайская 1,95; Алматинская 1,78; Жетісу 1,78; Павлодарская 1,63; Актюбинская 1,35; Карагандинская 1,39; Ұлытау 1,39; СКО 1,33; Акмолинская 1,32; ЗКО 1,17; Мангистауская 1,15; Кызылординская 1,09; Туркестанская 1,01; Шымкент 1,01; Жамбылская 1,00",
@@ -9609,7 +9618,9 @@
       "unit": "—",
       "law": "Закон РК «О банках и банковской деятельности» ст. 39 п. 5",
       "used_by": [
-        "EarlyRepaymentCalculator"
+        "EarlyRepaymentCalculator",
+        "CreditCalculator",
+        "MortgageSpecializedCalculator"
       ],
       "source_url": "https://adilet.zan.kz/rus/docs/Z950002444_",
       "verify_note": "calkcheck 2026-09-27: страница ссылалась на ГК ст. 723/727 и «ст. 36 закона о банках», требовала уведомление за 10 рабочих дней — в законе нет.",
@@ -9640,6 +9651,86 @@
       "verified_date": "2026-09-27",
       "verify_method": "calkcheck-secondary",
       "status": "current"
+    },
+    {
+      "key": "vat_registration_deadline_working_days",
+      "value": 5,
+      "unit": "working days",
+      "law": "НК РК 2026 ст. 101 п. 3 (при сделке сверх порога — до её совершения, п. 4)",
+      "used_by": [
+        "VATThresholdCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-09-27 б5: сайт писал «10 рабочих дней после месяца превышения» (быстрый ответ, методика, FAQ, примеры, виджет). В НК-2026 — «не позднее пяти рабочих дней со дня превышения».",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": 5
+    },
+    {
+      "key": "vat_registration_late_fine_mrp",
+      "value": 50,
+      "unit": "MRP",
+      "law": "КоАП РК ст. 269 ч. 3",
+      "used_by": [
+        "VATThresholdCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 б5: FAQ писал «от 50 до 200 МРП»; в ст. 269 для НДС только ч. 3 — 50 МРП.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": 50
+    },
+    {
+      "key": "vat_unregistered_turnover_fine_pct",
+      "value": 15,
+      "unit": "percent",
+      "law": "КоАП РК ст. 275 ч. 5 (оборот за период непостановки на учёт по НДС)",
+      "used_by": [
+        "VATThresholdCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K1400000235",
+      "verify_note": "calkcheck 2026-09-27 б5: сверено дословно (old.adilet).",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": 15
+    },
+    {
+      "key": "kurban_sacrifice_period_days",
+      "value": 3,
+      "unit": "days",
+      "law": "ДУМК (ханафитский мазхаб): 10–12 Зуль-хиджа, до захода солнца третьего дня праздника",
+      "used_by": [
+        "KurbanCalculator"
+      ],
+      "source_url": "https://www.muftyat.kz/ru/articles/kurban-ait/2020-07-22/32233-v-kakoe-vremia-sovershaetsia-zhertvoprinoshenie/",
+      "verify_note": "calkcheck 2026-09-27 б5: страница писала «10–13 Зуль-хиджа (4 дня)» — это шафиитский мазхаб.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-09-27",
+      "verified_date": "2026-09-27",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": 3
     }
   ],
   "estimates_excluded": [

@@ -56,9 +56,9 @@ export default function HajjCalculator() {
     const totalKZT = totalUSD * rate;
 
     // Срок ожидания хаджа — 1-5 лет в КЗ (по квоте 5000/год)
-    const waitYears = tripType === 'hajj' ? '1-5 лет' : 'доступно круглый год';
+    const waitYears = tripType === 'hajj' ? t('hajj.waitHajjValue') : t('hajj.waitUmraValue');
     // Длительность поездки
-    const duration = tripType === 'hajj' ? '15-25 дней' : '7-10 дней';
+    const duration = tripType === 'hajj' ? t('hajj.durationHajjValue') : t('hajj.durationUmraValue');
 
     return {
       perPersonUSD: Math.round(perPersonUSD),
@@ -72,7 +72,7 @@ export default function HajjCalculator() {
       waitYears,
       duration,
     };
-  }, [tripType, pkg, persons, usdRate, addKurban, addSouvenirs]);
+  }, [tripType, pkg, persons, usdRate, addKurban, addSouvenirs, t]);
 
   const formatKZT = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
   const formatUSD = (n: number) => '$' + n.toLocaleString('en-US');

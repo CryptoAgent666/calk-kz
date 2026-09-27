@@ -548,12 +548,12 @@ export default function RamadanSadaqahCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('ramadan-sadaqah.calculation')}</div>
-                <div>5 × 735 ₸ = 3,675 ₸</div>
+                <div>5 × {formatNumber(DUMK_FITR_RATE_2026)} = {formatNumber(5 * DUMK_FITR_RATE_2026)}</div>
                 <div>{t('ramadan-sadaqah.example1Basis')}</div>
               </div>
               <div>
                 <div className="font-medium text-blue-700">{t('ramadan-sadaqah.toPay')}</div>
-                <div className="text-lg font-bold text-blue-600">3,675 ₸</div>
+                <div className="text-lg font-bold text-blue-600">{formatNumber(5 * DUMK_FITR_RATE_2026)}</div>
                 <div className="text-xs text-blue-600">{t('ramadan-sadaqah.fitrSadaqah')}</div>
               </div>
             </div>
@@ -577,7 +577,8 @@ export default function RamadanSadaqahCalculator() {
               </div>
               <div>
                 <div className="font-medium text-teal-700">{t('ramadan-sadaqah.toPay')}</div>
-                <div className="text-lg font-bold text-teal-600">46,310 ₸</div>
+                {/* 4 × фитр + 10 × фидия: раньше стояло зашитое «46,310 ₸», а по ставкам 2026 выходит 42 940 ₸ */}
+                <div className="text-lg font-bold text-teal-600">{formatNumber(4 * DUMK_FITR_RATE_2026 + 10 * DUMK_FIDYA_RATE_2026)}</div>
                 <div className="text-xs text-teal-600">{t('ramadan-sadaqah.fitrPlusFidya')}</div>
               </div>
             </div>
@@ -599,13 +600,13 @@ export default function RamadanSadaqahCalculator() {
                     «4 × 2 200 ₸ = 8 800 ₸», хотя пример заявляет выбор фиников,
                     а ставка фиников 12 400 ₸ — пример занижал садаку в 5,6 раза
                     и разошёлся бы снова при следующем изменении ставки. */}
-                <div>4 × {formatNumber(alternativeRates.dates.rate)} ₸ = {formatNumber(4 * alternativeRates.dates.rate)} ₸</div>
+                <div>4 × {formatNumber(alternativeRates.dates.rate)} = {formatNumber(4 * alternativeRates.dates.rate)}</div>
                 <div>{t('ramadan-sadaqah.example3InsteadOf')}</div>
                 <div>{t('ramadan-sadaqah.example3Voluntary')}</div>
               </div>
               <div>
                 <div className="font-medium text-green-700">{t('ramadan-sadaqah.toPay')}</div>
-                <div className="text-lg font-bold text-green-600">{formatNumber(4 * alternativeRates.dates.rate)} ₸</div>
+                <div className="text-lg font-bold text-green-600">{formatNumber(4 * alternativeRates.dates.rate)}</div>
                 <div className="text-xs text-green-600">{t('ramadan-sadaqah.example3Generous')}</div>
               </div>
             </div>

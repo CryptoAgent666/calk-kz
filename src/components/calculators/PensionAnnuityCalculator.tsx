@@ -53,31 +53,13 @@ export default function PensionAnnuityCalculator() {
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
-  // Порог минимальной достаточности пенсионных накоплений (ПМД) на 2026.
-  // С 04.06.2026 (Постановление Правительства РК №422 от 21.05.2026) порог НЕ единый,
-  // а зависит от ВОЗРАСТА вкладчика (present-value: доходность 9%, индексация выплат 8%,
-  // целевая выплата = max(75% мин.пенсии, 60% МЗП); таблица единая для мужчин и женщин).
-  // Официальные значения ЕНПФ для возрастов 20–62, в тенге (округление до 10 000).
-  // Источник: enpf.kz/ru/services/vyplaty/ (сверено digit-for-digit с inform.kz).
-  // Ранее в калькуляторе стоял устаревший флэт 656 МРП (≈2,84 млн ₸).
-  const SUFFICIENCY_THRESHOLD_BY_AGE: Record<number, number> = {
-    20: 6_670_000, 21: 6_960_000, 22: 7_250_000, 23: 7_540_000, 24: 7_840_000,
-    25: 8_150_000, 26: 8_460_000, 27: 8_770_000, 28: 9_090_000, 29: 9_420_000,
-    30: 9_750_000, 31: 10_090_000, 32: 10_430_000, 33: 10_780_000, 34: 11_130_000,
-    35: 11_490_000, 36: 11_850_000, 37: 12_220_000, 38: 12_600_000, 39: 12_980_000,
-    40: 13_370_000, 41: 13_760_000, 42: 14_160_000, 43: 14_560_000, 44: 14_980_000,
-    45: 15_400_000, 46: 15_820_000, 47: 16_250_000, 48: 16_690_000, 49: 17_140_000,
-    50: 17_590_000, 51: 18_050_000, 52: 18_510_000, 53: 18_980_000, 54: 19_460_000,
-    55: 19_950_000, 56: 20_450_000, 57: 20_950_000, 58: 21_460_000, 59: 21_970_000,
-    60: 22_500_000, 61: 23_030_000, 62: 23_570_000,
-  };
-  // Порог для возраста. Официальная таблица опубликована для 20–62; вне диапазона
-  // берём ближайшее опубликованное значение (20 для младше, 62 для старше) — без экстраполяции.
-  const getSufficiencyThreshold = (currentAge: number): number => {
-    if (currentAge <= 0) return 0;
-    const clamped = Math.min(62, Math.max(20, currentAge));
-    return SUFFICIENCY_THRESHOLD_BY_AGE[clamped] ?? 0;
-  };
+  // Условие аннуитета — СК РК ст. 220 п. 1 пп. 4 (с 45 лет) и ст. 225 п. 2: накоплений
+  // должно хватить на пожизненную выплату не ниже 70 % прожиточного минимума на 1 января.
+  // Точную сумму считает страховщик по своим тарифам; здесь — оценка тем же аннуитетным
+  // фактором, что и сама выплата. Раньше тут стояла таблица ПМД ЕНПФ (ПП № 422), но ПМД
+  // по ст. 220 п. 3 — порог для единовременных выплат на жильё и лечение, а не для
+  // аннуитета: женщине 55 лет калькулятор требовал 19,95 млн вместо ~7,5 млн.
+  const MIN_ANNUITY_PAYMENT_SHARE_OF_PM = 0.7;
   const CURRENT_YEAR = 2026;
   const PM_2026 = 50851;      // прожиточный минимум
   const MIN_PENSION_2026 = 69049; // Закон о респ. бюджете № 239-VIII, ст. 7
@@ -202,16 +184,16 @@ export default function PensionAnnuityCalculator() {
     const birthYear = CURRENT_YEAR - currentAge;
     const retirementAge = getRetirementAge(birthYear, gender);
 
-    // Проверка достаточности накоплений (порог зависит от возраста — ЕНПФ 2026)
-    const sufficientAmount = getSufficiencyThreshold(currentAge);
-    const isSufficientForAnnuity = accumulations >= sufficientAmount;
-    const shortfall = Math.max(0, sufficientAmount - accumulations);
-
     // Ожидаемая продолжительность жизни
     const lifeExpectancy = getLifeExpectancy(currentAge, gender);
 
     // Расчет аннуитетного фактора
     const annuityFactor = calculateAnnuityFactor(currentAge, gender);
+
+    // Проверка достаточности: выплата не ниже 70 % ПМ (СК ст. 225 п. 2)
+    const sufficientAmount = Math.round(MIN_ANNUITY_PAYMENT_SHARE_OF_PM * PM_2026 * annuityFactor);
+    const isSufficientForAnnuity = accumulations >= sufficientAmount;
+    const shortfall = Math.max(0, sufficientAmount - accumulations);
 
 
     // Расчет ежемесячного аннуитетного платежа
@@ -326,7 +308,7 @@ export default function PensionAnnuityCalculator() {
                 >
                   <Users className="w-5 h-5 mx-auto mb-2" />
                   <div className="font-medium">{t('pension-annuity.inputs.gender.male')}</div>
-                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} 63 {t('pension-annuity.inputs.gender.years')}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} 63 {i18n.language === 'kk' ? t('pension-annuity.inputs.gender.years') : 'лет'}</div>
                 </button>
                 <button
                   onClick={() => setGender('female')}
@@ -338,7 +320,7 @@ export default function PensionAnnuityCalculator() {
                 >
                   <Heart className="w-5 h-5 mx-auto mb-2" />
                   <div className="font-medium">{t('pension-annuity.inputs.gender.female')}</div>
-                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} 61 {t('pension-annuity.inputs.gender.years')}</div>
+                  <div className="text-xs text-gray-600 mt-1">{t('pension-annuity.inputs.gender.pensionFrom')} 61 {i18n.language === 'kk' ? t('pension-annuity.inputs.gender.years') : 'года'}</div>
                 </button>
               </div>
             </div>
@@ -493,7 +475,7 @@ export default function PensionAnnuityCalculator() {
 
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">{t('pension-annuity.results.lifeExpectancy')}</span>
-                <span className="font-semibold text-gray-900">{results.lifeExpectancy} {t('pension-annuity.results.years')}</span>
+                <span className="font-semibold text-gray-900">{results.lifeExpectancy.toLocaleString(NUMBER_LOCALE)} {i18n.language === 'kk' ? t('pension-annuity.results.years') : Number.isInteger(results.lifeExpectancy) ? pluralize(i18n.language, results.lifeExpectancy, 'год', 'года', 'лет') : 'года'}</span>
               </div>
 
               <div className="flex justify-between items-center py-2">
@@ -763,7 +745,7 @@ export default function PensionAnnuityCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('pension-annuity.longevityContext.men.title')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
-              <div>{t('pension-annuity.longevityContext.men.avgLife')}: <strong>69.5 {pluralize(i18n.language, 69.5, 'год', 'года', 'лет')}</strong></div>
+              <div>{t('pension-annuity.longevityContext.men.avgLife')}: <strong>{(69.5).toLocaleString(NUMBER_LOCALE)} {pluralize(i18n.language, 69.5, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.men.retirementAge')}: <strong>63 {pluralize(i18n.language, 63, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.men.avgPeriod')}: <strong>6-12 {t('pension-annuity.longevityContext.years')}</strong></div>
             </div>
@@ -775,7 +757,7 @@ export default function PensionAnnuityCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('pension-annuity.longevityContext.women.title')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
-              <div>{t('pension-annuity.longevityContext.women.avgLife')}: <strong>77.2 {pluralize(i18n.language, 77.2, 'год', 'года', 'лет')}</strong></div>
+              <div>{t('pension-annuity.longevityContext.women.avgLife')}: <strong>{(77.2).toLocaleString(NUMBER_LOCALE)} {pluralize(i18n.language, 77.2, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.women.retirementAge')}: <strong>61 {pluralize(i18n.language, 61, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.women.avgPeriod')}: <strong>14-19 {t('pension-annuity.longevityContext.years')}</strong></div>
             </div>
@@ -787,7 +769,7 @@ export default function PensionAnnuityCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('pension-annuity.longevityContext.trends.title')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
-              <div>{t('pension-annuity.longevityContext.trends.growth')}: <strong>+0.3 {t('pension-annuity.longevityContext.trends.yearPerYear')}</strong></div>
+              <div>{t('pension-annuity.longevityContext.trends.growth')}: <strong>+{(0.3).toLocaleString(NUMBER_LOCALE)} {t('pension-annuity.longevityContext.trends.yearPerYear')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.trends.medicineImprovement')}</div>
               <div className="break-words">{t('pension-annuity.longevityContext.trends.healthyLifestyle')}</div>
             </div>

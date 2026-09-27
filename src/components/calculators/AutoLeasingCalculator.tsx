@@ -142,7 +142,7 @@ export default function AutoLeasingCalculator() {
           { label: t('auto-leasing.monthlyPayment'), value: formatCurrency(results.monthlyPayment) },
           { label: t('auto-leasing.totalPayments'), value: formatCurrency(results.totalPayments) },
           { label: t('auto-leasing.overpayment'), value: formatCurrency(results.overpayment) },
-          { label: t('auto-leasing.effectiveRate'), value: `${results.effectiveRate}%` },
+          { label: t('auto-leasing.effectiveRate'), value: `${results.effectiveRate.toLocaleString('ru-KZ')}%` },
         ],
       },
       {
@@ -400,7 +400,7 @@ export default function AutoLeasingCalculator() {
             {/* Effective rate */}
             <div className="bg-purple-50 rounded-lg p-4 flex justify-between items-center">
               <span className="text-sm text-purple-700">{t('auto-leasing.effectiveRate')}</span>
-              <span className="text-lg font-bold text-purple-800">{results.effectiveRate}%</span>
+              <span className="text-lg font-bold text-purple-800">{results.effectiveRate.toLocaleString('ru-KZ')}%</span>
             </div>
 
             {/* Comparison block */}

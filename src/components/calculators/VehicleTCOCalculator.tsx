@@ -10,6 +10,13 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import {
+  OGPO_BASE_PREMIUM_MRP,
+  OGPO_EXPLOITATION_OVER_7Y_COEFF,
+  OGPO_EXPLOITATION_THRESHOLD_YEARS,
+  findOgpoRegion,
+  ogpoTerritoryCoeff,
+} from '../../data/ogpoCoefficients';
 
 interface FuelType {
   id: string;
@@ -70,9 +77,11 @@ export default function VehicleTCOCalculator() {
   ];
 
   const regions: RegionOption[] = [
-    { id: 'almaty', labelKey: 'vehicle-tco.regionAlmaty', ogpoMultiplier: 2.96 },
-    { id: 'astana', labelKey: 'vehicle-tco.regionAstana', ogpoMultiplier: 2.96 },
-    { id: 'other', labelKey: 'vehicle-tco.regionOther', ogpoMultiplier: 1.0 },
+    // Территориальный множитель ОГПО = коэф. региона (ст. 19 п. 3) × поправочный (п. 3-1), как в калькуляторе ОГПО.
+    // «Другие регионы» — ориентир ~1,6 (медиана произведений по областям).
+    { id: 'almaty', labelKey: 'vehicle-tco.regionAlmaty', ogpoMultiplier: ogpoTerritoryCoeff(findOgpoRegion('almaty-city')!) },
+    { id: 'astana', labelKey: 'vehicle-tco.regionAstana', ogpoMultiplier: ogpoTerritoryCoeff(findOgpoRegion('astana-city')!) },
+    { id: 'other', labelKey: 'vehicle-tco.regionOther', ogpoMultiplier: 1.6 },
   ];
 
   const [vehiclePrice, setVehiclePrice] = useState<string>('8000000');
@@ -121,15 +130,12 @@ export default function VehicleTCOCalculator() {
       else if (age >= 10) yearlyTax *= 0.7;
     }
 
-    // 2. ОГПО — базовая ставка зависит от объёма и региона (EV — по базовой).
+    // 2. ОГПО по ст. 19 Закона № 446-II: 1,9 МРП × территория × тип «B» 2,09 × срок эксплуатации
+    // (старше 7 лет — 1,1); водитель старше 25 лет со стажем от 2 лет, класс 3 — коэффициенты 1,0.
+    // От объёма двигателя премия по закону не зависит.
     const regionData = regions.find(r => r.id === region) ?? regions[0];
-    let ogpoBase = 30000;
-    if (!isElectric) {
-      if (volume > 1500) ogpoBase = 42000;
-      if (volume > 2000) ogpoBase = 58000;
-      if (volume > 3000) ogpoBase = 78000;
-    }
-    const yearlyOgpo = Math.round(ogpoBase * regionData.ogpoMultiplier / 2.5);
+    const ogpoAgeCoeff = age > OGPO_EXPLOITATION_THRESHOLD_YEARS ? OGPO_EXPLOITATION_OVER_7Y_COEFF : 1;
+    const yearlyOgpo = Math.round(OGPO_BASE_PREMIUM_MRP * MRP_2026 * regionData.ogpoMultiplier * 2.09 * ogpoAgeCoeff);
 
     // 3. КАСКО (~5% от стоимости, падает вместе с амортизацией)
     const yearlyKasko = includeKasko ? price * 0.05 : 0;

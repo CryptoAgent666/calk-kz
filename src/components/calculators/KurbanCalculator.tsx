@@ -676,7 +676,7 @@ export default function KurbanCalculator() {
             <div className="text-gray-600 text-sm space-y-1">
               <div><strong>{t('kurban-sacrifice.timing.inAdvance')}</strong> {t('kurban-sacrifice.timing.inAdvanceDesc')}</div>
               <div><strong>{t('kurban-sacrifice.timing.lowerPrices')}</strong> {t('kurban-sacrifice.timing.lowerPricesDesc')}</div>
-              <div><strong>{t('kurban-sacrifice.timing.bestChoice')}</strong> {t('kurban-sacrifice.timing.bestChoiceDesc')}</div>
+              <div><strong>{t('kurban-sacrifice.timing.bestTime')}</strong> {t('kurban-sacrifice.timing.bestTimeDesc')}</div>
             </div>
           </div>
 
@@ -688,7 +688,7 @@ export default function KurbanCalculator() {
             <div className="text-gray-600 text-sm space-y-1">
               <div><strong>{t('kurban-sacrifice.timing.start')}</strong> {t('kurban-sacrifice.timing.startDesc')}</div>
               <div><strong>{t('kurban-sacrifice.timing.period')}</strong> {t('kurban-sacrifice.timing.periodDesc')}</div>
-              <div><strong>{t('kurban-sacrifice.timing.bestTime')}</strong> {t('kurban-sacrifice.timing.bestTimeDesc')}</div>
+              <div><strong>{t('kurban-sacrifice.timing.bestChoice')}</strong> {t('kurban-sacrifice.timing.bestChoiceDesc')}</div>
             </div>
           </div>
 

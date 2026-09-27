@@ -619,27 +619,37 @@ export default function CaloriesCalculator() {
           {
             title: 'Mifflin MD, St Jeor ST, et al. "A new predictive equation for resting energy expenditure in healthy individuals" (1990)',
             url: 'https://pubmed.ncbi.nlm.nih.gov/2305711/',
-            description: 'Am J Clin Nutr. 51(2):241-7. Оригинальная рецензируемая публикация формулы Миффлина-Сан Жеора, которая используется в этом калькуляторе для расчёта базального метаболизма (BMR).',
+            description: i18n.language === 'kk'
+              ? 'Am J Clin Nutr. 51(2):241-7. Миффлин-Сан Жеор формуласының түпнұсқа рецензияланған жарияланымы — калькулятор негізгі алмасуды (BMR) осы формуламен есептейді.'
+              : 'Am J Clin Nutr. 51(2):241-7. Оригинальная рецензируемая публикация формулы Миффлина-Сан Жеора, которая используется в этом калькуляторе для расчёта базального метаболизма (BMR).',
           },
           {
             title: 'Academy of Nutrition and Dietetics — Position Paper on Energy Estimation',
             url: 'https://www.jandonline.org/article/S2212-2672(14)01200-6/fulltext',
-            description: 'J Acad Nutr Diet. Рецензируемое подтверждение точности уравнения Миффлина-Сан Жеора для здоровых взрослых нормального и избыточного веса.',
+            description: i18n.language === 'kk'
+              ? 'J Acad Nutr Diet. Миффлин-Сан Жеор теңдеуінің қалыпты және артық салмақты сау ересектер үшін дәлдігін растайтын рецензияланған жұмыс.'
+              : 'J Acad Nutr Diet. Рецензируемое подтверждение точности уравнения Миффлина-Сан Жеора для здоровых взрослых нормального и избыточного веса.',
           },
           {
             title: 'USDA — Dietary Guidelines for Americans 2020-2025',
             url: 'https://www.dietaryguidelines.gov/sites/default/files/2021-03/Dietary_Guidelines_for_Americans-2020-2025.pdf',
-            description: 'Министерство сельского хозяйства США. Рекомендации по суточному потреблению энергии и распределению макронутриентов (белки, жиры, углеводы).',
+            description: i18n.language === 'kk'
+              ? 'АҚШ Ауыл шаруашылығы министрлігі. Тәуліктік энергия тұтыну мен макронутриенттерді (ақуыз, май, көмірсу) бөлу бойынша ұсынымдар.'
+              : 'Министерство сельского хозяйства США. Рекомендации по суточному потреблению энергии и распределению макронутриентов (белки, жиры, углеводы).',
           },
           {
             title: 'WHO — Healthy diet fact sheet',
             url: 'https://www.who.int/news-room/fact-sheets/detail/healthy-diet',
-            description: 'World Health Organization. Глобальные рекомендации по здоровому питанию: общее потребление, ограничения сахаров, соли, насыщенных жиров.',
+            description: i18n.language === 'kk'
+              ? 'Дүниежүзілік денсаулық сақтау ұйымы. Дұрыс тамақтану бойынша жаһандық ұсынымдар: жалпы тұтыну, қант, тұз және қаныққан майларды шектеу.'
+              : 'World Health Organization. Глобальные рекомендации по здоровому питанию: общее потребление, ограничения сахаров, соли, насыщенных жиров.',
           },
           {
             title: 'Institute of Medicine — Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids (Macronutrients)',
             url: 'https://nap.nationalacademies.org/catalog/10490/dietary-reference-intakes-for-energy-carbohydrate-fiber-fat-fatty-acids-cholesterol-protein-and-amino-acids',
-            description: 'National Academies Press. Источник коэффициентов активности (PAL 1.2–1.9) и диапазонов AMDR для распределения макронутриентов.',
+            description: i18n.language === 'kk'
+              ? 'National Academies Press. Белсенділік коэффициенттерінің (PAL 1.2–1.9) және макронутриенттерді бөлуге арналған AMDR ауқымдарының дереккөзі.'
+              : 'National Academies Press. Источник коэффициентов активности (PAL 1.2–1.9) и диапазонов AMDR для распределения макронутриентов.',
           },
         ]}
       />
