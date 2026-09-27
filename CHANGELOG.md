@@ -29,6 +29,7 @@
   - Исправлены 11 записей `traffic_fine_*`: у `child_seat` реестр был неверен, калькулятор прав.
   - `maternity_leave_start_week_ecological_zone` → 27; `base_pension_rate_max_pct_of_pm` — `changes_next_fy` 120%.
   - Новые записи: `vat_reduced_rate_medical_2026`, `deposit_interest_ipn_exempt`, `transport_tax_car_over_4000cc`, `maternity_benefit_minimum`.
+- **Выложено 27.09.2026:** коммит `8768066`, бандл `20260927084814`, deploy-fast + OTA. На проде: 570 страниц, sitemap 302/302 → 200, контрольные строки 18/18, гидратация без ошибок.
 
 ## [2026-09-25] CalkCheck, батч 2: ещё 20 страниц (AUDIT-2026-09-25-b2.md)
 
