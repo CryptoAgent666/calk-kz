@@ -403,7 +403,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
 
   const formatPercent = (num: number) => {
     const safeValue = Number.isFinite(num) ? num : 0;
-    return safeValue.toFixed(1) + '%';
+    return safeValue.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 1 }) + '%';
   };
 
   const originalPriceValue = normalizePriceInput(originalPrice);
@@ -968,18 +968,18 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('discount.initialData')}</div>
-                <div>{t('discount.productPrice')} 50,000 ₸</div>
+                <div>{t('discount.productPrice')} 50 000 ₸</div>
                 <div>{t('discount.discountLabel')} 25%</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('discount.calculation')}</div>
-                <div>50,000 x 25% = 12,500 ₸</div>
-                <div>50,000 - 12,500 = 37,500 ₸</div>
+                <div>50 000 × 25% = 12 500 ₸</div>
+                <div>50 000 - 12 500 = 37 500 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-orange-700">{t('discount.resultLabel')}</div>
-                <div className="text-base sm:text-lg font-bold text-orange-600">37,500 ₸</div>
-                <div className="text-xs text-orange-600">{t('discount.economyLabel')} 12,500 ₸</div>
+                <div className="text-base sm:text-lg font-bold text-orange-600">37 500 ₸</div>
+                <div className="text-xs text-orange-600">{t('discount.economyLabel')} 12 500 ₸</div>
               </div>
             </div>
           </div>
@@ -989,20 +989,20 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('discount.initialData')}</div>
-                <div>{t('discount.price')}: 100,000 ₸</div>
+                <div>{t('discount.price')}: 100 000 ₸</div>
                 <div>{t('discount.firstDiscount')} 20%</div>
                 <div>{t('discount.secondDiscount')} 10%</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('discount.calculation')}</div>
-                <div>100,000 - 20% = 80,000 ₸</div>
-                <div>80,000 - 10% = 72,000 ₸</div>
+                <div>100 000 - 20% = 80 000 ₸</div>
+                <div>80 000 - 10% = 72 000 ₸</div>
                 <div>{t('discount.effectiveDiscount')} 28%</div>
               </div>
               <div>
                 <div className="font-medium text-blue-700">{t('discount.resultLabel')}</div>
-                <div className="text-base sm:text-lg font-bold text-blue-600">72,000 ₸</div>
-                <div className="text-xs text-blue-600">{t('discount.economyLabel')} 28,000 ₸</div>
+                <div className="text-base sm:text-lg font-bold text-blue-600">72 000 ₸</div>
+                <div className="text-xs text-blue-600">{t('discount.economyLabel')} 28 000 ₸</div>
               </div>
             </div>
           </div>
@@ -1012,18 +1012,18 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('discount.initialData')}</div>
-                <div>{t('discount.priceWithoutDiscount')} 80,000 ₸</div>
-                <div>{t('discount.priceWithDiscountLabel')} 64,000 ₸</div>
+                <div>{t('discount.priceWithoutDiscount')} 80 000 ₸</div>
+                <div>{t('discount.priceWithDiscountLabel')} 64 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('discount.calculation')}</div>
-                <div>{t('discount.savings')}: 16,000 ₸</div>
-                <div>16,000 / 80,000 x 100%</div>
+                <div>{t('discount.savings')}: 16 000 ₸</div>
+                <div>16 000 / 80 000 × 100%</div>
               </div>
               <div>
                 <div className="font-medium text-green-700">{t('discount.resultLabel')}</div>
                 <div className="text-base sm:text-lg font-bold text-green-600">20%</div>
-                <div className="text-xs text-green-600">{t('discount.economyLabel')} 16,000 ₸</div>
+                <div className="text-xs text-green-600">{t('discount.economyLabel')} 16 000 ₸</div>
               </div>
             </div>
           </div>

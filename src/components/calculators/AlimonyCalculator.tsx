@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heart, Calculator, Users, DollarSign, Info, AlertTriangle, Baby, TrendingUp, BarChart3 } from 'lucide-react';
+import { Heart, Calculator, Users, DollarSign, Info, AlertTriangle, BarChart3 } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -510,44 +510,9 @@ ${t('alimony.exportAlimonyCalc')}
         </div>
       </div>
 
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('alimony.statisticsTitle')}</h2>
-
-       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-pink-50 rounded-lg">
-            <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Baby className="w-8 h-8 text-pink-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('alimony.minForOneChild')}</h3>
-            <div className="text-2xl font-bold text-pink-600">{formatNumber(MRP * 0.5)}</div>
-            <div className="text-sm text-gray-600">50% {t('alimony.percentOfMrp')}</div>
-          </div>
-
-          <div className="text-center p-6 bg-teal-50 rounded-lg">
-            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-teal-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('alimony.minForTwoChildren')}</h3>
-            <div className="text-2xl font-bold text-teal-600">{formatNumber(MRP * 0.5 * 2)}</div>
-            <div className="text-sm text-gray-600">50% {t('alimony.percentOfMrpMultiple')}</div>
-          </div>
-
-          <div className="text-center p-6 bg-orange-50 rounded-lg">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <TrendingUp className="w-8 h-8 text-orange-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('alimony.minForThreePlus')}</h3>
-            <div className="text-2xl font-bold text-orange-600">{formatNumber(MRP * 0.5 * 3)}</div>
-            <div className="text-sm text-gray-600">50% {t('alimony.percentOfMrpByCount')}</div>
-          </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-green-50 rounded-lg">
-          <p className="text-sm text-green-800">
-            <strong>{t('alimony.referenceNote')}</strong> {t('alimony.minAmountProtection')}
-          </p>
-        </div>
-      </div>
+      {/* Блок «Ориентиры по твёрдой денежной сумме» (0,5 МРП на ребёнка) убран — calkcheck 06.10.2026:
+          нормы нет (КоБС ст. 141 п. 3 — суд определяет сумму в МРП из прежнего уровня обеспечения),
+          а само значение 0,5 МРП источником не подтверждено (реестр alimony_min_per_child_mrp). */}
 
       {parseFloat(grossSalary) > 0 && (
         <div className="mt-8">

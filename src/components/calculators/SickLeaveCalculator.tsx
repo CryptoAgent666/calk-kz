@@ -464,7 +464,6 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                     <h3 className="font-semibold text-blue-900 mb-2">{t('sick-leave.legislativeBase')}</h3>
                     <ul className="space-y-1 text-blue-800">
                       <li>• {t('sick-leave.laborCodeItem')}</li>
-                      <li>• {t('sick-leave.socialCodeItem')}</li>
                       <li>• {t('sick-leave.mrp2026Item')}: {formatNumber(MRP)}</li>
                       <li>• {t('sick-leave.maxPaymentItem')}: {MAX_BENEFIT_MRP} {t('sick-leave.mrp')} ({formatNumber(MONTHLY_LIMIT)}/{t('sick-leave.month')})</li>
                     </ul>

@@ -92,6 +92,12 @@ export function parseIsoDate(value: string): Date | null {
   return isNaN(+d) ? null : d;
 }
 
+/** Локальная дата → 'YYYY-MM-DD'. Не toISOString(): та даёт дату по UTC, и в Казахстане
+ *  (UTC+5) с полуночи до 05:00 «сегодня» превращалось во вчера. */
+export function toIsoDateLocal(d: Date = new Date()): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 /**
  * Раскладывает N рабочих дней подряд, начиная с даты start, по календарным месяцам.
  * Нужна больничному: лимит 25 МРП действует на пособие за каждый месяц отдельно

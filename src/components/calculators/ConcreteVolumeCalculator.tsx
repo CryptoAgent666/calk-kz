@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { pluralize } from '../../utils/pluralize';
 import { Package } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
@@ -21,13 +22,15 @@ const SAND_PER_M3 = 640; // кг
 const GRAVEL_PER_M3 = 1200; // кг
 const WATER_PER_M3 = 170; // л
 
-// Цены 2026 (Казахстан, ориентировочно)
-const CEMENT_PRICE_KG = 55; // ₸/кг
-const SAND_PRICE_KG = 8;
-const GRAVEL_PRICE_KG = 12;
+// Цены 2026 (Казахстан, ориентировочно; satu.kz / OLX, октябрь 2026):
+// цемент М400 1 800–2 800 ₸ за мешок 50 кг, песок 3 000–7 000 ₸/т, щебень 5–20 7 500–11 000 ₸/т.
+// Было 55 / 8 / 12 ₸/кг — ~37 тыс. ₸ за м³ материалов, дороже готового бетона с доставкой.
+const CEMENT_PRICE_KG = 45; // ₸/кг
+const SAND_PRICE_KG = 5;
+const GRAVEL_PRICE_KG = 9;
 
 export default function ConcreteVolumeCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [shape, setShape] = useState<Shape>('slab');
   const [length, setLength] = useState<string>('5');
   const [width, setWidth] = useState<string>('3');
@@ -168,10 +171,10 @@ export default function ConcreteVolumeCalculator() {
               </div>
 
               <div className="space-y-2">
-                <div className="font-medium text-gray-900 mb-2">{t('concrete.materials')} (М200)</div>
+                <div className="font-medium text-gray-900 mb-2">{t('concrete.materials')}</div>
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>🏭 {t('concrete.cement')}</span>
-                  <span className="font-semibold">{results.cement} кг ({results.cementBags} {t('concrete.bags')})</span>
+                  <span className="font-semibold">{results.cement} кг ({results.cementBags} {pluralize(i18n.language, results.cementBags, t('concrete.bagsOne'), t('concrete.bagsFew'), t('concrete.bags'))})</span>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>🏖 {t('concrete.sand')}</span>

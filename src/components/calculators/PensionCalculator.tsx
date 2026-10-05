@@ -66,10 +66,10 @@ export default function PensionCalculator() {
     const age = CURRENT_YEAR - year;
     const totalWorkExperience = experienceBefore + experienceAfter;
 
-    // Пенсионный возраст в РК (ст. 11 Закона "О пенсионном обеспечении"):
-    // Мужчины — 63 года (стабильно с 2018 г., повышение не планируется).
-    // Женщины — поэтапное повышение с 58 (2018) до 63 (по графику до 2027):
-    //   2024 → 61, 2025 → 61, 2026 → 61, 2027 → 63 (по последним поправкам).
+    // Пенсионный возраст в РК (Социальный кодекс, ст. 207 п. 1) на текущий 2026 год:
+    // мужчины — 63, женщины — 61 (61 до 2027 г. включительно, затем +0,5 года ежегодно:
+    // 61,5 — 2028, 62 — 2029, 62,5 — 2030, 63 — 2031). Для будущей даты выхода по году
+    // рождения график считает AgeCalculator.
     const retirementAgeMen = 63;
     const retirementAgeWomen = 61;
 
@@ -78,7 +78,7 @@ export default function PensionCalculator() {
     if (totalWorkExperience >= 10) {
       let baseRate = 70; // 70% от ПМ
       const additionalYears = Math.floor(totalWorkExperience - 10);
-      // С 01.01.2026 максимум базовой пенсии повышен со 110% до 118% ПМ (60 005 ₸ при ПМ 50 851 ₸).
+      // С 01.01.2026 максимум базовой пенсии повышен со 110% до 118% ПМ (60 004 ₸ при ПМ 50 851 ₸).
       // При +2%/год сверх 10 лет потолок 118% достигается при стаже 34 года (ранее 110% — при 30 годах).
       baseRate = Math.min(baseRate + (additionalYears * 2), 118); // максимум 118%
       basePension = (PM * baseRate) / 100;

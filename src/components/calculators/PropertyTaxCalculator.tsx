@@ -549,7 +549,7 @@ export default function PropertyTaxCalculator() {
           { question: t('property-tax.faq.q5'), answer: t('property-tax.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 62-тарау' : 'Налоговый кодекс РК, глава 62', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 67-тарау (597–603-баптар)' : 'Налоговый кодекс РК, глава 67 (ст. 597–603)', url: i18n.language === 'kk' ? 'https://adilet.zan.kz/kaz/docs/K2500000214' : 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'eGov.kz — мүлік салығы' : 'eGov.kz — Налог на имущество', url: 'https://egov.kz/' },
         ]}
       />

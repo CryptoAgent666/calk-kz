@@ -10,18 +10,33 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { formatLongDate } from '../../utils/localeFormat';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { pluralizeRu } from '../../utils/pluralize';
+import { toIsoDateLocal } from '../../utils/workingTime';
 
 type Gender = 'male' | 'female';
 
-const LIFE_EXPECTANCY_YEARS = 73;
+// Подпись на странице — «при средней продолжительности жизни 75 лет» (РК, 2024 — ~75,4 года).
+// Раньше в коде стояло 73 и процент расходился с подписью.
+const LIFE_EXPECTANCY_YEARS = 75;
 const RETIREMENT_AGE_MALE = 63;
-const RETIREMENT_AGE_FEMALE = 61;
+// СК РК ст. 207 п. 1: женщины — 61 год до 2027 г. включительно, с 2028 — 61,5, с 2029 — 62,
+// с 2030 — 62,5, с 2031 — 63. Возраст берётся по году, в котором он наступает, поэтому для
+// женщины 1990 г. р. пенсия — в 63 (2053), а не в 61, как считал фиксированный RETIREMENT_AGE_FEMALE.
+const femaleRequiredAgeMonths = (year: number) =>
+  year >= 2031 ? 756 : year === 2030 ? 750 : year === 2029 ? 744 : year === 2028 ? 738 : 732;
+const femaleRetirement = (birth: Date) => {
+  for (const ageMonths of [732, 738, 744, 750, 756]) {
+    const d = new Date(birth.getFullYear(), birth.getMonth() + ageMonths, birth.getDate());
+    if (femaleRequiredAgeMonths(d.getFullYear()) <= ageMonths) return { date: d, ageMonths };
+  }
+  return { date: new Date(birth.getFullYear() + 63, birth.getMonth(), birth.getDate()), ageMonths: 756 };
+};
 
 export default function AgeCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const isKazakh = i18n.language === 'kk';
 
-  const todayIso = new Date().toISOString().split('T')[0];
+  const todayIso = toIsoDateLocal();
 
   const [birthDate, setBirthDate] = useState<string>('1990-01-01');
   const [gender, setGender] = useState<Gender>('male');
@@ -90,8 +105,11 @@ export default function AgeCalculator() {
     const lifePercent = Math.min(100, (totalDays / expectancyDays) * 100);
 
     // Retirement
-    const retirementAge = gender === 'male' ? RETIREMENT_AGE_MALE : RETIREMENT_AGE_FEMALE;
-    const retirementDate = new Date(birth.getFullYear() + retirementAge, birth.getMonth(), birth.getDate());
+    const female = gender === 'female' ? femaleRetirement(birth) : null;
+    const retirementAge = female ? female.ageMonths / 12 : RETIREMENT_AGE_MALE;
+    const retirementDate = female
+      ? female.date
+      : new Date(birth.getFullYear() + RETIREMENT_AGE_MALE, birth.getMonth(), birth.getDate());
     const isRetired = retirementDate <= target;
     let yearsUntilRetirement = 0;
     let monthsUntilRetirement = 0;
@@ -124,7 +142,7 @@ export default function AgeCalculator() {
   }, [birthDate, targetDate, gender, weekDayNames]);
 
   useEffect(() => {
-    setTargetDate(new Date().toISOString().split('T')[0]);
+    setTargetDate(toIsoDateLocal());
   }, []);
 
   // Не toLocaleDateString('kk-KZ'): текст зависит от ICU браузера, см. utils/localeFormat.
@@ -201,7 +219,7 @@ export default function AgeCalculator() {
                     {t('age.targetDate')}
                   </label>
                   <button
-                    onClick={() => setTargetDate(new Date().toISOString().split('T')[0])}
+                    onClick={() => setTargetDate(toIsoDateLocal())}
                     className="text-sm text-purple-600 hover:text-purple-800 transition-colors"
                   >
                     {t('age.today')}
@@ -315,7 +333,8 @@ export default function AgeCalculator() {
                   <div className="flex justify-between py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('age.retirementAge')}</span>
                     <span className="font-semibold text-gray-900">
-                      {results.retirementAge} {t('age.yearsUnit')}
+                      {results.retirementAge.toLocaleString(NUMBER_LOCALE)}{' '}
+                      {isKazakh ? t('age.yearsUnit') : pluralizeRu(results.retirementAge, 'год', 'года', 'лет')}
                     </span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-gray-100">
@@ -330,7 +349,7 @@ export default function AgeCalculator() {
                     <div className="flex justify-between py-2">
                       <span className="text-gray-600">{t('age.untilRetirement')}</span>
                       <span className="font-semibold text-purple-700">
-                        {results.yearsUntilRetirement} {t('age.yearsUnit')}{' '}
+                        {results.yearsUntilRetirement} {isKazakh ? t('age.yearsUnit') : pluralizeRu(results.yearsUntilRetirement, 'год', 'года', 'лет')}{' '}
                         {results.monthsUntilRetirement} {t('age.monthsUnit')}
                       </span>
                     </div>

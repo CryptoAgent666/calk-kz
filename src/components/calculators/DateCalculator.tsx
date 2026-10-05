@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toIsoDateLocal } from '../../utils/workingTime';
 import { Calendar, Calculator, Plus, Minus, Clock, Info, RotateCcw, Copy, Download, ArrowRight, CalendarDays, BarChart3 } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -29,7 +30,7 @@ interface CalculationHistory {
 
 export default function DateCalculator() {
   const { t, i18n } = useTranslation('calculators');
-  const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [startDate, setStartDate] = useState<string>(toIsoDateLocal());
   const [operation, setOperation] = useState<'add' | 'subtract'>('add');
   const [years, setYears] = useState<string>('');
   const [months, setMonths] = useState<string>('');
@@ -57,6 +58,7 @@ export default function DateCalculator() {
     warnings: [] as string[]
   });
 
+  const MONTHS_RU_GENITIVE = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
   const monthNames = [
     t('date-calculator.january'),
     t('date-calculator.february'),
@@ -129,8 +131,10 @@ export default function DateCalculator() {
     const resultDateISO = resultDate.toISOString().split('T')[0];
     const dayOfWeek = dayNames[resultDate.getDay()];
     const isWeekend = resultDate.getDay() === 0 || resultDate.getDay() === 6;
+    // По-русски после числа — родительный падеж («27 сентября»), в ключах i18n — именительный.
     const monthName = monthNames[resultDate.getMonth()];
-    const resultDateFormatted = `${resultDate.getDate()} ${monthName} ${resultDate.getFullYear()} (${dayOfWeek})`;
+    const monthInDate = i18n.language === 'kk' ? monthName : MONTHS_RU_GENITIVE[resultDate.getMonth()];
+    const resultDateFormatted = `${resultDate.getDate()} ${monthInDate} ${resultDate.getFullYear()} (${dayOfWeek})`;
 
     const isLeapYear = (year: number) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
     const yearInfo = isLeapYear(resultDate.getFullYear()) ?
@@ -260,7 +264,7 @@ export default function DateCalculator() {
 
   const setToday = () => {
     const today = new Date();
-    setStartDate(today.toISOString().split('T')[0]);
+    setStartDate(toIsoDateLocal(today));
   };
 
   const clearAll = () => {
@@ -354,10 +358,13 @@ export default function DateCalculator() {
     }
   }, [startDate, endDateForDiff, calculateDifference, t]);
 
+  // В историю попадают только расчёты, которые пользователь сделал сам: первый автоматический
+  // расчёт при загрузке страницы пропускаем (иначе запись «сегодня → сегодня» попадала даже в пререндер).
+  const skipFirstHistoryRef = React.useRef(true);
   useEffect(() => {
-    if (results.resultDate && startDate) {
-      addToHistory();
-    }
+    if (!results.resultDate || !startDate) return;
+    if (skipFirstHistoryRef.current) { skipFirstHistoryRef.current = false; return; }
+    addToHistory();
   }, [results.resultDateFormatted]);
 
   return (
