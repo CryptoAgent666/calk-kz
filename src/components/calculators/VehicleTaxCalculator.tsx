@@ -90,15 +90,16 @@ export default function VehicleTaxCalculator() {
       }
     }
 
-    // С 2026: поправочные коэффициенты за возраст авто (0.7 при 10-20 лет, 0.5 свыше 20 лет)
+    // НК РК ст. 565 п. 8: только для ЛЕГКОВЫХ — свыше 10 до 20 лет эксплуатации ×0,7, свыше 20 лет ×0,5.
+    // Раньше коэффициент включался уже при 10 годах и применялся также к грузовым и автобусам.
     let ageDiscountPercent = 0;
     let discountAmount = 0;
 
-    if (applyAgeDiscount && vehicleAge) {
+    if (applyAgeDiscount && vehicleAge && vehicleType === 'car') {
       const age = parseInt(vehicleAge);
       if (age > 20) {
         ageDiscountPercent = 50; // коэффициент 0.5
-      } else if (age >= 10) {
+      } else if (age > 10) {
         ageDiscountPercent = 30; // коэффициент 0.7
       }
 
@@ -433,7 +434,7 @@ export default function VehicleTaxCalculator() {
           { question: t('vehicle-tax.faq.q5'), answer: t('vehicle-tax.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 54-тарау' : 'Налоговый кодекс РК, глава 54', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 563–567-баптар' : 'Налоговый кодекс РК, ст. 563–567', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'eGov.kz — салық төлеу' : 'eGov.kz — Оплата налогов', url: 'https://egov.kz/' },
         ]}
       />

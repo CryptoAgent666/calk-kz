@@ -151,14 +151,22 @@ export default function RentalIncomeTaxCalculator() {
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
-  // Рекомендация: режим с минимальной эффективной ставкой
-  const bestRegime = comparison.length
-    ? comparison.reduce((a, b) => (a.totalTax < b.totalTax ? a : b))
-    : null;
-
-  // Самозанятые: лимит проверяется по МЕСЯЧНОМУ доходу (300 МРП/мес), не по полугодию.
+  // Самозанятые: лимит проверяется по МЕСЯЧНОМУ доходу (300 МРП/мес, ст. 718 НК РК), не по полугодию.
   const patentLimitExceeded = (parseFloat(monthlyRent) || 0) > SELF_EMPLOYED_LIMIT_MONTHLY;
   const simplifiedLimitExceeded = results.yearlyIncome > SIMPLIFIED_LIMIT_ANNUAL;
+  // В перечне видов деятельности для самозанятых — только сдача ЖИЛЬЯ (ОКЭД 68201);
+  // коммерческую недвижимость в этом режиме сдавать нельзя.
+  const selfEmployedNotAllowed = propertyType === 'commercial';
+  const isUnavailable = (r: TaxRegime) =>
+    (r === 'patent' && (patentLimitExceeded || selfEmployedNotAllowed)) ||
+    (r === 'simplified' && simplifiedLimitExceeded);
+
+  // Рекомендация: режим с минимальной нагрузкой среди ДОСТУПНЫХ. Раньше самозанятый
+  // рекомендовался и для коммерческой недвижимости, и при аренде больше 300 МРП в месяц.
+  const availableRegimes = comparison.filter((r) => !isUnavailable(r.regime));
+  const bestRegime = availableRegimes.length
+    ? availableRegimes.reduce((a, b) => (a.totalTax < b.totalTax ? a : b))
+    : null;
 
   const regimeLabel = (r: TaxRegime) => t(`rental-income-tax.regime.${r}`);
 
@@ -416,6 +424,12 @@ calk.kz`;
             )}
 
             {/* Limit warnings */}
+            {selfEmployedNotAllowed && selectedRegime === 'patent' && (
+              <div className="bg-red-50 rounded-lg p-3 text-xs text-red-700 border border-red-200">
+                <AlertTriangle className="w-4 h-4 inline mr-1" />
+                {t('rental-income-tax.selfEmployedCommercial')}
+              </div>
+            )}
             {patentLimitExceeded && selectedRegime === 'patent' && (
               <div className="bg-red-50 rounded-lg p-3 text-xs text-red-700 border border-red-200">
                 <AlertTriangle className="w-4 h-4 inline mr-1" />
@@ -469,6 +483,9 @@ calk.kz`;
                           <span className="ml-2 text-xs bg-green-600 text-white px-2 py-0.5 rounded">
                             {t('rental-income-tax.best')}
                           </span>
+                        )}
+                        {isUnavailable(row.regime) && (
+                          <span className="ml-2 text-xs text-gray-500">({t('rental-income-tax.unavailableShort')})</span>
                         )}
                       </td>
                       <td className="py-3 px-2 text-right text-gray-700">{formatCurrency(row.incomeTax)}</td>

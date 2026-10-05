@@ -57,7 +57,9 @@ export default function CashFlowGapCalculator() {
     const dailyExpenses = expenses / 30;
     const cashCycle = dsoDays + dioDays - dpoDays;
     const gapSize = Math.max(0, dailyRevenue * cashCycle);
-    const recommended = gapSize * 1.25;
+    // Минимальный резерв = 30 дней расходов + сам разрыв — так он описан в подписи и FAQ.
+    // Раньше здесь стояло gapSize × 1,25, и цифра расходилась с описанием (31,25 млн вместо 37 млн).
+    const recommended = gapSize + dailyExpenses * 30;
 
     const growthFactor10 = 1.1;
     const growthFactor20 = 1.2;

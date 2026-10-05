@@ -18,7 +18,7 @@ export default function UnifiedPaymentCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [grossSalary, setGrossSalary] = useState<string>('300000');
 
-  // Единый платёж — 24.8% от ФОТ
+  // Единый платёж — 24,8% от ФОТ в 2026 (НК РК ст. 822 п. 1); с 2027 — 25,8%, с 2028 — 26,3% (rollover!)
   const EP_RATE = 0.248;
 
   // Распределение ЕП по фондам
@@ -143,7 +143,7 @@ ${t('unified-payment.breakdown')}:
             <div className="bg-indigo-50 rounded-lg p-4">
               <h3 className="text-sm font-medium text-indigo-900 mb-2">{t('unified-payment.ratesTitle')}</h3>
               <div className="text-xs text-indigo-800 space-y-1">
-                <div><strong>{t('unified-payment.epRateLabel')}</strong> 24.8%</div>
+                <div><strong>{t('unified-payment.epRateLabel')}</strong> 24,8%</div>
                 <div className="mt-2"><strong>{t('unified-payment.distributionLabel')}</strong></div>
                 <div>• {t('unified-payment.opv')} — 40.3%</div>
                 <div>• {t('unified-payment.vosms')} — 8.1%</div>
@@ -179,7 +179,7 @@ ${t('unified-payment.breakdown')}:
             <div className="flex justify-between items-center py-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg px-4">
               <div>
                 <span className="text-lg font-semibold text-gray-900">{t('unified-payment.epTotal')}</span>
-                <span className="text-sm text-gray-500 ml-2">(24.8%)</span>
+                <span className="text-sm text-gray-500 ml-2">(24,8%)</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Calculator className="w-5 h-5 text-indigo-600" />

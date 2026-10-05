@@ -646,7 +646,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
                 <span className="ml-2 transform group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <p className="mt-2 text-gray-700 text-sm pl-4">
-                {t('casino-winnings-tax.faqA1')} {formatNumber(TAX_FREE_THRESHOLD)} {t('casino-winnings-tax.faqA1b')}
+                {t('casino-winnings-tax.faqA1')}
               </p>
             </details>
 

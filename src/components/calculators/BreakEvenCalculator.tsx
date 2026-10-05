@@ -321,7 +321,9 @@ calk.kz`;
               <div className="flex justify-between items-center">
                 <div>
                   <div className="text-sm text-indigo-600">{t('break-even.safetyMargin')}</div>
-                  <div className="text-xs text-indigo-500">{formatCurrency(results.expectedRevenue)}</div>
+                  {/* Запас прочности в деньгах: ожидаемая выручка минус выручка в точке безубыточности.
+                      Раньше здесь выводилась сама ожидаемая выручка (2 000 000 ₸ при запасе 37,5%). */}
+                  <div className="text-xs text-indigo-500">{results.valid ? formatCurrency(Math.max(0, results.expectedRevenue - results.breakEvenRevenue)) : '—'}</div>
                 </div>
                 <span className={`text-xl font-bold ${
                   results.safetyMargin >= 30 ? 'text-emerald-700' : results.safetyMargin >= 10 ? 'text-sky-700' : 'text-rose-700'

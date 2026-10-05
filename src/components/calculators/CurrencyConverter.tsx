@@ -142,6 +142,32 @@ ${t('currency-converter.exportCalculationTime')} ${new Date().toLocaleString('ru
 ${t('currency-converter.exportSource')}`;
   };
 
+  // Примеры, методика и FAQ не зависят от курсов. Раньше, пока курсы грузились из Supabase,
+  // показывался только скелетон — и в пререндер (то есть в HTML для поисковиков) попадал
+  // один быстрый ответ. Теперь эти блоки рендерятся и в состоянии загрузки; первый
+  // клиентский рендер тоже идёт с loading=true, поэтому гидратация совпадает.
+  const infoSections = (
+    <>
+      <CalculatorExamples calculatorId="currency-converter" />
+      <MethodologySection calculatorId="currency-converter" />
+
+      {/* FAQ */}
+      <FAQSection
+        items={[
+          { question: t('currency-converter.faq.q1'), answer: t('currency-converter.faq.a1') },
+          { question: t('currency-converter.faq.q2'), answer: t('currency-converter.faq.a2') },
+          { question: t('currency-converter.faq.q3'), answer: t('currency-converter.faq.a3') },
+          { question: t('currency-converter.faq.q4'), answer: t('currency-converter.faq.a4') },
+          { question: t('currency-converter.faq.q5'), answer: t('currency-converter.faq.a5') }
+        ]}
+        sources={[
+          { title: i18n.language === 'kk' ? 'ҚР Ұлттық Банкі — Валюта бағамдары' : 'Национальный Банк РК — Курсы валют', url: 'https://nationalbank.kz/ru/exchangerates' },
+          { title: i18n.language === 'kk' ? 'KASE — Қазақстан қор биржасы' : 'KASE — Казахстанская фондовая биржа', url: 'https://kase.kz/' },
+        ]}
+      />
+    </>
+  );
+
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto">
@@ -153,6 +179,10 @@ ${t('currency-converter.exportSource')}`;
             <div className="h-[520px] bg-white rounded-xl border border-gray-100 shadow-sm" />
           </div>
         </div>
+        {infoSections}
+        <LegalDisclaimer type="finance" />
+        <ExpertBlock />
+        <LastUpdated calculatorId="currency-converter" />
       </div>
     );
   }
@@ -554,23 +584,7 @@ ${t('currency-converter.exportSource')}`;
         </div>
       </div>
 
-      <CalculatorExamples calculatorId="currency-converter" />
-      <MethodologySection calculatorId="currency-converter" />
-
-      {/* FAQ */}
-      <FAQSection
-        items={[
-          { question: t('currency-converter.faq.q1'), answer: t('currency-converter.faq.a1') },
-          { question: t('currency-converter.faq.q2'), answer: t('currency-converter.faq.a2') },
-          { question: t('currency-converter.faq.q3'), answer: t('currency-converter.faq.a3') },
-          { question: t('currency-converter.faq.q4'), answer: t('currency-converter.faq.a4') },
-          { question: t('currency-converter.faq.q5'), answer: t('currency-converter.faq.a5') }
-        ]}
-        sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Ұлттық Банкі — Валюта бағамдары' : 'Национальный Банк РК — Курсы валют', url: 'https://nationalbank.kz/ru/exchangerates' },
-          { title: i18n.language === 'kk' ? 'KASE — Қазақстан қор биржасы' : 'KASE — Казахстанская фондовая биржа', url: 'https://kase.kz/' },
-        ]}
-      />
+      {infoSections}
 
       {/* Экспорт результатов */}
       {results.convertedAmount > 0 && (

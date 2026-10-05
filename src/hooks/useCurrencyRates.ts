@@ -33,16 +33,18 @@ export function useCurrencyRates(): CurrencyRatesResult {
   const [error, setError] = useState<string | null>(null);
 
   // Резервные курсы на случай недоступности API (от НБРК на 19.04.2026)
+  // Запасные курсы — если в базе нет данных. Официальные курсы НБРК на 05.10.2026
+  // (nationalbank.kz/rss/get_rates.cfm); обновлять при заметном расхождении.
   const fallbackRates: Record<string, number> = {
-    USD: 469.52,
-    EUR: 553.75,
-    RUB: 6.15,
-    CNY: 68.82,
-    GBP: 683.68,
-    JPY: 3.23,
-    CHF: 637.90,
-    CAD: 367.66,
-    AUD: 340.59
+    USD: 447.73,
+    EUR: 502.98,
+    RUB: 5.35,
+    CNY: 66.78,
+    GBP: 591.14,
+    JPY: 2.84,
+    CHF: 540.41,
+    CAD: 314.46,
+    AUD: 310.5
   };
 
   const fetchRates = async (date?: string) => {

@@ -20,9 +20,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
-      "verify_note": "КоБС РК ст.139: на 1 ребёнка — 1/4 (25%) дохода. Не изменялось для 2026. | Tier-2 2026-09-09: ст. 139 п. 1 дословно: «на одного ребенка - одной четверти … заработка и (или) иного дохода родителей». Сносок об изменениях у ст. 139 нет — первоначальная редакция 2011 г. Кодекс правился Законом от 14.07.2026 № 350-VIII (ст. 1, 54, 57 — суррогатное материнство); алиментных долей правка не касалась. Алерт монитора — ложный.",
-      "reverified": "2026-09-09",
-      "verified_date": "2026-09-09"
+      "verify_note": "КоБС РК ст.139: на 1 ребёнка — 1/4 (25%) дохода. Не изменялось для 2026. | Tier-2 2026-09-09: ст. 139 п. 1 дословно: «на одного ребенка - одной четверти … заработка и (или) иного дохода родителей». Сносок об изменениях у ст. 139 нет — первоначальная редакция 2011 г. Кодекс правился Законом от 14.07.2026 № 350-VIII (ст. 1, 54, 57 — суррогатное материнство); алиментных долей правка не касалась. Алерт монитора — ложный. | 2026-10-05: алерт монитора по K1100000518 ложный — сверено дословно по old.adilet: ст. 139 п. 1 (¼ / ⅓ / ½) и ст. 38 п. 1–2 без сносок об изменениях; последняя поправка КоБС — Закон № 350-VIII от 14.07.2026 (ст. 1, 54, 57, суррогатное материнство). Причина алерта: adilet.zan.kz перешёл на SPA НЦПС, монитор видит оболочку (1 токен, покрытие 0).",
+      "reverified": "2026-10-05",
+      "verified_date": "2026-10-05",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "alimony_share_two_children",
@@ -41,9 +42,10 @@
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
-      "verify_note": "КоБС РК ст.139: на 2 детей — 1/3 (≈33.3%). Не изменялось для 2026. | Tier-2 2026-09-09: В норме это ДРОБЬ 1/3, а не процент. В коде AlimonyCalculator стоит 1/3 — верно; 33,3 в реестре — округление. Считать доход/3, не доход×0,333.",
-      "reverified": "2026-09-09",
-      "verified_date": "2026-09-09"
+      "verify_note": "КоБС РК ст.139: на 2 детей — 1/3 (≈33.3%). Не изменялось для 2026. | Tier-2 2026-09-09: В норме это ДРОБЬ 1/3, а не процент. В коде AlimonyCalculator стоит 1/3 — верно; 33,3 в реестре — округление. Считать доход/3, не доход×0,333. | 2026-10-05: алерт монитора по K1100000518 ложный — сверено дословно по old.adilet: ст. 139 п. 1 (¼ / ⅓ / ½) и ст. 38 п. 1–2 без сносок об изменениях; последняя поправка КоБС — Закон № 350-VIII от 14.07.2026 (ст. 1, 54, 57, суррогатное материнство). Причина алерта: adilet.zan.kz перешёл на SPA НЦПС, монитор видит оболочку (1 токен, покрытие 0).",
+      "reverified": "2026-10-05",
+      "verified_date": "2026-10-05",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "alimony_share_three_children",
@@ -62,9 +64,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
-      "verify_note": "КоБС РК ст.139: на 3 и более детей — 1/2 (50%). Не изменялось для 2026. | Tier-2 2026-09-09: ст. 139 п. 1: «на трех и более детей - половины». Не менялось.",
-      "reverified": "2026-09-09",
-      "verified_date": "2026-09-09"
+      "verify_note": "КоБС РК ст.139: на 3 и более детей — 1/2 (50%). Не изменялось для 2026. | Tier-2 2026-09-09: ст. 139 п. 1: «на трех и более детей - половины». Не менялось. | 2026-10-05: алерт монитора по K1100000518 ложный — сверено дословно по old.adilet: ст. 139 п. 1 (¼ / ⅓ / ½) и ст. 38 п. 1–2 без сносок об изменениях; последняя поправка КоБС — Закон № 350-VIII от 14.07.2026 (ст. 1, 54, 57, суррогатное материнство). Причина алерта: adilet.zan.kz перешёл на SPA НЦПС, монитор видит оболочку (1 токен, покрытие 0).",
+      "reverified": "2026-10-05",
+      "verified_date": "2026-10-05",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "asp_child_bonus_mrp",
@@ -527,9 +530,10 @@
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
-      "reverified": "2026-09-09",
-      "verified_date": "2026-09-09",
-      "verify_note": "Tier-2 2026-09-09: Уточнена ссылка: равенство долей — ИСКЛЮЧИТЕЛЬНО ст. 38 п. 1 («доли каждого из супругов признаются равными, если иное не предусмотрено договором между ними»). Ст. 37 регулирует порядок раздела и процента не содержит. У ст. 38 сносок об изменениях нет."
+      "reverified": "2026-10-05",
+      "verified_date": "2026-10-05",
+      "verify_note": "Tier-2 2026-09-09: Уточнена ссылка: равенство долей — ИСКЛЮЧИТЕЛЬНО ст. 38 п. 1 («доли каждого из супругов признаются равными, если иное не предусмотрено договором между ними»). Ст. 37 регулирует порядок раздела и процента не содержит. У ст. 38 сносок об изменениях нет. | 2026-10-05: алерт монитора по K1100000518 ложный — сверено дословно по old.adilet: ст. 139 п. 1 (¼ / ⅓ / ½) и ст. 38 п. 1–2 без сносок об изменениях; последняя поправка КоБС — Закон № 350-VIII от 14.07.2026 (ст. 1, 54, 57, суррогатное материнство). Причина алерта: adilet.zan.kz перешёл на SPA НЦПС, монитор видит оболочку (1 токен, покрытие 0).",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "marital_share_with_children",
@@ -547,10 +551,11 @@
         "PropertyDivisionCalculator"
       ],
       "audit_status": "representation_variants",
-      "verify_note": "Tier-2 2026-08: проверено исследователем и скептиком — «55» в акте отсутствует. В UI разведено: «по закону 50/50 (ст. 38 п. 1)» vs «55/45 — иллюстративный сценарий». | Tier-2 2026-09-09: Подтверждено обратное: числа 55 в кодексе нет, фиксированного процента отступления нет вовсе. Статус assumption верен, дисклеймер «иллюстративный сценарий» в PropertyDivisionCalculator обязателен — без него запись становится фактической ошибкой YMYL.",
-      "reverified": "2026-09-09",
+      "verify_note": "Tier-2 2026-08: проверено исследователем и скептиком — «55» в акте отсутствует. В UI разведено: «по закону 50/50 (ст. 38 п. 1)» vs «55/45 — иллюстративный сценарий». | Tier-2 2026-09-09: Подтверждено обратное: числа 55 в кодексе нет, фиксированного процента отступления нет вовсе. Статус assumption верен, дисклеймер «иллюстративный сценарий» в PropertyDivisionCalculator обязателен — без него запись становится фактической ошибкой YMYL. | 2026-10-05: алерт монитора по K1100000518 ложный — сверено дословно по old.adilet: ст. 139 п. 1 (¼ / ⅓ / ½) и ст. 38 п. 1–2 без сносок об изменениях; последняя поправка КоБС — Закон № 350-VIII от 14.07.2026 (ст. 1, 54, 57, суррогатное материнство). Причина алерта: adilet.zan.kz перешёл на SPA НЦПС, монитор видит оболочку (1 токен, покрытие 0).",
+      "reverified": "2026-10-05",
       "source_url": "https://adilet.zan.kz/rus/docs/K1100000518",
-      "verified_date": "2026-09-09"
+      "verified_date": "2026-10-05",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "unemployment_income_cap_mzp",
@@ -923,7 +928,7 @@
       "key": "gov_duty_court_property_individual_rate",
       "value": 1,
       "unit": "percent",
-      "law": "ст. 610 НК РК (госпошлина по имущественному иску, физлица)",
+      "law": "НК РК 2026 ст. 665 (госпошлина по имущественному иску, физлица)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -939,15 +944,17 @@
         "PropertyDivisionCalculator"
       ],
       "audit_status": "representation_variants",
-      "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
-      "verify_note": "Имущественный иск, физлица: 1% суммы иска (но не более 10 000 МРП). Сохранено в новом НК РК 2026 (ст.665, ранее ст.610).",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Имущественный иск, физлица: 1% суммы иска (но не более 10 000 МРП). Сохранено в новом НК РК 2026 (ст.665, ранее ст.610). | calkcheck 2026-10-06 б6: сверено по ст. 665 п. 1 НК-2026 (old.adilet); «ст. 610» — номер из старого кодекса. Цена иска о разделе имущества — стоимость истребуемой доли (ГПК ст. 104 п. 1 пп. 4).",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_court_property_legal_rate",
       "value": 3,
       "unit": "percent",
-      "law": "ст. 610 НК РК (госпошлина по имущественному иску, юрлица)",
+      "law": "НК РК 2026 ст. 665 (госпошлина по имущественному иску, юрлица)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -959,15 +966,17 @@
         "CourtFeeCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
-      "verify_note": "Имущественный иск, юрлица: 3% суммы иска (но не более 20 000 МРП). Сохранено в новом НК РК 2026.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Имущественный иск, юрлица: 3% суммы иска (но не более 20 000 МРП). Сохранено в новом НК РК 2026. | calkcheck 2026-10-06 б6: сверено по ст. 665 п. 1 НК-2026 (old.adilet); «ст. 610» — номер из старого кодекса. Цена иска о разделе имущества — стоимость истребуемой доли (ГПК ст. 104 п. 1 пп. 4).",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_court_property_claim_min_mrp",
-      "value": 0.5,
+      "value": 0,
       "unit": "MRP",
-      "law": "ст. 610 НК РК (минимум госпошлины по имущественному иску)",
+      "law": "НК РК 2026 ст. 665 п. 1 пп. 1 — минимума нет (1% / 3% от цены иска, не более 10 000 / 20 000 МРП)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -981,9 +990,12 @@
         "PropertyDivisionCalculator"
       ],
       "audit_status": "representation_variants",
-      "source_url": "https://sud.gov.kz/rus/content/stavki-gosudarstvennoy-poshliny-v-sudah",
-      "verify_note": "0.5 МРП — общий минимальный/нижний размер госпошлины (совпадает со ставкой неимущественного иска). Подтверждено как действующее в 2026; явного отдельного «минимума именно по имущественному иску» в НК нет, но величина корректна.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "0.5 МРП — общий минимальный/нижний размер госпошлины (совпадает со ставкой неимущественного иска). Подтверждено как действующее в 2026; явного отдельного «минимума именно по имущественному иску» в НК нет, но величина корректна. | calkcheck 2026-10-06 б6: ledger lag — минимум 0,5 МРП из кода убран 24.09.2026 (Divorce, PropertyDivision), а реестр держал 0,5. В ст. 665 минимума нет.",
+      "reverified": "2026-10-06",
+      "official_value": "0",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_court_nonproperty_claim_individual_mrp",
@@ -1012,7 +1024,7 @@
       "key": "gov_duty_court_max_individual_mrp",
       "value": 10000,
       "unit": "MRP",
-      "law": "ст. 610 НК РК (предельная госпошлина для физлиц)",
+      "law": "НК РК 2026 ст. 665 (предельная госпошлина для физлиц)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1023,15 +1035,17 @@
         "CourtFeeCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://signumlaw.com/posts/vneseny-izmeneniya-v-nalogovyy-kodeks-rk-ustanovlen-verhniy-predel-gosudarstvennoy-poshliny-pri-podache-imuschestvennyh-iskov",
-      "verify_note": "Предельная госпошлина по имущественному иску для физлиц — 10 000 МРП. Действует в 2026.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Предельная госпошлина по имущественному иску для физлиц — 10 000 МРП. Действует в 2026. | calkcheck 2026-10-06 б6: сверено по ст. 665 п. 1 НК-2026 (old.adilet); «ст. 610» — номер из старого кодекса. Цена иска о разделе имущества — стоимость истребуемой доли (ГПК ст. 104 п. 1 пп. 4).",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_court_max_legal_mrp",
       "value": 20000,
       "unit": "MRP",
-      "law": "ст. 610 НК РК (предельная госпошлина для юрлиц)",
+      "law": "НК РК 2026 ст. 665 (предельная госпошлина для юрлиц)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1042,15 +1056,17 @@
         "CourtFeeCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://signumlaw.com/posts/vneseny-izmeneniya-v-nalogovyy-kodeks-rk-ustanovlen-verhniy-predel-gosudarstvennoy-poshliny-pri-podache-imuschestvennyh-iskov",
-      "verify_note": "Предельная госпошлина по имущественному иску для юрлиц — 20 000 МРП. Действует в 2026.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Предельная госпошлина по имущественному иску для юрлиц — 20 000 МРП. Действует в 2026. | calkcheck 2026-10-06 б6: сверено по ст. 665 п. 1 НК-2026 (old.adilet); «ст. 610» — номер из старого кодекса. Цена иска о разделе имущества — стоимость истребуемой доли (ГПК ст. 104 п. 1 пп. 4).",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_court_nonproperty_mrp_table",
       "value": "new НК K2500000214 ст.665 (exemptions ст.668): general non-property 0.5 (individual & legal); divorce 0.3; alimony/labor/consumer exempt 0; АППК (administrative) 0.3 individual / 5 legal; bankruptcy 0.3 citizen / 0.5 rehabilitation (МРП)",
       "unit": "MRP",
-      "law": "ст. 610 НК РК (неимущественные иски — таблица госпошлин)",
+      "law": "НК РК 2026 ст. 665 (неимущественные иски — таблица госпошлин)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1063,10 +1079,12 @@
       ],
       "audit_status": "clean",
       "official_value": "новый НК K2500000214 ст.665 (льготы ст.668): общий неимущ. иск 0.5 МРП (физ- и юрлица); развод 0.3; алименты/трудовые споры/потребители — освобождены (0); АППК (спор с госорганом) 0.3 физлица / 5 юрлица; банкротство 0.5 (реабилитация) / 0.3 (судебн. банкротство гражданина)",
-      "source_url": "https://sud.gov.kz/rus/content/gosudarstvennaya-poshlina",
-      "verify_note": "Большинство строк старой таблицы неверны; статья перенумерована в ст.665 нового НК (льготы — ст.668). Верна была только строка «развод 0.3».",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Большинство строк старой таблицы неверны; статья перенумерована в ст.665 нового НК (льготы — ст.668). Верна была только строка «развод 0.3». | calkcheck 2026-10-06 б6: сверено по ст. 665 п. 1 НК-2026 (old.adilet); «ст. 610» — номер из старого кодекса. Цена иска о разделе имущества — стоимость истребуемой доли (ГПК ст. 104 п. 1 пп. 4).",
       "confidence": "high",
-      "reverified": "2026-06-27"
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_divorce_court_mrp",
@@ -4256,7 +4274,7 @@
       "key": "gambling_winnings_tax_free_threshold",
       "value": 0,
       "unit": "KZT",
-      "law": "НК РК 2026 (специальный необлагаемый минимум по выигрышам не предусмотрен)",
+      "law": "НК РК 2026 ст. 21 пп. 17, ст. 379 — для азартных игр и пари облагается имущественная выгода (выигрыш минус ставка), необлагаемого минимума нет; для лотерей см. lottery_winnings_exempt_mrp",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -4268,10 +4286,12 @@
         "CasinoWinningsTaxCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://legalbet.kz/shkola-bettinga/nalog-na-viigrish-v-kazahstane/",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "official_value": "0",
-      "verify_note": "Специальный необлагаемый минимум по выигрышам в НК РК 2026 не предусмотрен; выигрыш облагается ИПН 10% у источника выплаты. Значение '0' (нет порога) корректно.",
-      "reverified": "2026-06-23"
+      "verify_note": "Специальный необлагаемый минимум по выигрышам в НК РК 2026 не предусмотрен; выигрыш облагается ИПН 10% у источника выплаты. Значение '0' (нет порога) корректно. | calkcheck 2026-10-06 б6: 0 верно только для казино и букмекеров. Для лотерей — 6 МРП по одной лотерее (ст. 436 пп. 12).",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "ipn_90pct_reduction_abolished_2026",
@@ -4339,7 +4359,7 @@
       "key": "property_sale_exempt_ownership_years",
       "value": 1,
       "unit": "factor",
-      "law": "НК РК ст. 331 (освобождение от ИПН при владении >1 года — жильё/земля/авто)",
+      "law": "НК РК 2026 ст. 384 п. 1 пп. 1 — транспортные средства: облагаются при владении менее 1 года (жильё и земля под ИЖС — 2 года, ст. 383; см. property_sale_exempt_ownership_years_realestate)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -4351,10 +4371,12 @@
         "PropertySaleTaxCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://prodengi.kz/post/novye-pravila-prodazi-nedvizimosti-v-rk",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "official_value": "1",
-      "verify_note": "Освобождение при владении >1 года сохраняется для недвижимости, право собственности на которую зарегистрировано ДО 01.01.2026 (переходные положения), и для движимого имущества (авто). Для нового жилья (с 2026) — 2 года (см. отдельный ключ). Значение '1 год' остаётся актуальным для указанных случаев. | calkcheck 2026-09-24: для недвижимости с 01.01.2026 — 2 года (property_sale_exempt_ownership_years_realestate); 1 год остаётся для ТС. FAQ/QuickAnswer PropertySaleTax приведены к 2 годам.",
-      "reverified": "2026-09-24"
+      "verify_note": "Освобождение при владении >1 года сохраняется для недвижимости, право собственности на которую зарегистрировано ДО 01.01.2026 (переходные положения), и для движимого имущества (авто). Для нового жилья (с 2026) — 2 года (см. отдельный ключ). Значение '1 год' остаётся актуальным для указанных случаев. | calkcheck 2026-09-24: для недвижимости с 01.01.2026 — 2 года (property_sale_exempt_ownership_years_realestate); 1 год остаётся для ТС. FAQ/QuickAnswer PropertySaleTax приведены к 2 годам. | calkcheck 2026-10-06 б6: значение 1 год верно только для ТС (ст. 384). Для жилья, дач, гаражей, паркингов и земли под ИЖС/дачу/ЛПХ/гараж — 2 года (ст. 383 п. 1), прочая недвижимость облагается при любом сроке. Ссылка «ст. 331» — номер из старого кодекса.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "tax_simplified_rate_snr",
@@ -4921,7 +4943,7 @@
       "key": "unified_payment_rate",
       "value": 24.8,
       "unit": "%",
-      "law": "НК РК (единый платёж с ФОТ)",
+      "law": "НК РК 2026, гл. 94, ст. 822 п. 1 (24,8% с 01.01.2026)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -4930,9 +4952,16 @@
         "UnifiedPaymentCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
-      "verify_note": "Ставка единого платежа (ЕП) с зарплаты = 24,8% с 01.01.2026 (повышена). Совпадает с ledger.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Ставка единого платежа (ЕП) с зарплаты = 24,8% с 01.01.2026 (повышена). Совпадает с ledger. | calkcheck 2026-10-06 б6: сверено дословно по ст. 820–822 НК-2026 (old.adilet). Тексты страницы ссылались на «ст. 776» и условия «до 25 работников и 70 000 МРП» — в НК-2026 их нет: ЕП доступен МСБ на упрощёнке (гл. 78), режиме КФХ (гл. 79), сельхозпроизводителям и кооперативам (ст. 820 п. 2).",
+      "reverified": "2026-10-06",
+      "changes_next_fy": {
+        "2027-01-01": 25.8,
+        "2028-01-01": 26.3,
+        "note": "ст. 822 п. 1 — ставка ЕП растёт; доли внутри ЕП (кроме ИПН) пересчитать при rollover"
+      },
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "unified_payment_share_opv",
@@ -4972,7 +5001,7 @@
       "key": "unified_payment_share_ipn",
       "value": 7.3,
       "unit": "% от ЕП",
-      "law": "НК РК (распределение ЕП)",
+      "law": "НК РК 2026, ст. 822 п. 2 (доля ИПН 7,3% с 01.01.2026)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -4981,9 +5010,15 @@
         "UnifiedPaymentCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://pro1c.kz/articles/trud-zarplata-kadry/pro-edinyy-platezh-s-zarabotnoy-platy/",
-      "verify_note": "Доля ИПН в ЕП = 7,3% в 2026. Совпадает.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "Доля ИПН в ЕП = 7,3% в 2026. Совпадает. | calkcheck 2026-10-06 б6: сверено дословно по ст. 820–822 НК-2026 (old.adilet). Тексты страницы ссылались на «ст. 776» и условия «до 25 работников и 70 000 МРП» — в НК-2026 их нет: ЕП доступен МСБ на упрощёнке (гл. 78), режиме КФХ (гл. 79), сельхозпроизводителям и кооперативам (ст. 820 п. 2).",
+      "reverified": "2026-10-06",
+      "changes_next_fy": {
+        "2027-01-01": 7.0,
+        "2028-01-01": 6.9
+      },
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "unified_payment_share_opvr",
@@ -5363,8 +5398,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
-      "verify_note": "Truck <=1 ton = 3 МРП confirmed for 2026 (zakon.mybuh.kz tax-code text, 12,975 ₸). Article ст.492 НК РК (not ст.565).",
-      "reverified": "2026-06-23"
+      "verify_note": "Truck <=1 ton = 3 МРП confirmed for 2026 (zakon.mybuh.kz tax-code text, 12,975 ₸). Article ст.492 НК РК (not ст.565). | calkcheck 2026-10-06 б6: значения в коде верны (ст. 565 п. 1), но подписи сеток на странице были «до 2 / 2–5 / 5–10 / 10–20 т» и «до 20 / 21–40 / >40 мест» — исправлены.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_truck_rate_1_1_5t_mrp",
@@ -5380,8 +5417,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
-      "verify_note": "Truck 1-1.5 t = 5 МРП confirmed for 2026 (zakon.mybuh.kz, 21,625 ₸). Article ст.492.",
-      "reverified": "2026-06-23"
+      "verify_note": "Truck 1-1.5 t = 5 МРП confirmed for 2026 (zakon.mybuh.kz, 21,625 ₸). Article ст.492. | calkcheck 2026-10-06 б6: значения в коде верны (ст. 565 п. 1), но подписи сеток на странице были «до 2 / 2–5 / 5–10 / 10–20 т» и «до 20 / 21–40 / >40 мест» — исправлены.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_truck_rate_1_5_5t_mrp",
@@ -5397,8 +5436,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
-      "verify_note": "Truck 1.5-5 t = 7 МРП confirmed for 2026 (zakon.mybuh.kz, 30,275 ₸). Article ст.492.",
-      "reverified": "2026-06-23"
+      "verify_note": "Truck 1.5-5 t = 7 МРП confirmed for 2026 (zakon.mybuh.kz, 30,275 ₸). Article ст.492. | calkcheck 2026-10-06 б6: значения в коде верны (ст. 565 п. 1), но подписи сеток на странице были «до 2 / 2–5 / 5–10 / 10–20 т» и «до 20 / 21–40 / >40 мест» — исправлены.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_truck_rate_gt_5t_mrp",
@@ -5414,8 +5455,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://zakon.mybuh.kz/rus/docs/k2500000214-2/",
-      "verify_note": "Truck >5 t = 9 МРП confirmed for 2026 (zakon.mybuh.kz, 38,925 ₸). Article ст.492. (Note: one secondary aggregator showed different band edges 2/5/10/20 t — that summary is unreliable; the tax-code text uses 1/1.5/5 t edges matching the input.)",
-      "reverified": "2026-06-23"
+      "verify_note": "Truck >5 t = 9 МРП confirmed for 2026 (zakon.mybuh.kz, 38,925 ₸). Article ст.492. (Note: one secondary aggregator showed different band edges 2/5/10/20 t — that summary is unreliable; the tax-code text uses 1/1.5/5 t edges matching the input.) | calkcheck 2026-10-06 б6: значения в коде верны (ст. 565 п. 1), но подписи сеток на странице были «до 2 / 2–5 / 5–10 / 10–20 т» и «до 20 / 21–40 / >40 мест» — исправлены.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_bus_rate_le_12_mrp",
@@ -5431,8 +5474,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://pro1c.kz/articles/nalog-na-zemlyu-transport-imushchestvo/nalog-na-transportnye-sredstva/",
-      "verify_note": "Bus <=12 seats = 9 МРП — long-standing ст.492 НК РК value, unchanged for 2026 (buses not touched by the 2026 amendments). Bus-by-seats structure confirmed (pro1c.kz cites ст.492); 14 МРП for an 18-seat bus independently corroborated, consistent with the 12-25 band. Exact МРП read from secondary sources, not a primary table image.",
-      "reverified": "2026-06-23"
+      "verify_note": "Bus <=12 seats = 9 МРП — long-standing ст.492 НК РК value, unchanged for 2026 (buses not touched by the 2026 amendments). Bus-by-seats structure confirmed (pro1c.kz cites ст.492); 14 МРП for an 18-seat bus independently corroborated, consistent with the 12-25 band. Exact МРП read from secondary sources, not a primary table image. | calkcheck 2026-10-06 б6: значения в коде верны (ст. 565 п. 1), но подписи сеток на странице были «до 2 / 2–5 / 5–10 / 10–20 т» и «до 20 / 21–40 / >40 мест» — исправлены.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_bus_rate_12_25_mrp",
@@ -5448,8 +5493,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://mybuh.kz/useful/nalog-na-transport-v-kazakhstane-stavki-sroki-sposoby-oplaty.html",
-      "verify_note": "Bus 12-25 seats = 14 МРП — ст.492 НК РК, unchanged for 2026. Independently corroborated: an 18-seat bus is taxed at 14 МРП.",
-      "reverified": "2026-06-23"
+      "verify_note": "Bus 12-25 seats = 14 МРП — ст.492 НК РК, unchanged for 2026. Independently corroborated: an 18-seat bus is taxed at 14 МРП. | calkcheck 2026-10-06 б6: значения в коде верны (ст. 565 п. 1), но подписи сеток на странице были «до 2 / 2–5 / 5–10 / 10–20 т» и «до 20 / 21–40 / >40 мест» — исправлены.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_bus_rate_gt_25_mrp",
@@ -5465,14 +5512,16 @@
       ],
       "audit_status": "clean",
       "source_url": "https://pro1c.kz/articles/nalog-na-zemlyu-transport-imushchestvo/nalog-na-transportnye-sredstva/",
-      "verify_note": "Bus >25 seats = 20 МРП — long-standing ст.492 НК РК value, unchanged for 2026. Not contradicted by any 2026 source; buses excluded from 2026 changes.",
-      "reverified": "2026-06-23"
+      "verify_note": "Bus >25 seats = 20 МРП — long-standing ст.492 НК РК value, unchanged for 2026. Not contradicted by any 2026 source; buses excluded from 2026 changes. | calkcheck 2026-10-06 б6: значения в коде верны (ст. 565 п. 1), но подписи сеток на странице были «до 2 / 2–5 / 5–10 / 10–20 т» и «до 20 / 21–40 / >40 мест» — исправлены.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_age_discount_pct_10_20y",
       "value": 30,
       "unit": "%",
-      "law": "НК РК (поправочный коэффициент за возраст)",
+      "law": "НК РК 2026 ст. 565 п. 8 — только легковые: свыше 10 до 20 лет ×0,7, свыше 20 лет ×0,5",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -5481,15 +5530,17 @@
         "VehicleTaxCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://uchet.kz/news/izmeneniya-v-nalogakh-na-imushchestvo-i-transport-s-2026-goda-glavnoe/",
-      "verify_note": "NEW for 2026: понижающий коэффициент 0.7 for cars 10-20 years old = 30% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '30%' correctly equals the 0.7 coefficient. (This is a 2026 addition; applies to легковые.)",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "NEW for 2026: понижающий коэффициент 0.7 for cars 10-20 years old = 30% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '30%' correctly equals the 0.7 coefficient. (This is a 2026 addition; applies to легковые.) | calkcheck 2026-10-06 б6: сверено дословно. Код применял коэффициент уже при 10 годах и к грузовым/автобусам — исправлено (age > 10, только vehicleType car).",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_tax_age_discount_pct_gt_20y",
       "value": 50,
       "unit": "%",
-      "law": "НК РК (поправочный коэффициент за возраст)",
+      "law": "НК РК 2026 ст. 565 п. 8 — только легковые: свыше 10 до 20 лет ×0,7, свыше 20 лет ×0,5",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -5498,9 +5549,11 @@
         "VehicleTaxCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://uchet.kz/news/izmeneniya-v-nalogakh-na-imushchestvo-i-transport-s-2026-goda-glavnoe/",
-      "verify_note": "NEW for 2026: понижающий коэффициент 0.5 for cars >20 years = 50% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '50%' correctly equals the 0.5 coefficient.",
-      "reverified": "2026-06-23"
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "NEW for 2026: понижающий коэффициент 0.5 for cars >20 years = 50% reduction. Confirmed (uchet.kz, pro1c.kz, kursiv.media). Input's '50%' correctly equals the 0.5 coefficient. | calkcheck 2026-10-06 б6: сверено дословно. Код применял коэффициент уже при 10 годах и к грузовым/автобусам — исправлено (age > 10, только vehicleType car).",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_registration_fee_mrp",
@@ -7823,7 +7876,7 @@
       "key": "property_sale_exempt_ownership_years_realestate",
       "value": 2,
       "unit": "years",
-      "law": "Новый НК РК K2500000214, ст. 331/363 + переходная ст. 842 — с 01.01.2026 для нед",
+      "law": "НК РК 2026 ст. 383 п. 1 пп. 1–2 (жильё, дачи, гаражи, паркинги, кладовки, ЛПХ, земля под ИЖС/дачу/ЛПХ/гараж — менее 2 лет; пп. 3 — прочая недвижимость независимо от срока)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [],
@@ -7834,10 +7887,12 @@
       "note": "MAJOR MISS: minOwnershipYears: 2 for apartment/house/land/dacha/garage (lines 28-32). First sweep captured only value 1, which in the file a",
       "origin": "diff_sweep_2026-06-11",
       "audit_status": "clean",
-      "source_url": "https://mybuh.kz/news/prodazha-imushchestva-menee-2-let-vladeniya-10-ipn-s-2026-goda/",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
       "official_value": "2",
-      "verify_note": "Новый НК РК (K2500000214/№214-VIII): с 01.01.2026 освобождение от ИПН при продаже недвижимости — после 2 лет владения (для объектов, право на которые зарегистрировано после 01.01.2026). Подтверждено. (Для долей в жилстроительстве — 3 года.)",
-      "reverified": "2026-06-23"
+      "verify_note": "Новый НК РК (K2500000214/№214-VIII): с 01.01.2026 освобождение от ИПН при продаже недвижимости — после 2 лет владения (для объектов, право на которые зарегистрировано после 01.01.2026). Подтверждено. (Для долей в жилстроительстве — 3 года.) | calkcheck 2026-10-06 б6: сверено дословно по ст. 383. Льготы «единственное жильё» и «не более одной квартиры в год» в НК-2026 нет — убраны со страницы.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "ipn_declaration_deadline_fno240",
@@ -8445,7 +8500,7 @@
       "key": "mobile_transfers_senders_threshold",
       "value": 100,
       "unit": "persons",
-      "law": "Приказ МФ РК от 29.03.2022 № 323 в ред. приказа от 12.11.2025 № 698 (с 01.01.2026)",
+      "law": "Приказ МФ РК от 12.11.2025 № 698, приложение 5, п. 2 (с 01.01.2026; приказ № 323 утратил силу)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -8454,16 +8509,18 @@
         "MobileTransfersCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://adilet.zan.kz/rus/docs/V2200027305",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2500037396",
       "official_value": "100",
-      "verify_note": "Критерий камерального контроля: поступления от 100+ РАЗНЫХ лиц в КАЖДОМ из 3 последовательных месяцев (все условия критерия — одновременно).",
-      "reverified": "2026-07-10"
+      "verify_note": "Критерий камерального контроля: поступления от 100+ РАЗНЫХ лиц в КАЖДОМ из 3 последовательных месяцев (все условия критерия — одновременно). | calkcheck 2026-10-06 б6: сверено дословно по old.adilet V2500037396 прил. 5 п. 2 («в течение каждого из 3 последовательных календарных месяцев от 100 и более разных лиц… итоговая сумма… превышает 12-кратный размер МЗП»). Источник был на утративший силу приказ № 323 (V2200027305) — монитор следил не за той страницей.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "mobile_transfers_months_consecutive",
       "value": 3,
       "unit": "months",
-      "law": "Приказ МФ РК № 323 в ред. № 698",
+      "law": "Приказ МФ РК от 12.11.2025 № 698, приложение 5, п. 2 (с 01.01.2026; приказ № 323 утратил силу)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -8472,16 +8529,18 @@
         "MobileTransfersCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://adilet.zan.kz/rus/docs/V2200027305",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2500037396",
       "official_value": "3",
-      "verify_note": "Три последовательных календарных месяца; порог отправителей должен выполняться в каждом.",
-      "reverified": "2026-07-10"
+      "verify_note": "Три последовательных календарных месяца; порог отправителей должен выполняться в каждом. | calkcheck 2026-10-06 б6: сверено дословно по old.adilet V2500037396 прил. 5 п. 2 («в течение каждого из 3 последовательных календарных месяцев от 100 и более разных лиц… итоговая сумма… превышает 12-кратный размер МЗП»). Источник был на утративший силу приказ № 323 (V2200027305) — монитор следил не за той страницей.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "mobile_transfers_sum_threshold_mzp",
       "value": 12,
       "unit": "MZP",
-      "law": "Приказ МФ РК № 323 в ред. № 698",
+      "law": "Приказ МФ РК от 12.11.2025 № 698, приложение 5, п. 2 (с 01.01.2026; приказ № 323 утратил силу)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [],
@@ -8490,10 +8549,12 @@
         "MobileTransfersCalculator"
       ],
       "audit_status": "clean",
-      "source_url": "https://adilet.zan.kz/rus/docs/V2200027305",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2500037396",
       "official_value": "12",
-      "verify_note": "12 МЗП = 1 020 000 ₸ (2026, МЗП 85 000) суммарно за 3 месяца. ⚠️ uchet.kz публиковал ошибочные 1 105 000 ₸ — верно 1 020 000 (tengrinews, mybuh, арифметика).",
-      "reverified": "2026-07-10"
+      "verify_note": "12 МЗП = 1 020 000 ₸ (2026, МЗП 85 000) суммарно за 3 месяца. ⚠️ uchet.kz публиковал ошибочные 1 105 000 ₸ — верно 1 020 000 (tengrinews, mybuh, арифметика). | calkcheck 2026-10-06 б6: сверено дословно по old.adilet V2500037396 прил. 5 п. 2 («в течение каждого из 3 последовательных календарных месяцев от 100 и более разных лиц… итоговая сумма… превышает 12-кратный размер МЗП»). Источник был на утративший силу приказ № 323 (V2200027305) — монитор следил не за той страницей.",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "enpf_pmd_methodology_revision",
@@ -9731,6 +9792,87 @@
       "verify_method": "calkcheck-primary",
       "status": "current",
       "official_value": 3
+    },
+    {
+      "key": "lottery_winnings_exempt_mrp",
+      "value": 6,
+      "unit": "MRP",
+      "law": "НК РК 2026 ст. 436 пп. 12 — выигрыш по одной лотерее в пределах 6 МРП (на 1 января) не облагается",
+      "used_by": [
+        "CasinoWinningsTaxCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-10-06 б6: страница писала «необлагаемого минимума нет» и для лотерей; пример лотереи пересчитан: 500 000 − 25 950 = 474 050 × 10%.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": 6
+    },
+    {
+      "key": "gambling_winnings_nonresident_rate",
+      "value": 10,
+      "unit": "percent",
+      "law": "НК РК 2026 ст. 682 п. 1 пп. 9 — доходы нерезидента в виде выигрышей в азартной игре и (или) пари; прочие выигрыши — 20% (пп. 1)",
+      "used_by": [
+        "CasinoWinningsTaxCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-10-06 б6: страница писала «для нерезидентов 15%».",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": 10
+    },
+    {
+      "key": "vehicle_tax_exemptions_individuals",
+      "value": "ветераны ВОВ, приравненные и ветераны боевых действий; лица с инвалидностью — по одному авто (кроме легковых > 4 000 см³)",
+      "unit": "—",
+      "law": "НК РК 2026 ст. 563 п. 3 пп. 5–6, п. 4",
+      "used_by": [
+        "VehicleTaxCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-10-06 б6: FAQ называл льготы для многодетных и электромобилей — их в ст. 563 нет.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": "ветераны ВОВ, приравненные и ветераны боевых действий; лица с инвалидностью — по одному авто (кроме легковых > 4 000 см³)"
+    },
+    {
+      "key": "self_employed_rental_allowed",
+      "value": "только сдача жилья (ОКЭД 68201); коммерческая недвижимость — нет",
+      "unit": "—",
+      "law": "НК РК 2026 ст. 718 п. 2 пп. 1 — перечень видов деятельности утверждает Правительство",
+      "used_by": [
+        "RentalIncomeTaxCalculator"
+      ],
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "verify_note": "calkcheck 2026-10-06 б6: калькулятор аренды рекомендовал самозанятого и для коммерческой недвижимости; теперь режим помечается недоступным. Источник перечня — сводки mybuh.kz / krisha.kz (2026); текст постановления на adilet не сверен.",
+      "year": "2026",
+      "change_frequency": "rare",
+      "aliases": [],
+      "audit_status": "clean",
+      "reverified": "2026-10-06",
+      "verified_date": "2026-10-06",
+      "verify_method": "calkcheck-primary",
+      "status": "current",
+      "official_value": "только сдача жилья (ОКЭД 68201); коммерческая недвижимость — нет",
+      "confidence": "medium"
     }
   ],
   "estimates_excluded": [

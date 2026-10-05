@@ -858,8 +858,9 @@ export default function RentOrBuyCalculator() {
             <h3 className="font-semibold text-gray-900 mb-2">{t('rent-vs-buy.marketContext.mortgageRates')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
               <div>{t('rent-vs-buy.marketContext.program720')}: <strong>7%</strong></div>
-              <div>{t('rent-vs-buy.marketContext.standardMortgage')}: <strong>12-16%</strong></div>
-              <div>{t('rent-vs-buy.marketContext.partnerPrograms')}: <strong>9-12%</strong></div>
+              {/* Рыночные ставки обновлены 06.10.2026: вторичка ~19–24% (ГЭСВ), прежние «12–16%» устарели. */}
+              <div>{t('rent-vs-buy.marketContext.standardMortgage')}: <strong>19–24%</strong></div>
+              <div>{t('rent-vs-buy.marketContext.partnerPrograms')}: <strong>7–9%</strong></div>
             </div>
           </div>
 

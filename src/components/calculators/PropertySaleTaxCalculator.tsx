@@ -29,7 +29,7 @@ export default function PropertySaleTaxCalculator() {
     { id: 'land', labelKey: 'property-sale-tax.typeLand', minOwnershipYears: 2, alwaysTaxable: false },
     { id: 'dacha', labelKey: 'property-sale-tax.typeDacha', minOwnershipYears: 2, alwaysTaxable: false },
     { id: 'garage', labelKey: 'property-sale-tax.typeGarage', minOwnershipYears: 2, alwaysTaxable: false },
-    // ТС: срок владения остаётся 1 год (ст. 331 НК РК, изменение 2026 касается только недвижимости)
+    // ТС: срок владения остаётся 1 год (ст. 384 НК РК, изменение 2026 касается только недвижимости)
     { id: 'car', labelKey: 'property-sale-tax.typeCar', minOwnershipYears: 1, alwaysTaxable: false },
     { id: 'commercial', labelKey: 'property-sale-tax.typeCommercial', minOwnershipYears: 0, alwaysTaxable: true },
   ];
@@ -45,7 +45,8 @@ export default function PropertySaleTaxCalculator() {
   const [purchasePrice, setPurchasePrice] = useState<string>('20000000');
   const [ownershipYears, setOwnershipYears] = useState<string>('0');
   const [ownershipMonths, setOwnershipMonths] = useState<string>('8');
-  const [isMainHome, setIsMainHome] = useState<boolean>(false);
+  // Галочки «Единственное жильё» больше нет: такой льготы в НК-2026 нет (ст. 383 — только срок владения),
+  // а на расчёт она и раньше не влияла.
   const [isInherited, setIsInherited] = useState<boolean>(false);
 
   // Срок декларации о доходах и имуществе (ФНО 270.00) — 15 сентября следующего года
@@ -143,7 +144,7 @@ export default function PropertySaleTaxCalculator() {
   const results = useMemo(
     computeResults,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedType, salePrice, purchasePrice, ownershipYears, ownershipMonths, isMainHome, isInherited]
+    [selectedType, salePrice, purchasePrice, ownershipYears, ownershipMonths, isInherited]
   );
 
   const formatCurrency = (num: number) => {
@@ -324,15 +325,6 @@ calk.kz`;
 
             {/* Checkboxes */}
             <div className="space-y-3">
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isMainHome}
-                  onChange={(e) => setIsMainHome(e.target.checked)}
-                  className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">{t('property-sale-tax.isMainHome')}</span>
-              </label>
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input
                   type="checkbox"

@@ -19,14 +19,18 @@ interface CityRates {
   outskirts: number;
 }
 
+// Базовые ставки, ₸ за м² в месяц. Откалиброваны 06.10.2026 по медианам krisha.kz на 20.09.2026
+// (2-комнатная ≈ 55 м² в «срединной зоне» ≈ медиана города): Алматы 230/350/500 тыс ₸ за 1/2/3-комн,
+// Астана 250/350/500, Шымкент 150/200/210, Караганда 160/220/280, Актобе 150/180/230, Атырау 180/250/250;
+// средняя по Алматы в июле 2026 — 5 814 ₸/м². Прежние ставки (Алматы 3 000 ₸/м²) занижали аренду вдвое.
 const cities: CityRates[] = [
-  { id: 'almaty', labelKey: 'fair-rental-price.cities.almaty', center: 4500, middle: 3000, outskirts: 2000 },
-  { id: 'astana', labelKey: 'fair-rental-price.cities.astana', center: 4000, middle: 2700, outskirts: 1800 },
-  { id: 'shymkent', labelKey: 'fair-rental-price.cities.shymkent', center: 2000, middle: 1500, outskirts: 1100 },
-  { id: 'karaganda', labelKey: 'fair-rental-price.cities.karaganda', center: 1800, middle: 1300, outskirts: 900 },
-  { id: 'aktobe', labelKey: 'fair-rental-price.cities.aktobe', center: 1900, middle: 1400, outskirts: 1000 },
-  { id: 'atyrau', labelKey: 'fair-rental-price.cities.atyrau', center: 2500, middle: 1800, outskirts: 1200 },
-  { id: 'other', labelKey: 'fair-rental-price.cities.other', center: 1500, middle: 1100, outskirts: 800 },
+  { id: 'almaty', labelKey: 'fair-rental-price.cities.almaty', center: 8000, middle: 6000, outskirts: 4500 },
+  { id: 'astana', labelKey: 'fair-rental-price.cities.astana', center: 7500, middle: 6000, outskirts: 4300 },
+  { id: 'shymkent', labelKey: 'fair-rental-price.cities.shymkent', center: 4800, middle: 3600, outskirts: 2700 },
+  { id: 'karaganda', labelKey: 'fair-rental-price.cities.karaganda', center: 5200, middle: 4000, outskirts: 3000 },
+  { id: 'aktobe', labelKey: 'fair-rental-price.cities.aktobe', center: 4300, middle: 3300, outskirts: 2500 },
+  { id: 'atyrau', labelKey: 'fair-rental-price.cities.atyrau', center: 5800, middle: 4500, outskirts: 3400 },
+  { id: 'other', labelKey: 'fair-rental-price.cities.other', center: 4200, middle: 3200, outskirts: 2400 },
 ];
 
 type Location = 'center' | 'middle' | 'outskirts';
