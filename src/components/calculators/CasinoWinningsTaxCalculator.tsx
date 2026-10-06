@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { toIsoDateLocal } from '../../utils/workingTime';
 
 interface WinningEntry {
   id: string;
@@ -26,7 +27,7 @@ export default function CasinoWinningsTaxCalculator() {
   const [winningAmount, setWinningAmount] = useState<string>('500000');
   const [stakeAmount, setStakeAmount] = useState<string>('50000');
   const [isResident, setIsResident] = useState<boolean>(true);
-  const [winningDate, setWinningDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [winningDate, setWinningDate] = useState<string>(toIsoDateLocal());
   const [locationInKz, setLocationInKz] = useState<boolean>(true);
   const [multipleMode, setMultipleMode] = useState<boolean>(false);
   const [winningEntries, setWinningEntries] = useState<WinningEntry[]>([
@@ -34,10 +35,20 @@ export default function CasinoWinningsTaxCalculator() {
   ]);
 
   const MRP_2026 = 4325;
-  // НК РК 2026: специального необлагаемого минимума по выигрышам нет.
-  // ИПН 10% удерживается у источника с чистого выигрыша (выигрыш − сумма ставки).
+  // НК РК 2026: у казино и букмекеров необлагаемого минимума нет (6 МРП — только для лотерей, ст. 436 пп. 12).
+  // База — чистый выигрыш (выигрыш − сумма ставки), ст. 21 пп. 17, ст. 379.
   const TAX_FREE_THRESHOLD = 0;
   const TAX_RATE = 0.10;
+  // Ст. 363 пп. 1: прогрессивная шкала для резидента — 10% с годового облагаемого дохода
+  // до 8 500 МРП (36 762 500 ₸) и 15% с превышения. Налоговый агент применяет её при выплате
+  // (ст. 440 п. 2). Раньше калькулятор брал плоские 10% с любой суммы (письмо пользователя, 06.10.2026).
+  // Нерезиденту — плоские 10% по азартным играм и пари (ст. 682 пп. 9).
+  const PROGRESSIVE_THRESHOLD = 8500 * MRP_2026;
+  const HIGH_RATE = 0.15;
+  const ipnOnWinnings = (base: number) =>
+    !isResident || base <= PROGRESSIVE_THRESHOLD
+      ? base * TAX_RATE
+      : PROGRESSIVE_THRESHOLD * TAX_RATE + (base - PROGRESSIVE_THRESHOLD) * HIGH_RATE;
 
   const calculateTax = (gross: number, stake: number) => {
     if (gross <= 0) {
@@ -51,6 +62,7 @@ export default function CasinoWinningsTaxCalculator() {
         effectiveRate: 0,
         isAboveThreshold: false,
         isTaxable: false,
+        isProgressive: false,
         requiresSelfDeclaration: false
       };
     }
@@ -60,7 +72,7 @@ export default function CasinoWinningsTaxCalculator() {
     // Облагается чистый выигрыш (выигрыш − ставка), без необлагаемого минимума.
     const taxableBase = Math.max(0, gross - totalStake);
     const isTaxable = taxableBase > 0;
-    const taxAmount = isTaxable ? taxableBase * TAX_RATE : 0;
+    const taxAmount = isTaxable ? ipnOnWinnings(taxableBase) : 0;
     const isAboveThreshold = isTaxable;
 
     const netAmount = gross - taxAmount;
@@ -78,6 +90,7 @@ export default function CasinoWinningsTaxCalculator() {
       effectiveRate: Number(effectiveRate.toFixed(2)),
       isAboveThreshold,
       isTaxable,
+      isProgressive: isResident && taxableBase > PROGRESSIVE_THRESHOLD,
       requiresSelfDeclaration
     };
   };
@@ -85,7 +98,7 @@ export default function CasinoWinningsTaxCalculator() {
   const calculateMultipleWinnings = () => {
     let totalGross = 0;
     let totalStake = 0;
-    let totalTax = 0;
+    let totalBase = 0;
 
     winningEntries.forEach(entry => {
       const gross = parseFloat(entry.amount) || 0;
@@ -94,9 +107,11 @@ export default function CasinoWinningsTaxCalculator() {
       totalGross += gross;
       totalStake += stake;
 
-      const taxableBase = Math.max(0, gross - stake);
-      totalTax += taxableBase * TAX_RATE;
+      totalBase += Math.max(0, gross - stake);
     });
+
+    // Шкала ст. 363 — по сумме за год, а не по каждому выигрышу отдельно.
+    const totalTax = ipnOnWinnings(totalBase);
 
     const netAmount = totalGross - totalTax;
     const effectiveRate = totalGross > 0 ? (totalTax / totalGross) * 100 : 0;
@@ -105,12 +120,13 @@ export default function CasinoWinningsTaxCalculator() {
       grossWinning: Math.round(totalGross),
       totalStake: Math.round(totalStake),
       taxFreeThreshold: TAX_FREE_THRESHOLD,
-      taxableBase: Math.round(totalGross - totalStake),
+      taxableBase: Math.round(totalBase),
       taxAmount: Math.round(totalTax),
       netAmount: Math.round(netAmount),
       effectiveRate: Number(effectiveRate.toFixed(2)),
       isAboveThreshold: totalTax > 0,
       isTaxable: totalTax > 0,
+      isProgressive: isResident && totalBase > PROGRESSIVE_THRESHOLD,
       requiresSelfDeclaration: !locationInKz
     };
   };
@@ -170,7 +186,7 @@ export default function CasinoWinningsTaxCalculator() {
     setIsResident(true);
     setLocationInKz(true);
     setMultipleMode(false);
-    setWinningDate(new Date().toISOString().split('T')[0]);
+    setWinningDate(toIsoDateLocal());
   };
 
   const generateExportData = () => {
@@ -485,7 +501,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
                   <span className="text-gray-600">{t('casino-winnings-tax.taxRate')}</span>
-                  <span className="font-semibold text-amber-600">10%</span>
+                  <span className="font-semibold text-amber-600">{results.isProgressive ? '10% / 15%' : '10%'}</span>
                 </div>
                 <div className="flex justify-between py-3 bg-amber-50 rounded-lg px-3 mt-2">
                   <span className="font-semibold text-gray-900">{t('casino-winnings-tax.taxToPay')}</span>
@@ -505,7 +521,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
               <div>
                 <h4 className="font-semibold text-green-900 mb-1">{t('casino-winnings-tax.notTaxable')}</h4>
                 <p className="text-sm text-green-700">
-                  Чистый выигрыш (выигрыш за вычетом суммы ставки) равен нулю — налогооблагаемой базы по ИПН нет.
+                  {t('casino-winnings-tax.notTaxableDesc')}
                 </p>
               </div>
             </div>
@@ -531,6 +547,16 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
                 <p className="text-sm text-blue-700">
                   {t('casino-winnings-tax.automaticWithholdingDesc')}
                 </p>
+              </div>
+            </div>
+          )}
+
+          {results.isTaxable && isResident && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start space-x-3">
+              <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-semibold text-amber-900 mb-1">{t('casino-winnings-tax.progressiveTitle')}</h4>
+                <p className="text-sm text-amber-800">{t('casino-winnings-tax.progressiveNote')}</p>
               </div>
             </div>
           )}
