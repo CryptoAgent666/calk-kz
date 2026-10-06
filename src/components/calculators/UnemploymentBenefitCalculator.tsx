@@ -10,6 +10,7 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { QuickAnswer } from '../ui/QuickAnswer';
 
 /** МЗП 2026 (закон о республиканском бюджете). Именованной константой, а не
  *  литералом в выражении: при смене МЗП поиск по MZP_2026 обязан находить
@@ -31,8 +32,11 @@ export default function UnemploymentBenefitCalculator() {
     incomeReplacementCoef: 0.45,
     experienceCoef: 0,
     monthlyBenefit: 0,
+    opvWithheld: 0,
+    netMonthly: 0,
     paymentPeriodMonths: 0,
     totalBenefit: 0,
+    netTotal: 0,
     isEligible: false,
     minRequiredExperience: 6
   };
@@ -108,14 +112,20 @@ export default function UnemploymentBenefitCalculator() {
     const monthlyBenefit = averageMonthlyIncome * incomeReplacementCoef * experienceCoef;
 
     const totalBenefit = monthlyBenefit * paymentPeriodMonths;
+    // СК ст. 117 п. 1: из выплаты удерживаются ОПВ 10% — на руки 90% начисленного.
+    const opvWithheld = Math.round(monthlyBenefit) * 0.1;
+    const netMonthly = Math.round(monthlyBenefit) - opvWithheld;
 
     return {
       averageMonthlyIncome: Math.round(averageMonthlyIncome),
       incomeReplacementCoef,
       experienceCoef,
       monthlyBenefit: Math.round(monthlyBenefit),
+      opvWithheld: Math.round(opvWithheld),
+      netMonthly: Math.round(netMonthly),
       paymentPeriodMonths,
       totalBenefit: Math.round(totalBenefit),
+      netTotal: Math.round(netMonthly) * paymentPeriodMonths,
       isEligible: true,
       minRequiredExperience: 6
     };
@@ -151,6 +161,7 @@ export default function UnemploymentBenefitCalculator() {
 
   return (
     <div className="max-w-6xl mx-auto">
+      <QuickAnswer calculatorId="unemployment" />
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
           <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
@@ -278,6 +289,16 @@ export default function UnemploymentBenefitCalculator() {
                   </div>
 
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="text-gray-600">{t('unemployment.opvWithheld')}</span>
+                    <span className="font-semibold text-gray-900">−{formatNumber(results.opvWithheld)}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="text-gray-600">{t('unemployment.netMonthly')}</span>
+                    <span className="font-semibold text-green-700">{formatNumber(results.netMonthly)}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <div className="flex items-center space-x-2">
                       <Calendar className="w-4 h-4 text-blue-600" />
                       <span className="text-gray-600">{t('unemployment.paymentPeriod')}</span>
@@ -296,7 +317,7 @@ export default function UnemploymentBenefitCalculator() {
                       <span className="text-xl font-bold text-green-700">{formatNumber(results.totalBenefit)}</span>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">{t('unemployment.forEntirePeriod')}</div>
+                  <div className="text-sm text-gray-600 mt-1">{t('unemployment.forEntirePeriod')} · {t('unemployment.netTotal')}: {formatNumber(results.netTotal)}</div>
                 </div>
               </div>
             </div>

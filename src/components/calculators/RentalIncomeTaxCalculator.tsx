@@ -61,8 +61,12 @@ export default function RentalIncomeTaxCalculator() {
     let socialPayments = 0;
 
     if (regime === 'individual') {
-      // ИПН 10% от арендной платы
-      incomeTax = taxableIncome * 0.10;
+      // ИПН декларанта по ст. 363 пп. 1 НК: 10% с годового облагаемого дохода до 8 500 МРП
+      // (36 762 500 ₸) и 15% с превышения. Раньше — плоские 10% с любой суммы (calkcheck 06.10.2026).
+      const IPN_THRESHOLD = 8500 * MRP;
+      incomeTax = taxableIncome <= IPN_THRESHOLD
+        ? taxableIncome * 0.10
+        : IPN_THRESHOLD * 0.10 + (taxableIncome - IPN_THRESHOLD) * 0.15;
       socialPayments = 0;
     } else if (regime === 'patent') {
       // Патентный СНР упразднён с 01.01.2026 → режим для самозанятых.

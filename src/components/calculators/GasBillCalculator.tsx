@@ -38,7 +38,7 @@ export default function GasBillCalculator() {
   };
 
   // Цены розничной реализации товарного газа для населения (1 группа),
-  // АО «QazaqGaz Aimaq», прайс с 01.08.2026, «с учётом тарифа на транспортировку».
+  // АО «QazaqGaz Aimaq», прайс с 01.10.2026 (сверено 06.10.2026), «с учётом тарифа на транспортировку».
   // Официальный прайс публикуется БЕЗ НДС — здесь приведено С НДС 16%, потому что
   // калькулятор показывает сумму к оплате потребителем.
   // Проверено Tier-2 23.08.2026: до этого все восемь значений были неверны, причём
@@ -48,13 +48,13 @@ export default function GasBillCalculator() {
     {
       id: 'astana',
       nameKey: 'calculators:gas.cityAstana',
-      tariffPerCubicMeter: 54.79, // 47 230,48 тг/1000 м3 без НДС
+      tariffPerCubicMeter: 54.81, // 47 250,00 тг/1000 м3 без НДС (с 01.10.2026)
       averageMonthlyConsumption: { apartment: 25, house: 45 }
     },
     {
       id: 'almaty',
       nameKey: 'calculators:gas.cityAlmaty',
-      tariffPerCubicMeter: 62.43, // 53 814,98 тг/1000 м3 без НДС
+      tariffPerCubicMeter: 62.75, // 54 095,11 тг/1000 м3 без НДС (с 01.10.2026)
       averageMonthlyConsumption: { apartment: 30, house: 55 }
     },
     {
@@ -89,7 +89,7 @@ export default function GasBillCalculator() {
       // Единой цены «для прочих регионов» не публикуется: QazaqGaz Aimaq утверждает
       // её отдельно по каждому филиалу. Здесь — среднее по шести филиалам выше;
       // в интерфейсе подписано как ориентир, а не как утверждённый тариф.
-      tariffPerCubicMeter: 44.13,
+      tariffPerCubicMeter: 44.18,
       averageMonthlyConsumption: { apartment: 30, house: 50 }
     }
   ];

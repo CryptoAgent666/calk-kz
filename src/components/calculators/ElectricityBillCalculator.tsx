@@ -39,50 +39,56 @@ export default function ElectricityBillCalculator() {
     recommendationKey: ''
   };
 
-  // Тарифы обновлены для 2026 года (включая НДС 16%)
-  // Алматы — по данным АО «Алатау Жарық Компаниясы» — «Энергосбыт»
-  // Остальные города — приблизительные значения, сверяйте с вашим поставщиком
+  // Тарифы с НДС 16% (calkcheck 06.10.2026, б8):
+  // Алматы — «Алатау жарық компаниясы» — «Энергосбыт», с 12.09.2026: 29,55 / 39,23 / 49,04 без НДС
+  //   (bes.media). Было 31,85 / 42,10 / 52,63 — до повышения.
+  // Астана — с 01.06.2026 (электроплита 20,21 / 29,09 / 36,36, без плиты 21,39 / 29,09 / 36,36 без НДС;
+  //   inbusiness.kz, 26.05.2026). Было 33,18 / 43,86 / 54,83 — на ~40% выше факта. На 1 октября 2026
+  //   заявлено новое повышение (bes.media, 24.09.2026) — пересмотреть, когда утвердят.
+  // Шымкент — «Оңтүстік Жарық Транзит», утверждено с 01.08.2025 (24,248 / 25,424 / 31,976 / 39,9728
+  //   с НДС 12%), пересчитано на НДС 16%. Было 36,77 / 48,47 / 60,61.
+  // Прочие регионы — ориентир, сверяйте с вашим поставщиком.
   const cityTariffs: CityTariff[] = [
     {
       id: 'astana',
       nameKey: 'calculators:electricity.cityAstana',
       electricStove: [
-        { min: 0, max: 90, rate: 33.18, descriptionKey: 'calculators:electricity.tier1Electric90' },
-        { min: 90, max: 180, rate: 43.86, descriptionKey: 'calculators:electricity.tier2Electric90_180' },
-        { min: 180, max: Infinity, rate: 54.83, descriptionKey: 'calculators:electricity.tier3Electric180' }
+        { min: 0, max: 90, rate: 23.44, descriptionKey: 'calculators:electricity.tier1Electric90' },
+        { min: 90, max: 180, rate: 33.74, descriptionKey: 'calculators:electricity.tier2Electric90_180' },
+        { min: 180, max: Infinity, rate: 42.18, descriptionKey: 'calculators:electricity.tier3Electric180' }
       ],
       gasStove: [
-        { min: 0, max: 70, rate: 33.18, descriptionKey: 'calculators:electricity.tier1Gas70' },
-        { min: 70, max: 140, rate: 43.86, descriptionKey: 'calculators:electricity.tier2Gas70_140' },
-        { min: 140, max: Infinity, rate: 54.83, descriptionKey: 'calculators:electricity.tier3Gas140' }
+        { min: 0, max: 70, rate: 24.81, descriptionKey: 'calculators:electricity.tier1Gas70' },
+        { min: 70, max: 140, rate: 33.74, descriptionKey: 'calculators:electricity.tier2Gas70_140' },
+        { min: 140, max: Infinity, rate: 42.18, descriptionKey: 'calculators:electricity.tier3Gas140' }
       ]
     },
     {
       id: 'almaty',
       nameKey: 'calculators:electricity.cityAlmaty',
       electricStove: [
-        { min: 0, max: 100, rate: 31.85, descriptionKey: 'calculators:electricity.tier1Electric100' },
-        { min: 100, max: 200, rate: 42.10, descriptionKey: 'calculators:electricity.tier2Electric100_200' },
-        { min: 200, max: Infinity, rate: 52.63, descriptionKey: 'calculators:electricity.tier3Electric200' }
+        { min: 0, max: 100, rate: 34.28, descriptionKey: 'calculators:electricity.tier1Electric100' },
+        { min: 100, max: 200, rate: 45.51, descriptionKey: 'calculators:electricity.tier2Electric100_200' },
+        { min: 200, max: Infinity, rate: 56.89, descriptionKey: 'calculators:electricity.tier3Electric200' }
       ],
       gasStove: [
-        { min: 0, max: 80, rate: 31.85, descriptionKey: 'calculators:electricity.tier1Gas80' },
-        { min: 80, max: 160, rate: 42.10, descriptionKey: 'calculators:electricity.tier2Gas80_160' },
-        { min: 160, max: Infinity, rate: 52.63, descriptionKey: 'calculators:electricity.tier3Gas160' }
+        { min: 0, max: 80, rate: 34.28, descriptionKey: 'calculators:electricity.tier1Gas80' },
+        { min: 80, max: 160, rate: 45.51, descriptionKey: 'calculators:electricity.tier2Gas80_160' },
+        { min: 160, max: Infinity, rate: 56.89, descriptionKey: 'calculators:electricity.tier3Gas160' }
       ]
     },
     {
       id: 'shymkent',
       nameKey: 'calculators:electricity.cityShymkent',
       electricStove: [
-        { min: 0, max: 85, rate: 36.77, descriptionKey: 'calculators:electricity.tier1Electric85' },
-        { min: 85, max: 170, rate: 48.47, descriptionKey: 'calculators:electricity.tier2Electric85_170' },
-        { min: 170, max: Infinity, rate: 60.61, descriptionKey: 'calculators:electricity.tier3Electric170' }
+        { min: 0, max: 85, rate: 25.11, descriptionKey: 'calculators:electricity.tier1Electric85' },
+        { min: 85, max: 170, rate: 33.12, descriptionKey: 'calculators:electricity.tier2Electric85_170' },
+        { min: 170, max: Infinity, rate: 41.40, descriptionKey: 'calculators:electricity.tier3Electric170' }
       ],
       gasStove: [
-        { min: 0, max: 65, rate: 36.77, descriptionKey: 'calculators:electricity.tier1Gas65' },
-        { min: 65, max: 130, rate: 48.47, descriptionKey: 'calculators:electricity.tier2Gas65_130' },
-        { min: 130, max: Infinity, rate: 60.61, descriptionKey: 'calculators:electricity.tier3Gas130' }
+        { min: 0, max: 65, rate: 26.33, descriptionKey: 'calculators:electricity.tier1Gas65' },
+        { min: 65, max: 130, rate: 33.12, descriptionKey: 'calculators:electricity.tier2Gas65_130' },
+        { min: 130, max: Infinity, rate: 41.40, descriptionKey: 'calculators:electricity.tier3Gas130' }
       ]
     },
     {

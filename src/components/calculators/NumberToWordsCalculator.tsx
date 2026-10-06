@@ -964,11 +964,11 @@ export default function NumberToWordsCalculator() {
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex justify-between py-1">
                 <span>{t('number-to-words.minNumber')}:</span>
-                <span className="font-mono text-xs">-999,999,999,999,999</span>
+                <span className="font-mono text-xs">−999 999 999 999 999</span>
               </div>
               <div className="flex justify-between py-1">
                 <span>{t('number-to-words.maxNumber')}:</span>
-                <span className="font-mono text-xs">999,999,999,999,999</span>
+                <span className="font-mono text-xs">999 999 999 999 999</span>
               </div>
               <div className="flex justify-between py-1">
                 <span>{t('number-to-words.fractionalPart')}:</span>

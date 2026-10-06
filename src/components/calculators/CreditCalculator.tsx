@@ -495,10 +495,6 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
                 <span className="font-medium text-green-700">22-35%</span>
               </div>
               <div className="flex justify-between">
-                <span>{t('credit.kaspiRed')}</span>
-                <span className="font-medium text-green-700">39-49%</span>
-              </div>
-              <div className="flex justify-between">
                 <span>{t('credit.autoLoan')}</span>
                 <span className="font-medium text-green-700">19-28%</span>
               </div>

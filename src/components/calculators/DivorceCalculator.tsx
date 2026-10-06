@@ -154,7 +154,7 @@ export default function DivorceCalculator() {
             </div>
             {results.propertyFee > 0 && (
               <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-                <span>{t('divorce.propertyFee')} (1%)</span>
+                <span>{t('divorce.propertyFee')}</span>
                 <span className="font-semibold">{formatNumber(results.propertyFee)}</span>
               </div>
             )}

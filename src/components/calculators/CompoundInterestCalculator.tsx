@@ -268,8 +268,8 @@ ${results.yearlyData.map(data =>
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>10,000 {currencies.find(c => c.code === currency)?.symbol}</span>
-                  <span>10,000,000 {currencies.find(c => c.code === currency)?.symbol}</span>
+                  <span>10 000 {currencies.find(c => c.code === currency)?.symbol}</span>
+                  <span>10 000 000 {currencies.find(c => c.code === currency)?.symbol}</span>
                 </div>
               </div>
 
@@ -293,7 +293,7 @@ ${results.yearlyData.map(data =>
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
                   <span>0</span>
-                  <span>500,000 {currencies.find(c => c.code === currency)?.symbol}</span>
+                  <span>500 000 {currencies.find(c => c.code === currency)?.symbol}</span>
                 </div>
               </div>
 

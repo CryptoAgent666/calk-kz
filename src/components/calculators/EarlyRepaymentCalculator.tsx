@@ -133,16 +133,23 @@ export default function EarlyRepaymentCalculator() {
       if (logArg <= 0) {
         return EMPTY_RESULTS;
       }
-      newTerm = Math.ceil(Math.log(logArg) / Math.log(1 + r));
-      newTotalPayment = newMonthlyPayment * newTerm;
-      newTotalInterest = newTotalPayment - newBalance;
+      newTerm = Math.ceil(Math.log(logArg) / Math.log(1 + r) - 1e-9);
+      // Последний платёж неполный: остаток после (newTerm − 1) платежей плюс проценты за месяц.
+      // Раньше все newTerm платежей считались полными — переплата завышалась (5 млн / 16% / 60 мес,
+      // досрочно 500 000: на ~80 000 ₸).
+      const k = newTerm - 1;
+      const balanceBeforeLast = newBalance * Math.pow(1 + r, k) - newMonthlyPayment * (Math.pow(1 + r, k) - 1) / r;
+      const paidByPayments = newMonthlyPayment * k + balanceBeforeLast * (1 + r);
+      newTotalInterest = paidByPayments - newBalance;
+      // «Всего выплат (после)» включает сам досрочный взнос — иначе сравнение с «до» нечестное.
+      newTotalPayment = paidByPayments + D;
       timeSavedMonths = N - newTerm;
     } else {
       newTerm = N;
       const powRNewTerm = Math.pow(1 + r, newTerm);
       newMonthlyPayment = newBalance * (r * powRNewTerm) / (powRNewTerm - 1);
-      newTotalPayment = newMonthlyPayment * newTerm;
-      newTotalInterest = newTotalPayment - newBalance;
+      newTotalInterest = newMonthlyPayment * newTerm - newBalance;
+      newTotalPayment = newMonthlyPayment * newTerm + D;
       timeSavedMonths = 0;
     }
 
