@@ -148,7 +148,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
         data: [
           { label: t('credit.loanAmount'), value: formatNumber(loanAmount) },
           { label: t('credit.interestRate'), value: `${interestRate}%` },
-          { label: t('credit.loanTerm'), value: `${loanTerm} мес.` },
+          { label: t('credit.loanTerm'), value: `${loanTerm} ${i18n.language === 'kk' ? 'ай' : 'мес.'}` },
         ]
       },
       {
@@ -284,7 +284,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
                 max={120}
                 step={6}
                 label={t('credit.loanTerm')}
-                formatValue={(v) => `${v} мес.`}
+                formatValue={(v) => `${v} ${i18n.language === 'kk' ? 'ай' : 'мес.'}`}
                 color="#8b5cf6"
               />
             </div>
