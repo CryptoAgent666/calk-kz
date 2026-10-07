@@ -70,9 +70,11 @@ export default function KurbanCalculator() {
   };
 
   // Дата плавает по лунному календарю и объявляется ДУМК — обновлять ежегодно.
-  // Ключ раньше назывался date2025, а хранил уже дату 2026 г.
+  // Ключ раньше назывался date2025, а хранил уже дату 2026 г. С 07.10.2026 — ближайший
+  // Курбан-айт 2027: расчётно 10 Зуль-хиджа 1448 = 16 мая (без серпа 6 мая — 17-е).
   const KURBAN_DATE = t('kurban-sacrifice.holidayDate');
-  const CURRENT_YEAR = 2026;
+  // Год цен в сравнении по регионам — рынок Курбана-2026, не год ближайшего праздника.
+  const PRICES_YEAR = 2026;
 
   // Цены Курбан-2026 (сверено 05.2026: zakon/inform/tengrinews — страна 80–120 тыс.,
   // Алматы типично 100–110, Астана 90–170, Шымкент от 60, сёла от 45–60; пай в корове:
@@ -327,13 +329,13 @@ export default function KurbanCalculator() {
           <Star className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
           <div>
             <h3 className="text-lg font-semibold text-red-900 mb-2">
-              {t('kurban-sacrifice.holidayTitle', { year: CURRENT_YEAR })}
+              {t('kurban-sacrifice.holidayTitle')}
             </h3>
             <div className="text-red-800 space-y-2">
               <p>{t('kurban-sacrifice.holidayDesc1')}</p>
               <p>{t('kurban-sacrifice.holidayDesc2')}</p>
               <p className="text-sm">
-                <strong>{t('kurban-sacrifice.dateLabel', { year: CURRENT_YEAR })}</strong> {KURBAN_DATE} •
+                <strong>{t('kurban-sacrifice.dateLabel')}</strong> {KURBAN_DATE} •
                 <strong>{t('kurban-sacrifice.periodLabel')}</strong> {t('kurban-sacrifice.periodValue')}
               </p>
             </div>
@@ -595,7 +597,7 @@ export default function KurbanCalculator() {
       </div>
 
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('kurban-sacrifice.regionalComparison', { year: CURRENT_YEAR })}</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('kurban-sacrifice.regionalComparison', { year: PRICES_YEAR })}</h2>
 
         <div className="overflow-x-auto">
           <table className="w-full">

@@ -20,8 +20,11 @@ export default function RamadanSadaqahCalculator() {
   const [missedFastingDays, setMissedFastingDays] = useState<string>('0');
   const [alternativeCalculation, setAlternativeCalculation] = useState<'flour' | 'dates' | 'raisins'>('flour');
 
-  // Константы на 2026 год
-  const CURRENT_YEAR = 2026;
+  // Ближайший Рамадан — 2027 (расчётно с 8–9 февраля: в 2026 ДУМК начал пост 19.02).
+  // Ставки — последние объявленные ДУМК (2026). Ставки 2027 ДУМК объявит перед Рамаданом
+  // (в 2026 — 11.02): заменить, 735/4 000 перенести в историю, убрать ratesPendingNote.
+  const RAMADAN_YEAR = 2027;
+  const RATES_YEAR = 2026;
   const DUMK_FITR_RATE_2026 = 735; // 735 тенге — ставка ДУМК на 2026 год
   const DUMK_FIDYA_RATE_2026 = 4000; // 4000 тенге в день — ставка ДУМК 2026
 
@@ -86,7 +89,7 @@ export default function RamadanSadaqahCalculator() {
       alternativeFitrAmount,
       recommendedMinimum,
       ramadanInfo: {
-        currentYear: CURRENT_YEAR,
+        currentYear: RAMADAN_YEAR,
         estimatedRamadanStart: t('ramadan-sadaqah.estimatedRamadanStart'),
         ramadanDays: 30
       }
@@ -180,9 +183,10 @@ export default function RamadanSadaqahCalculator() {
                 <strong>{t('ramadan-sadaqah.fidyaSadaqah')}</strong> {t('ramadan-sadaqah.fidyaSadaqahExplanation')}
               </p>
               <p className="text-sm">
-                <strong>{t('ramadan-sadaqah.ratesForYear', { year: CURRENT_YEAR })}</strong> {t('ramadan-sadaqah.fitrSadaqah')} {formatNumber(DUMK_FITR_RATE_2026)} {t('ramadan-sadaqah.perPerson')} •
+                <strong>{t('ramadan-sadaqah.ratesForYear', { year: RATES_YEAR })}</strong> {t('ramadan-sadaqah.fitrSadaqah')} {formatNumber(DUMK_FITR_RATE_2026)} {t('ramadan-sadaqah.perPerson')} •
                 {t('ramadan-sadaqah.fidyaSadaqah')} {formatNumber(DUMK_FIDYA_RATE_2026)} {t('ramadan-sadaqah.perDay')}
               </p>
+              <p className="text-sm">{t('ramadan-sadaqah.ratesPendingNote', { year: RAMADAN_YEAR, ratesYear: RATES_YEAR })}</p>
             </div>
           </div>
         </div>
@@ -283,7 +287,7 @@ export default function RamadanSadaqahCalculator() {
                 </div>
 
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <h3 className="text-sm font-medium text-blue-900 mb-2">{t('ramadan-sadaqah.fitrRateForYear', { year: CURRENT_YEAR })}</h3>
+                  <h3 className="text-sm font-medium text-blue-900 mb-2">{t('ramadan-sadaqah.fitrRateForYear', { year: RATES_YEAR })}</h3>
                   <div className="text-sm text-blue-800 space-y-1">
                     <div>• {t('ramadan-sadaqah.baseRateDUMK', { rate: formatNumber(DUMK_FITR_RATE_2026) })}</div>
                     <div>• {t('ramadan-sadaqah.baseFlourCost')}</div>
@@ -439,7 +443,7 @@ export default function RamadanSadaqahCalculator() {
                     <div className="text-yellow-800 text-sm space-y-1">
                       <p>• <strong>{t('ramadan-sadaqah.fitrSadaqah')}:</strong> {t('ramadan-sadaqah.beforePrayerDeadline')}</p>
                       <p>• <strong>{t('ramadan-sadaqah.fidyaSadaqah')}:</strong> {t('ramadan-sadaqah.anytimePayment')}</p>
-                      <p>• <strong>{t('ramadan-sadaqah.ramadanYear', { year: CURRENT_YEAR })}:</strong> {t('ramadan-sadaqah.approximately')} {results.ramadanInfo.estimatedRamadanStart}</p>
+                      <p>• <strong>{t('ramadan-sadaqah.ramadanYear', { year: RAMADAN_YEAR })}:</strong> {t('ramadan-sadaqah.approximately')} {results.ramadanInfo.estimatedRamadanStart}</p>
                     </div>
                   </div>
                 </div>
@@ -907,7 +911,7 @@ export default function RamadanSadaqahCalculator() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-3">{t('ramadan-sadaqah.ramadanYear', { year: CURRENT_YEAR })}</h3>
+            <h3 className="font-semibold text-blue-900 mb-3">{t('ramadan-sadaqah.ramadanYear', { year: RAMADAN_YEAR })}</h3>
             <div className="text-sm text-blue-800 space-y-2">
               <p><strong>{t('ramadan-sadaqah.estimatedStart')}</strong> {results.ramadanInfo.estimatedRamadanStart}</p>
               <p><strong>{t('ramadan-sadaqah.duration')}</strong> {t('ramadan-sadaqah.durationDays')}</p>
