@@ -12,6 +12,7 @@ import { useMounted } from '../../hooks/useMounted';
 interface TimezoneInfo {
   id: string;
   name: string;
+  nameKk?: string; // если казахское название отличается
   tz: string; // IANA
   emoji: string;
 }
@@ -20,12 +21,12 @@ const TIMEZONES: TimezoneInfo[] = [
   { id: 'almaty', name: 'Алматы', tz: 'Asia/Almaty', emoji: '🇰🇿' },
   { id: 'astana', name: 'Астана', tz: 'Asia/Almaty', emoji: '🇰🇿' },
   { id: 'atyrau', name: 'Атырау', tz: 'Asia/Atyrau', emoji: '🇰🇿' },
-  { id: 'moscow', name: 'Москва', tz: 'Europe/Moscow', emoji: '🇷🇺' },
-  { id: 'bishkek', name: 'Бишкек', tz: 'Asia/Bishkek', emoji: '🇰🇬' },
+  { id: 'moscow', name: 'Москва', nameKk: 'Мәскеу', tz: 'Europe/Moscow', emoji: '🇷🇺' },
+  { id: 'bishkek', name: 'Бишкек', nameKk: 'Бішкек', tz: 'Asia/Bishkek', emoji: '🇰🇬' },
   { id: 'tashkent', name: 'Ташкент', tz: 'Asia/Tashkent', emoji: '🇺🇿' },
-  { id: 'beijing', name: 'Пекин', tz: 'Asia/Shanghai', emoji: '🇨🇳' },
+  { id: 'beijing', name: 'Пекин', nameKk: 'Бейжің', tz: 'Asia/Shanghai', emoji: '🇨🇳' },
   { id: 'dubai', name: 'Дубай', tz: 'Asia/Dubai', emoji: '🇦🇪' },
-  { id: 'istanbul', name: 'Стамбул', tz: 'Europe/Istanbul', emoji: '🇹🇷' },
+  { id: 'istanbul', name: 'Стамбул', nameKk: 'Ыстамбұл', tz: 'Europe/Istanbul', emoji: '🇹🇷' },
   { id: 'london', name: 'Лондон', tz: 'Europe/London', emoji: '🇬🇧' },
   { id: 'paris', name: 'Париж', tz: 'Europe/Paris', emoji: '🇫🇷' },
   { id: 'newyork', name: 'Нью-Йорк', tz: 'America/New_York', emoji: '🇺🇸' },
@@ -53,7 +54,8 @@ function getOffset(tz: string, now: Date): string {
 }
 
 export default function TimezoneCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
+  const cityName = (c: TimezoneInfo) => (i18n.language === 'kk' && c.nameKk) || c.name;
   // Живые часы: до маунта — плейсхолдеры, иначе статика (время пререндера) ≠
   // первого клиентского рендера (время визита) → #425 + #423 на каждом визите.
   const mounted = useMounted();
@@ -119,7 +121,7 @@ export default function TimezoneCalculator() {
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">{tz.emoji}</span>
                 <div>
-                  <div className="font-semibold text-gray-900">{tz.name}</div>
+                  <div className="font-semibold text-gray-900">{cityName(tz)}</div>
                   <div className="text-xs text-gray-500">{mounted ? getOffset(tz.tz, displayDate) : 'UTC'}</div>
                 </div>
               </div>
@@ -138,7 +140,7 @@ export default function TimezoneCalculator() {
               <button key={tz.id} onClick={() => toggleTimezone(tz.id)}
                 className="flex items-center gap-1 px-3 py-2 bg-gray-50 hover:bg-sky-50 rounded-lg text-sm border border-gray-200">
                 <span>{tz.emoji}</span>
-                <span>{tz.name}</span>
+                <span>{cityName(tz)}</span>
                 <Plus className="w-3 h-3" />
               </button>
             ))}

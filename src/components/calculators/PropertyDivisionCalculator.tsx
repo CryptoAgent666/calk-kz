@@ -188,7 +188,7 @@ export default function PropertyDivisionCalculator() {
                 <span className="text-sm font-medium text-blue-900">{t('property-division.husband')} ({results.husbandShare}%)</span>
               </div>
               <div className="text-xl font-bold text-blue-700">{formatNumber(results.husbandGets)}</div>
-              <div className="text-xs text-blue-700 mt-1">− долги: {formatNumber(results.husbandDebts)}</div>
+              <div className="text-xs text-blue-700 mt-1">− {t('property-division.debtsShort')}: {formatNumber(results.husbandDebts)}</div>
             </div>
             <div className="bg-pink-50 rounded-lg p-4 border border-pink-200">
               <div className="flex items-center gap-1 mb-1">
@@ -196,7 +196,7 @@ export default function PropertyDivisionCalculator() {
                 <span className="text-sm font-medium text-pink-900">{t('property-division.wife')} ({results.wifeShare}%)</span>
               </div>
               <div className="text-xl font-bold text-pink-700">{formatNumber(results.wifeGets)}</div>
-              <div className="text-xs text-pink-700 mt-1">− долги: {formatNumber(results.wifeDebts)}</div>
+              <div className="text-xs text-pink-700 mt-1">− {t('property-division.debtsShort')}: {formatNumber(results.wifeDebts)}</div>
             </div>
           </div>
 

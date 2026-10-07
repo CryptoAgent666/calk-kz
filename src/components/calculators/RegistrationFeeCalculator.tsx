@@ -206,7 +206,7 @@ export default function RegistrationFeeCalculator() {
                 min={1990}
                 max={CURRENT_YEAR}
                 step={1}
-                formatValue={(v) => `${v} г.`}
+                formatValue={(v) => `${v} ${i18n.language === 'kk' ? 'ж.' : 'г.'}`}
                 color="#3b82f6"
               />
               <input
@@ -424,7 +424,7 @@ export default function RegistrationFeeCalculator() {
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — алымдар' : 'Налоговый кодекс РК — сборы', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: i18n.language === 'kk' ? 'СпецЦОН — КӨ тіркеу' : 'СпецЦОН — регистрация ТС', url: 'https://egov.kz/' },
+          { title: i18n.language === 'kk' ? 'Арнайы ХҚКО — КҚ тіркеу' : 'СпецЦОН — регистрация ТС', url: 'https://egov.kz/' },
         ]}
       />
 
@@ -433,7 +433,7 @@ export default function RegistrationFeeCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="registration-fee"
-        calculatorTitle="Калькулятор регистрационного сбора"
+        calculatorTitle={t('registration-fee.title')}
       />
       <LastUpdated calculatorId="registration-fee" />
     </div>

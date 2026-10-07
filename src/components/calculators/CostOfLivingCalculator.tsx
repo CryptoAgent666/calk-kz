@@ -190,13 +190,13 @@ export default function CostOfLivingCalculator() {
           </div>
           {diff !== 0 ? (
             <div className={`text-2xl font-bold ${diff > 0 ? 'text-red-700' : 'text-green-700'}`}>
-              {t(c1.labelKey)} {diff > 0 ? t('cost-living.moreExpensive') : t('cost-living.cheaper')} {t('cost-living.by')} {Math.abs(Number(diffPercent))}%
+              {t(diff > 0 ? 'cost-living.diffMore' : 'cost-living.diffLess', { city: t(c1.labelKey), pct: Math.abs(Number(diffPercent)) })}
             </div>
           ) : (
             <div className="text-2xl font-bold text-gray-700">{t('cost-living.equal')}</div>
           )}
           <div className="text-sm text-gray-600 mt-2">
-            {formatCurrency(result1.total)} vs {formatCurrency(result2.total)} / {t('cost-living.perMonth')}
+            {formatCurrency(result1.total)} vs {formatCurrency(result2.total)} {t('cost-living.perMonthWord')}
           </div>
         </div>
       </div>
@@ -279,7 +279,7 @@ export default function CostOfLivingCalculator() {
           sources={getSources('cost-of-living')}
         />
 
-      <LegalDisclaimer type="social" />
+      <LegalDisclaimer type="finance" />
       <ExpertBlock />
       <EmbedWidget calculatorId="cost-living" calculatorTitle={t('cost-living.heading')} />
       <LastUpdated calculatorId="cost-of-living" />

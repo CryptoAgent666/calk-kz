@@ -307,7 +307,7 @@ export default function WaterBillCalculator() {
               </div>
               {waterConsumption && parseFloat(waterConsumption) > 0 && (
                 <div className="text-sm text-gray-600">
-                  {t('water.averageTariff')}: {formatRate(results.averageRate)} {t('water.forVolume')} {waterConsumption} м³
+                  {t('water.averageTariff')}: {formatRate(results.averageRate)} {t('water.forVolumeOf', { volume: waterConsumption })}
                 </div>
               )}
             </div>
@@ -441,7 +441,7 @@ export default function WaterBillCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="water-bill"
-        calculatorTitle="Калькулятор воды"
+        calculatorTitle={t('water.title')}
       />
       <LastUpdated calculatorId="water" />
     </div>

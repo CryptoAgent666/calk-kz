@@ -17,16 +17,16 @@ interface Card {
   annualFee: number;
   cashback: { grocery: number; restaurant: number; fuel: number; online: number; other: number };
   maxMonthly: number; // лимит кэшбека в месяц
-  bonusNote?: string;
+  bonusNoteKey?: string;
 }
 
 const CARDS: Card[] = [
   { id: 'kaspiGold', name: 'Kaspi Gold', annualFee: 0,
     cashback: { grocery: 0, restaurant: 0, fuel: 0, online: 0, other: 0 },
-    maxMonthly: 0, bonusNote: 'Бонусы рассрочки + бонусы Kaspi (до 30%)' },
+    maxMonthly: 0, bonusNoteKey: 'cashback.bonusNotes.kaspiGold' },
   { id: 'kaspiRed', name: 'Kaspi Red', annualFee: 0,
     cashback: { grocery: 0, restaurant: 0, fuel: 0, online: 0, other: 0 },
-    maxMonthly: 0, bonusNote: 'Рассрочка 3-24 мес' },
+    maxMonthly: 0, bonusNoteKey: 'cashback.bonusNotes.kaspiRed' },
   { id: 'halykBank', name: 'Halyk Bonus', annualFee: 3000,
     cashback: { grocery: 5, restaurant: 10, fuel: 3, online: 3, other: 1 },
     maxMonthly: 30000 },
@@ -136,8 +136,8 @@ export default function CashbackCalculator() {
               </div>
               <div className="text-xs text-gray-600 space-y-0.5">
                 <div>{t('cashback.monthly')}: {formatNumber(card.monthlyCashback)}</div>
-                {card.annualFee > 0 && <div>{t('cashback.fee')}: {formatNumber(card.annualFee)}/год</div>}
-                {card.bonusNote && <div className="italic">ℹ️ {card.bonusNote}</div>}
+                {card.annualFee > 0 && <div>{t('cashback.fee')}: {formatNumber(card.annualFee)}{t('cashback.perYear')}</div>}
+                {card.bonusNoteKey && <div className="italic">ℹ️ {t(card.bonusNoteKey)}</div>}
               </div>
             </div>
           ))}
@@ -154,7 +154,7 @@ export default function CashbackCalculator() {
             title: t('cashback.title'),
             sections: [{ title: t('cashback.resultsTitle'),
               data: results.cardResults.slice(0, 3).map(c => ({
-                label: c.name, value: `${formatNumber(c.yearlyCashback)}/год`
+                label: c.name, value: `${formatNumber(c.yearlyCashback)}${t('cashback.perYear')}`
               }))
             }],
             footer: 'Calk.kz'

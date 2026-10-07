@@ -62,6 +62,8 @@ const COURT_FEE_RULE: Record<Category, FeeRule> = {
 
 export default function MoralDamageCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  const isKk = i18n.language === 'kk';
+  const mrpUnit = isKk ? 'АЕК' : 'МРП';
   const [category, setCategory] = useState<Category>('labor');
   const [severity, setSeverity] = useState<number>(50); // 0-100 (низкая-высокая)
   const [hasEvidence, setHasEvidence] = useState<boolean>(true);
@@ -144,7 +146,7 @@ export default function MoralDamageCalculator() {
                   className={`p-3 rounded-lg border text-left ${category === c ? 'bg-violet-50 border-violet-500' : 'bg-white border-gray-300'}`}>
                   <div className="text-sm font-medium">{t(`moral-damage.categories.${c}`)}</div>
                   <div className="text-xs text-gray-500">
-                    {CATEGORY_RANGES[c].min}-{CATEGORY_RANGES[c].max} МРП ({formatNumber(CATEGORY_RANGES[c].avg * MRP_2026)} ср.)
+                    {CATEGORY_RANGES[c].min}-{CATEGORY_RANGES[c].max} {mrpUnit} ({formatNumber(CATEGORY_RANGES[c].avg * MRP_2026)} {isKk ? 'орт.' : 'ср.'})
                   </div>
                 </button>
               ))}
@@ -186,14 +188,14 @@ export default function MoralDamageCalculator() {
           <div className="bg-gradient-to-r from-violet-50 to-purple-50 rounded-lg p-6 border-2 border-violet-300">
             <div className="text-sm text-gray-600">{t('moral-damage.estimatedAmount')}</div>
             <div className="text-4xl font-bold text-violet-700">{formatNumber(results.estimatedKZT)}</div>
-            <div className="text-xs text-gray-500 mt-1">= {results.estimatedMRP} МРП</div>
+            <div className="text-xs text-gray-500 mt-1">= {results.estimatedMRP} {mrpUnit}</div>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-4 text-sm space-y-1">
             <div className="font-medium mb-1">{t('moral-damage.rangeInfo')}</div>
-            <div>{t('moral-damage.min')}: {formatNumber(results.rangeMin * MRP_2026)} ({results.rangeMin} МРП)</div>
-            <div>{t('moral-damage.avg')}: {formatNumber(results.rangeAvg * MRP_2026)} ({results.rangeAvg} МРП)</div>
-            <div>{t('moral-damage.max')}: {formatNumber(results.rangeMax * MRP_2026)} ({results.rangeMax} МРП)</div>
+            <div>{t('moral-damage.min')}: {formatNumber(results.rangeMin * MRP_2026)} ({results.rangeMin} {mrpUnit})</div>
+            <div>{t('moral-damage.avg')}: {formatNumber(results.rangeAvg * MRP_2026)} ({results.rangeAvg} {mrpUnit})</div>
+            <div>{t('moral-damage.max')}: {formatNumber(results.rangeMax * MRP_2026)} ({results.rangeMax} {mrpUnit})</div>
           </div>
 
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
@@ -223,7 +225,7 @@ export default function MoralDamageCalculator() {
             subtitle: t(`moral-damage.categories.${category}`),
             sections: [{ title: t('moral-damage.resultsTitle'), data: [
               { label: t('moral-damage.estimatedAmount'), value: formatNumber(results.estimatedKZT) },
-              { label: t('moral-damage.rangeInfo'), value: `${results.rangeMin}-${results.rangeMax} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` },
+              { label: t('moral-damage.rangeInfo'), value: `${results.rangeMin}-${results.rangeMax} ${mrpUnit}` },
               { label: t('moral-damage.courtFee'), value: formatNumber(results.courtFee) },
             ]}],
             footer: 'Calk.kz'

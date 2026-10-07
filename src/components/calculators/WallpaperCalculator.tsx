@@ -14,11 +14,11 @@ import { getSources } from '../../data/calculatorSources';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type RollSize = '0.53x10' | '0.53x15' | '1.06x10' | '1.06x25';
-const ROLLS: Record<RollSize, { width: number; length: number; label: string }> = {
-  '0.53x10': { width: 0.53, length: 10, label: '0.53 × 10 м (стандарт)' },
-  '0.53x15': { width: 0.53, length: 15, label: '0.53 × 15 м' },
-  '1.06x10': { width: 1.06, length: 10, label: '1.06 × 10 м (метровые)' },
-  '1.06x25': { width: 1.06, length: 25, label: '1.06 × 25 м' },
+const ROLLS: Record<RollSize, { width: number; length: number; noteKey?: string }> = {
+  '0.53x10': { width: 0.53, length: 10, noteKey: 'wallpaper.rollStandard' },
+  '0.53x15': { width: 0.53, length: 15 },
+  '1.06x10': { width: 1.06, length: 10, noteKey: 'wallpaper.rollMeter' },
+  '1.06x25': { width: 1.06, length: 25 },
 };
 
 export default function WallpaperCalculator() {
@@ -77,6 +77,10 @@ export default function WallpaperCalculator() {
     };
   }, [length, width, height, doors, windows, rollSize, pattern, rollPrice]);
 
+  const rollsWord = results
+    ? (i18n.language === 'kk' ? t('wallpaper.rollUnit') : pluralizeRu(results.rollsNeeded, 'рулон', 'рулона', 'рулонов'))
+    : '';
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8 flex items-center space-x-3">
@@ -112,7 +116,7 @@ export default function WallpaperCalculator() {
             <select value={rollSize} onChange={e => setRollSize(e.target.value as RollSize)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg">
               {(Object.keys(ROLLS) as RollSize[]).map(r => (
-                <option key={r} value={r}>{ROLLS[r].label}</option>
+                <option key={r} value={r}>{ROLLS[r].width} × {ROLLS[r].length} м{ROLLS[r].noteKey ? ` (${t(ROLLS[r].noteKey)})` : ''}</option>
               ))}
             </select>
           </div>
@@ -134,7 +138,7 @@ export default function WallpaperCalculator() {
             <>
               <div className="bg-gradient-to-r from-purple-50 to-fuchsia-50 rounded-lg p-6 border border-purple-200">
                 <div className="text-sm text-gray-600">{t('wallpaper.rollsNeeded')}</div>
-                <div className="text-5xl font-bold text-purple-700">{results.rollsNeeded} рулонов</div>
+                <div className="text-5xl font-bold text-purple-700">{results.rollsNeeded} {rollsWord}</div>
                 <div className="text-xs text-gray-500 mt-1">{t('wallpaper.wallArea')}: {results.wallArea} м²</div>
               </div>
 
@@ -153,7 +157,7 @@ export default function WallpaperCalculator() {
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>{t('wallpaper.stripsPerRoll')}</span>
-                  <span className="font-semibold">{results.stripsPerRoll} шт</span>
+                  <span className="font-semibold">{results.stripsPerRoll} {t('wallpaper.strips')}</span>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>🧪 {t('wallpaper.glue')}</span>
@@ -176,7 +180,7 @@ export default function WallpaperCalculator() {
             data={{
               title: t('wallpaper.title'),
               sections: [{ title: t('wallpaper.resultsTitle'), data: [
-                { label: t('wallpaper.rollsNeeded'), value: `${results.rollsNeeded} рулонов` },
+                { label: t('wallpaper.rollsNeeded'), value: `${results.rollsNeeded} ${rollsWord}` },
                 { label: t('wallpaper.wallArea'), value: `${results.wallArea} м²` },
                 { label: t('wallpaper.totalCost'), value: `${results.totalCost.toLocaleString(NUMBER_LOCALE)} ₸` },
               ]}],

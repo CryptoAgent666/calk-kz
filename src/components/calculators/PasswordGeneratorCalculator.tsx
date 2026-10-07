@@ -7,7 +7,8 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
-import { pluralizeRu } from '../../utils/pluralize';
+import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
@@ -66,7 +67,7 @@ function calculateStrength(pw: string): StrengthInfo {
   return { score, label: 'veryStrong', bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-900', icon: 'text-emerald-600', bar: 'bg-emerald-500' };
 }
 
-function estimateCrackTime(pw: string): string {
+function estimateCrackTime(pw: string, lang: string): string {
   let charset = 0;
   if (/[a-z]/.test(pw)) charset += 26;
   if (/[A-Z]/.test(pw)) charset += 26;
@@ -77,37 +78,38 @@ function estimateCrackTime(pw: string): string {
   const combinations = Math.pow(charset, pw.length);
   // Предположим 10 млрд попыток/сек (modern GPU)
   const seconds = combinations / 10_000_000_000;
+  const kk = lang === 'kk';
+  const unit = (n: number, one: string, few: string, many: string) => `${n} ${pluralize(lang, n, one, few, many)}`;
 
-  if (seconds < 1) return 'мгновенно';
+  if (seconds < 1) return kk ? 'лезде' : 'мгновенно';
   if (seconds < 60) {
     const n = Math.round(seconds);
-    return `${n} ${pluralizeRu(n, 'секунда', 'секунды', 'секунд')}`;
+    return kk ? `${n} секунд` : unit(n, 'секунда', 'секунды', 'секунд');
   }
   if (seconds < 3600) {
     const n = Math.round(seconds / 60);
-    return `${n} ${pluralizeRu(n, 'минута', 'минуты', 'минут')}`;
+    return kk ? `${n} минут` : unit(n, 'минута', 'минуты', 'минут');
   }
   if (seconds < 86400) {
-    const n = Math.round(seconds / 3600);
-    return `${n} ${pluralizeRu(n, 'час', 'часа', 'часов')}`;
+    return unit(Math.round(seconds / 3600), 'час', 'часа', 'часов');
   }
   if (seconds < 31536000) {
-    const n = Math.round(seconds / 86400);
-    return `${n} ${pluralizeRu(n, 'день', 'дня', 'дней')}`;
+    return unit(Math.round(seconds / 86400), 'день', 'дня', 'дней');
   }
-  if (seconds < 31536000 * 1000) {
+  if (seconds < 31536000 * 1e6) {
+    // до миллиона лет — целым числом («16 000 лет»), иначе выходило «0 млн лет»
     const n = Math.round(seconds / 31536000);
-    return `${n} ${pluralizeRu(n, 'год', 'года', 'лет')}`;
+    return `${n.toLocaleString(NUMBER_LOCALE)} ${pluralize(lang, n, 'год', 'года', 'лет')}`;
   }
   if (seconds < 31536000 * 1e9) {
     const n = parseFloat((seconds / 31536000 / 1e6).toFixed(1));
-    return `${n} млн ${pluralizeRu(n, 'год', 'года', 'лет')}`;
+    return `${n} млн ${pluralize(lang, n, 'год', 'года', 'лет')}`;
   }
-  return 'миллиарды лет';
+  return kk ? 'миллиардтаған жыл' : 'миллиарды лет';
 }
 
 export default function PasswordGeneratorCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [length, setLength] = useState<number>(16);
   const [useUpper, setUseUpper] = useState<boolean>(true);
   const [useLower, setUseLower] = useState<boolean>(true);
@@ -134,7 +136,7 @@ export default function PasswordGeneratorCalculator() {
   }, [length, useUpper, useLower, useDigits, useSymbols, excludeSimilar, count]);
 
   const strength = useMemo(() => calculateStrength(password), [password]);
-  const crackTime = useMemo(() => estimateCrackTime(password), [password]);
+  const crackTime = useMemo(() => estimateCrackTime(password, i18n.language), [password, i18n.language]);
 
   const handleCopy = async (pw: string) => {
     await navigator.clipboard.writeText(pw);

@@ -237,7 +237,7 @@ export default function RamadanSadaqahCalculator() {
                     min={1}
                     max={20}
                     step={1}
-                    formatValue={(v) => `${v} чел.`}
+                    formatValue={(v) => `${v} ${i18n.language === 'kk' ? 'адам' : 'чел.'}`}
                     color="#10b981"
                   />
                   <input
@@ -518,7 +518,7 @@ export default function RamadanSadaqahCalculator() {
               </div>
               <div className="flex justify-between py-2 px-3 bg-gray-50 rounded">
                 <span>{t('ramadan-sadaqah.year2024')}</span>
-                <span className="font-medium">3400 ₸</span>
+                <span className="font-medium">3 400 ₸</span>
               </div>
             </div>
           </div>
@@ -992,26 +992,26 @@ export default function RamadanSadaqahCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт Рамадан',
-              subtitle: calculationType === 'fitr' ? 'Фитр-садака' : calculationType === 'fidya' ? 'Фидия' : 'Фитр и Фидия',
+              title: t('ramadan-sadaqah.title'),
+              subtitle: calculationType === 'fitr' ? t('ramadan-sadaqah.fitrSadaqah') : calculationType === 'fidya' ? t('ramadan-sadaqah.fidyaSadaqah') : t('ramadan-sadaqah.bothTypes'),
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('ramadan-sadaqah.parameters'),
                   data: [
-                    { label: 'Членов семьи', value: familyMembers },
-                    { label: 'Пропущенных дней', value: missedFastingDays || '0' },
+                    { label: t('ramadan-sadaqah.familyMembersLabel'), value: familyMembers },
+                    { label: t('ramadan-sadaqah.missedDaysLabel'), value: missedFastingDays || '0' },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('ramadan-sadaqah.calculationResults'),
                   data: [
-                    { label: 'Фитр-садака', value: `${results.fitrSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Фидия', value: `${results.fidyaSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Итого', value: `${results.totalSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('ramadan-sadaqah.fitrSadaqah'), value: `${results.fitrSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('ramadan-sadaqah.fidyaSadaqah'), value: `${results.fidyaSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('ramadan-sadaqah.totalSadaqah'), value: `${results.totalSadaqahAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="ramadan-calculation"
           />
@@ -1040,7 +1040,7 @@ export default function RamadanSadaqahCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="ramadan-sadaqah"
-        calculatorTitle="Калькулятор садаки"
+        calculatorTitle={t('ramadan-sadaqah.title')}
       />
       <LastUpdated calculatorId="ramadan-sadaqah" />
     </div>

@@ -49,6 +49,7 @@ function subtractMinutes(hours: number, minutes: number, subMin: number): { h: n
 
 export default function SleepCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  const hoursAbbr = i18n.language === 'kk' ? 'сағ' : 'ч';
   const [age, setAge] = useState<string>('30');
   const [mode, setMode] = useState<'wakeup' | 'bedtime'>('wakeup');
   const [wakeupTime, setWakeupTime] = useState<string>('07:00');
@@ -111,7 +112,7 @@ export default function SleepCalculator() {
         <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-5 border border-indigo-200">
           <div className="text-sm text-gray-600">{t(`sleep.groups.${ageGroup.key}`)}</div>
           <div className="text-3xl font-bold text-indigo-700">{ageGroup.hours} {t('sleep.hoursPerDay')}</div>
-          <div className="text-xs text-gray-500 mt-1">{t('sleep.recommended')}: {ageGroup.recommended} ч</div>
+          <div className="text-xs text-gray-500 mt-1">{t('sleep.recommended')}: {ageGroup.recommended} {hoursAbbr}</div>
         </div>
 
         <div className="flex gap-2">
@@ -146,7 +147,7 @@ export default function SleepCalculator() {
                 <div key={i} className={`p-4 rounded-lg border ${isOptimal ? 'bg-green-50 border-green-400' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl font-bold font-mono">{opt.time}</div>
                   <div className="text-xs text-gray-600 mt-1">{opt.cycles} {t('sleep.cycles')}</div>
-                  <div className="text-xs text-gray-500">{opt.hours} ч</div>
+                  <div className="text-xs text-gray-500">{opt.hours} {hoursAbbr}</div>
                   {isOptimal && <div className="text-xs text-green-700 font-medium mt-1">✓ {t('sleep.optimal')}</div>}
                 </div>
               );
@@ -165,7 +166,7 @@ export default function SleepCalculator() {
             title: t('sleep.title'),
             subtitle: t(`sleep.groups.${ageGroup.key}`),
             sections: [{ title: t('sleep.results'), data: results.options.map(o => ({
-              label: `${o.cycles} ${t('sleep.cycles')} (${o.hours} ч)`, value: o.time
+              label: `${o.cycles} ${t('sleep.cycles')} (${o.hours} ${hoursAbbr})`, value: o.time
             }))}],
             footer: 'Calk.kz'
           }}

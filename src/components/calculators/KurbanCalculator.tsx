@@ -1255,24 +1255,24 @@ export default function KurbanCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт Курбан',
-              subtitle: `Регион: ${region}`,
+              title: t('kurban-sacrifice.title'),
+              subtitle: `${t('kurban-sacrifice.region')}: ${results.regionName}`,
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('kurban-sacrifice.selectedAnimal'),
                   data: [
-                    { label: 'Регион', value: region },
-                    { label: 'Тип животного', value: results.animalDescription },
+                    { label: t('kurban-sacrifice.region'), value: results.regionName },
+                    { label: t('kurban-sacrifice.type'), value: results.animalDescription },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('kurban-sacrifice.costTitle'),
                   data: [
-                    { label: 'Стоимость', value: `${results.totalCost.max.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('kurban-sacrifice.totalCost'), value: `${results.totalCost.max.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="kurban-calculation"
           />
@@ -1300,7 +1300,7 @@ export default function KurbanCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="kurban"
-        calculatorTitle="Калькулятор Курбана"
+        calculatorTitle={t('kurban-sacrifice.title')}
       />
       <LastUpdated calculatorId="kurban-sacrifice" />
     </div>

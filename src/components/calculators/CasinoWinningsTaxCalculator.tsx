@@ -767,7 +767,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
       <ExpertBlock />
       <EmbedWidget
         calculatorId="casino-winnings-tax"
-        calculatorTitle="Калькулятор налога на выигрыш"
+        calculatorTitle={t('casino-winnings-tax.title')}
       />
       <MethodologySection calculatorId="casino-winnings-tax" />
       <CalculatorExamples calculatorId="casino-winnings-tax" />

@@ -15,6 +15,12 @@ interface TimeConversionResult {
   description: string;
 }
 
+// Порядковые числительные в родительном падеже: «четверть десятого», «половина первого»
+const RU_HOUR_GENITIVE: Record<number, string> = {
+  1: 'первого', 2: 'второго', 3: 'третьего', 4: 'четвёртого', 5: 'пятого', 6: 'шестого',
+  7: 'седьмого', 8: 'восьмого', 9: 'девятого', 10: 'десятого', 11: 'одиннадцатого', 12: 'двенадцатого'
+};
+
 interface ConversionHistory {
   id: string;
   time: string;
@@ -27,7 +33,7 @@ interface ConversionHistory {
 export default function TimeToWordsCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [inputTime, setInputTime] = useState<string>('14:30');
-  const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
+  const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>(i18n.language === 'kk' ? 'kz' : 'ru');
   const [timeFormat, setTimeFormat] = useState<'24h' | '12h'>('24h');
   const [includeSeconds, setIncludeSeconds] = useState<boolean>(false);
   const [style, setStyle] = useState<'formal' | 'colloquial' | 'both'>('formal');
@@ -77,7 +83,7 @@ export default function TimeToWordsCalculator() {
         minute: 'минут',
         second: 'секунд'
       },
-      periods: { am: 'таңертең', pm: 'кешкі', noon: 'түс', midnight: 'түн жарысы' }
+      periods: { am: 'таңертең', pm: 'кешкі', noon: 'түс', midnight: 'түн жарымы' }
     },
     en: {
       hours: {
@@ -228,14 +234,17 @@ export default function TimeToWordsCalculator() {
         }
       } else {
         // Разговорные варианты для 24-часового
+        // «половина третьего» в 14:30: следующий час по 12-часовому циферблату,
+        // порядковое в родительном; «без четверти» — количественное («без четверти три»)
+        const nextHour12 = (hours + 1) % 12 || 12;
         if (minutes === 0) {
-          colloquial = `${hoursWord} ${hours === 1 ? 'час ровно' : 'часов ровно'}`;
+          colloquial = `${hoursWord} ${getWordFormRu(hours, dict.forms.hour)} ровно`;
         } else if (minutes === 15) {
-          colloquial = `четверть ${hours + 1 <= 23 ? dict.hours[hours + 1] : 'первого'}`;
+          colloquial = `четверть ${RU_HOUR_GENITIVE[nextHour12]}`;
         } else if (minutes === 30) {
-          colloquial = `половина ${hours + 1 <= 23 ? dict.hours[hours + 1] : 'первого'}`;
+          colloquial = `половина ${RU_HOUR_GENITIVE[nextHour12]}`;
         } else if (minutes === 45) {
-          colloquial = `без четверти ${hours + 1 <= 23 ? dict.hours[hours + 1] : 'час'}`;
+          colloquial = `без четверти ${nextHour12 === 1 ? 'час' : dict.hours[nextHour12]}`;
         } else {
           colloquial = formal;
         }
@@ -1098,19 +1107,19 @@ export default function TimeToWordsCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Время прописью',
-              subtitle: 'Конвертация времени',
+              title: t('time-to-words.timeInWords'),
+              subtitle: `${inputTime} — ${language === 'ru' ? t('time-to-words.russian') : language === 'kz' ? t('time-to-words.kazakh') : t('time-to-words.english')}`,
               sections: [
                 {
-                  title: 'Результат',
+                  title: t('time-to-words.result'),
                   data: [
-                    { label: 'Время прописью', value: results.words },
-                    { label: 'Формальное', value: results.formal },
-                    { label: 'Разговорное', value: results.colloquial },
+                    { label: t('time-to-words.timeInWords'), value: results.words },
+                    { label: t('time-to-words.formalStyle'), value: results.formal },
+                    { label: t('time-to-words.colloquialStyle'), value: results.colloquial },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="time-to-words-result"
           />
@@ -1135,7 +1144,7 @@ export default function TimeToWordsCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="time-to-words"
-        calculatorTitle="Время прописью"
+        calculatorTitle={t('time-to-words.timeInWords')}
       />
       <LastUpdated calculatorId="time-to-words" />
     </div>
