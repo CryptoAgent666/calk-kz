@@ -20,6 +20,18 @@ const JOINT_V_M = 0.010; // вертикальный
 // Шов на клею — 2 мм (там же, п. 4.7.6.4; пункт о силикатных блоках, отдельного для газобетона в СП РК нет)
 const JOINT_GLUE_M = 0.002;
 
+// Раствор для кирпича — норма 0,25 м³ на 1 м³ кладки (М75–М100, 1:4)
+const BRICK_MORTAR_M3 = 0.25;
+const CEMENT_KG_PER_M3 = 320;  // кг цемента М400 на 1 м³ раствора
+const SAND_KG_PER_M3 = 1200;
+const CEMENT_PRICE = 55;       // ₸/кг
+const SAND_PRICE = 8;          // ₸/кг
+// Клей для газоблока: 1,2–1,4 кг сухой смеси на 1 м² шва на каждый мм толщины
+// (техописание Ceresit CT 21 для Казахстана), берём верхнюю границу
+const GLUE_KG_PER_M2_MM = 1.4;
+const GLUE_BAG_KG = 25;
+const GLUE_BAG_PRICE = 1800;   // ₸ за мешок 25 кг (Алматы, 10.2026: 1 100–1 850 ₸)
+
 interface BrickSpec {
   length: number;  // мм
   width: number;
@@ -85,6 +97,21 @@ function perSquareMeter(spec: BrickSpec, wall: WallOption): number {
   return wall.across / ((spec.length / 1000 + jv) * (spec.height / 1000 + jh));
 }
 
+// Раствор, м³ на 1 м³ кладки. Керамзитоблок — по геометрии: всё, что в стене не блок, — шов
+// (швы 12/10 мм: ≈ 0,084 в стене 190 мм, ≈ 0,107 в стене 390 мм).
+// Норма кирпича 0,25 давала ему раствора в 2–3 раза больше.
+function mortarPerM3(masonry: Masonry, spec: BrickSpec, wall: WallOption, perM2: number): number {
+  if (masonry === 'brick') return BRICK_MORTAR_M3;
+  const blockM3 = (spec.length / 1000) * (spec.width / 1000) * (spec.height / 1000);
+  return 1 - perM2 * blockM3 / (wall.mm / 1000);
+}
+
+// Клей, кг на 1 м³ кладки в один блок. Площадь швов в 1 м³ = 1/L + 1/H (м²) — формула техописания CT 21.
+// Для 600×200 со швом 2 мм — 18,7 кг, от толщины стены не зависит
+function glueKgPerM3(spec: BrickSpec): number {
+  return (1000 / spec.length + 1000 / spec.height) * JOINT_GLUE_M * 1000 * GLUE_KG_PER_M2_MM;
+}
+
 export default function BrickCalculator() {
   const { t } = useTranslation('calculators');
   const [brickType, setBrickType] = useState<BrickType>('single');
@@ -99,6 +126,9 @@ export default function BrickCalculator() {
   const wall = WALLS[masonry].find(o => o.mm === wallMm[masonry]) ?? WALLS[masonry][0];
   const spec = sizedSpec(brickType, wall.mm);
   const perM2 = perSquareMeter(spec, wall);
+  const glue = !!spec.glue;
+  const mortarRate = glue ? 0 : mortarPerM3(masonry, spec, wall, perM2); // м³ на 1 м³ кладки
+  const glueRate = glue ? glueKgPerM3(spec) : 0;                         // кг на 1 м³ кладки
 
   const results = useMemo(() => {
     const l = parseFloat(wallLength) || 0;
@@ -119,15 +149,18 @@ export default function BrickCalculator() {
     // на 2–8 % меньше: шт/м³ закладывает шов и по толщине, а в стене в полкирпича продольного шва нет.
     const brickCount = Math.ceil(wallArea * perM2 * (1 + r / 100));
 
-    // Раствор: ~0.25 м³ на 1 м³ кладки
-    const mortarVolume = volume * 0.25;
-    const cementKg = mortarVolume * 320; // кг цемента на 1 м³ раствора
-    const sandKg = mortarVolume * 1200;
+    // Кирпич и керамзитоблок — на цементно-песчаном растворе, газоблок — на клею
+    const mortarVolume = volume * mortarRate;
+    const cementKg = mortarVolume * CEMENT_KG_PER_M3;
+    const sandKg = mortarVolume * SAND_KG_PER_M3;
+    const glueKg = volume * glueRate;
+    const glueBags = Math.ceil(glueKg / GLUE_BAG_KG);
 
     const brickPrice = brickCount * spec.price;
-    const cementPrice = cementKg * 55;
-    const sandPrice = sandKg * 8;
-    const totalPrice = brickPrice + cementPrice + sandPrice;
+    const cementPrice = cementKg * CEMENT_PRICE;
+    const sandPrice = sandKg * SAND_PRICE;
+    const gluePrice = glueBags * GLUE_BAG_PRICE;
+    const totalPrice = brickPrice + cementPrice + sandPrice + gluePrice;
 
     // Вес стены (ориентир для фундамента)
     const density = brickType === 'gasBlock' ? 500 : brickType === 'block' ? 1200 : 1800; // кг/м³
@@ -141,11 +174,13 @@ export default function BrickCalculator() {
       cementKg: Math.round(cementKg),
       sandKg: Math.round(sandKg),
       cementBags: Math.ceil(cementKg / 50),
+      glueKg: Math.round(glueKg),
+      glueBags,
       brickPrice: Math.round(brickPrice),
       totalPrice: Math.round(totalPrice),
       wallWeight: Math.round(wallWeight),
     };
-  }, [brickType, wall, perM2, spec.price, wallLength, wallHeight, doors, windows, reserve]);
+  }, [brickType, wall, perM2, mortarRate, glueRate, spec.price, wallLength, wallHeight, doors, windows, reserve]);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -226,17 +261,31 @@ export default function BrickCalculator() {
                   <span>🧱 {t('brick.bricks')}</span>
                   <span className="font-semibold">{results.brickPrice.toLocaleString(NUMBER_LOCALE)} ₸</span>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-                  <span>🥣 {t('brick.mortar')}</span>
-                  <span className="font-semibold">{results.mortarVolume} м³</span>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-                  <span>🏭 {t('brick.cement')}</span>
-                  <span className="font-semibold">{results.cementKg} кг ({results.cementBags} {t('brick.bags')})</span>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-                  <span>🏖 {t('brick.sand')}</span>
-                  <span className="font-semibold">{results.sandKg} кг</span>
+                {glue ? (
+                  <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
+                    <span>🪣 {t('brick.glue')}</span>
+                    <span className="font-semibold">{t('brick.glueAmount', { kg: results.glueKg.toLocaleString(NUMBER_LOCALE), bags: results.glueBags })}</span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
+                      <span>🥣 {t('brick.mortar')}</span>
+                      <span className="font-semibold">{results.mortarVolume} м³</span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
+                      <span>🏭 {t('brick.cement')}</span>
+                      <span className="font-semibold">{results.cementKg} кг ({results.cementBags} {t('brick.bags')})</span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
+                      <span>🏖 {t('brick.sand')}</span>
+                      <span className="font-semibold">{results.sandKg} кг</span>
+                    </div>
+                  </>
+                )}
+                <div className="text-xs text-gray-500">
+                  {glue
+                    ? t('brick.glueRate', { kg: glueRate.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 1 }) })
+                    : t('brick.mortarRate', { m3: mortarRate.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 3 }) })}
                 </div>
               </div>
 
@@ -261,8 +310,12 @@ export default function BrickCalculator() {
               subtitle: t(`brick.types.${brickType}`),
               sections: [{ title: t('brick.resultsTitle'), data: [
                 { label: t('brick.brickCount'), value: `${results.brickCount} шт.` },
-                { label: t('brick.cement'), value: `${results.cementKg} кг` },
-                { label: t('brick.sand'), value: `${results.sandKg} кг` },
+                ...(glue ? [
+                  { label: t('brick.glue'), value: t('brick.glueAmount', { kg: results.glueKg.toLocaleString(NUMBER_LOCALE), bags: results.glueBags }) },
+                ] : [
+                  { label: t('brick.cement'), value: `${results.cementKg} кг` },
+                  { label: t('brick.sand'), value: `${results.sandKg} кг` },
+                ]),
                 { label: t('brick.estimatedCost'), value: `${results.totalPrice.toLocaleString(NUMBER_LOCALE)} ₸` },
               ]}],
               footer: 'Calk.kz'

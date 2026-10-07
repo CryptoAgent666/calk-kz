@@ -758,7 +758,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'brick',
         title: 'Калькулятор кирпича',
-        description: 'Расчёт количества кирпича, газоблока, раствора и стоимости стены с учётом проёмов и толщины кладки',
+        description: 'Расчёт количества кирпича, газоблока, раствора, клея и стоимости стены с учётом проёмов и толщины кладки',
         category: 'construction',
         icon: 'Layers',
         component: React.lazy(() => import('../components/calculators/BrickCalculator'))

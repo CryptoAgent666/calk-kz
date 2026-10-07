@@ -170,6 +170,28 @@
         "calculators.json",
         "QuickAnswer"
       ]
+    },
+    {
+      "was": "1-2 мешка 25 кг",
+      "now": "18,7 кг клея на 1 м³ при шве 2 мм (Ceresit CT 21: 1,2–1,4 кг/м² на 1 мм), меньше мешка",
+      "what": "gasblock_glue_bags_per_m3",
+      "only": [
+        "calculators.json",
+        "calculatorMethodology",
+        "QuickAnswer",
+        "BrickCalculator"
+      ]
+    },
+    {
+      "was": "25 кг 1-2 қап",
+      "now": "18,7 кг желім 1 м³ қалауға, жік 2 мм (Ceresit CT 21: 1 мм-ге 1,2–1,4 кг/м²)",
+      "what": "gasblock_glue_bags_per_m3_kk",
+      "only": [
+        "calculators.json",
+        "calculatorMethodology",
+        "QuickAnswer",
+        "BrickCalculator"
+      ]
     }
   ]
 }
