@@ -777,7 +777,7 @@ export default function LuxuryTaxCalculator() {
           { question: t('luxury-tax.faq.q5'), answer: t('luxury-tax.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — сәнді салық' : 'Налоговый кодекс РК — налог на роскошь', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — сәнді салық' : 'Налоговый кодекс РК — налог на роскошь', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'МКД — мүлік салықтары' : 'КГД — имущественные налоги', url: 'https://kgd.gov.kz/' },
         ]}
       />

@@ -499,6 +499,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
                       {t('discount.originalPrice')}
                     </label>
                     <RangeSlider
+                ariaLabel={t('discount.originalPrice')}
                       value={Math.max(0, originalPriceValue)}
                       onChange={(val) => setOriginalPrice(String(val))}
                       min={1000}

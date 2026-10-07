@@ -537,7 +537,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
       <FAQSection
         items={faqItems}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Банктер туралы заңы' : 'Закон о банках РК', url: 'https://online.zakon.kz/document/?doc_id=31547359' },
+          { title: i18n.language === 'kk' ? 'ҚР Банктер туралы заңы' : 'Закон о банках РК', url: 'https://adilet.zan.kz/rus/docs/Z950002444_' },
           { title: i18n.language === 'kk' ? 'ПКБ — Несиелік тарих' : 'ПКБ — Кредитная история', url: 'https://www.pkb.kz/' },
         ]}
       />

@@ -247,6 +247,7 @@ export default function IPSimplifiedCalculator() {
                   {t('ip-simplified.semiannualIncome')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('ip-simplified.semiannualIncome')}
                   value={parseFloat(semiannualIncome) || 0}
                   onChange={(val) => setSemiannualIncome(String(val))}
                   min={500000}
@@ -691,7 +692,7 @@ export default function IPSimplifiedCalculator() {
           { question: t('ip-simplified.faq.q5'), answer: t('ip-simplified.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — АСР' : 'Налоговый кодекс РК — СНР', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — АСР' : 'Налоговый кодекс РК — СНР', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'Egov.kz — ЖК тіркеу' : 'Egov.kz — Регистрация ИП', url: 'https://egov.kz/' },
         ]}
       />

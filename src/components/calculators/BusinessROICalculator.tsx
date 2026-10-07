@@ -265,6 +265,7 @@ calk.kz`;
                 {t('business-roi.clientsPerMonth')}
               </label>
               <RangeSlider
+                ariaLabel={t('business-roi.clientsPerMonth')}
                 value={parseFloat(clientsPerMonth) || 0}
                 onChange={(val) => setClientsPerMonth(String(val))}
                 min={1}

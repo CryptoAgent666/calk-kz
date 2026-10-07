@@ -245,6 +245,7 @@ ${totalsText}`;
                 {t('salary.grossSalary')}
               </label>
               <RangeSlider
+                ariaLabel={t('salary.grossSalary')}
                 value={parseFloat(grossSalary) || 0}
                 onChange={(val) => setGrossSalary(String(val))}
                 min={100000}
@@ -747,7 +748,7 @@ ${totalsText}`;
           { question: t('salary.faq.q5'), answer: t('salary.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'БЖЗҚ — Зейнетақы аударымдары' : 'ЕНПФ — Пенсионные отчисления', url: 'https://enpf.kz/' },
         ]}
       />

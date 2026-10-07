@@ -356,6 +356,7 @@ export default function PensionAnnuityCalculator() {
                 {t('pension-annuity.inputs.accumulations.label')}
               </label>
               <RangeSlider
+                ariaLabel={t('pension-annuity.inputs.accumulations.label')}
                 value={parseFloat(currentAccumulations) || 0}
                 onChange={(val) => setCurrentAccumulations(String(val))}
                 min={1000000}

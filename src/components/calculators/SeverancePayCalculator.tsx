@@ -232,6 +232,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                 {t('severance-pay.monthlyIncomeLabel')}
               </label>
               <RangeSlider
+                ariaLabel={t('severance-pay.monthlyIncomeLabel')}
                 value={parseFloat(monthlyIncome) || 0}
                 onChange={(val) => setMonthlyIncome(String(val))}
                 min={100000}

@@ -192,6 +192,7 @@ export default function CryptoTaxCalculator() {
                   {t('crypto-tax.buyPrice')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('crypto-tax.buyPrice')}
                   value={parseFloat(buyPrice) || 0}
                   onChange={(val) => setBuyPrice(String(val))}
                   min={0}

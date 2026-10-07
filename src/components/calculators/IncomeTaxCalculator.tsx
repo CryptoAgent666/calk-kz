@@ -469,8 +469,8 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
       <FAQSection
         items={faqItems}
         sources={[
-          { title: t('income-tax.sources.taxCode'), url: 'https://online.zakon.kz/document/?doc_id=36148637' },
-          { title: t('income-tax.sources.opvLaw'), url: 'https://online.zakon.kz/document/?doc_id=1013016' },
+          { title: t('income-tax.sources.taxCode'), url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
+          { title: t('income-tax.sources.opvLaw'), url: 'https://adilet.zan.kz/rus/docs/K2300000224' },
         ]}
       />
 

@@ -278,6 +278,7 @@ export default function PropertyTaxCalculator() {
                 {t('property-tax.totalArea')}
               </label>
               <RangeSlider
+                ariaLabel={t('property-tax.totalArea')}
                 value={parseFloat(area) || 0}
                 onChange={(val) => setArea(String(val))}
                 min={10}

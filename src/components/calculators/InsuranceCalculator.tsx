@@ -21,6 +21,7 @@ import {
   ogpoTerritoryCoeff
 } from '../../data/ogpoCoefficients';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
 
 interface Driver {
@@ -251,6 +252,8 @@ export default function InsuranceCalculator() {
         </div>
       </div>
 
+      <QuickAnswer calculatorId="insurance-premium" />
+
       <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-6">
         <div className="flex items-start space-x-3">
           <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -395,6 +398,7 @@ export default function InsuranceCalculator() {
                   {t('insurance-premium.manufactureYearLabel')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('insurance-premium.manufactureYearLabel')}
                   value={parseInt(manufactureYear) || 2020}
                   onChange={(val) => setManufactureYear(String(val))}
                   min={1990}
@@ -747,7 +751,7 @@ export default function InsuranceCalculator() {
           { question: t('insurance-premium.faq.q5'), answer: t('insurance-premium.faq.a5') }
         ]}
         sources={[
-          { title: t('insurance-premium.sources.law'), url: 'https://online.zakon.kz/document/?doc_id=1044080' },
+          { title: t('insurance-premium.sources.law'), url: 'https://adilet.zan.kz/rus/docs/Z030000446_' },
           { title: t('insurance-premium.sources.finreg'), url: 'https://finreg.kz/' },
         ]}
       />

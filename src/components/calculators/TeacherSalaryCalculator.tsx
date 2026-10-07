@@ -310,11 +310,12 @@ export default function TeacherSalaryCalculator() {
 
             {/* Experience */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="teacher-experience" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('teacher-salary.experience')}
               </label>
               <div className="relative">
                 <input
+                  id="teacher-experience"
                   type="number"
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
@@ -330,11 +331,12 @@ export default function TeacherSalaryCalculator() {
 
             {/* Hours per week */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="teacher-hoursPerWeek" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('teacher-salary.hoursPerWeek')}
               </label>
               <div className="relative">
                 <input
+                  id="teacher-hoursPerWeek"
                   type="number"
                   value={hoursPerWeek}
                   onChange={(e) => setHoursPerWeek(e.target.value)}

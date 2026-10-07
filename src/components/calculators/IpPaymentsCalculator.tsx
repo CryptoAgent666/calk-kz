@@ -118,6 +118,7 @@ ${t('ip-payments.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('ip-payments.declaredLabel')}</label>
               <RangeSlider
+                ariaLabel={t('ip-payments.declaredLabel')}
                 value={parseFloat(declaredIncome) || 0}
                 onChange={(val) => setDeclaredIncome(String(val))}
                 min={MZP_2026}
@@ -138,6 +139,7 @@ ${t('ip-payments.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('ip-payments.actualLabel')}</label>
               <RangeSlider
+                ariaLabel={t('ip-payments.actualLabel')}
                 value={parseFloat(actualIncome) || 0}
                 onChange={(val) => setActualIncome(String(val))}
                 min={0}

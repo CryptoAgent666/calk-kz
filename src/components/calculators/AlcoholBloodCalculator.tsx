@@ -142,6 +142,7 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('alcohol-blood.weightLabel')}</label>
               <RangeSlider
+                ariaLabel={t('alcohol-blood.weightLabel')}
                 value={parseFloat(weight) || 0}
                 onChange={(v) => setWeight(String(v))}
                 min={40} max={150} step={1}
@@ -186,6 +187,7 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('alcohol-blood.hoursLabel')}</label>
               <RangeSlider
+                ariaLabel={t('alcohol-blood.hoursLabel')}
                 value={parseFloat(hours) || 0}
                 onChange={(v) => setHours(String(v))}
                 min={0} max={24} step={0.5}

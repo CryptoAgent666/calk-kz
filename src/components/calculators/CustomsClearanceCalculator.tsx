@@ -294,6 +294,7 @@ export default function CustomsClearanceCalculator() {
                   {t('customs-clearance.engineVolume')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('customs-clearance.engineVolume')}
                   value={parseFloat(engineVolume) || 0}
                   onChange={(val) => setEngineVolume(String(val))}
                   min={500}
@@ -575,7 +576,7 @@ export default function CustomsClearanceCalculator() {
           { title: t('customs-clearance.sources.personalUse'), url: 'https://www.alta.ru/tamdoc/17sr0107/' },
           { title: t('customs-clearance.sources.excise'), url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: t('customs-clearance.sources.kgd'), url: 'https://kgd.gov.kz/' },
-          { title: t('customs-clearance.sources.customsCode'), url: 'https://online.zakon.kz/document/?doc_id=37508292' },
+          { title: t('customs-clearance.sources.customsCode'), url: 'https://adilet.zan.kz/rus/docs/K1700000123' },
         ]}
       />
 

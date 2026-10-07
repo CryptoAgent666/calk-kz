@@ -122,6 +122,7 @@ ${t('unified-payment.breakdown')}:
                 {t('unified-payment.grossSalary')}
               </label>
               <RangeSlider
+                ariaLabel={t('unified-payment.grossSalary')}
                 value={parseFloat(grossSalary) || 0}
                 onChange={(val) => setGrossSalary(String(val))}
                 min={100000}
@@ -286,7 +287,7 @@ ${t('unified-payment.breakdown')}:
           { question: t('unified-payment.faq.q5'), answer: t('unified-payment.faq.a5') },
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'Бірыңғай төлем — egov.kz' : 'Единый платёж — egov.kz', url: 'https://egov.kz/' },
         ]}
       />

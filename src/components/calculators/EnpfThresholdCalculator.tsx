@@ -104,6 +104,7 @@ ${t('enpf-threshold.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('enpf-threshold.ageLabel')}</label>
               <RangeSlider
+                ariaLabel={t('enpf-threshold.ageLabel')}
                 value={parseInt(age) || MIN_AGE}
                 onChange={(val) => setAge(String(val))}
                 min={MIN_AGE}
@@ -124,6 +125,7 @@ ${t('enpf-threshold.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('enpf-threshold.savingsLabel')}</label>
               <RangeSlider
+                ariaLabel={t('enpf-threshold.savingsLabel')}
                 value={parseFloat(savings) || 0}
                 onChange={(val) => setSavings(String(val))}
                 min={1000000}

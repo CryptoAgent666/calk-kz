@@ -802,7 +802,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'ҚНРДА — МҚҰ тізілімі' : 'АРРФР — Реестр МФО', url: 'https://finreg.kz/' },
-          { title: i18n.language === 'kk' ? 'Микроқаржылық қызмет туралы заң' : 'Закон о микрофинансовой деятельности', url: 'https://online.zakon.kz/document/?doc_id=31106926' },
+          { title: i18n.language === 'kk' ? 'Микроқаржылық қызмет туралы заң' : 'Закон о микрофинансовой деятельности', url: 'https://adilet.zan.kz/rus/docs/Z1200000056' },
         ]}
       />
 

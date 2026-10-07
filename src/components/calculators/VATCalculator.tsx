@@ -909,7 +909,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
           { question: t('vat.faq.q5'), answer: t('vat.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 10-бөлім' : 'Налоговый кодекс РК, Раздел 10', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі, 10-бөлім' : 'Налоговый кодекс РК, Раздел 10', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'Мемлекеттік кірістер комитеті' : 'Комитет государственных доходов', url: 'https://kgd.gov.kz/' },
         ]}
       />

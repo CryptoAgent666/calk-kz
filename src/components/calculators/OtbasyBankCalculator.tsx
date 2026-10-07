@@ -237,6 +237,7 @@ export default function OtbasyBankCalculator() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('otbasy-bank.propertyPrice')}</label>
               <RangeSlider
+                ariaLabel={t('otbasy-bank.propertyPrice')}
                 value={parseFloat(propertyPrice) || 0}
                 onChange={(val) => setPropertyPrice(String(val))}
                 min={5000000}
@@ -262,6 +263,7 @@ export default function OtbasyBankCalculator() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('otbasy-bank.downPaymentPercent')}</label>
               <RangeSlider
+                ariaLabel={t('otbasy-bank.downPaymentPercent')}
                 value={parseFloat(downPaymentPercent) || 0}
                 onChange={(val) => setDownPaymentPercent(String(val))}
                 min={0}
@@ -276,6 +278,7 @@ export default function OtbasyBankCalculator() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('otbasy-bank.term')}</label>
               <RangeSlider
+                ariaLabel={t('otbasy-bank.term')}
                 value={parseInt(term) || 0}
                 onChange={(val) => setTerm(String(val))}
                 min={1}

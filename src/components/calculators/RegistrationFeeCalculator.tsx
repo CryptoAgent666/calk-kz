@@ -201,6 +201,7 @@ export default function RegistrationFeeCalculator() {
                 {t('registration-fee.manufactureYear')}
               </label>
               <RangeSlider
+                ariaLabel={t('registration-fee.manufactureYear')}
                 value={parseInt(manufactureYear) || 2020}
                 onChange={(val) => setManufactureYear(String(val))}
                 min={1990}
@@ -423,7 +424,7 @@ export default function RegistrationFeeCalculator() {
           { question: t('registration-fee.faq.q5'), answer: t('registration-fee.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — алымдар' : 'Налоговый кодекс РК — сборы', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — алымдар' : 'Налоговый кодекс РК — сборы', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'Арнайы ХҚКО — КҚ тіркеу' : 'СпецЦОН — регистрация ТС', url: 'https://egov.kz/' },
         ]}
       />

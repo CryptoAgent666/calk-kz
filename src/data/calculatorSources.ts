@@ -95,7 +95,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 
   // === АВТО ===
   'customs-clearance': [
-    { title: 'Таможенный кодекс ЕАЭС', url: 'https://online.zakon.kz/document/?doc_id=37777699' },
+    { title: 'Кодекс РК «О таможенном регулировании»', url: 'https://adilet.zan.kz/rus/docs/K1700000123' },
     KGD,
   ],
   'recycling-fee': [
@@ -113,12 +113,12 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     NBK,
   ],
   'parcel-customs': [
-    { title: 'Таможенный кодекс ЕАЭС', url: 'https://online.zakon.kz/document/?doc_id=37777699' },
+    { title: 'Кодекс РК «О таможенном регулировании»', url: 'https://adilet.zan.kz/rus/docs/K1700000123' },
     { title: 'ЕЭК — пороги беспошлинного ввоза', url: 'https://eec.eaeunion.org/' },
     KGD,
   ],
   'vehicle-tco': [
-    { title: 'НК РК — налог на ТС', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+    { title: 'НК РК — налог на ТС', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
     { title: 'Закон об ОГПО ВТС', url: 'https://adilet.zan.kz/rus/docs/Z030000446_' },
   ],
   'auto-leasing': [NBK, { title: 'Закон о финансовом лизинге', url: 'https://adilet.zan.kz/rus/docs/Z000000078_' }],
@@ -133,11 +133,11 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'КоАП РК', url: 'https://adilet.zan.kz/rus/docs/K1400000235' },
   ],
   'fancy-plates': [
-    { title: 'НК РК ст. 605 — сбор за номера', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+    { title: 'НК РК ст. 605 — сбор за номера', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
     EGOV,
   ],
   'tire-size': [
-    { title: 'ГОСТ 4754-97 Шины пневматические', url: 'https://online.zakon.kz/document/?doc_id=30099054' },
+    { title: 'ГОСТ 4754-97 Шины пневматические', url: 'https://egfntd.kz/' },
   ],
 
   // === ФИНАНСЫ ===
@@ -235,7 +235,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 
   // === ЮРИДИЧЕСКИЕ ===
   'court-fee': [
-    { title: 'НК РК, глава 78 — госпошлина', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+    { title: 'НК РК, глава 78 — госпошлина', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
     { title: 'Судебная система РК', url: 'https://sud.gov.kz/' },
   ],
   'penalty': [NK_RK, GK_RK],
@@ -265,21 +265,21 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 
   // === СТРОИТЕЛЬСТВО ===
   'concrete-volume': [
-    { title: 'СНиП РК 5.03-37-2005 Бетонные конструкции', url: 'https://online.zakon.kz/document/?doc_id=30013030' },
+    { title: 'СНиП РК 5.03-37-2005 Бетонные конструкции', url: 'https://egfntd.kz/' },
   ],
   'brick': [
-    { title: 'СНиП РК 5.02-02-2010 Каменные конструкции', url: 'https://online.zakon.kz/document/?doc_id=30013030' },
+    { title: 'СНиП РК 5.02-02-2010 Каменные конструкции', url: 'https://egfntd.kz/' },
   ],
   'wallpaper': [],
   'flooring': [],
   'insulation': [
-    { title: 'СНиП РК 2.04-21-2004 Тепловая защита зданий', url: 'https://online.zakon.kz/document/?doc_id=30041517' },
+    { title: 'СНиП РК 2.04-21-2004 Тепловая защита зданий', url: 'https://egfntd.kz/' },
   ],
 
   // === КОММУНАЛЬНЫЕ ===
   'electricity': [
-    { title: 'Алматы Су', url: 'https://www.almatysu.kz/' },
-    { title: 'Астана Су Арнасы', url: 'https://astanasuarnasy.kz/' },
+    { title: 'Комитет по регулированию естественных монополий МНЭ РК', url: 'https://kremzk.gov.kz/' },
+    { title: 'KEGOC', url: 'https://www.kegoc.kz/' },
   ],
   'water': [
     { title: 'ГКП «Алматы Су» — тарифы', url: 'https://almatysu.kz/tarify.html' },
@@ -324,7 +324,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'ГК РК (Особенная часть), раздел 6 — наследственное право', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
   ],
   'hajj': [
-    { title: 'Хадж-комитет ДУМК', url: 'https://hajj.muftyat.kz/' },
+    { title: 'Хадж-комитет ДУМК', url: 'https://hajj.kz/' },
   ],
   'islamic-mortgage': [
     { title: 'Al Hilal Islamic Bank', url: 'https://www.alhilalbank.kz/' },
@@ -429,6 +429,7 @@ const SOURCE_TITLE_KK: Record<string, string> = {
   "Налоговый кодекс РК, ст. 563–567": "ҚР Салық кодексі, 563–567-баптар",
   "НК РК — налог на имущество, гл. 67": "ҚР СК — мүлік салығы, 67-тарау",
   "Таможенный кодекс ЕАЭС": "ЕАЭО Кеден кодексі",
+  "Кодекс РК «О таможенном регулировании»": "ҚР «Кедендік реттеу туралы» кодексі",
   "Методика расчёта утилизационного платежа (приказ № 448)": "Кәдеге жарату төлемін есептеу әдістемесі (№ 448 бұйрық)",
   "Приказ № 54 от 20.03.2026 — новая редакция коэффициентов": "20.03.2026 № 54 бұйрық — коэффициенттердің жаңа редакциясы",
   "Закон об ОГПО ВТС": "Көлік иелерінің жауапкершілігін міндетті сақтандыру туралы заң",

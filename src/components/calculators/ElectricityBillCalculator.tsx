@@ -233,6 +233,7 @@ export default function ElectricityBillCalculator() {
                 {t('electricity.consumptionVolume')}
               </label>
               <RangeSlider
+                ariaLabel={t('electricity.consumptionVolume')}
                 value={parseFloat(consumption) || 0}
                 onChange={(val) => setConsumption(String(val))}
                 min={0}
@@ -452,6 +453,7 @@ export default function ElectricityBillCalculator() {
           { question: t('electricity.faq.q5'), answer: t('electricity.faq.a5') }
         ]}
         sources={[
+          { title: i18n.language === 'kk' ? 'ҚР ҰЭМ Табиғи монополияларды реттеу комитеті — тарифтер' : 'Комитет по регулированию естественных монополий МНЭ РК — тарифы', url: 'https://kremzk.gov.kz/' },
           { title: i18n.language === 'kk' ? 'KEGOC — Қазақстан энергетикасы' : 'KEGOC — Энергетика Казахстана', url: 'https://www.kegoc.kz/' },
           { title: 'АО "Самрук-Энерго"', url: 'https://www.samruk-energy.kz/' },
         ]}

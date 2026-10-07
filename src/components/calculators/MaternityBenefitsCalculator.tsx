@@ -229,6 +229,7 @@ export default function MaternityBenefitsCalculator() {
                   {t('maternity-benefits.averageIncome12Months')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('maternity-benefits.averageIncome12Months')}
                   value={parseFloat(averageIncomeForMaternity) || 0}
                   onChange={(val) => setAverageIncomeForMaternity(String(val))}
                   min={100000}

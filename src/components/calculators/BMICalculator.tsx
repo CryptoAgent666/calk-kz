@@ -317,6 +317,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                 {t('bmi.weight')}
               </label>
               <RangeSlider
+                ariaLabel={t('bmi.weight')}
                 value={parseFloat(weight) || 70}
                 onChange={(val) => setWeight(String(val))}
                 min={30}

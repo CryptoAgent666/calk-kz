@@ -238,6 +238,7 @@ calk.kz`;
                 {t('property-sale-tax.salePrice')}
               </label>
               <RangeSlider
+                ariaLabel={t('property-sale-tax.salePrice')}
                 value={parseFloat(salePrice) || 0}
                 onChange={(val) => setSalePrice(String(val))}
                 min={100000}
@@ -266,6 +267,7 @@ calk.kz`;
                 {t('property-sale-tax.purchasePrice')}
               </label>
               <RangeSlider
+                ariaLabel={t('property-sale-tax.purchasePrice')}
                 value={parseFloat(purchasePrice) || 0}
                 onChange={(val) => setPurchasePrice(String(val))}
                 min={0}

@@ -197,6 +197,7 @@ export default function InflationCalculator() {
                 {t('inflation.amount')}
               </label>
               <RangeSlider
+                ariaLabel={t('inflation.amount')}
                 value={amount}
                 onChange={setAmount}
                 min={10000}

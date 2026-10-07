@@ -208,7 +208,8 @@ calk.kz`;
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('car-market-value.year')}</label>
-              <RangeSlider value={parseInt(year) || 2020} onChange={(v) => setYear(String(v))}
+              <RangeSlider
+                ariaLabel={t('car-market-value.year')} value={parseInt(year) || 2020} onChange={(v) => setYear(String(v))}
                 min={1990} max={CURRENT_YEAR} step={1} formatValue={(v) => String(v)} color="#475569" />
               <input type="number" value={year} onChange={(e) => setYear(e.target.value)} min={1990} max={CURRENT_YEAR}
                 className="mt-3 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent" />
@@ -216,7 +217,8 @@ calk.kz`;
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('car-market-value.mileage')}</label>
-              <RangeSlider value={parseFloat(mileage) || 0} onChange={(v) => setMileage(String(v))}
+              <RangeSlider
+                ariaLabel={t('car-market-value.mileage')} value={parseFloat(mileage) || 0} onChange={(v) => setMileage(String(v))}
                 min={0} max={400000} step={1000}
                 formatValue={(v) => `${v.toLocaleString('ru-KZ')} ${t('car-market-value.km')}`} color="#475569" />
               <div className="relative mt-3">

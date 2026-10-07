@@ -210,6 +210,7 @@ export default function CourtFeeCalculator() {
                   {t('court-fee.claimAmount')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('court-fee.claimAmount')}
                   value={parseFloat(claimAmount) || 0}
                   onChange={(val) => setClaimAmount(String(val))}
                   min={100000}

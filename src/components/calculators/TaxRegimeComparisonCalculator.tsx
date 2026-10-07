@@ -190,6 +190,7 @@ export default function TaxRegimeComparisonCalculator() {
                 {t('tax-regime.monthlyRevenue')}
               </label>
               <RangeSlider
+                ariaLabel={t('tax-regime.monthlyRevenue')}
                 value={parseFloat(monthlyRevenue) || 0}
                 onChange={(val) => setMonthlyRevenue(String(val))}
                 min={100000}
@@ -217,6 +218,7 @@ export default function TaxRegimeComparisonCalculator() {
                 {t('tax-regime.monthlyExpenses')}
               </label>
               <RangeSlider
+                ariaLabel={t('tax-regime.monthlyExpenses')}
                 value={parseFloat(monthlyExpenses) || 0}
                 onChange={(val) => setMonthlyExpenses(String(val))}
                 min={0}

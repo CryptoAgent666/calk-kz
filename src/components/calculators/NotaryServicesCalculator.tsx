@@ -351,6 +351,7 @@ export default function NotaryServicesCalculator() {
                   {t('notary.propertyValue')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('notary.propertyValue')}
                   value={parseFloat(propertyValue) || 0}
                   onChange={(val) => setPropertyValue(String(val))}
                   min={100000}
@@ -564,7 +565,7 @@ export default function NotaryServicesCalculator() {
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'ҚР Нотариаттық палатасы' : 'Нотариальная палата РК', url: 'https://notariat.kz/' },
-          { title: i18n.language === 'kk' ? 'Нотариат туралы заң' : 'Закон о нотариате', url: 'https://online.zakon.kz/document/?doc_id=1006057' },
+          { title: i18n.language === 'kk' ? 'Нотариат туралы заң' : 'Закон о нотариате', url: 'https://adilet.zan.kz/rus/docs/Z970000155_' },
         ]}
       />
 

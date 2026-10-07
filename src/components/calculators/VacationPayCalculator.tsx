@@ -149,6 +149,7 @@ export default function VacationPayCalculator() {
                 {t('vacation-pay.monthlyIncome')}
               </label>
               <RangeSlider
+                ariaLabel={t('vacation-pay.monthlyIncome')}
                 value={parseFloat(monthlyIncome) || 0}
                 onChange={(val) => setMonthlyIncome(String(val))}
                 min={100000}
@@ -175,6 +176,7 @@ export default function VacationPayCalculator() {
                 {t('vacation-pay.workMonths')}
               </label>
               <RangeSlider
+                ariaLabel={t('vacation-pay.workMonths')}
                 value={workMonths}
                 onChange={(val) => setWorkMonths(val)}
                 min={1}
@@ -499,7 +501,7 @@ export default function VacationPayCalculator() {
         ]}
         sources={[
           { title: t('vacation-pay.sources.laborCode'), url: 'https://online.zakon.kz/document/?doc_id=38910832' },
-          { title: t('vacation-pay.sources.taxCode'), url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: t('vacation-pay.sources.taxCode'), url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
         ]}
       />
 

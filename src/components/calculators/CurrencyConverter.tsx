@@ -223,6 +223,7 @@ ${t('currency-converter.exportSource')}`;
                 {t('currency-converter.amountLabel')}
               </label>
               <RangeSlider
+                ariaLabel={t('currency-converter.amountLabel')}
                 value={parseFloat(amount) || 0}
                 onChange={(val) => setAmount(String(val))}
                 min={100}

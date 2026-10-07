@@ -178,6 +178,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
                 {t('debt-burden.incomeLabel')}
               </label>
               <RangeSlider
+                ariaLabel={t('debt-burden.incomeLabel')}
                 value={parseFloat(income) || 300000}
                 onChange={(val) => setIncome(String(val))}
                 min={100000}

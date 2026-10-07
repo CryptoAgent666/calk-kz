@@ -226,6 +226,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                 {t('pension.workExperienceBefore1998')}
               </label>
               <RangeSlider
+                ariaLabel={t('pension.workExperienceBefore1998')}
                 value={parseFloat(workExperienceBefore1998) || 0}
                 onChange={(val) => setWorkExperienceBefore1998(String(val))}
                 min={0}
@@ -255,6 +256,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                 {t('pension.workExperienceAfter1998')}
               </label>
               <RangeSlider
+                ariaLabel={t('pension.workExperienceAfter1998')}
                 value={parseFloat(workExperienceAfter1998) || 0}
                 onChange={(val) => setWorkExperienceAfter1998(String(val))}
                 min={0}

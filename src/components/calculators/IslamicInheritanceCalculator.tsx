@@ -445,6 +445,7 @@ export default function IslamicInheritanceCalculator() {
                   {t('islamic-inheritance.totalInheritanceLabel')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('islamic-inheritance.totalInheritanceLabel')}
                   value={parseFloat(totalInheritance) || 0}
                   onChange={(val) => setTotalInheritance(String(val))}
                   min={1000000}

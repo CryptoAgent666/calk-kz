@@ -241,6 +241,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                   {t('sick-leave.averageMonthlyIncomeLabel')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('sick-leave.averageMonthlyIncomeLabel')}
                   value={parseFloat(averageMonthlyIncome) || 0}
                   onChange={(val) => setAverageMonthlyIncome(String(val))}
                   min={100000}

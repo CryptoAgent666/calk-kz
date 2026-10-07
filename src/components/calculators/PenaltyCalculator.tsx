@@ -186,6 +186,7 @@ export default function PenaltyCalculator() {
                 {t('penalty.debtAmount')}
               </label>
               <RangeSlider
+                ariaLabel={t('penalty.debtAmount')}
                 value={parseFloat(debtAmount) || 0}
                 onChange={(val) => setDebtAmount(String(val))}
                 min={10000}

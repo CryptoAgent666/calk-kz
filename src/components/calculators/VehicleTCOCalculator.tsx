@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Calculator, TrendingUp, Fuel, Shield, Wrench, DollarSign, Info, MapPin, Calendar, Settings } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getSources } from '../../data/calculatorSources';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { LastUpdated } from '../ui/LastUpdated';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -384,6 +385,7 @@ calk.kz`;
                 {t('vehicle-tco.consumption')}
               </label>
               <RangeSlider
+                ariaLabel={t('vehicle-tco.consumption')}
                 value={parseFloat(consumption) || 0}
                 onChange={(val) => setConsumption(String(val))}
                 min={4}
@@ -626,6 +628,7 @@ calk.kz`;
           { question: t('vehicle-tco.faq.q4'), answer: t('vehicle-tco.faq.a4') },
           { question: t('vehicle-tco.faq.q5'), answer: t('vehicle-tco.faq.a5') },
         ]}
+        sources={getSources('vehicle-tco')}
       />
 
       <LegalDisclaimer type="finance" />

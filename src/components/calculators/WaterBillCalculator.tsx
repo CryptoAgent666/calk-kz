@@ -167,6 +167,7 @@ export default function WaterBillCalculator() {
                 {t('water.coldWaterVolume')}
               </label>
               <RangeSlider
+                ariaLabel={t('water.coldWaterVolume')}
                 value={parseFloat(waterConsumption) || 0}
                 onChange={(val) => setWaterConsumption(String(val))}
                 min={0}

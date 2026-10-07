@@ -243,6 +243,7 @@ ${t('salary-reverse.employerCosts')}:
                 {t('salary-reverse.desiredNet')}
               </label>
               <RangeSlider
+                ariaLabel={t('salary-reverse.desiredNet')}
                 value={parseFloat(desiredNet) || 0}
                 onChange={(val) => setDesiredNet(String(val))}
                 min={50000}
@@ -454,7 +455,7 @@ ${t('salary-reverse.employerCosts')}:
           { question: t('salary-reverse.faq.q5'), answer: t('salary-reverse.faq.a5') },
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі' : 'Налоговый кодекс РК', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'БЖЗҚ — Зейнетақы аударымдары' : 'ЕНПФ — Пенсионные отчисления', url: 'https://enpf.kz/' },
         ]}
       />

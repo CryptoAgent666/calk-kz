@@ -251,6 +251,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
                 {t('deposit.initialAmount')}
               </label>
               <RangeSlider
+                ariaLabel={t('deposit.initialAmount')}
                 value={parseFloat(initialAmount) || 0}
                 onChange={(val) => setInitialAmount(String(val))}
                 min={100000}

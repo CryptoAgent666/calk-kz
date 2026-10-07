@@ -1291,7 +1291,7 @@ export default function KurbanCalculator() {
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'ҚМДБ — Құрбан айт' : 'ДУМК — Курбан-айт', url: 'https://muftyat.kz/' },
-          { title: i18n.language === 'kk' ? 'Islamic Relief — Құрбандық' : 'Islamic Relief — Курбан', url: 'https://islamic-relief.kz/' },
+          { title: i18n.language === 'kk' ? 'Islamic Relief — Құрбандық' : 'Islamic Relief — Курбан', url: 'https://islamic-relief.org/' },
         ]}
       />
 

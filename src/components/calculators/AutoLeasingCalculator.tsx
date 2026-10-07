@@ -231,6 +231,7 @@ export default function AutoLeasingCalculator() {
                 {t('auto-leasing.downPayment')}
               </label>
               <RangeSlider
+                ariaLabel={t('auto-leasing.downPayment')}
                 value={downPaymentPct}
                 onChange={setDownPaymentPct}
                 min={10}
@@ -250,6 +251,7 @@ export default function AutoLeasingCalculator() {
                 {t('auto-leasing.term')}
               </label>
               <RangeSlider
+                ariaLabel={t('auto-leasing.term')}
                 value={termMonths}
                 onChange={setTermMonths}
                 min={12}
@@ -283,6 +285,7 @@ export default function AutoLeasingCalculator() {
                 {t('auto-leasing.residualValue')}
               </label>
               <RangeSlider
+                ariaLabel={t('auto-leasing.residualValue')}
                 value={residualPct}
                 onChange={setResidualPct}
                 min={0}

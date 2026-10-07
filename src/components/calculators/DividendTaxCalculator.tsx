@@ -137,6 +137,7 @@ ${t('dividend-tax.results')}:
                 {t('dividend-tax.amountLabel')}
               </label>
               <RangeSlider
+                ariaLabel={t('dividend-tax.amountLabel')}
                 value={parseFloat(amount) || 0}
                 onChange={(val) => setAmount(String(val))}
                 min={100000}

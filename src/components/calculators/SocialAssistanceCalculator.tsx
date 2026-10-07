@@ -134,6 +134,7 @@ export default function SocialAssistanceCalculator() {
                 {t('social-assistance.quarterlyIncome')}
               </label>
               <RangeSlider
+                ariaLabel={t('social-assistance.quarterlyIncome')}
                 value={parseFloat(quarterlyIncome) || 0}
                 onChange={(val) => setQuarterlyIncome(String(val))}
                 min={0}
@@ -574,7 +575,7 @@ export default function SocialAssistanceCalculator() {
           { question: t('social-assistance.faq.q5'), answer: t('social-assistance.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'АӘК туралы заң' : 'Закон об АСП', url: 'https://online.zakon.kz/document/?doc_id=1040571' },
+          { title: i18n.language === 'kk' ? 'ҚР Әлеуметтік кодексі (АӘК)' : 'Социальный кодекс РК (АСП)', url: 'https://adilet.zan.kz/rus/docs/K2300000224' },
           { title: i18n.language === 'kk' ? 'eGov.kz — әлеуметтік көмек' : 'eGov.kz — соцпомощь', url: 'https://egov.kz/' },
         ]}
       />

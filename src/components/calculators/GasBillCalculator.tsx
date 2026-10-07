@@ -233,6 +233,7 @@ export default function GasBillCalculator() {
                 {t('gas.gasConsumptionVolume')}
               </label>
               <RangeSlider
+                ariaLabel={t('gas.gasConsumptionVolume')}
                 value={parseFloat(gasConsumption) || 0}
                 onChange={(val) => setGasConsumption(String(val))}
                 min={0}
@@ -548,8 +549,8 @@ export default function GasBillCalculator() {
           { question: t('gas.faq.q5'), answer: t('gas.faq.a5') }
         ]}
         sources={[
-          { title: 'КазТрансГаз', url: 'https://kaztransgas.kz/' },
-          { title: i18n.language === 'kk' ? 'ТМРА — газ тарифтері' : 'АРЕМ — тарифы на газ', url: 'https://www.arem.kz/' },
+          { title: i18n.language === 'kk' ? 'QazaqGaz (бұрынғы ҚазТрансГаз)' : 'QazaqGaz (бывш. КазТрансГаз)', url: 'https://qazaqgaz.kz/ru/' },
+          { title: i18n.language === 'kk' ? 'ҚР ҰЭМ Табиғи монополияларды реттеу комитеті — газ тарифтері' : 'Комитет по регулированию естественных монополий МНЭ РК — тарифы на газ', url: 'https://kremzk.gov.kz/' },
         ]}
       />
 

@@ -206,6 +206,7 @@ export default function CaloriesCalculator() {
                   {t('calories.weight')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('calories.weight')}
                   value={parseFloat(weight) || 70}
                   onChange={(val) => setWeight(String(val))}
                   min={30}
@@ -230,6 +231,7 @@ export default function CaloriesCalculator() {
                   {t('calories.height')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('calories.height')}
                   value={parseFloat(height) || 170}
                   onChange={(val) => setHeight(String(val))}
                   min={120}

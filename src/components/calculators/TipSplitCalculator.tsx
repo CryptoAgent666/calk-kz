@@ -79,6 +79,7 @@ ${t('tip-split.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('tip-split.billLabel')}</label>
               <RangeSlider
+                ariaLabel={t('tip-split.billLabel')}
                 value={parseFloat(bill) || 0}
                 onChange={(v) => setBill(String(v))}
                 min={1000} max={200000} step={500}
@@ -124,6 +125,7 @@ ${t('tip-split.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('tip-split.peopleLabel')}</label>
               <RangeSlider
+                ariaLabel={t('tip-split.peopleLabel')}
                 value={parseInt(people) || 1}
                 onChange={(v) => setPeople(String(v))}
                 min={1} max={20} step={1}

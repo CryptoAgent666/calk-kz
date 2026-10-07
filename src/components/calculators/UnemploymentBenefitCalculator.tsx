@@ -210,6 +210,7 @@ export default function UnemploymentBenefitCalculator() {
                 {t('unemployment.socialContributions')}
               </label>
               <RangeSlider
+                ariaLabel={t('unemployment.socialContributions')}
                 value={Math.min(normalizeContributionsInput(socialContributions), 2000000)}
                 onChange={(val) => setSocialContributions(String(val))}
                 min={0}

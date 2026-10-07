@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flame, Target } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
+import { getSources } from '../../data/calculatorSources';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { LastUpdated } from '../ui/LastUpdated';
@@ -215,7 +216,7 @@ export default function FIRECalculator() {
         { question: t('fire.faq.q3'), answer: t('fire.faq.a3') },
         { question: t('fire.faq.q4'), answer: t('fire.faq.a4') },
         { question: t('fire.faq.q5'), answer: t('fire.faq.a5') },
-      ]} />
+      ]} sources={getSources('fire')} />
       <EmbedWidget calculatorId="fire" calculatorTitle={t('fire.title')} />
       <LastUpdated calculatorId="fire" />
     </div>

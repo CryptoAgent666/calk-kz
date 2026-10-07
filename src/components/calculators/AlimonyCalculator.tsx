@@ -176,10 +176,11 @@ ${t('alimony.exportAlimonyCalc')}
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="grossSalary" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('alimony.grossSalary')}
               </label>
               <RangeSlider
+                ariaLabel={t('alimony.grossSalary')}
                 value={parseFloat(grossSalary) || 0}
                 onChange={(val) => setGrossSalary(String(val))}
                 min={100000}

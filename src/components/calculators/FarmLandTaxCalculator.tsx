@@ -165,6 +165,7 @@ export default function FarmLandTaxCalculator() {
                 {t('farm-land-tax.inputs.landArea')}
               </label>
               <RangeSlider
+                ariaLabel={t('farm-land-tax.inputs.landArea')}
                 value={parseFloat(landArea) || 0}
                 onChange={(val) => setLandArea(String(val))}
                 min={1}

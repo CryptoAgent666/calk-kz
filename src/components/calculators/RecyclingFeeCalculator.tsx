@@ -273,6 +273,7 @@ export default function RecyclingFeeCalculator() {
                   {t('recycling-fee.engineVolume')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('recycling-fee.engineVolume')}
                   value={parseFloat(engineVolume) || 0}
                   onChange={(val) => setEngineVolume(String(val))}
                   min={500}

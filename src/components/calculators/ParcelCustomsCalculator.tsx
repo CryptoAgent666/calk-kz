@@ -342,6 +342,7 @@ export default function ParcelCustomsCalculator() {
                 {t('parcel-customs.itemValue')}
               </label>
               <RangeSlider
+                ariaLabel={t('parcel-customs.itemValue')}
                 value={parseFloat(itemValue) || 0}
                 onChange={(val) => setItemValue(String(val))}
                 min={0}
@@ -771,7 +772,7 @@ export default function ParcelCustomsCalculator() {
         sources={[
           { title: t('parcel-customs.sources.eaeu'), url: 'https://www.eaeunion.org/' },
           { title: t('parcel-customs.sources.kgd'), url: 'https://kgd.gov.kz/' },
-          { title: t('parcel-customs.sources.customsCode'), url: 'https://online.zakon.kz/document/?doc_id=36231050' },
+          { title: t('parcel-customs.sources.customsCode'), url: 'https://adilet.zan.kz/rus/docs/K1700000123' },
         ]}
       />
 

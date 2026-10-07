@@ -126,6 +126,7 @@ ${t('gph-tax.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('gph-tax.amountLabel')}</label>
               <RangeSlider
+                ariaLabel={t('gph-tax.amountLabel')}
                 value={parseFloat(amount) || 0}
                 onChange={(val) => setAmount(String(val))}
                 min={50000}

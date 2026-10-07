@@ -311,6 +311,7 @@ calk.kz`;
                 {t('rental-income-tax.rentalMonths')}
               </label>
               <RangeSlider
+                ariaLabel={t('rental-income-tax.rentalMonths')}
                 value={parseFloat(rentalMonths) || 0}
                 onChange={(val) => setRentalMonths(String(val))}
                 min={1}

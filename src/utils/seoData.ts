@@ -189,7 +189,7 @@ export const getCalculatorSEO = (calculatorId: string): SEOData => {
     'calories': 'Калькулятор калорий — суточная норма и БЖУ | Calk.kz',
     'pregnancy': 'Калькулятор беременности — срок и дата родов | Calk.kz',
     'vacation-pay': 'Калькулятор отпускных 2026 — расчёт по ТК РК | Calk.kz',
-    'early-repayment': 'Досрочное погашение кредита — экономия | Calk.kz',
+    'early-repayment': 'Калькулятор досрочного погашения кредита — экономия | Calk.kz',
     'severance-pay': 'Компенсация при увольнении 2026 — расчёт | Calk.kz',
     'parcel-customs': 'Пошлина на посылки 2026 — лимит и расчёт | Calk.kz',
     'refinancing': 'Рефинансирование кредита 2026 — выгода | Calk.kz',

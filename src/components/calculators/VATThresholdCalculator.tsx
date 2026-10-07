@@ -728,7 +728,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
           { question: t('vat-threshold.faq.q5'), answer: t('vat-threshold.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — ҚҚС' : 'Налоговый кодекс РК — НДС', url: 'https://online.zakon.kz/document/?doc_id=36148637' },
+          { title: i18n.language === 'kk' ? 'ҚР Салық кодексі — ҚҚС' : 'Налоговый кодекс РК — НДС', url: 'https://adilet.zan.kz/rus/docs/K2500000214' },
           { title: i18n.language === 'kk' ? 'МКД — ҚҚС' : 'КГД — НДС', url: 'https://kgd.gov.kz/' },
         ]}
       />

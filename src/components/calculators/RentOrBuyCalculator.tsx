@@ -327,6 +327,7 @@ export default function RentOrBuyCalculator() {
                   {t('rent-vs-buy.propertyDetails.propertyPrice')}
                 </label>
                 <RangeSlider
+                ariaLabel={t('rent-vs-buy.propertyDetails.propertyPrice')}
                   value={parseFloat(propertyPrice) || 0}
                   onChange={(val) => setPropertyPrice(String(val))}
                   min={10000000}

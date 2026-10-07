@@ -132,6 +132,7 @@ ${rows}`;
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('mortgage-compare.priceLabel')}</label>
               <RangeSlider
+                ariaLabel={t('mortgage-compare.priceLabel')}
                 value={parseFloat(price) || 0}
                 onChange={(v) => setPrice(String(v))}
                 min={5_000_000} max={80_000_000} step={500_000}
@@ -164,6 +165,7 @@ ${rows}`;
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('mortgage-compare.downLabel')}</label>
               <RangeSlider
+                ariaLabel={t('mortgage-compare.downLabel')}
                 value={parseFloat(downPercent) || 0}
                 onChange={(v) => setDownPercent(String(v))}
                 min={0} max={70} step={5}
@@ -175,6 +177,7 @@ ${rows}`;
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('mortgage-compare.termLabel')}</label>
               <RangeSlider
+                ariaLabel={t('mortgage-compare.termLabel')}
                 value={parseFloat(termYears) || 0}
                 onChange={(v) => setTermYears(String(v))}
                 min={3} max={25} step={1}
@@ -198,6 +201,7 @@ ${rows}`;
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('mortgage-compare.marketRateLabel')}</label>
               <RangeSlider
+                ariaLabel={t('mortgage-compare.marketRateLabel')}
                 value={parseFloat(marketRate) || 0}
                 onChange={(v) => setMarketRate(String(v))}
                 min={15} max={30} step={0.5}

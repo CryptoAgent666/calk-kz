@@ -1089,7 +1089,7 @@ export default function MortgageCalculator() {
         items={faqItems}
         sources={[
           { title: i18n.language === 'kk' ? '7-20-25 бағдарламасы' : 'Программа 7-20-25', url: 'https://www.gov.kz/memleket/entities/economy/press/news/details/14659' },
-          { title: i18n.language === 'kk' ? 'ҚР Ипотека туралы заңы' : 'Закон об ипотеке РК', url: 'https://online.zakon.kz/document/?doc_id=1013060' },
+          { title: i18n.language === 'kk' ? 'ҚР Ипотека туралы заңы' : 'Закон об ипотеке РК', url: 'https://adilet.zan.kz/rus/docs/U950002723_' },
         ]}
       />
 

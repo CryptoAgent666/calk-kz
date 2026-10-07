@@ -83,6 +83,7 @@ ${t('bad-habits-cost.results')}:
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">{t(labelKey)}</label>
       <RangeSlider
+                ariaLabel={t(labelKey)}
         value={parseFloat(value) || 0}
         onChange={(v) => setter(String(v))}
         min={0} max={max} step={step}
@@ -135,6 +136,7 @@ ${t('bad-habits-cost.results')}:
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('bad-habits-cost.rateLabel')}</label>
               <RangeSlider
+                ariaLabel={t('bad-habits-cost.rateLabel')}
                 value={parseFloat(rate) || 0}
                 onChange={(v) => setRate(String(v))}
                 min={0} max={20} step={0.5}

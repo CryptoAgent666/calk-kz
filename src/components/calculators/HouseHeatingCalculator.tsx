@@ -114,6 +114,7 @@ ${lines.join('\n')}`;
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">{t('house-heating.areaLabel')}</label>
               <RangeSlider
+                ariaLabel={t('house-heating.areaLabel')}
                 value={parseFloat(area) || 0}
                 onChange={(val) => setArea(String(val))}
                 min={30}

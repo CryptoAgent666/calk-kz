@@ -188,6 +188,7 @@ export default function CarTransferCalculator() {
                 {t('car-transfer.salePrice')}
               </label>
               <RangeSlider
+                ariaLabel={t('car-transfer.salePrice')}
                 value={parseFloat(salePrice) || 0}
                 onChange={(v) => setSalePrice(String(v))}
                 min={500000}
@@ -294,6 +295,7 @@ export default function CarTransferCalculator() {
                 {t('car-transfer.buyerAge')}
               </label>
               <RangeSlider
+                ariaLabel={t('car-transfer.buyerAge')}
                 value={parseInt(buyerAge) || 30}
                 onChange={(v) => setBuyerAge(String(v))}
                 min={18}
@@ -310,6 +312,7 @@ export default function CarTransferCalculator() {
                 {t('car-transfer.buyerExperience')}
               </label>
               <RangeSlider
+                ariaLabel={t('car-transfer.buyerExperience')}
                 value={parseInt(buyerExperience) || 2}
                 onChange={(v) => setBuyerExperience(String(v))}
                 min={0}

@@ -205,6 +205,7 @@ export default function VehicleTaxCalculator() {
                     {t('vehicle-tax.engineVolume')}
                   </label>
                   <RangeSlider
+                ariaLabel={t('vehicle-tax.engineVolume')}
                     value={parseFloat(engineVolume) || 0}
                     onChange={(val) => setEngineVolume(String(val))}
                     min={500}

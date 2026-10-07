@@ -239,6 +239,7 @@ export default function GONSCalculator() {
                 {t('gons.initialDepositAmount')}
               </label>
               <RangeSlider
+                ariaLabel={t('gons.initialDepositAmount')}
                 value={parseFloat(initialDeposit) || 0}
                 onChange={(val) => setInitialDeposit(String(val))}
                 min={10000}
@@ -831,7 +832,7 @@ export default function GONSCalculator() {
           { question: t('gons.faq.q5'), answer: t('gons.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ENIC — Білім беру жинақтары' : 'ENIC — Образовательные накопления', url: 'https://enic.kz/' },
+          { title: i18n.language === 'kk' ? '«Қаржы орталығы» АҚ — МБЖЖ операторы' : 'АО «Финансовый центр» — оператор ГОНС', url: 'https://fincenter.kz/' },
           { title: i18n.language === 'kk' ? 'ҚР Білім туралы заңы' : 'Закон об образовании РК', url: 'https://online.zakon.kz/document/?doc_id=30118747' },
         ]}
       />

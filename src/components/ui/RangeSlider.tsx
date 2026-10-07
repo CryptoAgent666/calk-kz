@@ -7,6 +7,8 @@ interface RangeSliderProps {
   max: number;
   step?: number;
   label?: string;
+  /** Доступное имя, если подпись выведена снаружи компонента */
+  ariaLabel?: string;
   formatValue?: (value: number) => string;
   showMinMax?: boolean;
   showValue?: boolean;
@@ -44,6 +46,7 @@ export function RangeSlider({
   max,
   step = 1,
   label,
+  ariaLabel,
   formatValue = (v) => v.toString(),
   showMinMax = true,
   showValue = true,
@@ -94,6 +97,10 @@ export function RangeSlider({
           value={safeValue}
           onChange={handleChange}
           disabled={disabled}
+          // Подпись <label> выше не связана с полем (useId не годится: снимок
+          // пререндера делается createRoot, и id разошлись бы при гидратации)
+          aria-label={ariaLabel ?? label}
+          aria-valuetext={formatValue(safeValue)}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer
                      focus:outline-none focus:ring-2 focus:ring-offset-2
                      disabled:cursor-not-allowed"
