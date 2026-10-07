@@ -21,12 +21,11 @@ function readBuildVersion(): string {
 }
 
 // Без этих переменных сборка проходит, но бандл молча ломается: заглушки
-// RevenueCat (покупки в приложениях), нет Supabase (конвертер валют падает).
-// 18.09.2026 так ушёл бандл из worktree без .env. Проверяем только `vite build` —
-// `npm run dev` и `vite preview` без .env работают. Значения не печатаем.
+// RevenueCat (покупки в приложениях). 18.09.2026 так ушёл бандл из worktree без .env.
+// Проверяем только `vite build` — `npm run dev` и `vite preview` без .env работают.
+// Значения не печатаем. VITE_SUPABASE_* больше не нужны: единственный потребитель,
+// конвертер валют, с 07.10.2026 берёт курсы НБРК через /api/nbrk-rates.php.
 const REQUIRED_BUILD_ENV = [
-  'VITE_SUPABASE_URL',
-  'VITE_SUPABASE_ANON_KEY',
   'VITE_RC_IOS_KEY',
   'VITE_RC_ANDROID_KEY',
 ];
@@ -69,7 +68,6 @@ export default defineConfig(({ command, mode }) => {
             vendor: ['react', 'react-dom'],
             router: ['react-router-dom'],
             icons: ['lucide-react'],
-            supabase: ['@supabase/supabase-js'],
             'i18n': ['i18next', 'react-i18next'],
             'export-tools': ['jspdf', 'jspdf-autotable', 'xlsx', 'file-saver'],
           }

@@ -1,30 +1,46 @@
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { fetchNbrkRates } from '../utils/nbrkRates';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
+/**
+ * Официальные курсы НБРК для конвертера валют — через прокси /api/nbrk-rates.php.
+ *
+ * До 07.10.2026 курсы читались из таблицы Supabase exchange_rates, но там лежали
+ * не курсы НБРК (05.10.2026: USD 456,63 против 447,73 у НБРК), хотя конвертер
+ * подписан «Национальный Банк РК». Теперь источник тот же, что у калькулятора посылок.
+ */
 
 interface ExchangeRate {
-  id: string;
   currency_code: string;
   rate_to_kzt: number;
-  report_date: string;
-  last_fetched_at: string;
-  currency_name_ru?: string;
-  currency_name_kz?: string;
-  currency_name_en?: string;
 }
 
 interface CurrencyRatesResult {
   rates: ExchangeRate[];
+  /** Дата курса НБРК, YYYY-MM-DD */
   lastUpdated: string | null;
   loading: boolean;
+  /** Ключ i18n предупреждения (параметр date — дата запасных курсов) или null */
   error: string | null;
-  getRate: (from: string, to: string, date?: string) => number;
+  getRate: (from: string, to: string) => number;
   refreshRates: () => Promise<void>;
 }
+
+/** Курсы НБРК на 07.10.2026 (nationalbank.kz/rss) — если прокси или НБРК недоступны. */
+export const FALLBACK_RATES_DATE = '2026-10-07';
+const FALLBACK_RATES: Record<string, number> = {
+  USD: 453.65,
+  EUR: 509.99,
+  RUB: 5.31,
+  CNY: 67.66,
+  GBP: 600.86,
+  JPY: 2.87,
+  CHF: 545.78,
+  CAD: 317.82,
+  AUD: 316.1,
+};
+
+const toList = (rates: Record<string, number>): ExchangeRate[] =>
+  Object.entries(rates).map(([currency_code, rate_to_kzt]) => ({ currency_code, rate_to_kzt }));
 
 export function useCurrencyRates(): CurrencyRatesResult {
   const [rates, setRates] = useState<ExchangeRate[]>([]);
@@ -32,160 +48,34 @@ export function useCurrencyRates(): CurrencyRatesResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Резервные курсы на случай недоступности API (от НБРК на 19.04.2026)
-  // Запасные курсы — если в базе нет данных. Официальные курсы НБРК на 05.10.2026
-  // (nationalbank.kz/rss/get_rates.cfm); обновлять при заметном расхождении.
-  const fallbackRates: Record<string, number> = {
-    USD: 447.73,
-    EUR: 502.98,
-    RUB: 5.35,
-    CNY: 66.78,
-    GBP: 591.14,
-    JPY: 2.84,
-    CHF: 540.41,
-    CAD: 314.46,
-    AUD: 310.5
-  };
-
-  const fetchRates = async (date?: string) => {
-    try {
-      setLoading(true);
+  const fetchRates = async () => {
+    setLoading(true);
+    const r = await fetchNbrkRates();
+    if (r && r.date >= FALLBACK_RATES_DATE && r.rates.USD) {
+      setRates(toList(r.rates));
+      setLastUpdated(r.date);
       setError(null);
-
-      const targetDate = date || new Date().toISOString().split('T')[0];
-      
-      let query = supabase
-        .from('exchange_rates')
-        .select('*')
-        .eq('report_date', targetDate)
-        .order('currency_code');
-
-      const { data, error: fetchError } = await query;
-
-      if (fetchError) {
-        console.error('Error fetching exchange rates:', fetchError);
-        setError('Ошибка загрузки курсов валют');
-        return;
-      }
-
-      if (data && data.length > 0) {
-        setRates(data);
-        setLastUpdated(data[0]?.last_fetched_at || null);
-        console.log('Exchange rates loaded from database:', data.length);
-      } else {
-        // Если нет данных в базе для указанной даты, используем резервные курсы
-        console.log('No rates found in database, using fallback rates');
-        const fallbackData: ExchangeRate[] = Object.entries(fallbackRates).map(([code, rate]) => ({
-          id: `fallback-${code}`,
-          currency_code: code,
-          rate_to_kzt: rate,
-          report_date: targetDate,
-          last_fetched_at: new Date().toISOString(),
-          currency_name_ru: code,
-          currency_name_kz: code,
-          currency_name_en: code
-        }));
-        
-        setRates(fallbackData);
-        setLastUpdated(new Date().toISOString());
-        setError('Используются резервные курсы НБРК от 19.04.2026. Обновите данные для получения актуальных курсов.');
-      }
-
-    } catch (err) {
-      console.error('Unexpected error fetching rates:', err);
-      setError('Неожиданная ошибка при загрузке курсов');
-    } finally {
-      setLoading(false);
+    } else {
+      setRates(toList(FALLBACK_RATES));
+      setLastUpdated(FALLBACK_RATES_DATE);
+      setError('currency-converter.ratesFallback');
     }
+    setLoading(false);
   };
 
-  const getRate = (from: string, to: string, date?: string): number => {
+  const rateOf = (code: string): number | undefined =>
+    code === 'KZT' ? 1 : rates.find((r) => r.currency_code === code)?.rate_to_kzt ?? FALLBACK_RATES[code];
+
+  const getRate = (from: string, to: string): number => {
     if (from === to) return 1;
-
-    // Если одна из валют - тенге
-    if (from === 'KZT') {
-      const toRate = rates.find(r => r.currency_code === to);
-      return toRate ? 1 / toRate.rate_to_kzt : (fallbackRates[to] ? 1 / fallbackRates[to] : 1);
-    }
-
-    if (to === 'KZT') {
-      const fromRate = rates.find(r => r.currency_code === from);
-      return fromRate ? fromRate.rate_to_kzt : (fallbackRates[from] || 1);
-    }
-
-    // Конвертация через тенге
-    const fromRate = rates.find(r => r.currency_code === from);
-    const toRate = rates.find(r => r.currency_code === to);
-
-    if (fromRate && toRate) {
-      return fromRate.rate_to_kzt / toRate.rate_to_kzt;
-    }
-
-    // Резервный расчет через fallback rates
-    const fromFallback = fallbackRates[from];
-    const toFallback = fallbackRates[to];
-    
-    if (fromFallback && toFallback) {
-      return fromFallback / toFallback;
-    }
-
-    return 1;
-  };
-
-  const refreshRates = async () => {
-    try {
-      // Принудительно обновляем курсы через основную Edge Function
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-nbrk-rates`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          source: 'manual_refresh',
-          timestamp: new Date().toISOString()
-        })
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Manual refresh completed:', result);
-        // После успешного обновления перезагружаем данные
-        await fetchRates();
-      } else {
-        const errorData = await response.json();
-        setError(`Ошибка обновления: ${errorData.error || 'Неизвестная ошибка'}`);
-      }
-    } catch (err) {
-      console.error('Error refreshing rates:', err);
-      setError('Ошибка при обновлении курсов');
-    }
+    const fromRate = rateOf(from);
+    const toRate = rateOf(to);
+    return fromRate && toRate ? fromRate / toRate : 1;
   };
 
   useEffect(() => {
-    // Проверяем время последнего обновления
-    const checkLastUpdate = () => {
-      const lastCheck = localStorage.getItem('last_rates_check');
-      const now = new Date().getTime();
-      const twoHours = 2 * 60 * 60 * 1000; // 2 часа в миллисекундах
-      
-      if (!lastCheck || (now - parseInt(lastCheck)) > twoHours) {
-        localStorage.setItem('last_rates_check', now.toString());
-        // Попробуем автоматически обновить курсы если прошло более 2 часов
-        refreshRates().catch(console.error);
-      }
-    };
-    
     fetchRates();
-    checkLastUpdate();
   }, []);
 
-  return {
-    rates,
-    lastUpdated,
-    loading,
-    error,
-    getRate,
-    refreshRates
-  };
+  return { rates, lastUpdated, loading, error, getRate, refreshRates: fetchRates };
 }

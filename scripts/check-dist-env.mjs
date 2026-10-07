@@ -22,10 +22,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MAIN_ENV = path.join(os.homedir(), 'Projects', 'KZ-CALK', '.env');
 
-// Проверяем по форме значения, а не по «есть ли слово»: в исходниках supabase-js
-// есть «supabase.com» и «project-ref.supabase.co» (сейчас минификация их
-// выкидывает, но голый поиск «supabase.co» не должен от этого зависеть).
-// У реального проекта ref — [a-z0-9] без дефисов; supabase.com не матчится по \b.
+// Проверяем по форме значения (реальный ключ против заглушки appl_XXXX/goog_XXXX).
 const CHECKS = [
   {
     env: 'VITE_RC_IOS_KEY',
@@ -39,16 +36,8 @@ const CHECKS = [
     placeholder: /goog_XXXX/,
     real: /\bgoog_(?!XXXX)[A-Za-z0-9]{20,}/,
   },
-  {
-    env: 'VITE_SUPABASE_URL',
-    label: 'хост проекта Supabase (https://<ref>.supabase.co)',
-    real: /https:\/\/[a-z0-9]+\.supabase\.co\b/,
-  },
-  {
-    env: 'VITE_SUPABASE_ANON_KEY',
-    label: 'anon-ключ Supabase (JWT или sb_publishable_…)',
-    real: /\beyJ[\w-]{10,}\.eyJ[\w-]{10,}\.[\w-]{10,}|\bsb_publishable_\w{10,}/,
-  },
+  // VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY проверялись до 07.10.2026: их читал
+  // только конвертер валют, а он теперь берёт курсы НБРК через /api/nbrk-rates.php.
 ];
 
 /** Список проблем (без значений ключей); пустой — dist в порядке. */
@@ -84,7 +73,7 @@ export function distEnvErrorMessage(problems) {
     '❌ env-гейт: dist собран без ключей из .env — выкладка сайта и OTA-бандла запрещена.',
     '  Проверка dist/assets/*.js:',
     ...problems.map((p) => `  • ${p}`),
-    '  (так 18.09.2026 ушёл бандл 20260918082602: покупки в приложениях сломаны, конвертер валют падал)',
+    '  (так 18.09.2026 ушёл бандл 20260918082602: покупки в приложениях сломаны)',
     fix,
     '    npm run build:prerender',
   ].join('\n');
@@ -97,5 +86,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     console.error(distEnvErrorMessage(problems));
     process.exit(1);
   }
-  console.log(`✅ env-гейт: в ${path.relative(process.cwd(), distDir) || distDir}/assets есть ключи RevenueCat iOS/Android и Supabase URL/anon`);
+  console.log(`✅ env-гейт: в ${path.relative(process.cwd(), distDir) || distDir}/assets есть ключи RevenueCat iOS/Android`);
 }

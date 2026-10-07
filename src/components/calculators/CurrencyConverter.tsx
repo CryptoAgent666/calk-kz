@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DollarSign, ArrowLeftRight, RefreshCw, TrendingUp, Info, AlertTriangle, Target, Clock, BarChart3 } from 'lucide-react';
-import { useCurrencyRates } from '../../hooks/useCurrencyRates';
+import { useCurrencyRates, FALLBACK_RATES_DATE } from '../../hooks/useCurrencyRates';
 import SharePrintButtons from '../SharePrintButtons';
 import { ExportButtons } from '../ui/ExportButtons';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -12,7 +12,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatShortDate } from '../../utils/localeFormat';
 
 interface ConversionHistory {
   id: string;
@@ -207,7 +207,7 @@ ${t('currency-converter.exportSource')}`;
             <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="text-lg font-semibold text-amber-900 mb-2">{t('currency-converter.warning')}</h3>
-              <p className="text-amber-800">{error}</p>
+              <p className="text-amber-800">{t(error, { date: formatShortDate(FALLBACK_RATES_DATE) })}</p>
             </div>
           </div>
         </div>
@@ -368,7 +368,7 @@ ${t('currency-converter.exportSource')}`;
                     <span className="text-sm font-medium text-blue-900">{t('currency-converter.lastUpdated')}</span>
                   </div>
                   <div className="text-sm text-blue-800">
-                    {new Date(lastUpdated).toLocaleString('ru-RU')}
+                    {formatShortDate(lastUpdated)}
                   </div>
                   <div className="mt-3 pt-3 border-t border-blue-200">
                     <div className="flex items-start space-x-2">
