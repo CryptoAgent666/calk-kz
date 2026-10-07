@@ -128,6 +128,48 @@
       "what": "ip_self_min_package_monthly",
       "ctx": "за себя|өзі үшін|ООСМС|ҚМӘМС|baseSocial",
       "why_ctx": "Минимум соцплатежей ИП за себя с 1 МЗП (ОПВ+ОПВР+СО+ВОСМС 5 950). 17 000 считалось с ВОСМС 2% МЗП и ООСМС 3%, которые ИП за себя не платит (tax-regime до 24.09.2026). Само число 17 000 ходовое (курбан, коммуналка, пошлина) — без ctx ловилось бы мимо."
+    },
+    {
+      "was": "4.7 м²·К/Вт",
+      "now": "3,4 м²·К/Вт для стен севера (СН РК 2.04-07-2022, табл. 4); 4,7 — норма покрытий",
+      "what": "insulation_wall_R_north_was_roof_value",
+      "only": [
+        "calculators.json",
+        "InsulationCalculator",
+        "QuickAnswer",
+        "calculatorMethodology",
+        "calculatorExamples"
+      ]
+    },
+    {
+      "was": "north: 4.7",
+      "now": "north: 3.4",
+      "what": "insulation_region_r_north_code",
+      "only": [
+        "InsulationCalculator"
+      ]
+    },
+    {
+      "was": "51 шт/м²",
+      "now": "49,95 ≈ 50 шт/м² (швы 12/10 мм, СП РК 5.03-107-2013 п. 4.7.1.3)",
+      "what": "brick_per_m2_half_with_10mm_joint"
+    },
+    {
+      "was": "51 дана/м²",
+      "now": "49,95 ≈ 50 дана/м² (жіктер 12/10 мм, ҚР ЕЖ 5.03-107-2013)",
+      "what": "brick_per_m2_half_with_10mm_joint_kk"
+    },
+    {
+      "was": "394",
+      "now": "384 шт/м³ (швы 12/10 мм)",
+      "what": "brick_single_per_m3_with_10mm_joint",
+      "ctx": "кирпич|кірпіш|perM3",
+      "only": [
+        "BrickCalculator",
+        "calculatorMethodology",
+        "calculators.json",
+        "QuickAnswer"
+      ]
     }
   ]
 }

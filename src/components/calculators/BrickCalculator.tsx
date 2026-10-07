@@ -14,20 +14,24 @@ import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type BrickType = 'single' | 'oneAndHalf' | 'double' | 'block' | 'gasBlock';
 
+// Швы кладки из кирпича и камней правильной формы — СП РК 5.03-107-2013, п. 4.7.1.3
+const JOINT_H_M = 0.012; // горизонтальный
+const JOINT_V_M = 0.010; // вертикальный
+
 interface BrickSpec {
   length: number;  // мм
   width: number;
   height: number;
-  perM3: number;   // шт на 1 м³ кладки (с учётом швов раствора 10 мм)
+  perM3: number;   // шт на 1 м³ кладки с учётом швов
   price: number;   // ₸/шт
 }
 
 const BRICKS: Record<BrickType, BrickSpec> = {
-  single:        { length: 250, width: 120, height: 65, perM3: 394, price: 80 },
-  oneAndHalf:    { length: 250, width: 120, height: 88, perM3: 302, price: 110 },
-  double:        { length: 250, width: 120, height: 138, perM3: 200, price: 150 },
-  block:         { length: 390, width: 190, height: 188, perM3: 62, price: 320 },
-  gasBlock:      { length: 600, width: 300, height: 200, perM3: 27, price: 550 },
+  single:        { length: 250, width: 120, height: 65, perM3: 384, price: 80 },   // 1 / (0,26 × 0,13 × 0,077)
+  oneAndHalf:    { length: 250, width: 120, height: 88, perM3: 296, price: 110 },  // 1 / (0,26 × 0,13 × 0,100)
+  double:        { length: 250, width: 120, height: 138, perM3: 197, price: 150 }, // 1 / (0,26 × 0,13 × 0,150)
+  block:         { length: 390, width: 190, height: 188, perM3: 62, price: 320 },  // 1 / (0,40 × 0,20 × 0,20)
+  gasBlock:      { length: 600, width: 300, height: 200, perM3: 27, price: 550 },  // на клею, шов 2–3 мм
 };
 
 type Thickness = 'half' | 'one' | 'oneAndHalf' | 'two';
@@ -37,6 +41,8 @@ const THICKNESS_M: Record<Thickness, number> = {
   oneAndHalf: 0.38, // 1.5 кирпича
   two: 0.51,        // 2 кирпича
 };
+// Кирпичей по ширине (120 мм) в толщине стены: 120 / 250 / 380 / 510 мм с продольными швами 10 мм
+const BRICKS_ACROSS: Record<Thickness, number> = { half: 1, one: 2, oneAndHalf: 3, two: 4 };
 
 export default function BrickCalculator() {
   const { t } = useTranslation('calculators');
@@ -62,16 +68,24 @@ export default function BrickCalculator() {
     if (wallArea <= 0) return null;
 
     const volume = wallArea * th; // м³
-    const volumeReserve = volume * (1 + r / 100);
+    const spec = BRICKS[brickType];
 
-    const brickCount = Math.ceil(volumeReserve * BRICKS[brickType].perM3);
+    // Кирпич — по лицевой площади: один кирпич со швами занимает (длина + 10 мм) × (высота + 12 мм).
+    // Через м³ × шт/м³ выходило на 2–8 % меньше: шт/м³ закладывает шов и по толщине,
+    // а в стене в полкирпича продольного шва нет. Блоки — по объёму.
+    const isBrick = brickType === 'single' || brickType === 'oneAndHalf' || brickType === 'double';
+    const perM2 = isBrick
+      ? BRICKS_ACROSS[thickness] / ((spec.length / 1000 + JOINT_V_M) * (spec.height / 1000 + JOINT_H_M))
+      : th * spec.perM3;
+
+    const brickCount = Math.ceil(wallArea * perM2 * (1 + r / 100));
 
     // Раствор: ~0.25 м³ на 1 м³ кладки
     const mortarVolume = volume * 0.25;
     const cementKg = mortarVolume * 320; // кг цемента на 1 м³ раствора
     const sandKg = mortarVolume * 1200;
 
-    const brickPrice = brickCount * BRICKS[brickType].price;
+    const brickPrice = brickCount * spec.price;
     const cementPrice = cementKg * 55;
     const sandPrice = sandKg * 8;
     const totalPrice = brickPrice + cementPrice + sandPrice;
