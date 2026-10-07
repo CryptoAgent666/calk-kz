@@ -18,14 +18,12 @@ header('Access-Control-Allow-Origin: *');
 header('X-Robots-Tag: noindex');
 
 date_default_timezone_set('Asia/Almaty');
-// На хостинге serialize_precision = 17: без этого json_encode пишет 453.64999999999998
-ini_set('serialize_precision', '-1');
 
 const CACHE_TTL = 1800;
 const CODES = ['USD', 'EUR', 'RUB', 'CNY', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD', 'KGS', 'UZS', 'TRY', 'AED'];
 
 $cacheDir = is_writable(sys_get_temp_dir()) ? sys_get_temp_dir() : null;
-$cacheFile = $cacheDir ? $cacheDir . '/calk_kz_nbrk_rates.json' : null;
+$cacheFile = $cacheDir ? $cacheDir . '/calk_kz_nbrk_rates_v2.json' : null;
 
 function respond(string $json, int $maxAge): void
 {
@@ -55,7 +53,12 @@ function fetch_rss(string $url): ?string
     return $body === false ? null : $body;
 }
 
-/** @return array{date: string, rates: array<string, float>}|null */
+/**
+ * Курсы — десятичные строки («453.65»): json_encode на хостинге с serialize_precision=17
+ * писал 453.64999999999998, а ini_set там не помог, поэтому JSON собираем сами.
+ *
+ * @return array{date: string, rates: array<string, string>}|null
+ */
 function parse_rss(string $xml): ?array
 {
     if (!preg_match('~<date>(\d{2})\.(\d{2})\.(\d{4})</date>~', $xml, $d)) {
@@ -71,13 +74,23 @@ function parse_rss(string $xml): ?array
         $quant = preg_match('~<quant>(\d+)</quant>~', $item, $q) ? max(1, (int) $q[1]) : 1;
         $rate = (float) $v[1] / $quant;
         if (in_array($t[1], CODES, true) && $rate > 0) {
-            $rates[$t[1]] = round($rate, 6);
+            $rates[$t[1]] = rtrim(rtrim(sprintf('%.6F', $rate), '0'), '.');
         }
     }
     if (!isset($rates['USD'], $rates['EUR'])) {
         return null;
     }
     return ['date' => "{$d[3]}-{$d[2]}-{$d[1]}", 'rates' => $rates];
+}
+
+/** Коды валют — [A-Z]{3}, дата и курсы — проверенные цифры: экранировать нечего. */
+function encode_payload(array $parsed): string
+{
+    $parts = [];
+    foreach ($parsed['rates'] as $code => $rate) {
+        $parts[] = '"' . $code . '":' . $rate;
+    }
+    return '{"source":"nationalbank.kz","date":"' . $parsed['date'] . '","rates":{' . implode(',', $parts) . '}}';
 }
 
 if ($cacheFile && is_file($cacheFile) && time() - filemtime($cacheFile) < CACHE_TTL) {
@@ -88,7 +101,7 @@ $xml = fetch_rss('https://nationalbank.kz/rss/get_rates.cfm?fdate=' . date('d.m.
 $parsed = $xml !== null ? parse_rss($xml) : null;
 
 if ($parsed !== null) {
-    $json = json_encode(['source' => 'nationalbank.kz'] + $parsed, JSON_UNESCAPED_SLASHES);
+    $json = encode_payload($parsed);
     if ($cacheFile) {
         $tmp = $cacheFile . '.' . getmypid();
         if (@file_put_contents($tmp, $json) !== false) {
@@ -99,9 +112,9 @@ if ($parsed !== null) {
 }
 
 if ($cacheFile && is_file($cacheFile)) {
-    $stale = json_decode((string) file_get_contents($cacheFile), true);
-    if (is_array($stale)) {
-        respond((string) json_encode($stale + ['stale' => true], JSON_UNESCAPED_SLASHES), 300);
+    $cached = (string) file_get_contents($cacheFile);
+    if (str_ends_with($cached, '}}')) {
+        respond(substr($cached, 0, -1) . ',"stale":true}', 300);
     }
 }
 
