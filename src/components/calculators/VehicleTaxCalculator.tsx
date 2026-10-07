@@ -133,7 +133,7 @@ export default function VehicleTaxCalculator() {
   };
 
   const formatMRP = (rate: number) => {
-    return `${rate} МРП (${formatNumber(rate * MRP_2026)})`;
+    return `${rate} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'} (${formatNumber(rate * MRP_2026)})`;
   };
 
   return (

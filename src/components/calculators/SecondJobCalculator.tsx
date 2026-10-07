@@ -53,7 +53,8 @@ function calcSecondary(gross: number) {
 }
 
 export default function SecondJobCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
+  const isKk = i18n.language === 'kk';
   const { t: tCommon } = useTranslation('common');
   const [primary, setPrimary] = useState<string>('400000');
   const [secondary, setSecondary] = useState<string>('200000');
@@ -149,9 +150,9 @@ export default function SecondJobCalculator() {
             <div className="bg-blue-50 rounded-lg p-4">
               <div className="font-semibold text-blue-900 mb-2">{t('second-job.primaryJob')}</div>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>ОПВ: {formatNumber(results.p.opv)}</div>
-                <div>ВОСМС: {formatNumber(results.p.vosms)}</div>
-                <div>ИПН: {formatNumber(results.p.ipn)}</div>
+                <div>{isKk ? 'МЗЖ' : 'ОПВ'}: {formatNumber(results.p.opv)}</div>
+                <div>{isKk ? 'МӘМС' : 'ВОСМС'}: {formatNumber(results.p.vosms)}</div>
+                <div>{isKk ? 'ЖТС' : 'ИПН'}: {formatNumber(results.p.ipn)}</div>
                 <div className="font-semibold">{tCommon('calculator.netPay')}: {formatNumber(results.p.net)}</div>
               </div>
               <div className="text-xs text-blue-700 mt-2">{t('second-job.primaryNote')}</div>
@@ -160,9 +161,9 @@ export default function SecondJobCalculator() {
             <div className="bg-purple-50 rounded-lg p-4">
               <div className="font-semibold text-purple-900 mb-2">{t('second-job.secondaryJob')}</div>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>ОПВ: {formatNumber(results.s.opv)}</div>
-                <div>ВОСМС: {formatNumber(results.s.vosms)}</div>
-                <div>ИПН: {formatNumber(results.s.ipn)}</div>
+                <div>{isKk ? 'МЗЖ' : 'ОПВ'}: {formatNumber(results.s.opv)}</div>
+                <div>{isKk ? 'МӘМС' : 'ВОСМС'}: {formatNumber(results.s.vosms)}</div>
+                <div>{isKk ? 'ЖТС' : 'ИПН'}: {formatNumber(results.s.ipn)}</div>
                 <div className="font-semibold">{tCommon('calculator.netPay')}: {formatNumber(results.s.net)}</div>
               </div>
               <div className="text-xs text-purple-700 mt-2">{t('second-job.secondaryNote')}</div>

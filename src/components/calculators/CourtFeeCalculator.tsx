@@ -99,7 +99,7 @@ export default function CourtFeeCalculator() {
           feeRate: 0,
           maxAmount: 0,
           isMaxReached: false,
-          feeDescription: `${feeInMRP} МРП`
+          feeDescription: `${feeInMRP} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}`
         };
       }
     }
@@ -119,7 +119,7 @@ export default function CourtFeeCalculator() {
   };
 
   const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount} МРП (${formatNumber(mrpAmount * MRP_2026)})`;
+    return `${mrpAmount} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
   return (
@@ -369,7 +369,7 @@ export default function CourtFeeCalculator() {
                     <span className="text-gray-700">{t(`calculators:court-fee.${key}`)}</span>
                     <div className="text-right">
                       <div className="font-medium">
-                        {value.individual > 0 ? `${value.individual} МРП` : t('court-fee.exemption')} / {value.legal > 0 ? `${value.legal} МРП` : t('court-fee.exemption')}
+                        {value.individual > 0 ? `${value.individual} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` : t('court-fee.exemption')} / {value.legal > 0 ? `${value.legal} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` : t('court-fee.exemption')}
                       </div>
                       <div className="text-xs text-gray-500">{t('court-fee.individualShort')} / {t('court-fee.legalShort')}</div>
                     </div>

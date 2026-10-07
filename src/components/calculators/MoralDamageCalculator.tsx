@@ -61,7 +61,7 @@ const COURT_FEE_RULE: Record<Category, FeeRule> = {
 };
 
 export default function MoralDamageCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [category, setCategory] = useState<Category>('labor');
   const [severity, setSeverity] = useState<number>(50); // 0-100 (низкая-высокая)
   const [hasEvidence, setHasEvidence] = useState<boolean>(true);
@@ -223,7 +223,7 @@ export default function MoralDamageCalculator() {
             subtitle: t(`moral-damage.categories.${category}`),
             sections: [{ title: t('moral-damage.resultsTitle'), data: [
               { label: t('moral-damage.estimatedAmount'), value: formatNumber(results.estimatedKZT) },
-              { label: t('moral-damage.rangeInfo'), value: `${results.rangeMin}-${results.rangeMax} МРП` },
+              { label: t('moral-damage.rangeInfo'), value: `${results.rangeMin}-${results.rangeMax} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` },
               { label: t('moral-damage.courtFee'), value: formatNumber(results.courtFee) },
             ]}],
             footer: 'Calk.kz'

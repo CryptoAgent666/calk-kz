@@ -156,9 +156,9 @@ export default function OvertimeCalculator() {
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-1 text-sm">
             <div className="font-medium text-blue-900 mb-2">{t('overtime.taxes')}</div>
-            <div className="flex justify-between"><span>ОПВ 10%</span><span>{formatNumber(results.opv)}</span></div>
-            <div className="flex justify-between"><span>ВОСМС 2%</span><span>{formatNumber(results.vosms)}</span></div>
-            <div className="flex justify-between"><span>ИПН 10%</span><span>{formatNumber(results.ipn)}</span></div>
+            <div className="flex justify-between"><span>{i18n.language === 'kk' ? 'МЗЖ' : 'ОПВ'} 10%</span><span>{formatNumber(results.opv)}</span></div>
+            <div className="flex justify-between"><span>{i18n.language === 'kk' ? 'МӘМС' : 'ВОСМС'} 2%</span><span>{formatNumber(results.vosms)}</span></div>
+            <div className="flex justify-between"><span>{i18n.language === 'kk' ? 'ЖТС' : 'ИПН'} 10%</span><span>{formatNumber(results.ipn)}</span></div>
             <div className="flex justify-between border-t pt-2 font-semibold"><span>{t('overtime.net')}</span><span>{formatNumber(results.net)}</span></div>
           </div>
         </div>

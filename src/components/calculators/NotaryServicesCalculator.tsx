@@ -198,7 +198,7 @@ export default function NotaryServicesCalculator() {
   };
 
   const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount.toFixed(2)} МРП (${formatNumber(mrpAmount * MRP_2026)})`;
+    return `${mrpAmount.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 2 })} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
   return (
