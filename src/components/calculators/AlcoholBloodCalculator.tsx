@@ -273,7 +273,7 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
       <FAQSection
         items={[1, 2, 3, 4].map((n) => ({ question: t(`alcohol-blood.faq.q${n}`), answer: t(`alcohol-blood.faq.a${n}`) }))}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР ӘҚБК 608-бабы (мас күйде көлік жүргізу)' : 'Ст. 608 КоАП РК (управление в опьянении)', url: 'https://adilet.zan.kz/rus/docs/K1400000235' },
+          { title: i18n.language === 'kk' ? 'ҚР ӘҚБтК 608-бабы (мас күйде көлік жүргізу)' : 'Ст. 608 КоАП РК (управление в опьянении)', url: 'https://adilet.zan.kz/rus/docs/K1400000235' },
           { title: i18n.language === 'kk' ? 'Widmark формуласы (NIH зерттеуі)' : 'Формула Видмарка (исследование NIH)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4361698/' },
         ]}
       />

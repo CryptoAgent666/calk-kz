@@ -300,7 +300,7 @@ calk.kz`;
                 </div>
               </div>
               <div className="text-sm text-gray-600">
-                {t('fuel-cost.forDistance')} {distance} {t('fuel-cost.km')}
+                {t('fuel-cost.forDistanceN', { n: distance })}
               </div>
             </div>
 

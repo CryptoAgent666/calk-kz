@@ -814,7 +814,7 @@ export default function GONSCalculator() {
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="gons-calculation"
           />
@@ -841,7 +841,7 @@ export default function GONSCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="gons"
-        calculatorTitle="Калькулятор ГОНС"
+        calculatorTitle={t('gons.title')}
       />
       <LastUpdated calculatorId="gons" />
     </div>

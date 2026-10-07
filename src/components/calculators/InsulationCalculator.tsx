@@ -177,11 +177,11 @@ export default function InsulationCalculator() {
                 <div className="font-medium text-gray-900 mb-1">{t('insulation.heatLoss')}</div>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex justify-between">
                   <span>{t('insulation.without')}</span>
-                  <span className="font-semibold text-red-700">{results.costWithout.toLocaleString(NUMBER_LOCALE)} ₸/год</span>
+                  <span className="font-semibold text-red-700">{results.costWithout.toLocaleString(NUMBER_LOCALE)} {t('insulation.perYear')}</span>
                 </div>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex justify-between">
                   <span>{t('insulation.with')}</span>
-                  <span className="font-semibold text-green-700">{results.costWith.toLocaleString(NUMBER_LOCALE)} ₸/год</span>
+                  <span className="font-semibold text-green-700">{results.costWith.toLocaleString(NUMBER_LOCALE)} {t('insulation.perYear')}</span>
                 </div>
               </div>
 
@@ -190,7 +190,7 @@ export default function InsulationCalculator() {
                   <TrendingDown className="w-5 h-5 text-green-700" />
                   <span className="text-sm text-green-900 font-medium">{t('insulation.savings')}</span>
                 </div>
-                <div className="text-3xl font-bold text-green-700">{results.savingsPerYear.toLocaleString('ru-KZ')} ₸/год</div>
+                <div className="text-3xl font-bold text-green-700">{results.savingsPerYear.toLocaleString(NUMBER_LOCALE)} {t('insulation.perYear')}</div>
                 <div className="text-sm text-green-800">({results.savingsPercent}% {t('insulation.less')})</div>
                 <div className="mt-3 pt-3 border-t border-green-300">
                   <div className="text-sm text-green-900">{t('insulation.payback')}:</div>
@@ -211,7 +211,7 @@ export default function InsulationCalculator() {
               sections: [{ title: t('insulation.resultsTitle'), data: [
                 { label: t('insulation.thickness'), value: `${results.thicknessCm} см` },
                 { label: t('insulation.materialCost'), value: `${results.materialCost.toLocaleString(NUMBER_LOCALE)} ₸` },
-                { label: t('insulation.savings'), value: `${results.savingsPerYear.toLocaleString(NUMBER_LOCALE)} ₸/год` },
+                { label: t('insulation.savings'), value: `${results.savingsPerYear.toLocaleString(NUMBER_LOCALE)} ${t('insulation.perYear')}` },
                 { label: t('insulation.payback'), value: `${results.payback} ${pluralize(i18n.language, parseFloat(results.payback as any), 'год', 'года', 'лет')}` },
               ]}],
               footer: 'Calk.kz'

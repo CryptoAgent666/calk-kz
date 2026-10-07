@@ -9,6 +9,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatLongDate, toUiLang } from '../../utils/localeFormat';
 
 /**
  * Согласование числительного с существительным.
@@ -34,21 +35,22 @@ interface Rule {
   months?: number;
   days?: number;
   article: string;
+  articleKk: string;
 }
 
 const RULES: Record<Category, Rule> = {
-  general:      { years: 3, article: 'ст. 178 ГК РК' },
-  contract:     { years: 3, article: 'ст. 178 ГК РК' },
-  loan:         { years: 3, article: 'ст. 178 ГК РК' },
-  salary:       { years: 1, article: 'ст. 164 ТК РК' },
-  damage:       { years: 3, article: 'ст. 178 ГК РК' },
-  family:       { years: 3, article: 'ст. 9 КоБС РК' },
-  tax:          { years: 3, article: 'ст. 65 НК РК (5 лет — крупный бизнес/недропользователи)' }, // НК РК 2026 (№214-VIII): по умолч. 3 года
-  labor:        { years: 0, months: 1, article: 'ст. 160 ТК РК (восстановление → согласит. комиссия)' }, // 1 мес в комиссию; 2 мес в суд; иные споры — 1 год
-  adminFine:    { years: 0, months: 2, article: 'ст. 62 КоАП РК (общий срок; 1 год — налоги/таможня для физлиц)' }, // общий срок давности — 2 месяца
-  criminal:     { years: 2, article: 'ст. 71 УК РК (небольшая тяжесть)' },
-  inheritance:  { years: 0, months: 6, article: 'ст. 1072 ГК РК (принятие)' },
-  property:     { years: 7, article: 'ст. 240 ГК РК (недвижимость; иное имущество — 5 лет)' }, // приобретательная давность: 7 лет недвижимость / 5 лет иное
+  general:      { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
+  contract:     { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
+  loan:         { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
+  salary:       { years: 1, article: 'ст. 164 ТК РК', articleKk: 'ҚР ЕК 164-бабы' },
+  damage:       { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
+  family:       { years: 3, article: 'ст. 9 КоБС РК', articleKk: 'ҚР НОБК 9-бабы' },
+  tax:          { years: 3, article: 'ст. 65 НК РК (5 лет — крупный бизнес/недропользователи)', articleKk: 'ҚР СК 65-бабы (5 жыл — ірі бизнес/жер қойнауын пайдаланушылар)' }, // НК РК 2026 (№214-VIII): по умолч. 3 года
+  labor:        { years: 0, months: 1, article: 'ст. 160 ТК РК (восстановление → согласит. комиссия)', articleKk: 'ҚР ЕК 160-бабы (жұмысқа қайта алу → келісім комиссиясы)' }, // 1 мес в комиссию; 2 мес в суд; иные споры — 1 год
+  adminFine:    { years: 0, months: 2, article: 'ст. 62 КоАП РК (общий срок; 1 год — налоги/таможня для физлиц)', articleKk: 'ӘҚБтК 62-бабы (жалпы мерзім; жеке тұлғаларға салық/кеден — 1 жыл)' }, // общий срок давности — 2 месяца
+  criminal:     { years: 2, article: 'ст. 71 УК РК (небольшая тяжесть)', articleKk: 'ҚР ҚК 71-бабы (онша ауыр емес)' },
+  inheritance:  { years: 0, months: 6, article: 'ст. 1072 ГК РК (принятие)', articleKk: 'ҚР АК 1072-бабы (қабылдау)' },
+  property:     { years: 7, article: 'ст. 240 ГК РК (недвижимость; иное имущество — 5 лет)', articleKk: 'ҚР АК 240-бабы (жылжымайтын мүлік; өзге мүлік — 5 жыл)' }, // приобретательная давность: 7 лет недвижимость / 5 лет иное
 };
 
 function addYearsAndMonths(date: Date, years: number, months: number, days: number = 0): Date {
@@ -60,7 +62,8 @@ function addYearsAndMonths(date: Date, years: number, months: number, days: numb
 }
 
 export default function StatuteLimitationsCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
+  const lang = toUiLang(i18n.language);
   const [category, setCategory] = useState<Category>('general');
   const [eventDate, setEventDate] = useState<string>(new Date().toISOString().slice(0, 10));
 
@@ -77,12 +80,16 @@ export default function StatuteLimitationsCalculator() {
     const isExpired = daysRemaining <= 0;
 
     return {
-      expiryDate: expiryDate.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' }),
+      expiryDate: formatLongDate(expiryDate, lang),
       daysRemaining: Math.abs(daysRemaining),
       isExpired,
       rule,
     };
-  }, [category, eventDate]);
+  }, [category, eventDate, lang]);
+
+  const daysText = results
+    ? `${results.daysRemaining} ${t(`statute-limitations.daysWord_${pluralForm(results.daysRemaining)}`)}`
+    : '';
 
   const categories: Category[] = [
     'general', 'contract', 'loan', 'salary', 'damage',
@@ -142,8 +149,8 @@ export default function StatuteLimitationsCalculator() {
                   </div>
                   <div className="text-sm mt-2">
                     {results.isExpired
-                      ? t('statute-limitations.expiredDaysAgo', { days: results.daysRemaining })
-                      : t('statute-limitations.daysRemaining', { days: results.daysRemaining })}
+                      ? t('statute-limitations.expiredDaysAgo', { days: daysText })
+                      : t('statute-limitations.daysRemaining', { days: daysText })}
                   </div>
                 </div>
               </div>
@@ -163,7 +170,7 @@ export default function StatuteLimitationsCalculator() {
               </div>
               <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                 <span>{t('statute-limitations.article')}</span>
-                <span className="font-semibold">{results.rule.article}</span>
+                <span className="font-semibold">{lang === 'kk' ? results.rule.articleKk : results.rule.article}</span>
               </div>
             </div>
           </>
@@ -181,9 +188,9 @@ export default function StatuteLimitationsCalculator() {
               title: t('statute-limitations.title'),
               subtitle: t(`statute-limitations.categories.${category}`),
               sections: [{ title: t('statute-limitations.resultsTitle'), data: [
-                { label: t('statute-limitations.status'), value: results.isExpired ? 'Истёк' : 'Активен' },
+                { label: t('statute-limitations.status'), value: results.isExpired ? t('statute-limitations.expired') : t('statute-limitations.active') },
                 { label: t('statute-limitations.expiryDate'), value: results.expiryDate },
-                { label: t('statute-limitations.article'), value: results.rule.article },
+                { label: t('statute-limitations.article'), value: lang === 'kk' ? results.rule.articleKk : results.rule.article },
               ]}],
               footer: 'Calk.kz'
             }}

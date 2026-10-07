@@ -83,8 +83,10 @@ export default function IslamicInheritanceCalculator() {
       scenario = t('islamic-inheritance.scenarioWithParents');
     } else if (hasSiblings) {
       scenario = t('islamic-inheritance.scenarioWithSiblings');
-    } else {
+    } else if (hasSpouse) {
       scenario = t('islamic-inheritance.scenarioSpouseOnly');
+    } else {
+      scenario = t('islamic-inheritance.scenarioNoHeirs');
     }
 
     // 1. ФИКСИРОВАННЫЕ ДОЛИ (FARA'ID)
@@ -1195,18 +1197,18 @@ export default function IslamicInheritanceCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт исламского наследования',
-              subtitle: 'Распределение наследства',
+              title: t('islamic-inheritance.title'),
+              subtitle: t('islamic-inheritance.distributionTitle'),
               sections: [
                 {
-                  title: 'Наследство',
+                  title: t('islamic-inheritance.distributionTitle'),
                   data: results.heirs.map(heir => ({
                     label: heir.name,
                     value: `${heir.amount.toLocaleString(NUMBER_LOCALE)} ₸ (${heir.percentage.toFixed(1)}%)`
                   }))
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="islamic-inheritance-calculation"
           />
@@ -1235,7 +1237,7 @@ export default function IslamicInheritanceCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="islamic-inheritance"
-        calculatorTitle="Исламский калькулятор наследства"
+        calculatorTitle={t('islamic-inheritance.title')}
       />
       <LastUpdated calculatorId="islamic-inheritance" />
     </div>

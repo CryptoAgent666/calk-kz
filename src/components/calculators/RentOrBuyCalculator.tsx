@@ -633,7 +633,7 @@ export default function RentOrBuyCalculator() {
                       {results.isRentingBetter ? t('rent-vs-buy.recommendation.betterToRent') : t('rent-vs-buy.recommendation.betterToBuy')}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {t('rent-vs-buy.recommendation.forYears', { years: analysisYears })}
+                      {t('rent-vs-buy.recommendation.forYears', { years: `${analysisYears} ${pluralize(i18n.language, parseInt(analysisYears) || 0, 'год', 'года', 'лет')}` })}
                     </p>
                   </div>
                 </div>
@@ -914,27 +914,27 @@ export default function RentOrBuyCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Аренда или покупка',
-              subtitle: !results.isRentingBetter ? 'Рекомендация: Покупка' : 'Рекомендация: Аренда',
+              title: t('rent-vs-buy.title'),
+              subtitle: `${t('rent-vs-buy.recommendation.title')}: ${!results.isRentingBetter ? t('rent-vs-buy.recommendation.betterToBuy') : t('rent-vs-buy.recommendation.betterToRent')}`,
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('rent-vs-buy.propertyDetails.title'),
                   data: [
-                    { label: 'Стоимость недвижимости', value: `${parseFloat(propertyPrice).toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Ежемесячная аренда', value: `${parseFloat(monthlyRent).toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Период анализа', value: `${analysisYears} ${pluralize(i18n.language, parseInt(analysisYears) || 0, 'год', 'года', 'лет')}` },
+                    { label: t('rent-vs-buy.propertyDetails.propertyPrice'), value: `${parseFloat(propertyPrice).toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('rent-vs-buy.propertyDetails.monthlyRent'), value: `${parseFloat(monthlyRent).toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('rent-vs-buy.propertyDetails.analysisPeriod'), value: `${analysisYears} ${pluralize(i18n.language, parseInt(analysisYears) || 0, 'год', 'года', 'лет')}` },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('rent-vs-buy.financialSummary.title'),
                   data: [
-                    { label: 'Общая стоимость покупки', value: `${results.netOwnershipCost.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Общая стоимость аренды', value: `${results.totalRentingCost.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Разница', value: `${results.difference.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: `${t('rent-vs-buy.financialSummary.buyingScenario')}: ${t('rent-vs-buy.financialSummary.netCost')}`, value: `${results.netOwnershipCost.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: `${t('rent-vs-buy.financialSummary.rentingScenario')}: ${t('rent-vs-buy.financialSummary.totalCost')}`, value: `${results.totalRentingCost.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('rent-vs-buy.recommendation.savings'), value: `${results.difference.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="rent-or-buy-analysis"
           />
@@ -963,7 +963,7 @@ export default function RentOrBuyCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="rent-or-buy"
-        calculatorTitle="Арендовать или покупать"
+        calculatorTitle={t('rent-vs-buy.title')}
       />
       <LastUpdated calculatorId="rent-vs-buy" />
     </div>

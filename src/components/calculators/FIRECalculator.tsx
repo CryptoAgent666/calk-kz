@@ -141,7 +141,7 @@ export default function FIRECalculator() {
                 <div className="text-sm text-gray-600">{t('fire.fireNumber')}</div>
                 <div className="text-3xl font-bold text-red-700">{formatNumber(results.fireNumber)}</div>
                 <div className="text-xs text-gray-500 mt-1">
-                  = {monthlyExpenses} ₸/мес × 12 × {fireType === 'fat' ? '28.6' : '25'}
+                  = {formatNumber(parseFloat(monthlyExpenses) || 0)}/{i18n.language === 'kk' ? 'ай' : 'мес'} × 12 × {fireType === 'fat' ? '28.6' : '25'}
                 </div>
               </div>
 

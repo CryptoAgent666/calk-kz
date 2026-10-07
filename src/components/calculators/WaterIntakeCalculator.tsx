@@ -152,7 +152,7 @@ export default function WaterIntakeCalculator() {
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
-                💡 {t('water-intake.schedule')}: ~{results.hourly} мл × 8 раз в день (с 08:00 до 22:00)
+                💡 {t('water-intake.schedule')}: {t('water-intake.scheduleText', { ml: results.hourly })}
               </div>
             </>
           )}

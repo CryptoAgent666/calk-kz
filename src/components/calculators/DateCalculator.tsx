@@ -133,7 +133,7 @@ export default function DateCalculator() {
     const isWeekend = resultDate.getDay() === 0 || resultDate.getDay() === 6;
     // По-русски после числа — родительный падеж («27 сентября»), в ключах i18n — именительный.
     const monthName = monthNames[resultDate.getMonth()];
-    const monthInDate = i18n.language === 'kk' ? monthName : MONTHS_RU_GENITIVE[resultDate.getMonth()];
+    const monthInDate = i18n.language === 'kk' ? monthName.toLowerCase() : MONTHS_RU_GENITIVE[resultDate.getMonth()];
     const resultDateFormatted = `${resultDate.getDate()} ${monthInDate} ${resultDate.getFullYear()} (${dayOfWeek})`;
 
     const isLeapYear = (year: number) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
@@ -826,9 +826,9 @@ export default function DateCalculator() {
                       <span className="text-sm font-medium text-gray-900">
                         {item.calculation.operation === 'add' ? '+' : '-'}
                         {[
-                          item.calculation.period.years && `${item.calculation.period.years}г`,
-                          item.calculation.period.months && `${item.calculation.period.months}м`,
-                          item.calculation.period.days && `${item.calculation.period.days}д`
+                          item.calculation.period.years && `${item.calculation.period.years}${i18n.language === 'kk' ? 'ж' : 'г'}`,
+                          item.calculation.period.months && `${item.calculation.period.months}${i18n.language === 'kk' ? 'ай' : 'м'}`,
+                          item.calculation.period.days && `${item.calculation.period.days}${i18n.language === 'kk' ? 'к' : 'д'}`
                         ].filter(Boolean).join(' ')}
                       </span>
                       <span className="text-xs text-gray-500">
@@ -992,7 +992,7 @@ export default function DateCalculator() {
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="date-calculation"
           />
@@ -1018,7 +1018,7 @@ export default function DateCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="date-calculator"
-        calculatorTitle="Калькулятор дат"
+        calculatorTitle={t('date-calculator.title')}
       />
       <LastUpdated calculatorId="date-calculator" />
     </div>

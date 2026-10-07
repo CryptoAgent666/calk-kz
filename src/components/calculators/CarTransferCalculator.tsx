@@ -507,7 +507,7 @@ export default function CarTransferCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="car-transfer"
-        calculatorTitle="Калькулятор переоформления авто"
+        calculatorTitle={t('car-transfer.title')}
       />
       <LastUpdated calculatorId="car-transfer" />
     </div>

@@ -127,11 +127,11 @@ export default function FlooringCalculator() {
             <div className="flex gap-2">
               <button onClick={() => setMethod('straight')}
                 className={`flex-1 p-3 rounded-lg border ${method === 'straight' ? 'bg-amber-600 text-white border-amber-600' : 'bg-white border-gray-300'}`}>
-                {t('flooring.straight')} (5%)
+                {t('flooring.straight')} ({t('flooring.reserveShort')} {MATERIALS[material].reserve}%)
               </button>
               <button onClick={() => setMethod('diagonal')}
                 className={`flex-1 p-3 rounded-lg border ${method === 'diagonal' ? 'bg-amber-600 text-white border-amber-600' : 'bg-white border-gray-300'}`}>
-                {t('flooring.diagonal')} (15%)
+                {t('flooring.diagonal')} ({t('flooring.reserveShort')} {MATERIALS[material].reserve + 10}%)
               </button>
             </div>
           </div>
@@ -167,7 +167,7 @@ export default function FlooringCalculator() {
               <div className="space-y-2 text-sm">
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>📦 {t('flooring.packs')}</span>
-                  <span className="font-semibold">{results.packs} шт ({results.actualArea} м²)</span>
+                  <span className="font-semibold">{results.packs} {t('flooring.pcs')} ({results.actualArea} м²)</span>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>💰 {t('flooring.materialCost')}</span>
@@ -203,7 +203,7 @@ export default function FlooringCalculator() {
               subtitle: t(`flooring.materials.${material}`),
               sections: [{ title: t('flooring.resultsTitle'), data: [
                 { label: t('flooring.area'), value: `${results.actualArea} м²` },
-                { label: t('flooring.packs'), value: `${results.packs} шт.` },
+                { label: t('flooring.packs'), value: `${results.packs} ${t('flooring.pcs')}` },
                 { label: t('flooring.materialCost'), value: `${results.totalCost.toLocaleString(NUMBER_LOCALE)} ₸` },
                 { label: t('flooring.grandTotal'), value: `${results.grandTotal.toLocaleString(NUMBER_LOCALE)} ₸` },
               ]}],

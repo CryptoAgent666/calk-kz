@@ -397,7 +397,7 @@ export default function AgeCalculator() {
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'Calk.kz'
             }}
             filename="age-calculation"
           />

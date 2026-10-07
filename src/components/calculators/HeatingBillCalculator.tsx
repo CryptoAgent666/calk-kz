@@ -24,7 +24,7 @@ interface CityHeatingData {
 }
 
 export default function HeatingBillCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [city, setCity] = useState<string>('astana');
   const [heatingArea, setHeatingArea] = useState<string>('60');
   const [hasMeter, setHasMeter] = useState<boolean>(false);
@@ -394,7 +394,7 @@ export default function HeatingBillCalculator() {
               <div className="border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-3">{t('heating.seasonalProjection')}</h3>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">{t('heating.forMonths')} {selectedCityData?.monthlyNorms.length || 7} {t('heating.months')}</span>
+                  <span className="text-gray-600">{t('heating.forMonthsN', { n: selectedCityData?.monthlyNorms.length || 7 })}</span>
                   <span className="text-xl font-bold text-orange-600">{formatNumber(results.seasonalAmount)}</span>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
@@ -592,8 +592,8 @@ export default function HeatingBillCalculator() {
           { question: t('heating.faq.q5'), answer: t('heating.faq.a5') }
         ]}
         sources={[
-          { title: 'Алматинские тепловые сети — тарифы', url: 'https://alts.kz/tarify/' },
-          { title: 'Астана-Теплотранзит — тарифы', url: 'https://a-tranzit.kz/tarif-i-tarifnaya-smeta' },
+          { title: i18n.language === 'kk' ? '«Алматы жылу желілері» — тарифтер' : 'Алматинские тепловые сети — тарифы', url: 'https://alts.kz/tarify/' },
+          { title: i18n.language === 'kk' ? '«Астана-Теплотранзит» — тарифтер' : 'Астана-Теплотранзит — тарифы', url: 'https://a-tranzit.kz/tarif-i-tarifnaya-smeta' },
         ]}
       />
 
@@ -601,7 +601,7 @@ export default function HeatingBillCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="heating-bill"
-        calculatorTitle="Калькулятор отопления"
+        calculatorTitle={t('heating.title')}
       />
       <LastUpdated calculatorId="heating" />
     </div>

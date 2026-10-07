@@ -24,8 +24,9 @@ const ECOM_DUTY_MIN_EUR_PER_KG = 1; // не менее 1 EUR/кг; весово�
 // Сверх 200 € по товарам электронной торговли дополнительно взимается НДС по национальной ставке —
 // в РК 16% (ст. 503 НК РК) от таможенной стоимости с пошлиной.
 const ECOM_VAT_RATE = 0.16;
-const DEFAULT_EUR_RATE = 553.75;
-const DEFAULT_USD_RATE = 469.52;
+// Курсы НБРК на 07.10.2026 (nationalbank.kz/rss) — по умолчанию; пользователь вводит текущий
+const DEFAULT_EUR_RATE = 509.99;
+const DEFAULT_USD_RATE = 453.65;
 
 type ShipmentType = 'standard' | 'ecommerce';
 
