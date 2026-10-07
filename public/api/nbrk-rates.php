@@ -18,6 +18,8 @@ header('Access-Control-Allow-Origin: *');
 header('X-Robots-Tag: noindex');
 
 date_default_timezone_set('Asia/Almaty');
+// На хостинге serialize_precision = 17: без этого json_encode пишет 453.64999999999998
+ini_set('serialize_precision', '-1');
 
 const CACHE_TTL = 1800;
 const CODES = ['USD', 'EUR', 'RUB', 'CNY', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD', 'KGS', 'UZS', 'TRY', 'AED'];
