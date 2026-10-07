@@ -17,6 +17,8 @@ type BrickType = 'single' | 'oneAndHalf' | 'double' | 'block' | 'gasBlock';
 // Швы кладки из кирпича и камней правильной формы — СП РК 5.03-107-2013, п. 4.7.1.3
 const JOINT_H_M = 0.012; // горизонтальный
 const JOINT_V_M = 0.010; // вертикальный
+// Шов на клею — 2 мм (там же, п. 4.7.6.4; пункт о силикатных блоках, отдельного для газобетона в СП РК нет)
+const JOINT_GLUE_M = 0.002;
 
 interface BrickSpec {
   length: number;  // мм
@@ -24,6 +26,7 @@ interface BrickSpec {
   height: number;
   perM3: number;   // шт на 1 м³ кладки с учётом швов
   price: number;   // ₸/шт
+  glue?: boolean;  // кладка на клею
 }
 
 const BRICKS: Record<BrickType, BrickSpec> = {
@@ -31,28 +34,71 @@ const BRICKS: Record<BrickType, BrickSpec> = {
   oneAndHalf:    { length: 250, width: 120, height: 88, perM3: 296, price: 110 },  // 1 / (0,26 × 0,13 × 0,100)
   double:        { length: 250, width: 120, height: 138, perM3: 197, price: 150 }, // 1 / (0,26 × 0,13 × 0,150)
   block:         { length: 390, width: 190, height: 188, perM3: 62, price: 320 },  // 1 / (0,40 × 0,20 × 0,20)
-  gasBlock:      { length: 600, width: 300, height: 200, perM3: 27, price: 550 },  // на клею, шов 2–3 мм
+  gasBlock:      { length: 600, width: 300, height: 200, perM3: 27, price: 550, glue: true }, // 1 / (0,602 × 0,30 × 0,202)
 };
 
-type Thickness = 'half' | 'one' | 'oneAndHalf' | 'two';
-const THICKNESS_M: Record<Thickness, number> = {
-  half: 0.12,       // полкирпича
-  one: 0.25,        // 1 кирпич
-  oneAndHalf: 0.38, // 1.5 кирпича
-  two: 0.51,        // 2 кирпича
+type Masonry = 'brick' | 'block' | 'gasBlock';
+const MASONRY: Record<BrickType, Masonry> = {
+  single: 'brick', oneAndHalf: 'brick', double: 'brick', block: 'block', gasBlock: 'gasBlock',
 };
-// Кирпичей по ширине (120 мм) в толщине стены: 120 / 250 / 380 / 510 мм с продольными швами 10 мм
-const BRICKS_ACROSS: Record<Thickness, number> = { half: 1, one: 2, oneAndHalf: 3, two: 4 };
+
+// Толщина стены и сколько изделий в ней поперёк. label — ключ brick.thicknessLabels.*, без него подпись «N мм».
+interface WallOption { mm: number; across: number; label?: string }
+const WALLS: Record<Masonry, WallOption[]> = {
+  // Кирпичей по ширине (120 мм) с продольными швами 10 мм: 120 / 250 / 380 / 510 мм
+  brick: [
+    { mm: 120, across: 1, label: 'half' },
+    { mm: 250, across: 2, label: 'one' },
+    { mm: 380, across: 3, label: 'oneAndHalf' },
+    { mm: 510, across: 4, label: 'two' },
+  ],
+  // Керамзитоблок шириной 190 мм: в один блок или в два с продольным швом 10 мм
+  block: [
+    { mm: 190, across: 1, label: 'block190' },
+    { mm: 390, across: 2, label: 'block390' },
+  ],
+  // Газоблок кладут в один блок: ширину блока берут по толщине стены, лицо у всех 600 × 200 мм
+  gasBlock: [200, 250, 300, 375, 400].map(mm => ({ mm, across: 1 })),
+};
+const DEFAULT_WALL_MM: Record<Masonry, number> = { brick: 250, block: 190, gasBlock: 300 };
+const WALL_GRID: Record<Masonry, string> = {
+  brick: 'grid-cols-4', block: 'grid-cols-2', gasBlock: 'grid-cols-3 sm:grid-cols-5',
+};
+
+// Газоблок под выбранную толщину: ширина = толщине стены, цена — пропорционально объёму блока
+function sizedSpec(type: BrickType, wallMm: number): BrickSpec {
+  const spec = BRICKS[type];
+  if (type !== 'gasBlock') return spec;
+  return {
+    ...spec,
+    width: wallMm,
+    perM3: Math.round(1 / ((spec.length / 1000 + JOINT_GLUE_M) * (wallMm / 1000) * (spec.height / 1000 + JOINT_GLUE_M))),
+    price: Math.round(spec.price * wallMm / spec.width),
+  };
+}
+
+// Изделий на 1 м² лица стены: одно изделие со швами занимает (длина + верт. шов) × (высота + гориз. шов),
+// across — сколько их в толщине стены
+function perSquareMeter(spec: BrickSpec, wall: WallOption): number {
+  const jv = spec.glue ? JOINT_GLUE_M : JOINT_V_M;
+  const jh = spec.glue ? JOINT_GLUE_M : JOINT_H_M;
+  return wall.across / ((spec.length / 1000 + jv) * (spec.height / 1000 + jh));
+}
 
 export default function BrickCalculator() {
   const { t } = useTranslation('calculators');
   const [brickType, setBrickType] = useState<BrickType>('single');
-  const [thickness, setThickness] = useState<Thickness>('one');
+  const [wallMm, setWallMm] = useState<Record<Masonry, number>>(DEFAULT_WALL_MM);
   const [wallLength, setWallLength] = useState<string>('10');
   const [wallHeight, setWallHeight] = useState<string>('3');
   const [doors, setDoors] = useState<string>('0'); // м²
   const [windows, setWindows] = useState<string>('0');
   const [reserve, setReserve] = useState<string>('5');
+
+  const masonry = MASONRY[brickType];
+  const wall = WALLS[masonry].find(o => o.mm === wallMm[masonry]) ?? WALLS[masonry][0];
+  const spec = sizedSpec(brickType, wall.mm);
+  const perM2 = perSquareMeter(spec, wall);
 
   const results = useMemo(() => {
     const l = parseFloat(wallLength) || 0;
@@ -60,7 +106,7 @@ export default function BrickCalculator() {
     const d = parseFloat(doors) || 0;
     const w = parseFloat(windows) || 0;
     const r = parseFloat(reserve) || 0;
-    const th = THICKNESS_M[thickness];
+    const th = wall.mm / 1000;
 
     if (l <= 0 || h <= 0) return null;
 
@@ -68,16 +114,9 @@ export default function BrickCalculator() {
     if (wallArea <= 0) return null;
 
     const volume = wallArea * th; // м³
-    const spec = BRICKS[brickType];
 
-    // Кирпич — по лицевой площади: один кирпич со швами занимает (длина + 10 мм) × (высота + 12 мм).
-    // Через м³ × шт/м³ выходило на 2–8 % меньше: шт/м³ закладывает шов и по толщине,
-    // а в стене в полкирпича продольного шва нет. Блоки — по объёму.
-    const isBrick = brickType === 'single' || brickType === 'oneAndHalf' || brickType === 'double';
-    const perM2 = isBrick
-      ? BRICKS_ACROSS[thickness] / ((spec.length / 1000 + JOINT_V_M) * (spec.height / 1000 + JOINT_H_M))
-      : th * spec.perM3;
-
+    // Кирпич и блоки — по лицевой площади (perSquareMeter). Через м³ × шт/м³ кирпича выходило
+    // на 2–8 % меньше: шт/м³ закладывает шов и по толщине, а в стене в полкирпича продольного шва нет.
     const brickCount = Math.ceil(wallArea * perM2 * (1 + r / 100));
 
     // Раствор: ~0.25 м³ на 1 м³ кладки
@@ -106,7 +145,7 @@ export default function BrickCalculator() {
       totalPrice: Math.round(totalPrice),
       wallWeight: Math.round(wallWeight),
     };
-  }, [brickType, thickness, wallLength, wallHeight, doors, windows, reserve]);
+  }, [brickType, wall, perM2, spec.price, wallLength, wallHeight, doors, windows, reserve]);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -128,27 +167,35 @@ export default function BrickCalculator() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">{t('brick.brickType')}</label>
             <div className="space-y-2">
-              {(Object.keys(BRICKS) as BrickType[]).map(b => (
-                <button key={b} onClick={() => setBrickType(b)}
-                  className={`w-full p-3 rounded-lg border text-left text-sm ${brickType === b ? 'bg-orange-50 border-orange-500' : 'bg-white border-gray-300'}`}>
-                  <div className="font-medium">{t(`brick.types.${b}`)}</div>
-                  <div className="text-xs text-gray-500">{BRICKS[b].length}×{BRICKS[b].width}×{BRICKS[b].height} мм • {BRICKS[b].perM3} шт/м³ • {BRICKS[b].price} ₸/шт</div>
-                </button>
-              ))}
+              {(Object.keys(BRICKS) as BrickType[]).map(b => {
+                const s = sizedSpec(b, wallMm[MASONRY[b]]);
+                return (
+                  <button key={b} onClick={() => setBrickType(b)}
+                    className={`w-full p-3 rounded-lg border text-left text-sm ${brickType === b ? 'bg-orange-50 border-orange-500' : 'bg-white border-gray-300'}`}>
+                    <div className="font-medium">{t(`brick.types.${b}`)}</div>
+                    <div className="text-xs text-gray-500">{s.length}×{s.width}×{s.height} мм • {s.perM3} шт/м³ • {s.price} ₸/шт</div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">{t('brick.thickness')}</label>
-            <div className="grid grid-cols-4 gap-2">
-              {(['half', 'one', 'oneAndHalf', 'two'] as Thickness[]).map(th => (
-                <button key={th} onClick={() => setThickness(th)}
-                  className={`p-2 rounded-lg border text-sm ${thickness === th ? 'bg-orange-600 text-white border-orange-600' : 'bg-white border-gray-300'}`}>
-                  {t(`brick.thicknessLabels.${th}`)}
+            <div className={`grid ${WALL_GRID[masonry]} gap-2`}>
+              {WALLS[masonry].map(o => (
+                <button key={o.mm} onClick={() => setWallMm(prev => ({ ...prev, [masonry]: o.mm }))}
+                  className={`p-2 rounded-lg border text-sm ${wall.mm === o.mm ? 'bg-orange-600 text-white border-orange-600' : 'bg-white border-gray-300'}`}>
+                  {o.label ? t(`brick.thicknessLabels.${o.label}`) : t('brick.thicknessMm', { mm: o.mm })}
                 </button>
               ))}
             </div>
-            <div className="text-xs text-gray-500 mt-1">{THICKNESS_M[thickness]} м</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {t('brick.thicknessHint', {
+                m: (wall.mm / 1000).toLocaleString(NUMBER_LOCALE),
+                n: perM2.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: perM2 < 20 ? 1 : 0 }),
+              })}
+            </div>
           </div>
 
           <RangeSlider label={t('brick.wallLength')} value={parseFloat(wallLength) || 0} onChange={v => setWallLength(String(v))}
