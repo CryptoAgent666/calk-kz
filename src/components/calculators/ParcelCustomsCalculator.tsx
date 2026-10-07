@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Package, Calculator, Info, AlertTriangle, Scale } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -11,7 +11,8 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatShortDate } from '../../utils/localeFormat';
+import { fetchNbrkRates } from '../../utils/nbrkRates';
 
 const VALUE_LIMIT_EUR = 200;
 // Classic regime (обычные МПО, физлицо → физлицо)
@@ -24,7 +25,9 @@ const ECOM_DUTY_MIN_EUR_PER_KG = 1; // не менее 1 EUR/кг; весово�
 // Сверх 200 € по товарам электронной торговли дополнительно взимается НДС по национальной ставке —
 // в РК 16% (ст. 503 НК РК) от таможенной стоимости с пошлиной.
 const ECOM_VAT_RATE = 0.16;
-// Курсы НБРК на 07.10.2026 (nationalbank.kz/rss) — по умолчанию; пользователь вводит текущий
+// Курсы НБРК на 07.10.2026 (nationalbank.kz/rss) — для пререндера и на случай, если
+// /api/nbrk-rates.php недоступен; после загрузки страницы подставляется курс дня.
+const DEFAULT_RATES_DATE = '2026-10-07';
 const DEFAULT_EUR_RATE = 509.99;
 const DEFAULT_USD_RATE = 453.65;
 
@@ -38,6 +41,25 @@ export default function ParcelCustomsCalculator() {
   const [currency, setCurrency] = useState<'EUR' | 'USD' | 'KZT'>('EUR');
   const [eurRate, setEurRate] = useState<number>(DEFAULT_EUR_RATE);
   const [usdRate, setUsdRate] = useState<number>(DEFAULT_USD_RATE);
+  // Дата загруженного курса НБРК; null — пока стоят курсы по умолчанию
+  const [ratesDate, setRatesDate] = useState<string | null>(null);
+  const eurTouched = useRef(false);
+  const usdTouched = useRef(false);
+
+  // Курс дня — только после гидратации: в пререндер-снимок попадают курсы по
+  // умолчанию, иначе первый клиентский рендер разошёлся бы со статикой.
+  useEffect(() => {
+    if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return;
+    let cancelled = false;
+    fetchNbrkRates().then((r) => {
+      if (cancelled || !r || r.date < DEFAULT_RATES_DATE) return;
+      // Ручной ввод пользователя не перетираем
+      if (r.rates.EUR && !eurTouched.current) setEurRate(r.rates.EUR);
+      if (r.rates.USD && !usdTouched.current) setUsdRate(r.rates.USD);
+      setRatesDate(r.date);
+    });
+    return () => { cancelled = true; };
+  }, []);
   const [itemWeight, setItemWeight] = useState<string>('');
   const [deliveryCost, setDeliveryCost] = useState<string>('');
 
@@ -354,13 +376,13 @@ export default function ParcelCustomsCalculator() {
                 type="number"
                 id="eurRate"
                 value={eurRate}
-                onChange={(e) => setEurRate(parseFloat(e.target.value) || DEFAULT_EUR_RATE)}
+                onChange={(e) => { eurTouched.current = true; setEurRate(parseFloat(e.target.value) || DEFAULT_EUR_RATE); }}
                 placeholder={String(DEFAULT_EUR_RATE)}
                 step="0.01"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-colors"
               />
               <p className="text-xs text-gray-500 mt-1">
-                {t('parcel-customs.rateHint')}
+                {ratesDate ? t('parcel-customs.rateHintLive', { date: formatShortDate(ratesDate) }) : t('parcel-customs.rateHint')}
               </p>
             </div>
 
@@ -374,7 +396,7 @@ export default function ParcelCustomsCalculator() {
                   type="number"
                   id="usdRate"
                   value={usdRate}
-                  onChange={(e) => setUsdRate(parseFloat(e.target.value) || DEFAULT_USD_RATE)}
+                  onChange={(e) => { usdTouched.current = true; setUsdRate(parseFloat(e.target.value) || DEFAULT_USD_RATE); }}
                   placeholder={String(DEFAULT_USD_RATE)}
                   step="0.01"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-colors"
