@@ -29,7 +29,7 @@ const LAST_UPDATED: Record<string, string> = {
   'alcohol-blood': '2026-09-24', // КоАП 608 ч. 3-1: повторно 20 суток + 8 лет; порог 0,3‰ приостановлен
   'kdif-guarantee': '2026-07-11',
   'bad-habits-cost': '2026-07-11',
-  'mortgage-compare': '2026-07-11',
+  'mortgage-compare': '2026-10-13', // рыночная ГЭСВ → месячная ставка (платёж был завышен ~10%)
   'mrp-converter': '2026-10-06', // calkcheck 06.10 б8: формулировка критерия 12 МЗП
   'house-heating': '2026-09-25', // пример 150 м²: 7,7 т угля
   'ip-payments': '2026-07-11',

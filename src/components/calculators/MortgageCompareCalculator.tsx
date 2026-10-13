@@ -34,6 +34,13 @@ function annuity(loan: number, ratePct: number, years: number): number {
   return (loan * i) / (1 - Math.pow(1 + i, -n));
 }
 
+// Рыночную ставку банки публикуют как ГЭСВ — эффективную годовую с комиссиями и страховкой:
+// ГЭСВ = (1 + i)^12 − 1. В аннуитет идёт месячная i, а не ГЭСВ / 12: иначе 23,5 % ГЭСВ
+// считались как 23,5 % номинала (вместо ≈ 21,3 %), и платёж по рынку выходил выше на ~10 %.
+function gesvToNominalPct(gesvPct: number): number {
+  return (Math.pow(1 + gesvPct / 100, 1 / 12) - 1) * 12 * 100;
+}
+
 interface ProgramResult {
   id: string;
   rate: number;
@@ -60,9 +67,10 @@ export default function MortgageCompareCalculator() {
     const loan = p * (1 - dp / 100);
     const mkt = parseFloat(marketRate) || MARKET_RATE_DEFAULT;
 
-    const mk = (id: string, rate: number, maxTerm: number, eligible: boolean, reasonKey?: string): ProgramResult => {
+    // rate — для показа (у рынка это ГЭСВ), calcRate — номинал для аннуитета.
+    const mk = (id: string, rate: number, maxTerm: number, eligible: boolean, reasonKey?: string, calcRate = rate): ProgramResult => {
       const tEff = Math.min(term, maxTerm);
-      const monthly = annuity(loan, rate, tEff);
+      const monthly = annuity(loan, calcRate, tEff);
       return { id, rate, term: tEff, monthly: Math.round(monthly), overpay: Math.round(monthly * tEff * 12 - loan), eligible, reasonKey };
     };
 
@@ -78,7 +86,7 @@ export default function MortgageCompareCalculator() {
       mk('otau', otbasyRate, 19,
         loan <= CAP_OTBASY[city] && dp >= 20,
         loan > CAP_OTBASY[city] ? 'mortgage-compare.reasonLoanCap' : dp < 20 ? 'mortgage-compare.reasonDown20' : undefined),
-      mk('market', mkt, 25, true),
+      mk('market', mkt, 25, true, undefined, gesvToNominalPct(mkt)),
     ];
   };
 
@@ -91,6 +99,7 @@ export default function MortgageCompareCalculator() {
   );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
+  const rateText = (pr: ProgramResult) => `${pr.rate}%${pr.id === 'market' ? ` ${t('mortgage-compare.gesvShort')}` : ''}`;
   const loan = Math.round((parseFloat(price) || 0) * (1 - (Math.min(90, Math.max(0, parseFloat(downPercent) || 0))) / 100));
   const eligible = programs.filter((pr) => pr.eligible);
   const best = eligible.length ? eligible.reduce((a, b) => (a.monthly <= b.monthly ? a : b)) : null;
@@ -100,7 +109,7 @@ export default function MortgageCompareCalculator() {
   const generateExportData = () => {
     if (!programs.length || loan <= 0) return '';
     const rows = programs
-      .map((pr) => `- ${t(`mortgage-compare.program_${pr.id}`)} (${pr.rate}%${pr.term !== (parseFloat(termYears) || 0) ? `, ${pr.term} ${t('mortgage-compare.yearsShort')}` : ''}): ${pr.eligible ? `${fmt(pr.monthly)}/${t('mortgage-compare.monthShort')}, ${t('mortgage-compare.overpayLabel')} ${fmt(pr.overpay)}` : t('mortgage-compare.notEligible')}`)
+      .map((pr) => `- ${t(`mortgage-compare.program_${pr.id}`)} (${rateText(pr)}${pr.term !== (parseFloat(termYears) || 0) ? `, ${pr.term} ${t('mortgage-compare.yearsShort')}` : ''}): ${pr.eligible ? `${fmt(pr.monthly)}/${t('mortgage-compare.monthShort')}, ${t('mortgage-compare.overpayLabel')} ${fmt(pr.overpay)}` : t('mortgage-compare.notEligible')}`)
       .join('\n');
     return `${t('mortgage-compare.parameters')}:
 - ${t('mortgage-compare.priceLabel')}: ${fmt(parseFloat(price) || 0)}
@@ -226,7 +235,7 @@ ${rows}`;
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-sm font-semibold text-gray-900">{t(`mortgage-compare.program_${pr.id}`)}</span>
-                    <span className="ml-2 text-xs text-gray-500">{pr.rate}% · {pr.term} {t('mortgage-compare.yearsShort')}</span>
+                    <span className="ml-2 text-xs text-gray-500">{rateText(pr)} · {pr.term} {t('mortgage-compare.yearsShort')}</span>
                     {best && pr.id === best.id && pr.eligible && (
                       <span className="ml-2 rounded bg-indigo-600 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">{t('mortgage-compare.bestBadge')}</span>
                     )}
@@ -293,7 +302,7 @@ ${rows}`;
               sections: [{
                 title: t('mortgage-compare.export.results'),
                 data: programs.map((pr) => ({
-                  label: `${t(`mortgage-compare.program_${pr.id}`)} (${pr.rate}%)`,
+                  label: `${t(`mortgage-compare.program_${pr.id}`)} (${rateText(pr)})`,
                   value: pr.eligible ? `${fmt(pr.monthly)}/${t('mortgage-compare.monthShort')}` : t('mortgage-compare.notEligible'),
                 })),
               }],
