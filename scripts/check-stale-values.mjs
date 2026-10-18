@@ -82,8 +82,11 @@ for (const root of CFG.roots) {
         if (e.ctx && !new RegExp(e.ctx, 'i').test(code)) continue
         // старое И новое значение в одной строке («808.70 … was $795.20») —
         // это починенное место с историей в комменте, не хвост
-        const nowTok = String(e.now).match(/\d[\d.,_ ]*/)?.[0]?.trim()
-        if (nowTok && nowTok !== String(e.was) && code.includes(nowTok)) continue
+        // the "now" token must be one the stale text does not already contain — otherwise
+        // ("$26.44/hour ($1,004.70" → "$26.44/hour ($1,004.90") the shared 26.44 exempted every hit
+        const nowTok = (String(e.now).match(/\d[\d.,_ ]*/g) || []).map((t) => t.trim())
+          .find((t) => t && !String(e.was).includes(t))
+        if (nowTok && code.includes(nowTok)) continue
         const tag = e.pending_fix ? '⚠ известный хвост (apply-план)' : '✗ УСТАРЕВШЕЕ'
         e.pending_fix ? warns++ : errors++
         console.log(`${tag} ${file}:${i + 1}  «${e.was}» → ${e.now}  [${e.what}]`)
