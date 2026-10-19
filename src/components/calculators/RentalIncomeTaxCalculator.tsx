@@ -73,8 +73,10 @@ export default function RentalIncomeTaxCalculator() {
       // Патентный СНР упразднён с 01.01.2026 → режим для самозанятых.
       // ИПН 0%; единственный платёж — соцплатежи 4% от дохода
       // (ОПВ 1% + ОПВР 1% + СО 1% + ОСМС 1%), удерживаемые с фактического дохода.
+      // СО 1% — с дохода не выше 7 МЗП в месяц (Соцкодекс ст. 101-1 п. 3), остальные 3% — со всего.
       incomeTax = 0;
-      socialPayments = taxableIncome * SELF_EMPLOYED_RATE;
+      const monthly = months > 0 ? taxableIncome / months : 0;
+      socialPayments = (monthly * (SELF_EMPLOYED_RATE - 0.01) + Math.min(monthly, SO_MAX_BASE) * 0.01) * months;
     } else {
       // Упрощёнка: 4% от дохода (ИПН/КПН, НК РК 2026; акимат вправе изменить ±50%)
       incomeTax = taxableIncome * 0.04;
@@ -120,12 +122,17 @@ export default function RentalIncomeTaxCalculator() {
     }
 
     const yearlyIncome = rent * months;
-    const utilityDeduction = utilitiesIncluded ? util * months : 0;
-    const taxableIncome = Math.max(0, yearlyIncome - utilityDeduction);
+    // Возмещение коммунальных по счетам, отдельно от арендной платы, не доход только у
+    // физлица без ИП при сдаче жилья (НК ст. 370 пп. 10). Раньше вычиталось во всех режимах
+    // и для коммерции, а чекбокс назывался «Коммунальные включены в аренду» — как раз случай,
+    // когда это облагаемая арендная плата.
+    const utilityDeduction = utilitiesIncluded && propertyType === 'residential' ? util * months : 0;
+    const individualTaxable = Math.max(0, yearlyIncome - utilityDeduction);
+    const taxableIncome = selectedRegime === 'individual' ? individualTaxable : yearlyIncome;
 
-    const individual = calculateForRegime('individual', taxableIncome, months);
-    const patent = calculateForRegime('patent', taxableIncome, months);
-    const simplified = calculateForRegime('simplified', taxableIncome, months);
+    const individual = calculateForRegime('individual', individualTaxable, months);
+    const patent = calculateForRegime('patent', yearlyIncome, months);
+    const simplified = calculateForRegime('simplified', yearlyIncome, months);
 
     const selected =
       selectedRegime === 'individual'
@@ -336,6 +343,7 @@ calk.kz`;
                   {t('rental-income-tax.utilitiesIncluded')}
                 </span>
               </label>
+              <p className="text-xs text-gray-500 mb-3">{t('rental-income-tax.utilitiesHint')}</p>
               {utilitiesIncluded && (
                 <div>
                   <label className="block text-xs text-gray-600 mb-1">

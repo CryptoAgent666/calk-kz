@@ -30,9 +30,12 @@ import { NUMBER_LOCALE } from '../../utils/localeFormat';
 const MRP_2026 = 4325;
 const LIMIT_MRP = 300;
 const LIMIT_KZT = LIMIT_MRP * MRP_2026; // 1 297 500 ₸/мес
-const RATE_TOTAL = 0.04;
 // Разбивка 4% по компонентам (по 1%)
 const COMPONENTS = ['opv', 'opvr', 'so', 'vosms'] as const;
+// База СО самозанятого — не выше 7 МЗП в месяц (Соцкодекс ст. 101-1 п. 3; для платформ —
+// ст. 102-1 п. 2). ОПВ, ОПВР и ВОСМС ограничены только порогом режима (300 МРП).
+const MZP_2026 = 85000;
+const SO_BASE_CAP = 7 * MZP_2026; // 595 000 ₸
 
 type WorkMode = 'direct' | 'platform';
 
@@ -48,7 +51,8 @@ export default function SelfEmployedCalculator() {
   const EMPTY_RESULTS = {
     base: 0,
     payments: 0,
-    perComponent: 0,
+    components: { opv: 0, opvr: 0, so: 0, vosms: 0 } as Record<(typeof COMPONENTS)[number], number>,
+    soCapped: false,
     commissionAmount: 0,
     net: 0,
     overLimit: false,
@@ -63,11 +67,14 @@ export default function SelfEmployedCalculator() {
     const commissionAmount = gross * (commPct / 100);
     // База 4% — доход, начисленный исполнителю платформой (после её комиссии)
     const base = gross - commissionAmount;
-    const payments = base * RATE_TOTAL;
+    const onePct = Math.round(base * 0.01);
+    const components = { opv: onePct, opvr: onePct, so: Math.round(Math.min(base, SO_BASE_CAP) * 0.01), vosms: onePct };
+    const payments = components.opv + components.opvr + components.so + components.vosms;
     return {
       base: Math.round(base),
-      payments: Math.round(payments),
-      perComponent: Math.round(payments / 4),
+      payments,
+      components,
+      soCapped: base > SO_BASE_CAP,
       commissionAmount: Math.round(commissionAmount),
       net: Math.round(base - payments),
       overLimit: base > LIMIT_KZT,
@@ -236,9 +243,12 @@ ${t('self-employed.results')}:
                 <span className="text-gray-600 text-sm">
                   {t(`self-employed.${c}`)} <span className="text-xs text-gray-400">(1%)</span>
                 </span>
-                <span className="font-semibold text-gray-900">{formatNumber(results.perComponent)}</span>
+                <span className="font-semibold text-gray-900">{formatNumber(results.components[c])}</span>
               </div>
             ))}
+            {results.soCapped && (
+              <p className="text-xs text-gray-500">{t('self-employed.soCapNote', { cap: formatNumber(SO_BASE_CAP) })}</p>
+            )}
 
             <div className="flex justify-between items-center py-2">
               <span className="text-gray-600">{t('self-employed.ipnLabel')}</span>
@@ -300,10 +310,10 @@ ${t('self-employed.results')}:
                   data: [
                     { label: t('self-employed.incomeLabel'), value: formatNumber(parseFloat(income) || 0) },
                     { label: t('self-employed.paymentsLabel'), value: formatNumber(results.payments) },
-                    { label: t('self-employed.opv'), value: formatNumber(results.perComponent) },
-                    { label: t('self-employed.opvr'), value: formatNumber(results.perComponent) },
-                    { label: t('self-employed.so'), value: formatNumber(results.perComponent) },
-                    { label: t('self-employed.vosms'), value: formatNumber(results.perComponent) },
+                    { label: t('self-employed.opv'), value: formatNumber(results.components.opv) },
+                    { label: t('self-employed.opvr'), value: formatNumber(results.components.opvr) },
+                    { label: t('self-employed.so'), value: formatNumber(results.components.so) },
+                    { label: t('self-employed.vosms'), value: formatNumber(results.components.vosms) },
                     { label: t('self-employed.netLabel'), value: formatNumber(results.net) },
                   ],
                 },
