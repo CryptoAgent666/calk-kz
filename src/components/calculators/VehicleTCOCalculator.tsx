@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { pluralize } from '../../utils/pluralize';
 import {
   OGPO_BASE_PREMIUM_MRP,
   OGPO_EXPLOITATION_OVER_7Y_COEFF,
@@ -334,7 +335,7 @@ calk.kz`;
                 min={0}
                 max={25}
                 step={1}
-                formatValue={(v) => `${v} ${t('vehicle-tco.years')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'год', 'года', t('vehicle-tco.years'))}`}
                 color="#10b981"
               />
             </div>

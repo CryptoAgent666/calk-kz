@@ -23,6 +23,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
+import { pluralize } from '../../utils/pluralize';
 
 type Region = 'almaty-astana' | 'shymkent-karaganda' | 'other';
 type Coverage = 'full' | 'partial' | 'theft-only';
@@ -255,7 +256,7 @@ export default function KaskoCalculator() {
                 min={18}
                 max={80}
                 step={1}
-                formatValue={(v) => `${v} ${t('kasko.years')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'год', 'года', t('kasko.years'))}`}
                 color="#0ea5e9"
               />
               <input
@@ -280,7 +281,7 @@ export default function KaskoCalculator() {
                 min={0}
                 max={50}
                 step={1}
-                formatValue={(v) => `${v} ${t('kasko.years')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'год', 'года', t('kasko.years'))}`}
                 color="#0ea5e9"
               />
               <input
@@ -329,7 +330,7 @@ export default function KaskoCalculator() {
                 min={0}
                 max={20}
                 step={1}
-                formatValue={(v) => `${v} ${t('kasko.years')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'год', 'года', t('kasko.years'))}`}
                 color="#0ea5e9"
               />
               <input

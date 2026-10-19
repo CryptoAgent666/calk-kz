@@ -218,7 +218,7 @@ calk.kz`;
                 min={0}
                 max={120}
                 step={1}
-                formatValue={(v) => `${v} ${t('cash-flow-gap.days')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'день', 'дня', t('cash-flow-gap.days'))}`}
                 color="#f59e0b"
               />
               <p className="text-xs text-gray-500 mt-2">{t('cash-flow-gap.dsoHint')}</p>
@@ -236,7 +236,7 @@ calk.kz`;
                 min={0}
                 max={120}
                 step={1}
-                formatValue={(v) => `${v} ${t('cash-flow-gap.days')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'день', 'дня', t('cash-flow-gap.days'))}`}
                 color="#f59e0b"
               />
               <p className="text-xs text-gray-500 mt-2">{t('cash-flow-gap.dpoHint')}</p>
@@ -254,7 +254,7 @@ calk.kz`;
                 min={0}
                 max={180}
                 step={1}
-                formatValue={(v) => `${v} ${t('cash-flow-gap.days')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'день', 'дня', t('cash-flow-gap.days'))}`}
                 color="#f59e0b"
               />
               <p className="text-xs text-gray-500 mt-2">{t('cash-flow-gap.dioHint')}</p>

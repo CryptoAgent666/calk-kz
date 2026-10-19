@@ -11,6 +11,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { pluralize } from '../../utils/pluralize';
 
 // Госипотеки 2026. Сверка 13.09.2026 по первоисточникам (kfu.kz, baspana72025.kz, hcsbk.kz):
 // - «7-20-25» — НЕ продукт Отбасы банка: оператор АО «Казахстанский фонд устойчивости»
@@ -57,7 +58,7 @@ function calcAnnuity(principal: number, annualRate: number, termYears: number): 
 }
 
 export default function OtbasyBankCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   const [selectedProgram, setSelectedProgram] = useState('7-20-25');
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
@@ -284,7 +285,7 @@ export default function OtbasyBankCalculator() {
                 min={1}
                 max={25}
                 step={1}
-                formatValue={(v) => `${v} ${t('otbasy-bank.years')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'год', 'года', t('otbasy-bank.years'))}`}
                 color="#0ea5e9"
               />
             </div>

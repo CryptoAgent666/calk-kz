@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
+import { pluralize } from '../../utils/pluralize';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
 type PropertyType = 'residential' | 'commercial';
@@ -25,7 +26,7 @@ interface RegimeResult {
 }
 
 export default function RentalIncomeTaxCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
 
   // Константы 2026
   const MRP = 4325; // МРП 2026
@@ -317,7 +318,7 @@ calk.kz`;
                 min={1}
                 max={12}
                 step={1}
-                formatValue={(v) => `${v} ${t('rental-income-tax.months')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'месяц', 'месяца', t('rental-income-tax.months'))}`}
                 color="#3b82f6"
               />
             </div>

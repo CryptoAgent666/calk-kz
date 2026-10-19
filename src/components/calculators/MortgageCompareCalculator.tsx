@@ -12,6 +12,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import LocalizedLink from '../LocalizedLink';
+import { pluralize } from '../../utils/pluralize';
 
 /**
  * Сравнитель госипотек 07.2026: 7-20-25 (7%, ≤25 лет, лимит цены 30/25/20 млн
@@ -190,7 +191,7 @@ ${rows}`;
                 value={parseFloat(termYears) || 0}
                 onChange={(v) => setTermYears(String(v))}
                 min={3} max={25} step={1}
-                formatValue={(v) => `${v} ${t('mortgage-compare.yearsShort')}`}
+                formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'год', 'года', t('mortgage-compare.yearsShort'))}`}
                 color="#6366f1"
               />
             </div>

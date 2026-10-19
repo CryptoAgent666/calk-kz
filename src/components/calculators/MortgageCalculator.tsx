@@ -11,6 +11,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { pluralize } from '../../utils/pluralize';
 
 interface MortgageProgram {
   id: string;
@@ -476,7 +477,7 @@ export default function MortgageCalculator() {
                     max={selectedProgramData?.maxTermYears || 30}
                     step={1}
                     label={t('mortgage.loanTerm')}
-                    formatValue={(v) => `${v} ${t('mortgage.years')}`}
+                    formatValue={(v) => `${v} ${pluralize(i18n.language, v, 'год', 'года', t('mortgage.years'))}`}
                     color="#8b5cf6"
                   />
                 </div>
