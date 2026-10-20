@@ -48,9 +48,15 @@ export default function MaternityBenefitsCalculator() {
 
   const calculateBenefits = () => {
     if (isEmployed) {
-      // Расчет для работающих
-      const maternityIncome = Math.min(parseFloat(averageIncomeForMaternity) || 0, MAX_INCOME_FOR_CALCULATION);
-      const childcareIncome = Math.min(parseFloat(averageIncomeForChildcare) || 0, MAX_INCOME_FOR_CALCULATION);
+      // Расчет для работающих. В поля вводят зарплату; выплаты считаются от дохода, с которого
+      // платились СО (Соцкодекс ст. 78 п. 2, ст. 85 п. 1): зарплата минус ОПВ, не менее 1 и не более
+      // 7 МЗП (ст. 245 п. 1). Раньше брали саму зарплату — выплаты были завышены на ~11%.
+      const soObject = (salary: number) =>
+        salary > 0 ? Math.min(Math.max(salary * (1 - OPV_RATE), MZP), MAX_INCOME_FOR_CALCULATION) : 0;
+      const maternityIncome = soObject(parseFloat(averageIncomeForMaternity) || 0);
+      const childcareIncome = soObject(parseFloat(averageIncomeForChildcare) || 0);
+      // Пособие на рождение из бюджета получают все, независимо от занятости (ст. 79–80).
+      const birthBenefitEmployed = birthBenefitMRP * MRP;
 
       // Единовременная выплата по беременности и родам
       const grossMaternityBenefit = maternityIncome * MATERNITY_COEFFICIENT;
@@ -65,11 +71,11 @@ export default function MaternityBenefitsCalculator() {
       const childcareOPV = grossChildcareBenefit * OPV_RATE;
       const netChildcareBenefit = grossChildcareBenefit - childcareOPV;
 
-      // Общая сумма за первый год (единовременная + 18 месяцев ежемесячной)
-      const totalFirstYearBenefits = netMaternityBenefit + (netChildcareBenefit * 18);
+      // Общая сумма за первые 1,5 года: по беременности и родам + 18 месяцев по уходу + на рождение
+      const totalFirstYearBenefits = netMaternityBenefit + (netChildcareBenefit * 18) + birthBenefitEmployed;
 
-      const isIncomeExceedsLimit = (parseFloat(averageIncomeForMaternity) || 0) > MAX_INCOME_FOR_CALCULATION ||
-                                  (parseFloat(averageIncomeForChildcare) || 0) > MAX_INCOME_FOR_CALCULATION;
+      const isIncomeExceedsLimit = (parseFloat(averageIncomeForMaternity) || 0) * (1 - OPV_RATE) > MAX_INCOME_FOR_CALCULATION ||
+                                  (parseFloat(averageIncomeForChildcare) || 0) * (1 - OPV_RATE) > MAX_INCOME_FOR_CALCULATION;
 
       return {
         maternityBenefit: Math.round(grossMaternityBenefit),
@@ -78,7 +84,7 @@ export default function MaternityBenefitsCalculator() {
         childcareOPV: Math.round(childcareOPV),
         netMaternityBenefit: Math.round(netMaternityBenefit),
         netChildcareBenefit: Math.round(netChildcareBenefit),
-        birthBenefit: 0,
+        birthBenefit: Math.round(birthBenefitEmployed),
         monthlyChildcareBenefit: 0,
         totalFirstYearBenefits: Math.round(totalFirstYearBenefits),
         isIncomeExceedsLimit
@@ -278,6 +284,24 @@ export default function MaternityBenefitsCalculator() {
                 </p>
               </div>
 
+              <div>
+                <label htmlFor="childNumberEmployed" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('maternity-benefits.childNumberQuestion')}
+                </label>
+                <select
+                  id="childNumberEmployed"
+                  value={childNumber}
+                  onChange={(e) => setChildNumber(parseInt(e.target.value))}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                >
+                  {[1, 2, 3, 4].map((num) => (
+                    <option key={num} value={num}>
+                      {num <= 3 ? t(`maternity-benefits.childOrdinal${num}Child`) : t('maternity-benefits.fourthPlusChild')}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="bg-blue-50 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-blue-900 mb-2">{t('maternity-benefits.calculationFormulas')}</h3>
                 <div className="space-y-1 text-xs text-blue-800">
@@ -383,6 +407,11 @@ export default function MaternityBenefitsCalculator() {
                     <span className="font-bold text-green-600">{formatNumber(results.netChildcareBenefit)}</span>
                   </div>
                 </div>
+              </div>
+
+              <div className="flex justify-between items-center bg-green-50 rounded-lg p-4">
+                <span className="text-sm font-medium text-gray-800">{t('maternity-benefits.birthLumpSumBenefit')}</span>
+                <span className="font-bold text-green-600">{formatNumber(results.birthBenefit)}</span>
               </div>
 
               {results.isIncomeExceedsLimit && (
