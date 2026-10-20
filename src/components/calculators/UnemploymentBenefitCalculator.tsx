@@ -393,6 +393,17 @@ export default function UnemploymentBenefitCalculator() {
             </div>
           </div>
         </div>
+
+        {/* Закон № 306-VIII от 11.06.2026, ст. 1 п. 9 пп. 32 — изменения ст. 118 СК с 01.01.2027 */}
+        <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="flex items-start space-x-2">
+            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <h3 className="text-sm font-medium text-amber-900 mb-1">{t('unemployment.changes2027Title')}</h3>
+              <p className="text-amber-800 text-sm">{t('unemployment.changes2027Text')}</p>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
 
