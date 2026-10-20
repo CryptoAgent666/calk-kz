@@ -31,19 +31,26 @@ export default function UnifiedPaymentCalculator() {
 
   const calculate = (gross: number) => {
     if (gross <= 0) {
-      return { epTotal: 0, opv: 0, vosms: 0, ipn: 0, opvr: 0, oosms: 0, so: 0 };
+      return { epTotal: 0, opv: 0, vosms: 0, ipn: 0, opvr: 0, oosms: 0, so: 0, employerCost: 0, employeeNet: 0 };
     }
 
     const epTotal = gross * EP_RATE;
 
-    return {
-      epTotal: Math.round(epTotal),
+    const shares = {
       opv: Math.round(epTotal * OPV_SHARE),
       vosms: Math.round(epTotal * VOSMS_SHARE),
       ipn: Math.round(epTotal * IPN_SHARE),
       opvr: Math.round(epTotal * OPVR_SHARE),
       oosms: Math.round(epTotal * OOSMS_SHARE),
       so: Math.round(epTotal * SO_SHARE),
+    };
+    // Доли ИПН, ОПВ и ВОСМС удерживаются из зарплаты (НК ст. 823 п. 3), ОПВР, СО и ООСМС
+    // работодатель платит за свой счёт (п. 4). Раньше «итого для работодателя» = зарплата + весь ЕП.
+    return {
+      epTotal: Math.round(epTotal),
+      ...shares,
+      employerCost: Math.round(gross) + shares.opvr + shares.so + shares.oosms,
+      employeeNet: Math.round(gross) - shares.ipn - shares.opv - shares.vosms,
     };
   };
 
@@ -76,7 +83,10 @@ ${t('unified-payment.breakdown')}:
 - ${t('unified-payment.ipn')} (${(IPN_SHARE * 100).toFixed(1)}%): ${formatNumber(results.ipn)}
 - ${t('unified-payment.opvr')} (${(OPVR_SHARE * 100).toFixed(1)}%): ${formatNumber(results.opvr)}
 - ${t('unified-payment.oosms')} (${(OOSMS_SHARE * 100).toFixed(1)}%): ${formatNumber(results.oosms)}
-- ${t('unified-payment.so')} (${(SO_SHARE * 100).toFixed(1)}%): ${formatNumber(results.so)}`;
+- ${t('unified-payment.so')} (${(SO_SHARE * 100).toFixed(1)}%): ${formatNumber(results.so)}
+
+- ${t('unified-payment.employerCost')}: ${formatNumber(results.employerCost)}
+- ${t('unified-payment.employeeNet')}: ${formatNumber(results.employeeNet)}`;
   };
 
   const breakdownItems = [
@@ -211,10 +221,12 @@ ${t('unified-payment.breakdown')}:
                 <span className="font-semibold text-gray-900">{formatNumber(parseFloat(grossSalary) || 0)}</span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">{t('unified-payment.totalWithEP')}</span>
-                <span className="font-bold text-indigo-700">
-                  {formatNumber((parseFloat(grossSalary) || 0) + results.epTotal)}
-                </span>
+                <span className="text-gray-600">{t('unified-payment.employerCost')}</span>
+                <span className="font-bold text-indigo-700">{formatNumber(results.employerCost)}</span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-gray-600">{t('unified-payment.employeeNet')}</span>
+                <span className="font-bold text-emerald-700">{formatNumber(results.employeeNet)}</span>
               </div>
             </div>
           </div>
