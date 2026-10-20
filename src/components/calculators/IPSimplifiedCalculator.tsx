@@ -18,6 +18,9 @@ import { calculateSalary2026 } from '../../utils/salary2026';
 export default function IPSimplifiedCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [semiannualIncome, setSemiannualIncome] = useState<string>('3000000');
+  // Маслихат вправе понизить или повысить ставку 4% не более чем на 50% (НК ст. 726, ч. 2):
+  // на 2026 так сделали, например, Созакский район (2%). Решение — до 1 декабря на следующий год.
+  const [taxRatePct, setTaxRatePct] = useState<string>('4');
   const [hasEmployees, setHasEmployees] = useState<boolean>(false);
   const [numberOfEmployees, setNumberOfEmployees] = useState<string>('1');
   const [totalEmployeeSalaries, setTotalEmployeeSalaries] = useState<string>('');
@@ -141,7 +144,7 @@ export default function IPSimplifiedCalculator() {
 
     // 1. Расчет налога с дохода (раз в полгода).
     // С 2026 ставка 4% от дохода — это ИПН; социальный налог на упрощёнке отменён.
-    const totalTax = income * 0.04;
+    const totalTax = income * ((parseFloat(taxRatePct) || 4) / 100);
     const ipnTax = totalTax;
     const socialTax = 0;
 
@@ -198,7 +201,7 @@ export default function IPSimplifiedCalculator() {
   const results = useMemo(
     calculateTaxes,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [semiannualIncome, hasEmployees, numberOfEmployees, totalEmployeeSalaries, declaredIncome]
+    [semiannualIncome, taxRatePct, hasEmployees, numberOfEmployees, totalEmployeeSalaries, declaredIncome]
   );
 
   const formatNumber = (num: number) => {
@@ -269,6 +272,23 @@ export default function IPSimplifiedCalculator() {
                     <span className="text-gray-500 text-sm">₸</span>
                   </div>
                 </div>
+              </div>
+
+              <div>
+                <label htmlFor="taxRatePct" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('ip-simplified.regionalRateLabel')}
+                </label>
+                <select
+                  id="taxRatePct"
+                  value={taxRatePct}
+                  onChange={(e) => setTaxRatePct(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                >
+                  {['2', '3', '4', '5', '6'].map((r) => (
+                    <option key={r} value={r}>{r === '4' ? `4% — ${t('ip-simplified.baseRateOption')}` : `${r}%`}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">{t('ip-simplified.regionalRateHint')}</p>
               </div>
 
               <div className="flex items-center">
