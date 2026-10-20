@@ -21,6 +21,8 @@ export default function AlimonyCalculator() {
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
+  // Инвалидность плательщика: g3 — III группа, g12 — I–II на срок, g12perm — I–II бессрочно.
+  const [disability, setDisability] = useState<'none' | 'g3' | 'g12' | 'g12perm'>('none');
 
   const MZP = 85000;
   const MRP = 4325;
@@ -50,16 +52,23 @@ export default function AlimonyCalculator() {
       };
     }
 
+    // Лица с инвалидностью не платят ВОСМС (Закон об ОСМС ст. 28 п. 7), ОПВ — при I–II группе
+    // бессрочно (Соцкодекс ст. 248 п. 3); социальный вычет 882 / 5000 МРП в год (НК ст. 404) — по 1/12
+    // в месяц. Раньше флажок «пенсионер, инвалид» снимал только взносы, а ИПН считался без вычета.
     const opvBase = Math.min(gross, OPV_MAX_BASE);
-    const opv = isSpecialCategory ? 0 : opvBase * OPV_RATE;
+    const opv = isSpecialCategory || disability === 'g12perm' ? 0 : opvBase * OPV_RATE;
 
     const vosmsBase = Math.min(gross, VOSMS_MAX_BASE);
-    const vosms = isSpecialCategory ? 0 : vosmsBase * VOSMS_RATE;
+    const vosms = isSpecialCategory || disability !== 'none' ? 0 : vosmsBase * VOSMS_RATE;
 
     const standardDeduction = (isResident && isPrimaryJob) ? STANDARD_DEDUCTION : 0;
+    const socialDeduction = !isResident || disability === 'none' ? 0
+      : (disability === 'g3' ? 882 : 5000) * MRP / 12;
 
-    let taxableIncome = gross - opv - vosms - standardDeduction;
-    taxableIncome = Math.max(0, taxableIncome);
+    // Нерезидент: ИПН без налоговых вычетов (НК ст. 692 п. 3) — база = весь доход.
+    const taxableIncome = isResident
+      ? Math.max(0, gross - opv - vosms - standardDeduction - socialDeduction)
+      : gross;
 
     // 90%-корректировка для доходов ≤25 МРП ОТМЕНЕНА с 2026 (ст. 401 НК РК).
     const hasNinetyPercentReduction = false;
@@ -94,7 +103,7 @@ export default function AlimonyCalculator() {
       incomeTax: Math.round(incomeTax),
       totalDeductions: Math.round(totalDeductions),
       netIncome: Math.round(netIncome),
-      alimonyRate: alimonyRate * 100,
+      alimonyRate: Math.round(alimonyRate * 10000) / 100, // 1/3 → 33.33, а не 33.333333333333336
       alimonyAmount: Math.round(alimonyAmount),
       remainingIncome: Math.round(remainingIncome),
       hasNinetyPercentReduction,
@@ -108,7 +117,7 @@ export default function AlimonyCalculator() {
   const results = useMemo(
     () => calculateAlimony(parseFloat(grossSalary) || 0),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [grossSalary, childrenCount, isResident, isPrimaryJob, isSpecialCategory]
+    [grossSalary, childrenCount, isResident, isPrimaryJob, isSpecialCategory, disability]
   );
 
   const formatNumber = (num: number) => {
@@ -270,6 +279,24 @@ ${t('alimony.exportAlimonyCalc')}
                 <label htmlFor="isSpecialCategory" className="ml-2 block text-sm text-gray-700">
                   {t('alimony.isSpecialCategory')}
                 </label>
+              </div>
+
+              <div>
+                <label htmlFor="alimonyDisability" className="block text-sm text-gray-700 mb-1">
+                  {t('alimony.disabilityLabel')}
+                </label>
+                <select
+                  id="alimonyDisability"
+                  value={disability}
+                  onChange={(e) => setDisability(e.target.value as typeof disability)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                >
+                  <option value="none">{t('alimony.disabilityNone')}</option>
+                  <option value="g3">{t('alimony.disabilityG3')}</option>
+                  <option value="g12">{t('alimony.disabilityG12')}</option>
+                  <option value="g12perm">{t('alimony.disabilityG12Perm')}</option>
+                </select>
+                <p className="mt-1 text-xs text-gray-500">{t('alimony.disabilityHint')}</p>
               </div>
             </div>
 
