@@ -47,8 +47,16 @@ export default function OvertimeCalculator() {
 
     const hourlyRate = salary / mh;
     const regularPay = hourlyRate * h;
-    const overtimePay = hourlyRate * h * mult;
-    const extraPay = overtimePay - regularPay;
+    // Другой день отдыха вместо повышенной оплаты (ТК ст. 85 п. 2): часы — в одинарном размере.
+    const timeOff = takeTimeOff && (workType === 'weekend' || workType === 'holiday');
+    const effMult = timeOff ? 1 : mult;
+    // Ночные часы внутри графика уже оплачены окладом — сверх него положена надбавка не ниже 0,5×
+    // (ст. 110: «не ниже чем в полуторном размере»). Сверхурочные и выходные — вне графика, поэтому
+    // сверх оклада идёт вся оплата 1,5×. Раньше и для ночи «сверх зарплаты» показывались 1,5×.
+    const overtimePay = workType === 'night'
+      ? hourlyRate * h * (mult - 1)
+      : hourlyRate * h * effMult;
+    const extraPay = hourlyRate * h * (effMult - 1);
 
     // Налоги с доплаты (ИПН 10%, ОПВ 10%, ВОСМС 2%)
     const opv = overtimePay * 0.10;
@@ -65,7 +73,7 @@ export default function OvertimeCalculator() {
       regularPay: Math.round(regularPay),
       overtimePay: Math.round(overtimePay),
       extraPay: Math.round(extraPay),
-      multiplier: mult,
+      multiplier: effMult,
       net: Math.round(net),
       opv: Math.round(opv),
       vosms: Math.round(vosms),
