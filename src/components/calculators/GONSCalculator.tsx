@@ -14,12 +14,12 @@ import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // Та же модель, что и у основного расчёта ниже: вознаграждение банка на среднегодовой остаток,
-// госпремия = ставка × (взносы + вознаграждение банка), но не более 100 МРП за год.
+// госпремия = ставка × фактический остаток вклада (взносы, вознаграждение банка и прошлые
+// премии — ст. 12 п. 2–3 закона), но не более 100 МРП за год.
 // Используется для примеров, чтобы их цифры не расходились с калькулятором.
 function simulateGONS(initial: number, monthly: number, years: number, bankRatePct: number, premiumRate: number) {
   const maxPremium = 100 * 4325;
   let balance = initial;
-  let premiumBase = initial;
   let contributions = initial;
   let bank = 0;
   let premium = 0;
@@ -28,8 +28,7 @@ function simulateGONS(initial: number, monthly: number, years: number, bankRateP
     contributions += yearly;
     const reward = (balance + yearly / 2) * (bankRatePct / 100);
     bank += reward;
-    premiumBase += yearly + reward;
-    const p = Math.min(premiumBase * premiumRate, maxPremium);
+    const p = Math.min((balance + yearly + reward) * premiumRate, maxPremium);
     premium += p;
     balance += yearly + reward + p;
   }
@@ -42,10 +41,16 @@ function simulateGONS(initial: number, monthly: number, years: number, bankRateP
   };
 }
 
+// Минимальная эффективная ставка банка по вкладу больше года — базовая ставка НБРК
+// минус 300 б.п. (ст. 10 п. 3, ред. закона № 153-VIII). При базовой 16,25% (с 07.09.2026) —
+// 13,25%. ⚠️ Меняется вместе с базовой ставкой (см. реестр nbrk_base_rate).
+const GONS_MIN_BANK_RATE = 13.25;
+const GONS_MIN_BANK_RATE_LABEL = '13,25%';
+
 const GONS_EXAMPLES = {
-  ex1: simulateGONS(50000, 10000, 10, 5.5, 0.05),
-  ex2: simulateGONS(30000, 15000, 8, 5.5, 0.07),
-  ex3: simulateGONS(100000, 50000, 5, 5.5, 0.05),
+  ex1: simulateGONS(50000, 10000, 10, GONS_MIN_BANK_RATE, 0.05),
+  ex2: simulateGONS(30000, 15000, 8, GONS_MIN_BANK_RATE, 0.07),
+  ex3: simulateGONS(100000, 50000, 5, GONS_MIN_BANK_RATE, 0.05),
 };
 
 export default function GONSCalculator() {
@@ -54,7 +59,7 @@ export default function GONSCalculator() {
   const [monthlyContribution, setMonthlyContribution] = useState<string>('30000');
   const [savingPeriodYears, setSavingPeriodYears] = useState<string>('5');
   const [childCategory, setChildCategory] = useState<'regular' | 'priority'>('regular');
-  const [bankRate, setBankRate] = useState<string>('5.5');
+  const [bankRate, setBankRate] = useState<string>(String(GONS_MIN_BANK_RATE));
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
@@ -79,7 +84,10 @@ export default function GONSCalculator() {
 
   // Константы на 2026 год
   const MRP_2026 = 4325;
-  const MIN_INITIAL_DEPOSIT = 3 * MRP_2026; // 12 975 тенге
+  // Минимум первого взноса 3 МРП и срок 3–20 лет исключены законом от 10.01.2025 № 153-VIII
+  // (с марта 2025): взнос устанавливает банк, срок договора — по соглашению, госпремия —
+  // при накоплении не менее 1 года и не более 20 лет (ст. 7 п. 2, ст. 8 п. 1, ст. 12 п. 1–2).
+  const MAX_PREMIUM_YEARS = 20;
   // 100 МРП/год — ПОТОЛОК самой госпремии (макс. выплата государства = 432 500 ₸/год),
   // а НЕ лимит базы начисления. Правило (egov.kz/cms/ru/articles/nakop_sistema):
   // госпремия = ставка × сумма вклада с учётом вознаграждения банка, но не более
@@ -94,16 +102,15 @@ export default function GONSCalculator() {
     const years = parseInt(savingPeriodYears) || 0;
     const annualBankRate = (parseFloat(bankRate) || 0) / 100;
 
-    if (initial < MIN_INITIAL_DEPOSIT || years < 3 || years > 20) {
+    if (initial < 0 || initial + monthly <= 0 || years < 1 || years > MAX_PREMIUM_YEARS) {
       return EMPTY_RESULTS;
     }
 
-    const isMinimumMet = initial >= MIN_INITIAL_DEPOSIT;
+    const isMinimumMet = true;
     const statePremiumRate = childCategory === 'priority' ? PRIORITY_PREMIUM_RATE : REGULAR_PREMIUM_RATE;
 
     // Расчет по годам
-    let currentBalance = initial;         // полный счёт (для вознаграждения банка компаундится всё)
-    let premiumBaseBalance = initial;     // взносы + вознагр. банка (без госпремий — на них премия не начисляется)
+    let currentBalance = initial;         // фактический остаток вклада: взносы, вознаграждение, премии
     let totalContributions = initial;
     let totalBankReward = 0;
     let totalStatePremium = 0;
@@ -119,10 +126,13 @@ export default function GONSCalculator() {
       const yearlyBankReward = averageBalance * annualBankRate;
       totalBankReward += yearlyBankReward;
 
-      // Госпремия = ставка × сумма вклада с учётом вознаграждения банка (без ранее
-      // полученных госпремий — на них премия не начисляется), но НЕ более 100 МРП/год.
-      premiumBaseBalance += yearlyContributions + yearlyBankReward;
-      const yearlyStatePremium = Math.min(premiumBaseBalance * statePremiumRate, MAX_STATE_PREMIUM_YEARLY);
+      // Госпремия = ставка × фактически накопленный остаток на 1 января — вместе с
+      // вознаграждением банка и прошлыми премиями (ст. 12 п. 2–3, вклад включает премию —
+      // ст. 1 пп. 4), но НЕ более 100 МРП/год. Раньше прошлые премии из базы исключались.
+      const yearlyStatePremium = Math.min(
+        (currentBalance + yearlyContributions + yearlyBankReward) * statePremiumRate,
+        MAX_STATE_PREMIUM_YEARLY
+      );
       totalStatePremium += yearlyStatePremium;
 
       // Обновляем текущий баланс
@@ -217,9 +227,9 @@ export default function GONSCalculator() {
                 {t('gons.infoDescription')}
               </p>
               <p>
-                <strong>{t('gons.minimumDeposit')}:</strong> {formatMRP(3)} •
                 <strong>{t('gons.statePremium')}:</strong> {(REGULAR_PREMIUM_RATE * 100).toFixed(0)}% {t('gons.or')} {(PRIORITY_PREMIUM_RATE * 100).toFixed(0)}% •
-                <strong>{t('gons.premiumLimit')}:</strong> {formatMRP(100)} {t('gons.perYear')}
+                <strong>{t('gons.premiumLimit')}:</strong> {formatMRP(100)} {t('gons.perYear')} •
+                <strong>{t('gons.minBankRate')}:</strong> {GONS_MIN_BANK_RATE_LABEL}
               </p>
             </div>
           </div>
@@ -255,7 +265,7 @@ export default function GONSCalculator() {
                   value={initialDeposit}
                   onChange={(e) => setInitialDeposit(e.target.value)}
                   placeholder={t('gons.enterAmount')}
-                  min={MIN_INITIAL_DEPOSIT}
+                  min={0}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -263,7 +273,7 @@ export default function GONSCalculator() {
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                {t('gons.minimum')}: {formatMRP(3)}
+                {t('gons.firstDepositByBank')}
               </p>
             </div>
 
@@ -299,7 +309,7 @@ export default function GONSCalculator() {
                   value={savingPeriodYears}
                   onChange={(e) => setSavingPeriodYears(e.target.value)}
                   placeholder={t('gons.numberOfYears')}
-                  min="3"
+                  min="1"
                   max="20"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 />
@@ -474,19 +484,6 @@ export default function GONSCalculator() {
             </div>
           ) : (
             <div className="space-y-4">
-              {!results.isMinimumMet && initialDeposit && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <div className="flex items-start space-x-2">
-                    <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="font-medium text-red-900">{t('gons.insufficientInitialDeposit')}</h3>
-                      <p className="text-red-800 text-sm">
-                        {t('gons.minimumInitialDepositMessage', { amount: formatMRP(3) })}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               <div className="text-center py-8 text-gray-500">
                 {t('gons.enterCorrectParameters')}
@@ -587,7 +584,7 @@ export default function GONSCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.income')}:</div>
-                <div className="text-gray-900">{t('gons.bank')} (5,5%): ~{formatNumber(GONS_EXAMPLES.ex1.bank)}</div>
+                <div className="text-gray-900">{t('gons.bank')} ({GONS_MIN_BANK_RATE_LABEL}): ~{formatNumber(GONS_EXAMPLES.ex1.bank)}</div>
                 <div className="text-gray-900">{t('gons.state')} (5%): ~{formatNumber(GONS_EXAMPLES.ex1.premium)}</div>
               </div>
               <div>
@@ -615,7 +612,7 @@ export default function GONSCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('gons.income')}:</div>
-                <div className="text-gray-900">{t('gons.bank')} (5,5%): ~{formatNumber(GONS_EXAMPLES.ex2.bank)}</div>
+                <div className="text-gray-900">{t('gons.bank')} ({GONS_MIN_BANK_RATE_LABEL}): ~{formatNumber(GONS_EXAMPLES.ex2.bank)}</div>
                 <div className="text-gray-900">{t('gons.state')} (7%): ~{formatNumber(GONS_EXAMPLES.ex2.premium)}</div>
               </div>
               <div>
@@ -668,8 +665,8 @@ export default function GONSCalculator() {
                 <ul className="space-y-1 list-disc list-inside">
                   <li>{t('gons.condition1')}</li>
                   <li>{t('gons.condition2')}</li>
-                  <li>{t('gons.condition3')}: {formatMRP(3)}</li>
-                  <li>{t('gons.condition4')}: 3 {i18n.language === 'kk' ? t('gons.years') : 'года'}</li>
+                  <li>{t('gons.condition3')}</li>
+                  <li>{t('gons.condition4')}</li>
                   <li>{t('gons.condition5')}: 20 {t('gons.years')}</li>
                 </ul>
               </div>
