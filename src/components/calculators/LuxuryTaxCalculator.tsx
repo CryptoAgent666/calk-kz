@@ -122,7 +122,8 @@ export default function LuxuryTaxCalculator() {
         threshold = VEHICLE_THRESHOLD;
         category = t('luxury-tax.assetTypes.vehicle.category');
 
-        if (value > threshold) {
+        // Акциз — «составляет 18 000 (24 000) МРП … и выше» (ст. 536 пп. 10): ровно на пороге тоже облагается.
+        if (value >= threshold) {
           isSubjectToTax = true;
           excessAmount = value - threshold;
 
@@ -138,7 +139,8 @@ export default function LuxuryTaxCalculator() {
         threshold = YACHT_AIRCRAFT_THRESHOLD;
         category = t('luxury-tax.assetTypes.yacht.category');
 
-        if (value > threshold) {
+        // Акциз — «составляет 18 000 (24 000) МРП … и выше» (ст. 536 пп. 10): ровно на пороге тоже облагается.
+        if (value >= threshold) {
           isSubjectToTax = true;
           excessAmount = value - threshold;
 
@@ -154,7 +156,8 @@ export default function LuxuryTaxCalculator() {
         threshold = YACHT_AIRCRAFT_THRESHOLD;
         category = t('luxury-tax.assetTypes.aircraft.category');
 
-        if (value > threshold) {
+        // Акциз — «составляет 18 000 (24 000) МРП … и выше» (ст. 536 пп. 10): ровно на пороге тоже облагается.
+        if (value >= threshold) {
           isSubjectToTax = true;
           excessAmount = value - threshold;
 
