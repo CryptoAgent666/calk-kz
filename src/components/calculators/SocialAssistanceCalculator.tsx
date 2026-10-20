@@ -51,14 +51,14 @@ export default function SocialAssistanceCalculator() {
       return EMPTY_RESULTS;
     }
 
-    // Расчет среднедушевого месячного дохода
+    // Среднедушевой доход: доход за квартал, предшествующий кварталу обращения, ÷ члены семьи ÷ 3 (ст. 127 п. 2 СК)
     const averageMonthlyIncomePerPerson = totalIncome / members / 3; // за квартал (3 месяца)
 
     // Черта бедности региона (ст. 120 СК): её публикует акимат ежеквартально
     const povertyThreshold = parseFloat(povertyLine) || 0;
 
-    // Проверка права на АСП
-    const isEligible = averageMonthlyIncomePerPerson < povertyThreshold;
+    // Проверка права на АСП: доход «не превышающий черты бедности» (ст. 120 п. 1 СК) — включительно
+    const isEligible = averageMonthlyIncomePerPerson <= povertyThreshold;
 
     let aspAmount = 0;
     let childrenBonus = 0;
