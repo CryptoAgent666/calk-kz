@@ -15,7 +15,8 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 interface PropertyType {
   id: string;
   labelKey: string;
-  minOwnershipYears: number; // срок владения, после которого продажа освобождается от ИПН (0 = всегда облагается). Недвижимость: 2 года с 01.01.2026 (новый НК РК, ст. 331/363 + переходная ст. 842); ТС: 1 год.
+  minOwnershipYears: number; // срок владения для освобождения (0 = всегда облагается). Недвижимость: 2 года, но до 01.01.2028 — 1 год, если право зарегистрировано до 01.01.2026 (переходные ст. 841–842 НК). ТС: 1 год.
+  transitional?: boolean; // действует ли переходный срок 1 год (ст. 842: жильё, дача, гараж, паркинг, кладовка, ЛПХ, земля под ИЖС/дачу/ЛПХ/гараж)
   alwaysTaxable: boolean;
 }
 
@@ -23,12 +24,13 @@ export default function PropertySaleTaxCalculator() {
   const { t } = useTranslation('calculators');
 
   const propertyTypes: PropertyType[] = [
-    // Недвижимость: срок владения для освобождения от ИПН — 2 года с 01.01.2026 (ранее 1 год)
-    { id: 'apartment', labelKey: 'property-sale-tax.typeApartment', minOwnershipYears: 2, alwaysTaxable: false },
-    { id: 'house', labelKey: 'property-sale-tax.typeHouse', minOwnershipYears: 2, alwaysTaxable: false },
-    { id: 'land', labelKey: 'property-sale-tax.typeLand', minOwnershipYears: 2, alwaysTaxable: false },
-    { id: 'dacha', labelKey: 'property-sale-tax.typeDacha', minOwnershipYears: 2, alwaysTaxable: false },
-    { id: 'garage', labelKey: 'property-sale-tax.typeGarage', minOwnershipYears: 2, alwaysTaxable: false },
+    // Недвижимость: 2 года для права, зарегистрированного после 01.01.2026; 1 год — если до (ст. 842).
+    // Раньше 2 года применялись ко всему, и квартира 2025 года покупки через 1,5 года «облагалась».
+    { id: 'apartment', labelKey: 'property-sale-tax.typeApartment', minOwnershipYears: 2, alwaysTaxable: false, transitional: true },
+    { id: 'house', labelKey: 'property-sale-tax.typeHouse', minOwnershipYears: 2, alwaysTaxable: false, transitional: true },
+    { id: 'land', labelKey: 'property-sale-tax.typeLand', minOwnershipYears: 2, alwaysTaxable: false, transitional: true },
+    { id: 'dacha', labelKey: 'property-sale-tax.typeDacha', minOwnershipYears: 2, alwaysTaxable: false, transitional: true },
+    { id: 'garage', labelKey: 'property-sale-tax.typeGarage', minOwnershipYears: 2, alwaysTaxable: false, transitional: true },
     // ТС: срок владения остаётся 1 год (ст. 384 НК РК, изменение 2026 касается только недвижимости)
     { id: 'car', labelKey: 'property-sale-tax.typeCar', minOwnershipYears: 1, alwaysTaxable: false },
     { id: 'commercial', labelKey: 'property-sale-tax.typeCommercial', minOwnershipYears: 0, alwaysTaxable: true },
@@ -48,6 +50,8 @@ export default function PropertySaleTaxCalculator() {
   // Галочки «Единственное жильё» больше нет: такой льготы в НК-2026 нет (ст. 383 — только срок владения),
   // а на расчёт она и раньше не влияла.
   const [isInherited, setIsInherited] = useState<boolean>(false);
+  // Право собственности зарегистрировано до 01.01.2026 → переходный срок 1 год (ст. 842 НК).
+  const [registeredBefore2026, setRegisteredBefore2026] = useState<boolean>(false);
 
   // Срок декларации о доходах и имуществе (ФНО 270.00) — 15 сентября следующего года
   // (ст. 418 п. 1 НК РК); ФНО 240.00 с 01.01.2025 упразднена.
@@ -70,6 +74,7 @@ export default function PropertySaleTaxCalculator() {
     const totalMonths = years * 12 + months;
 
     const propertyType = propertyTypes.find((p) => p.id === selectedType);
+    const minYears = propertyType ? (propertyType.transitional && registeredBefore2026 ? 1 : propertyType.minOwnershipYears) : 0;
     if (!propertyType || sale <= 0) {
       return {
         gain: 0,
@@ -98,7 +103,7 @@ export default function PropertySaleTaxCalculator() {
       reasonKey = 'property-sale-tax.taxableCommercial';
     }
     // 3. Срок владения больше минимального — освобождение
-    else if (totalMonths >= propertyType.minOwnershipYears * 12) {
+    else if (totalMonths >= minYears * 12) {
       isTaxable = false;
       reasonKey = 'property-sale-tax.exemptOwnershipPeriod';
     }
@@ -108,18 +113,15 @@ export default function PropertySaleTaxCalculator() {
       reasonKey = 'property-sale-tax.taxableShortOwnership';
 
       // Рекомендация: если до окончания льготного срока владения осталось меньше 3 месяцев
-      const monthsLeft = propertyType.minOwnershipYears * 12 - totalMonths;
+      const monthsLeft = minYears * 12 - totalMonths;
       if (monthsLeft > 0 && monthsLeft <= 3) {
         recommendation = 'property-sale-tax.recommendationWait';
       }
     }
 
-    // Наследство: освобождается, если выдержан льготный срок владения для данного типа имущества
-    // (недвижимость — 2 года с 01.01.2026, ТС — 1 год)
-    if (isInherited && totalMonths >= propertyType.minOwnershipYears * 12 && !propertyType.alwaysTaxable) {
-      isTaxable = false;
-      reasonKey = 'property-sale-tax.exemptInherited';
-    }
+    // Наследство отдельной льготы не даёт: срок — с регистрации права наследника, цена приобретения —
+    // рыночная стоимость по оценке на дату возникновения права (ст. 383 п. 5 пп. 2, п. 9 пп. 1).
+    // Раньше галочка выводила причину «Освобождение: наследство».
 
     const tax = isTaxable
       ? Math.round(Math.min(gain, IPN_THRESHOLD) * TAX_RATE + Math.max(0, gain - IPN_THRESHOLD) * TAX_RATE_HIGH)
@@ -144,7 +146,7 @@ export default function PropertySaleTaxCalculator() {
   const results = useMemo(
     computeResults,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedType, salePrice, purchasePrice, ownershipYears, ownershipMonths, isInherited]
+    [selectedType, salePrice, purchasePrice, ownershipYears, ownershipMonths, isInherited, registeredBefore2026]
   );
 
   const formatCurrency = (num: number) => {
@@ -336,6 +338,19 @@ calk.kz`;
                 />
                 <span className="text-sm text-gray-700">{t('property-sale-tax.isInherited')}</span>
               </label>
+              {isInherited && (
+                <p className="text-xs text-gray-500 pl-8">{t('property-sale-tax.inheritedHint')}</p>
+              )}
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={registeredBefore2026}
+                  onChange={(e) => setRegisteredBefore2026(e.target.checked)}
+                  className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">{t('property-sale-tax.registeredBefore2026')}</span>
+              </label>
+              <p className="text-xs text-gray-500 pl-8">{t('property-sale-tax.registeredBefore2026Hint')}</p>
             </div>
           </div>
         </div>
