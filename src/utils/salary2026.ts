@@ -118,7 +118,8 @@ export function calculateSalary2026({ gross, isResident, isPrimaryJob, isSpecial
   const oosmsBase = Math.min(gross, OOSMS_MAX_BASE);
   const oosms = isSpecialCategory ? 0 : oosmsBase * OOSMS_RATE;
 
-  const opvrBase = Math.min(gross, OPV_MAX_BASE);
+  // База ОПВР — не ниже 1 МЗП и не выше 50 МЗП (Соцкодекс ст. 251 п. 2).
+  const opvrBase = Math.min(Math.max(gross, MZP), OPV_MAX_BASE);
   const opvr = isSpecialCategory ? 0 : opvrBase * OPVR_RATE;
 
   const totalEmployerContributions = sn + so + oosms + opvr;
