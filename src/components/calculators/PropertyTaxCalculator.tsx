@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, AlertTriangle, Info, Building, BarChart3 } from 'lucide-react';
-import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -25,7 +24,12 @@ export default function PropertyTaxCalculator() {
   //  — материал стен определяет только ПОРОГ износа: каменное или из несущих
   //    панелей — 70 %, из иных материалов — 65 %.
   const [capitalityGroup, setCapitalityGroup] = useState<string>('3');
-  const [wallMaterial, setWallMaterial] = useState<string>('stone');
+  const [wallMaterial, setWallMaterial] = useState<string>('panel');
+  // Коэффициент функционального износа (ст. 600 п. 5): этаж, угол, материал стен, благоустройство, отопление.
+  const [floorPos, setFloorPos] = useState<'first' | 'middle' | 'last'>('middle');
+  const [isCorner, setIsCorner] = useState<boolean>(false);
+  const [noAmenities, setNoAmenities] = useState<boolean>(false);
+  const [heating, setHeating] = useState<'central' | 'gas' | 'solid' | 'stove'>('central');
   const [useCustomCoefficients, setUseCustomCoefficients] = useState<boolean>(false);
   const [baseCost, setBaseCost] = useState<string>('');
   const [zoneCoefficient, setZoneCoefficient] = useState<string>('');
@@ -41,6 +45,7 @@ export default function PropertyTaxCalculator() {
     wearPercent: 0,
     wearCoeff: 0,
     wearExceeded: false,
+    funcCoeff: 1,
     taxBase: 0,
     taxRate: 0,
     taxAmount: 0,
@@ -69,30 +74,49 @@ export default function PropertyTaxCalculator() {
   // физического износа принимается равным 0,2». До 09.09.2026 код вместо этого
   // обрезал сам износ (Math.min) и упирался в К физ 0,30/0,35.
   const WEAR_EXCEEDED_COEFF = 0.2;
+  // Материал стен: порог износа (п. 4: каменные и панельные — 70%, иные — 65%) и К мат.ст (п. 5).
   const wallMaterials = [
-    { id: 'stone', maxWear: 70, nameKey: 'calculators:property-tax.wallStone' },
-    { id: 'other', maxWear: 65, nameKey: 'calculators:property-tax.wallOther' }
+    { id: 'brick', maxWear: 70, kMat: 1.1, nameKey: 'calculators:property-tax.wallBrick' },
+    { id: 'keramzit', maxWear: 70, kMat: 1.0, nameKey: 'calculators:property-tax.wallKeramzit' },
+    { id: 'panel', maxWear: 70, kMat: 1.0, nameKey: 'calculators:property-tax.wallPanel' },
+    { id: 'monolith', maxWear: 70, kMat: 0.7, nameKey: 'calculators:property-tax.wallMonolithSlag' },
+    { id: 'wood', maxWear: 65, kMat: 0.85, nameKey: 'calculators:property-tax.wallWood' },
+    { id: 'framePanel', maxWear: 65, kMat: 0.6, nameKey: 'calculators:property-tax.wallFramePanel' },
+    { id: 'adobe', maxWear: 65, kMat: 0.5, nameKey: 'calculators:property-tax.wallAdobe' },
+    { id: 'other', maxWear: 65, kMat: 1.0, nameKey: 'calculators:property-tax.wallOther' }
   ];
+  const FLOOR_COEFF = { first: 0.95, middle: 1.0, last: 0.9 } as const;
+  const HEATING_COEFF = { central: 1.0, gas: 0.98, solid: 0.95, stove: 0.9 } as const;
+  // Доля базовой стоимости (п. 3): гараж и паркинг — 15%, кладовка, хозпостройка, подвал — 25%;
+  // для них К функц не применяется. Раньше тип объекта на расчёт не влиял (гараж считался как квартира).
+  const TYPE_BASE_SHARE: Record<string, number> = { apartment: 1, house: 1, cottage: 1, garage: 0.15, storage: 0.25 };
 
   const propertyTypes = [
     { id: 'apartment', nameKey: 'calculators:property-tax.propertyType_apartment', icon: '🏠' },
     { id: 'house', nameKey: 'calculators:property-tax.propertyType_house', icon: '🏡' },
     { id: 'cottage', nameKey: 'calculators:property-tax.propertyType_cottage', icon: '🏘️' },
     { id: 'garage', nameKey: 'calculators:property-tax.propertyType_garage', icon: '🚗' },
-    { id: 'commercial', nameKey: 'calculators:property-tax.propertyType_commercial', icon: '🏢' }
+    { id: 'storage', nameKey: 'calculators:property-tax.propertyType_storage', icon: '📦' }
   ];
 
   // Базовая стоимость 1 м² жилища — ст. 600 НК РК (новый НК K2500000214, ред. 2026):
   // города респ. значения (Алматы/Астана/Шымкент) = 60 000 ₸/м²; областные центры = 36 000 ₸/м².
   // Коэффициент зонирования (Кзон) утверждается местными исполнительными органами (акиматами)
   // и различается по районам — здесь нейтральный дефолт 1.0, точное значение задаётся вручную.
+  // К изм.мрп = МРП текущего года / МРП предыдущего (п. 7): 4 325 / 3 932 ≈ 1,0999 для 2026.
+  const MRP_CHANGE_2026 = 4325 / 3932;
+  // 36 000 ₸ — только 17 городов из таблицы п. 2; прочие населённые пункты дешевле (раньше «Другой город» = 36 000).
   const cities = [
-    { id: 'almaty', nameKey: 'calculators:property-tax.city_almaty', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
-    { id: 'astana', nameKey: 'calculators:property-tax.city_astana', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
-    { id: 'shymkent', nameKey: 'calculators:property-tax.city_shymkent', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
-    { id: 'karaganda', nameKey: 'calculators:property-tax.city_karaganda', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
-    { id: 'aktobe', nameKey: 'calculators:property-tax.city_aktobe', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: 1.0 },
-    { id: 'other', nameKey: 'calculators:property-tax.city_other', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: 1.0 }
+    { id: 'almaty', nameKey: 'calculators:property-tax.city_almaty', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'astana', nameKey: 'calculators:property-tax.city_astana', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'shymkent', nameKey: 'calculators:property-tax.city_shymkent', baseCost: 60000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'karaganda', nameKey: 'calculators:property-tax.city_karaganda', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'aktobe', nameKey: 'calculators:property-tax.city_aktobe', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'other', nameKey: 'calculators:property-tax.city_other', baseCost: 36000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'oblastTown', nameKey: 'calculators:property-tax.city_oblastTown', baseCost: 12000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'districtTown', nameKey: 'calculators:property-tax.city_districtTown', baseCost: 6000, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'settlement', nameKey: 'calculators:property-tax.city_settlement', baseCost: 4200, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 },
+    { id: 'village', nameKey: 'calculators:property-tax.city_village', baseCost: 2700, zoneCoeff: 1.0, mrpCoeff: MRP_CHANGE_2026 }
   ];
 
   // Прогрессивная (маржинальная) шкала налога на имущество физлиц — ст. 602 НК РК (новый НК K2500000214, 2026).
@@ -147,7 +171,14 @@ export default function PropertyTaxCalculator() {
     const wearExceeded = wearPercent > material.maxWear;
     const wearCoeff = wearExceeded ? WEAR_EXCEEDED_COEFF : 1 - wearPercent / 100;
 
-    const taxBase = baseCostPerSqm * propertyArea * wearCoeff * zoneCoeff * mrpCoeff;
+    const share = TYPE_BASE_SHARE[propertyType] ?? 1;
+    const isDwelling = share === 1;
+    // К функц — только для жилищ и дачных построек; этаж и угол — только для квартир.
+    const funcCoeff = isDwelling
+      ? (propertyType === 'apartment' ? FLOOR_COEFF[floorPos] * (isCorner ? 0.95 : 1) : 1)
+        * material.kMat * (noAmenities ? 0.8 : 1) * HEATING_COEFF[heating]
+      : 1;
+    const taxBase = baseCostPerSqm * share * propertyArea * wearCoeff * funcCoeff * zoneCoeff * mrpCoeff;
 
     const applicableRate = taxRates.find(rate => taxBase >= rate.min && taxBase <= rate.max) || taxRates[taxRates.length - 1];
     const taxRate = applicableRate.rate;
@@ -171,6 +202,7 @@ export default function PropertyTaxCalculator() {
       wearPercent: Math.round(wearPercent * 10) / 10,
       wearCoeff: Math.round(wearCoeff * 1000) / 1000,
       wearExceeded,
+      funcCoeff: Math.round(funcCoeff * 1000) / 1000,
       taxBase: Math.round(taxBase),
       taxRate,
       taxAmount: Math.round(taxAmount + exemptionAmount),
@@ -184,7 +216,7 @@ export default function PropertyTaxCalculator() {
   const results = useMemo(
     calculatePropertyTax,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [propertyType, capitalityGroup, wallMaterial, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]
+    [propertyType, capitalityGroup, wallMaterial, floorPos, isCorner, noAmenities, heating, city, area, buildYear, useCustomCoefficients, baseCost, zoneCoefficient, mrpCoefficient]
   );
 
   const formatNumber = (num: number) => {
@@ -338,23 +370,55 @@ export default function PropertyTaxCalculator() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('property-tax.wallMaterial')}
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <select
+                value={wallMaterial}
+                onChange={(e) => setWallMaterial(e.target.value)}
+                aria-label={t('property-tax.wallMaterial')}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              >
                 {wallMaterials.map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => setWallMaterial(m.id)}
-                    className={`p-3 rounded-lg border-2 text-sm transition-all ${
-                      wallMaterial === m.id
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                    }`}
-                  >
-                    {t(m.nameKey)}
-                  </button>
+                  <option key={m.id} value={m.id}>{t(m.nameKey)} — ×{m.kMat}</option>
                 ))}
-              </div>
+              </select>
               <p className="text-xs text-gray-500 mt-2">{t('property-tax.wallMaterialHint')}</p>
             </div>
+
+            {(propertyType === 'apartment' || propertyType === 'house' || propertyType === 'cottage') && (
+              <div className="grid sm:grid-cols-2 gap-4">
+                {propertyType === 'apartment' && (
+                  <div>
+                    <label htmlFor="floorPos" className="block text-sm font-medium text-gray-700 mb-2">{t('property-tax.floorLabel')}</label>
+                    <select id="floorPos" value={floorPos} onChange={(e) => setFloorPos(e.target.value as 'first' | 'middle' | 'last')}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                      <option value="middle">{t('property-tax.floorMiddle')} — ×1</option>
+                      <option value="first">{t('property-tax.floorFirst')} — ×0,95</option>
+                      <option value="last">{t('property-tax.floorLast')} — ×0,9</option>
+                    </select>
+                  </div>
+                )}
+                <div>
+                  <label htmlFor="heating" className="block text-sm font-medium text-gray-700 mb-2">{t('property-tax.heatingLabel')}</label>
+                  <select id="heating" value={heating} onChange={(e) => setHeating(e.target.value as 'central' | 'gas' | 'solid' | 'stove')}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                    <option value="central">{t('property-tax.heatingCentral')} — ×1</option>
+                    <option value="gas">{t('property-tax.heatingGas')} — ×0,98</option>
+                    <option value="solid">{t('property-tax.heatingSolid')} — ×0,95</option>
+                    <option value="stove">{t('property-tax.heatingStove')} — ×0,9</option>
+                  </select>
+                </div>
+                {propertyType === 'apartment' && (
+                  <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" checked={isCorner} onChange={(e) => setIsCorner(e.target.checked)} className="h-4 w-4" />
+                    {t('property-tax.cornerLabel')}
+                  </label>
+                )}
+                <label className="flex items-center gap-2 text-sm text-gray-700">
+                  <input type="checkbox" checked={noAmenities} onChange={(e) => setNoAmenities(e.target.checked)} className="h-4 w-4" />
+                  {t('property-tax.noAmenitiesLabel')}
+                </label>
+                <p className="sm:col-span-2 text-xs text-gray-500">{t('property-tax.funcCoeffHint', { k: results.funcCoeff })}</p>
+              </div>
+            )}
 
             <div className="border-t pt-6">
               <div className="flex items-center mb-3">
@@ -554,19 +618,6 @@ export default function PropertyTaxCalculator() {
           { title: i18n.language === 'kk' ? 'eGov.kz — мүлік салығы' : 'eGov.kz — Налог на имущество', url: 'https://egov.kz/' },
         ]}
       />
-
-      {/* Диаграмма структуры */}
-      {results && results.finalAmount > 0 && results.taxBase && (
-        <div className="mt-8">
-          <TaxPieChart
-            data={[
-              { name: i18n.language === 'kk' ? 'Салық' : 'Налог', value: results.finalAmount },
-              { name: i18n.language === 'kk' ? 'Бағалау құны' : 'Оценочная стоимость', value: results.taxBase / 100 },
-            ]}
-            title={i18n.language === 'kk' ? 'Мүлік салығының құрылымы' : 'Структура налога на имущество'}
-          />
-        </div>
-      )}
 
       {/* Экспорт результатов */}
       {results && results.finalAmount > 0 && (
