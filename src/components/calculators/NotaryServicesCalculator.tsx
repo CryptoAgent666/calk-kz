@@ -89,9 +89,23 @@ export default function NotaryServicesCalculator() {
       technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       hasPropertyValue: false
     },
+    // Приказ № 533, п. 2 пп. 13–15: доверенность на авто без права продажи — 2 МРП,
+    // на пользование и распоряжение имуществом — 2,5 МРП, прочие — 1,1 (физлица) / 2,5 (юрлица).
+    // Раньше была одна «доверенность» за 1,1 МРП, подписанная в примерах как генеральная.
+    'poa-property': {
+      name: t('notary.poaProperty'),
+      stateFee: { individuals: 2.5, mixed: 2.5, legal: 2.5 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
+      hasPropertyValue: false
+    },
+    'poa-car': {
+      name: t('notary.poaCar'),
+      stateFee: { individuals: 2, mixed: 2, legal: 2 },
+      technicalFee: { individuals: 0, mixed: 0, legal: 0 },
+      hasPropertyValue: false
+    },
     'power-of-attorney': {
       name: t('notary.powerOfAttorney'),
-      // Доверенность: физлица — 1.1 МРП, юрлица — 2.5 МРП.
       stateFee: { individuals: 1.1, mixed: 2.5, legal: 2.5 },
       technicalFee: { individuals: 0, mixed: 0, legal: 0 },
       hasPropertyValue: false
@@ -480,8 +494,8 @@ export default function NotaryServicesCalculator() {
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.powerOfAttorneyExample')}</td>
-                <td className="py-3 px-4 text-center text-sm">{formatMRP(1.1)}</td>
-                <td className="py-3 px-4 text-right font-semibold">{formatNumber(1.1 * MRP_2026)}</td>
+                <td className="py-3 px-4 text-center text-sm">{formatMRP(2.5)}</td>
+                <td className="py-3 px-4 text-right font-semibold">{formatNumber(2.5 * MRP_2026)}</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-3 px-4 text-sm text-gray-900">{t('notary.copyExample')}</td>
