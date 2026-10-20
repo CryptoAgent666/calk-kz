@@ -20,6 +20,9 @@ export default function PensionCalculator() {
   // «61 год», «2 года», «35 лет»; в казахском форма одна — «жыл»
   const yearsWord = (n: number) => (i18n.language === 'kk' ? t('pension.years') : pluralizeRu(n, 'год', 'года', 'лет'));
   const [birthYear, setBirthYear] = useState<string>('1965');
+  // Пол: норма стажа для полной солидарной пенсии 25 лет у мужчин и 20 у женщин (ст. 210 п. 4),
+  // пенсионный возраст 63 / 61 (ст. 207).
+  const [gender, setGender] = useState<'male' | 'female'>('male');
   const [workExperienceBefore1998, setWorkExperienceBefore1998] = useState<string>('15');
   const [workExperienceAfter1998, setWorkExperienceAfter1998] = useState<string>('20');
   const [averageIncomeBefore1998, setAverageIncomeBefore1998] = useState<string>('50000');
@@ -43,6 +46,7 @@ export default function PensionCalculator() {
   // Константы на 2026 год
   const PM = 50851; // Прожиточный минимум
   const MIN_PENSION = 69049; // минимальная пенсия 2026 — Закон о респ. бюджете № 239-VIII, ст. 7
+  const SOLIDARITY_INCOME_CAP = 55 * 4325; // 237 875 ₸ — потолок дохода для солидарной пенсии (ст. 211 п. 2)
   // График выплат ЕНПФ (ПП РК от 30.06.2023 № 521, Методика п. 4–6, приложение): в первый год —
   // 6,5 % накоплений в год, далее +5 % ежегодно, до исчерпания счёта; не менее 70 % ПМ; при
   // накоплениях ≤ 12 минимальных пенсий — единовременно. Никаких «19 лет» в правилах нет.
@@ -73,30 +77,29 @@ export default function PensionCalculator() {
     const retirementAgeMen = 63;
     const retirementAgeWomen = 61;
 
-    // 1. Базовая государственная пенсия
-    let basePension = 0;
-    if (totalWorkExperience >= 10) {
-      let baseRate = 70; // 70% от ПМ
-      const additionalYears = Math.floor(totalWorkExperience - 10);
-      // С 01.01.2026 максимум базовой пенсии повышен со 110% до 118% ПМ (60 004 ₸ при ПМ 50 851 ₸).
-      // При +2%/год сверх 10 лет потолок 118% достигается при стаже 34 года (ранее 110% — при 30 годах).
-      baseRate = Math.min(baseRate + (additionalYears * 2), 118); // максимум 118%
-      basePension = (PM * baseRate) / 100;
-    }
+    // 1. Базовая государственная пенсия (ст. 206 п. 1): при стаже 10 лет и меньше или без стажа —
+    // 70% ПМ, +2% за каждый полный год сверх 10, максимум 118% ПМ (60 004 ₸ при ПМ 50 851 ₸).
+    // Раньше при стаже меньше 10 лет базовая пенсия выходила 0.
+    const additionalYears = Math.max(0, Math.floor(totalWorkExperience - 10));
+    const baseRate = Math.min(70 + additionalYears * 2, 118);
+    const basePension = (PM * baseRate) / 100;
 
-    // 2. Солидарная пенсия (упрощенный расчет по правилам Соцкодекса):
-    // при полном стаже до 1998 г. (25 лет) — 60% среднемесячного дохода,
-    // пропорционально меньшему стажу; общий потолок замещения — 75% дохода.
-    // (Ранее формула домножала ещё на коэффициент дохода до ×3 — это завышало
-    // солидарную часть при доходах выше 50 000 и не имело опоры в правилах.)
+    // 2. Солидарная пенсия (Соцкодекс ст. 210–211): доход — среднемесячный за любые 3 года подряд
+    // с 1998 года, не выше 55 МРП; полная = 60% дохода + 1% за каждый год стажа до 1998 сверх нормы
+    // (25 лет мужчинам, 20 женщинам), не более 75%, и не ниже минимальной пенсии (п. 5);
+    // при меньшем стаже (от 6 месяцев) — доля от полной пропорционально стажу (п. 6–7).
+    // Раньше: норма 25 лет для всех, без потолка 55 МРП и без доведения до минимальной пенсии.
     let solidarityPension = 0;
-    if (experienceBefore > 0 && incomeBefore > 0) {
-      const replacement = 0.6 * Math.min(experienceBefore / 25, 1);
-      solidarityPension = Math.min(incomeBefore * replacement, incomeBefore * 0.75);
+    const stakeNorm = gender === 'female' ? 20 : 25;
+    if (experienceBefore >= 0.5 && incomeBefore > 0) {
+      const income = Math.min(incomeBefore, SOLIDARITY_INCOME_CAP);
+      const fullRate = Math.min(0.6 + 0.01 * Math.max(0, Math.floor(experienceBefore - stakeNorm)), 0.75);
+      const fullPension = Math.max(income * fullRate, MIN_PENSION);
+      solidarityPension = experienceBefore >= stakeNorm ? fullPension : fullPension * (experienceBefore / stakeNorm);
     }
 
     // 3. Накопительная пенсия
-    const yearsToRetirement = Math.max(retirementAgeMen - age, 0);
+    const yearsToRetirement = Math.max((gender === 'female' ? retirementAgeWomen : retirementAgeMen) - age, 0);
 
     // Прогноз накоплений к пенсии
     let estimatedAccumulationsAtRetirement = accumulations;
@@ -137,7 +140,7 @@ export default function PensionCalculator() {
   const results = useMemo(
     calculatePension,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [birthYear, workExperienceBefore1998, workExperienceAfter1998, averageIncomeBefore1998, currentAccumulations]
+    [birthYear, gender, workExperienceBefore1998, workExperienceAfter1998, averageIncomeBefore1998, currentAccumulations]
   );
 
   const formatNumber = (num: number) => {
@@ -219,6 +222,24 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                 max="2007"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
               />
+            </div>
+
+            <div>
+              <span className="block text-sm font-medium text-gray-700 mb-2">{t('pension.genderLabel')}</span>
+              <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={t('pension.genderLabel')}>
+                {(['male', 'female'] as const).map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    role="radio"
+                    aria-checked={gender === g}
+                    onClick={() => setGender(g)}
+                    className={`px-4 py-2 rounded-lg border text-sm font-medium ${gender === g ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-300 text-gray-700'}`}
+                  >
+                    {t(g === 'male' ? 'pension.men' : 'pension.women')}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div>
