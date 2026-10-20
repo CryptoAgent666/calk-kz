@@ -20,8 +20,7 @@ import {
   type SocialDeduction,
   type SalaryRow,
   type SalaryResult,
-  type SalaryTotals,
-} from '../../utils/salary2026';
+  type SalaryTotals, type Disability } from '../../utils/salary2026';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // Константы и формула расчёта (МЗП, МРП, пол СО 1 МЗП по ст. 245 СК, вычеты ст. 403/404 НК)
@@ -66,6 +65,7 @@ export default function SalaryCalculator() {
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
   const [socialDeduction, setSocialDeduction] = useState<SocialDeduction>('none');
+  const [disability, setDisability] = useState<Disability>('none');
 
   // Режим «несколько сотрудников»: строки таблицы + текстовое быстрое заполнение.
   // Резидентство — общий флаг на всю таблицу (isResident выше).
@@ -77,15 +77,15 @@ export default function SalaryCalculator() {
   // числами, и первый клиентский рендер обязан выдать те же числа — иначе
   // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
   const results = useMemo(
-    () => calculateSalary2026({ gross: parseFloat(grossSalary) || 0, isResident, isPrimaryJob, isSpecialCategory, socialDeduction }),
-    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, socialDeduction]
+    () => calculateSalary2026({ gross: parseFloat(grossSalary) || 0, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability }),
+    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability]
   );
 
   const multiRows = useMemo(
     () => rows.map((row, idx) => {
       const gross = parseFloat(row.gross) || 0;
       const result = calculateSalary2026({
-        gross, isResident, isPrimaryJob: row.isPrimaryJob, isSpecialCategory: row.isSpecialCategory, socialDeduction: row.socialDeduction,
+        gross, isResident, isPrimaryJob: row.isPrimaryJob, isSpecialCategory: row.isSpecialCategory, socialDeduction: row.socialDeduction, disability: row.disability,
       });
       return { row, idx, gross, result };
     }),
@@ -302,6 +302,22 @@ ${totalsText}`;
                 <label htmlFor="isSpecialCategory" className="ml-2 block text-sm text-gray-700">
                   {t('salary.isSpecialCategory')}
                 </label>
+              </div>
+
+              <div>
+                <label htmlFor="disability" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('salary.disabilityLabel')}
+                </label>
+                <select
+                  id="disability"
+                  value={disability}
+                  onChange={(e) => setDisability(e.target.value as Disability)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {(['none', 'severe', 'other'] as Disability[]).map((opt) => (
+                    <option key={opt} value={opt}>{t(`salary.disability_${opt}`)}</option>
+                  ))}
+                </select>
               </div>
 
               <div>

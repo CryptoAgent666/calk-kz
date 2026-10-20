@@ -30,12 +30,20 @@ export const SO_MIN_BASE = MZP;
 export const OOSMS_MAX_BASE = 40 * MZP; // С 2026: макс. база ООСМС = 40 МЗП
 export const SOCIAL_DEDUCTION_ANNUAL: Record<SocialDeduction, number> = { none: 0, '882': 882 * MRP, '5000': 5000 * MRP };
 
+// Инвалидность работника: 'severe' — I–II группа, установленная бессрочно; 'other' — III группа
+// или I–II на срок. ВОСМС и ООСМС не платятся за всех лиц с инвалидностью (Закон об ОСМС ст. 26
+// п. 1 пп. 12, ст. 27–28), ОПВ и ОПВР — только при I–II группе бессрочно (Соцкодекс ст. 248 п. 3, 6),
+// СО платятся всегда. Раньше флажок «пенсионер, инвалид» снимал все пять взносов с любого инвалида.
+export type Disability = 'none' | 'severe' | 'other';
+
 export interface SalaryInput {
   gross: number;
   isResident: boolean;
   isPrimaryJob: boolean;
+  /** Пенсионер по возрасту: без ОПВ, ОПВР, СО, ВОСМС, ООСМС. */
   isSpecialCategory: boolean;
   socialDeduction: SocialDeduction;
+  disability?: Disability;
 }
 
 export interface SalaryResult {
@@ -68,20 +76,25 @@ export const EMPTY_SALARY_RESULT: SalaryResult = {
   effectiveEmployeeTaxRate: 0, effectiveEmployerRate: 0
 };
 
-export function calculateSalary2026({ gross, isResident, isPrimaryJob, isSpecialCategory, socialDeduction }: SalaryInput): SalaryResult {
+export function calculateSalary2026({ gross, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability = 'none' }: SalaryInput): SalaryResult {
   if (gross <= 0) {
     return { ...EMPTY_SALARY_RESULT };
   }
 
+  const pensionExempt = isSpecialCategory || disability === 'severe'; // ОПВ и ОПВР
+  const osmsExempt = isSpecialCategory || disability !== 'none';       // ВОСМС и ООСМС
+
   const opvBase = Math.min(gross, OPV_MAX_BASE);
-  const opv = isSpecialCategory ? 0 : opvBase * OPV_RATE;
+  const opv = pensionExempt ? 0 : opvBase * OPV_RATE;
 
   const vosmsBase = Math.min(gross, VOSMS_MAX_BASE);
-  const vosms = isSpecialCategory ? 0 : vosmsBase * VOSMS_RATE;
+  const vosms = osmsExempt ? 0 : vosmsBase * VOSMS_RATE;
 
   const standardDeduction = (isResident && isPrimaryJob) ? STANDARD_DEDUCTION : 0;
 
-  const taxableBeforeSocial = Math.max(0, gross - opv - vosms - standardDeduction);
+  // Нерезидент: ИПН по ставкам ст. 682 п. 1 пп. 8 «без осуществления налоговых вычетов» (ст. 692 п. 3) —
+  // ни ОПВ/ВОСМС, ни базового вычета. Раньше из базы нерезидента вычитались ОПВ и ВОСМС.
+  const taxableBeforeSocial = isResident ? Math.max(0, gross - opv - vosms - standardDeduction) : gross;
 
   // Социальный вычет — годовой лимит, применяется к доходу до исчерпания (ст. 404 НК РК):
   // в месяц берётся не больше облагаемого дохода, поэтому первые месяцы ИПН = 0.
@@ -116,11 +129,11 @@ export function calculateSalary2026({ gross, isResident, isPrimaryJob, isSpecial
   // За пенсионеров и лиц с инвалидностью работодатель ООСМС не платит
   // (взносы за них уплачивает государство — ст. 26, 27 Закона об ОСМС)
   const oosmsBase = Math.min(gross, OOSMS_MAX_BASE);
-  const oosms = isSpecialCategory ? 0 : oosmsBase * OOSMS_RATE;
+  const oosms = osmsExempt ? 0 : oosmsBase * OOSMS_RATE;
 
   // База ОПВР — не ниже 1 МЗП и не выше 50 МЗП (Соцкодекс ст. 251 п. 2).
   const opvrBase = Math.min(Math.max(gross, MZP), OPV_MAX_BASE);
-  const opvr = isSpecialCategory ? 0 : opvrBase * OPVR_RATE;
+  const opvr = pensionExempt ? 0 : opvrBase * OPVR_RATE;
 
   const totalEmployerContributions = sn + so + oosms + opvr;
   const netSalary = gross - totalEmployeeDeductions;
@@ -160,6 +173,7 @@ export interface SalaryRow {
   isPrimaryJob: boolean;
   isSpecialCategory: boolean;
   socialDeduction: SocialDeduction;
+  disability?: Disability;
 }
 
 export type SalaryTotals = Pick<SalaryResult,
