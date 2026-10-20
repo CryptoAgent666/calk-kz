@@ -40,13 +40,15 @@ function calcPrimary(gross: number) {
   return { opv, vosms, ipn, net, taxable };
 }
 
-function calcSecondary(gross: number) {
+// unusedDeduction — остаток базового вычета с основной работы. При внутреннем совместительстве
+// работодатель — один налоговый агент и применяет 30 МРП ко всему доходу у себя (НК ст. 403,
+// ст. 437 п. 3); при внешнем вычет у второго агента не применяется. Раньше тип не влиял на расчёт.
+function calcSecondary(gross: number, unusedDeduction = 0) {
   const opvBase = Math.min(gross, OPV_MAX_BASE);
   const opv = opvBase * 0.10;
   const vosmsBase = Math.min(gross, VOSMS_MAX_BASE);
   const vosms = vosmsBase * 0.02;
-  // БЕЗ базового вычета
-  const taxable = Math.max(0, gross - opv - vosms);
+  const taxable = Math.max(0, gross - opv - vosms - unusedDeduction);
   const ipn = taxable * 0.10;
   const net = gross - opv - vosms - ipn;
   return { opv, vosms, ipn, net, taxable };
@@ -70,7 +72,11 @@ export default function SecondJobCalculator() {
 
   const results = useMemo(() => {
     const p = calcPrimary(parseFloat(primary) || 0);
-    const s = calcSecondary(parseFloat(secondary) || 0);
+    const primaryGross = parseFloat(primary) || 0;
+    const unused = type === 'internal'
+      ? Math.max(0, STANDARD_DEDUCTION - Math.max(0, primaryGross - p.opv - p.vosms))
+      : 0;
+    const s = calcSecondary(parseFloat(secondary) || 0, unused);
     const totalGross = (parseFloat(primary) || 0) + (parseFloat(secondary) || 0);
     const totalNet = p.net + s.net;
     const totalTax = p.opv + p.vosms + p.ipn + s.opv + s.vosms + s.ipn;
