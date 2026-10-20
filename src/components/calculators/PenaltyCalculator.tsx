@@ -53,12 +53,16 @@ export default function PenaltyCalculator() {
       description: t('penalty.contractDescription'),
       example: t('penalty.contractExample')
     },
+    // «Административные штрафы 0,03%/день по КоАП» убраны: пени за неуплату штрафа в КоАП
+    // нет — неуплата ведёт к принудительному исполнению (ст. 894) и исполнительской санкции
+    // 10% (ст. 124 Закона об исполнительном производстве). Взамен — законная неустойка по
+    // ст. 353 ГК: базовая ставка НБРК / 365 (⚠️ меняется вместе с nbrk_base_rate).
     {
-      id: 'administrative',
-      name: t('penalty.administrative'),
-      rate: t('penalty.administrativeRate'),
-      description: t('penalty.administrativeDescription'),
-      example: t('penalty.administrativeExample')
+      id: 'legal',
+      name: t('penalty.legal'),
+      rate: t('penalty.legalRate'),
+      description: t('penalty.legalDescription'),
+      example: t('penalty.legalExample')
     },
     {
       id: 'rent',
@@ -449,10 +453,10 @@ export default function PenaltyCalculator() {
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-600">
                     {type.id === 'tax' && t('penalty.taxCodeRK')}
-                    {type.id === 'utilities' && t('penalty.naturalMonopoliesLaw')}
-                    {type.id === 'contract' && t('penalty.civilCodeRK')}
-                    {type.id === 'administrative' && t('penalty.coapRK')}
-                    {type.id === 'rent' && t('penalty.civilCodeRK')}
+                    {type.id === 'utilities' && t('penalty.supplyContractBasis')}
+                    {type.id === 'contract' && t('penalty.contractBasis')}
+                    {type.id === 'legal' && t('penalty.legalBasis')}
+                    {type.id === 'rent' && t('penalty.rentBasis')}
                   </td>
                 </tr>
               ))}

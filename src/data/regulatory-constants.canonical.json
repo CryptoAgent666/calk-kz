@@ -9083,7 +9083,7 @@
         "base_rate_nbrk"
       ],
       "status": "current",
-      "conflict": "Якорь для производных величин: пеня по налогам = 1,25 × базовая ставка / 365 (0,65 — для участников горизонтального мониторинга) и ориентир рыночной ипотечной ГЭСВ. Менять ВМЕСТЕ с ними; минимальная ставка банка по ГОНС = базовая − 3 п.п. (gons_min_bank_rate_pct, GONSCalculator). Менять ВМЕСТЕ с ними.",
+      "conflict": "Якорь для производных величин: пеня по налогам = 1,25 × базовая ставка / 365 (0,65 — для участников горизонтального мониторинга) и ориентир рыночной ипотечной ГЭСВ. Менять ВМЕСТЕ с ними; минимальная ставка банка по ГОНС = базовая − 3 п.п. (gons_min_bank_rate_pct, GONSCalculator). Менять ВМЕСТЕ с ними; законная неустойка по ст. 353 ГК = базовая / 365 (civil_legal_penalty_daily_pct).",
       "used_by": [
         "PenaltyCalculator",
         "MortgageCompareCalculator",
@@ -9097,6 +9097,26 @@
       "official_source": "НБРК, пресс-релиз «О снижении базовой ставки до 16,25% по итогам прогнозного раунда» (04.09.2026)",
       "verified_date": "2026-10-20",
       "verify_method": "tier2-primary-source"
+    },
+    {
+      "key": "civil_legal_penalty_daily_pct",
+      "value": 0.0445,
+      "unit": "percent_per_day",
+      "law": "ГК РК ст. 353 п. 1: неустойка за неправомерное пользование чужими деньгами — исходя из базовой ставки НБРК на день исполнения обязательства",
+      "year": "2026",
+      "change_frequency": "monthly",
+      "aliases": [],
+      "status": "current",
+      "conflict": "Производная от nbrk_base_rate: 16,25% / 365 = 0,0445%/день (penalty.legalRate, penalty.legalDescription ru+kk). Менять вместе с базовой ставкой.",
+      "used_by": [
+        "PenaltyCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K940001000_",
+      "official_value": 0.0445,
+      "verified_date": "2026-10-20",
+      "verify_method": "tier2-primary-source",
+      "verify_note": "calkcheck б14 2026-10-20: добавлен тип «законная неустойка» вместо «административных штрафов 0,03%/день по КоАП» (пени за неуплату штрафа в КоАП нет)."
     },
     {
       "key": "customs_etp_personal_use_car_rates",
