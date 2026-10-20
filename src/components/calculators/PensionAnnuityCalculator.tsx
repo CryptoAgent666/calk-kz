@@ -110,8 +110,11 @@ export default function PensionAnnuityCalculator() {
   // Прежняя версия давала разрыв: мужчина 54 лет → 69,5, а 55 лет → 75, то
   // есть +5,5 года за один день рождения, и дальше плато ровно на 75. Это
   // скачком меняло аннуитетный фактор и, значит, размер выплаты.
+  const LIFE_EXPECTANCY = { male: 71.33, female: 79.42 } as const;
   const getLifeExpectancy = (currentAge: number, gender: 'male' | 'female') => {
-    const baseLifeExpectancy = gender === 'male' ? 69.5 : 77.2; // средние показатели для РК
+    // Ожидаемая продолжительность жизни при рождении, БНС за 2024 год: мужчины 71,33, женщины 79,42
+    // (stat.gov.kz, 2025). Раньше стояли 69,5 / 77,2 — данные прошлых лет.
+    const baseLifeExpectancy = gender === 'male' ? LIFE_EXPECTANCY.male : LIFE_EXPECTANCY.female;
     const slope = gender === 'male' ? 0.35 : 0.25;
     const expected = baseLifeExpectancy + Math.max(0, currentAge - 45) * slope;
     // Функция непрерывна и монотонна: ступенек на границах возрастов нет.
@@ -746,9 +749,9 @@ export default function PensionAnnuityCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('pension-annuity.longevityContext.men.title')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
-              <div>{t('pension-annuity.longevityContext.men.avgLife')}: <strong>{(69.5).toLocaleString(NUMBER_LOCALE)} {pluralize(i18n.language, 69.5, 'год', 'года', 'лет')}</strong></div>
+              <div>{t('pension-annuity.longevityContext.men.avgLife')}: <strong>{(LIFE_EXPECTANCY.male).toLocaleString(NUMBER_LOCALE)} {pluralize(i18n.language, LIFE_EXPECTANCY.male, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.men.retirementAge')}: <strong>63 {pluralize(i18n.language, 63, 'год', 'года', 'лет')}</strong></div>
-              <div className="break-words">{t('pension-annuity.longevityContext.men.avgPeriod')}: <strong>6-12 {t('pension-annuity.longevityContext.years')}</strong></div>
+              <div className="break-words">{t('pension-annuity.longevityContext.men.avgPeriod')}: <strong>≈{Math.round(getLifeExpectancy(63, 'male') - 63)} {t('pension-annuity.longevityContext.years')}</strong></div>
             </div>
           </div>
 
@@ -758,9 +761,9 @@ export default function PensionAnnuityCalculator() {
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">{t('pension-annuity.longevityContext.women.title')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
-              <div>{t('pension-annuity.longevityContext.women.avgLife')}: <strong>{(77.2).toLocaleString(NUMBER_LOCALE)} {pluralize(i18n.language, 77.2, 'год', 'года', 'лет')}</strong></div>
+              <div>{t('pension-annuity.longevityContext.women.avgLife')}: <strong>{(LIFE_EXPECTANCY.female).toLocaleString(NUMBER_LOCALE)} {pluralize(i18n.language, LIFE_EXPECTANCY.female, 'год', 'года', 'лет')}</strong></div>
               <div className="break-words">{t('pension-annuity.longevityContext.women.retirementAge')}: <strong>61 {pluralize(i18n.language, 61, 'год', 'года', 'лет')}</strong></div>
-              <div className="break-words">{t('pension-annuity.longevityContext.women.avgPeriod')}: <strong>14-19 {t('pension-annuity.longevityContext.years')}</strong></div>
+              <div className="break-words">{t('pension-annuity.longevityContext.women.avgPeriod')}: <strong>≈{Math.round(getLifeExpectancy(61, 'female') - 61)} {t('pension-annuity.longevityContext.years')}</strong></div>
             </div>
           </div>
 
