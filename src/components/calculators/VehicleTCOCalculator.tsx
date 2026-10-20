@@ -120,7 +120,8 @@ export default function VehicleTCOCalculator() {
       return null;
     }
 
-    // 1. Годовой налог на ТС. Электромобили освобождены от транспортного налога.
+    // 1. Годовой налог на ТС. Ставки ст. 565 НК привязаны к объёму двигателя; льготы электромобилям в НК-2026
+    // нет (ст. 563), но и объёма у них нет — как облагать, кодекс прямо не говорит, поэтому для EV считаем 0.
     let yearlyTax = 0;
     if (!isElectric) {
       const rateInfo = CAR_TAX_RATES.find(r => volume >= r.min && volume <= r.max);
