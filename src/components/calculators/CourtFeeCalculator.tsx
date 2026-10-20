@@ -370,7 +370,7 @@ export default function CourtFeeCalculator() {
                     <span className="text-gray-700">{t(`calculators:court-fee.${key}`)}</span>
                     <div className="text-right">
                       <div className="font-medium">
-                        {value.individual > 0 ? `${value.individual} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` : t('court-fee.exemption')} / {value.legal > 0 ? `${value.legal} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` : t('court-fee.exemption')}
+                        {value.individual > 0 ? `${value.individual} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` : t('court-fee.exemption')} / {key === 'divorce' ? '—' : value.legal > 0 ? `${value.legal} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}` : t('court-fee.exemption')}
                       </div>
                       <div className="text-xs text-gray-500">{t('court-fee.individualShort')} / {t('court-fee.legalShort')}</div>
                     </div>
