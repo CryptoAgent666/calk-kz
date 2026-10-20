@@ -82,9 +82,9 @@ export default function SeverancePayCalculator() {
       // ст. 131 п. 2 ТК РК: расторжение по инициативе работодателя из-за снижения объёма производства,
       // ухудшившего экономическое состояние работодателя, — 2 средние зарплаты
       severancePay = income * 2;
-    } else if (dismissalReason === 'agreement') {
-      severancePay = income * 1; // Negotiable, default 1 month
     }
+    // По соглашению сторон ТК выходного пособия не устанавливает (ст. 131) — раньше
+    // калькулятор сам добавлял 1 оклад, будто он положен.
     // own-will = 0 severance
 
     const grossTotal = vacationCompensation + severancePay;
@@ -306,7 +306,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                     <h3 className={`text-xs font-semibold ${dismissalReason === key ? 'text-orange-700' : 'text-gray-700'}`}>
                       {getDismissalReasonLabel(key)}
                     </h3>
-                    {key !== 'own-will' && (
+                    {key !== 'own-will' && key !== 'agreement' && (
                       <p className="text-xs text-green-600 mt-1 font-medium">
                         {t('severance-pay.severanceIncluded')}
                       </p>
