@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { SOCIAL_DEDUCTION_ANNUAL, type SocialDeduction } from '../../utils/salary2026';
 
 export default function IncomeTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -20,6 +21,9 @@ export default function IncomeTaxCalculator() {
   const [isResident, setIsResident] = useState<boolean>(true);
   const [isPrimaryJob, setIsPrimaryJob] = useState<boolean>(true);
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
+  // Социальный вычет ст. 404 НК: флажок «пенсионер, инвалид» снимал только ОПВ и ВОСМС,
+  // а вычет 5 000 / 882 МРП в год по инвалидности не давал (calkcheck б14).
+  const [socialDeduction, setSocialDeduction] = useState<SocialDeduction>('none');
   const [showCharts, setShowCharts] = useState<boolean>(true);
 
   const MZP = 85000;
@@ -41,7 +45,7 @@ export default function IncomeTaxCalculator() {
   const calculateTax = (gross: number, resident = isResident, primary = isPrimaryJob, special = isSpecialCategory) => {
     if (gross <= 0) {
       return {
-        opv: 0, vosms: 0, standardDeduction: 0, taxableIncome: 0,
+        opv: 0, vosms: 0, standardDeduction: 0, socialDeduction: 0, taxableIncome: 0,
         incomeTax: 0, netSalary: 0, totalDeductions: 0, effectiveRate: 0,
         hasNinetyPercentReduction: false, isNearThreshold: false, thresholdWarning: ''
       };
@@ -57,6 +61,10 @@ export default function IncomeTaxCalculator() {
 
     let taxableIncome = gross - opv - vosms - standardDeduction;
     taxableIncome = Math.max(0, taxableIncome);
+    // Социальный вычет — годовой лимит, берётся до исчерпания (как в salary2026): в месяц —
+    // не больше облагаемого дохода, поэтому первые месяцы ИПН = 0.
+    const socialDeductionAmount = resident ? Math.min(taxableIncome, SOCIAL_DEDUCTION_ANNUAL[socialDeduction]) : 0;
+    taxableIncome -= socialDeductionAmount;
 
     // 90%-корректировка для доходов ≤25 МРП ОТМЕНЕНА с 2026 (ст. 401 НК РК).
     const hasNinetyPercentReduction = false;
@@ -79,6 +87,7 @@ export default function IncomeTaxCalculator() {
       opv: Math.round(opv),
       vosms: Math.round(vosms),
       standardDeduction: Math.round(standardDeduction),
+      socialDeduction: Math.round(socialDeductionAmount),
       taxableIncome: Math.round(taxableIncome),
       incomeTax: Math.round(incomeTax),
       netSalary: Math.round(netSalary),
@@ -96,7 +105,7 @@ export default function IncomeTaxCalculator() {
   const results = useMemo(
     () => calculateTax(grossSalary),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, i18n.language]
+    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, i18n.language]
   );
 
   // Данные для круговой диаграммы
@@ -212,7 +221,7 @@ export default function IncomeTaxCalculator() {
 ${t('income-tax.results')}:
 - ${t('income-tax.opv')}: ${formatNumber(results.opv)}
 - ${t('income-tax.vosms')}: ${formatNumber(results.vosms)}
-${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${formatNumber(results.standardDeduction)}` : ''}
+${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${formatNumber(results.standardDeduction)}` : ''}${results.socialDeduction > 0 ? `\n- ${t('salary.socialDeductionRow')}: ${formatNumber(results.socialDeduction)}` : ''}
 - ${t('income-tax.ipn')}: ${formatNumber(results.incomeTax)}${results.hasNinetyPercentReduction ? ' ' + t('income-tax.withBenefit') : ''}
 - ${t('income-tax.totalDeductions')}: ${formatNumber(results.totalDeductions)}
 - ${t('income-tax.netSalary')}: ${formatNumber(results.netSalary)}
@@ -302,6 +311,22 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
                   {t('income-tax.isSpecialCategory')}
                 </label>
               </div>
+
+              <div>
+                <label htmlFor="socialDeduction" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('salary.socialDeductionLabel')}
+                </label>
+                <select
+                  id="socialDeduction"
+                  value={socialDeduction}
+                  onChange={(e) => setSocialDeduction(e.target.value as SocialDeduction)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  {(['none', '882', '5000'] as SocialDeduction[]).map((opt) => (
+                    <option key={opt} value={opt}>{t(`salary.socialDeduction_${opt}`)}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="bg-blue-50 rounded-lg p-4">
@@ -368,6 +393,13 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
               <div className="flex justify-between items-center py-3 border-b border-gray-100">
                 <span className="text-gray-600">{t('income-tax.standardDeduction')}</span>
                 <span className="font-semibold text-green-600">-{formatNumber(results.standardDeduction)}</span>
+              </div>
+            )}
+
+            {results.socialDeduction > 0 && (
+              <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                <span className="text-gray-600">{t('salary.socialDeductionRow')}</span>
+                <span className="font-semibold text-green-600">-{formatNumber(results.socialDeduction)}</span>
               </div>
             )}
 
