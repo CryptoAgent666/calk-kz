@@ -133,7 +133,11 @@ export default function BusinessTripCalculator() {
     const taxFreeDays = Math.min(n, PERDIEM_TAX_FREE_MAX_DAYS);
     const overLimit = Math.max(0, dailyPerDay - dailyTaxFreeLimit) * taxFreeDays
       + dailyPerDay * Math.max(0, n - PERDIEM_TAX_FREE_MAX_DAYS);
-    const taxOnOverLimit = overLimit * 0.10;
+    // Сверхнормативные суточные — доход работника: с них ОПВ 10% и ВОСМС 2%, которые
+    // уменьшают базу ИПН (НК ст. 402). Базовый вычет считаем уже использованным на зарплате.
+    // Раньше ИПН брали со всей суммы превышения, без взносов.
+    const contribOnOverLimit = overLimit * 0.10 + overLimit * 0.02;
+    const taxOnOverLimit = (overLimit - contribOnOverLimit) * 0.10;
 
     return {
       housingCapPerDay: housingCapPerDay === null ? null : Math.round(housingCapPerDay),
@@ -147,6 +151,7 @@ export default function BusinessTripCalculator() {
       advance: Math.round(advance),
       overLimit: Math.round(overLimit),
       taxOnOverLimit: Math.round(taxOnOverLimit),
+      contribOnOverLimit: Math.round(contribOnOverLimit),
     };
   }, [tripType, domesticCity, foreignNorm, days, usdRate, eurRate, accommodation, transport, avgDaySalary,
     workDays, budgetFunded, customPerDiemMrp]);
@@ -318,6 +323,7 @@ export default function BusinessTripCalculator() {
                 <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-amber-900">
                   <div className="font-medium">{t('business-trip.taxWarning')}</div>
+                  <div>{t('business-trip.contribAmount')}: {formatNumber(results.contribOnOverLimit)}</div>
                   <div>{t('business-trip.taxAmount')}: {formatNumber(results.taxOnOverLimit)}</div>
                 </div>
               </div>
