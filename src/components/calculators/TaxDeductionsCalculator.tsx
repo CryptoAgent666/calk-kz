@@ -12,7 +12,9 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-type SocialCategory = 'none' | 'group3' | 'group12';
+// other882 — родители/опекуны/усыновители ребёнка с инвалидностью, приёмные родители, участники ВОВ
+// и приравненные, ветераны боевых действий: вычет 882 МРП есть, а освобождения от взносов нет.
+type SocialCategory = 'none' | 'group3' | 'other882' | 'group12';
 
 export default function TaxDeductionsCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -44,7 +46,13 @@ export default function TaxDeductionsCalculator() {
   };
 
   const socialDeductionAnnual =
-    socialCategory === 'group3' ? GROUP3_ANNUAL : socialCategory === 'group12' ? GROUP12_ANNUAL : 0;
+    socialCategory === 'group3' || socialCategory === 'other882' ? GROUP3_ANNUAL : socialCategory === 'group12' ? GROUP12_ANNUAL : 0;
+
+  // Лица с инвалидностью не платят ВОСМС (Закон об ОСМС ст. 28 п. 7 пп. 1 → ст. 26 п. 1 пп. 12);
+  // ОПВ не удерживаются при I–II группе, установленной бессрочно (Соцкодекс ст. 248 п. 3 пп. 2).
+  // Раньше калькулятор удерживал оба взноса с любой категории.
+  const vosmsExempt = socialCategory === 'group3' || socialCategory === 'group12';
+  const opvExempt = socialCategory === 'group12';
 
   // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
   // числами, и первый клиентский рендер обязан выдать те же числа — иначе
@@ -53,8 +61,8 @@ export default function TaxDeductionsCalculator() {
     () => {
       const income = monthlyIncome > 0 ? monthlyIncome : 0;
 
-      const opv = OPV_RATE * Math.min(income, OPV_MAX_BASE);
-      const vosms = VOSMS_RATE * Math.min(income, VOSMS_MAX_BASE);
+      const opv = opvExempt ? 0 : OPV_RATE * Math.min(income, OPV_MAX_BASE);
+      const vosms = vosmsExempt ? 0 : VOSMS_RATE * Math.min(income, VOSMS_MAX_BASE);
       const baseDeduction = applyBaseDeduction ? BASE_DEDUCTION : 0;
       const socialDeduction = socialDeductionAnnual / 12;
 
@@ -202,6 +210,7 @@ export default function TaxDeductionsCalculator() {
               >
                 <option value="none">{t('tax-deductions.inputSection.socialCategory.none')}</option>
                 <option value="group3">{t('tax-deductions.inputSection.socialCategory.group3')}</option>
+                <option value="other882">{t('tax-deductions.inputSection.socialCategory.other882')}</option>
                 <option value="group12">{t('tax-deductions.inputSection.socialCategory.group12')}</option>
               </select>
               <p className="text-xs text-gray-500 mt-1">
