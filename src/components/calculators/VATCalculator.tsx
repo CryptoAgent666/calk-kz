@@ -124,6 +124,10 @@ ${t('vat.export.formula')}: ${results.formula}`;
 
   const vatRates = [
     { value: '0', label: t('vat.rates.zero.label'), description: t('vat.rates.zero.description') },
+    // Пониженные ставки НК ст. 503 п. 2–3: лекарства, медизделия, медуслуги — 5% в 2026 (с 2027 — 10%),
+    // отечественная периодическая печать — 10%. Страница их описывала, а выбрать было нельзя.
+    { value: '5', label: t('vat.rates.reduced5.label'), description: t('vat.rates.reduced5.description') },
+    { value: '10', label: t('vat.rates.reduced10.label'), description: t('vat.rates.reduced10.description') },
     { value: '16', label: t('vat.rates.standard.label'), description: t('vat.rates.standard.description') }
   ];
 
