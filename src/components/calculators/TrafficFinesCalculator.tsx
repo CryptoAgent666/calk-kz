@@ -25,6 +25,10 @@ interface Violation {
   noMonetaryFine?: boolean;
   penaltyKey?: string;
   repeatPenaltyKey?: string;
+  // Повтор с альтернативной санкцией «штраф или лишение прав»: сокращённого производства
+  // (и скидки 50%) нет — ст. 810 ч. 2 пп. 1 КоАП.
+  repeatNoDiscount?: boolean;
+  repeatNote?: string;
 }
 
 // Сверено с КоАП РК (old.adilet.zan.kz, K1400000235) 27.09.2026 — calkcheck, батч 3.
@@ -45,7 +49,9 @@ const violations: Violation[] = [
   { id: 'noInsurance', labelKey: 'traffic-fines.v.noInsurance', articleRef: '230 ч.2', firstMRP: 10, repeatMRP: null },
   { id: 'childSeat', labelKey: 'traffic-fines.v.childSeat', articleRef: '593 ч.1, ч.3', firstMRP: 5, repeatMRP: 10, note: 'traffic-fines.noteChildSeat' },
   // Сверка Tier-2 23.08.2026: санкция 10/20 МРП верна, но стояла ссылка на ч.4 — фактически это ч.2 и ч.2-1.
-  { id: 'noPlates', labelKey: 'traffic-fines.v.noPlates', articleRef: '590 ч.2, ч.2-1', firstMRP: 10, repeatMRP: 20 },
+  // calkcheck б14: ч.2-1 — «20 МРП или лишение прав на 1 год», скидки нет; скрытые номера — ч.4 (арест).
+  { id: 'noPlates', labelKey: 'traffic-fines.v.noPlates', articleRef: '590 ч.2, ч.2-1', firstMRP: 10, repeatMRP: 20, repeatNoDiscount: true, repeatNote: 'traffic-fines.noteNoPlatesRepeat' },
+  { id: 'hiddenPlates', labelKey: 'traffic-fines.v.hiddenPlates', articleRef: '590 ч.4', firstMRP: 0, repeatMRP: null, noMonetaryFine: true, penaltyKey: 'traffic-fines.penaltyHiddenPlates' },
 ];
 
 export default function TrafficFinesCalculator() {
@@ -263,6 +269,15 @@ export default function TrafficFinesCalculator() {
                     )}
                   </div>
 
+                  {isRepeat && selected.repeatNoDiscount ? (
+                    selected.repeatNote && (
+                      <div className="bg-amber-50 rounded-lg p-4 text-sm text-amber-800 border border-amber-200">
+                        <AlertTriangle className="w-4 h-4 inline mr-1" />
+                        {t(selected.repeatNote)}
+                      </div>
+                    )
+                  ) : (
+                  <>
                   {/* Discount */}
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
                     <div className="flex justify-between items-center mb-2">
@@ -282,6 +297,8 @@ export default function TrafficFinesCalculator() {
                     <span className="text-sm text-blue-700">{t('traffic-fines.savings')}</span>
                     <span className="text-lg font-bold text-blue-700">{formatCurrency(fineAmount - discountedAmount)}</span>
                   </div>
+                  </>
+                  )}
                 </>
               )}
 
