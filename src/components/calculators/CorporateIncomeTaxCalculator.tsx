@@ -27,15 +27,18 @@ export default function CorporateIncomeTaxCalculator() {
     { id: 'standard', labelKey: 'corporate-income-tax.activityStandard', rate: 20 },
     // С 01.01.2026 (новый НК РК): льготная ставка КПН для сельхозтоваропроизводителей снижена с 10% до 3%.
     { id: 'agricultural', labelKey: 'corporate-income-tax.activityAgricultural', rate: 3 },
-    // С 01.01.2026 освобождение (0%) для организаций социальной сферы (образование, здравоохранение, фин. лизинг) отменено: 5% в 2026, 10% с 2027.
+    // С 01.01.2026 освобождение (0%) для организаций социальной сферы (НК ст. 15: медицина, образование, наука, спорт,
+    // культура и др. при доле таких доходов ≥ 90%) отменено: 5% в 2026, 10% с 2027 (ст. 357 п. 2 пп. 3).
     { id: 'social', labelKey: 'corporate-income-tax.activitySocial', rate: 5 },
   ];
 
   const WITHHOLDING_RATE = 15; // у источника при выплате нерезиденту (ст. 357 п. 1, ст. 682 НК РК)
   // Авансовые платежи не платят компании с совокупным годовым доходом за позапрошлый год
   // не больше 600 000 МРП (ст. 348 п. 1 пп. 1 НК РК 2026); порог «КПН > 100 МРП» — из старого НК.
+  // МРП берётся тоже позапрошлого года: для авансов 2026 — 3 692 ₸ (2024), порог 2 215 200 000 ₸.
+  // До 20.10.2026 стоял МРП 2026 — порог 2,595 млрд, и компании с доходом 2,2–2,6 млрд выпадали из авансов.
   const ADVANCE_EXEMPT_INCOME_MRP = 600000;
-  const MRP_2026 = 4325;
+  const MRP_ADVANCE_BASE_YEAR = 3692;
 
   const [activity, setActivity] = useState<ActivityType>('standard');
   const [grossIncome, setGrossIncome] = useState<string>('50000000');
@@ -63,7 +66,7 @@ export default function CorporateIncomeTaxCalculator() {
     const withholdingTax = Math.round(((divs + roy) * WITHHOLDING_RATE) / 100);
     const totalTax = mainTax + withholdingTax;
     const effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
-    const monthlyAdvance = income > ADVANCE_EXEMPT_INCOME_MRP * MRP_2026 ? Math.round(mainTax / 12) : 0;
+    const monthlyAdvance = income > ADVANCE_EXEMPT_INCOME_MRP * MRP_ADVANCE_BASE_YEAR ? Math.round(mainTax / 12) : 0;
     const netProfit = taxableIncome - mainTax;
 
     return {

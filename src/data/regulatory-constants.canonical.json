@@ -10002,6 +10002,27 @@
       "verify_method": "calkcheck-primary",
       "status": "current",
       "official_value": 10
+    },
+    {
+      "key": "cit_advance_exempt_income_mrp",
+      "value": 600000,
+      "unit": "MRP",
+      "law": "НК РК (K2500000214) ст. 348 п. 1 пп. 1: авансы КПН не платят налогоплательщики с совокупным годовым доходом за позапрошлый налоговый период не выше 600 000 МРП, «предшествующего предыдущему финансовому году»",
+      "year": "2026",
+      "change_frequency": "annual",
+      "aliases": [],
+      "status": "current",
+      "conflict": "МРП — позапрошлого года: для авансов 2026 — 3 692 ₸ (2024), порог 2 215 200 000 ₸; для 2027 — 3 932 ₸ (2025), 2 359 200 000 ₸. Калькулятор до 20.10.2026 умножал на МРП 2026 (2,595 млрд).",
+      "used_by": [
+        "CorporateIncomeTaxCalculator"
+      ],
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/K2500000214",
+      "official_value": 600000,
+      "changes_next_fy": "С 01.01.2027 в коде MRP_ADVANCE_BASE_YEAR = 3 932 (МРП 2025), подсказки monthlyAdvanceHint и методика — 2,359 млрд ₸.",
+      "verified_date": "2026-10-20",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck б15 2026-10-20: текст ст. 348 п. 1 пп. 1 с old.adilet; подсказка «≈2,6 млрд» → «≈2,215 млрд»."
     }
   ],
   "estimates_excluded": [
