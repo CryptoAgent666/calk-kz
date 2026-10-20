@@ -45,7 +45,7 @@ function calcSecondary(gross: number) {
   const opv = opvBase * 0.10;
   const vosmsBase = Math.min(gross, VOSMS_MAX_BASE);
   const vosms = vosmsBase * 0.02;
-  // БЕЗ стандартного вычета
+  // БЕЗ базового вычета
   const taxable = Math.max(0, gross - opv - vosms);
   const ipn = taxable * 0.10;
   const net = gross - opv - vosms - ipn;
