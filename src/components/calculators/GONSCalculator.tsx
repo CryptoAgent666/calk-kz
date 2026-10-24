@@ -42,10 +42,10 @@ function simulateGONS(initial: number, monthly: number, years: number, bankRateP
 }
 
 // Минимальная эффективная ставка банка по вкладу больше года — базовая ставка НБРК
-// минус 300 б.п. (ст. 10 п. 3, ред. закона № 153-VIII). При базовой 16,25% (с 07.09.2026) —
-// 13,25%. ⚠️ Меняется вместе с базовой ставкой (см. реестр nbrk_base_rate).
-const GONS_MIN_BANK_RATE = 13.25;
-const GONS_MIN_BANK_RATE_LABEL = '13,25%';
+// минус 300 б.п. (ст. 10 п. 3, ред. закона № 153-VIII). При базовой 15,75% (с 27.10.2026) —
+// 12,75%. ⚠️ Меняется вместе с базовой ставкой (см. реестр nbrk_base_rate).
+const GONS_MIN_BANK_RATE = 12.75;
+const GONS_MIN_BANK_RATE_LABEL = '12,75%';
 
 const GONS_EXAMPLES = {
   ex1: simulateGONS(50000, 10000, 10, GONS_MIN_BANK_RATE, 0.05),
