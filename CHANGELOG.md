@@ -7,6 +7,7 @@
 - **Производные вне чек-листа задачи:** законная неустойка ст. 353 ГК 15,75 / 365 = 0,0432%/день (`legalRate`, было 0,0445); минимум ставки банка по ГОНС 15,75 − 3 = 12,75% (`GONS_MIN_BANK_RATE`, banksNote, QuickAnswer; было 13,25); ставка в FAQ business-roi a1, mortgage-compare a3, altOverdraftDesc, bankExamplesDisclaimer; шапки MortgageCompare/GONS; `public/llms.txt` (из реестра).
 - `MARKET_RATE_DEFAULT` 23,5% не тронут — рыночная ГЭСВ от ставки не производна. Ссылки на «ст. 121 НК» в коде уже были исправлены 25.09; в реестре `penalty_tax_daily_rate_example.value` тоже переведено на ст. 5 пп. 2 и ст. 85.
 - **Реестр:** `nbrk_base_rate`, `penalty_tax_daily_rate_example`, `gons_min_bank_rate_pct`, `civil_legal_penalty_daily_pct`. Даты «Обновлено» — penalty, gons. Запись на странице «Обновления» (ru + kk).
+- **Выложено 25.10.2026:** коммит 682746a, бандл `20261024223924`, deploy-fast + OTA (`check:ota` ok). На проде: 570 страниц, prerender-errors нет, единый `assets/index-CooedXtj.js` (application/javascript); в HTML — «0,0539» и «15,75» (penalty ru и __kk), «12,75%» (gons), «15,75» (business-roi, /legal/updates/), llms.txt «Базовая ставка НБРК: 15,75%». Следующая сверка — scheduled-задача `calk-kz-nbrk-rate-2026-12-04`.
 
 ## [2026-10-20] CalkCheck, батч 15: оставшиеся регуляторные страницы — модель расчёта против текстов законов (AUDIT-2026-10-20-b15.md)
 
