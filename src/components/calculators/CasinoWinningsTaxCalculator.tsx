@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { getSources } from '../../data/calculatorSources';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 import { toIsoDateLocal } from '../../utils/workingTime';
 
@@ -663,61 +664,6 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
           </div>
         </div>
 
-        <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-          <h4 className="font-semibold text-gray-900 mb-3">{t('casino-winnings-tax.faqTitle')}</h4>
-          <div className="space-y-4">
-            <details className="group">
-              <summary className="font-medium text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                {t('casino-winnings-tax.faqQ1')}
-                <span className="ml-2 transform group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <p className="mt-2 text-gray-700 text-sm pl-4">
-                {t('casino-winnings-tax.faqA1')}
-              </p>
-            </details>
-
-            <details className="group">
-              <summary className="font-medium text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                {t('casino-winnings-tax.faqQ2')}
-                <span className="ml-2 transform group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <p className="mt-2 text-gray-700 text-sm pl-4">
-                {t('casino-winnings-tax.faqA2')}
-              </p>
-            </details>
-
-            <details className="group">
-              <summary className="font-medium text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                {t('casino-winnings-tax.faqQ3')}
-                <span className="ml-2 transform group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <p className="mt-2 text-gray-700 text-sm pl-4">
-                {t('casino-winnings-tax.faqA3')}
-              </p>
-            </details>
-
-            <details className="group">
-              <summary className="font-medium text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                {t('casino-winnings-tax.faqQ4')}
-                <span className="ml-2 transform group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <p className="mt-2 text-gray-700 text-sm pl-4">
-                {t('casino-winnings-tax.faqA4')}
-              </p>
-            </details>
-
-            <details className="group">
-              <summary className="font-medium text-gray-900 cursor-pointer list-none flex items-center justify-between">
-                {t('casino-winnings-tax.faqQ5')}
-                <span className="ml-2 transform group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <p className="mt-2 text-gray-700 text-sm pl-4">
-                {t('casino-winnings-tax.faqA5')}
-              </p>
-            </details>
-          </div>
-        </div>
-
         <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
           <p className="text-sm text-amber-900">
             <strong>{t('casino-winnings-tax.disclaimer')}</strong> {t('casino-winnings-tax.disclaimerText')}
@@ -761,6 +707,14 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
           />
         </div>
       )}
+
+      <FAQSection
+        items={[1, 2, 3, 4, 5].map((n) => ({
+          question: t(`casino-winnings-tax.faq.q${n}`),
+          answer: t(`casino-winnings-tax.faq.a${n}`),
+        }))}
+        sources={getSources('casino-winnings-tax')}
+      />
 
       {/* Виджет для встраивания */}
       <LegalDisclaimer type="tax" />
