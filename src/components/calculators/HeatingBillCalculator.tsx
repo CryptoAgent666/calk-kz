@@ -638,7 +638,7 @@ export default function HeatingBillCalculator() {
       {/* Виджет для встраивания */}
       <ExpertBlock />
       <EmbedWidget
-        calculatorId="heating-bill"
+        calculatorId="heating"
         calculatorTitle={t('heating.title')}
       />
       <LastUpdated calculatorId="heating" />

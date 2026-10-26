@@ -1123,7 +1123,7 @@ export default function MortgageCalculator() {
 
       {/* Виджет для встраивания */}
       <EmbedWidget
-        calculatorId="mortgage"
+        calculatorId="mortgage-specialized"
         calculatorTitle={t('mortgage.title')}
       />
       <LastUpdated calculatorId="mortgage-specialized" />

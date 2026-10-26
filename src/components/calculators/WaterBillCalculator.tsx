@@ -466,7 +466,7 @@ export default function WaterBillCalculator() {
       {/* Виджет для встраивания */}
       <ExpertBlock />
       <EmbedWidget
-        calculatorId="water-bill"
+        calculatorId="water"
         calculatorTitle={t('water.title')}
       />
       <LastUpdated calculatorId="water" />

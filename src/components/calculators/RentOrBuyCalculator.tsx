@@ -960,7 +960,7 @@ export default function RentOrBuyCalculator() {
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
       <EmbedWidget
-        calculatorId="rent-or-buy"
+        calculatorId="rent-vs-buy"
         calculatorTitle={t('rent-vs-buy.title')}
       />
       <LastUpdated calculatorId="rent-vs-buy" />

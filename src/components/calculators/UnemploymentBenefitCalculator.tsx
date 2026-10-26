@@ -463,7 +463,7 @@ export default function UnemploymentBenefitCalculator() {
 
       {/* Виджет для встраивания */}
       <EmbedWidget
-        calculatorId="unemployment-benefit"
+        calculatorId="unemployment"
         calculatorTitle="Калькулятор пособия по безработице"
       />
       <LastUpdated calculatorId="unemployment" />

@@ -255,7 +255,7 @@ export default function PasswordGeneratorCalculator() {
       ]} 
           sources={getSources('password-generator')}
         />
-      <EmbedWidget calculatorId="password-gen" calculatorTitle={t('password-gen.title')} />
+      <EmbedWidget calculatorId="password-generator" calculatorTitle={t('password-gen.title')} />
       <LastUpdated calculatorId="password-generator" />
     </div>
   );

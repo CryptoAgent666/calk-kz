@@ -559,7 +559,7 @@ export default function GasBillCalculator() {
       {/* Виджет для встраивания */}
       <ExpertBlock />
       <EmbedWidget
-        calculatorId="gas-bill"
+        calculatorId="gas"
         calculatorTitle="Калькулятор газа"
       />
       <LastUpdated calculatorId="gas" />

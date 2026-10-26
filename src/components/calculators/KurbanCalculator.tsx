@@ -1301,7 +1301,7 @@ export default function KurbanCalculator() {
       <LegalDisclaimer type="religious" />
       <ExpertBlock />
       <EmbedWidget
-        calculatorId="kurban"
+        calculatorId="kurban-sacrifice"
         calculatorTitle={t('kurban-sacrifice.title')}
       />
       <LastUpdated calculatorId="kurban-sacrifice" />

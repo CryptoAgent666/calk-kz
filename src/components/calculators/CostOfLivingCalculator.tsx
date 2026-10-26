@@ -281,7 +281,7 @@ export default function CostOfLivingCalculator() {
 
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
-      <EmbedWidget calculatorId="cost-living" calculatorTitle={t('cost-living.heading')} />
+      <EmbedWidget calculatorId="cost-of-living" calculatorTitle={t('cost-living.heading')} />
       <LastUpdated calculatorId="cost-of-living" />
     </div>
   );

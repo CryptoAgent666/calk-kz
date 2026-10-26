@@ -412,7 +412,7 @@ export default function TaxRegimeComparisonCalculator() {
 
       <LegalDisclaimer type="tax" />
       <ExpertBlock />
-      <EmbedWidget calculatorId="tax-regime" calculatorTitle={t('tax-regime.heading')} />
+      <EmbedWidget calculatorId="tax-regime-comparison" calculatorTitle={t('tax-regime.heading')} />
       <LastUpdated calculatorId="tax-regime-comparison" />
     </div>
   );

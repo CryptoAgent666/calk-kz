@@ -232,7 +232,7 @@ export default function ConcreteVolumeCalculator() {
       ]} 
           sources={getSources('concrete-volume')}
         />
-      <EmbedWidget calculatorId="concrete" calculatorTitle={t('concrete.title')} />
+      <EmbedWidget calculatorId="concrete-volume" calculatorTitle={t('concrete.title')} />
       <LastUpdated calculatorId="concrete-volume" />
     </div>
   );
