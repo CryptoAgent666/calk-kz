@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { pluralize } from '../../utils/pluralize';
 import { TrendingUp, Calculator, DollarSign, Target, BarChart3, PieChart, Info, AlertTriangle, Percent, Calendar } from 'lucide-react';
 import SharePrintButtons from '../SharePrintButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
@@ -24,6 +25,8 @@ interface YearlyData {
 
 export default function CompoundInterestCalculator() {
   const { t, i18n } = useTranslation('calculators');
+  // «1 год / 3 года / 10 лет»; в kk одна форма «жыл» (раньше «1 лет», «3 лет»).
+  const yearsWord = (n: number) => pluralize(i18n.language, n, 'год', 'года', t('compound-interest.years'));
   const [initialDeposit, setInitialDeposit] = useState<number>(500000);
   const [regularContribution, setRegularContribution] = useState<number>(25000);
   const [contributionFrequency, setContributionFrequency] = useState<'monthly' | 'yearly'>('monthly');
@@ -90,6 +93,14 @@ export default function CompoundInterestCalculator() {
 
     const finalAmount = currentAmount;
     const totalInterestEarned = finalAmount - totalContributions;
+    // Простой процент для сравнения — и на пополнения, каждое со своего месяца/года внесения:
+    // ежемесячные вносятся в конце месяца (как в цикле выше), ежегодные — в начале года.
+    // До 27.10.2026 простой процент начисляли только на первоначальный взнос, и «разница»
+    // выходила вдвое больше (по умолчанию +4,29 млн вместо +2,21 млн).
+    const months = years * 12;
+    const simpleInterest = principal * rate * years + (contributionFrequency === 'monthly'
+      ? monthlyContrib * rate * months * (months - 1) / 24
+      : yearlyContrib * rate * years * (years + 1) / 2);
     const effectiveReturn = totalContributions > 0 ? (totalInterestEarned / totalContributions) * 100 : 0;
     const totalReturn = totalContributions > 0 ? ((finalAmount / totalContributions) - 1) * 100 : 0;
 
@@ -97,6 +108,7 @@ export default function CompoundInterestCalculator() {
       finalAmount: Math.round(finalAmount),
       totalPersonalContributions: Math.round(totalContributions),
       totalInterestEarned: Math.round(totalInterestEarned),
+      simpleInterest: Math.round(simpleInterest),
       effectiveReturn: Number(effectiveReturn.toFixed(2)),
       totalReturn: Number(totalReturn.toFixed(2)),
       yearlyData
@@ -130,7 +142,7 @@ export default function CompoundInterestCalculator() {
 - ${t('compound-interest.initialDeposit')}: ${formatNumber(initialDeposit)}
 - ${t('compound-interest.regularContribution')}: ${formatNumber(regularContribution)} (${contributionFreqText})
 - ${t('compound-interest.annualRate')}: ${annualRate}%
-- ${t('compound-interest.investmentYears')}: ${investmentYears} ${t('compound-interest.years')}
+- ${t('compound-interest.investmentYears')}: ${investmentYears} ${yearsWord(investmentYears)}
 - ${t('compound-interest.compoundingPeriod')}: ${compoundingFreqText}
 - ${t('compound-interest.currency')}: ${selectedCurrency?.name}
 
@@ -360,7 +372,7 @@ ${results.yearlyData.map(data =>
                     {t('compound-interest.investmentYears')}
                   </label>
                   <span className="text-sm font-semibold text-orange-600">
-                    {investmentYears} {t('compound-interest.years')}
+                    {investmentYears} {yearsWord(investmentYears)}
                   </span>
                 </div>
                 <input
@@ -445,7 +457,7 @@ ${results.yearlyData.map(data =>
                   </div>
                 </div>
                 <div className="text-xs sm:text-sm text-gray-600">
-                  {t('compound-interest.capitalAfter')} {investmentYears} {t('compound-interest.years')}
+                  {t('compound-interest.capitalAfter')} {investmentYears} {yearsWord(investmentYears)}{i18n.language === 'kk' ? ' кейін' : ''}
                 </div>
               </div>
 
@@ -666,12 +678,12 @@ ${results.yearlyData.map(data =>
               </p>
               <p>
                 <strong>{t('compound-interest.wouldBe')}</strong> {formatNumber(
-                  results.totalPersonalContributions + (initialDeposit * (annualRate / 100) * investmentYears)
+                  results.totalPersonalContributions + results.simpleInterest
                 )}
               </p>
               <p>
                 <strong>{t('compound-interest.difference')}</strong> <span className="text-green-600 font-semibold">
-                  +{formatNumber(results.totalInterestEarned - (initialDeposit * (annualRate / 100) * investmentYears))}
+                  +{formatNumber(results.totalInterestEarned - results.simpleInterest)}
                 </span>
               </p>
             </div>
@@ -754,6 +766,8 @@ ${results.yearlyData.map(data =>
           <TaxPieChart
             data={[
               { name: t('compound-interest.chart.initialAmount'), value: initialDeposit },
+              // Без пополнений диаграмма показывала проценты как 91% накоплений вместо 59%.
+              { name: t('compound-interest.chart.contributions'), value: results.totalPersonalContributions - initialDeposit },
               { name: t('compound-interest.chart.interestEarned'), value: results.totalInterestEarned },
             ]}
             title={t('compound-interest.chart.title')}
