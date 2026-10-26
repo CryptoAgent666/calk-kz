@@ -285,7 +285,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'fancy-plates',
         title: 'Стоимость красивых госномеров',
-        description: 'Сбор за выбор регистрационного номера авто в МРП — статья 605 НК РК',
+        description: 'Госпошлина за регистрационный номер авто в МРП — ст. 667 НК РК',
         category: 'auto',
         icon: 'Hash',
         component: React.lazy(() => import('../components/calculators/FancyPlatesCalculator'))
