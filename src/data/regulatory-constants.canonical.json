@@ -1098,7 +1098,7 @@
       "key": "gov_duty_divorce_court_mrp",
       "value": 0.3,
       "unit": "MRP",
-      "law": "ст. 610 НК РК (иск о расторжении брака в суде)",
+      "law": "НК РК 2026 ст. 665 п. 1 пп. 5 (иск о расторжении брака — 0,3 МРП)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1111,8 +1111,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://egov.kz/cms/ru/articles/marital_status/divorce-details",
-      "verify_note": "Иск о расторжении брака в суде — 0.3 МРП. Подтверждено egov + НК РК 2026. | calkcheck 2026-09-24: ст. 665 п. 1 пп. 5 — «с исков о расторжении брака – 0,3 МРП» подтверждено агентом; раздел имущества — пп. 1 (1% цены иска, не более 10 000 МРП, без минимума).",
-      "reverified": "2026-09-24"
+      "verify_note": "Иск о расторжении брака в суде — 0.3 МРП. Подтверждено egov + НК РК 2026. | calkcheck 2026-09-24: ст. 665 п. 1 пп. 5 — «с исков о расторжении брака – 0,3 МРП» подтверждено агентом; раздел имущества — пп. 1 (1% цены иска, не более 10 000 МРП, без минимума). | calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены.",
+      "reverified": "2026-09-24",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_divorce_zags_mrp",
@@ -1136,7 +1138,7 @@
       "key": "gov_duty_alimony_petition_mrp",
       "value": 0,
       "unit": "MRP",
-      "law": "пп.4 ст.616 НК РК (истец по алиментам освобождён от госпошлины)",
+      "law": "НК РК 2026 ст. 668 пп. 4 (истцы по искам о взыскании алиментов освобождены)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1149,14 +1151,16 @@
       ],
       "audit_status": "clean",
       "source_url": "https://sud.gov.kz/rus/content/stavki-gosudarstvennoy-poshliny-v-sudah",
-      "verify_note": "Истец по искам о взыскании алиментов освобождён от госпошлины (0 МРП). Льгота сохранена в НК РК 2026 (перечень освобождений).",
-      "reverified": "2026-06-23"
+      "verify_note": "Истец по искам о взыскании алиментов освобождён от госпошлины (0 МРП). Льгота сохранена в НК РК 2026 (перечень освобождений). | calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены.",
+      "reverified": "2026-06-23",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_property_division_rate",
       "value": 1,
       "unit": "percent",
-      "law": "ст. 610 НК РК (раздел имущества — имущественный иск, физлица)",
+      "law": "НК РК 2026 ст. 665 п. 1 пп. 1, п. 4 (имущественный иск — 1% цены иска, не более 10 000 МРП); цена иска — стоимость истребуемого имущества (ГПК ст. 104 п. 1 пп. 4)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1169,8 +1173,10 @@
       ],
       "audit_status": "representation_variants",
       "source_url": "https://egov.kz/cms/ru/articles/stamp_tax",
-      "verify_note": "Раздел имущества — имущественный иск: 1% для физлиц (от стоимости спорного имущества). Действует в 2026.",
-      "reverified": "2026-06-23"
+      "verify_note": "Раздел имущества — имущественный иск: 1% для физлиц (от стоимости спорного имущества). Действует в 2026. | calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены.",
+      "reverified": "2026-06-23",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "gov_duty_vehicle_certificate_mrp",
@@ -1274,7 +1280,7 @@
       "key": "inheritance_notary_cert_per_heir_mrp",
       "value": 4,
       "unit": "MRP",
-      "law": "НК РК (госпошлина/нотариальный сбор за свидетельство о праве на наследство)",
+      "law": "Приказ МЮ № 533 от 27.09.2025, п. 2 пп. 10 — тариф частного нотариуса 4 МРП за свидетельство (+ 5 МРП за свидетельство о доле супруга, пп. 11); у госнотариуса — госпошлина 1 МРП (НК ст. 667 п. 1 пп. 7)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1288,9 +1294,11 @@
       "audit_status": "clean",
       "official_value": "4 МРП за свидетельство о праве на наследство (фикс., Приказ МЮ РК №533, с 01.01.2026; % составляющая отменена)",
       "source_url": "https://uchet.kz/news/skolko-budut-stoit-uslugi-notariusa-s-1-yanvarya-2026-goda-opublikovan-polnyy-perechen/",
-      "verify_note": "Старое 1 МРП устарело. Приказ №533 ввёл фикс. 4 МРП за каждое свидетельство (ср. notary_unified_tariff_inheritance_certificate_mrp=4).",
+      "verify_note": "Старое 1 МРП устарело. Приказ №533 ввёл фикс. 4 МРП за каждое свидетельство (ср. notary_unified_tariff_inheritance_certificate_mrp=4). | calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены.",
       "confidence": "high",
-      "reverified": "2026-06-27"
+      "reverified": "2026-06-27",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "installment_loan_max_amount_kzt",
@@ -1349,9 +1357,9 @@
     },
     {
       "key": "limitation_family_years",
-      "value": 3,
+      "value": 0,
       "unit": "years",
-      "law": "ст. 9 КоБС РК (срок исковой давности по семейным спорам)",
+      "law": "КоБС ст. 8 п. 1 — исковая давность не распространяется на требования из брачно-семейных отношений, кроме сроков, установленных Кодексом (напр. ст. 37 п. 6 — 3 года по разделу имущества разведённых)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1363,7 +1371,11 @@
       "used_by": [
         "StatuteLimitationsCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "official_value": "давность не распространяется",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены."
     },
     {
       "key": "limitation_general_civil_years",
@@ -1387,7 +1399,7 @@
       "key": "limitation_inheritance_acceptance_months",
       "value": 6,
       "unit": "months",
-      "law": "ст. 1072 ГК РК (срок принятия наследства)",
+      "law": "ГК РК ст. 1072-2 (срок принятия наследства — 6 месяцев); восстановление — ст. 1072-3",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1401,14 +1413,16 @@
       ],
       "audit_status": "representation_variants",
       "source_url": "https://adilet.zan.kz/rus/docs/K990000409_",
-      "verify_note": "ст.1072 ГК РК — срок принятия наследства 6 месяцев. Не изменялся.",
-      "reverified": "2026-06-23"
+      "verify_note": "ст.1072 ГК РК — срок принятия наследства 6 месяцев. Не изменялся. | calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены.",
+      "reverified": "2026-06-23",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "limitation_labor_dispute_months",
       "value": 3,
       "unit": "months",
-      "law": "ст. 160 ТК РК (срок обращения по индивидуальному трудовому спору)",
+      "law": "ТК ст. 160: восстановление на работе — 1 мес. в согласительную комиссию / 2 мес. в суд; трёхмесячный срок прямого обращения в суд признан неконституционным (НП КС № 88-НП от 12.06.2026)",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -1420,7 +1434,10 @@
       "used_by": [
         "StatuteLimitationsCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены."
     },
     {
       "key": "limitation_property_acquisitive_years",
@@ -1444,9 +1461,9 @@
     },
     {
       "key": "limitation_period_salary_disputes",
-      "value": 1,
+      "value": 3,
       "unit": "years",
-      "law": "ТК РК ст. 164",
+      "law": "ТК ст. 160 п. 1 пп. 2 (1 год) в истолковании НП КС от 08.06.2026 № 81-НП: зарплата и выплаты по оплате труда — в пределах общего 3-летнего срока (ГК ст. 178)",
       "year": "2026",
       "change_frequency": "rare",
       "status": "current",
@@ -1458,13 +1475,17 @@
       "used_by": [
         "StatuteLimitationsCalculator"
       ],
-      "audit_status": "representation_variants"
+      "audit_status": "representation_variants",
+      "official_value": 3,
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены."
     },
     {
       "key": "limitation_period_tax_disputes",
       "value": 5,
       "unit": "years",
-      "law": "НК РК ст. 48",
+      "law": "НК РК 2026 ст. 65 п. 2 (3 года; 5 лет — крупные налогоплательщики, недропользователи); срок течёт после окончания налогового периода (п. 3)",
       "year": "2026",
       "change_frequency": "rare",
       "status": "current",
@@ -1479,8 +1500,10 @@
       "audit_status": "representation_variants",
       "source_url": "https://kodeksy-kz.com/ka/nalogovyj_kodeks/65.htm",
       "official_value": "5",
-      "verify_note": "Срок исковой давности 5 лет сохраняется, но ТОЛЬКО для крупного предпринимательства, недропользователей, резидентов по гл.33, НДС по методу зачёта. Для прочих НП — 3 года. Статья переномерована: в новом НК РК (№214-VIII, 2026) это ст. 65, а не ст. 48.",
-      "reverified": "2026-06-23"
+      "verify_note": "Срок исковой давности 5 лет сохраняется, но ТОЛЬКО для крупного предпринимательства, недропользователей, резидентов по гл.33, НДС по методу зачёта. Для прочих НП — 3 года. Статья переномерована: в новом НК РК (№214-VIII, 2026) это ст. 65, а не ст. 48. | calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены.",
+      "reverified": "2026-06-23",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "mfo_gesv_max_rate",
@@ -1560,7 +1583,7 @@
       "key": "notary_fee_property_division",
       "value": 10,
       "unit": "MRP",
-      "law": "нотариальный тариф (Закон РК О нотариате)",
+      "law": "Приказ МЮ № 533 от 27.09.2025, п. 2 пп. 4 — удостоверение соглашения о разделе имущества 10 МРП; удостоверение обязательно (КоБС ст. 37 п. 2)",
       "year": "2026",
       "change_frequency": "annual",
       "status": "current",
@@ -1571,7 +1594,10 @@
       "used_by": [
         "PropertyDivisionCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary",
+      "verify_note": "calkcheck б16 2026-10-26: сверено по первоисточнику (old.adilet), ссылка/значение исправлены."
     },
     {
       "key": "notary_fee_agreement_certification",
