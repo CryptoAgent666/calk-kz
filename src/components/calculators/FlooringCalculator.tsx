@@ -47,7 +47,8 @@ export default function FlooringCalculator() {
     const area = l * w;
     const spec = MATERIALS[material];
     const baseReserve = spec.reserve;
-    const methodReserve = method === 'diagonal' ? 10 : 0;
+    // Диагональ — только для штучных покрытий; линолеум кладут одним полотном
+    const methodReserve = method === 'diagonal' && material !== 'linoleum' ? 10 : 0;
     const totalReserve = baseReserve + methodReserve;
 
     const withReserve = area * (1 + totalReserve / 100);
@@ -59,8 +60,8 @@ export default function FlooringCalculator() {
     const actualArea = packs > 0 ? packs * packArea : withReserve;
     const totalCost = actualArea * price;
 
-    // Подложка (только для ламината/паркета)
-    const needsUnderlay = material === 'laminate' || material === 'parquet' || material === 'vinyl';
+    // Подложка — для ламината и паркета; у SPC-винила она обычно встроенная (FAQ)
+    const needsUnderlay = material === 'laminate' || material === 'parquet';
     const underlayArea = needsUnderlay ? withReserve : 0;
     const underlayPrice = needsUnderlay ? underlayArea * 600 : 0; // ~600 ₸/м²
 
@@ -165,10 +166,12 @@ export default function FlooringCalculator() {
               </div>
 
               <div className="space-y-2 text-sm">
-                <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
-                  <span>📦 {t('flooring.packs')}</span>
-                  <span className="font-semibold">{results.packs} {t('flooring.pcs')} ({results.actualArea} м²)</span>
-                </div>
+                {results.packs > 0 && (
+                  <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
+                    <span>📦 {t('flooring.packs')}</span>
+                    <span className="font-semibold">{results.packs} {t('flooring.pcs')} ({results.actualArea} м²)</span>
+                  </div>
+                )}
                 <div className="bg-gray-50 rounded-lg p-3 flex justify-between">
                   <span>💰 {t('flooring.materialCost')}</span>
                   <span className="font-semibold">{results.totalCost.toLocaleString('ru-KZ')} ₸</span>
