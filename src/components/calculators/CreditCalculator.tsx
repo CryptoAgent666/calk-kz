@@ -465,21 +465,20 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('credit.bankRates')}</h2>
 
+        {/* Только беззалоговые кредиты: ставки и ГЭСВ с сайтов банков на 26.10.2026 (halykbank.kz,
+            bank.forte.kz, Kaspi Гид). Прежние «16–24%», «15–22%», «22–35%» и строки авто/залог/бизнес
+            были без источника и ниже рынка. */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           <div className="border border-blue-200 rounded-lg p-4">
             <h3 className="font-semibold text-blue-900 mb-3">{t('credit.halykBank')}</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span>{t('credit.consumerLoan')}</span>
-                <span className="font-medium text-blue-700">16-24%</span>
+                <span>{t('credit.unsecuredLoan')}</span>
+                <span className="font-medium text-blue-700">17,5–33%</span>
               </div>
               <div className="flex justify-between">
-                <span>{t('credit.autoLoan')}</span>
-                <span className="font-medium text-blue-700">18-26%</span>
-              </div>
-              <div className="flex justify-between">
-                <span>{t('credit.pledgeLoan')}</span>
-                <span className="font-medium text-blue-700">14-20%</span>
+                <span>{t('credit.gesvLabel')}</span>
+                <span className="font-medium text-blue-700">28,70–45,89%</span>
               </div>
             </div>
             <div className="mt-3 text-xs text-gray-600">
@@ -491,12 +490,8 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
             <h3 className="font-semibold text-green-900 mb-3">{t('credit.kaspiBank')}</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span>{t('credit.expressLoan')}</span>
-                <span className="font-medium text-green-700">22-35%</span>
-              </div>
-              <div className="flex justify-between">
-                <span>{t('credit.autoLoan')}</span>
-                <span className="font-medium text-green-700">19-28%</span>
+                <span>{t('credit.kaspiCashLoan')}</span>
+                <span className="font-medium text-green-700">46%</span>
               </div>
             </div>
             <div className="mt-3 text-xs text-gray-600">
@@ -508,16 +503,12 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
             <h3 className="font-semibold text-teal-900 mb-3">{t('credit.forteBank')}</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span>{t('credit.consumerLoan')}</span>
-                <span className="font-medium text-teal-700">15-22%</span>
+                <span>{t('credit.unsecuredLoan')}</span>
+                <span className="font-medium text-teal-700">17–37,9%</span>
               </div>
               <div className="flex justify-between">
-                <span>{t('credit.pledgeRealEstate')}</span>
-                <span className="font-medium text-teal-700">12-18%</span>
-              </div>
-              <div className="flex justify-between">
-                <span>{t('credit.businessLoan')}</span>
-                <span className="font-medium text-teal-700">14-25%</span>
+                <span>{t('credit.gesvLabel')}</span>
+                <span className="font-medium text-teal-700">18,7–46%</span>
               </div>
             </div>
             <div className="mt-3 text-xs text-gray-600">
@@ -537,7 +528,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
       <FAQSection
         items={faqItems}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Банктер туралы заңы' : 'Закон о банках РК', url: 'https://adilet.zan.kz/rus/docs/Z950002444_' },
+          { title: i18n.language === 'kk' ? 'ҚР Банктер туралы заңы' : 'Закон о банках РК', url: 'https://adilet.zan.kz/rus/docs/Z2600000258' },
           { title: i18n.language === 'kk' ? 'ПКБ — Несиелік тарих' : 'ПКБ — Кредитная история', url: 'https://www.pkb.kz/' },
         ]}
       />

@@ -143,7 +143,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 
   // === ФИНАНСЫ ===
   'credit': [
-    { title: 'Закон о банках и банковской деятельности', url: 'https://adilet.zan.kz/rus/docs/Z950002444_' },
+    { title: 'Закон о банках и банковской деятельности', url: 'https://adilet.zan.kz/rus/docs/Z2600000258' },
     NBK,
   ],
   'deposit': [
@@ -162,7 +162,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     NBK,
   ],
   'early-repayment': [
-    { title: 'Закон о банках', url: 'https://adilet.zan.kz/rus/docs/Z950002444_' },
+    { title: 'Закон о банках', url: 'https://adilet.zan.kz/rus/docs/Z2600000258' },
     NBK,
   ],
   'otbasy-bank': [

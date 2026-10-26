@@ -158,25 +158,28 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
     { name: i18n.language === 'kk' ? 'Есептелген пайыздар' : 'Начисленные проценты', value: results.totalEarningsWithContributions, color: '#f97316' },
   ].filter(item => item.value > 0) : [];
 
-  // Данные для графика роста
+  // Данные для графика роста — та же модель, что в calculateDeposit, с выбранной периодичностью
+  // капитализации. До 26.10.2026 график всегда капитализировал ежемесячно и на последней точке
+  // расходился с итогом (1 000 000 ₸, 14%, 12 мес, +10 000/мес, раз в год: 1 277 349 против 1 267 518).
   const growthData = (() => {
     const principal = parseFloat(initialAmount) || 0;
     const contribution = parseFloat(monthlyContribution) || 0;
     const termInMonths = termUnit === 'years' ? (parseFloat(termValue) || 0) * 12 : parseFloat(termValue) || 0;
     const annualRate = (parseFloat(nominalRate) || 0) / 100;
-    
+    const periodsPerYear = { monthly: 12, quarterly: 4, yearly: 1 }[capitalizationPeriod];
+
     if (principal <= 0 || termInMonths <= 0) return [];
-    
+
+    const grow = (monthsLeft: number) => Math.pow(1 + annualRate / periodsPerYear, periodsPerYear * monthsLeft / 12);
     const data = [];
     const years = Math.ceil(termInMonths / 12);
-    
+
     for (let year = 0; year <= years; year++) {
       const months = Math.min(year * 12, termInMonths);
-      const yearsElapsed = months / 12;
-      const amount = principal * Math.pow(1 + annualRate / 12, months) + 
-                    (contribution > 0 ? contribution * ((Math.pow(1 + annualRate / 12, months) - 1) / (annualRate / 12)) : 0);
+      let amount = principal * grow(months);
+      for (let m = 1; m <= months; m++) amount += contribution * grow(months - m);
       data.push({
-        name: `${year} год`,
+        name: `${year} ${pluralize(i18n.language, year, t('deposit.termUnits.yearOne'), t('deposit.termUnits.yearFew'), t('deposit.termUnits.yearMany'))}`,
         amount: Math.round(amount),
       });
     }
@@ -542,7 +545,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
           {growthData.length > 1 && (
             <TrendLineChart
               data={growthData}
-              dataKeys={[{ key: 'amount', name: 'Сумма на счете', color: '#22c55e' }]}
+              dataKeys={[{ key: 'amount', name: i18n.language === 'kk' ? 'Шоттағы сома' : 'Сумма на счёте', color: '#22c55e' }]}
               title={i18n.language === 'kk' ? 'Жинақтың жылдар бойынша өсуі' : 'Рост накоплений по годам'}
               formatValue={(v) => formatNumber(v)}
               showArea
