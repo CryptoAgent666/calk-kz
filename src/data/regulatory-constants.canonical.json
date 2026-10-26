@@ -5699,7 +5699,7 @@
       "key": "zakat_nisab_gold_grams",
       "value": 85,
       "unit": "grams",
-      "law": "Шариат (нисаб золота, 20 динаров)",
+      "law": "Шариат (нисаб золота, 20 динаров); ДУМК — денежный нисаб по золоту",
       "year": "—",
       "change_frequency": "occasional",
       "aliases": [],
@@ -5707,7 +5707,12 @@
       "used_by": [
         "ZakatCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://zeket.online/",
+      "verify_note": "calkcheck 2026-10-27: применяемый нисаб — по золоту (ДУМК, фонд «Зекет», zeket.online: GoldPrice_85 = GoldPrice × 85); раньше сайт брал min(золото, серебро) = серебро 511 700 ₸ — в ~10 раз ниже нисаба ДУМК. Цена по умолчанию 58 814 ₸/г — учётная цена НБРК на 23.10.2026",
+      "reverified": "2026-10-27",
+      "verified_date": "2026-10-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "zakat_nisab_silver_grams",
@@ -5721,7 +5726,11 @@
       "used_by": [
         "ZakatCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "calkcheck 2026-10-27: в расчёте не применяется (только справка) — ДУМК считает денежный нисаб по золоту",
+      "reverified": "2026-10-27",
+      "verified_date": "2026-10-27",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "water_tariff_almaty_tier1_le_3m3",

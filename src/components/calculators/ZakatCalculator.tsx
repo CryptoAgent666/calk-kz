@@ -13,11 +13,12 @@ import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
-// Цены по умолчанию, ₸ за грамм (золото — НБРК 24.09.2026: 61 845 ₸). Поля редактируемые.
-// Примеры ниже считаются от этих же цен: раньше в них был зашит нисаб
-// 595 г × 400 ₸ = 238 000 ₸ при 511 700 ₸ в самом калькуляторе.
-const DEFAULT_GOLD_PRICE_PER_GRAM = 61000;
-const DEFAULT_SILVER_PRICE_PER_GRAM = 860;
+// Цены по умолчанию, ₸ за грамм: золото — учётная цена НБРК на 23.10.2026 (58 814 ₸),
+// серебро — спот ($54,02/унция) × курс НБРК 451,05 ≈ 783 ₸. Поля редактируемые.
+// Нисаб — по золоту (85 г), как в калькуляторе фонда «Зекет» ДУМК (zeket.online);
+// серебряный нисаб показывается только для справки.
+const DEFAULT_GOLD_PRICE_PER_GRAM = 58814;
+const DEFAULT_SILVER_PRICE_PER_GRAM = 783;
 
 export default function ZakatCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -26,9 +27,7 @@ export default function ZakatCalculator() {
   const [silverValue, setSilverValue] = useState<string>('0');
   const [businessGoods, setBusinessGoods] = useState<string>('0');
   const [debts, setDebts] = useState<string>('0');
-  // Дефолтные цены металлов — учётный курс НБРК, сверено 07.2026 (золото 61 214 ₸/г,
-  // серебро 858 ₸/г; спот×курс сходится в ~1%). Для нисаба берём рыночную цену грамма,
-  // НЕ розничный слиток с премией. Обновлять при заметном движении рынка.
+  // Для нисаба берём рыночную цену грамма, НЕ розничный слиток с премией.
   const [goldPricePerGram, setGoldPricePerGram] = useState<string>(String(DEFAULT_GOLD_PRICE_PER_GRAM));
   const [silverPricePerGram, setSilverPricePerGram] = useState<string>(String(DEFAULT_SILVER_PRICE_PER_GRAM));
   const [calculateByWeight, setCalculateByWeight] = useState<boolean>(false);
@@ -63,8 +62,8 @@ export default function ZakatCalculator() {
     const netWealth = Math.max(0, totalAssets - debtsAmount);
     const goldNisab = GOLD_NISAB_GRAMS * goldPrice;
     const silverNisab = SILVER_NISAB_GRAMS * silverPrice;
-    const applicableNisab = Math.min(goldNisab, silverNisab);
-    const nisabType = goldNisab <= silverNisab ? t('zakat.nisabTypeGold') : t('zakat.nisabTypeSilver');
+    const applicableNisab = goldNisab;
+    const nisabType = t('zakat.nisabTypeGold');
     const isAboveNisab = netWealth >= applicableNisab;
 
     let zakatableAmount = 0;
@@ -110,8 +109,8 @@ export default function ZakatCalculator() {
     return num.toLocaleString('ru-KZ') + ' ₸';
   };
 
-  // Нисаб для примеров — серебро по цене по умолчанию (595 г × 860 ₸ = 511 700 ₸).
-  const EXAMPLE_NISAB = SILVER_NISAB_GRAMS * DEFAULT_SILVER_PRICE_PER_GRAM;
+  // Нисаб для примеров — золото по цене по умолчанию (85 г × 58 814 ₸ = 4 999 190 ₸).
+  const EXAMPLE_NISAB = GOLD_NISAB_GRAMS * DEFAULT_GOLD_PRICE_PER_GRAM;
 
   const formatGrams = (grams: number) => {
     return grams.toLocaleString('ru-KZ') + ' ' + t('zakat.grams');
@@ -652,14 +651,14 @@ export default function ZakatCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('zakat.nisab')}:</div>
-                <div>{t('zakat.silverNisabShort')}: {formatNumber(EXAMPLE_NISAB)}</div>
+                <div>{t('zakat.goldNisabShort')}: {formatNumber(EXAMPLE_NISAB)}</div>
                 <div>{t('zakat.exceeded')}: {t('zakat.yes')}</div>
                 <div>{t('zakat.taxableAmount')}: 5 500 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-green-700">{t('zakat.zakat')}:</div>
                 <div className="text-lg font-bold text-green-600">137 500 ₸</div>
-                <div className="text-xs text-green-600">2.5% {t('zakat.from')} 5 500 000 ₸</div>
+                <div className="text-xs text-green-600">2,5% {t('zakat.from')} 5 500 000 ₸</div>
               </div>
             </div>
           </div>
@@ -682,7 +681,7 @@ export default function ZakatCalculator() {
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('zakat.nisab')}:</div>
-                <div>{t('zakat.silverNisabShort')}: {formatNumber(EXAMPLE_NISAB)}</div>
+                <div>{t('zakat.goldNisabShort')}: {formatNumber(EXAMPLE_NISAB)}</div>
                 <div>{t('zakat.notReached')}</div>
                 <div>{t('zakat.shortfall')}: {formatNumber(EXAMPLE_NISAB - 200000)}</div>
               </div>
@@ -700,26 +699,27 @@ export default function ZakatCalculator() {
             <div className="grid md:grid-cols-4 gap-4 text-sm">
               <div>
                 <div className="font-medium text-gray-700">{t('zakat.assets')}:</div>
-                <div>{t('zakat.cash')}: 1 500 000 ₸</div>
-                <div>{t('zakat.gold')}: 500 000 ₸</div>
-                <div>{t('zakat.totalAssets')}: 2 000 000 ₸</div>
+                <div>{t('zakat.cash')}: 7 000 000 ₸</div>
+                <div>{t('zakat.gold')}: 1 000 000 ₸</div>
+                <div>{t('zakat.totalAssets')}: 8 000 000 ₸</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('zakat.obligations')}:</div>
-                <div>{t('zakat.mortgage')}: 800 000 ₸</div>
+                <div>{t('zakat.mortgage')}: 1 800 000 ₸</div>
                 <div>{t('zakat.loan')}: 200 000 ₸</div>
-                <div>{t('zakat.totalDebts')}: 1 000 000 ₸</div>
+                <div>{t('zakat.totalDebts')}: 2 000 000 ₸</div>
+                <div className="text-xs text-gray-500">{t('zakat.example3DebtNote')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('zakat.calculation')}:</div>
-                <div>{t('zakat.netAssets')}: 1 000 000 ₸</div>
+                <div>{t('zakat.netAssets')}: 6 000 000 ₸</div>
                 <div>{t('zakat.nisab')}: {formatNumber(EXAMPLE_NISAB)}</div>
                 <div>{t('zakat.exceeded')}: {t('zakat.yes')}</div>
               </div>
               <div>
                 <div className="font-medium text-blue-700">{t('zakat.zakat')}:</div>
-                <div className="text-lg font-bold text-blue-600">25 000 ₸</div>
-                <div className="text-xs text-blue-600">2.5% {t('zakat.from')} 1 000 000 ₸</div>
+                <div className="text-lg font-bold text-blue-600">150 000 ₸</div>
+                <div className="text-xs text-blue-600">2,5% {t('zakat.from')} 6 000 000 ₸</div>
               </div>
             </div>
           </div>
@@ -1034,8 +1034,8 @@ export default function ZakatCalculator() {
         <div className="mt-8">
           <TaxPieChart
             data={[
-              { name: i18n.language === 'kk' ? 'Зекет (2.5%)' : 'Закят (2.5%)', value: results.zakatAmount },
-              { name: i18n.language === 'kk' ? 'Қалдық' : 'Остаток', value: results.totalAssets - results.zakatAmount },
+              { name: i18n.language === 'kk' ? 'Зекет (2,5%)' : 'Закят (2,5%)', value: results.zakatAmount },
+              { name: i18n.language === 'kk' ? 'Қалдық' : 'Остаток', value: results.netWealth - results.zakatAmount },
             ]}
             title={i18n.language === 'kk' ? 'Активтерді бөлу' : 'Распределение активов'}
           />
@@ -1047,19 +1047,19 @@ export default function ZakatCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт закята',
-              subtitle: 'Обязательный закят',
+              title: t('zakat.title'),
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('zakat.calculation'),
                   data: [
-                    { label: 'Общее имущество', value: `${results.totalAssets.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Нисаб (порог)', value: `${results.applicableNisab.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Закят (2.5%)', value: `${results.zakatAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('zakat.totalAssets'), value: `${results.totalAssets.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('zakat.totalDebts'), value: `${results.totalDebts.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('zakat.applicableNisab'), value: `${results.applicableNisab.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: `${t('zakat.zakat')} (2,5%)`, value: `${results.zakatAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'calk.kz'
             }}
             filename="zakat-calculation"
           />
@@ -1071,7 +1071,7 @@ export default function ZakatCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="zakat"
-        calculatorTitle="Калькулятор закята"
+        calculatorTitle={t('zakat.title')}
       />
       <LastUpdated calculatorId="zakat" />
     </div>
