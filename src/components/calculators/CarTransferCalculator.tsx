@@ -6,7 +6,9 @@ import {
   OGPO_VEHICLE_TYPES,
   findOgpoRegion,
   ogpoAgeExperienceCoeff,
-  ogpoTerritoryCoeff
+  ogpoTerritoryCoeff,
+  OGPO_EXPLOITATION_THRESHOLD_YEARS,
+  OGPO_EXPLOITATION_OVER_7Y_COEFF
 } from '../../data/ogpoCoefficients';
 import { Car, Calculator, FileCheck, Users, AlertTriangle, Info, ShieldCheck, Receipt } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
@@ -25,7 +27,7 @@ type Region =
   | 'karaganda-region' | 'kostanay-region' | 'akmola-region' | 'aktobe-region'
   | 'ulytau-region' | 'pavlodar-region' | 'abay-region' | 'mangystau-region'
   | 'east-kazakhstan' | 'almaty-city' | 'north-kazakhstan' | 'atyrau-region';
-type NotaryParty = 'relatives' | 'others' | 'legal';
+type NotaryParty = 'egov' | 'relatives' | 'others' | 'legal';
 
 export default function CarTransferCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -37,8 +39,11 @@ export default function CarTransferCalculator() {
   const PLATES_FEE_MRP = 2.8;
   // Нотариальный тариф за удостоверение договора отчуждения авто (с 01.01.2026):
   // ставка зависит от СТОРОН сделки, а не от цены ТС.
-  // Приказ Министра юстиции РК от 27.09.2025 № 957 (adilet.zan.kz V2500036957).
+  // Приказ Министра юстиции РК от 27.09.2025 № 533 (рег. № 36957, adilet.zan.kz V2500036957).
+  // Договор можно подписать ЭЦП обеих сторон через eGov — тогда нотариус не нужен
+  // (Правила госрегистрации ТС, п. 16 пп. 7). Раньше нотариус всегда входил в итог.
   const NOTARY_MRP: Record<NotaryParty, number> = {
+    egov: 0,
     relatives: 4,  // близкие родственники (дети, супруг, родители, братья/сёстры, внуки)
     others: 10,    // прочие физлица
     legal: 12,     // одна из сторон — юридическое лицо
@@ -61,7 +66,7 @@ export default function CarTransferCalculator() {
   const [purchasePrice, setPurchasePrice] = useState<string>('4500000');
   const [ownershipYears, setOwnershipYears] = useState<string>('2');
   const [ownershipMonths, setOwnershipMonths] = useState<string>('0');
-  const [keepPlates, setKeepPlates] = useState<boolean>(false);
+  const [carYear, setCarYear] = useState<string>('2020');
   const [needInspection, setNeedInspection] = useState<boolean>(false);
   const [region, setRegion] = useState<Region>('almaty-city');
   const [notaryParty, setNotaryParty] = useState<NotaryParty>('others');
@@ -79,7 +84,11 @@ export default function CarTransferCalculator() {
     // Регистрационные расходы
     const registrationFee = Math.round(REGISTRATION_FEE_MRP * MRP_2026);
     const certificateFee = Math.round(CERTIFICATE_FEE_MRP * MRP_2026);
-    const platesFee = keepPlates ? 0 : Math.round(PLATES_FEE_MRP * MRP_2026);
+    // Номера: покупателю-не родственнику старые знаки не передают (Правила, п. 30) — он получает новые за 2,8 МРП;
+    // близкий родственник может оставить старые по заявлению продавца, но платит пошлину за дубликат — те же
+    // 2,8 МРП (п. 29–30). Продавец свои знаки может сдать на хранение до 30 дней и бесплатно поставить на новую
+    // машину (п. 27–28). Раньше флажок «сохранить номера» обнулял эту строку, а подсказка обещала «~10 МРП».
+    const platesFee = Math.round(PLATES_FEE_MRP * MRP_2026);
 
     // Нотариус — зависит от сторон сделки (родственники/прочие/юрлицо), не от цены авто
     const notaryMRP = NOTARY_MRP[notaryParty];
@@ -93,8 +102,11 @@ export default function CarTransferCalculator() {
     const ageExpCoef = ogpoAgeExperienceCoeff(age, experience);
     const vehicleTypeCoef = OGPO_VEHICLE_TYPES.find((v) => v.id === 'passenger-car')!.coefficient;
 
+    // Срок эксплуатации (ст. 19 п. 9): старше 7 лет — ×1,1. Раньше не учитывался.
+    const carAge = Math.max(0, 2026 - (parseInt(carYear) || 2026));
+    const exploitationCoef = carAge > OGPO_EXPLOITATION_THRESHOLD_YEARS ? OGPO_EXPLOITATION_OVER_7Y_COEFF : 1;
     const ogpoFee = Math.round(
-      OGPO_BASE_PREMIUM_MRP * MRP_2026 * regionCoef(region) * vehicleTypeCoef * ageExpCoef
+      OGPO_BASE_PREMIUM_MRP * MRP_2026 * regionCoef(region) * vehicleTypeCoef * ageExpCoef * exploitationCoef
     );
 
     // Техосмотр
@@ -105,7 +117,7 @@ export default function CarTransferCalculator() {
     let salesTax = 0;
     let taxReason = '';
     if (totalMonths >= 12) {
-      taxReason = t('car-transfer.taxExplanation');
+      taxReason = t('car-transfer.taxExplanationLongOwnership');
     } else if (sale <= purchase) {
       taxReason = t('car-transfer.taxExplanationNoProfit');
     } else {
@@ -144,7 +156,7 @@ export default function CarTransferCalculator() {
   const results = useMemo(
     computeResults,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [salePrice, purchasePrice, ownershipYears, ownershipMonths, keepPlates, needInspection, region, notaryParty, buyerAge, buyerExperience, t, i18n.language]
+    [salePrice, purchasePrice, ownershipYears, ownershipMonths, carYear, needInspection, region, notaryParty, buyerAge, buyerExperience, t, i18n.language]
   );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
@@ -272,7 +284,7 @@ export default function CarTransferCalculator() {
                 {t('car-transfer.notaryParty')}
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {(['relatives', 'others', 'legal'] as NotaryParty[]).map((p) => (
+                {(['egov', 'relatives', 'others', 'legal'] as NotaryParty[]).map((p) => (
                   <button
                     key={p}
                     onClick={() => setNotaryParty(p)}
@@ -325,18 +337,21 @@ export default function CarTransferCalculator() {
 
             {/* Checkboxes */}
             <div className="space-y-3 pt-2">
-              <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg bg-amber-50 border border-amber-100 hover:bg-amber-100 transition-colors">
+              <div>
+                <label htmlFor="carTransferYear" className="block text-sm font-medium text-gray-700 mb-1">{t('car-transfer.carYear')}</label>
                 <input
-                  type="checkbox"
-                  checked={keepPlates}
-                  onChange={(e) => setKeepPlates(e.target.checked)}
-                  className="mt-1 w-4 h-4 text-amber-600 rounded focus:ring-amber-500"
+                  id="carTransferYear"
+                  type="number"
+                  min={1980}
+                  max={2026}
+                  value={carYear}
+                  onChange={(e) => setCarYear(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 />
-                <div className="flex-1">
-                  <div className="text-sm font-medium text-gray-900">{t('car-transfer.keepPlates')}</div>
-                  <div className="text-xs text-gray-600 mt-0.5">{t('car-transfer.keepPlatesHint')}</div>
-                </div>
-              </label>
+                <p className="text-xs text-gray-500 mt-1">{t('car-transfer.carYearHint')}</p>
+              </div>
+
+              <p className="text-xs text-gray-600 p-3 rounded-lg bg-amber-50 border border-amber-100">{t('car-transfer.platesNote')}</p>
 
               <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg bg-amber-50 border border-amber-100 hover:bg-amber-100 transition-colors">
                 <input
@@ -369,7 +384,7 @@ export default function CarTransferCalculator() {
             <div className="flex justify-between items-center py-3 border-b border-gray-100">
               <span className="text-gray-600 text-sm flex items-center"><Car className="w-4 h-4 mr-2 text-amber-600" />{t('car-transfer.plates')}</span>
               <span className="font-semibold text-gray-900">
-                {keepPlates ? <span className="text-green-600 text-xs">{t('car-transfer.platesKept')}</span> : fmt(results.platesFee)}
+                {fmt(results.platesFee)}
               </span>
             </div>
             <div className="flex justify-between items-center py-3 border-b border-gray-100">
