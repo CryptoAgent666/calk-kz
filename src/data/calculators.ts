@@ -782,7 +782,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'insulation',
         title: 'Калькулятор утепления дома',
-        description: 'Расчёт толщины утеплителя, материала и экономии на отоплении: минвата, пеноплекс, PIR — для всех регионов Казахстана',
+        description: 'Толщина утеплителя по СН РК 2.04-07-2022, стоимость материала и экономия на отоплении для четырёх климатических зон',
         category: 'construction',
         icon: 'Thermometer',
         component: React.lazy(() => import('../components/calculators/InsulationCalculator'))

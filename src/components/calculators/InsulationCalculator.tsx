@@ -20,12 +20,14 @@ interface InsulationSpec {
   pricePerM3: number; // ₸/м³
 }
 
+// Цены ₸/м³ — розница Алматы, 10.2026: пенопласт ~21 000 (Демеу 20 900), XPS ~35 000
+// (Техноплекс ~42 000, Carbon Prof ~41 000, акции дешевле), эковата ~15 000 (мешок 13 кг ≈ 3 500 ₸).
 const INSULATIONS: Record<Insulation, InsulationSpec> = {
   mineralWool: { lambda: 0.042, pricePerM3: 35000 },
-  foam:        { lambda: 0.039, pricePerM3: 12000 },
-  xps:         { lambda: 0.032, pricePerM3: 55000 },
+  foam:        { lambda: 0.039, pricePerM3: 21000 },
+  xps:         { lambda: 0.032, pricePerM3: 35000 },
   pir:         { lambda: 0.023, pricePerM3: 90000 },
-  ecowool:     { lambda: 0.040, pricePerM3: 28000 },
+  ecowool:     { lambda: 0.040, pricePerM3: 15000 },
 };
 
 // Требуемое сопротивление теплопередаче стен жилого дома R (м²·К/Вт).
@@ -34,17 +36,19 @@ const INSULATIONS: Record<Insulation, InsulationSpec> = {
 // по СП РК 2.04-01-2017* (табл. 3.1*, изм. 13.05.2025); t_в = 21 °C, где пятидневка ≤ −31 °C
 // (ГОСТ 30494), иначе 20 °C. Значение зоны — по самому холодному городу зоны, округлено до 0,1.
 const REGION_R: Record<string, number> = {
-  north: 3.4,    // Кокшетау 3,42 · Костанай 3,41 · Астана 3,40 · Петропавловск 3,38
-  south: 2.5,    // Алматы 2,53 · Тараз 2,42 · Туркестан 2,38 · Шымкент 2,25
+  north: 3.5,    // Степногорск 3,50 · Павлодар 3,49 · Кокшетау 3,42 · Астана 3,40 · Усть-Каменогорск 3,39 · Семей 3,35
+  south: 2.7,    // Талдыкорган 2,69 · Кызылорда 2,60 · Алматы 2,53 · Тараз 2,42 · Шымкент 2,25
   central: 3.2,  // Актобе 3,22 · Караганда 3,20 · Уральск 3,06
   west: 2.7,     // Атырау 2,69 · Актау 2,32
 };
+// ГСОП зоны — обратно из той же формулы R = 0,00035·ГСОП + 1,4. Теплопотери за отопительный
+// период = площадь × ГСОП × 24 / R: раньше ΔT × 4 380 ч было одинаковым для всех регионов,
+// и юг «окупался» быстрее севера.
+const regionDegreeDays = (r: number) => (r - 1.4) / 0.00035;
 
-// Цена газа в КЗ 2026 ~40 ₸/м³, теплотворность 9.3 кВт·ч/м³
-// Цена электричества ~27 ₸/кВт·ч
-// Стоимость 1 кВт·ч тепла: газ ~4.3 ₸, электро ~27 ₸
-const HEAT_COST_PER_KWH = 8; // среднее (газ+электро)
-const HEATING_HOURS_PER_YEAR = 4380; // ~6 мес × 24 ч × 0.5 (среднее)
+// Газ с 01.10.2026 — 54,81–62,75 ₸/м³ (≈6–7 ₸ за кВт·ч тепла), электричество 26–46 ₸/кВт·ч —
+// берём 8 ₸ как смесь.
+const HEAT_COST_PER_KWH = 8;
 
 export default function InsulationCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -52,14 +56,10 @@ export default function InsulationCalculator() {
   const [region, setRegion] = useState<keyof typeof REGION_R>('north');
   const [area, setArea] = useState<string>('100');
   const [currentR, setCurrentR] = useState<string>('1.5'); // текущее R (без утепления)
-  const [indoorTemp, setIndoorTemp] = useState<string>('22');
-  const [outdoorTemp, setOutdoorTemp] = useState<string>('-10');
 
   const results = useMemo(() => {
     const a = parseFloat(area) || 0;
     const r = parseFloat(currentR) || 0;
-    const ti = parseFloat(indoorTemp) || 0;
-    const to = parseFloat(outdoorTemp) || 0;
 
     if (a <= 0 || r <= 0) return null;
 
@@ -71,21 +71,21 @@ export default function InsulationCalculator() {
     const addR = Math.max(0, requiredR - r);
     const thicknessM = addR * spec.lambda;
     const thicknessCm = thicknessM * 100;
-    // Округляем до ближайших 5 см (стандартные толщины)
-    const standardThicknessCm = Math.ceil(thicknessCm / 5) * 5;
+    // Округляем вверх до 5 см (стандартные толщины); 1e-9 — от ошибки плавающей точки (5,04 → 10)
+    const standardThicknessCm = addR > 0 ? Math.ceil(thicknessCm / 5 - 1e-9) * 5 : 0;
     const standardThicknessM = standardThicknessCm / 100;
 
     const volume = a * standardThicknessM; // м³
     const materialCost = volume * spec.pricePerM3;
 
     // Теплопотери до утепления (кВт·ч/год)
-    const deltaT = ti - to;
-    const heatLossWithout = (a * deltaT / r) * HEATING_HOURS_PER_YEAR / 1000; // кВт·ч/год
+    const degreeHours = regionDegreeDays(requiredR) * 24;
+    const heatLossWithout = (a * degreeHours / r) / 1000;
     const costWithout = heatLossWithout * HEAT_COST_PER_KWH;
 
-    // После утепления
-    const newR = r + addR;
-    const heatLossWith = (a * deltaT / newR) * HEATING_HOURS_PER_YEAR / 1000;
+    // После утепления — для толщины, которую реально покупают
+    const newR = r + standardThicknessM / spec.lambda;
+    const heatLossWith = (a * degreeHours / newR) / 1000;
     const costWith = heatLossWith * HEAT_COST_PER_KWH;
 
     const savingsPerYear = costWithout - costWith;
@@ -105,7 +105,7 @@ export default function InsulationCalculator() {
       payback: payback.toFixed(1),
       savingsPercent: heatLossWithout > 0 ? ((heatLossWithout - heatLossWith) / heatLossWithout * 100).toFixed(0) : '0',
     };
-  }, [insulation, region, area, currentR, indoorTemp, outdoorTemp]);
+  }, [insulation, region, area, currentR]);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -154,10 +154,6 @@ export default function InsulationCalculator() {
             min={10} max={1000} step={5} formatValue={v => `${v} м²`} />
           <RangeSlider label={t('insulation.currentR')} value={parseFloat(currentR) || 0} onChange={v => setCurrentR(String(v))}
             min={0.5} max={5} step={0.1} formatValue={v => `${v}`} />
-          <RangeSlider label={t('insulation.indoorTemp')} value={parseFloat(indoorTemp) || 0} onChange={v => setIndoorTemp(String(v))}
-            min={15} max={30} step={1} formatValue={v => `${v}°C`} />
-          <RangeSlider label={t('insulation.outdoorTemp')} value={parseFloat(outdoorTemp) || 0} onChange={v => setOutdoorTemp(String(v))}
-            min={-40} max={10} step={1} formatValue={v => `${v}°C`} />
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
