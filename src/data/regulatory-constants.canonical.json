@@ -3954,7 +3954,7 @@
       "key": "kpn_general_rate",
       "value": 20,
       "unit": "percent",
-      "law": "НК РК ст. 313 (КПН, общеустановленный режим)",
+      "law": "НК РК (№ 214-VIII) ст. 357 п. 2 пп. 5: КПН 20%",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -3972,8 +3972,10 @@
       ],
       "audit_status": "clean",
       "source_url": "https://www.bcc.kz/bcc-journal/changes-in-legislation/",
-      "verify_note": "КПН general rate stays 20% in new 2026 code (banks/gambling 25%). Confirmed.",
-      "reverified": "2026-06-23"
+      "verify_note": "calkcheck 2026-10-26: ссылка «ст. 313» — статья НК-2026 про вычеты недропользователей; ставка КПН — ст. 357 п. 2 пп. 5. | КПН general rate stays 20% in new 2026 code (banks/gambling 25%). Confirmed.",
+      "reverified": "2026-10-26",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "kpn_rate_agricultural",
@@ -4449,7 +4451,7 @@
       "key": "tax_simplified_rate_snr",
       "value": 4,
       "unit": "percent",
-      "law": "НК РК ст. 687 (СНР на основе упрощённой декларации)",
+      "law": "НК РК (№ 214-VIII) ст. 726: СНР на основе упрощённой декларации — 4% (маслихат вправе ±50%)",
       "year": "2026",
       "change_frequency": "occasional",
       "aliases": [
@@ -4467,12 +4469,14 @@
       ],
       "audit_status": "clean",
       "source_url": "https://uchet.kz/news/obnovlennyy-snr-dlya-msb-chto-izmenilos/",
-      "verify_note": "Duplicate of snr_simplified_rate: 4% simplified-declaration rate in 2026. Confirmed.",
-      "reverified": "2026-06-23"
+      "verify_note": "calkcheck 2026-10-26: «ст. 687» — статья старого кодекса; в НК-2026 ставка в ст. 726 (дубль snr_simplified_rate уже ссылался верно). | Duplicate of snr_simplified_rate: 4% simplified-declaration rate in 2026. Confirmed.",
+      "reverified": "2026-10-26",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "tax_patent_rate",
-      "value": "самозанятый СНР: 0% ИПН + 4% соцплатежи (ОПВ/ОПВР/СО/ВОСМС); не 0% (соцплатёж 4%)",
+      "value": 4,
       "unit": "percent",
       "law": "НК РК 2026 — СНР для самозанятых (преемник патента)",
       "year": "2026",
@@ -4490,9 +4494,11 @@
       "audit_status": "clean",
       "official_value": "самозанятый СНР: 0% ИПН + 4% соц.платежи (ОПВ/ОПВР/СО/ВОСМС); значение 0% вводит в заблуждение (соц.платёж 4%)",
       "source_url": "https://uchet.kz/week/ipn-0-i-nikakoy-otchetnosti-polnyy-gid-po-rezhimu-dlya-samozanyatykh-v-2026-godu/",
-      "verify_note": "Режим самозанятого — 0% ИПН, но 4% соц.платежи; нельзя представлять как 0%.",
+      "verify_note": "calkcheck 2026-10-26: калькулятор business-roi ставил самозанятым 0 — теперь соцплатежи 4% с дохода (НК ст. 715, таблица) и предупреждение при выручке выше 300 МРП (ст. 718). | Режим самозанятого — 0% ИПН, но 4% соц.платежи; нельзя представлять как 0%.",
       "confidence": "high",
-      "reverified": "2026-06-27"
+      "reverified": "2026-10-26",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "vehicle_sale_taxfree_ownership_months",
@@ -9169,7 +9175,8 @@
       "used_by": [
         "PenaltyCalculator",
         "MortgageCompareCalculator",
-        "GONSCalculator"
+        "GONSCalculator",
+        "BusinessROICalculator"
       ],
       "audit_status": "clean",
       "source_url": "https://nationalbank.kz/ru/news/press-relizy/20503",
