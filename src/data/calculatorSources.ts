@@ -394,6 +394,9 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'ent-score': [
     { title: 'Национальный центр тестирования', url: 'https://www.testcenter.kz/' },
     { title: 'МНВО РК', url: 'https://www.gov.kz/memleket/entities/sci' },
+    { title: 'Типовые правила приёма на обучение (приказ МОН № 600)', url: 'https://adilet.zan.kz/rus/docs/V1800017650' },
+    { title: 'Правила проведения ЕНТ (приказ МОН № 204)', url: 'https://adilet.zan.kz/rus/docs/V1700015173' },
+    { title: 'Правила присуждения образовательного гранта (ПП РК № 58)', url: 'https://adilet.zan.kz/rus/docs/P080000058_' },
   ],
   'gpa': [
     { title: 'GPA Scale Conversion (US Education)', url: 'https://en.wikipedia.org/wiki/Grading_in_education' },
@@ -519,6 +522,9 @@ const SOURCE_TITLE_KK: Record<string, string> = {
   "Земельный кодекс РК": "ҚР Жер кодексі",
   "Krisha.kz — рынок недвижимости": "Krisha.kz — жылжымайтын мүлік нарығы",
   "Krisha.kz — оценка квартир": "Krisha.kz — пәтерлерді бағалау",
+  "Типовые правила приёма на обучение (приказ МОН № 600)": "Оқуға қабылдаудың үлгілік қағидалары (БҒМ № 600 бұйрығы)",
+  "Правила проведения ЕНТ (приказ МОН № 204)": "ҰБТ өткізу қағидалары (БҒМ № 204 бұйрығы)",
+  "Правила присуждения образовательного гранта (ПП РК № 58)": "Білім беру грантын беру қағидалары (ҚР ҮҚ № 58)",
   "Закон РК «Об оценочной деятельности»": "ҚР «Бағалау қызметі туралы» Заңы",
 };
 

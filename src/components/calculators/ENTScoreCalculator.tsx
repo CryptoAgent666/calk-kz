@@ -11,56 +11,45 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-// Проходные баллы на ГРАНТ обновлены на конкурсные баллы приёмной кампании 2025 г.
-// (данные приёмных комиссий, агрегированы univision.kz; для КазНУ дополнительно
-// сверено с официальными порогами вуза). Баллы реально меняются каждый год по
-// конкурсу — используйте как ориентир, а не гарантию.
-// Балл "платно" обновлён там, где нашлась официальная 2025-цифра (КазНУ); иначе
-// сохранено прежнее ориентировочное значение.
+// grant — минимальный балл зачисленных на грант по конкурсу 2026 г. (сводки по спискам МНВО:
+// notabene.courses, my-test.kz); для КазНУ он не ниже порога вуза на 2026–2027 (решение Учёного
+// совета от 29.05.2026 № 13). grant не задан — в 2026 г. грантов по программе в этом вузе не было.
+// paid — порог платного приёма: КазНУ — из того же решения; Satbayev и ЕНУ — ориентир, не ниже
+// законного минимума 65 для национальных вузов (Типовые правила приёма, приказ № 600, п. 4).
 // Nazarbayev University и KIMEP НЕ участвуют в конкурсе по шкале ЕНТ (0–140) —
 // вместо числовых порогов показывается пояснение (i18n: ent-score.ownAdmission.<id>).
 interface University {
   id: string;
-  name: string;
   hasOwnAdmission?: boolean;
-  programs: { key: string; name: string; grant?: number; paid?: number }[];
+  programs: { key: string; grant?: number; paid?: number }[];
 }
 
 const UNIVERSITIES: University[] = [
-  { id: 'kaznu', name: 'КазНУ им. Аль-Фараби', programs: [
-    { key: 'it', name: 'Информатика / IT', grant: 90, paid: 75 },
-    { key: 'law', name: 'Юриспруденция', grant: 90, paid: 75 },
-    { key: 'medicine', name: 'Медицина', grant: 119, paid: 110 },
-    { key: 'economy', name: 'Экономика', grant: 98, paid: 65 },
-    { key: 'philology', name: 'Филология', grant: 118, paid: 70 },
+  { id: 'kaznu', programs: [
+    { key: 'it', grant: 100, paid: 90 },
+    { key: 'law', grant: 126, paid: 75 },
+    { key: 'medicine', grant: 124, paid: 110 },
+    { key: 'economy', paid: 70 },
+    { key: 'philology', grant: 124, paid: 80 },
   ]},
-  { id: 'nazarbayev', name: 'Nazarbayev University',
-    hasOwnAdmission: true,
-    programs: [
-      { key: 'it', name: 'Computer Science' },
-      { key: 'engineering', name: 'Engineering' },
-      { key: 'medicine', name: 'School of Medicine' },
-    ]},
-  { id: 'satbayev', name: 'КазНИТУ им. Сатпаева', programs: [
-    { key: 'it', name: 'IT и программирование', grant: 75, paid: 75 },
-    { key: 'geology', name: 'Геология', grant: 72, paid: 60 },
-    // 2025: узкая специальность «Нефтегазовое дело» грантов на очное обучение не получила;
-    // значение — по ближайшей укрупнённой группе «Горное дело» (мин. балл среди зачисленных).
-    { key: 'oil', name: 'Нефтегазовое дело', grant: 65, paid: 70 },
+  { id: 'nazarbayev', hasOwnAdmission: true, programs: [] },
+  { id: 'satbayev', programs: [
+    { key: 'it', grant: 80, paid: 75 },
+    { key: 'geology', grant: 81, paid: 65 },
+    { key: 'mining', grant: 80, paid: 70 },
   ]},
-  { id: 'enu', name: 'ЕНУ им. Гумилёва (Астана)', programs: [
-    { key: 'it', name: 'IT', grant: 110, paid: 80 },
-    { key: 'intRelations', name: 'Международные отношения', grant: 108, paid: 85 },
-    { key: 'law', name: 'Юриспруденция', grant: 96, paid: 80 },
+  { id: 'enu', programs: [
+    { key: 'it', grant: 110, paid: 80 },
+    { key: 'intRelations', grant: 135, paid: 85 },
+    { key: 'law', paid: 80 },
   ]},
-  { id: 'kimep', name: 'KIMEP University',
-    hasOwnAdmission: true,
-    programs: [
-      { key: 'business', name: 'Business Administration' },
-      { key: 'law', name: 'Law' },
-      { key: 'it', name: 'IT' },
-    ]},
+  { id: 'kimep', hasOwnAdmission: true, programs: [] },
 ];
+
+// Допуск к конкурсу и платному приёму: история и оба профильных — не меньше 5 баллов,
+// грамотность чтения и математическая грамотность — не меньше 3 (приказ № 600, п. 4).
+const MIN_CORE = 5;
+const MIN_LITERACY = 3;
 
 // Максимальный балл ЕНТ = 140
 const MAX_SCORE = 140;
@@ -83,17 +72,26 @@ export default function ENTScoreCalculator() {
 
   const universityData = UNIVERSITIES.find(u => u.id === selectedUni);
 
+  const belowMin = [
+    { key: 'history', value: parseFloat(history) || 0, min: MIN_CORE },
+    { key: 'mathLiteracy', value: parseFloat(mathLit) || 0, min: MIN_LITERACY },
+    { key: 'readingLiteracy', value: parseFloat(readLit) || 0, min: MIN_LITERACY },
+    { key: 'subject1', value: parseFloat(subject1) || 0, min: MIN_CORE },
+    { key: 'subject2', value: parseFloat(subject2) || 0, min: MIN_CORE },
+  ].filter(x => x.value < x.min);
+  const admitted = belowMin.length === 0;
+
   const results = useMemo(() => {
     if (!universityData) return null;
     const programs = universityData.programs.map(p => ({
       ...p,
-      grantPass: p.grant !== undefined && totalScore >= p.grant,
-      paidPass: p.paid !== undefined && totalScore >= p.paid,
+      grantPass: admitted && p.grant !== undefined && totalScore >= p.grant,
+      paidPass: admitted && p.paid !== undefined && totalScore >= p.paid,
       grantDiff: p.grant !== undefined ? totalScore - p.grant : 0,
       paidDiff: p.paid !== undefined ? totalScore - p.paid : 0,
     }));
-    return { programs, totalScore, maxScore: MAX_SCORE, percent: (totalScore / MAX_SCORE * 100).toFixed(1) };
-  }, [universityData, totalScore]);
+    return { programs, totalScore, maxScore: MAX_SCORE, percent: (totalScore / MAX_SCORE * 100).toFixed(1).replace('.', ',') };
+  }, [universityData, totalScore, admitted]);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -128,6 +126,13 @@ export default function ENTScoreCalculator() {
             <div className="text-5xl font-bold text-blue-700">{totalScore} / {MAX_SCORE}</div>
             <div className="text-sm text-gray-500">{results?.percent}%</div>
           </div>
+
+          {!admitted && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+              <div className="font-medium mb-1">{t('ent-score.notAdmitted')}</div>
+              <div>{belowMin.map(x => `${t(`ent-score.${x.key}`)}: ${x.value} < ${x.min}`).join('; ')}</div>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
@@ -138,7 +143,7 @@ export default function ENTScoreCalculator() {
             <select value={selectedUni} onChange={e => setSelectedUni(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg">
               {UNIVERSITIES.map(u => (
-                <option key={u.id} value={u.id}>{u.name}</option>
+                <option key={u.id} value={u.id}>{t(`ent-score.uni.${u.id}`)}</option>
               ))}
             </select>
           </div>
@@ -156,13 +161,13 @@ export default function ENTScoreCalculator() {
               {results.programs.map(p => (
                 <div key={p.key} className="bg-gray-50 rounded-lg p-3">
                   <div className="flex justify-between items-center mb-1">
-                    <div className="text-sm font-medium">{p.name}</div>
+                    <div className="text-sm font-medium">{t(`ent-score.prog.${p.key}`)}</div>
                     <div className={`text-xs px-2 py-0.5 rounded ${p.grantPass ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                       {p.grantPass ? `✓ ${tCommon('calculator.grant')}` : `✗ ${tCommon('calculator.grant')}`}
                     </div>
                   </div>
                   <div className="flex justify-between text-xs text-gray-600">
-                    <span>{tCommon('calculator.grant')}: {p.grant} ({p.grantDiff > 0 ? `+${p.grantDiff}` : p.grantDiff})</span>
+                    <span>{tCommon('calculator.grant')}: {p.grant !== undefined ? `${p.grant} (${p.grantDiff > 0 ? `+${p.grantDiff}` : p.grantDiff})` : t('ent-score.noGrants2026')}</span>
                     <span>{tCommon('calculator.paid')}: {p.paid} ({p.paidDiff > 0 ? `+${p.paidDiff}` : p.paidDiff})</span>
                   </div>
                 </div>
@@ -180,10 +185,10 @@ export default function ENTScoreCalculator() {
         <ExportButtons
           data={{
             title: t('ent-score.title'),
-            subtitle: universityData?.name,
+            subtitle: universityData ? t(`ent-score.uni.${universityData.id}`) : undefined,
             sections: [{ title: t('ent-score.resultsTitle'), data: [
               { label: t('ent-score.totalScore'), value: `${totalScore} / ${MAX_SCORE}` },
-              { label: t('ent-score.university'), value: universityData?.name || '' },
+              { label: t('ent-score.university'), value: universityData ? t(`ent-score.uni.${universityData.id}`) : '' },
             ]}],
             footer: 'Calk.kz'
           }}
