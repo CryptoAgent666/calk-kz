@@ -20,7 +20,7 @@ export default function RamadanSadaqahCalculator() {
   const [missedFastingDays, setMissedFastingDays] = useState<string>('0');
   const [alternativeCalculation, setAlternativeCalculation] = useState<'flour' | 'dates' | 'raisins'>('flour');
 
-  // Ближайший Рамадан — 2027 (расчётно с 8–9 февраля: в 2026 ДУМК начал пост 19.02).
+  // Ближайший Рамадан — 2027: по календарю ДУМК от 16.10.2026 — 1 Рамадана 8.02.2027, Ораза айт 9.03.
   // Ставки — последние объявленные ДУМК (2026). Ставки 2027 ДУМК объявит перед Рамаданом
   // (в 2026 — 11.02): заменить, 735/4 000 перенести в историю, убрать ratesPendingNote.
   const RAMADAN_YEAR = 2027;
@@ -54,13 +54,10 @@ export default function RamadanSadaqahCalculator() {
     const members = parseInt(familyMembers) || 1;
     const missedDays = parseInt(missedFastingDays) || 0;
 
-    // Фитр-садака
-    const fitrPerPerson = DUMK_FITR_RATE_2026;
-    const fitrSadaqahAmount = members * fitrPerPerson;
-
-    // Альтернативный расчет фитр-садака
+    // Фитр-садака — по выбранной основе: мука (ставка ДУМК, минимум), изюм или финики
     const alternativeRate = alternativeRates[alternativeCalculation];
-    const alternativeFitrAmount = members * alternativeRate.rate;
+    const fitrPerPerson = alternativeRate.rate;
+    const fitrSadaqahAmount = members * fitrPerPerson;
 
     // Фидия-садака
     const fidyaPerDay = DUMK_FIDYA_RATE_2026;
@@ -76,9 +73,6 @@ export default function RamadanSadaqahCalculator() {
       totalSadaqahAmount = fitrSadaqahAmount + fidyaSadaqahAmount;
     }
 
-    // Рекомендуемый минимум
-    const recommendedMinimum = Math.max(fitrSadaqahAmount, alternativeFitrAmount);
-
     return {
       fitrSadaqahAmount,
       fitrPerPerson,
@@ -86,12 +80,9 @@ export default function RamadanSadaqahCalculator() {
       fidyaSadaqahAmount,
       fidyaPerDay,
       totalSadaqahAmount,
-      alternativeFitrAmount,
-      recommendedMinimum,
       ramadanInfo: {
         currentYear: RAMADAN_YEAR,
         estimatedRamadanStart: t('ramadan-sadaqah.estimatedRamadanStart'),
-        ramadanDays: 30
       }
     };
   };
@@ -373,26 +364,10 @@ export default function RamadanSadaqahCalculator() {
                       </div>
                     </div>
                     <div className="text-sm text-gray-600">
-                      {familyMembers} {parseInt(familyMembers) === 1 ? t('ramadan-sadaqah.person1') : parseInt(familyMembers) < 5 ? t('ramadan-sadaqah.person24') : t('ramadan-sadaqah.person5plus')} × {formatNumber(results.fitrPerPerson)}
+                      {familyMembers} {parseInt(familyMembers) === 1 ? t('ramadan-sadaqah.person1') : parseInt(familyMembers) < 5 ? t('ramadan-sadaqah.person24') : t('ramadan-sadaqah.person5plus')} × {formatNumber(results.fitrPerPerson)} ({results.fitrBasedOn})
                     </div>
                   </div>
 
-                  {results.alternativeFitrAmount !== results.fitrSadaqahAmount && (
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <h4 className="font-semibold text-blue-900 mb-2">
-                        {t('ramadan-sadaqah.alternativeCalc', { name: alternativeRates[alternativeCalculation].name })}
-                      </h4>
-                      <div className="text-blue-800">
-                        <span className="text-lg font-bold">{formatNumber(results.alternativeFitrAmount)}</span>
-                        <span className="text-sm ml-2">
-                          ({familyMembers} × {formatNumber(alternativeRates[alternativeCalculation].rate)})
-                        </span>
-                      </div>
-                      <p className="text-xs text-blue-700 mt-1">
-                        {alternativeRates[alternativeCalculation].description}
-                      </p>
-                    </div>
-                  )}
                 </div>
               )}
 
