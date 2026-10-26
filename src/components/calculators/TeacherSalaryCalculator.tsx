@@ -84,7 +84,7 @@ const PED_CATEGORY_RATES: Record<PedCategory, number> = {
 type SchoolLevel = 'primary' | 'secondary';
 type BonusSpec = { value: number; prorated: boolean };
 
-// prorated: по п. 37 Правил исчисления зарплаты педагогов (приказ МОН РК № 622)
+// prorated: по п. 37 Правил исчисления зарплаты педагогов (приказ МОН РК от 11.05.2020 № 191, рег. № 20622)
 // доплаты считаются от ФАКТИЧЕСКОЙ нагрузки. Единственное исключение из тех,
 // что здесь есть, — проверка тетрадей у основного учителя 1-4 классов.
 const bonusSpecsFor = (level: SchoolLevel): Record<string, BonusSpec> => ({
@@ -110,9 +110,8 @@ export default function TeacherSalaryCalculator() {
   const [qualCategory, setQualCategory] = useState<QualCategory>('first');
   const [pedCategory, setPedCategory] = useState<PedCategory>('moderator');
   const [experience, setExperience] = useState<string>('10');
-  const [hoursPerWeek, setHoursPerWeek] = useState<string>('18');
+  const [hoursPerWeek, setHoursPerWeek] = useState<string>('16');
   const [isRural, setIsRural] = useState(false);
-  const [isSmallSchool, setIsSmallSchool] = useState(false);
   const [schoolLevel, setSchoolLevel] = useState<SchoolLevel>('secondary');
   const [bonuses, setBonuses] = useState({
     classTeacher: true,
@@ -123,7 +122,10 @@ export default function TeacherSalaryCalculator() {
   const results = useMemo(() => {
     const years = parseFloat(experience) || 0;
     const hours = parseFloat(hoursPerWeek) || 0;
-    const standardHours = 18; // норма часов педагога
+    // Нормативная учебная нагрузка учителя школы — 16 часов в неделю (Закон «О статусе педагога», ст. 8 п. 3
+    // пп. 1; Правила № 191, п. 13: оклад × фактическая нагрузка ÷ норма). Было 18 — норма колледжей и доп.
+    // образования (пп. 2): оклад по нагрузке выходил заниженным на 11%.
+    const standardHours = 16;
 
     const expIndex = getExperienceIndex(years);
     const coeff = COEFFICIENTS[qualCategory][expIndex];
@@ -142,7 +144,8 @@ export default function TeacherSalaryCalculator() {
 
     // Региональные надбавки
     const ruralBonus = isRural ? Math.round(okladByLoad * 0.25) : 0;
-    const smallSchoolBonus = isSmallSchool ? Math.round(okladByLoad * 0.20) : 0;
+    // «Малокомплектная школа +20%» убрана: в Правилах № 191 (п. 23–24) малокомплектным школам платят за
+    // фактическую нагрузку, отдельной надбавки нет ни там, ни в ПП № 1193.
 
     const bonusAmount = Object.entries(bonusSpecsFor(schoolLevel)).reduce(
       (sum, [key, spec]) =>
@@ -150,7 +153,7 @@ export default function TeacherSalaryCalculator() {
       0
     );
 
-    const grossSalary = okladByLoad + pedCategoryBonus + ruralBonus + smallSchoolBonus + bonusAmount;
+    const grossSalary = okladByLoad + pedCategoryBonus + ruralBonus + bonusAmount;
 
     // Удержания
     const opv = Math.round(Math.min(grossSalary, 50 * MZP_2026) * 0.10);
@@ -171,7 +174,6 @@ export default function TeacherSalaryCalculator() {
       okladByLoad,
       pedCategoryBonus,
       ruralBonus,
-      smallSchoolBonus,
       bonusAmount,
       grossSalary,
       opv,
@@ -180,7 +182,7 @@ export default function TeacherSalaryCalculator() {
       totalDeductions,
       netSalary,
     };
-  }, [qualCategory, pedCategory, experience, hoursPerWeek, isRural, isSmallSchool, bonuses, schoolLevel]);
+  }, [qualCategory, pedCategory, experience, hoursPerWeek, isRural, bonuses, schoolLevel]);
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
@@ -366,15 +368,6 @@ export default function TeacherSalaryCalculator() {
                 />
                 <span className="text-sm text-gray-700">{t('teacher-salary.ruralBonus')} (+25%)</span>
               </label>
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isSmallSchool}
-                  onChange={(e) => setIsSmallSchool(e.target.checked)}
-                  className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">{t('teacher-salary.smallSchoolBonus')} (+20%)</span>
-              </label>
             </div>
 
             {/* School level — от него зависят ставки доплат по Прил. 4 ПП № 1193 */}
@@ -474,12 +467,6 @@ export default function TeacherSalaryCalculator() {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">{t('teacher-salary.ruralBonus')} (+25%)</span>
                   <span className="font-medium text-green-600">+{formatCurrency(results.ruralBonus)}</span>
-                </div>
-              )}
-              {results.smallSchoolBonus > 0 && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">{t('teacher-salary.smallSchoolBonus')} (+20%)</span>
-                  <span className="font-medium text-green-600">+{formatCurrency(results.smallSchoolBonus)}</span>
                 </div>
               )}
               {results.bonusAmount > 0 && (

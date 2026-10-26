@@ -2987,7 +2987,7 @@
       "key": "teacher_rural_bonus_rate",
       "value": 25,
       "unit": "percent",
-      "law": "Сельская надбавка педагогу (+25% к окладу за работу в сельской местности)",
+      "law": "Закон «О статусе педагога», ст. 12 п. 5 пп. 1; ТК ст. 139 п. 9 — не менее 25% по решению местных представительных органов",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -3001,7 +3001,8 @@
       "source_url": "https://adilet.zan.kz/rus/docs/P990001876_",
       "official_value": "25",
       "verify_note": "Сельская надбавка педагогу = +25% к окладу. Подтверждено (Пост. №1927/№1193).",
-      "reverified": "2026-06-23"
+      "reverified": "2026-06-23",
+      "verified_date": "2026-10-26"
     },
     {
       "key": "teacher_small_school_bonus_rate",
@@ -3013,15 +3014,14 @@
       "aliases": [
         "teacher_small_school_bonus_rate"
       ],
-      "status": "current",
-      "used_by": [
-        "TeacherSalaryCalculator"
-      ],
+      "status": "stale_confirmed",
+      "used_by": [],
       "audit_status": "clean",
       "source_url": "https://calk.kz/calculator/teacher-salary/",
       "official_value": "20",
-      "verify_note": "Надбавка за работу в малокомплектной школе (<40 учеников) = +20%. Подтверждено.",
-      "reverified": "2026-06-23"
+      "verify_note": "Надбавка за работу в малокомплектной школе (<40 учеников) = +20%. Подтверждено. | calkcheck б16 2026-10-26: надбавки нет — Правила № 191 п. 23–24 (оплата за фактическую нагрузку), в ПП № 1193 прил. 4 и 18 тоже нет; из калькулятора удалена.",
+      "reverified": "2026-06-23",
+      "verified_date": "2026-10-26"
     },
     {
       "key": "teacher_bonus_class_teacher_mrp",
@@ -3188,9 +3188,9 @@
     },
     {
       "key": "teacher_standard_hours_per_week",
-      "value": 18,
+      "value": 16,
       "unit": "factor",
-      "law": "Норма учебной нагрузки педагога — 18 часов/неделю (Закон РК «О статусе педагога» / приказ МП РК)",
+      "law": "Закон РК «О статусе педагога», ст. 8 п. 3 пп. 1 — 16 часов в неделю для организаций среднего образования (18 — для ТиПО, доп. образования, спецорганизаций, пп. 2); Правила № 191, п. 13",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -3203,9 +3203,11 @@
       ],
       "audit_status": "clean",
       "source_url": "https://kodeksy-kz.com/ka/o_statuse_pedagoga.htm",
-      "official_value": "18",
-      "verify_note": "Нормативная учебная нагрузка на 1 ставку учителя = 18 часов/неделю (Закон 'О статусе педагога'; общая раб. неделя ≤36 ч). Подтверждено.",
-      "reverified": "2026-06-23"
+      "official_value": 16,
+      "verify_note": "Нормативная учебная нагрузка на 1 ставку учителя = 18 часов/неделю (Закон 'О статусе педагога'; общая раб. неделя ≤36 ч). Подтверждено. | calkcheck б16 2026-10-26: 18 → 16 (ст. 8 п. 3 пп. 1 Закона о статусе педагога); оклад по нагрузке был занижен на 11%.",
+      "reverified": "2026-06-23",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "land_tax_base_rate_mrp_per_ha",
