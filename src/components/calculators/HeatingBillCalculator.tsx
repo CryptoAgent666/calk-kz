@@ -18,7 +18,13 @@ interface MonthlyNorm {
 interface CityHeatingData {
   id: string;
   nameKey: string;
+  /** Среднеотпускной тариф для населения (с НДС). */
   tariffPerGcal: number;
+  /** Дифференцированные тарифы: дом с общедомовым прибором учёта (ОДПУ) / без ОДПУ. */
+  tariffWithOdpu?: number;
+  tariffNoOdpu?: number;
+  /** Без ОДПУ поставщик берёт фиксированную плату за м² в месяц (Караганда). */
+  perM2NoOdpu?: number;
   monthlyNorms: MonthlyNorm[];
   averageNorm: number;
 }
@@ -40,6 +46,8 @@ export default function HeatingBillCalculator() {
     consumption: 0,
     norm: 0,
     tariff: 0,
+    byReading: false,
+    fixedPerM2: undefined as number | undefined,
     heatingSeasonMonths: 7,
     averageMonthlyRate: 0,
     recommendationKey: ''
@@ -59,6 +67,8 @@ export default function HeatingBillCalculator() {
       // без приборов 4 956,00) → 4 790,80 с НДС 16 %. Прежние 3 930 — тариф ТОО «Астанаэнергосбыт»
       // от 01.01.2025 при НДС 12 %, компания тепло уже не продаёт (сверка 13.09.2026, a-tranzit.kz).
       tariffPerGcal: 4790.80,
+      tariffWithOdpu: 4710.89, // 4 061,11 без НДС
+      tariffNoOdpu: 5748.96,   // 4 956,00 без НДС
       averageNorm: 0.0185,
       monthlyNorms: [
         { month: 'october', norm: 0.015, descriptionKey: 'calculators:heating.octoberStart' },
@@ -73,22 +83,32 @@ export default function HeatingBillCalculator() {
     {
       id: 'almaty',
       nameKey: 'calculators:heating.cityAlmaty',
-      tariffPerGcal: 9139.07, // ТОО «АлТС» с 01.05.2026: 7 878,51 без НДС (приказ ДКРЕМ по Алматы от 22.04.2026 № 65-ОД)
-      averageNorm: 0.0165,
+      // ТОО «АлТС» с 01.10.2026 (приказ ДКРЕМ по Алматы от 24.09.2026 № 108-ОД, alts.kz/tarify), без НДС:
+      // в среднем 8 682,12, с ОДПУ 8 542,66, без ОДПУ 10 418,54. Было 7 878,51 (с 01.05.2026).
+      tariffPerGcal: 10071.26,
+      tariffWithOdpu: 9909.49,
+      tariffNoOdpu: 12085.51,
+      // Нормы для потребителей без приборов учёта — alts.kz (сезон 0,153 Гкал/м²); на сайте стояли
+      // 0,012…0,021 (сезон ~0,115), и январь без ОДПУ для 60 м² выходил 11 515 ₸ вместо ~26 000 ₸.
+      averageNorm: 0.0219,
       monthlyNorms: [
-        { month: 'october', norm: 0.012, descriptionKey: 'calculators:heating.octoberRegular' },
-        { month: 'november', norm: 0.016, descriptionKey: 'calculators:heating.november' },
-        { month: 'december', norm: 0.019, descriptionKey: 'calculators:heating.december' },
-        { month: 'january', norm: 0.021, descriptionKey: 'calculators:heating.januaryRegular' },
-        { month: 'february', norm: 0.019, descriptionKey: 'calculators:heating.february' },
-        { month: 'march', norm: 0.015, descriptionKey: 'calculators:heating.march' },
-        { month: 'april', norm: 0.010, descriptionKey: 'calculators:heating.aprilRegular' }
+        { month: 'october', norm: 0.00517, descriptionKey: 'calculators:heating.octoberRegular' },
+        { month: 'november', norm: 0.02387, descriptionKey: 'calculators:heating.november' },
+        { month: 'december', norm: 0.03246, descriptionKey: 'calculators:heating.december' },
+        { month: 'january', norm: 0.03587, descriptionKey: 'calculators:heating.januaryRegular' },
+        { month: 'february', norm: 0.03022, descriptionKey: 'calculators:heating.february' },
+        { month: 'march', norm: 0.02424, descriptionKey: 'calculators:heating.march' },
+        { month: 'april', norm: 0.00117, descriptionKey: 'calculators:heating.aprilRegular' }
       ]
     },
     {
       id: 'shymkent',
       nameKey: 'calculators:heating.cityShymkent',
-      tariffPerGcal: 7456.61, // ГКП «Қуатжылуорталық-3», среднеотпускной для населения: 6 428,11 без НДС
+      // ГКП «Қуатжылуорталық-3» (kzho.kz), прейскурант на 01.01–31.03.2026 — более свежего не нашли: средний для
+      // населения 6 428,11 без НДС, с ОДПУ 4 272,71, без ОДПУ 8 404,06.
+      tariffPerGcal: 7456.61,
+      tariffWithOdpu: 4956.34,
+      tariffNoOdpu: 9748.71,
       averageNorm: 0.0145,
       monthlyNorms: [
         { month: 'november', norm: 0.013, descriptionKey: 'calculators:heating.novemberStart' },
@@ -102,6 +122,8 @@ export default function HeatingBillCalculator() {
       id: 'karaganda',
       nameKey: 'calculators:heating.cityKaraganda',
       tariffPerGcal: 5735.27, // ТОО «Теплотранзит Караганда» с 15.08.2026: 4 944,20 без НДС
+      // Без приборов учёта — не норматив × тариф, а фиксированная плата 195,00 ₸/м² в месяц с НДС (teplotranzit.kz).
+      perM2NoOdpu: 195.00,
       averageNorm: 0.0195,
       monthlyNorms: [
         { month: 'october', norm: 0.016, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -117,9 +139,8 @@ export default function HeatingBillCalculator() {
       id: 'other',
       nameKey: 'calculators:heating.otherRegions',
       // Единого тарифа «по РК» нет — ДКРЕМ утверждает по каждому субъекту. Здесь среднее по четырём
-      // городам выше ((4 790,80 + 9 139,07 + 7 456,61 + 5 735,27) / 4). Официальная статистика цен БНС
-      // даёт по РК ≈ 6 200 ₸/Гкал (май 2026) — того же порядка. Пересчитано 13.09.2026.
-      tariffPerGcal: 6780.44,
+      // городам выше ((4 790,80 + 10 071,26 + 7 456,61 + 5 735,27) / 4). Пересчитано 26.10.2026.
+      tariffPerGcal: 7013.49,
       averageNorm: 0.017,
       monthlyNorms: [
         { month: 'october', norm: 0.014, descriptionKey: 'calculators:heating.octoberRegular' },
@@ -146,6 +167,11 @@ export default function HeatingBillCalculator() {
     return monthKeys[monthId] || monthId;
   };
 
+  // Выбранный месяц может не входить в сезон другого города (в Шымкенте сезон с ноября) —
+  // тогда берём январь, а не «средний норматив» с подписью «за октябрь».
+  const cityForMonth = cityHeatingData.find(c => c.id === city);
+  const activeMonth = cityForMonth?.monthlyNorms.some(m => m.month === selectedMonth) ? selectedMonth : 'january';
+
   const calculateHeatingBill = () => {
     const area = parseFloat(heatingArea) || 0;
 
@@ -156,23 +182,28 @@ export default function HeatingBillCalculator() {
     const selectedCity = cityHeatingData.find(c => c.id === city);
     if (!selectedCity) return EMPTY_RESULTS;
 
-    let consumption: number;
-    let norm: number;
+    // hasMeter — в доме есть общедомовой прибор учёта (ОДПУ): от этого зависит тариф. Показание
+    // из квитанции необязательно — без него оцениваем по норме. Раньше тариф был один на всех,
+    // а без показаний подпись всё равно говорила «Расчёт по показаниям».
+    const reading = hasMeter ? parseFloat(actualConsumption) || 0 : 0;
+    const monthData = selectedCity.monthlyNorms.find(m => m.month === activeMonth) ?? selectedCity.monthlyNorms[0];
+    const tariff = hasMeter
+      ? (selectedCity.tariffWithOdpu ?? selectedCity.tariffPerGcal)
+      : (selectedCity.tariffNoOdpu ?? selectedCity.tariffPerGcal);
+    const fixedPerM2 = !hasMeter ? selectedCity.perM2NoOdpu : undefined;
 
-    if (hasMeter && actualConsumption) {
-      consumption = parseFloat(actualConsumption);
-      norm = consumption / area;
-    } else {
-      const selectedMonthData = selectedCity.monthlyNorms.find(m => m.month === selectedMonth);
-      norm = selectedMonthData ? selectedMonthData.norm : selectedCity.averageNorm;
-      consumption = area * norm;
+    let norm = monthData.norm;
+    let consumption = area * norm;
+    if (reading > 0) {
+      consumption = reading;
+      norm = reading / area;
     }
+    const monthlyAmount = fixedPerM2 ? area * fixedPerM2 : consumption * tariff;
 
-    const tariff = selectedCity.tariffPerGcal;
-    const monthlyAmount = consumption * tariff;
-
-    const seasonalConsumption = area * selectedCity.averageNorm * selectedCity.monthlyNorms.length;
-    const seasonalAmount = seasonalConsumption * tariff;
+    // Сезон — сумма месяцев по их нормам (раньше средняя норма × число месяцев).
+    const seasonalAmount = fixedPerM2
+      ? area * fixedPerM2 * selectedCity.monthlyNorms.length
+      : selectedCity.monthlyNorms.reduce((s, m) => s + area * m.norm * tariff, 0);
 
     const averageMonthlyRate = monthlyAmount / area;
 
@@ -193,6 +224,8 @@ export default function HeatingBillCalculator() {
       consumption: Number(consumption.toFixed(4)),
       norm: Number(norm.toFixed(4)),
       tariff,
+      byReading: reading > 0,
+      fixedPerM2,
       heatingSeasonMonths: selectedCity.monthlyNorms.length,
       averageMonthlyRate: Number(averageMonthlyRate.toFixed(2)),
       recommendationKey
@@ -204,7 +237,7 @@ export default function HeatingBillCalculator() {
   const results = useMemo(
     calculateHeatingBill,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [city, heatingArea, hasMeter, actualConsumption, selectedMonth]
+    [city, heatingArea, hasMeter, actualConsumption, activeMonth]
   );
 
   const formatNumber = (num: number) => {
@@ -321,7 +354,7 @@ export default function HeatingBillCalculator() {
               )}
             </div>
 
-            {!hasMeter && (
+            {!(hasMeter && parseFloat(actualConsumption) > 0) && (
               <div>
                 <label htmlFor="selectedMonth" className="block text-sm font-medium text-gray-700 mb-2">
                   <Calendar className="w-4 h-4 inline mr-1" />
@@ -329,7 +362,7 @@ export default function HeatingBillCalculator() {
                 </label>
                 <select
                   id="selectedMonth"
-                  value={selectedMonth}
+                  value={activeMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 >
@@ -347,7 +380,10 @@ export default function HeatingBillCalculator() {
                 {t('heating.tariffsFor')} {selectedCityData ? t(selectedCityData.nameKey) : ''}:
               </h3>
               <div className="space-y-1 text-xs text-red-800">
-                <div>• {t('heating.tariff')}: <strong>{formatTariff(selectedCityData?.tariffPerGcal || 0)}</strong></div>
+                <div>• {t('heating.tariff')}: <strong>{formatTariff(results.tariff || selectedCityData?.tariffPerGcal || 0)}</strong>{' '}({t(hasMeter ? 'heating.withOdpu' : 'heating.noOdpu')})</div>
+                {!hasMeter && selectedCityData?.perM2NoOdpu && (
+                  <div>• {t('heating.perM2NoOdpu', { rate: selectedCityData.perM2NoOdpu.toFixed(2).replace('.', ',') })}</div>
+                )}
                 <div>• {t('heating.averageNorm')}: <strong>{formatNorm(selectedCityData?.averageNorm || 0)}</strong></div>
                 <div>• {t('heating.heatingSeasonMonths')}: <strong>{selectedCityData?.monthlyNorms.length || 7} {t('heating.months')}</strong></div>
               </div>
@@ -364,8 +400,8 @@ export default function HeatingBillCalculator() {
                 <h3 className="font-medium text-gray-900 mb-2">{t('heating.calculationParams')}</h3>
                 <div className="text-sm text-gray-700 space-y-1">
                   <div>{t('heating.heatedAreaLabel')}: <strong>{heatingArea} м²</strong></div>
-                  <div>{t('heating.calculationMethod')}: <strong>{hasMeter ? t('heating.byMeter') : t('heating.byNorms')}</strong></div>
-                  {!hasMeter && selectedCityData && (
+                  <div>{t('heating.calculationMethod')}: <strong>{results.byReading ? t('heating.byMeter') : t('heating.byNorms')}</strong></div>
+                  {!results.byReading && selectedCityData && (
                     <div>{t('heating.monthlyNorm')}: <strong>{formatNorm(results.norm)}</strong></div>
                   )}
                   <div>{t('heating.consumption')}: <strong>{results.consumption.toFixed(4)} Гкал</strong></div>
@@ -376,7 +412,7 @@ export default function HeatingBillCalculator() {
             <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-6">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-lg font-semibold text-gray-900">
-                  {hasMeter ? t('heating.calculationByMeter') : `${t('heating.calculationFor')} ${t(getMonthNameKey(selectedMonth))}`}
+                  {results.byReading ? t('heating.calculationByMeter') : `${t('heating.calculationFor')} ${t(getMonthNameKey(activeMonth))}`}
                 </span>
                 <div className="flex items-center space-x-2">
                   <Thermometer className="w-6 h-6 text-red-600" />
@@ -390,7 +426,7 @@ export default function HeatingBillCalculator() {
               )}
             </div>
 
-            {!hasMeter && results.seasonalAmount > 0 && (
+            {!results.byReading && results.seasonalAmount > 0 && (
               <div className="border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-3">{t('heating.seasonalProjection')}</h3>
                 <div className="flex justify-between items-center">
@@ -477,7 +513,7 @@ export default function HeatingBillCalculator() {
                       title: t('heating.calculationParameters'),
                       data: [
                         { label: t('heating.area'), value: `${heatingArea} м²` },
-                        { label: t('heating.month'), value: t(`calculators:heating.${selectedMonth}`) },
+                        { label: t('heating.month'), value: t(getMonthNameKey(activeMonth)) },
                         { label: t('heating.tariff'), value: formatTariff(results.tariff) },
                       ]
                     },
@@ -509,7 +545,7 @@ export default function HeatingBillCalculator() {
               <div className="space-y-2">
                 {selectedCityData?.monthlyNorms.slice(0, Math.ceil(selectedCityData.monthlyNorms.length / 2)).map((monthData) => (
                   <div key={monthData.month} className={`flex justify-between text-sm py-3 px-4 rounded ${
-                    selectedMonth === monthData.month ? 'bg-red-100 border border-red-300' : 'bg-gray-50'
+                    activeMonth === monthData.month ? 'bg-red-100 border border-red-300' : 'bg-gray-50'
                   }`}>
                     <span className="text-gray-700">{t(monthData.descriptionKey)}</span>
                     <span className="font-medium">{formatNorm(monthData.norm)}</span>
@@ -519,7 +555,7 @@ export default function HeatingBillCalculator() {
               <div className="space-y-2">
                 {selectedCityData?.monthlyNorms.slice(Math.ceil(selectedCityData.monthlyNorms.length / 2)).map((monthData) => (
                   <div key={monthData.month} className={`flex justify-between text-sm py-3 px-4 rounded ${
-                    selectedMonth === monthData.month ? 'bg-red-100 border border-red-300' : 'bg-gray-50'
+                    activeMonth === monthData.month ? 'bg-red-100 border border-red-300' : 'bg-gray-50'
                   }`}>
                     <span className="text-gray-700">{t(monthData.descriptionKey)}</span>
                     <span className="font-medium">{formatNorm(monthData.norm)}</span>
