@@ -23,7 +23,8 @@ const MIN_VALUE_RATIO = 0.15;
 
 const CONDITION_K: Record<ConditionKey, number> = { excellent: 1.10, good: 1.00, average: 0.88, poor: 0.70 };
 const REGION_K: Record<RegionKey, number> = { 'almaty-astana': 1.10, 'shymkent-karaganda': 1.00, other: 0.93 };
-const BODY_K: Record<BodyKey, number> = { sedan: 1.00, suv: 1.12, hatchback: 0.95, wagon: 0.92, pickup: 1.05 };
+// Цена нового уже отражает кузов, поэтому коэффициент — только ликвидность на вторичке.
+const BODY_K: Record<BodyKey, number> = { sedan: 1.00, suv: 1.00, hatchback: 0.95, wagon: 0.92, pickup: 1.00 };
 const DOCS_K: Record<DocsKey, number> = { original: 1.00, duplicate: 0.93 };
 
 export default function CarMarketValueCalculator() {
@@ -78,15 +79,14 @@ export default function CarMarketValueCalculator() {
     const minValue = basePrice * MIN_VALUE_RATIO;
     if (depreciated < minValue) depreciated = minValue;
 
-    const normalMileage = age * NORMAL_KM_PER_YEAR;
+    // Машине текущего года засчитываем полгода нормы, иначе пробег не влиял бы вовсе.
+    const normalMileage = Math.max(age, 0.5) * NORMAL_KM_PER_YEAR;
+    const ratio = km / normalMileage;
     let mileageK = 1;
-    if (normalMileage > 0) {
-      const ratio = km / normalMileage;
-      if (ratio <= 0.8) mileageK = 1.10;
-      else if (ratio <= 1.2) mileageK = 1.00;
-      else if (ratio <= 1.6) mileageK = 0.88;
-      else mileageK = 0.75;
-    }
+    if (ratio <= 0.8) mileageK = 1.10;
+    else if (ratio <= 1.2) mileageK = 1.00;
+    else if (ratio <= 1.6) mileageK = 0.88;
+    else mileageK = 0.75;
 
     const conditionK = CONDITION_K[condition];
     const regionK = REGION_K[region];
@@ -94,19 +94,20 @@ export default function CarMarketValueCalculator() {
     const damagedK = isDamaged ? 0.75 : 1.00;
     const docsK = DOCS_K[docs];
 
-    const marketValue = depreciated * mileageK * conditionK * regionK * bodyK * damagedK * docsK;
+    // Подержанная машина не дороже новой.
+    const marketValue = Math.min(basePrice, depreciated * mileageK * conditionK * regionK * bodyK * damagedK * docsK);
     const lossAmount = basePrice - marketValue;
 
     return {
       baseAfterDepreciation: Math.round(depreciated),
       marketValue: Math.round(marketValue),
       minPrice: Math.round(marketValue * 0.90),
-      maxPrice: Math.round(marketValue * 1.10),
+      maxPrice: Math.round(Math.min(basePrice, marketValue * 1.10)),
       lossAmount: Math.round(lossAmount),
       lossPercent: Number(((lossAmount / basePrice) * 100).toFixed(1)),
       mileageK, conditionK, regionK, bodyK, damagedK, docsK,
-      sellPrice: Math.round(marketValue * 0.95),
-      buyPrice: Math.round(marketValue * 0.94),
+      sellPrice: Math.round(marketValue * 0.90),
+      buyPrice: Math.round(marketValue * 0.95),
     };
   };
 
@@ -138,7 +139,7 @@ ${t('car-market-value.resultsTitle')}:
 ─────────────────────────────
 ${t('car-market-value.marketValue')}: ${formatCurrency(results.marketValue)}
 ${t('car-market-value.priceRange')}: ${formatCurrency(results.minPrice)} — ${formatCurrency(results.maxPrice)}
-${t('car-market-value.lossAmount')}: ${formatCurrency(results.lossAmount)} (${results.lossPercent}%)
+${t('car-market-value.lossAmount')}: ${formatCurrency(results.lossAmount)} (${results.lossPercent.toLocaleString('ru-KZ')}%)
 ${t('car-market-value.sellPrice')}: ${formatCurrency(results.sellPrice)}
 ${t('car-market-value.buyPrice')}: ${formatCurrency(results.buyPrice)}
 ─────────────────────────────
@@ -300,12 +301,12 @@ calk.kz`;
               <div className="bg-green-50 rounded-lg p-4">
                 <div className="text-xs text-green-600">{t('car-market-value.sellPrice')}</div>
                 <div className="text-sm font-bold text-green-700">{formatCurrency(results.sellPrice)}</div>
-                <div className="text-xs text-green-500 mt-1">−5%</div>
+                <div className="text-xs text-green-500 mt-1">−10%</div>
               </div>
               <div className="bg-blue-50 rounded-lg p-4">
                 <div className="text-xs text-blue-600">{t('car-market-value.buyPrice')}</div>
                 <div className="text-sm font-bold text-blue-700">{formatCurrency(results.buyPrice)}</div>
-                <div className="text-xs text-blue-500 mt-1">−6%</div>
+                <div className="text-xs text-blue-500 mt-1">−5%</div>
               </div>
             </div>
 
@@ -314,12 +315,12 @@ calk.kz`;
               <div className="space-y-1.5 text-sm">
                 {[
                   { key: 'afterDepreciation', val: formatCurrency(results.baseAfterDepreciation) },
-                  { key: 'kMileage', val: `×${results.mileageK.toFixed(2)}` },
-                  { key: 'kCondition', val: `×${results.conditionK.toFixed(2)}` },
-                  { key: 'kRegion', val: `×${results.regionK.toFixed(2)}` },
-                  { key: 'kBody', val: `×${results.bodyK.toFixed(2)}` },
-                  { key: 'kDamaged', val: `×${results.damagedK.toFixed(2)}` },
-                  { key: 'kDocs', val: `×${results.docsK.toFixed(2)}` },
+                  { key: 'kMileage', val: `×${results.mileageK.toFixed(2).replace('.', ',')}` },
+                  { key: 'kCondition', val: `×${results.conditionK.toFixed(2).replace('.', ',')}` },
+                  { key: 'kRegion', val: `×${results.regionK.toFixed(2).replace('.', ',')}` },
+                  { key: 'kBody', val: `×${results.bodyK.toFixed(2).replace('.', ',')}` },
+                  { key: 'kDamaged', val: `×${results.damagedK.toFixed(2).replace('.', ',')}` },
+                  { key: 'kDocs', val: `×${results.docsK.toFixed(2).replace('.', ',')}` },
                 ].map((row) => (
                   <div key={row.key} className="flex justify-between">
                     <span className="text-gray-600">{t(`car-market-value.${row.key}`)}</span>
