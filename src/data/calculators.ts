@@ -1144,7 +1144,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'gpa',
         title: 'Калькулятор GPA',
-        description: 'Конвертация казахстанской 100-балльной шкалы в GPA США 4.0 / ECTS / РФ / UK',
+        description: 'GPA по шкале РК: баллы 0–100 в буквы и 4.0, взвешенный по кредитам',
         category: 'education',
         icon: 'Award',
         component: React.lazy(() => import('../components/calculators/GPACalculator'))

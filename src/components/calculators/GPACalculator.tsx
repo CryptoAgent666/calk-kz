@@ -17,10 +17,11 @@ interface Subject {
   credits: string; // кредиты (от 3 до 8 обычно)
 }
 
-// КЗ система оценок ECTS (4-балльная)
+// Шкала РК — приказ МОН № 152 от 20.04.2011, приложение 2:
 // 95-100 — A (4.0), 90-94 — A- (3.67), 85-89 — B+ (3.33), 80-84 — B (3.0)
 // 75-79 — B- (2.67), 70-74 — C+ (2.33), 65-69 — C (2.0), 60-64 — C- (1.67)
-// 55-59 — D+ (1.33), 50-54 — D (1.0), 0-49 — F (0)
+// 55-59 — D+ (1.33), 50-54 — D (1.0), 25-49 — FX (0.5), 0-24 — F (0)
+// Традиционная оценка: «отлично» A…A-, «хорошо» B+…C+, «удовлетворительно» C…D, ниже — «неудовлетворительно».
 
 function gradeToGPA(score: number): number {
   if (score >= 95) return 4.0;
@@ -33,6 +34,7 @@ function gradeToGPA(score: number): number {
   if (score >= 60) return 1.67;
   if (score >= 55) return 1.33;
   if (score >= 50) return 1.0;
+  if (score >= 25) return 0.5;
   return 0;
 }
 
@@ -47,16 +49,17 @@ function gradeToLetter(score: number): string {
   if (score >= 60) return 'C-';
   if (score >= 55) return 'D+';
   if (score >= 50) return 'D';
+  if (score >= 25) return 'FX';
   return 'F';
 }
 
-// GPA в разные системы (США, ЕС/ECTS, Россия 5-балльная, Великобритания)
+// GPA в другие системы (США 4.0, традиционная 5-балльная, Великобритания)
 function gpaToUS(gpa: number): string { return gpa.toFixed(2); } // US 4.0
 function gpaToRussia5(gpa: number): string {
-  // Примерное соответствие: 4.0 — 5, 3.0 — 4, 2.0 — 3, <2.0 — 2
-  if (gpa >= 3.5) return '5';
-  if (gpa >= 2.5) return '4';
-  if (gpa >= 1.5) return '3';
+  // По границам традиционных оценок приказа № 152: A- 3,67 — «5», C+ 2,33 — «4», D 1,0 — «3»
+  if (gpa >= 3.67) return '5';
+  if (gpa >= 2.33) return '4';
+  if (gpa >= 1.0) return '3';
   return '2';
 }
 function gpaToUK(gpa: number): string {
@@ -66,19 +69,19 @@ function gpaToUK(gpa: number): string {
   if (gpa >= 2.0) return 'Third (40-49)';
   return 'Fail (<40)';
 }
-function gpaToClassification(gpa: number): string {
-  if (gpa >= 3.67) return 'Отлично (Excellent)';
-  if (gpa >= 3.0) return 'Хорошо (Good)';
-  if (gpa >= 2.0) return 'Удовлетворительно';
-  return 'Неудовлетворительно';
+function gpaToClassification(gpa: number): 'excellent' | 'good' | 'satisfactory' | 'fail' {
+  if (gpa >= 3.67) return 'excellent';
+  if (gpa >= 2.33) return 'good';
+  if (gpa >= 1.0) return 'satisfactory';
+  return 'fail';
 }
 
 export default function GPACalculator() {
   const { t } = useTranslation('calculators');
-  const [subjects, setSubjects] = useState<Subject[]>([
-    { id: 1, name: 'Математика', grade: '85', credits: '5' },
-    { id: 2, name: 'Информатика', grade: '92', credits: '6' },
-    { id: 3, name: 'История', grade: '78', credits: '3' },
+  const [subjects, setSubjects] = useState<Subject[]>(() => [
+    { id: 1, name: t('gpa.defaultSubjects.math'), grade: '85', credits: '5' },
+    { id: 2, name: t('gpa.defaultSubjects.cs'), grade: '92', credits: '6' },
+    { id: 3, name: t('gpa.defaultSubjects.history'), grade: '78', credits: '3' },
   ]);
 
   const addSubject = () => {
@@ -96,22 +99,21 @@ export default function GPACalculator() {
     let totalPoints = 0;
     let totalCredits = 0;
     let totalScore = 0;
-    let count = 0;
     const valid = subjects.filter(s => s.grade && s.credits);
     valid.forEach(s => {
-      const score = parseFloat(s.grade) || 0;
+      const score = Math.min(100, Math.max(0, parseFloat(s.grade) || 0));
       const credits = parseFloat(s.credits) || 0;
       const gpa = gradeToGPA(score);
       totalPoints += gpa * credits;
       totalCredits += credits;
-      totalScore += score;
-      count++;
+      totalScore += score * credits;
     });
 
     if (totalCredits === 0) return null;
 
     const weightedGPA = totalPoints / totalCredits;
-    const avgScore = count > 0 ? totalScore / count : 0;
+    // Средний балл тоже взвешен по кредитам, иначе его буква может спорить с GPA рядом
+    const avgScore = totalScore / totalCredits;
 
     return {
       weightedGPA: weightedGPA.toFixed(2),
@@ -148,9 +150,10 @@ export default function GPACalculator() {
         </div>
 
         {subjects.map(s => {
-          const score = parseFloat(s.grade);
-          const gpa = !isNaN(score) ? gradeToGPA(score) : 0;
-          const letter = !isNaN(score) ? gradeToLetter(score) : '';
+          const score = Math.min(100, Math.max(0, parseFloat(s.grade)));
+          const hasScore = s.grade !== '' && !isNaN(score);
+          const gpa = hasScore ? gradeToGPA(score) : 0;
+          const letter = hasScore ? gradeToLetter(score) : '';
           return (
             <div key={s.id} className="grid grid-cols-12 gap-2 items-center">
               <input value={s.name} onChange={e => updateSubject(s.id, 'name', e.target.value)}
@@ -160,7 +163,7 @@ export default function GPACalculator() {
               <input type="number" min="1" max="10" value={s.credits} onChange={e => updateSubject(s.id, 'credits', e.target.value)}
                 className="col-span-2 px-2 py-2 border border-gray-300 rounded text-sm text-center" />
               <div className="col-span-1 text-sm text-gray-700 text-center">
-                {gpa > 0 ? `${gpa.toFixed(2)} (${letter})` : ''}
+                {hasScore ? `${gpa.toFixed(2)} (${letter})` : ''}
               </div>
               <button onClick={() => removeSubject(s.id)} className="col-span-1 text-red-500 hover:text-red-700">
                 <X className="w-4 h-4" />
@@ -179,7 +182,7 @@ export default function GPACalculator() {
             <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-6 border-2 border-purple-300 text-center">
               <div className="text-sm text-gray-600">{t('gpa.weightedGPA')}</div>
               <div className="text-6xl font-bold text-purple-700">{results.weightedGPA}</div>
-              <div className="text-sm font-medium text-purple-800 mt-1">{results.classification}</div>
+              <div className="text-sm font-medium text-purple-800 mt-1">{t(`gpa.class.${results.classification}`)}</div>
               <div className="text-xs text-gray-500 mt-1">
                 {t('gpa.credits')}: {results.totalCredits} • {t('gpa.avgScore')}: {results.avgScore} • {results.letter}
               </div>
