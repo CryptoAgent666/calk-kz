@@ -20,12 +20,14 @@ const JOINT_V_M = 0.010; // вертикальный
 // Шов на клею — 2 мм (там же, п. 4.7.6.4; пункт о силикатных блоках, отдельного для газобетона в СП РК нет)
 const JOINT_GLUE_M = 0.002;
 
-// Раствор для кирпича — норма 0,25 м³ на 1 м³ кладки (М75–М100, 1:4)
-const BRICK_MORTAR_M3 = 0.25;
+// Раствор для кирпича — по геометрии швов + 10% на потери: одинарный кирпич в стене в 1 кирпич
+// даёт ≈ 0,24 м³ на 1 м³ кладки (как типовая норма 0,24–0,25), полуторный ≈ 0,21, двойной ≈ 0,17.
+// Прежняя норма 0,25 для всех завышала раствор полуторному и двойному на 25–65%.
+const BRICK_MORTAR_LOSS = 1.1;
 const CEMENT_KG_PER_M3 = 320;  // кг цемента М400 на 1 м³ раствора
 const SAND_KG_PER_M3 = 1200;
-const CEMENT_PRICE = 55;       // ₸/кг
-const SAND_PRICE = 8;          // ₸/кг
+const CEMENT_PRICE = 45;       // ₸/кг — как в калькуляторе бетона (мешок 50 кг ≈ 2 250 ₸)
+const SAND_PRICE = 5;          // ₸/кг
 // Клей для газоблока: 1,2–1,4 кг сухой смеси на 1 м² шва на каждый мм толщины
 // (техописание Ceresit CT 21 для Казахстана), берём верхнюю границу
 const GLUE_KG_PER_M2_MM = 1.4;
@@ -44,9 +46,10 @@ interface BrickSpec {
 const BRICKS: Record<BrickType, BrickSpec> = {
   single:        { length: 250, width: 120, height: 65, perM3: 384, price: 80 },   // 1 / (0,26 × 0,13 × 0,077)
   oneAndHalf:    { length: 250, width: 120, height: 88, perM3: 296, price: 110 },  // 1 / (0,26 × 0,13 × 0,100)
-  double:        { length: 250, width: 120, height: 138, perM3: 197, price: 150 }, // 1 / (0,26 × 0,13 × 0,150)
+  double:        { length: 250, width: 120, height: 140, perM3: 195, price: 150 }, // 2,1НФ по ГОСТ 530: 1 / (0,26 × 0,13 × 0,152)
   block:         { length: 390, width: 190, height: 188, perM3: 62, price: 320 },  // 1 / (0,40 × 0,20 × 0,20)
-  gasBlock:      { length: 600, width: 300, height: 200, perM3: 27, price: 550, glue: true }, // 1 / (0,602 × 0,30 × 0,202)
+  // Газоблок 600×300×200 — ~1 050–1 100 ₸ (Алматы, 10.2026: gazoblok-almaty.kz 1 099, OLX 1 050; ALSAPA D600 от 32 000 ₸/м³)
+  gasBlock:      { length: 600, width: 300, height: 200, perM3: 27, price: 1050, glue: true }, // 1 / (0,602 × 0,30 × 0,202)
 };
 
 type Masonry = 'brick' | 'block' | 'gasBlock';
@@ -97,13 +100,13 @@ function perSquareMeter(spec: BrickSpec, wall: WallOption): number {
   return wall.across / ((spec.length / 1000 + jv) * (spec.height / 1000 + jh));
 }
 
-// Раствор, м³ на 1 м³ кладки. Керамзитоблок — по геометрии: всё, что в стене не блок, — шов
-// (швы 12/10 мм: ≈ 0,084 в стене 190 мм, ≈ 0,107 в стене 390 мм).
-// Норма кирпича 0,25 давала ему раствора в 2–3 раза больше.
+// Раствор, м³ на 1 м³ кладки — по геометрии: всё, что в стене не изделие, — шов.
+// Керамзитоблок: швы 12/10 мм дают ≈ 0,084 в стене 190 мм и ≈ 0,107 в стене 390 мм.
+// Кирпич: та же геометрия + 10% на потери (заполнение пустот, подрезка).
 function mortarPerM3(masonry: Masonry, spec: BrickSpec, wall: WallOption, perM2: number): number {
-  if (masonry === 'brick') return BRICK_MORTAR_M3;
-  const blockM3 = (spec.length / 1000) * (spec.width / 1000) * (spec.height / 1000);
-  return 1 - perM2 * blockM3 / (wall.mm / 1000);
+  const unitM3 = (spec.length / 1000) * (spec.width / 1000) * (spec.height / 1000);
+  const joints = 1 - perM2 * unitM3 / (wall.mm / 1000);
+  return masonry === 'brick' ? joints * BRICK_MORTAR_LOSS : joints;
 }
 
 // Клей, кг на 1 м³ кладки в один блок. Площадь швов в 1 м³ = 1/L + 1/H (м²) — формула техописания CT 21.
