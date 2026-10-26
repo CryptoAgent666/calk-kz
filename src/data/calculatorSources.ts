@@ -254,7 +254,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'property-division': [FAMILY_CODE, GK_RK],
   'statute-limitations': [GK_RK],
   'bankruptcy': [
-    { title: 'Закон о банкротстве физлиц', url: 'https://adilet.zan.kz/rus/docs/Z2300000208' },
+    { title: 'Закон «О восстановлении платёжеспособности и банкротстве граждан РК» № 178-VII', url: 'https://adilet.zan.kz/rus/docs/Z2200000178' },
     EGOV,
   ],
   'moral-damage': [

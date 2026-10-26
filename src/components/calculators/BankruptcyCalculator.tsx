@@ -21,7 +21,9 @@ const MRP_2026 = 4325;
 // 3. Восстановление платёжеспособности — реструктуризация долга через суд
 // Последствия: 5 лет нельзя брать кредиты, 7 лет запись в КИП
 
-type Procedure = 'extraJudicial' | 'judicial' | 'restructuring' | 'none';
+type Procedure = 'extraJudicial' | 'judicial' | 'restructuring' | 'none' | 'notYet';
+
+const MZP_2026 = 85000;
 
 export default function BankruptcyCalculator() {
   const { t } = useTranslation('calculators');
@@ -51,29 +53,34 @@ export default function BankruptcyCalculator() {
     // Закон № 178-VII: внесудебное — долг ≤ 1600 МРП, никакого имущества в собственности, 12 месяцев
     // без погашения (ст. 5); условия по доходу в законе нет. Судебное — долг > 1600 МРП либо есть
     // имущество (тогда размер долга не важен), тоже 12 месяцев без погашения (ст. 6 п. 2).
+    // План восстановления — не дольше 5 лет (ст. 29 п. 1), поэтому «можно погасить» = за 60 месяцев.
+    // Без 12 месяцев подряд без погашения банкротство недоступно (ст. 5 п. 1 пп. 2, ст. 6 п. 2 пп. 3) —
+    // раньше такой случай уходил в «Судебное», и для двух исходов на экран выводился сырой ключ перевода.
     if (debt > 0 && overdue >= 12 && debt <= EXTRA_JUDICIAL_LIMIT && !hasProperty) {
       procedure = 'extraJudicial';
-      reason = t('bankruptcy.reasons.extraJudicial');
-    } else if (debt > 0 && overdue >= 12 && (debt > EXTRA_JUDICIAL_LIMIT || hasProperty) && disposableIncome < debt / 60) {
-      procedure = 'judicial';
-      reason = t('bankruptcy.reasons.judicial');
-    } else if (debt > 0 && disposableIncome >= debt / 60 && disposableIncome < debt / 12) {
-      procedure = 'restructuring';
-      reason = t('bankruptcy.reasons.restructuring');
+      reason = t(overdue > 60 ? 'bankruptcy.reasons.extraJudicialLong' : 'bankruptcy.reasons.extraJudicial');
     } else if (debt > 0 && disposableIncome >= debt / 12) {
       procedure = 'none';
       reason = t('bankruptcy.reasons.none');
-    } else {
+    } else if (debt > 0 && disposableIncome >= debt / 60) {
+      procedure = 'restructuring';
+      reason = t('bankruptcy.reasons.restructuring');
+    } else if (debt > 0 && overdue >= 12) {
       procedure = 'judicial';
-      reason = t('bankruptcy.reasons.consult');
+      reason = t('bankruptcy.reasons.judicial');
+    } else if (debt > 0) {
+      procedure = 'notYet';
+      reason = t('bankruptcy.reasons.notYet');
     }
 
-    // Стоимость процедур (ориентир)
-    const costs = {
-      extraJudicial: 0, // бесплатно через ЦОН
-      judicial: 300000, // юрист + госпошлина + фин. управляющий
-      restructuring: 250000,
+    // Ориентир расходов. Судебное: вознаграждение финансового управляющего — 1 МЗП в месяц (ст. 23 п. 3),
+    // процедура до 6 месяцев (ст. 37 п. 1) + госпошлина 0,3 МРП (НК ст. 665). Раньше стояло «~300 000».
+    const costs: Record<Procedure, number> = {
+      extraJudicial: 0, // бесплатно через ЦОН / eGov
+      judicial: Math.round(6 * MZP_2026 + 0.3 * MRP_2026),
+      restructuring: Math.round(0.3 * MRP_2026),
       none: 0,
+      notYet: 0,
     };
 
     return {
@@ -132,12 +139,14 @@ export default function BankruptcyCalculator() {
 
           <div className={`rounded-lg p-6 border-2 ${
             results.procedure === 'none' ? 'bg-green-50 border-green-300' :
+            results.procedure === 'notYet' ? 'bg-gray-50 border-gray-300' :
             results.procedure === 'extraJudicial' ? 'bg-blue-50 border-blue-300' :
             'bg-amber-50 border-amber-300'
           }`}>
             <div className="text-sm text-gray-600">{t('bankruptcy.recommendation')}</div>
             <div className={`text-xl font-bold mt-1 ${
               results.procedure === 'none' ? 'text-green-700' :
+              results.procedure === 'notYet' ? 'text-gray-700' :
               results.procedure === 'extraJudicial' ? 'text-blue-700' :
               'text-amber-700'
             }`}>
@@ -170,7 +179,8 @@ export default function BankruptcyCalculator() {
           {results.cost > 0 && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <div className="text-sm text-amber-900">{t('bankruptcy.procedureCost')}</div>
-              <div className="text-2xl font-bold text-amber-700">~{formatNumber(results.cost)}</div>
+              <div className="text-2xl font-bold text-amber-700">{results.procedure === 'judicial' ? `${t('bankruptcy.costFrom')} ` : ''}{formatNumber(results.cost)}</div>
+              <div className="text-xs text-amber-800 mt-1">{t(results.procedure === 'judicial' ? 'bankruptcy.costJudicialHint' : 'bankruptcy.costRestructuringHint')}</div>
             </div>
           )}
 
