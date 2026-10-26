@@ -10,6 +10,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { formatLongDate, toUiLang } from '../../utils/localeFormat';
+import { isWorkingDay, parseIsoDate } from '../../utils/workingTime';
 
 /**
  * Согласование числительного с существительным.
@@ -31,6 +32,8 @@ type Category =
   | 'inheritance' | 'property';
 
 interface Rule {
+  /** Давность не распространяется (КоБС ст. 8 п. 1 и т. п.) — дату окончания не считаем. */
+  noLimit?: boolean;
   years: number;
   months?: number;
   days?: number;
@@ -42,22 +45,35 @@ const RULES: Record<Category, Rule> = {
   general:      { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
   contract:     { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
   loan:         { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
-  salary:       { years: 1, article: 'ст. 164 ТК РК', articleKk: 'ҚР ЕК 164-бабы' },
-  damage:       { years: 3, article: 'ст. 178 ГК РК', articleKk: 'ҚР АК 178-бабы' },
-  family:       { years: 3, article: 'ст. 9 КоБС РК', articleKk: 'ҚР НОБК 9-бабы' },
+  // Ст. 160 ТК (1 год) — в истолковании НП Конституционного суда от 08.06.2026 № 81-НП: зарплату и иные
+  // выплаты по оплате труда взыскивают в пределах общего 3-летнего срока (ст. 178 ГК). Было: «1 год, ст. 164».
+  salary:       { years: 3, article: 'ст. 178 ГК, ст. 160 ТК (НП КС № 81-НП от 08.06.2026)', articleKk: 'АК 178-бабы, ЕК 160-бабы (ҚР СК № 81-НҚ 08.06.2026)' },
+  damage:       { years: 3, article: 'ст. 178 ГК РК (вред жизни и здоровью — без давности, ст. 187 пп. 3)', articleKk: 'ҚР АК 178-бабы (өмір мен денсаулыққа зиян — мерзімсіз, 187-бап 3) тт.)' },
+  // КоБС ст. 8 п. 1: давность на семейные требования не распространяется (кроме сроков, установленных
+  // самим Кодексом, напр. ст. 37 п. 6). Было «3 года, ст. 9» — ст. 9 об условиях заключения брака.
+  family:       { noLimit: true, years: 0, article: 'ст. 8 п. 1 КоБС РК', articleKk: 'ҚР НОБК 8-бабы 1-т.' },
   tax:          { years: 3, article: 'ст. 65 НК РК (5 лет — крупный бизнес/недропользователи)', articleKk: 'ҚР СК 65-бабы (5 жыл — ірі бизнес/жер қойнауын пайдаланушылар)' }, // НК РК 2026 (№214-VIII): по умолч. 3 года
   labor:        { years: 0, months: 1, article: 'ст. 160 ТК РК (восстановление → согласит. комиссия)', articleKk: 'ҚР ЕК 160-бабы (жұмысқа қайта алу → келісім комиссиясы)' }, // 1 мес в комиссию; 2 мес в суд; иные споры — 1 год
   adminFine:    { years: 0, months: 2, article: 'ст. 62 КоАП РК (общий срок; 1 год — налоги/таможня для физлиц)', articleKk: 'ӘҚБтК 62-бабы (жалпы мерзім; жеке тұлғаларға салық/кеден — 1 жыл)' }, // общий срок давности — 2 месяца
   criminal:     { years: 2, article: 'ст. 71 УК РК (небольшая тяжесть)', articleKk: 'ҚР ҚК 71-бабы (онша ауыр емес)' },
-  inheritance:  { years: 0, months: 6, article: 'ст. 1072 ГК РК (принятие)', articleKk: 'ҚР АК 1072-бабы (қабылдау)' },
+  inheritance:  { years: 0, months: 6, article: 'ст. 1072-2 ГК РК (принятие)', articleKk: 'ҚР АК 1072-2-бабы (қабылдау)' },
   property:     { years: 7, article: 'ст. 240 ГК РК (недвижимость; иное имущество — 5 лет)', articleKk: 'ҚР АК 240-бабы (жылжымайтын мүлік; өзге мүлік — 5 жыл)' }, // приобретательная давность: 7 лет недвижимость / 5 лет иное
 };
 
+/**
+ * Окончание срока по ГК ст. 174–175: срок в годах/месяцах истекает в соответствующее число последнего
+ * месяца; если такого числа нет — в последний день месяца (31.10 + 1 мес = 30.11, а не 01.12, как давал
+ * setMonth); если последний день нерабочий — в ближайший рабочий день. Праздники в isWorkingDay — по
+ * календарю 2026 года, для других лет учитываются только выходные.
+ */
 function addYearsAndMonths(date: Date, years: number, months: number, days: number = 0): Date {
-  const d = new Date(date);
-  d.setFullYear(d.getFullYear() + years);
-  d.setMonth(d.getMonth() + months);
+  const total = date.getMonth() + months;
+  const y = date.getFullYear() + years + Math.floor(total / 12);
+  const m = ((total % 12) + 12) % 12;
+  const lastDay = new Date(y, m + 1, 0).getDate();
+  const d = new Date(y, m, Math.min(date.getDate(), lastDay));
   d.setDate(d.getDate() + days);
+  while (!isWorkingDay(d)) d.setDate(d.getDate() + 1);
   return d;
 }
 
@@ -69,10 +85,11 @@ export default function StatuteLimitationsCalculator() {
 
   const results = useMemo(() => {
     if (!eventDate) return null;
-    const start = new Date(eventDate);
-    if (isNaN(start.getTime())) return null;
+    const start = parseIsoDate(eventDate);
+    if (!start) return null;
 
     const rule = RULES[category];
+    if (rule.noLimit) return { noLimit: true as const, expiryDate: '', daysRemaining: 0, isExpired: false, rule };
     const expiryDate = addYearsAndMonths(start, rule.years, rule.months || 0, rule.days || 0);
     const today = new Date();
     const msRemaining = expiryDate.getTime() - today.getTime();
@@ -80,6 +97,7 @@ export default function StatuteLimitationsCalculator() {
     const isExpired = daysRemaining <= 0;
 
     return {
+      noLimit: false as const,
       expiryDate: formatLongDate(expiryDate, lang),
       daysRemaining: Math.abs(daysRemaining),
       isExpired,
@@ -119,7 +137,7 @@ export default function StatuteLimitationsCalculator() {
                 className={`p-3 rounded-lg border text-sm text-left ${category === c ? 'bg-slate-700 text-white border-slate-700' : 'bg-white border-gray-300'}`}>
                 <div className="font-medium">{t(`statute-limitations.categories.${c}`)}</div>
                 <div className={`text-xs ${category === c ? 'text-slate-200' : 'text-gray-500'}`}>
-                  {RULES[c].years ? `${RULES[c].years} ${t('statute-limitations.years')}` : `${RULES[c].months} ${t('statute-limitations.months')}`}
+                  {RULES[c].noLimit ? t('statute-limitations.noLimitShort') : RULES[c].years ? `${RULES[c].years} ${t('statute-limitations.years')}` : `${RULES[c].months} ${t('statute-limitations.months')}`}
                 </div>
               </button>
             ))}
@@ -133,7 +151,15 @@ export default function StatuteLimitationsCalculator() {
           <p className="text-xs text-gray-500 mt-1">{t('statute-limitations.eventDateHint')}</p>
         </div>
 
-        {results && (
+        {results && results.noLimit && (
+          <div className="rounded-lg p-6 border-2 bg-blue-50 border-blue-300">
+            <div className="text-sm text-gray-600">{t('statute-limitations.status')}</div>
+            <div className="text-2xl font-bold text-blue-700">{t('statute-limitations.noLimitShort')}</div>
+            <div className="text-sm mt-2">{t('statute-limitations.noLimitFamily')}</div>
+          </div>
+        )}
+
+        {results && !results.noLimit && (
           <>
             <div className={`rounded-lg p-6 border-2 ${results.isExpired ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300'}`}>
               <div className="flex items-start gap-3">
@@ -181,7 +207,7 @@ export default function StatuteLimitationsCalculator() {
         </div>
       </div>
 
-      {results && (
+      {results && !results.noLimit && (
         <div className="mt-8">
           <ExportButtons
             data={{
