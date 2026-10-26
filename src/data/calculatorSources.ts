@@ -410,7 +410,9 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'Krisha.kz — рынок недвижимости', url: 'https://krisha.kz/' },
   ],
   'apartment-valuation': [
-    { title: 'Krisha.kz — оценка квартир', url: 'https://krisha.kz/' },
+    STAT,
+    { title: 'Krisha.kz — рынок недвижимости', url: 'https://krisha.kz/' },
+    { title: 'Закон РК «Об оценочной деятельности»', url: 'https://adilet.zan.kz/rus/docs/Z1800000133' },
   ],
   'cost-of-living': [STAT, NBK],
 };
@@ -516,6 +518,7 @@ const SOURCE_TITLE_KK: Record<string, string> = {
   "Земельный кодекс РК": "ҚР Жер кодексі",
   "Krisha.kz — рынок недвижимости": "Krisha.kz — жылжымайтын мүлік нарығы",
   "Krisha.kz — оценка квартир": "Krisha.kz — пәтерлерді бағалау",
+  "Закон РК «Об оценочной деятельности»": "ҚР «Бағалау қызметі туралы» Заңы",
 };
 
 export function getSources(

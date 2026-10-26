@@ -1168,7 +1168,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'apartment-valuation',
         title: 'Оценка стоимости квартиры',
-        description: 'Оценка квартиры по 7 городам РК с учётом материала, года и ремонта',
+        description: 'Оценка квартиры по средним ценам БНС с учётом района, материала, года дома и ремонта',
         category: 'real-estate',
         icon: 'Home',
         component: React.lazy(() => import('../components/calculators/ApartmentValuationCalculator'))

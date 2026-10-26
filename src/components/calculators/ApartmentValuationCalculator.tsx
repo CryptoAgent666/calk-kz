@@ -18,22 +18,25 @@ interface CityPrices {
   center: number;
   middle: number;
   outskirts: number;
+  parking: number;
 }
 
+// middle — средняя цена перепродажи квартир за м² по БНС за сентябрь 2026 (other — медиана остальных
+// областных центров); center ≈ ×1,4, outskirts ≈ ×0,67. parking — медиана объявлений krisha.kz,
+// октябрь 2026 (Алматы, Астана, Шымкент), в остальных городах ≈ 5 м² жилья по средней цене.
 const cities: CityPrices[] = [
-  { id: 'almaty',    labelKey: 'apartment-valuation.cities.almaty',    center: 850000, middle: 600000, outskirts: 400000 },
-  { id: 'astana',    labelKey: 'apartment-valuation.cities.astana',    center: 750000, middle: 520000, outskirts: 350000 },
-  { id: 'shymkent',  labelKey: 'apartment-valuation.cities.shymkent',  center: 450000, middle: 350000, outskirts: 250000 },
-  { id: 'karaganda', labelKey: 'apartment-valuation.cities.karaganda', center: 380000, middle: 280000, outskirts: 200000 },
-  { id: 'aktobe',    labelKey: 'apartment-valuation.cities.aktobe',    center: 400000, middle: 300000, outskirts: 220000 },
-  { id: 'atyrau',    labelKey: 'apartment-valuation.cities.atyrau',    center: 520000, middle: 380000, outskirts: 260000 },
-  { id: 'other',     labelKey: 'apartment-valuation.cities.other',     center: 300000, middle: 230000, outskirts: 170000 },
+  { id: 'almaty',    labelKey: 'apartment-valuation.cities.almaty',    center: 1060000, middle: 760000, outskirts: 510000, parking: 5000000 },
+  { id: 'astana',    labelKey: 'apartment-valuation.cities.astana',    center: 1040000, middle: 740000, outskirts: 500000, parking: 3600000 },
+  { id: 'shymkent',  labelKey: 'apartment-valuation.cities.shymkent',  center: 660000,  middle: 470000, outskirts: 310000, parking: 2000000 },
+  { id: 'karaganda', labelKey: 'apartment-valuation.cities.karaganda', center: 570000,  middle: 410000, outskirts: 270000, parking: 2000000 },
+  { id: 'aktobe',    labelKey: 'apartment-valuation.cities.aktobe',    center: 530000,  middle: 380000, outskirts: 250000, parking: 1900000 },
+  { id: 'atyrau',    labelKey: 'apartment-valuation.cities.atyrau',    center: 740000,  middle: 530000, outskirts: 360000, parking: 2600000 },
+  { id: 'other',     labelKey: 'apartment-valuation.cities.other',     center: 560000,  middle: 400000, outskirts: 270000, parking: 2000000 },
 ];
 
 type Zone = 'center' | 'middle' | 'outskirts';
 type Material = 'panel' | 'brick' | 'monolith';
 type Condition = 'none' | 'soviet' | 'cosmetic' | 'modern' | 'luxury';
-type Rooms = 'studio' | '1' | '2' | '3' | '4+';
 
 const materialCoef: Record<Material, number> = { panel: 0.92, brick: 1.05, monolith: 1.10 };
 const conditionCoef: Record<Condition, number> = { none: 0.85, soviet: 0.90, cosmetic: 1.00, modern: 1.10, luxury: 1.20 };
@@ -44,7 +47,6 @@ export default function ApartmentValuationCalculator() {
   const [cityId, setCityId] = useState<string>('almaty');
   const [zone, setZone] = useState<Zone>('middle');
   const [area, setArea] = useState<string>('60');
-  const [rooms, setRooms] = useState<Rooms>('2');
   const [floor, setFloor] = useState<string>('5');
   const [totalFloors, setTotalFloors] = useState<string>('9');
   const [material, setMaterial] = useState<Material>('brick');
@@ -61,8 +63,8 @@ export default function ApartmentValuationCalculator() {
 
   const result = useMemo(() => {
     const a = Math.max(0, parseFloat(area) || 0);
-    const fl = Math.max(1, parseInt(floor) || 1);
     const tfl = Math.max(1, parseInt(totalFloors) || 1);
+    const fl = Math.min(tfl, Math.max(1, parseInt(floor) || 1));
     const year = parseInt(yearBuilt) || 2000;
     const bArea = Math.max(0, parseFloat(balconyArea) || 0);
 
@@ -94,7 +96,7 @@ export default function ApartmentValuationCalculator() {
     const baseValue = basePricePerM2 * a;
     let estimated = baseValue * totalCoef;
 
-    const parkingAdd = parking ? 800000 : 0;
+    const parkingAdd = parking ? city.parking : 0;
     const storageAdd = storage ? 200000 : 0;
     estimated += parkingAdd + storageAdd;
 
@@ -138,7 +140,6 @@ export default function ApartmentValuationCalculator() {
           { label: t('apartment-valuation.city'), value: t(city.labelKey) },
           { label: t('apartment-valuation.zone'), value: t(`apartment-valuation.zones.${zone}`) },
           { label: t('apartment-valuation.area'), value: `${area} м²` },
-          { label: t('apartment-valuation.rooms'), value: t(`apartment-valuation.roomsOpt.${rooms}`) },
           { label: t('apartment-valuation.floor'), value: `${floor} / ${totalFloors}` },
           { label: t('apartment-valuation.material'), value: t(`apartment-valuation.materials.${material}`) },
           { label: t('apartment-valuation.yearBuilt'), value: yearBuilt },
@@ -227,39 +228,25 @@ export default function ApartmentValuationCalculator() {
               </div>
             </div>
 
-            {/* Area + rooms */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Ruler className="w-4 h-4 inline mr-1" />
-                  {t('apartment-valuation.area')}
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={area}
-                    onChange={(e) => setArea(e.target.value)}
-                    min="10"
-                    max="500"
-                    step="0.1"
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                  />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500 text-sm">м²</span>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('apartment-valuation.rooms')}</label>
-                <select
-                  value={rooms}
-                  onChange={(e) => setRooms(e.target.value as Rooms)}
+            {/* Area */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Ruler className="w-4 h-4 inline mr-1" />
+                {t('apartment-valuation.area')}
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  min="10"
+                  max="500"
+                  step="0.1"
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                >
-                  {(['studio', '1', '2', '3', '4+'] as Rooms[]).map((r) => (
-                    <option key={r} value={r}>{t(`apartment-valuation.roomsOpt.${r}`)}</option>
-                  ))}
-                </select>
+                />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500 text-sm">м²</span>
+                </div>
               </div>
             </div>
 
