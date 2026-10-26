@@ -30,7 +30,7 @@ const LAST_UPDATED: Record<string, string> = {
   'kdif-guarantee': '2026-10-26', // calkcheck б16: выплата не позднее 20 рабочих дней (ст. 21)
   'bad-habits-cost': '2026-07-11',
   'mortgage-compare': '2026-10-26', // calkcheck 26.10 б17: Наурыз/Отау в две стадии, «выгоднее» по переплате
-  'mrp-converter': '2026-10-06', // calkcheck 06.10 б8: формулировка критерия 12 МЗП
+  'mrp-converter': '2026-10-27',
   'house-heating': '2026-10-26', // calkcheck 26.10 б17: климат, газ 45 ₸, COP 2,5
   'ip-payments': '2026-07-11',
   'dividend-tax': '2026-07-10',

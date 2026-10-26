@@ -25,8 +25,10 @@ const HISTORY: { year: number; mrp: number; mzp: number }[] = [
   { year: 2024, mrp: 3692, mzp: 85000 },
   { year: 2023, mrp: 3450, mzp: 70000 },
 ];
-// Частые пороги в МРП (для справочной таблицы)
+// Частые пороги (для справочной таблицы): МРП — от штрафов и пошлин до вычетов и лимитов,
+// МЗП — кратности, в которых считают пособия и выплаты.
 const COMMON_MRP = [1, 5, 10, 20, 30, 50, 100, 200, 500, 1000];
+const COMMON_MZP = [1, 2, 3, 4, 5, 7, 10, 15, 20, 25];
 
 type Unit = 'mrp' | 'mzp';
 type Direction = 'toKzt' | 'fromKzt';
@@ -52,6 +54,18 @@ export default function MrpConverterCalculator() {
   );
 
   const fmt = (n: number) => n.toLocaleString('ru-KZ', { maximumFractionDigits: 2 });
+  // Перевод тенге в МРП/МЗП даёт доли единицы — показываем до 4 знаков, иначе 10 ₸ = «0 МРП».
+  const fmtUnits = (n: number) => n.toLocaleString('ru-KZ', { maximumFractionDigits: 4 });
+  const commonValues = unit === 'mrp' ? COMMON_MRP : COMMON_MZP;
+
+  // При смене направления пересчитываем введённое значение, чтобы пара оставалась равной
+  // (10 МРП → 43 250 ₸), а не превращалась в «10 ₸ = 0,0023 МРП».
+  const switchDirection = (d: Direction) => {
+    if (d === direction) return;
+    const a = parseFloat(amount) || 0;
+    setAmount(String(d === 'fromKzt' ? Math.round(a * rate) : Math.round((a / rate) * 100) / 100));
+    setDirection(d);
+  };
   const unitName = t(`mrp-converter.unit_${unit}`);
 
   const generateExportData = () => {
@@ -59,7 +73,7 @@ export default function MrpConverterCalculator() {
     if (a <= 0) return '';
     return direction === 'toKzt'
       ? `${fmt(a)} ${unitName} = ${fmt(result)} ₸ (${t('mrp-converter.year2026')})`
-      : `${fmt(a)} ₸ = ${fmt(result)} ${unitName} (${t('mrp-converter.year2026')})`;
+      : `${fmt(a)} ₸ = ${fmtUnits(result)} ${unitName} (${t('mrp-converter.year2026')})`;
   };
 
   return (
@@ -99,7 +113,7 @@ export default function MrpConverterCalculator() {
               {(['toKzt', 'fromKzt'] as Direction[]).map((d) => (
                 <button
                   key={d}
-                  onClick={() => setDirection(d)}
+                  onClick={() => switchDirection(d)}
                   className={`px-4 py-2.5 rounded-lg border text-xs font-medium transition-colors ${
                     direction === d ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
                   }`}
@@ -146,14 +160,14 @@ export default function MrpConverterCalculator() {
             <div className="flex items-center space-x-2">
               <Calculator className="w-5 h-5 text-cyan-600" />
               <span className="text-2xl font-bold text-cyan-700">
-                {fmt(result)} {direction === 'toKzt' ? '₸' : unitName}
+                {direction === 'toKzt' ? `${fmt(result)} ₸` : `${fmtUnits(result)} ${unitName}`}
               </span>
             </div>
           </div>
 
           <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('mrp-converter.tableTitle', { unit: unitName })}</h3>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
-            {COMMON_MRP.map((n) => (
+            {commonValues.map((n) => (
               <div key={n} className="flex justify-between border-b border-gray-100 py-1 text-sm">
                 <span className="text-gray-600">{n} {unitName}</span>
                 <span className="font-medium text-gray-900">{fmt(n * rate)} ₸</span>
