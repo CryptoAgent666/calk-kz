@@ -12,11 +12,11 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
+/** Пороги уровня — на ОДНОГО проживающего; для квартиры умножаются на число проживающих. */
 interface TariffTier {
   min: number;
   max: number;
   rate: number;
-  descriptionKey: string;
 }
 
 interface CityTariff {
@@ -31,81 +31,90 @@ export default function ElectricityBillCalculator() {
   const [city, setCity] = useState<string>('astana');
   const [consumption, setConsumption] = useState<string>('150');
   const [stoveType, setStoveType] = useState<'electric' | 'gas'>('electric');
+  const [residents, setResidents] = useState<string>('2');
 
   const EMPTY_RESULTS = {
     totalAmount: 0,
-    breakdown: [] as Array<{tier: number, consumption: number, rate: number, amount: number, descriptionKey: string}>,
+    breakdown: [] as Array<{tier: number, consumption: number, rate: number, amount: number, label: string}>,
     averageRate: 0,
     recommendationKey: ''
   };
 
-  // Тарифы с НДС 16% (calkcheck 06.10.2026, б8):
-  // Алматы — «Алатау жарық компаниясы» — «Энергосбыт», с 12.09.2026: 29,55 / 39,23 / 49,04 без НДС
-  //   (bes.media). Было 31,85 / 42,10 / 52,63 — до повышения.
-  // Астана — с 01.06.2026 (электроплита 20,21 / 29,09 / 36,36, без плиты 21,39 / 29,09 / 36,36 без НДС;
-  //   inbusiness.kz, 26.05.2026). Было 33,18 / 43,86 / 54,83 — на ~40% выше факта. На 1 октября 2026
-  //   заявлено новое повышение (bes.media, 24.09.2026) — пересмотреть, когда утвердят.
-  // Шымкент — «Оңтүстік Жарық Транзит», утверждено с 01.08.2025 (24,248 / 25,424 / 31,976 / 39,9728
-  //   с НДС 12%), пересчитано на НДС 16%. Было 36,77 / 48,47 / 60,61.
+  // Тарифы с НДС, пороги — на одного постоянно проживающего (calkcheck 26.10.2026, б17). До этого
+  // пороги считались на квартиру: для семьи из 3 человек в Алматы 200 кВт·ч выходили 7 979 ₸ вместо 6 856 ₸.
+  // Алматы — «Алатау Жарық Компаниясы» — «Энергосбыт», с 12.09.2026: 34,28 / 45,51 / 56,89 ₸ (esalmaty.kz);
+  //   без электроплиты ≤90 / 90–160 / >160, с электроплитой ≤115 / 115–190 / >190 кВт·ч на человека.
+  // Астана — «Астана-РЭК», с 15.10.2026 (заключение ДКРЕМ № 03-04/412-И от 09.10.2026, astrec.kz):
+  //   с электроплитой 25,54 / 37,43 / 46,79 (≤90 / 90–180 / >180), без — 26,98 / 37,43 / 46,79 (≤70 / 70–140 / >140).
+  // Шымкент — «Оңтүстік Жарық Транзит», с 25.09.2026 (заключение ДКРЕМ № 61-04-13/1768 от 23.09.2026):
+  //   без электроплиты 25,4968 / 32,8744 / 41,0988 (≤90 / 90–150 / >150), с электроплитой 26,1232 /
+  //   32,8744 / 41,0988 (≤110 / 110–170 / >170).
   // Прочие регионы — ориентир, сверяйте с вашим поставщиком.
   const cityTariffs: CityTariff[] = [
     {
       id: 'astana',
       nameKey: 'calculators:electricity.cityAstana',
       electricStove: [
-        { min: 0, max: 90, rate: 23.44, descriptionKey: 'calculators:electricity.tier1Electric90' },
-        { min: 90, max: 180, rate: 33.74, descriptionKey: 'calculators:electricity.tier2Electric90_180' },
-        { min: 180, max: Infinity, rate: 42.18, descriptionKey: 'calculators:electricity.tier3Electric180' }
+        { min: 0, max: 90, rate: 25.54 },
+        { min: 90, max: 180, rate: 37.43 },
+        { min: 180, max: Infinity, rate: 46.79 }
       ],
       gasStove: [
-        { min: 0, max: 70, rate: 24.81, descriptionKey: 'calculators:electricity.tier1Gas70' },
-        { min: 70, max: 140, rate: 33.74, descriptionKey: 'calculators:electricity.tier2Gas70_140' },
-        { min: 140, max: Infinity, rate: 42.18, descriptionKey: 'calculators:electricity.tier3Gas140' }
+        { min: 0, max: 70, rate: 26.98 },
+        { min: 70, max: 140, rate: 37.43 },
+        { min: 140, max: Infinity, rate: 46.79 }
       ]
     },
     {
       id: 'almaty',
       nameKey: 'calculators:electricity.cityAlmaty',
       electricStove: [
-        { min: 0, max: 100, rate: 34.28, descriptionKey: 'calculators:electricity.tier1Electric100' },
-        { min: 100, max: 200, rate: 45.51, descriptionKey: 'calculators:electricity.tier2Electric100_200' },
-        { min: 200, max: Infinity, rate: 56.89, descriptionKey: 'calculators:electricity.tier3Electric200' }
+        { min: 0, max: 115, rate: 34.28 },
+        { min: 115, max: 190, rate: 45.51 },
+        { min: 190, max: Infinity, rate: 56.89 }
       ],
       gasStove: [
-        { min: 0, max: 80, rate: 34.28, descriptionKey: 'calculators:electricity.tier1Gas80' },
-        { min: 80, max: 160, rate: 45.51, descriptionKey: 'calculators:electricity.tier2Gas80_160' },
-        { min: 160, max: Infinity, rate: 56.89, descriptionKey: 'calculators:electricity.tier3Gas160' }
+        { min: 0, max: 90, rate: 34.28 },
+        { min: 90, max: 160, rate: 45.51 },
+        { min: 160, max: Infinity, rate: 56.89 }
       ]
     },
     {
       id: 'shymkent',
       nameKey: 'calculators:electricity.cityShymkent',
       electricStove: [
-        { min: 0, max: 85, rate: 25.11, descriptionKey: 'calculators:electricity.tier1Electric85' },
-        { min: 85, max: 170, rate: 33.12, descriptionKey: 'calculators:electricity.tier2Electric85_170' },
-        { min: 170, max: Infinity, rate: 41.40, descriptionKey: 'calculators:electricity.tier3Electric170' }
+        { min: 0, max: 110, rate: 26.1232 },
+        { min: 110, max: 170, rate: 32.8744 },
+        { min: 170, max: Infinity, rate: 41.0988 }
       ],
       gasStove: [
-        { min: 0, max: 65, rate: 26.33, descriptionKey: 'calculators:electricity.tier1Gas65' },
-        { min: 65, max: 130, rate: 33.12, descriptionKey: 'calculators:electricity.tier2Gas65_130' },
-        { min: 130, max: Infinity, rate: 41.40, descriptionKey: 'calculators:electricity.tier3Gas130' }
+        { min: 0, max: 90, rate: 25.4968 },
+        { min: 90, max: 150, rate: 32.8744 },
+        { min: 150, max: Infinity, rate: 41.0988 }
       ]
     },
     {
       id: 'other',
       nameKey: 'calculators:electricity.otherRegions',
       electricStove: [
-        { min: 0, max: 75, rate: 28.31, descriptionKey: 'calculators:electricity.tier1Electric75' },
-        { min: 75, max: 150, rate: 42.47, descriptionKey: 'calculators:electricity.tier2Electric75_150' },
-        { min: 150, max: Infinity, rate: 53.09, descriptionKey: 'calculators:electricity.tier3Electric150' }
+        { min: 0, max: 75, rate: 28.31 },
+        { min: 75, max: 150, rate: 42.47 },
+        { min: 150, max: Infinity, rate: 53.09 }
       ],
       gasStove: [
-        { min: 0, max: 60, rate: 28.31, descriptionKey: 'calculators:electricity.tier1Gas60' },
-        { min: 60, max: 120, rate: 42.47, descriptionKey: 'calculators:electricity.tier2Gas60_120' },
-        { min: 120, max: Infinity, rate: 53.09, descriptionKey: 'calculators:electricity.tier3Gas120' }
+        { min: 0, max: 60, rate: 28.31 },
+        { min: 60, max: 120, rate: 42.47 },
+        { min: 120, max: Infinity, rate: 53.09 }
       ]
     }
   ];
+
+  const residentsCount = Math.max(1, Math.round(parseFloat(residents) || 1));
+  const tierLabel = (tier: TariffTier, n = residentsCount) => tier.max === Infinity
+    ? t('electricity.tierAbove', { min: tier.min * n })
+    : tier.min === 0
+      ? t('electricity.tierFirst', { max: tier.max * n })
+      : t('electricity.tierRange', { min: tier.min * n, max: tier.max * n });
 
   const calculateElectricityBill = () => {
     const kwhConsumed = parseFloat(consumption) || 0;
@@ -128,7 +137,7 @@ export default function ElectricityBillCalculator() {
 
       if (remainingConsumption <= 0) break;
 
-      const tierMax = tariff.max === Infinity ? remainingConsumption : Math.min(tariff.max - tariff.min, remainingConsumption);
+      const tierMax = tariff.max === Infinity ? remainingConsumption : Math.min((tariff.max - tariff.min) * residentsCount, remainingConsumption);
       const tierConsumption = Math.min(tierMax, remainingConsumption);
 
       if (tierConsumption > 0) {
@@ -140,7 +149,7 @@ export default function ElectricityBillCalculator() {
           consumption: tierConsumption,
           rate: tariff.rate,
           amount: tierAmount,
-          descriptionKey: tariff.descriptionKey
+          label: tierLabel(tariff)
         });
 
         remainingConsumption -= tierConsumption;
@@ -174,7 +183,7 @@ export default function ElectricityBillCalculator() {
   const results = useMemo(
     calculateElectricityBill,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [city, consumption, stoveType, i18n.language]
+    [city, consumption, stoveType, residents, i18n.language]
   );
 
   const formatNumber = (num: number) => {
@@ -259,6 +268,23 @@ export default function ElectricityBillCalculator() {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('electricity.residentsLabel')}
+              </label>
+              <RangeSlider
+                ariaLabel={t('electricity.residentsLabel')}
+                value={residentsCount}
+                onChange={(val) => setResidents(String(val))}
+                min={1}
+                max={10}
+                step={1}
+                formatValue={(v) => `${v}`}
+                color="#eab308"
+              />
+              <p className="text-xs text-gray-500 mt-1">{t('electricity.residentsHint')}</p>
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 {t('electricity.stoveType')}
               </label>
@@ -297,7 +323,7 @@ export default function ElectricityBillCalculator() {
               <div className="space-y-1 text-xs text-blue-800">
                 {currentTariffs.map((tariff, index) => (
                   <div key={index}>
-                    • {t(tariff.descriptionKey)}: <strong>{formatRate(tariff.rate)}</strong>
+                    • {tierLabel(tariff)}: <strong>{formatRate(tariff.rate)}</strong>
                   </div>
                 ))}
               </div>
@@ -333,7 +359,7 @@ export default function ElectricityBillCalculator() {
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <div className="font-medium text-gray-900">
-                            {t('electricity.level')} {item.tier}: {t(item.descriptionKey)}
+                            {t('electricity.level')} {item.tier}: {item.label}
                           </div>
                           <div className="text-sm text-gray-600">
                             {item.consumption.toFixed(1)} кВт·ч × {formatRate(item.rate)}
@@ -407,15 +433,15 @@ export default function ElectricityBillCalculator() {
                   <td className="py-3 px-4 font-medium text-gray-900">{t(cityData.nameKey)}</td>
                   <td className="py-3 px-4 text-center text-sm">
                     <div>{formatRate(cityData.electricStove[0].rate)}</div>
-                    <div className="text-xs text-gray-500">{t(cityData.electricStove[0].descriptionKey)}</div>
+                    <div className="text-xs text-gray-500">{tierLabel(cityData.electricStove[0], 1)} {t('electricity.perPerson')}</div>
                   </td>
                   <td className="py-3 px-4 text-center text-sm">
                     <div>{formatRate(cityData.electricStove[1].rate)}</div>
-                    <div className="text-xs text-gray-500">{t(cityData.electricStove[1].descriptionKey)}</div>
+                    <div className="text-xs text-gray-500">{tierLabel(cityData.electricStove[1], 1)} {t('electricity.perPerson')}</div>
                   </td>
                   <td className="py-3 px-4 text-center text-sm">
                     <div>{formatRate(cityData.electricStove[2].rate)}</div>
-                    <div className="text-xs text-gray-500">{t(cityData.electricStove[2].descriptionKey)}</div>
+                    <div className="text-xs text-gray-500">{tierLabel(cityData.electricStove[2], 1)} {t('electricity.perPerson')}</div>
                   </td>
                 </tr>
               ))}
