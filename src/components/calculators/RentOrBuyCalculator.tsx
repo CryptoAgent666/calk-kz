@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Home, Calculator, TrendingUp, TrendingDown, DollarSign, PieChart, BarChart3, Info, AlertTriangle, Building, Key, Percent } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
@@ -18,7 +18,6 @@ import { NUMBER_LOCALE } from '../../utils/localeFormat';
 export default function RentOrBuyCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
-  const [downPayment, setDownPayment] = useState<string>('5000000');
   const [downPaymentPercent, setDownPaymentPercent] = useState<string>('20');
   // Дефолты приведены к рынку 2026: рыночная ипотека ~21% номинал (вторичка,
   // сверено 07.2026; льготные 7-20-25/Наурыз — ниже, меняется в поле),
@@ -40,6 +39,7 @@ export default function RentOrBuyCalculator() {
   // если первый клиентский рендер отдаёт нули — React валит гидратацию (#418/#425).
   const EMPTY_RESULTS = {
     loanAmount: 0,
+    downPayment: 0,
     monthlyMortgagePayment: 0,
     totalMortgagePayments: 0,
     totalInterestPaid: 0,
@@ -71,7 +71,9 @@ export default function RentOrBuyCalculator() {
 
   const calculateComparison = () => {
     const price = parseFloat(propertyPrice) || 0;
-    const downPay = parseFloat(downPayment) || 0;
+    // Взнос считаем прямо из цены и процента: раньше он жил в отдельном состоянии, которое эффект обновлял
+    // только при проценте > 0 — при 0% на экране «0 ₸», а в расчёте оставались прежние 5 млн.
+    const downPay = price * Math.max(0, parseFloat(downPaymentPercent) || 0) / 100;
     const mortgageRateDecimal = (parseFloat(mortgageRate) || 0) / 100;
     const termYears = parseInt(mortgageTermYears) || 20;
     const rent = parseFloat(monthlyRent) || 0;
@@ -116,7 +118,12 @@ export default function RentOrBuyCalculator() {
 
     const propertyValueAtEnd = price * Math.pow(1 + propertyGrowthRate, years);
 
-    const netOwnershipCost = totalOwnershipCosts - (propertyValueAtEnd - remainingBalance);
+    // Упущенный доход от первоначального взноса — издержка ПОКУПАТЕЛЯ: эти деньги он вложил в квартиру,
+    // а арендатор держит их на вкладе. До 26.10.2026 доход прибавлялся к стоимости аренды, и чем выше
+    // доходность, тем «выгоднее» выглядела покупка: по умолчанию «покупка выгоднее на 4,3 млн» вместо
+    // «аренда выгоднее на 22,7 млн».
+    const opportunityCostOfDownPayment = downPay * Math.pow(1 + opportunityRate, years) - downPay;
+    const netOwnershipCost = totalOwnershipCosts + opportunityCostOfDownPayment - (propertyValueAtEnd - remainingBalance);
 
     let totalRentPaid = 0;
     let currentMonthlyRent = rent;
@@ -126,9 +133,7 @@ export default function RentOrBuyCalculator() {
       currentMonthlyRent *= (1 + rentIncreaseRate);
     }
 
-    const opportunityCostOfDownPayment = downPay * Math.pow(1 + opportunityRate, years) - downPay;
-
-    const totalRentingCost = totalRentPaid + opportunityCostOfDownPayment;
+    const totalRentingCost = totalRentPaid;
 
     const difference = totalRentingCost - netOwnershipCost;
     const isRentingBetter = difference < 0;
@@ -164,10 +169,9 @@ export default function RentOrBuyCalculator() {
 
       const equityThisYear = propertyValueThisYear - Math.max(0, loanAmount - (loanAmount - currentBalance));
 
-      const netOwnershipCostThisYear = cumulativeOwnership - equityThisYear;
-
       const opportunityCostThisYear = downPay * Math.pow(1 + opportunityRate, year) - downPay;
-      const totalRentingCostThisYear = cumulativeRenting + opportunityCostThisYear;
+      const netOwnershipCostThisYear = cumulativeOwnership + opportunityCostThisYear - equityThisYear;
+      const totalRentingCostThisYear = cumulativeRenting;
 
       const yearDifference = totalRentingCostThisYear - netOwnershipCostThisYear;
 
@@ -198,6 +202,7 @@ export default function RentOrBuyCalculator() {
 
     return {
       loanAmount: Math.round(loanAmount),
+      downPayment: Math.round(downPay),
       monthlyMortgagePayment: Math.round(monthlyMortgagePayment),
       totalMortgagePayments: Math.round(totalMortgagePayments),
       totalInterestPaid: Math.round(totalInterestPaid),
@@ -223,18 +228,10 @@ export default function RentOrBuyCalculator() {
   const results = useMemo(
     calculateComparison,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [propertyPrice, downPayment, downPaymentPercent, mortgageRate, mortgageTermYears,
+    [propertyPrice, downPaymentPercent, mortgageRate, mortgageTermYears,
       monthlyRent, rentIncrease, propertyAppreciation, analysisYears,
       annualPropertyTax, annualInsurance, annualMaintenance, opportunityCostRate]
   );
-
-  useEffect(() => {
-    const price = parseFloat(propertyPrice) || 0;
-    const percent = parseFloat(downPaymentPercent) || 0;
-    if (price > 0 && percent > 0) {
-      setDownPayment((price * percent / 100).toString());
-    }
-  }, [propertyPrice, downPaymentPercent]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('ru-KZ') + ' ₸';
@@ -390,7 +387,7 @@ export default function RentOrBuyCalculator() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  {t('rent-vs-buy.propertyDetails.downPaymentAmount')}: {propertyPrice ? formatNumber((parseFloat(propertyPrice) * parseFloat(downPaymentPercent)) / 100) : '—'}
+                  {t('rent-vs-buy.propertyDetails.downPaymentAmount')}: {formatNumber(results.downPayment)}
                 </p>
               </div>
 
@@ -675,7 +672,7 @@ export default function RentOrBuyCalculator() {
                 <div className="space-y-2 text-sm text-blue-800">
                   <div className="flex justify-between">
                     <span>{t('rent-vs-buy.financialSummary.downPayment')}:</span>
-                    <span className="font-semibold">{formatNumber(parseFloat(downPayment) || 0)}</span>
+                    <span className="font-semibold">{formatNumber(results.downPayment)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('rent-vs-buy.financialSummary.mortgagePayments')}:</span>
@@ -684,6 +681,10 @@ export default function RentOrBuyCalculator() {
                   <div className="flex justify-between">
                     <span>{t('rent-vs-buy.financialSummary.additionalCosts')}:</span>
                     <span className="font-semibold">{formatNumber(((parseFloat(annualPropertyTax) || 0) + (parseFloat(annualInsurance) || 0) + (parseFloat(annualMaintenance) || 0)) * (parseInt(analysisYears) || 0))}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>{t('rent-vs-buy.financialSummary.opportunityCost')}:</span>
+                    <span className="font-semibold">+{formatNumber(results.opportunityCostOfDownPayment)}</span>
                   </div>
                   <div className="flex justify-between border-t border-blue-200 pt-2">
                     <span>{t('rent-vs-buy.financialSummary.propertyValueAtEnd')}:</span>
@@ -712,10 +713,6 @@ export default function RentOrBuyCalculator() {
                   <div className="flex justify-between">
                     <span>{t('rent-vs-buy.financialSummary.rentPayments')}:</span>
                     <span className="font-semibold">{formatNumber(results.totalRentPaid)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('rent-vs-buy.financialSummary.opportunityCost')}:</span>
-                    <span className="font-semibold">{formatNumber(results.opportunityCostOfDownPayment)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg border-t border-green-200 pt-2">
                     <span>{t('rent-vs-buy.financialSummary.totalCost')}:</span>
@@ -859,8 +856,8 @@ export default function RentOrBuyCalculator() {
             <h3 className="font-semibold text-gray-900 mb-2">{t('rent-vs-buy.marketContext.mortgageRates')}</h3>
             <div className="text-gray-600 text-sm space-y-1">
               <div>{t('rent-vs-buy.marketContext.program720')}: <strong>7%</strong></div>
-              {/* Рыночные ставки обновлены 06.10.2026: вторичка ~19–24% (ГЭСВ), прежние «12–16%» устарели. */}
-              <div>{t('rent-vs-buy.marketContext.standardMortgage')}: <strong>19–24%</strong></div>
+              {/* Вторичка: ~21% номинала, ГЭСВ 23–25% (предел по ипотеке — 25%), как на mortgage-compare (26.10.2026). */}
+              <div>{t('rent-vs-buy.marketContext.standardMortgage')}: <strong>23–25%</strong></div>
               <div>{t('rent-vs-buy.marketContext.partnerPrograms')}: <strong>7–9%</strong></div>
             </div>
           </div>
