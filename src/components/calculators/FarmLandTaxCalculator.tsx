@@ -320,7 +320,7 @@ export default function FarmLandTaxCalculator() {
             {/* Total Tax */}
             <div className="bg-gradient-to-r from-green-50 to-lime-50 rounded-lg p-6">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-lg font-semibold text-gray-900">{t('farm-land-tax.results.totalTax')}</span>
+                <span className="text-lg font-semibold text-gray-900">{t(results.individual ? 'farm-land-tax.results.totalTaxIndividual' : 'farm-land-tax.results.totalTax')}</span>
                 <div className="flex items-center space-x-2">
                   <Wheat className="w-6 h-6 text-green-600" />
                   <span className="text-2xl font-bold text-green-700">{formatTenge(results.totalTax)}</span>
