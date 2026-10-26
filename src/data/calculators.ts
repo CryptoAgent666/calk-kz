@@ -766,7 +766,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'wallpaper',
         title: 'Калькулятор обоев',
-        description: 'Расчёт количества рулонов обоев с учётом периметра комнаты, высоты потолка, рапорта и проёмов',
+        description: 'Расчёт рулонов обоев по периметру, высоте потолка и раппорту с припуском на подрезку',
         category: 'construction',
         icon: 'Square',
         component: React.lazy(() => import('../components/calculators/WallpaperCalculator'))

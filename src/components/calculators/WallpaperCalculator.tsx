@@ -15,9 +15,10 @@ import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type RollSize = '0.53x10' | '0.53x15' | '1.06x10' | '1.06x25';
 const ROLLS: Record<RollSize, { width: number; length: number; noteKey?: string }> = {
-  '0.53x10': { width: 0.53, length: 10, noteKey: 'wallpaper.rollStandard' },
+  // «10 м» на деле 10,05 м
+  '0.53x10': { width: 0.53, length: 10.05, noteKey: 'wallpaper.rollStandard' },
   '0.53x15': { width: 0.53, length: 15 },
-  '1.06x10': { width: 1.06, length: 10, noteKey: 'wallpaper.rollMeter' },
+  '1.06x10': { width: 1.06, length: 10.05, noteKey: 'wallpaper.rollMeter' },
   '1.06x25': { width: 1.06, length: 25 },
 };
 
@@ -52,8 +53,10 @@ export default function WallpaperCalculator() {
     const stripWidth = roll.width;
     const stripsNeeded = Math.ceil(perimeter / stripWidth);
 
-    // Длина одной полосы с учётом рапорта
-    const stripLength = h + (p / 100); // с подгонкой рисунка (рапорт в см → м)
+    // Длина одной полосы: высота + 10 см на подрезку сверху и снизу + рапорт (см → м).
+    // Без припуска при потолке 2,5 м из рулона выходило 4 полосы, а на деле 3.
+    const TRIM = 0.1;
+    const stripLength = h + TRIM + (p / 100);
     // Полос из одного рулона
     const stripsPerRoll = Math.floor(roll.length / stripLength);
 
@@ -62,8 +65,8 @@ export default function WallpaperCalculator() {
     const rollsNeeded = Math.ceil(stripsNeeded / stripsPerRoll);
     const totalCost = rollsNeeded * price;
 
-    // Клей: 1 пачка на 3-5 рулонов
-    const glueBags = Math.ceil(rollsNeeded / 4);
+    // Клей: пачка на ~4 рулона шириной 0,53 м или на ~2,5 метровых (как в FAQ)
+    const glueBags = Math.ceil(rollsNeeded / (roll.width > 1 ? 2.5 : 4));
 
     return {
       perimeter: perimeter.toFixed(2),
