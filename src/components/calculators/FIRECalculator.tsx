@@ -29,7 +29,11 @@ export default function FIRECalculator() {
   const [monthlyExpenses, setMonthlyExpenses] = useState<string>('300000');
   const [currentSavings, setCurrentSavings] = useState<string>('2000000');
   const [monthlySaving, setMonthlySaving] = useState<string>('150000');
-  const [annualReturn, setAnnualReturn] = useState<string>('8');
+  const [annualReturn, setAnnualReturn] = useState<string>('14');
+  // Инфляция: расходы и цель — в сегодняшних тенге, поэтому капитал растёт по РЕАЛЬНОЙ доходности.
+  // До 27.10.2026 номинальные 8% при инфляции 9,3% давали «FIRE через 19 лет», а в реальных
+  // ценах цель не достигалась вовсе.
+  const [inflation, setInflation] = useState<string>('9');
   const [fireType, setFireType] = useState<FIREType>('regular');
 
   const results = useMemo(() => {
@@ -37,7 +41,9 @@ export default function FIRECalculator() {
     const expenses = parseFloat(monthlyExpenses) || 0;
     const savings = parseFloat(currentSavings) || 0;
     const save = parseFloat(monthlySaving) || 0;
-    const ret = (parseFloat(annualReturn) || 0) / 100;
+    const nominal = (parseFloat(annualReturn) || 0) / 100;
+    const infl = (parseFloat(inflation) || 0) / 100;
+    const ret = (1 + nominal) / (1 + infl) - 1;
     if (expenses <= 0 || age <= 0) return null;
 
     // FIRE число = 25× годовые расходы (правило 4%) или 28.57× (3.5%)
@@ -45,7 +51,7 @@ export default function FIRECalculator() {
     const fireNumber = (expenses * 12) / wr;
 
     // Симуляция: сколько лет до FIRE с учётом сложного процента
-    const monthlyReturn = ret / 12;
+    const monthlyReturn = Math.pow(1 + ret, 1 / 12) - 1;
     let balance = savings;
     let months = 0;
     const maxMonths = 12 * 80; // максимум 80 лет
@@ -86,8 +92,10 @@ export default function FIRECalculator() {
       progress: progress.toFixed(1),
       scenarios,
       withdrawalMonthly: Math.round(fireNumber * wr / 12),
+      realReturn: (ret * 100).toFixed(1).replace('.', ','),
+      multiplier: String(Math.round(10 / wr) / 10).replace('.', ','),
     };
-  }, [currentAge, monthlyExpenses, currentSavings, monthlySaving, annualReturn, fireType]);
+  }, [currentAge, monthlyExpenses, currentSavings, monthlySaving, annualReturn, inflation, fireType]);
 
   const formatNumber = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 
@@ -117,7 +125,10 @@ export default function FIRECalculator() {
           <RangeSlider label={t('fire.monthlySaving')} value={parseFloat(monthlySaving) || 0}
             onChange={v => setMonthlySaving(String(v))} min={0} max={2000000} step={10000} formatValue={formatNumber} />
           <RangeSlider label={t('fire.annualReturn')} value={parseFloat(annualReturn) || 0}
-            onChange={v => setAnnualReturn(String(v))} min={1} max={20} step={0.5} formatValue={v => `${v}%`} />
+            onChange={v => setAnnualReturn(String(v))} min={1} max={25} step={0.5} formatValue={v => `${v}%`} />
+          <RangeSlider label={t('fire.inflation')} value={parseFloat(inflation) || 0}
+            onChange={v => setInflation(String(v))} min={0} max={20} step={0.5} formatValue={v => `${v}%`} />
+          {results && <p className="text-xs text-gray-500">{t('fire.realReturnNote', { rate: results.realReturn })}</p>}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">{t('fire.type')}</label>
@@ -139,10 +150,10 @@ export default function FIRECalculator() {
           {results && (
             <>
               <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-6 border border-red-200">
-                <div className="text-sm text-gray-600">{t('fire.fireNumber')}</div>
+                <div className="text-sm text-gray-600">{t('fire.fireNumber', { mult: results.multiplier })}</div>
                 <div className="text-3xl font-bold text-red-700">{formatNumber(results.fireNumber)}</div>
                 <div className="text-xs text-gray-500 mt-1">
-                  = {formatNumber(parseFloat(monthlyExpenses) || 0)}/{i18n.language === 'kk' ? 'ай' : 'мес'} × 12 × {fireType === 'fat' ? '28.6' : '25'}
+                  = {formatNumber(parseFloat(monthlyExpenses) || 0)}/{i18n.language === 'kk' ? 'ай' : 'мес'} × 12 × {results.multiplier}
                 </div>
               </div>
 
@@ -151,8 +162,14 @@ export default function FIRECalculator() {
                   <Target className="w-5 h-5 text-orange-700" />
                   <span className="text-sm text-orange-900 font-medium">{t('fire.timeToFire')}</span>
                 </div>
-                <div className="text-3xl font-bold text-orange-700">{results.years} {yWord(parseFloat(results.years))}</div>
-                <div className="text-sm text-orange-800">{t('fire.atAge')}: {results.ageAtFIRE} {ageWord(results.ageAtFIRE)}</div>
+                {results.achieved ? (
+                  <>
+                    <div className="text-3xl font-bold text-orange-700">{results.years.replace('.', ',')} {yWord(parseFloat(results.years))}</div>
+                    <div className="text-sm text-orange-800">{t('fire.atAge')}: {results.ageAtFIRE} {ageWord(results.ageAtFIRE)}</div>
+                  </>
+                ) : (
+                  <div className="text-sm font-medium text-orange-800">{t('fire.notAchieved')}</div>
+                )}
               </div>
 
               <div className="bg-gray-50 rounded-lg p-4">
