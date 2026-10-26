@@ -27,10 +27,12 @@ export default function BusinessROICalculator() {
   const { t, i18n } = useTranslation('calculators');
 
   // СНР на основе патента (ст. 685 старого НК, ставка 1%) упразднён с 01.01.2026.
-  // Преемник для бывших патентщиков — СНР для самозанятых: ИПН 0% с дохода
-  // (соцплатежи 4% — ОПВ/ОПВР/СО/ОСМС — учитываются отдельно, не как налог).
+  // Преемник для бывших патентщиков — СНР для самозанятых: ИПН 0% и социальные платежи 4% от
+  // дохода (НК ст. 715, таблица). До 27.10.2026 здесь стоял 0 — соцплатежи терялись (по умолчанию
+  // −120 000 ₸ в месяц, ROI 980% вместо 894%). Режим — без работников и до 300 МРП в месяц (ст. 718).
+  const SELF_EMPLOYED_INCOME_CAP = 300 * 4325;
   const taxOptions: TaxOption[] = [
-    { id: 'self-employed', labelKey: 'business-roi.taxSelfEmployed', rate: 0 },
+    { id: 'self-employed', labelKey: 'business-roi.taxSelfEmployed', rate: 0.04 },
     { id: 'simplified', labelKey: 'business-roi.taxSimplified', rate: 0.04 },
     { id: 'general', labelKey: 'business-roi.taxGeneral', rate: 0.20 },
   ];
@@ -43,20 +45,22 @@ export default function BusinessROICalculator() {
   const [monthlyExpenses, setMonthlyExpenses] = useState<string>('1500000');
   const [taxRegime, setTaxRegime] = useState<TaxRegime>('simplified');
   const [period, setPeriod] = useState<PeriodYears>(3);
-  const [discountRate, setDiscountRate] = useState<string>('12');
+  // Ставка дисконтирования ~ базовая ставка НБРК 15,75% + премия за риск (FAQ: +5–10 п.п.).
+  const [discountRate, setDiscountRate] = useState<string>('20');
 
   const computeResults = () => {
     const inv = parseFloat(investments) || 0;
     const check = parseFloat(avgCheck) || 0;
     const clients = parseFloat(clientsPerMonth) || 0;
     const expenses = parseFloat(monthlyExpenses) || 0;
-    const disc = parseFloat(discountRate) || 12;
+    const discParsed = parseFloat(discountRate);
+    const disc = Number.isFinite(discParsed) ? discParsed : 20;
     const taxRate = taxOptions.find((o) => o.id === taxRegime)?.rate ?? 0.04;
 
     const monthlyRevenue = check * clients;
     const grossProfit = monthlyRevenue - expenses;
 
-    // Налог: упрощёнка — от выручки (4%); самозанятые — ИПН 0%; ОУР (КПН 20%) — от прибыли
+    // Налог: упрощёнка — от выручки (4%); самозанятые — соцплатежи 4% с дохода; ОУР (КПН 20%) — от прибыли
     let taxAmount = 0;
     if (taxRegime === 'general') {
       taxAmount = grossProfit > 0 ? grossProfit * taxRate : 0;
@@ -116,6 +120,10 @@ export default function BusinessROICalculator() {
       roiPercent: Number(roiPercent.toFixed(1)),
       npv: Math.round(npv),
       breakEvenClients: Math.ceil(breakEvenClients),
+      // Годовой эквивалент ROI за период — его сравнивают с годовыми порогами и ставкой вклада.
+      roiAnnual: period > 0 && periodProfit > 0 && inv > 0
+        ? Number(((Math.pow(periodProfit / inv, 1 / period) - 1) * 100).toFixed(1)) : 0,
+      overSelfEmployedCap: taxRegime === 'self-employed' && monthlyRevenue > SELF_EMPLOYED_INCOME_CAP,
       rating,
     };
   };
@@ -199,6 +207,9 @@ calk.kz`;
 
       <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
         <p className="text-amber-800 text-sm">{t('business-roi.warning')}</p>
+        {results.overSelfEmployedCap && (
+          <p className="text-red-700 text-sm mt-2">{t('business-roi.selfEmployedCapWarning')}</p>
+        )}
       </div>
 
       <QuickAnswer calculatorId="business-roi" />
@@ -405,6 +416,9 @@ calk.kz`;
                   {t('business-roi.roi')} ({period} {yearsLabel(period)})
                 </div>
                 <div className="text-2xl font-bold text-blue-700">{results.roiPercent}%</div>
+                {period > 1 && (
+                  <div className="text-xs text-blue-600 mt-1">{t('business-roi.roiAnnual', { rate: String(results.roiAnnual).replace('.', ',') })}</div>
+                )}
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
             </div>
