@@ -50,10 +50,16 @@ export default function BreakEvenCalculator() {
     const vol = parseFloat(expectedVolume) || 0;
     const taxCoef = taxRate / 100;
 
-    // Учитываем налог как уменьшение эффективной цены
-    const effectivePrice = p * (1 - taxCoef);
+    // Упрощёнка (4%) берётся с выручки — уменьшает эффективную цену и сдвигает точку
+    // безубыточности. ИПН/КПН общего режима (10%) берётся с прибыли: при нулевой прибыли налога
+    // нет, точка не сдвигается, налог уменьшает только прибыль сверх неё. До 27.10.2026 10% тоже
+    // вычитались из цены: 167 ед. вместо 125, запас прочности 16,5% вместо 37,5%.
+    const revenueTax = taxRate === 4 ? taxCoef : 0;
+    const profitTax = taxRate === 10 ? taxCoef : 0;
+    const effectivePrice = p * (1 - revenueTax);
     const contributionMargin = effectivePrice - vc;
-    const marginPercent = effectivePrice > 0 ? (contributionMargin / effectivePrice) * 100 : 0;
+    // Маржинальность — от цены продажи (раньше от цены после налога: 37,5% вместо 36% при 4%).
+    const marginPercent = p > 0 ? (contributionMargin / p) * 100 : 0;
 
     if (contributionMargin <= 0 || p <= 0) {
       return {
@@ -73,7 +79,8 @@ export default function BreakEvenCalculator() {
     const expectedRevenue = vol * p;
     const safetyMargin =
       expectedRevenue > 0 ? ((expectedRevenue - breakEvenRevenue) / expectedRevenue) * 100 : 0;
-    const monthlyProfit = vol * contributionMargin - fc;
+    const profitBeforeTax = vol * contributionMargin - fc;
+    const monthlyProfit = profitBeforeTax > 0 ? profitBeforeTax * (1 - profitTax) : profitBeforeTax;
 
     return {
       contributionMargin: Math.round(contributionMargin),

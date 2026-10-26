@@ -9214,7 +9214,7 @@
     "taxRate": "Налоговая ставка, %",
     "taxNone": "Без налога",
     "taxSimplified": "Упрощёнка 4%",
-    "taxGeneral": "Общий режим ~10%",
+    "taxGeneral": "Общий режим, ИПН 10% с прибыли",
     "breakEvenPoint": "Точка безубыточности",
     "breakEvenUnits": "Объём в единицах",
     "breakEvenRevenue": "Выручка для безубыточности",
