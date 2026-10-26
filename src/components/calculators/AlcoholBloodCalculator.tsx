@@ -84,6 +84,8 @@ export default function AlcoholBloodCalculator() {
   const addPreset = (p: (typeof PRESETS)[0]) => setDrinks((ds) => [...ds, { volume: String(p.volume), abv: String(p.abv) }]);
   const del = (i: number) => setDrinks((ds) => ds.filter((_, idx) => idx !== i));
 
+  const dec = (n: number) => String(n).replace('.', ',');
+
   const generateExportData = () => {
     if (!results.grams) return '';
     return `${t('alcohol-blood.parameters')}:
@@ -91,9 +93,9 @@ export default function AlcoholBloodCalculator() {
 - ${t('alcohol-blood.alcoholGrams')}: ${results.grams} ${t('alcohol-blood.g')}
 
 ${t('alcohol-blood.results')}:
-- ${t('alcohol-blood.peakLabel')}: ${results.peak} ‰
-- ${t('alcohol-blood.nowLabel')}: ${results.now} ‰
-- ${t('alcohol-blood.zeroLabel')}: ~${results.hoursToZero} ${t('alcohol-blood.hoursShort')}
+- ${t('alcohol-blood.peakLabel')}: ${dec(results.peak)} ‰
+- ${t('alcohol-blood.nowLabel')}: ${dec(results.now)} ‰
+- ${t('alcohol-blood.zeroLabel')}: ~${dec(results.hoursToZero)} ${t('alcohol-blood.hoursShort')}
 
 ${t('alcohol-blood.zeroToleranceNote')}`;
   };
@@ -205,7 +207,7 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
               <span className="text-lg font-semibold text-gray-900">{t('alcohol-blood.nowLabel')}</span>
               <div className="flex items-center space-x-2">
                 <Calculator className="w-5 h-5 text-purple-600" />
-                <span className="text-2xl font-bold text-purple-700">≈ {results.now} ‰</span>
+                <span className="text-2xl font-bold text-purple-700">≈ {dec(results.now)} ‰</span>
               </div>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -214,12 +216,12 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-600">{t('alcohol-blood.peakLabel')}</span>
-              <span className="font-semibold text-gray-900">≈ {results.peak} ‰</span>
+              <span className="font-semibold text-gray-900">≈ {dec(results.peak)} ‰</span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-100">
               <span className="text-gray-600">{t('alcohol-blood.zeroLabel')}</span>
               <span className="font-semibold text-gray-900">
-                {results.hoursToZero > 0 ? `~${results.hoursToZero} ${t('alcohol-blood.hoursShort')}${mounted && results.zeroTime ? ` (${t('alcohol-blood.around')} ${results.zeroTime})` : ''}` : '—'}
+                {results.hoursToZero > 0 ? `~${dec(results.hoursToZero)} ${t('alcohol-blood.hoursShort')}${mounted && results.zeroTime ? ` (${t('alcohol-blood.around')} ${results.zeroTime})` : ''}` : '—'}
               </span>
             </div>
             <div className="mt-2 rounded-lg bg-amber-50 p-3">
@@ -253,14 +255,14 @@ ${t('alcohol-blood.zeroToleranceNote')}`;
           <ExportButtons
             data={{
               title: t('alcohol-blood.export.title'),
-              subtitle: `≈ ${results.now} ‰`,
+              subtitle: `≈ ${dec(results.now)} ‰`,
               sections: [{
                 title: t('alcohol-blood.export.results'),
                 data: [
                   { label: t('alcohol-blood.alcoholGrams'), value: `${results.grams} ${t('alcohol-blood.g')}` },
-                  { label: t('alcohol-blood.peakLabel'), value: `≈ ${results.peak} ‰` },
-                  { label: t('alcohol-blood.nowLabel'), value: `≈ ${results.now} ‰` },
-                  { label: t('alcohol-blood.zeroLabel'), value: results.hoursToZero > 0 ? `~${results.hoursToZero} ${t('alcohol-blood.hoursShort')}` : '—' },
+                  { label: t('alcohol-blood.peakLabel'), value: `≈ ${dec(results.peak)} ‰` },
+                  { label: t('alcohol-blood.nowLabel'), value: `≈ ${dec(results.now)} ‰` },
+                  { label: t('alcohol-blood.zeroLabel'), value: results.hoursToZero > 0 ? `~${dec(results.hoursToZero)} ${t('alcohol-blood.hoursShort')}` : '—' },
                 ],
               }],
               footer: t('alcohol-blood.export.footer'),
