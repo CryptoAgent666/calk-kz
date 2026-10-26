@@ -13,10 +13,25 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
+// Доли считаются простыми дробями, чтобы аул и радд давали точные 3/8, 16/27 и т. п.
+type Frac = [number, number];
+const gcd = (a: number, b: number): number => (b === 0 ? Math.abs(a) : gcd(b, a % b));
+const fr = (n: number, d: number): Frac => {
+  const g = gcd(n, d) || 1;
+  return [n / g, d / g];
+};
+const fAdd = (a: Frac, b: Frac): Frac => fr(a[0] * b[1] + b[0] * a[1], a[1] * b[1]);
+const fSub = (a: Frac, b: Frac): Frac => fr(a[0] * b[1] - b[0] * a[1], a[1] * b[1]);
+const fMul = (a: Frac, b: Frac): Frac => fr(a[0] * b[0], a[1] * b[1]);
+const fDiv = (a: Frac, b: Frac): Frac => fr(a[0] * b[1], a[1] * b[0]);
+const fVal = (a: Frac) => a[0] / a[1];
+const fText = (a: Frac) => (a[0] === a[1] ? '1' : `${a[0]}/${a[1]}`);
+
 interface Heir {
   type: string;
   name: string;
   share: number;
+  shareText: string;
   shareType: 'fixed' | 'residual';
   amount: number;
   percentage: number;
@@ -36,15 +51,15 @@ export default function IslamicInheritanceCalculator() {
   const { t, i18n } = useTranslation('calculators');
 
   const [totalInheritance, setTotalInheritance] = useState<string>('10000000');
-  const [hasSpouse, setHasSpouse] = useState<boolean>(false);
+  // По умолчанию — состав из пресета «классическая семья», чтобы страница сразу показывала раздел.
+  const [hasSpouse, setHasSpouse] = useState<boolean>(true);
   const [spouseGender, setSpouseGender] = useState<'husband' | 'wife'>('wife');
-  const [sons, setSons] = useState<string>('0');
-  const [daughters, setDaughters] = useState<string>('0');
-  const [hasFather, setHasFather] = useState<boolean>(false);
-  const [hasMother, setHasMother] = useState<boolean>(false);
+  const [sons, setSons] = useState<string>('2');
+  const [daughters, setDaughters] = useState<string>('1');
+  const [hasFather, setHasFather] = useState<boolean>(true);
+  const [hasMother, setHasMother] = useState<boolean>(true);
   const [brothers, setBrothers] = useState<string>('0');
   const [sisters, setSisters] = useState<string>('0');
-  const [hasPatGrandfather, setHasPatGrandfather] = useState<boolean>(false);
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через useState+useEffect:
   // иначе первый клиентский рендер отдаёт пустоту и гидратация падает (#418/#425).
@@ -57,263 +72,189 @@ export default function IslamicInheritanceCalculator() {
     scenario: ''
   };
 
-  const calculateIslamicInheritance = () => {
+  // Ханафитский расчёт для круга наследников калькулятора: супруг(а), сыновья, дочери, отец,
+  // мать, полнородные братья и сёстры. Порядок: фиксированные доли (фараид) → аул, если их сумма
+  // больше 1 → остаток асабе (сыновья с дочерьми 2:1 → отец → братья с сёстрами 2:1 → сёстры
+  // вместе с дочерьми) → радд, если асабы нет (супругу не возвращается).
+  const calculateIslamicInheritance = (): InheritanceResult => {
     const inheritance = parseFloat(totalInheritance) || 0;
-    const sonsCount = parseInt(sons) || 0;
-    const daughtersCount = parseInt(daughters) || 0;
-    const brothersCount = parseInt(brothers) || 0;
-    const sistersCount = parseInt(sisters) || 0;
+    const sonsCount = Math.max(0, parseInt(sons) || 0);
+    const daughtersCount = Math.max(0, parseInt(daughters) || 0);
+    const brothersCount = Math.max(0, parseInt(brothers) || 0);
+    const sistersCount = Math.max(0, parseInt(sisters) || 0);
 
     if (inheritance <= 0) {
       return EMPTY_RESULTS;
     }
 
-    const heirs: Heir[] = [];
     const warnings: string[] = [];
-    let remainingForResidual = inheritance;
-    let scenario = '';
-
     const hasChildren = sonsCount > 0 || daughtersCount > 0;
-    const hasSiblings = brothersCount > 0 || sistersCount > 0;
+    const siblingsCount = brothersCount + sistersCount;
+    const hasSiblings = siblingsCount > 0;
     const hasParents = hasFather || hasMother;
+    // Полнородных братьев и сестёр исключают сын и отец.
+    const siblingsBlocked = sonsCount > 0 || hasFather;
+    const brothersInherit = brothersCount > 0 && !siblingsBlocked;
+    const sistersInherit = sistersCount > 0 && !siblingsBlocked;
 
-    if (hasChildren) {
-      scenario = t('islamic-inheritance.scenarioWithChildren');
-    } else if (hasParents) {
-      scenario = t('islamic-inheritance.scenarioWithParents');
-    } else if (hasSiblings) {
-      scenario = t('islamic-inheritance.scenarioWithSiblings');
-    } else if (hasSpouse) {
-      scenario = t('islamic-inheritance.scenarioSpouseOnly');
-    } else {
-      scenario = t('islamic-inheritance.scenarioNoHeirs');
-    }
+    let scenario = '';
+    if (hasChildren) scenario = t('islamic-inheritance.scenarioWithChildren');
+    else if (hasParents) scenario = t('islamic-inheritance.scenarioWithParents');
+    else if (hasSiblings) scenario = t('islamic-inheritance.scenarioWithSiblings');
+    else if (hasSpouse) scenario = t('islamic-inheritance.scenarioSpouseOnly');
+    else scenario = t('islamic-inheritance.scenarioNoHeirs');
 
-    // 1. ФИКСИРОВАННЫЕ ДОЛИ (FARA'ID)
+    interface Entry { type: string; name: string; share: Frac; residual: boolean; description: string }
+    const fixed: Entry[] = [];
 
-    // Супруг/супруга
+    // 1. Фиксированные доли
+    let spouseShare: Frac = fr(0, 1);
     if (hasSpouse) {
-      let spouseShare = 0;
-      let spouseShareType: 'fixed' | 'residual' = 'fixed';
-      let spouseDescription = '';
-
-      if (spouseGender === 'wife') {
-        if (hasChildren) {
-          spouseShare = 1/8;
-          spouseDescription = t('islamic-inheritance.wifeShareWithChildren');
-        } else {
-          spouseShare = 1/4;
-          spouseDescription = t('islamic-inheritance.wifeShareWithoutChildren');
-        }
-      } else {
-        if (hasChildren) {
-          spouseShare = 1/4;
-          spouseDescription = t('islamic-inheritance.husbandShareWithChildren');
-        } else {
-          spouseShare = 1/2;
-          spouseDescription = t('islamic-inheritance.husbandShareWithoutChildren');
-        }
-      }
-
-      const spouseAmount = inheritance * spouseShare;
-      remainingForResidual -= spouseAmount;
-
-      heirs.push({
+      const isWife = spouseGender === 'wife';
+      spouseShare = isWife ? (hasChildren ? fr(1, 8) : fr(1, 4)) : (hasChildren ? fr(1, 4) : fr(1, 2));
+      fixed.push({
         type: spouseGender,
-        name: spouseGender === 'wife' ? t('islamic-inheritance.wife') : t('islamic-inheritance.husband'),
+        name: isWife ? t('islamic-inheritance.wife') : t('islamic-inheritance.husband'),
         share: spouseShare,
-        shareType: spouseShareType,
-        amount: spouseAmount,
-        percentage: spouseShare * 100,
-        description: spouseDescription
+        residual: false,
+        description: t(`islamic-inheritance.${isWife ? 'wife' : 'husband'}Share${hasChildren ? 'WithChildren' : 'WithoutChildren'}`),
       });
     }
 
-    // Отец
-    if (hasFather) {
-      let fatherShare = 0;
-      let fatherDescription = '';
-
-      if (hasChildren) {
-        fatherShare = 1/6;
-        fatherDescription = t('islamic-inheritance.fatherShareWithChildren');
-      } else {
-        fatherShare = 1/6;
-        fatherDescription = t('islamic-inheritance.fatherShareAsAsaba');
-      }
-
-      const fatherAmount = inheritance * fatherShare;
-      remainingForResidual -= fatherAmount;
-
-      heirs.push({
-        type: 'father',
-        name: t('islamic-inheritance.father'),
-        share: fatherShare,
-        shareType: 'fixed',
-        amount: fatherAmount,
-        percentage: fatherShare * 100,
-        description: fatherDescription
+    if (hasFather && hasChildren) {
+      fixed.push({
+        type: 'father', name: t('islamic-inheritance.father'), share: fr(1, 6), residual: false,
+        description: t(sonsCount > 0 ? 'islamic-inheritance.fatherShareWithChildren' : 'islamic-inheritance.fatherShareWithDaughters'),
       });
     }
 
-    // Мать
     if (hasMother) {
-      let motherShare = 0;
-      let motherDescription = '';
-
-      if (hasChildren || (brothersCount + sistersCount >= 2)) {
-        motherShare = 1/6;
-        motherDescription = t('islamic-inheritance.motherShareWithChildrenOrSiblings');
+      // Умарийя: супруг(а) + отец + мать без детей и без двух братьев/сестёр — мать получает 1/3 остатка.
+      const umariyya = hasSpouse && hasFather && !hasChildren && siblingsCount < 2;
+      let share: Frac;
+      let description: string;
+      if (hasChildren || siblingsCount >= 2) {
+        share = fr(1, 6);
+        description = t('islamic-inheritance.motherShareWithChildrenOrSiblings');
+      } else if (umariyya) {
+        share = fMul(fr(1, 3), fSub(fr(1, 1), spouseShare));
+        description = t('islamic-inheritance.motherShareUmariyya');
       } else {
-        motherShare = 1/3;
-        motherDescription = t('islamic-inheritance.motherShareDefault');
+        share = fr(1, 3);
+        description = t('islamic-inheritance.motherShareDefault');
       }
+      fixed.push({ type: 'mother', name: t('islamic-inheritance.mother'), share, residual: false, description });
+    }
 
-      const motherAmount = inheritance * motherShare;
-      remainingForResidual -= motherAmount;
-
-      heirs.push({
-        type: 'mother',
-        name: t('islamic-inheritance.mother'),
-        share: motherShare,
-        shareType: 'fixed',
-        amount: motherAmount,
-        percentage: motherShare * 100,
-        description: motherDescription
+    if (daughtersCount > 0 && sonsCount === 0) {
+      fixed.push({
+        type: 'daughters', name: `${t('islamic-inheritance.daughters')} (${daughtersCount})`,
+        share: daughtersCount === 1 ? fr(1, 2) : fr(2, 3), residual: false,
+        description: t(daughtersCount === 1 ? 'islamic-inheritance.daughterShareHalf' : 'islamic-inheritance.daughtersShareTwoThirds'),
       });
     }
 
-    // 2. ОСТАТОЧНЫЕ ДОЛИ (ASABA)
-
-    // Дети (если есть)
-    if (hasChildren) {
-      const totalChildrenUnits = sonsCount * 2 + daughtersCount;
-
-      if (totalChildrenUnits > 0) {
-        const childrenShare = remainingForResidual / totalChildrenUnits;
-
-        // Сыновья
-        if (sonsCount > 0) {
-          const sonAmount = childrenShare * 2;
-          const totalSonsAmount = sonAmount * sonsCount;
-
-          heirs.push({
-            type: 'sons',
-            name: `${t('islamic-inheritance.sons')} (${sonsCount})`,
-            share: totalSonsAmount / inheritance,
-            shareType: 'residual',
-            amount: totalSonsAmount,
-            percentage: (totalSonsAmount / inheritance) * 100,
-            description: t('islamic-inheritance.sonsDescription')
-          });
-        }
-
-        // Дочери
-        if (daughtersCount > 0) {
-          const daughterAmount = childrenShare;
-          const totalDaughtersAmount = daughterAmount * daughtersCount;
-
-          heirs.push({
-            type: 'daughters',
-            name: `${t('islamic-inheritance.daughters')} (${daughtersCount})`,
-            share: totalDaughtersAmount / inheritance,
-            shareType: 'residual',
-            amount: totalDaughtersAmount,
-            percentage: (totalDaughtersAmount / inheritance) * 100,
-            description: t('islamic-inheritance.daughtersDescription')
-          });
-        }
-
-        remainingForResidual = 0;
-      }
+    if (sistersInherit && brothersCount === 0 && daughtersCount === 0) {
+      fixed.push({
+        type: 'sisters', name: `${t('islamic-inheritance.sisters')} (${sistersCount})`,
+        share: sistersCount === 1 ? fr(1, 2) : fr(2, 3), residual: false,
+        description: t(sistersCount === 1 ? 'islamic-inheritance.sisterShareHalf' : 'islamic-inheritance.sistersShareTwoThirds'),
+      });
     }
-    // Братья/сестры (если нет детей и отца)
-    else if (!hasFather && hasSiblings) {
-      const totalSiblingsUnits = brothersCount * 2 + sistersCount;
 
-      if (totalSiblingsUnits > 0 && remainingForResidual > 0) {
-        const siblingShare = remainingForResidual / totalSiblingsUnits;
-
-        // Братья
-        if (brothersCount > 0) {
-          const brotherAmount = siblingShare * 2;
-          const totalBrothersAmount = brotherAmount * brothersCount;
-
-          heirs.push({
-            type: 'brothers',
-            name: `${t('islamic-inheritance.brothers')} (${brothersCount})`,
-            share: totalBrothersAmount / inheritance,
-            shareType: 'residual',
-            amount: totalBrothersAmount,
-            percentage: (totalBrothersAmount / inheritance) * 100,
-            description: t('islamic-inheritance.brothersDescription')
-          });
-        }
-
-        // Сестры
-        if (sistersCount > 0) {
-          const sisterAmount = siblingShare;
-          const totalSistersAmount = sisterAmount * sistersCount;
-
-          heirs.push({
-            type: 'sisters',
-            name: `${t('islamic-inheritance.sisters')} (${sistersCount})`,
-            share: totalSistersAmount / inheritance,
-            shareType: 'residual',
-            amount: totalSistersAmount,
-            percentage: (totalSistersAmount / inheritance) * 100,
-            description: t('islamic-inheritance.sistersDescription')
-          });
-        }
-
-        remainingForResidual = 0;
-      }
+    // 2. Аул: сумма фиксированных долей больше наследства — все доли уменьшаются пропорционально
+    const fixedSum = fixed.reduce<Frac>((acc, e) => fAdd(acc, e.share), fr(0, 1));
+    let residue: Frac = fr(0, 1);
+    if (fVal(fixedSum) > 1) {
+      // Классическая запись аула — в общем знаменателе исходных долей: «с 6 до 8», «с 24 до 27».
+      const base = fixed.reduce((l, e) => (l * e.share[1]) / gcd(l, e.share[1]), 1);
+      const raised = fixed.reduce((sum, e) => sum + (e.share[0] * base) / e.share[1], 0);
+      fixed.forEach((e) => { e.share = fDiv(e.share, fixedSum); });
+      warnings.push(t('islamic-inheritance.warningAwl', { from: base, to: raised }));
+    } else {
+      residue = fSub(fr(1, 1), fixedSum);
     }
-    // Отец как 'асаба (если нет детей)
-    else if (hasFather && !hasChildren) {
-      if (remainingForResidual > 0) {
-        const additionalFatherAmount = remainingForResidual;
 
-        const fatherIndex = heirs.findIndex(h => h.type === 'father');
-        if (fatherIndex !== -1) {
-          heirs[fatherIndex].amount += additionalFatherAmount;
-          heirs[fatherIndex].share = heirs[fatherIndex].amount / inheritance;
-          heirs[fatherIndex].percentage = heirs[fatherIndex].share * 100;
-          heirs[fatherIndex].description = t('islamic-inheritance.fatherShareAsAsaba');
-        }
-
-        remainingForResidual = 0;
+    // 3. Асаба — остаток по очереди
+    const residualEntries: Entry[] = [];
+    const splitResidue = (groups: { type: string; name: string; units: number; description: string }[]) => {
+      const totalUnits = groups.reduce((sum, g) => sum + g.units, 0);
+      groups.forEach((g) => residualEntries.push({
+        type: g.type, name: g.name, share: fMul(residue, fr(g.units, totalUnits)), residual: true, description: g.description,
+      }));
+      residue = fr(0, 1);
+    };
+    if (fVal(residue) > 0) {
+      if (sonsCount > 0) {
+        splitResidue([
+          { type: 'sons', name: `${t('islamic-inheritance.sons')} (${sonsCount})`, units: sonsCount * 2, description: t('islamic-inheritance.sonsDescription') },
+          ...(daughtersCount > 0 ? [{ type: 'daughters', name: `${t('islamic-inheritance.daughters')} (${daughtersCount})`, units: daughtersCount, description: t('islamic-inheritance.daughtersWithSons') }] : []),
+        ]);
+      } else if (hasFather) {
+        splitResidue([{ type: 'father', name: t('islamic-inheritance.father'), units: 1, description: t('islamic-inheritance.fatherShareAsAsaba') }]);
+      } else if (brothersInherit) {
+        splitResidue([
+          { type: 'brothers', name: `${t('islamic-inheritance.brothers')} (${brothersCount})`, units: brothersCount * 2, description: t('islamic-inheritance.brothersDescription') },
+          ...(sistersCount > 0 ? [{ type: 'sisters', name: `${t('islamic-inheritance.sisters')} (${sistersCount})`, units: sistersCount, description: t('islamic-inheritance.sistersWithBrothers') }] : []),
+        ]);
+      } else if (sistersInherit && daughtersCount > 0) {
+        splitResidue([{ type: 'sisters', name: `${t('islamic-inheritance.sisters')} (${sistersCount})`, units: 1, description: t('islamic-inheritance.sistersWithDaughters') }]);
       }
     }
 
-    // 3. ПРОВЕРКИ И ПРЕДУПРЕЖДЕНИЯ
-
-    const totalDistributed = heirs.reduce((sum, heir) => sum + heir.amount, 0);
-    const isValidDistribution = totalDistributed <= inheritance * 1.01;
-
-    if (!isValidDistribution) {
-      warnings.push(t('islamic-inheritance.warningExceedsTotal'));
+    // 4. Радд: асабы нет — остаток возвращается владельцам фиксированных долей, кроме супруга(и)
+    if (fVal(residue) > 0) {
+      const raddHeirs = fixed.filter((e) => e.type !== 'wife' && e.type !== 'husband');
+      if (raddHeirs.length > 0) {
+        const raddBase = raddHeirs.reduce<Frac>((acc, e) => fAdd(acc, e.share), fr(0, 1));
+        const rest = residue;
+        raddHeirs.forEach((e) => { e.share = fAdd(e.share, fMul(rest, fDiv(e.share, raddBase))); });
+        residue = fr(0, 1);
+        warnings.push(t('islamic-inheritance.warningRadd'));
+      }
     }
 
-    if (remainingForResidual > inheritance * 0.01) {
-      warnings.push(t('islamic-inheritance.warningUndistributed', { amount: formatNumber(remainingForResidual) }));
+    // Отец с дочерьми без сыновей: 1/6 + остаток — показываем одной строкой
+    const heirs: Heir[] = [];
+    [...fixed, ...residualEntries].forEach((e) => {
+      const existing = heirs.find((h) => h.type === e.type);
+      if (existing) return; // только отец: 1/6 + остаток, сводится ниже
+      heirs.push({
+        type: e.type, name: e.name, share: fVal(e.share), shareText: fText(e.share),
+        shareType: e.residual ? 'residual' : 'fixed', amount: inheritance * fVal(e.share),
+        percentage: fVal(e.share) * 100, description: e.description,
+      });
+    });
+    // Точная дробь для отца 1/6 + остаток
+    const fatherFixed = fixed.find((e) => e.type === 'father');
+    const fatherResidual = residualEntries.find((e) => e.type === 'father');
+    if (fatherFixed && fatherResidual) {
+      const total = fAdd(fatherFixed.share, fatherResidual.share);
+      const h = heirs.find((x) => x.type === 'father')!;
+      h.share = fVal(total);
+      h.shareText = fText(total);
+      h.amount = inheritance * h.share;
+      h.percentage = h.share * 100;
+      h.description = t('islamic-inheritance.fatherShareWithDaughters');
     }
 
-    if (!hasChildren && !hasParents && !hasSiblings && hasSpouse) {
-      warnings.push(t('islamic-inheritance.warningSpouseOnly'));
+    if (hasSiblings && siblingsBlocked) {
+      warnings.push(t('islamic-inheritance.warningSiblingsExcluded'));
     }
 
-    if (hasChildren && sonsCount === 0 && daughtersCount > 0) {
-      warnings.push(t('islamic-inheritance.warningDaughtersOnly'));
+    const remaining = inheritance * fVal(residue);
+    if (remaining > 0.5) {
+      warnings.push(t(hasSpouse && fixed.length === 1 ? 'islamic-inheritance.warningSpouseOnly' : 'islamic-inheritance.warningUndistributed', { amount: formatNumber(Math.round(remaining)) }));
     }
 
+    const totalDistributed = heirs.reduce((sum, h) => sum + h.amount, 0);
     return {
       heirs,
       totalDistributed: Math.round(totalDistributed),
-      remainingAmount: Math.round(remainingForResidual),
-      isValidDistribution,
+      remainingAmount: Math.round(remaining),
+      isValidDistribution: true,
       warnings,
-      scenario
+      scenario,
     };
   };
 
@@ -327,24 +268,8 @@ export default function IslamicInheritanceCalculator() {
   const results = useMemo(
     calculateIslamicInheritance,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [totalInheritance, hasSpouse, spouseGender, sons, daughters, hasFather, hasMother, brothers, sisters, hasPatGrandfather, i18n.language]
+    [totalInheritance, hasSpouse, spouseGender, sons, daughters, hasFather, hasMother, brothers, sisters, i18n.language]
   );
-
-  const formatFraction = (decimal: number) => {
-    const fractions = [
-      { decimal: 1/2, text: '1/2' },
-      { decimal: 1/3, text: '1/3' },
-      { decimal: 1/4, text: '1/4' },
-      { decimal: 1/6, text: '1/6' },
-      { decimal: 1/8, text: '1/8' },
-      { decimal: 2/3, text: '2/3' },
-      { decimal: 3/4, text: '3/4' },
-      { decimal: 5/6, text: '5/6' }
-    ];
-
-    const closestFraction = fractions.find(f => Math.abs(f.decimal - decimal) < 0.001);
-    return closestFraction ? closestFraction.text : (decimal * 100).toFixed(1) + '%';
-  };
 
   const familyCompositions = [
     {
@@ -672,7 +597,7 @@ export default function IslamicInheritanceCalculator() {
                       <div className="text-right">
                         <div className="text-lg font-bold text-emerald-600">{formatNumber(heir.amount)}</div>
                         <div className="text-sm text-gray-600">
-                          {formatFraction(heir.share)} ({heir.percentage.toFixed(1)}%)
+                          {heir.shareText} ({heir.percentage.toFixed(1).replace('.', ',')}%)
                         </div>
                       </div>
                     </div>
