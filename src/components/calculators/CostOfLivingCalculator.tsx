@@ -11,8 +11,9 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 
-// Средние расходы по городам Казахстана (₸/месяц, 2026 оценка)
-// Источники: stat.gov.kz, krisha.kz, 2gis
+// Средние расходы по городам Казахстана (₸/месяц). Аренда — медианы объявлений krisha.kz
+// (сентябрь–октябрь 2026); продукты — расходы на продовольственные товары на душу по БНС
+// за II кв. 2026 (для областных городов — по области); остальное — ориентир калькулятора.
 interface CityData {
   id: string;
   labelKey: string;
@@ -26,16 +27,16 @@ interface CityData {
 }
 
 const cities: CityData[] = [
-  { id: 'almaty', labelKey: 'cost-living.cities.almaty', rent1room: 220000, rent2room: 350000, utilities: 25000, groceries: 120000, transport: 30000, dining: 40000, internet: 8000 },
-  { id: 'astana', labelKey: 'cost-living.cities.astana', rent1room: 200000, rent2room: 320000, utilities: 28000, groceries: 115000, transport: 28000, dining: 38000, internet: 8000 },
-  { id: 'shymkent', labelKey: 'cost-living.cities.shymkent', rent1room: 120000, rent2room: 180000, utilities: 18000, groceries: 95000, transport: 22000, dining: 28000, internet: 7000 },
-  { id: 'karaganda', labelKey: 'cost-living.cities.karaganda', rent1room: 110000, rent2room: 170000, utilities: 22000, groceries: 100000, transport: 22000, dining: 25000, internet: 7000 },
-  { id: 'aktobe', labelKey: 'cost-living.cities.aktobe', rent1room: 130000, rent2room: 200000, utilities: 20000, groceries: 105000, transport: 25000, dining: 30000, internet: 7000 },
-  { id: 'atyrau', labelKey: 'cost-living.cities.atyrau', rent1room: 180000, rent2room: 280000, utilities: 22000, groceries: 130000, transport: 30000, dining: 45000, internet: 8000 },
-  { id: 'aktau', labelKey: 'cost-living.cities.aktau', rent1room: 170000, rent2room: 260000, utilities: 20000, groceries: 125000, transport: 28000, dining: 42000, internet: 8000 },
-  { id: 'ust-kamenogorsk', labelKey: 'cost-living.cities.ust-kamenogorsk', rent1room: 120000, rent2room: 185000, utilities: 20000, groceries: 100000, transport: 22000, dining: 28000, internet: 7000 },
-  { id: 'pavlodar', labelKey: 'cost-living.cities.pavlodar', rent1room: 100000, rent2room: 160000, utilities: 18000, groceries: 95000, transport: 20000, dining: 25000, internet: 7000 },
-  { id: 'semey', labelKey: 'cost-living.cities.semey', rent1room: 90000, rent2room: 145000, utilities: 17000, groceries: 90000, transport: 18000, dining: 22000, internet: 6500 },
+  { id: 'almaty', labelKey: 'cost-living.cities.almaty', rent1room: 230000, rent2room: 350000, utilities: 25000, groceries: 79000, transport: 30000, dining: 40000, internet: 8000 },
+  { id: 'astana', labelKey: 'cost-living.cities.astana', rent1room: 250000, rent2room: 350000, utilities: 28000, groceries: 66000, transport: 28000, dining: 38000, internet: 8000 },
+  { id: 'shymkent', labelKey: 'cost-living.cities.shymkent', rent1room: 150000, rent2room: 200000, utilities: 18000, groceries: 52000, transport: 22000, dining: 28000, internet: 7000 },
+  { id: 'karaganda', labelKey: 'cost-living.cities.karaganda', rent1room: 160000, rent2room: 220000, utilities: 22000, groceries: 68000, transport: 22000, dining: 25000, internet: 7000 },
+  { id: 'aktobe', labelKey: 'cost-living.cities.aktobe', rent1room: 155000, rent2room: 200000, utilities: 20000, groceries: 54000, transport: 25000, dining: 30000, internet: 7000 },
+  { id: 'atyrau', labelKey: 'cost-living.cities.atyrau', rent1room: 200000, rent2room: 290000, utilities: 22000, groceries: 49000, transport: 30000, dining: 45000, internet: 8000 },
+  { id: 'aktau', labelKey: 'cost-living.cities.aktau', rent1room: 150000, rent2room: 250000, utilities: 20000, groceries: 60000, transport: 28000, dining: 42000, internet: 8000 },
+  { id: 'ust-kamenogorsk', labelKey: 'cost-living.cities.ust-kamenogorsk', rent1room: 165000, rent2room: 240000, utilities: 20000, groceries: 73000, transport: 22000, dining: 28000, internet: 7000 },
+  { id: 'pavlodar', labelKey: 'cost-living.cities.pavlodar', rent1room: 150000, rent2room: 180000, utilities: 18000, groceries: 66000, transport: 20000, dining: 25000, internet: 7000 },
+  { id: 'semey', labelKey: 'cost-living.cities.semey', rent1room: 145000, rent2room: 190000, utilities: 17000, groceries: 54000, transport: 18000, dining: 22000, internet: 6500 },
 ];
 
 type RentType = '1room' | '2room' | 'own';

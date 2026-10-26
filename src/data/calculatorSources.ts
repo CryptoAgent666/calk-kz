@@ -414,7 +414,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'Krisha.kz — рынок недвижимости', url: 'https://krisha.kz/' },
     { title: 'Закон РК «Об оценочной деятельности»', url: 'https://adilet.zan.kz/rus/docs/Z1800000133' },
   ],
-  'cost-of-living': [STAT, NBK],
+  'cost-of-living': [STAT, { title: 'Krisha.kz — рынок недвижимости', url: 'https://krisha.kz/' }],
 };
 
 /**

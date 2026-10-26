@@ -165,7 +165,7 @@ const LAST_UPDATED: Record<string, string> = {
   // === НЕДВИЖИМОСТЬ ===
   'fair-rental-price': '2026-10-06', // calkcheck 06.10 б6: ставки по медианам krisha.kz 20.09.2026
   'apartment-valuation': '2026-10-27',
-  'cost-of-living': '2026-04-19',
+  'cost-of-living': '2026-10-27',
 };
 
 interface LastUpdatedProps {
