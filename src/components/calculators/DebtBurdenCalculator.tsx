@@ -472,7 +472,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
           { question: t('debt-burden.faq.q5'), answer: t('debt-burden.faq.a5') }
         ]}
         sources={[
-          { title: t('debt-burden.sourceNBRK'), url: 'https://www.nationalbank.kz' },
+          { title: t('debt-burden.sourceNBRK'), url: 'https://adilet.zan.kz/rus/docs/V2500036722' },
         ]}
       />
 

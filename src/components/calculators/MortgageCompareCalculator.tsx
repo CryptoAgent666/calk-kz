@@ -13,6 +13,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import LocalizedLink from '../LocalizedLink';
 import { pluralize } from '../../utils/pluralize';
+import { otbasyTwoStage, OTBASY_MIN_TERM_YEARS, OTBASY_STAGE1_YEARS } from '../../utils/otbasyTwoStage';
 
 /**
  * Сравнитель госипотек 07.2026: 7-20-25 (7%, ≤25 лет, лимит цены 30/25/20 млн
@@ -47,6 +48,8 @@ interface ProgramResult {
   rate: number;
   term: number;
   monthly: number;
+  /** Наурыз/Отау: платёж по жилищному займу после 8 лет предварительного. */
+  monthly2?: number;
   overpay: number;
   eligible: boolean;
   reasonKey?: string;
@@ -75,16 +78,27 @@ export default function MortgageCompareCalculator() {
       return { id, rate, term: tEff, monthly: Math.round(monthly), overpay: Math.round(monthly * tEff * 12 - loan), eligible, reasonKey };
     };
 
-    // Наурыз и Отау: 7 % для СУСН-очередников, 9 % остальным (hcsbk.kz, сверка 13.09.2026).
+    // Наурыз и Отау: 7 % для СУСН-очередников, 9 % остальным (hcsbk.kz, сверка 13.09.2026);
+    // две стадии — предварительный заём на 8 лет и жилищный под 3,5–5 % (utils/otbasyTwoStage).
+    // Одним аннуитетом на 19 лет переплата выходила больше, чем у 7-20-25, хотя по таблице
+    // банка она заметно меньше.
     const otbasyRate = vulnerable ? 7 : 9;
+    const mkOtbasy = (id: string, eligible: boolean, reasonKey?: string): ProgramResult => {
+      const tEff = Math.min(term, 19);
+      if (tEff < OTBASY_MIN_TERM_YEARS) {
+        return { id, rate: otbasyRate, term: tEff, monthly: 0, overpay: 0, eligible: false, reasonKey: reasonKey ?? 'mortgage-compare.reasonTermOtbasy' };
+      }
+      const s = otbasyTwoStage(loan, otbasyRate, tEff);
+      return { id, rate: otbasyRate, term: tEff, monthly: s.stage1Payment, monthly2: s.stage2Payment, overpay: s.overpayment, eligible, reasonKey };
+    };
     return [
       mk('72025', 7, 25,
         p <= CAP_72025[city] && dp >= 20,
         p > CAP_72025[city] ? 'mortgage-compare.reasonPriceCap' : dp < 20 ? 'mortgage-compare.reasonDown20' : undefined),
-      mk('nauryz', otbasyRate, 19,
+      mkOtbasy('nauryz',
         loan <= CAP_OTBASY[city] && dp >= 10,
         loan > CAP_OTBASY[city] ? 'mortgage-compare.reasonLoanCap' : dp < 10 ? 'mortgage-compare.reasonDown10' : undefined),
-      mk('otau', otbasyRate, 19,
+      mkOtbasy('otau',
         loan <= CAP_OTBASY[city] && dp >= 20,
         loan > CAP_OTBASY[city] ? 'mortgage-compare.reasonLoanCap' : dp < 20 ? 'mortgage-compare.reasonDown20' : undefined),
       mk('market', mkt, 25, true, undefined, gesvToNominalPct(mkt)),
@@ -103,7 +117,8 @@ export default function MortgageCompareCalculator() {
   const rateText = (pr: ProgramResult) => `${pr.rate}%${pr.id === 'market' ? ` ${t('mortgage-compare.gesvShort')}` : ''}`;
   const loan = Math.round((parseFloat(price) || 0) * (1 - (Math.min(90, Math.max(0, parseFloat(downPercent) || 0))) / 100));
   const eligible = programs.filter((pr) => pr.eligible);
-  const best = eligible.length ? eligible.reduce((a, b) => (a.monthly <= b.monthly ? a : b)) : null;
+  // «Выгоднее» — по переплате: у Наурыз/Отау первые 8 лет платёж выше, зато потом в разы ниже.
+  const best = eligible.length ? eligible.reduce((a, b) => (a.overpay <= b.overpay ? a : b)) : null;
   const market = programs.find((pr) => pr.id === 'market');
   const savings = best && market && best.id !== 'market' ? market.monthly - best.monthly : 0;
 
@@ -214,7 +229,7 @@ ${rows}`;
                 ariaLabel={t('mortgage-compare.marketRateLabel')}
                 value={parseFloat(marketRate) || 0}
                 onChange={(v) => setMarketRate(String(v))}
-                min={15} max={30} step={0.5}
+                min={15} max={25} step={0.5}
                 formatValue={(v) => `${v}%`}
                 color="#6366f1"
               />
@@ -248,7 +263,12 @@ ${rows}`;
                   )}
                 </div>
                 {pr.eligible ? (
-                  <p className="mt-1 text-xs text-gray-500">{t('mortgage-compare.overpayLabel')}: {fmt(pr.overpay)}</p>
+                  <>
+                    {pr.monthly2 !== undefined && (
+                      <p className="mt-1 text-xs text-gray-600">{t('mortgage-compare.stagesNote', { years: OTBASY_STAGE1_YEARS, amount: fmt(pr.monthly2) })}</p>
+                    )}
+                    <p className="mt-1 text-xs text-gray-500">{t('mortgage-compare.overpayLabel')}: {fmt(pr.overpay)}</p>
+                  </>
                 ) : (
                   pr.reasonKey && <p className="mt-1 text-xs text-red-400">{t(pr.reasonKey)}</p>
                 )}

@@ -635,7 +635,7 @@ export default function EarlyRepaymentCalculator() {
           { question: t('early-repayment.faq.q5'), answer: t('early-repayment.faq.a5') }
         ]}
         sources={[
-          { title: t('early-repayment.sources.civilCode'), url: 'https://online.zakon.kz/document/?doc_id=1006061' },
+          { title: t('early-repayment.sources.civilCode'), url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
           { title: t('early-repayment.sources.nbk'), url: 'https://nationalbank.kz/ru/news/grafik-prinyatiya-resheniy-po-bazovoy-stavke' },
         ]}
       />

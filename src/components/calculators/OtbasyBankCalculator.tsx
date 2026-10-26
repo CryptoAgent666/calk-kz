@@ -12,6 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
+import { otbasyTwoStage, OTBASY_MIN_TERM_YEARS, OTBASY_STAGE1_YEARS, OTBASY_HOUSING_LOAN_RATE } from '../../utils/otbasyTwoStage';
 
 // Госипотеки 2026. Сверка 13.09.2026 по первоисточникам (kfu.kz, baspana72025.kz, hcsbk.kz):
 // - «7-20-25» — НЕ продукт Отбасы банка: оператор АО «Казахстанский фонд устойчивости»
@@ -81,13 +82,32 @@ export default function OtbasyBankCalculator() {
     const rate = vulnerable && program.vulnerableRate ? program.vulnerableRate : program.rate;
     const capValue = program.cap[city];
 
-    const monthlyPayment = calcAnnuity(actualLoan, rate, termYears);
-    const totalPayments = monthlyPayment * termYears * 12;
-    const overpayment = totalPayments - actualLoan;
-    const requiredIncome = Math.round(monthlyPayment / 0.5); // DTI не более 50%
+    // Наурыз/Отау — две стадии (предварительный + жилищный заём), см. utils/otbasyTwoStage.
+    const isTwoStage = program.capKind === 'loan';
+    let monthlyPayment: number;
+    let stage2Payment = 0;
+    let stage2Years = 0;
+    let totalPayments: number;
+    let overpayment: number;
+    if (isTwoStage) {
+      const s = otbasyTwoStage(actualLoan, rate, Math.min(termYears, program.maxTerm));
+      monthlyPayment = s.stage1Payment;
+      stage2Payment = s.stage2Payment;
+      stage2Years = s.stage2Months / 12;
+      totalPayments = s.totalPaid;
+      overpayment = s.overpayment;
+    } else {
+      monthlyPayment = calcAnnuity(actualLoan, rate, termYears);
+      totalPayments = monthlyPayment * termYears * 12;
+      overpayment = totalPayments - actualLoan;
+    }
+    // КДН ≤ 0,5 (п. 36 Нормативов НБ РК № 52). К займам ЖСС предел не применяется
+    // с 01.01.2025 по 31.12.2026 (п. 20 ч. 4) — для Наурыз/Отау это ориентир, а не требование.
+    const requiredIncome = Math.round(monthlyPayment / 0.5);
 
     const isDownPaymentOk = dpPercent >= program.downPaymentMin;
-    const isTermOk = termYears <= program.maxTerm;
+    // У Наурыз/Отау срок > 19 лет раньше молча давал «Не подходит» без причины.
+    const isTermOk = termYears <= program.maxTerm && (!isTwoStage || termYears >= OTBASY_MIN_TERM_YEARS);
     // 7-20-25 ограничивает стоимость жилья, Наурыз/Отау — сумму займа.
     const isAmountOk = program.capKind === 'price' ? price <= capValue : actualLoan <= capValue;
 
@@ -97,6 +117,9 @@ export default function OtbasyBankCalculator() {
       downPayment,
       loanAmount: actualLoan,
       monthlyPayment,
+      isTwoStage,
+      stage2Payment,
+      stage2Years,
       totalPayments,
       overpayment,
       requiredIncome,
@@ -319,6 +342,11 @@ export default function OtbasyBankCalculator() {
                 {!results.isAmountOk && (
                   <p className="text-xs text-red-600 mt-1">{t(program.capKind === 'price' ? 'otbasy-bank.errorMaxPrice' : 'otbasy-bank.errorMaxAmount')} {formatCurrency(results.capValue)}</p>
                 )}
+                {!results.isTermOk && (
+                  <p className="text-xs text-red-600 mt-1">{results.isTwoStage
+                    ? t('otbasy-bank.errorTermTwoStage', { min: OTBASY_MIN_TERM_YEARS, max: program.maxTerm })
+                    : t('otbasy-bank.errorTerm', { max: program.maxTerm })}</p>
+                )}
               </div>
 
               {/* Monthly payment — main */}
@@ -327,6 +355,12 @@ export default function OtbasyBankCalculator() {
                   <span className="text-lg font-semibold text-sky-900">{t('otbasy-bank.monthlyPayment')}</span>
                   <span className="text-2xl font-bold text-sky-700">{formatCurrency(results.monthlyPayment)}</span>
                 </div>
+                {results.isTwoStage && (
+                  <div className="mt-2 space-y-1 text-sm text-sky-800">
+                    <p>{t('otbasy-bank.stage1Note', { years: OTBASY_STAGE1_YEARS })}</p>
+                    <p className="font-medium">{t('otbasy-bank.stage2Note', { years: results.stage2Years, rate: OTBASY_HOUSING_LOAN_RATE, amount: formatCurrency(results.stage2Payment) })}</p>
+                  </div>
+                )}
               </div>
 
               {/* Details */}
@@ -359,7 +393,7 @@ export default function OtbasyBankCalculator() {
               <div className="bg-purple-50 rounded-lg p-4 flex justify-between items-center">
                 <div>
                   <div className="text-sm text-purple-600">{t('otbasy-bank.requiredIncome')}</div>
-                  <div className="text-xs text-purple-500">DTI ≤ 50%</div>
+                  <div className="text-xs text-purple-500">{results.isTwoStage ? t('otbasy-bank.dtiNotApplied') : 'DTI ≤ 50%'}</div>
                 </div>
                 <span className="text-lg font-bold text-purple-700">{formatCurrency(results.requiredIncome)}</span>
               </div>

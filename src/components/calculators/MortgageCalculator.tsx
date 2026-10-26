@@ -80,11 +80,12 @@ export default function MortgageCalculator() {
         'almaty': 24000000, 'astana': 24000000, 'shymkent': 24000000, 'aktau': 24000000, 'atyrau': 24000000,
         'karaganda': 20000000, 'other': 16000000
       },
-      // Комиссии за предоставление и обслуживание займа у оператора запрещены (baspana72025.kz, FAQ) —
-      // комиссии за выдачу нет. Оценка и страховка — как у банка-участника.
+      // Комиссии за предоставление и обслуживание займа не взимаются, страхование залога и жизни
+      // заёмщика «не является обязательным, при необходимости банк осуществляет его за свой счёт»
+      // (Программа, пост. НБ РК № 107 в ред. № 88 от 27.07.2026, разд. VII). До 26.10.2026 здесь
+      // стояла страховка 0,3 % в год за счёт заёмщика: +1,2 млн к расходам и ГЭСВ 7,67 % вместо 7,25 %.
       additionalFees: {
-        evaluationFee: 25000,
-        yearlyInsurance: 0.3
+        evaluationFee: 25000
       },
       restrictionsKey: 'calculators:mortgage.program_7_20_25_restrictions'
     },
@@ -248,8 +249,19 @@ export default function MortgageCalculator() {
     if (program.additionalFees.yearlyInsurance) {
       totalAdditionalCosts += (loanAmount * program.additionalFees.yearlyInsurance / 100) * termYears;
     }
-    if (program.additionalFees.monthlyInsurance) {
-      totalAdditionalCosts += (loanAmount * program.additionalFees.monthlyInsurance / 100) * numberOfPayments * 0.6;
+    // Ежемесячная страховка — от остатка долга, одинаково в расходах и в ГЭСВ. Раньше в ГЭСВ
+    // брался первоначальный заём, а в расходах тот же платёж × 0,6.
+    const balanceBefore: number[] = [];
+    {
+      let bal = loanAmount;
+      for (let k = 1; k <= numberOfPayments; k++) {
+        balanceBefore.push(bal);
+        bal = Math.max(0, bal - (monthlyPayment - bal * monthlyRate));
+      }
+    }
+    const monthlyInsRate = (program.additionalFees.monthlyInsurance || 0) / 100;
+    if (monthlyInsRate) {
+      totalAdditionalCosts += balanceBefore.reduce((s, b) => s + b * monthlyInsRate, 0);
     }
 
     const totalCostOfCredit = totalPayment + totalAdditionalCosts - loanAmount;
@@ -262,14 +274,12 @@ export default function MortgageCalculator() {
     // страховку) и капитализируем в годовую: ГЭСВ ≥ номинальной по определению.
     const upfrontFees = (program.additionalFees.applicationFee || 0) +
                         (program.additionalFees.evaluationFee || 0) + additionalComm;
-    const monthlyInsAmt = program.additionalFees.monthlyInsurance
-      ? loanAmount * program.additionalFees.monthlyInsurance / 100 : 0;
     const yearlyInsAmt = (program.additionalFees.yearlyInsurance
       ? loanAmount * program.additionalFees.yearlyInsurance / 100 : 0) + yearlyIns;
     const npvAt = (i: number): number => {
       let v = loanAmount - upfrontFees; // t0: получен заём за вычетом разовых комиссий
       for (let k = 1; k <= numberOfPayments; k++) {
-        let out = monthlyPayment + monthlyInsAmt;
+        let out = monthlyPayment + balanceBefore[k - 1] * monthlyInsRate;
         if (k % 12 === 0) out += yearlyInsAmt;
         v -= out / Math.pow(1 + i, k);
       }
