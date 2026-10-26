@@ -79,7 +79,10 @@ export default function CaloriesCalculator() {
 
     const goalData = goals.find(g => g.id === goal);
     const adjustment = goalData?.adjustment || 0;
-    const targetCalories = maintenanceCalories * (1 + adjustment);
+    // Похудение: −18% от нормы, но дефицит не больше 500 ккал — так, как советует сама страница
+    const rawChange = maintenanceCalories * adjustment;
+    const change = goal === 'lose' ? Math.max(rawChange, -500) : rawChange;
+    const targetCalories = maintenanceCalories + change;
     const calorieAdjustment = targetCalories - maintenanceCalories;
 
     const macroData = macroSplits.find(split => split.id === macroSplit);
@@ -650,8 +653,8 @@ export default function CaloriesCalculator() {
             title: 'Institute of Medicine — Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids (Macronutrients)',
             url: 'https://nap.nationalacademies.org/catalog/10490/dietary-reference-intakes-for-energy-carbohydrate-fiber-fat-fatty-acids-cholesterol-protein-and-amino-acids',
             description: i18n.language === 'kk'
-              ? 'National Academies Press. Белсенділік коэффициенттерінің (PAL 1.2–1.9) және макронутриенттерді бөлуге арналған AMDR ауқымдарының дереккөзі.'
-              : 'National Academies Press. Источник коэффициентов активности (PAL 1.2–1.9) и диапазонов AMDR для распределения макронутриентов.',
+              ? 'National Academies Press. Макронутриенттерді бөлуге арналған AMDR ауқымдарының дереккөзі.'
+              : 'National Academies Press. Источник диапазонов AMDR для распределения макронутриентов.',
           },
         ]}
       />
@@ -665,7 +668,7 @@ export default function CaloriesCalculator() {
           { question: t('calories.faq.q2'), answer: t('calories.faq.a2') },
           { question: t('calories.faq.q3'), answer: t('calories.faq.a3') },
           { question: t('calories.faq.q4'), answer: t('calories.faq.a4') },
-          { question: t('calories.faq.q5'), answer: t('calories.faq.a5') }
+          { question: t('calories.faq.q5'), answer: t('calories.faq.a6') }
         ]}
         sources={[
           { title: 'Mifflin-St Jeor (1990) PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/2305711/' },
