@@ -36,6 +36,9 @@ export default function ConcreteVolumeCalculator() {
   const [width, setWidth] = useState<string>('3');
   const [depth, setDepth] = useState<string>('0.2');
   const [diameter, setDiameter] = useState<string>('0.3'); // для колонны
+  const [columnHeight, setColumnHeight] = useState<string>('3'); // своя высота: раньше колонна брала толщину плиты
+  const [stairWidth, setStairWidth] = useState<string>('1.2');
+  const [stairSlab, setStairSlab] = useState<string>('0.15'); // толщина наклонной плиты марша
   const [stepCount, setStepCount] = useState<string>('10'); // ступени
   const [stepHeight, setStepHeight] = useState<string>('0.17');
   const [stepDepth, setStepDepth] = useState<string>('0.3');
@@ -54,13 +57,15 @@ export default function ConcreteVolumeCalculator() {
     if (shape === 'slab' || shape === 'foundation') {
       volume = l * w * d;
     } else if (shape === 'column') {
-      volume = Math.PI * (dia / 2) ** 2 * d;
+      volume = Math.PI * (dia / 2) ** 2 * (parseFloat(columnHeight) || 0);
     } else if (shape === 'stairs') {
-      // Сумма ступеней (треугольник × ширина) + нижняя плита
-      volume = 0;
-      for (let i = 0; i < sc; i++) {
-        volume += 0.5 * (i + 1) * h * sd * w;
-      }
+      // Монолитный марш: n треугольных ступеней (½ × высота × проступь × ширина)
+      // + наклонная плита толщиной t по длине марша √((n·проступь)² + (n·высота)²)
+      const sw = parseFloat(stairWidth) || 0;
+      const t = parseFloat(stairSlab) || 0;
+      const steps = sc * 0.5 * h * sd * sw;
+      const flightLength = Math.sqrt((sc * sd) ** 2 + (sc * h) ** 2);
+      volume = steps + flightLength * t * sw;
     }
 
     if (volume <= 0) return null;
@@ -91,7 +96,7 @@ export default function ConcreteVolumeCalculator() {
       water: Math.round(water),
       totalPrice: Math.round(totalPrice),
     };
-  }, [shape, length, width, depth, diameter, stepHeight, stepDepth, stepCount, reserve]);
+  }, [columnHeight, stairWidth, stairSlab, shape, length, width, depth, diameter, stepHeight, stepDepth, stepCount, reserve]);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -137,7 +142,7 @@ export default function ConcreteVolumeCalculator() {
             <>
               <RangeSlider label={t('concrete.diameter')} value={parseFloat(diameter) || 0} onChange={v => setDiameter(String(v))}
                 min={0.1} max={2} step={0.05} formatValue={v => `${v} м`} />
-              <RangeSlider label={t('concrete.height')} value={parseFloat(depth) || 0} onChange={v => setDepth(String(v))}
+              <RangeSlider label={t('concrete.height')} value={parseFloat(columnHeight) || 0} onChange={v => setColumnHeight(String(v))}
                 min={0.5} max={20} step={0.1} formatValue={v => `${v} м`} />
             </>
           )}
@@ -150,8 +155,10 @@ export default function ConcreteVolumeCalculator() {
                 min={0.1} max={0.25} step={0.01} formatValue={v => `${v} м`} />
               <RangeSlider label={t('concrete.stepDepth')} value={parseFloat(stepDepth) || 0} onChange={v => setStepDepth(String(v))}
                 min={0.2} max={0.5} step={0.01} formatValue={v => `${v} м`} />
-              <RangeSlider label={t('concrete.width')} value={parseFloat(width) || 0} onChange={v => setWidth(String(v))}
+              <RangeSlider label={t('concrete.width')} value={parseFloat(stairWidth) || 0} onChange={v => setStairWidth(String(v))}
                 min={0.5} max={5} step={0.1} formatValue={v => `${v} м`} />
+              <RangeSlider label={t('concrete.stairSlab')} value={parseFloat(stairSlab) || 0} onChange={v => setStairSlab(String(v))}
+                min={0.08} max={0.3} step={0.01} formatValue={v => `${v} м`} />
             </>
           )}
 
