@@ -62,15 +62,15 @@ const LAST_UPDATED: Record<string, string> = {
   'deposit': '2026-10-26', // calkcheck 26.10 б17: график по выбранной капитализации, КФГД 20/10/5 млн
   'mortgage-specialized': '2026-10-26', // calkcheck 26.10 б17: 7-20-25 без страховки за счёт заёмщика
   'rent-vs-buy': '2026-10-26', // calkcheck 26.10 б17: упущенный доход — издержка покупки
-  'compound-interest': '2026-09-27', // calkcheck 27.09 б5: ставки вкладов 14–16,5%, пример 2
+  'compound-interest': '2026-10-27',
   'refinancing': '2026-10-26', // calkcheck 26.10 б17: «не окупается», ставки Halyk/Forte
   'microloan': '2026-10-26', // calkcheck 26.10 б17: ГЭСВ по IRR, потолки 179%/46%
   'early-repayment': '2026-10-26', // calkcheck 26.10 б17: ст. 53 п. 7 Закона № 258-VIII
   'otbasy-bank': '2026-10-26', // calkcheck 26.10 б17: Наурыз/Отау в две стадии
-  'fire': '2026-10-06', // calkcheck 06.10 б6: без ИИС
-  'business-roi': '2026-09-27', // calkcheck 27.09 б5: ROI за период, склонения
-  'break-even': '2026-10-06', // calkcheck 06.10 б6: запас прочности в тенге, единые пороги
-  'margin-markup': '2026-04-19',
+  'fire': '2026-10-27',
+  'business-roi': '2026-10-27',
+  'break-even': '2026-10-27',
+  'margin-markup': '2026-10-27',
   'cashback': '2026-10-26', // calkcheck 26.10 б17: условия банков по BES.media 24.08.2026
   'debt-burden': '2026-10-26', // calkcheck 26.10 б17: КДН ≠ КДД, исключения п. 20
   'inflation': '2026-10-26', // calkcheck 26.10 б17: цель НБРК, ЕАЭС по ЕЭК, сентябрь 9,3%
@@ -163,7 +163,7 @@ const LAST_UPDATED: Record<string, string> = {
   'farm-land-tax': '2026-10-26', // calkcheck б16: физлица — налог на имущество 20/100 ₸ за сотку, × 40 за неиспользование
 
   // === НЕДВИЖИМОСТЬ ===
-  'fair-rental-price': '2026-10-06', // calkcheck 06.10 б6: ставки по медианам krisha.kz 20.09.2026
+  'fair-rental-price': '2026-10-27',
   'apartment-valuation': '2026-10-27',
   'cost-of-living': '2026-10-27',
 };
