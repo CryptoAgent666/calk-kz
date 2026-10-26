@@ -31,17 +31,19 @@ type Category =
   | 'adminArrest'  // незаконный административный арест (сутки)
   | 'illegalArrest'; // незаконное уголовное преследование, содержание под стражей
 
+// Границы в МРП совпадают с ориентирами в тексте страницы (faq.a2). До 26.10.2026 верх расходился с текстом:
+// «смерть близкого» до 5 000 МРП = 21,6 млн при «3–12 млн», честь — до 648 тыс. при «20–200 тыс.» и т. п.
 const CATEGORY_RANGES: Record<Category, { min: number; max: number; avg: number }> = {
-  lightInjury:   { min: 25,  max: 150,  avg: 70 },   // 100–500 тыс ₸
-  mediumInjury:  { min: 50,  max: 250,  avg: 110 },  // 200–750 тыс ₸
-  severeInjury:  { min: 500, max: 2500, avg: 900 },  // 2,5–10 млн ₸ (II–III группа инвалидности)
-  death:         { min: 700, max: 5000, avg: 1800 }, // 3–11,7 млн ₸ на истца
-  honor:         { min: 5,   max: 150,  avg: 25 },   // 20–200 тыс ₸, частные лица
-  privacy:       { min: 20,  max: 250,  avg: 50 },   // 80 тыс – 1 млн ₸
-  consumer:      { min: 10,  max: 100,  avg: 25 },   // 50–250 тыс ₸
-  labor:         { min: 5,   max: 70,   avg: 23 },   // восстановление на работе — стабильно 100 тыс ₸
-  adminArrest:   { min: 30,  max: 120,  avg: 60 },   // 200–300 тыс ₸ за несколько суток
-  illegalArrest: { min: 300, max: 2500, avg: 700 },  // 1,5–10 млн ₸, зависит от срока под стражей
+  lightInjury:   { min: 25,  max: 115,  avg: 70 },   // 100–500 тыс ₸
+  mediumInjury:  { min: 46,  max: 173,  avg: 110 },  // 200–750 тыс ₸
+  severeInjury:  { min: 578, max: 2312, avg: 900 },  // 2,5–10 млн ₸ (II–III группа инвалидности)
+  death:         { min: 694, max: 2775, avg: 1800 }, // 3–12 млн ₸ на истца
+  honor:         { min: 5,   max: 46,   avg: 25 },   // 20–200 тыс ₸, частные лица
+  privacy:       { min: 19,  max: 231,  avg: 50 },   // 80 тыс – 1 млн ₸
+  consumer:      { min: 12,  max: 57,   avg: 25 },   // 50–250 тыс ₸
+  labor:         { min: 5,   max: 70,   avg: 23 },   // восстановление на работе — обычно около 100 тыс ₸
+  adminArrest:   { min: 46,  max: 69,   avg: 60 },   // 200–300 тыс ₸ за несколько суток
+  illegalArrest: { min: 347, max: 2312, avg: 700 },  // 1,5–10 млн ₸, зависит от срока под стражей
 };
 
 // Госпошлина по НК РК 2026 (ст. 665, 668): освобождены иски о вреде здоровью, трудовые
@@ -179,6 +181,7 @@ export default function MoralDamageCalculator() {
               <input type="checkbox" checked={longTermEffect} onChange={e => setLongTermEffect(e.target.checked)} className="h-4 w-4" />
               <span className="text-sm">{t('moral-damage.longTerm')} (+25%)</span>
             </label>
+            <p className="text-xs text-gray-500">{t('moral-damage.modifiersNote')}</p>
           </div>
         </div>
 
