@@ -58,15 +58,29 @@ export default function UniversalDeclarationCalculator() {
     // ФНО 270 только при условиях ст. 417 п. 1 НК РК: доход, облагаемый самостоятельно; счета в
     // иностранных банках > 1000 МРП; имущество за рубежом; доход > 8500 МРП и др. ФНО 250 — при
     // зарубежных активах (ст. 422 п. 2 пп. 2). Госслужащие, квазигоссектор, учредители — как раньше.
-    const MRP_2026 = 4325;
+    // Порог 8 500 МРП — по МРП «на 31 декабря отчётного налогового периода» (ст. 417 п. 1 пп. 8).
+    const MRP_DEC31: Record<ReportYear, number> = { 2024: 3692, 2025: 3932, 2026: 4325 };
+    const mrp = MRP_DEC31[reportYear];
     const isOfficial = status === 'civilServant' || status === 'quasiGov' || status === 'founder';
     const incomeNum = parseFloat(income) || 0;
     const hasForeignAssets = hasForeignProperty || hasForeignAccounts;
-    const hasTriggers = hasOtherIncome || hasForeignAssets || incomeNum > 8500 * MRP_2026;
+    // Адвокаты, нотариусы, ЧСИ, медиаторы — частная практика: доход облагается самостоятельно и
+    // отражается в ФНО 270 (ст. 412 п. 1 пп. 2, ст. 417 п. 1 пп. 3). Раньше считались «как все».
+    const selfTaxedIncome = hasOtherIncome || status === 'lawyer';
+    // ФНО 250 за зарубежные активы (ст. 422 п. 2 пп. 2); по имуществу за рубежом в этом году 270 тогда
+    // не требуется (ст. 417 п. 1, последний абзац — только для пп. 5 и 6, счета пп. 4 не освобождаются).
+    const foreign250 = reportYear >= 2025 && hasForeignAssets && firstDeclaration;
+    // Исключение пп. 8: единственный доход — зарплата, к которой агент применил ставку 15%. В 2025 году
+    // ставки 15% ещё не было, исключение не работает.
+    const salaryOnly = ipnWithheld && !selfTaxedIncome && reportYear >= 2026;
+    const incomeTrigger = incomeNum > 8500 * mrp && !salaryOnly;
+    const hasTriggers = selfTaxedIncome || hasForeignAccounts || (hasForeignProperty && !foreign250) || incomeTrigger;
     const startYear = statusStartYear[status];
-    const mustDeclare = isOfficial ? reportYear >= startYear : reportYear >= 2025 && hasTriggers;
-    const needsForm250 = firstDeclaration && (isOfficial ? mustDeclare : reportYear >= 2025 && hasForeignAssets);
-    const needsForm270 = mustDeclare;
+    const needsForm270 = isOfficial ? reportYear >= startYear : reportYear >= 2025 && hasTriggers;
+    // Госслужащий при поступлении (кандидат) — по закону о противодействии коррупции; учредителям и
+    // руководителям квазигоссектора ФНО 250 положена только при зарубежных активах.
+    const needsForm250 = (status === 'civilServant' && firstDeclaration && needsForm270) || foreign250;
+    const mustDeclare = needsForm270 || needsForm250;
     const deadlineYear = reportYear + 1;
     const baseExplKey = statusOptions.find((s) => s.id === status)?.explKey || 'explRegular';
     const explanationKey = !isOfficial && !mustDeclare ? 'explRegularNo' : baseExplKey;
@@ -83,7 +97,7 @@ export default function UniversalDeclarationCalculator() {
   const result = useMemo(
     computeResult,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [status, reportYear, firstDeclaration, income, hasOtherIncome, hasForeignProperty, hasForeignAccounts]
+    [status, reportYear, firstDeclaration, income, ipnWithheld, hasOtherIncome, hasForeignProperty, hasForeignAccounts]
   );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
