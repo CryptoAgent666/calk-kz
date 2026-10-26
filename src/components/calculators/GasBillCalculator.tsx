@@ -80,7 +80,7 @@ export default function GasBillCalculator() {
     {
       id: 'atyrau',
       nameKey: 'calculators:gas.cityAtyrau',
-      tariffPerCubicMeter: 13.56, // 11 691,95 тг/1000 м3 без НДС
+      tariffPerCubicMeter: 17.90, // 15 431,30 тг/1000 м3 без НДС с 01.10.2026 (было 11 691,95 → 13,56)
       averageMonthlyConsumption: { apartment: 28, house: 50 }
     },
     {
@@ -88,8 +88,8 @@ export default function GasBillCalculator() {
       nameKey: 'calculators:gas.otherRegions',
       // Единой цены «для прочих регионов» не публикуется: QazaqGaz Aimaq утверждает
       // её отдельно по каждому филиалу. Здесь — среднее по шести филиалам выше;
-      // в интерфейсе подписано как ориентир, а не как утверждённый тариф.
-      tariffPerCubicMeter: 44.18,
+      // в интерфейсе подписано как ориентир, а не как утверждённый тариф. Пересчитано 26.10.2026.
+      tariffPerCubicMeter: 44.91,
       averageMonthlyConsumption: { apartment: 30, house: 50 }
     }
   ];
@@ -113,7 +113,8 @@ export default function GasBillCalculator() {
     if (!selectedCity) return EMPTY_RESULTS;
 
     const tariff = selectedCity.tariffPerCubicMeter;
-    const monthlyAmount = consumption * tariff;
+    // Месяц округляем до тиынов до умножения на 12: подпись «12 × 1 644,00» давала итог 19 732.
+    const monthlyAmount = Math.round(consumption * tariff * 100) / 100;
     const yearlyAmount = monthlyAmount * 12;
 
     const averageConsumption = selectedCity.averageMonthlyConsumption[propertyType];
@@ -131,8 +132,8 @@ export default function GasBillCalculator() {
     }
 
     return {
-      monthlyAmount: Math.round(monthlyAmount),
-      yearlyAmount: Math.round(yearlyAmount),
+      monthlyAmount,
+      yearlyAmount: Math.round(yearlyAmount * 100) / 100,
       tariff,
       averageConsumption,
       isHighConsumption,
@@ -153,7 +154,7 @@ export default function GasBillCalculator() {
   };
 
   const formatTariff = (tariff: number) => {
-    return tariff.toFixed(2) + ' ₸/м³';
+    return tariff.toFixed(2).replace('.', ',') + ' ₸/м³';
   };
 
   const selectedCityData = cityGasData.find(c => c.id === city);
