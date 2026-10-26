@@ -28,11 +28,12 @@ export default function FuelCostCalculator() {
 
   // Средние цены по РК на апрель 2026 (источник: КазМунайГаз, Helios, Qazaq Oil)
   const fuelTypes: FuelType[] = [
-    { id: 'ai92', labelKey: 'fuel-cost.fuelAI92', price: 237 },
-    { id: 'ai95', labelKey: 'fuel-cost.fuelAI95', price: 312 },
+    // АЗС Астаны и Алматы 19–20.10.2026 (oilclub.kz): АИ-92 253–255, АИ-95 315–324, АИ-98 355–362, ДТ 345–359, газ 112.
+    { id: 'ai92', labelKey: 'fuel-cost.fuelAI92', price: 254 },
+    { id: 'ai95', labelKey: 'fuel-cost.fuelAI95', price: 320 },
     { id: 'ai98', labelKey: 'fuel-cost.fuelAI98', price: 360 },
-    { id: 'dt', labelKey: 'fuel-cost.fuelDT', price: 330 },
-    { id: 'lpg', labelKey: 'fuel-cost.fuelLPG', price: 100 },
+    { id: 'dt', labelKey: 'fuel-cost.fuelDT', price: 350 },
+    { id: 'lpg', labelKey: 'fuel-cost.fuelLPG', price: 112 },
   ];
 
   const quickRoutes: QuickRoute[] = [
@@ -47,7 +48,7 @@ export default function FuelCostCalculator() {
   // Дефолт цены обязан совпадать с ценой дефолтного топлива (ai92): эффект
   // «обновить цену при смене типа» срабатывает и на маунте, и если значения
   // расходятся — первый клиентский рендер не совпадает с пререндером.
-  const [fuelPrice, setFuelPrice] = useState<string>(() => String(fuelTypes.find(f => f.id === 'ai92')?.price ?? 237));
+  const [fuelPrice, setFuelPrice] = useState<string>(() => String(fuelTypes.find(f => f.id === 'ai92')?.price ?? 254));
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и

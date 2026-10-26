@@ -63,11 +63,13 @@ export default function VehicleTCOCalculator() {
   const { t, i18n } = useTranslation('calculators');
 
   const fuelTypes: FuelType[] = [
-    { id: 'ai92', labelKey: 'vehicle-tco.fuelAI92', price: 205 },
-    { id: 'ai95', labelKey: 'vehicle-tco.fuelAI95', price: 260 },
-    { id: 'ai98', labelKey: 'vehicle-tco.fuelAI98', price: 340 },
-    { id: 'dt', labelKey: 'vehicle-tco.fuelDT', price: 295 },
-    { id: 'lpg', labelKey: 'vehicle-tco.fuelLPG', price: 100 },
+    // Цены АЗС Астаны и Алматы на 19–20.10.2026 (oilclub.kz): АИ-92 253–255, АИ-95 315–324,
+    // АИ-98 355–362, ДТ 345–359, газ 112. В расчёте раньше были 205/260/340/295/100, а в подписи АИ-92 — 237.
+    { id: 'ai92', labelKey: 'vehicle-tco.fuelAI92', price: 254 },
+    { id: 'ai95', labelKey: 'vehicle-tco.fuelAI95', price: 320 },
+    { id: 'ai98', labelKey: 'vehicle-tco.fuelAI98', price: 360 },
+    { id: 'dt', labelKey: 'vehicle-tco.fuelDT', price: 350 },
+    { id: 'lpg', labelKey: 'vehicle-tco.fuelLPG', price: 112 },
     { id: 'electric', labelKey: 'vehicle-tco.fuelElectric', price: 35 }, // ₸/кВт·ч (расход в кВт·ч/100км)
   ];
 
@@ -80,17 +82,17 @@ export default function VehicleTCOCalculator() {
 
   const regions: RegionOption[] = [
     // Территориальный множитель ОГПО = коэф. региона (ст. 19 п. 3) × поправочный (п. 3-1), как в калькуляторе ОГПО.
-    // «Другие регионы» — ориентир ~1,6 (медиана произведений по областям).
+    // «Другие регионы» — медиана произведений по 17 областям из ogpoCoefficients.ts — 1,43 (было «~1,6»).
     { id: 'almaty', labelKey: 'vehicle-tco.regionAlmaty', ogpoMultiplier: ogpoTerritoryCoeff(findOgpoRegion('almaty-city')!) },
     { id: 'astana', labelKey: 'vehicle-tco.regionAstana', ogpoMultiplier: ogpoTerritoryCoeff(findOgpoRegion('astana-city')!) },
-    { id: 'other', labelKey: 'vehicle-tco.regionOther', ogpoMultiplier: 1.6 },
+    { id: 'other', labelKey: 'vehicle-tco.regionOther', ogpoMultiplier: 1.43 },
   ];
 
   const [vehiclePrice, setVehiclePrice] = useState<string>('8000000');
   const [vehicleAge, setVehicleAge] = useState<string>('3');
   const [engineVolume, setEngineVolume] = useState<string>('2000');
   const [selectedFuel, setSelectedFuel] = useState<string>('ai92');
-  const [fuelPrice, setFuelPrice] = useState<string>('205');
+  const [fuelPrice, setFuelPrice] = useState<string>('254');
   const [consumption, setConsumption] = useState<string>('9');
   const [yearlyMileage, setYearlyMileage] = useState<string>('15000');
   const [period, setPeriod] = useState<number>(5);
@@ -100,8 +102,10 @@ export default function VehicleTCOCalculator() {
   useEffect(() => {
     const fuel = fuelTypes.find((f) => f.id === selectedFuel);
     if (fuel) setFuelPrice(String(fuel.price));
-    // У EV расход в кВт·ч/100км — подставим типовые 18 при переключении.
+    // У EV расход в кВт·ч/100км — подставим типовые 18 при переключении, а при возврате
+    // на ДВС — обратно 9 л/100 км (раньше «18» оставалось и удваивало расход бензина).
     if (selectedFuel === 'electric') setConsumption('18');
+    else setConsumption((c) => (c === '18' ? '9' : c));
   }, [selectedFuel]);
 
   // Основной расчёт TCO
@@ -122,23 +126,25 @@ export default function VehicleTCOCalculator() {
 
     // 1. Годовой налог на ТС. Ставки ст. 565 НК привязаны к объёму двигателя; льготы электромобилям в НК-2026
     // нет (ст. 563), но и объёма у них нет — как облагать, кодекс прямо не говорит, поэтому для EV считаем 0.
-    let yearlyTax = 0;
+    let baseTax = 0;
     if (!isElectric) {
       const rateInfo = CAR_TAX_RATES.find(r => volume >= r.min && volume <= r.max);
-      yearlyTax = rateInfo ? rateInfo.rate * MRP_2026 : 0;
+      baseTax = rateInfo ? rateInfo.rate * MRP_2026 : 0;
       if (rateInfo && volume > 1500) {
-        yearlyTax += (volume - rateInfo.min + 1) * 7;
+        baseTax += (volume - rateInfo.min + 1) * 7;
       }
-      if (age > 20) yearlyTax *= 0.5;
-      else if (age >= 10) yearlyTax *= 0.7;
     }
+    // Поправка по сроку эксплуатации (ст. 565 п. 8): «свыше 10 до 20 лет» — 0,7, «свыше 20» — 0,5.
+    // Считаем по возрасту в каждом году владения; раньше коэффициент брался по возрасту на старте
+    // и применялся уже к авто ровно 10 лет (11 533 ₸ вместо 16 475 ₸ при 2000 см³).
+    const taxForAge = (a: number) => (a > 20 ? baseTax * 0.5 : a > 10 ? baseTax * 0.7 : baseTax);
 
     // 2. ОГПО по ст. 19 Закона № 446-II: 1,9 МРП × территория × тип «B» 2,09 × срок эксплуатации
-    // (старше 7 лет — 1,1); водитель старше 25 лет со стажем от 2 лет, класс 3 — коэффициенты 1,0.
+    // (свыше 7 лет — 1,1, п. 9); водитель старше 25 лет со стажем от 2 лет, класс 3 — коэффициенты 1,0.
     // От объёма двигателя премия по закону не зависит.
     const regionData = regions.find(r => r.id === region) ?? regions[0];
-    const ogpoAgeCoeff = age > OGPO_EXPLOITATION_THRESHOLD_YEARS ? OGPO_EXPLOITATION_OVER_7Y_COEFF : 1;
-    const yearlyOgpo = Math.round(OGPO_BASE_PREMIUM_MRP * MRP_2026 * regionData.ogpoMultiplier * 2.09 * ogpoAgeCoeff);
+    const ogpoForAge = (a: number) => Math.round(OGPO_BASE_PREMIUM_MRP * MRP_2026 * regionData.ogpoMultiplier * 2.09
+      * (a > OGPO_EXPLOITATION_THRESHOLD_YEARS ? OGPO_EXPLOITATION_OVER_7Y_COEFF : 1));
 
     // 3. КАСКО (~5% от стоимости, падает вместе с амортизацией)
     const yearlyKasko = includeKasko ? price * 0.05 : 0;
@@ -167,9 +173,11 @@ export default function VehicleTCOCalculator() {
     let currentValue = price;
     for (let y = 1; y <= period; y++) {
       const currentAge = age + y;
+      const ageThisYear = age + y - 1; // возраст авто в начале года владения
+      const yearlyTax = taxForAge(ageThisYear);
       const yFuel = yearlyFuel;
       const yKasko = includeKasko ? currentValue * 0.05 : 0;
-      const yInsurance = yearlyOgpo + yKasko;
+      const yInsurance = ogpoForAge(ageThisYear) + yKasko;
       const yMaintenance = currentValue * maintenanceRate(currentAge);
       const yTires = y % 4 === 0 ? 180000 : 45000;
 
@@ -194,19 +202,21 @@ export default function VehicleTCOCalculator() {
     const residualValue = currentValue;
     const depreciation = price - residualValue;
 
-    // Сборы — единоразовые в 1-й год
-    // Госпошлина 2026 (НК РК ст. 615): СРТС (техпаспорт) 1,25 МРП + госномера 2,8 МРП = 4,05 МРП (~17 516 ₸)
-    const regFee = (1.25 + 2.8) * MRP_2026; // 4,05 МРП ≈ 17 516 ₸
+    // Госпошлина при регистрации — разово в 1-й год: свидетельство о регистрации 1,25 МРП +
+    // номерной знак 2,8 МРП (ст. 667 п. 3 пп. 7 НК) = 4,05 МРП ≈ 17 516 ₸. Раньше сумма входила
+    // в итог, но не показывалась в структуре расходов, и ссылка была на ст. 615.
+    const regFee = Math.round((1.25 + 2.8) * MRP_2026);
     const totalFees = regFee;
 
     const totalTCO = totalFuel + totalInsurance + totalTax + totalMaintenance + totalTires + depreciation + totalFees;
     const totalMileage = mileage * period;
     const costPerKm = totalMileage > 0 ? totalTCO / totalMileage : 0;
 
-    // Экономия на газе
-    const ai92Cost = (mileage * cons / 100) * 205 * period;
-    const gasCost = (mileage * cons * 1.15 / 100) * 100 * period;
-    const gasSavings = ai92Cost - gasCost;
+    // Экономия на газе против выбранного жидкого топлива (у EV не считается).
+    const lpgPrice = fuelTypes.find((f) => f.id === 'lpg')!.price;
+    const liquidCost = (mileage * cons / 100) * fuelP * period;
+    const gasCost = (mileage * cons * 1.15 / 100) * lpgPrice * period;
+    const gasSavings = isElectric ? 0 : liquidCost - gasCost;
 
     return {
       totalTCO: Math.round(totalTCO),
@@ -223,7 +233,7 @@ export default function VehicleTCOCalculator() {
       yearlyData,
       gasSavings: Math.round(gasSavings),
     };
-  }, [vehiclePrice, vehicleAge, engineVolume, fuelPrice, consumption, yearlyMileage, period, includeKasko, region]);
+  }, [vehiclePrice, vehicleAge, engineVolume, fuelPrice, consumption, yearlyMileage, period, includeKasko, region, selectedFuel]);
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
@@ -235,6 +245,7 @@ export default function VehicleTCOCalculator() {
       { name: t('vehicle-tco.categoryMaintenance'), value: results.totalMaintenance, color: '#eab308' },
       { name: t('vehicle-tco.categoryInsurance'), value: results.totalInsurance, color: '#0ea5e9' },
       { name: t('vehicle-tco.categoryTax'), value: results.totalTax, color: '#22c55e' },
+      { name: t('vehicle-tco.categoryFees'), value: results.totalFees, color: '#a855f7' },
     ];
   }, [results, t, i18n.language]);
 
@@ -244,7 +255,7 @@ export default function VehicleTCOCalculator() {
 ─────────────────────────────
 ${t('vehicle-tco.vehiclePrice')}: ${formatCurrency(parseFloat(vehiclePrice))}
 ${t('vehicle-tco.engineVolume')}: ${engineVolume} ${t('vehicle-tco.cm3')}
-${t('vehicle-tco.consumption')}: ${consumption} ${t('vehicle-tco.lPer100km')}
+${t('vehicle-tco.consumption')}: ${consumption} ${selectedFuel === 'electric' ? t('vehicle-tco.kwhPer100km') : t('vehicle-tco.lPer100km')}
 ${t('vehicle-tco.yearlyMileage')}: ${yearlyMileage} ${t('vehicle-tco.km')}
 ${t('vehicle-tco.period')}: ${period} ${t('vehicle-tco.years')}
 
@@ -262,6 +273,7 @@ ${t('vehicle-tco.categoryFuel')}: ${formatCurrency(results.totalFuel)}
 ${t('vehicle-tco.categoryMaintenance')}: ${formatCurrency(results.totalMaintenance)}
 ${t('vehicle-tco.categoryInsurance')}: ${formatCurrency(results.totalInsurance)}
 ${t('vehicle-tco.categoryTax')}: ${formatCurrency(results.totalTax)}
+${t('vehicle-tco.categoryFees')}: ${formatCurrency(results.totalFees)}
 ─────────────────────────────
 calk.kz`;
   };
@@ -393,7 +405,7 @@ calk.kz`;
                 min={4}
                 max={25}
                 step={0.5}
-                formatValue={(v) => `${v} ${t('vehicle-tco.lPer100km')}`}
+                formatValue={(v) => `${v} ${selectedFuel === 'electric' ? t('vehicle-tco.kwhPer100km') : t('vehicle-tco.lPer100km')}`}
                 color="#10b981"
               />
             </div>
@@ -544,6 +556,7 @@ calk.kz`;
                   <div className="flex justify-between"><span className="text-gray-600">{t('vehicle-tco.categoryMaintenance')}</span><span className="font-medium">{formatCurrency(results.totalMaintenance)}</span></div>
                   <div className="flex justify-between"><span className="text-gray-600">{t('vehicle-tco.categoryInsurance')}</span><span className="font-medium">{formatCurrency(results.totalInsurance)}</span></div>
                   <div className="flex justify-between"><span className="text-gray-600">{t('vehicle-tco.categoryTax')}</span><span className="font-medium">{formatCurrency(results.totalTax)}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-600">{t('vehicle-tco.categoryFees')}</span><span className="font-medium">{formatCurrency(results.totalFees)}</span></div>
                 </div>
               </div>
 
@@ -598,7 +611,7 @@ calk.kz`;
       )}
 
       {/* Gas savings recommendation */}
-      {results && selectedFuel !== 'lpg' && results.gasSavings > 100000 && (
+      {results && selectedFuel !== 'lpg' && selectedFuel !== 'electric' && results.gasSavings > 100000 && (
         <div className="mt-8 rounded-xl border border-green-200 bg-green-50 p-5">
           <div className="flex items-start gap-3">
             <Fuel className="w-5 h-5 text-green-700 flex-shrink-0 mt-0.5" />
