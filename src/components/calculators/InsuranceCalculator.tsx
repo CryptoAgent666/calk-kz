@@ -39,6 +39,9 @@ export default function InsuranceCalculator() {
   const [settlementType, setSettlementType] = useState<'city' | 'other'>('city');
   const [drivers, setDrivers] = useState<Driver[]>([{ id: '1', age: 30, experience: 5 }]);
   const [bonusMalusClass, setBonusMalusClass] = useState<string>('3');
+  // Ст. 20 Закона № 446-II: ветераны ВОВ и приравненные, ветераны боевых действий, лица с инвалидностью
+  // I–II групп и пенсионеры платят 50% премии — если ТС не водят другие лица без этой льготы.
+  const [hasBenefit, setHasBenefit] = useState<boolean>(false);
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
@@ -52,6 +55,7 @@ export default function InsuranceCalculator() {
     vehicleTypeCoeff: 0,
     ageExperienceCoeff: 0,
     exploitationCoeff: 0,
+    benefitCoeff: 1,
     bonusMalusCoeff: 0,
     finalPremium: 0,
     vehicleAge: 0,
@@ -157,9 +161,10 @@ export default function InsuranceCalculator() {
 
     const bonusMalusCoeff = selectedBonusMalus.coefficient;
 
+    const benefitCoeff = hasBenefit ? 0.5 : 1;
     const finalPremium = basePremium * territoryCoeff * settlementCoeff *
                         vehicleTypeCoeff * ageExperienceCoeff * exploitationCoeff *
-                        bonusMalusCoeff;
+                        bonusMalusCoeff * benefitCoeff;
 
     return {
       basePremium: Math.round(basePremium),
@@ -171,6 +176,7 @@ export default function InsuranceCalculator() {
       ageExperienceCoeff,
       exploitationCoeff,
       bonusMalusCoeff,
+      benefitCoeff,
       finalPremium: Math.round(finalPremium),
       vehicleAge,
       worstDriver
@@ -182,7 +188,7 @@ export default function InsuranceCalculator() {
   const results = useMemo(
     calculatePremium,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [region, vehicleType, manufactureYear, settlementType, drivers, bonusMalusClass]
+    [region, vehicleType, manufactureYear, settlementType, drivers, bonusMalusClass, hasBenefit]
   );
 
   const formatNumber = (num: number) => {
@@ -539,6 +545,11 @@ export default function InsuranceCalculator() {
               ))}
             </div>
 
+            <label className="flex items-start gap-2 mt-4 p-3 bg-green-50 border border-green-200 rounded-lg cursor-pointer">
+              <input type="checkbox" checked={hasBenefit} onChange={(e) => setHasBenefit(e.target.checked)} className="h-4 w-4 mt-0.5" />
+              <span className="text-sm text-gray-700">{t('insurance-premium.benefitLabel')}</span>
+            </label>
+
             <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
               <div className="flex items-start space-x-2">
                 <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -612,6 +623,12 @@ export default function InsuranceCalculator() {
                     <span>{t('insurance-premium.bonusMalusCoefficient')}</span>
                     <span>×{results.bonusMalusCoeff}</span>
                   </div>
+                  {results.benefitCoeff < 1 && (
+                    <div className="flex justify-between">
+                      <span>{t('insurance-premium.benefitCoefficient')}</span>
+                      <span>×{results.benefitCoeff}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
