@@ -13,16 +13,15 @@ import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
 
-// Исламские продукты в КЗ:
-// Мурабаха — банк покупает дом и продаёт клиенту с наценкой (основной продукт Al Hilal, Заман Банк)
-// Иджара — лизинг (банк сдаёт в аренду, клиент выкупает)
-// Иджара мунтаха биль-тамлик — аренда с выкупом
-// Нет ссудного процента (риба) — запрещено шариатом
+// Исламские операции — глава 7 Закона о банках № 258-VIII (ст. 33–44): их ведут исламские банки
+// и банки с универсальной лицензией («исламские окна», ст. 34).
+// Мурабаха — банк покупает жильё и продаёт клиенту в рассрочку с наценкой (ст. 40).
+// Иджара — лизинг/аренда; право выкупа в договор включать нельзя, собственность переходит
+// по отдельному соглашению (ст. 43 п. 3).
+// Публичной жилищной программы для физлиц на 27.10.2026 не найдено: Al Hilal с 2024 г. — ADCB
+// Islamic Bank (только корпоративные клиенты), у Заман Банка — беззалоговое финансирование до 3 млн ₸.
 
 type Product = 'murabaha' | 'ijara';
-
-// Типичная наценка в КЗ: 8-12% годовых (для мурабаха — общая наценка, не проценты)
-// При сроке 15 лет наценка ~100-150% от стоимости
 
 export default function IslamicMortgageCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -30,7 +29,9 @@ export default function IslamicMortgageCalculator() {
   const [propertyPrice, setPropertyPrice] = useState<string>('25000000');
   const [downPayment, setDownPayment] = useState<string>('30'); // %
   const [termYears, setTermYears] = useState<string>('15');
-  const [markup, setMarkup] = useState<string>('7'); // % годовых (плоская наценка Al Hilal ~7%)
+  // Мурабаха — плоская наценка в % в год от суммы финансирования; иджара — ставка аренды на остаток.
+  // 12% плоских ≈ 19% эффективных за 15 лет — ориентир, а не предложение конкретного банка.
+  const [markup, setMarkup] = useState<string>('12');
 
   const results = useMemo(() => {
     const price = parseFloat(propertyPrice) || 0;
@@ -74,13 +75,12 @@ export default function IslamicMortgageCalculator() {
     const convTotal = convMonthly * convN;
     const convOverpayment = convTotal - financedAmount;
 
-    // Коэффициент удорожания — как это подают сами исламские банки РК
-    // (Al Hilal, Заман Банк): общая наценка в % от финансируемой суммы.
-    // ~104-106% за 15 лет при плоской наценке ~7%/год.
+    // Коэффициент удорожания — общая наценка в % от финансируемой суммы
+    // (при плоской наценке 12% за 15 лет — 180%).
     const markupCoefficient = financedAmount > 0 ? (overpayment / financedAmount) * 100 : 0;
 
-    // «Эффективная ставка ДЛЯ СРАВНЕНИЯ» — НЕ ГЭСВ (исламские банки по закону
-    // от ГЭСВ освобождены и её не публикуют, adilet V1200007663). Считаем IRR
+    // «Эффективная ставка ДЛЯ СРАВНЕНИЯ» — НЕ ГЭСВ (правила расчёта ГЭСВ, постановление АРРФР № 44,
+    // V2600038333, исламские банки исключают; «исламские окна» универсальных банков — нет). Считаем IRR
     // равных ежемесячных платежей: для мурабахи (плоская наценка) эффективная
     // ставка ~1,7× плоской (7% плоских ≈ 12% эффективных); прежняя формула
     // (totalToPay/financed)^(1/срок) занижала её ниже самой наценки.
@@ -155,7 +155,7 @@ export default function IslamicMortgageCalculator() {
             onChange={v => setDownPayment(String(v))} min={20} max={70} step={5} formatValue={v => `${v}%`} />
           <RangeSlider label={t('islamic-mortgage.term')} value={parseFloat(termYears) || 0}
             onChange={v => setTermYears(String(v))} min={3} max={15} step={1} formatValue={v => `${v} ${pluralize(i18n.language, v, 'год', 'года', 'лет')}`} />
-          <RangeSlider label={t('islamic-mortgage.markup')} value={parseFloat(markup) || 0}
+          <RangeSlider label={t(product === 'murabaha' ? 'islamic-mortgage.markupFlat' : 'islamic-mortgage.rentRate')} value={parseFloat(markup) || 0}
             onChange={v => setMarkup(String(v))} min={5} max={18} step={0.5} formatValue={v => `${v}%`} />
 
           <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-xs text-green-900">
@@ -172,7 +172,7 @@ export default function IslamicMortgageCalculator() {
                 <div className="text-sm text-gray-600">{t('islamic-mortgage.monthlyPayment')}</div>
                 <div className="text-4xl font-bold text-green-700">{formatNumber(results.monthlyPayment)}</div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {t('islamic-mortgage.effectiveRate')}: ~{results.effectiveRate}%
+                  {t('islamic-mortgage.effectiveRate')}: ~{results.effectiveRate.replace('.', ',')}%
                   <span className="block text-gray-400">{t('islamic-mortgage.effectiveRateNote')}</span>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export default function IslamicMortgageCalculator() {
               </div>
 
               <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-700">
-                🏦 {t('islamic-mortgage.banks')}: Al Hilal Islamic Bank, Заман Банк
+                🏦 {t('islamic-mortgage.banksNote')}
               </div>
             </>
           )}
@@ -237,7 +237,7 @@ export default function IslamicMortgageCalculator() {
         </div>
       )}
 
-      <LegalDisclaimer type="religious" />
+      <LegalDisclaimer type="finance" />
       <ExpertBlock />
       <CalculatorExamples calculatorId="islamic-mortgage" />
       <MethodologySection calculatorId="islamic-mortgage" />

@@ -991,7 +991,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'islamic-mortgage',
         title: 'Калькулятор исламской ипотеки',
-        description: 'Мурабаха и иджара: халяльные программы Al Hilal Bank, Заман Банк, Сауле Капитал',
+        description: 'Мурабаха и иджара: платёж, наценка и эффективная ставка в сравнении с обычной ипотекой',
         category: 'religious',
         icon: 'Home',
         component: React.lazy(() => import('../components/calculators/IslamicMortgageCalculator'))
