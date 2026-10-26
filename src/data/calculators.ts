@@ -245,7 +245,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'auto-leasing',
         title: 'Калькулятор автолизинга',
-        description: 'Сравнение лизинга с автокредитом: первоначальный взнос, остаточная стоимость, ГЭСВ',
+        description: 'Сравнение лизинга с автокредитом: первоначальный взнос, остаточная стоимость, удорожание',
         category: 'auto',
         icon: 'Wallet',
         component: React.lazy(() => import('../components/calculators/AutoLeasingCalculator'))

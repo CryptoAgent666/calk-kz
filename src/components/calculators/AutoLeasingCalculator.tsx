@@ -33,6 +33,9 @@ export default function AutoLeasingCalculator() {
   const [downPaymentPct, setDownPaymentPct] = useState<number>(20);
   const [termMonths, setTermMonths] = useState<number>(36);
   const [annualRate, setAnnualRate] = useState<number>(18);
+  // Ставка автокредита — отдельно: при одной ставке лизинг с выкупом всегда дороже кредита,
+  // и сравнение превращалось в тавтологию («Лизинг выгоднее» было недостижимо).
+  const [creditRate, setCreditRate] = useState<number>(18);
   const [residualPct, setResidualPct] = useState<number>(25);
   const [includeKasko, setIncludeKasko] = useState<boolean>(false);
   const [purpose, setPurpose] = useState<Purpose>('commercial');
@@ -56,9 +59,16 @@ export default function AutoLeasingCalculator() {
       return EMPTY_RESULTS;
     }
 
-    const effectiveRateAnnual = includeKasko ? annualRate + 4 : annualRate;
-    const r = effectiveRateAnnual / 100 / 12;
+    const r = annualRate / 100 / 12;
     const n = termMonths;
+    // КАСКО — 4 % в год от стоимости авто, которая дешевеет на 15 % в год; одинаково для лизинга
+    // и кредита (банк тоже требует КАСКО). До 26.10.2026 КАСКО моделировалось как +4 п.п.
+    // к ставке, то есть процентом от остатка долга: 15 млн на 36 мес — ≈1,06 млн вместо ≈1,54 млн.
+    let kaskoTotal = 0;
+    if (includeKasko) {
+      for (let m = 0; m < n; m++) kaskoTotal += price * 0.04 / 12 * Math.pow(0.85, Math.floor(m / 12));
+    }
+    const kaskoMonthly = kaskoTotal / n;
 
     const downPaymentAmount = price * (downPaymentPct / 100);
     const residualAmount = price * (residualPct / 100);
@@ -72,20 +82,21 @@ export default function AutoLeasingCalculator() {
 
     // Аннуитетный платёж
     const monthlyPayment =
-      r > 0
+      (r > 0
         ? (principal * r) / (1 - Math.pow(1 + r, -n))
-        : principal / n;
+        : principal / n) + kaskoMonthly;
 
     const totalPayments = downPaymentAmount + monthlyPayment * n + residualAmount;
     const overpayment = totalPayments - price;
     const effectiveRate = (overpayment / price / (termMonths / 12)) * 100;
 
-    // Сравнение с автокредитом: та же ставка, тот же срок, тот же первоначальный взнос, без остаточной
+    // Сравнение с автокредитом: своя ставка, тот же срок и взнос, без остаточной, КАСКО — как у лизинга
+    const rc = creditRate / 100 / 12;
     const creditPrincipal = price - downPaymentAmount;
     const creditMonthly =
-      r > 0
-        ? (creditPrincipal * r) / (1 - Math.pow(1 + r, -n))
-        : creditPrincipal / n;
+      (rc > 0
+        ? (creditPrincipal * rc) / (1 - Math.pow(1 + rc, -n))
+        : creditPrincipal / n) + kaskoMonthly;
     const creditTotal = downPaymentAmount + creditMonthly * n;
 
     const diff = Math.abs(totalPayments - creditTotal);
@@ -111,7 +122,7 @@ export default function AutoLeasingCalculator() {
   const results = useMemo(
     computeResults,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [carPrice, downPaymentPct, termMonths, annualRate, residualPct, includeKasko]
+    [carPrice, downPaymentPct, termMonths, annualRate, creditRate, residualPct, includeKasko]
   );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
@@ -129,6 +140,7 @@ export default function AutoLeasingCalculator() {
           },
           { label: t('auto-leasing.term'), value: `${termMonths} ${t('auto-leasing.months')}` },
           { label: t('auto-leasing.rate'), value: `${annualRate}%` },
+          { label: t('auto-leasing.creditRate'), value: `${creditRate}%` },
           {
             label: t('auto-leasing.residualValue'),
             value: `${residualPct}% (${formatCurrency(results.residualAmount)})`,
@@ -279,6 +291,24 @@ export default function AutoLeasingCalculator() {
               />
             </div>
 
+            {/* Credit rate for comparison */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Percent className="w-4 h-4 inline mr-1" />
+                {t('auto-leasing.creditRate')}
+              </label>
+              <RangeSlider
+                ariaLabel={t('auto-leasing.creditRate')}
+                value={creditRate}
+                onChange={setCreditRate}
+                min={4}
+                max={35}
+                step={0.5}
+                formatValue={(v) => `${v}%`}
+                color="#6366f1"
+              />
+            </div>
+
             {/* Residual value */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -363,8 +393,8 @@ export default function AutoLeasingCalculator() {
                 </span>
               </div>
               <div className="text-sm text-gray-600">
-                {termMonths} {t('auto-leasing.months')} · {annualRate}
-                {includeKasko ? '+4' : ''}%
+                {termMonths} {t('auto-leasing.months')} · {annualRate}%
+                {includeKasko ? ` · ${t('auto-leasing.kaskoIncluded')}` : ''}
               </div>
             </div>
 
@@ -431,10 +461,15 @@ export default function AutoLeasingCalculator() {
                       : 'bg-orange-50 text-orange-800'
                   }`}
                 >
-                  {results.leasingBetter
-                    ? `${t('auto-leasing.leasingBetter')}: ${formatCurrency(results.diff)}`
-                    : `${t('auto-leasing.creditBetter')}: ${formatCurrency(results.diff)}`}
+                  {results.diff === 0
+                    ? t('auto-leasing.equalCost')
+                    : results.leasingBetter
+                      ? `${t('auto-leasing.leasingBetter')}: ${formatCurrency(results.diff)}`
+                      : `${t('auto-leasing.creditBetter')}: ${formatCurrency(results.diff)}`}
                 </div>
+                {annualRate === creditRate && residualPct > 0 && (
+                  <p className="text-xs text-gray-500">{t('auto-leasing.sameRateNote')}</p>
+                )}
               </div>
             </div>
 
@@ -447,7 +482,7 @@ export default function AutoLeasingCalculator() {
                     {t('auto-leasing.recommendation')}
                   </div>
                   <div className="text-sm text-indigo-800">
-                    {purpose === 'commercial' || results.leasingBetter
+                    {purpose === 'commercial'
                       ? t('auto-leasing.recommendLeasing')
                       : t('auto-leasing.recommendCredit')}
                   </div>
