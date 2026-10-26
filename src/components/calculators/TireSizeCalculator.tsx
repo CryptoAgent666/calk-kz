@@ -12,7 +12,7 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 // Расчёт параметров шины
 function calcTire(width: number, profile: number, rim: number) {
   const sidewall = width * (profile / 100);           // высота профиля (мм)
-  const rimMM = rim * 25.4;                           // диаметр диска (мм)
+  const rimMM = rim * 25.4;                           // посадочный диаметр диска (мм); R — радиальная шина, не радиус
   const diameter = rimMM + 2 * sidewall;              // общий диаметр (мм)
   const circumference = Math.PI * diameter;           // длина окружности (мм)
   const revPerKm = 1_000_000 / circumference;         // оборотов/км
@@ -20,9 +20,10 @@ function calcTire(width: number, profile: number, rim: number) {
 }
 
 const COMMON_SIZES = [
-  '175/65/R14', '185/65/R15', '195/65/R15', '205/55/R16',
-  '215/55/R17', '225/45/R18', '235/55/R18', '265/65/R17',
+  '175/65 R14', '185/65 R15', '195/65 R15', '205/55 R16',
+  '215/55 R17', '225/45 R18', '235/55 R18', '265/65 R17',
 ];
+const dec = (v: number, digits = 1) => v.toFixed(digits).replace('.', ',');
 
 // На уровне модуля намеренно: объявленный внутри калькулятора компонент на каждом
 // рендере становился новым типом, React перемонтировал input — фокус терялся после первой цифры.
@@ -32,11 +33,11 @@ function TireInput({ label, w, p, r, setW, setP, setR }: {
 }) {
   const { t } = useTranslation('calculators');
   const applyPreset = (preset: string) => {
-    const parts = preset.split('/');
-    if (parts.length !== 3) return;
-    setW(parts[0]);
-    setP(parts[1]);
-    setR(parts[2].replace('R', ''));
+    const m = preset.match(/^(\d+)\/(\d+) R([\d.]+)$/);
+    if (!m) return;
+    setW(m[1]);
+    setP(m[2]);
+    setR(m[3]);
   };
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -59,7 +60,7 @@ function TireInput({ label, w, p, r, setW, setP, setR }: {
         </div>
       </div>
       <div className="text-center font-mono text-lg text-gray-900 mb-3">
-        {w}/{p}/R{r}
+        {w}/{p} R{r}
       </div>
       <div className="flex flex-wrap gap-1">
         {COMMON_SIZES.map((size) => (
@@ -90,7 +91,7 @@ export default function TireSizeCalculator() {
   const tire1 = useMemo(() => {
     const w = parseInt(width1) || 0;
     const p = parseInt(profile1) || 0;
-    const r = parseInt(rim1) || 0;
+    const r = parseFloat(rim1) || 0; // бывают R17,5 и R19,5
     if (w <= 0 || p <= 0 || r <= 0) return null;
     return calcTire(w, p, r);
   }, [width1, profile1, rim1]);
@@ -98,7 +99,7 @@ export default function TireSizeCalculator() {
   const tire2 = useMemo(() => {
     const w = parseInt(width2) || 0;
     const p = parseInt(profile2) || 0;
-    const r = parseInt(rim2) || 0;
+    const r = parseFloat(rim2) || 0; // бывают R17,5 и R19,5
     if (w <= 0 || p <= 0 || r <= 0) return null;
     return calcTire(w, p, r);
   }, [width2, profile2, rim2]);
@@ -109,10 +110,11 @@ export default function TireSizeCalculator() {
     const clearanceDiff = diameterDiff / 2;
     // Погрешность спидометра: если новая шина больше, спидометр показывает МЕНЬШЕ
     const speedoError = ((tire2.circumference - tire1.circumference) / tire1.circumference) * 100;
-    return { diameterDiff, clearanceDiff, speedoError };
+    const diameterDiffPct = (diameterDiff / tire1.diameter) * 100;
+    return { diameterDiff, diameterDiffPct, clearanceDiff, speedoError };
   }, [tire1, tire2]);
 
-  const formatMM = (val: number) => val.toFixed(1) + ' ' + t('tire-size.mm');
+  const formatMM = (val: number) => dec(val) + ' ' + t('tire-size.mm');
 
   const generateExportData = () => {
     if (!tire1 || !tire2 || !comparison) return null;
@@ -120,7 +122,7 @@ export default function TireSizeCalculator() {
       title: t('tire-size.exportTitle'),
       sections: [
         {
-          title: `${width1}/${profile1}/R${rim1}`,
+          title: `${width1}/${profile1} R${rim1}`,
           data: [
             { label: t('tire-size.diameter'), value: formatMM(tire1.diameter) },
             { label: t('tire-size.sidewall'), value: formatMM(tire1.sidewall) },
@@ -128,7 +130,7 @@ export default function TireSizeCalculator() {
           ],
         },
         {
-          title: `${width2}/${profile2}/R${rim2}`,
+          title: `${width2}/${profile2} R${rim2}`,
           data: [
             { label: t('tire-size.diameter'), value: formatMM(tire2.diameter) },
             { label: t('tire-size.sidewall'), value: formatMM(tire2.sidewall) },
@@ -182,11 +184,12 @@ export default function TireSizeCalculator() {
 
           <div className="grid md:grid-cols-3 gap-6 mb-6">
             {/* Diameter difference */}
-            <div className={`rounded-lg p-4 ${Math.abs(comparison.diameterDiff) > 15 ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'}`}>
+            <div className={`rounded-lg p-4 ${Math.abs(comparison.diameterDiffPct) > 3 ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'}`}>
               <div className="text-sm text-gray-600 mb-1">{t('tire-size.diameterDiff')}</div>
-              <div className={`text-2xl font-bold ${Math.abs(comparison.diameterDiff) > 15 ? 'text-red-700' : 'text-green-700'}`}>
-                {comparison.diameterDiff > 0 ? '+' : ''}{comparison.diameterDiff.toFixed(1)} {t('tire-size.mm')}
+              <div className={`text-2xl font-bold ${Math.abs(comparison.diameterDiffPct) > 3 ? 'text-red-700' : 'text-green-700'}`}>
+                {comparison.diameterDiff > 0 ? '+' : ''}{dec(comparison.diameterDiff)} {t('tire-size.mm')}
               </div>
+              <div className="text-xs text-gray-500 mt-1">{comparison.diameterDiffPct > 0 ? '+' : ''}{dec(comparison.diameterDiffPct, 2)}%</div>
             </div>
 
             {/* Clearance */}
@@ -195,7 +198,7 @@ export default function TireSizeCalculator() {
                 <ArrowUp className="w-4 h-4 mr-1" />{t('tire-size.clearanceDiff')}
               </div>
               <div className="text-2xl font-bold text-blue-700">
-                {comparison.clearanceDiff > 0 ? '+' : ''}{comparison.clearanceDiff.toFixed(1)} {t('tire-size.mm')}
+                {comparison.clearanceDiff > 0 ? '+' : ''}{dec(comparison.clearanceDiff)} {t('tire-size.mm')}
               </div>
             </div>
 
@@ -205,8 +208,13 @@ export default function TireSizeCalculator() {
                 <Gauge className="w-4 h-4 mr-1" />{t('tire-size.speedoError')}
               </div>
               <div className={`text-2xl font-bold ${Math.abs(comparison.speedoError) > 3 ? 'text-red-700' : 'text-amber-700'}`}>
-                {comparison.speedoError > 0 ? '+' : ''}{comparison.speedoError.toFixed(2)}%
+                {comparison.speedoError > 0 ? '+' : ''}{dec(comparison.speedoError, 2)}%
               </div>
+              {Math.abs(comparison.speedoError) >= 0.01 && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {t(comparison.speedoError > 0 ? 'tire-size.speedoUnder' : 'tire-size.speedoOver')}
+                </div>
+              )}
             </div>
           </div>
 
@@ -216,8 +224,8 @@ export default function TireSizeCalculator() {
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-2 px-3 text-gray-600">{t('tire-size.parameter')}</th>
-                  <th className="text-right py-2 px-3 text-gray-600">{width1}/{profile1}/R{rim1}</th>
-                  <th className="text-right py-2 px-3 text-gray-600">{width2}/{profile2}/R{rim2}</th>
+                  <th className="text-right py-2 px-3 text-gray-600">{width1}/{profile1} R{rim1}</th>
+                  <th className="text-right py-2 px-3 text-gray-600">{width2}/{profile2} R{rim2}</th>
                   <th className="text-right py-2 px-3 text-gray-600">{t('tire-size.difference')}</th>
                 </tr>
               </thead>
@@ -230,10 +238,10 @@ export default function TireSizeCalculator() {
                 ].map((row) => (
                   <tr key={row.key} className="border-b border-gray-50">
                     <td className="py-2 px-3 text-gray-700">{t(`tire-size.${row.key}`)}</td>
-                    <td className="py-2 px-3 text-right">{row.v1.toFixed(1)}</td>
-                    <td className="py-2 px-3 text-right">{row.v2.toFixed(1)}</td>
+                    <td className="py-2 px-3 text-right">{dec(row.v1)}</td>
+                    <td className="py-2 px-3 text-right">{dec(row.v2)}</td>
                     <td className="py-2 px-3 text-right font-medium">
-                      {(row.v2 - row.v1) > 0 ? '+' : ''}{(row.v2 - row.v1).toFixed(1)}
+                      {(row.v2 - row.v1) > 0 ? '+' : ''}{dec(row.v2 - row.v1)}
                     </td>
                   </tr>
                 ))}
@@ -245,7 +253,7 @@ export default function TireSizeCalculator() {
           {Math.abs(comparison.speedoError) > 3 && (
             <div className="mt-4 bg-red-50 rounded-lg p-3 text-sm text-red-700 border border-red-200">
               <Info className="w-4 h-4 inline mr-1" />
-              {t('tire-size.speedoWarning')}
+              {t('tire-size.speedoWarning', { speed: dec(100 * (1 + comparison.speedoError / 100)) })}
             </div>
           )}
         </div>
