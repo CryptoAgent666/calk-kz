@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { pluralize } from '../../utils/pluralize';
 
 // Нормы сна по возрасту (National Sleep Foundation)
 interface AgeGroup { min: number; max: number; key: string; hours: string; recommended: number }
@@ -55,7 +56,14 @@ export default function SleepCalculator() {
   const [wakeupTime, setWakeupTime] = useState<string>('07:00');
   const [bedTime, setBedTime] = useState<string>('23:00');
 
-  const ageGroup = useMemo(() => getAgeGroup(parseFloat(age) || 30), [age]);
+  // 0 лет — валидный возраст (новорождённый); раньше «|| 30» превращал его во взрослого
+  const ageGroup = useMemo(() => {
+    const n = parseFloat(age);
+    return getAgeGroup(Number.isFinite(n) ? n : 30);
+  }, [age]);
+  // Оптимальным считается вариант, чья длительность попадает в норму своей возрастной группы
+  const [normLo, normHi] = ageGroup.hours.split('-').map(Number);
+  const cyclesWord = (n: number) => i18n.language === 'kk' ? t('sleep.cycles') : pluralize('ru', n, 'цикл', 'цикла', 'циклов');
 
   // Цикл сна = 90 минут; засыпание ~ 15 мин
   const FALL_ASLEEP = 15;
@@ -70,7 +78,9 @@ export default function SleepCalculator() {
     if (mode === 'wakeup') {
       // Хочу проснуться в X — когда лечь?
       const { h, m } = parseT(wakeupTime);
-      const options = [6, 5, 4, 3].map(cycles => {
+      // Детям с нормой от 9 ч нужен и вариант на 7 циклов (10,5 ч)
+      const cyclesList = normLo >= 9 ? [7, 6, 5, 4] : [6, 5, 4, 3];
+      const options = cyclesList.map(cycles => {
         const total = cycles * CYCLE + FALL_ASLEEP;
         const bt = subtractMinutes(h, m, total);
         return { cycles, hours: (cycles * CYCLE) / 60, time: formatTime(bt.h, bt.m) };
@@ -87,7 +97,7 @@ export default function SleepCalculator() {
       });
       return { options };
     }
-  }, [mode, wakeupTime, bedTime]);
+  }, [mode, wakeupTime, bedTime, normLo]);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -112,7 +122,7 @@ export default function SleepCalculator() {
         <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-5 border border-indigo-200">
           <div className="text-sm text-gray-600">{t(`sleep.groups.${ageGroup.key}`)}</div>
           <div className="text-3xl font-bold text-indigo-700">{ageGroup.hours} {t('sleep.hoursPerDay')}</div>
-          <div className="text-xs text-gray-500 mt-1">{t('sleep.recommended')}: {ageGroup.recommended} {hoursAbbr}</div>
+          <div className="text-xs text-gray-500 mt-1">{t('sleep.recommended')}: {String(ageGroup.recommended).replace('.', ',')} {hoursAbbr}</div>
         </div>
 
         <div className="flex gap-2">
@@ -142,12 +152,12 @@ export default function SleepCalculator() {
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {results.options.map((opt, i) => {
-              const isOptimal = opt.cycles >= 5 && opt.cycles <= 6;
+              const isOptimal = opt.hours >= normLo && opt.hours <= normHi;
               return (
                 <div key={i} className={`p-4 rounded-lg border ${isOptimal ? 'bg-green-50 border-green-400' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="text-2xl font-bold font-mono">{opt.time}</div>
-                  <div className="text-xs text-gray-600 mt-1">{opt.cycles} {t('sleep.cycles')}</div>
-                  <div className="text-xs text-gray-500">{opt.hours} {hoursAbbr}</div>
+                  <div className="text-xs text-gray-600 mt-1">{opt.cycles} {cyclesWord(opt.cycles)}</div>
+                  <div className="text-xs text-gray-500">{String(opt.hours).replace('.', ',')} {hoursAbbr}</div>
                   {isOptimal && <div className="text-xs text-green-700 font-medium mt-1">✓ {t('sleep.optimal')}</div>}
                 </div>
               );
@@ -166,7 +176,7 @@ export default function SleepCalculator() {
             title: t('sleep.title'),
             subtitle: t(`sleep.groups.${ageGroup.key}`),
             sections: [{ title: t('sleep.results'), data: results.options.map(o => ({
-              label: `${o.cycles} ${t('sleep.cycles')} (${o.hours} ${hoursAbbr})`, value: o.time
+              label: `${o.cycles} ${cyclesWord(o.cycles)} (${String(o.hours).replace('.', ',')} ${hoursAbbr})`, value: o.time
             }))}],
             footer: 'Calk.kz'
           }}
