@@ -114,7 +114,7 @@ ${t('refinancing.export.result')}:
 - ${t('refinancing.export.paymentChange')}: ${results.monthlyDifference > 0 ? '-' : '+'}${formatNumber(Math.abs(results.monthlyDifference))}
 - ${t('refinancing.export.interestSavings')}: ${formatNumber(results.totalSavings)}
 - ${t('refinancing.export.netBenefit')}: ${formatNumber(results.netSavings)}
-- ${t('refinancing.export.breakEvenPeriod')}: ${results.breakEvenMonths > 0 ? results.breakEvenMonths + ' ' + t('refinancing.export.monthsShort') : t('refinancing.export.immediatelyProfitable')}
+- ${t('refinancing.export.breakEvenPeriod')}: ${results.breakEvenMonths > 0 ? results.breakEvenMonths + ' ' + t('refinancing.export.monthsShort') : results.breakEvenMonths < 0 ? t('refinancing.results.noPayback') : t('refinancing.export.immediatelyProfitable')}
 
 ${t('refinancing.export.conclusion')}: ${results.isWorthIt ? t('refinancing.export.refinancingProfitable') : t('refinancing.export.refinancingNotRecommended')}
 
@@ -146,9 +146,12 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
       const totalSav = currentInterest - newInterest;
       const netSav = totalSav - costs;
 
+      // −1 — расходы не окупаются: платёж не снизился. До 26.10.2026 в этом случае выводилось «Сразу».
       let breakEven = 0;
-      if (monthlyDiff > 0 && costs > 0) {
-        breakEven = Math.ceil(costs / monthlyDiff);
+      if (costs > 0) {
+        breakEven = monthlyDiff > 0 ? Math.ceil(costs / monthlyDiff) : -1;
+      } else if (monthlyDiff <= 0) {
+        breakEven = -1;
       }
 
       return {
@@ -311,7 +314,7 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
               <div className={`rounded-lg p-4 ${results.isWorthIt ? 'bg-white/70' : 'bg-white/70'}`}>
                 <div className="text-sm text-gray-600 mb-1">{t('refinancing.results.breakEvenPeriod')}</div>
                 <div className="text-2xl font-bold text-gray-800">
-                  {results.breakEvenMonths > 0 ? `${results.breakEvenMonths} ${t('refinancing.results.monthsShort')}` : t('refinancing.results.immediately')}
+                  {results.breakEvenMonths > 0 ? `${results.breakEvenMonths} ${t('refinancing.results.monthsShort')}` : results.breakEvenMonths < 0 ? t('refinancing.results.noPayback') : t('refinancing.results.immediately')}
                 </div>
               </div>
             </div>
@@ -377,7 +380,9 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('refinancing.banks.title')}</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {/* Условия с halykbank.kz/credit/refinans и bank.forte.kz/refenansirovanie на 26.10.2026.
+            Kaspi убран: продукта рефинансирования займов других банков у него не нашли. */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="border border-blue-200 rounded-lg p-4">
             <h3 className="font-semibold text-blue-900 mb-3">{t('refinancing.banks.halykBank.name')}</h3>
             <div className="space-y-2 text-sm">
@@ -392,23 +397,6 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
             </div>
             <div className="mt-3 text-xs text-gray-600">
               {t('refinancing.banks.halykBank.description')}
-            </div>
-          </div>
-
-          <div className="border border-green-200 rounded-lg p-4">
-            <h3 className="font-semibold text-green-900 mb-3">{t('refinancing.banks.kaspiBank.name')}</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span>{t('refinancing.banks.kaspiBank.refinancing')}</span>
-                <span className="font-medium text-green-700">{t('refinancing.banks.kaspiBank.rate')}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>{t('refinancing.banks.kaspiBank.commission')}</span>
-                <span className="font-medium text-green-700">{t('refinancing.banks.kaspiBank.commissionRate')}</span>
-              </div>
-            </div>
-            <div className="mt-3 text-xs text-gray-600">
-              {t('refinancing.banks.kaspiBank.description')}
             </div>
           </div>
 
@@ -635,8 +623,9 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
           { question: t('refinancing.faq.q5'), answer: t('refinancing.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР Ұлттық Банкі — Базалық мөлшерлеме' : 'Нацбанк РК — Базовая ставка', url: 'https://nationalbank.kz/ru/news/bazovaya-stavka' },
-          { title: i18n.language === 'kk' ? 'Қайта қаржыландыру шарттарын салыстыру' : 'Сравнение условий рефинансирования', url: 'https://finprom.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Ұлттық Банкі — Базалық мөлшерлеме' : 'Нацбанк РК — Базовая ставка', url: 'https://nationalbank.kz/ru/news/grafik-prinyatiya-resheniy-po-bazovoy-stavke' },
+          { title: i18n.language === 'kk' ? 'Halyk Bank — қайта қаржыландыру шарттары' : 'Halyk Bank — условия рефинансирования', url: 'https://halykbank.kz/credit/refinans' },
+          { title: i18n.language === 'kk' ? 'ForteBank — қайта қаржыландыру шарттары' : 'ForteBank — условия рефинансирования', url: 'https://bank.forte.kz/refenansirovanie' },
         ]}
       />
 

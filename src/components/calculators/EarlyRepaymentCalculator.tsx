@@ -636,7 +636,7 @@ export default function EarlyRepaymentCalculator() {
         ]}
         sources={[
           { title: t('early-repayment.sources.civilCode'), url: 'https://online.zakon.kz/document/?doc_id=1006061' },
-          { title: t('early-repayment.sources.nbk'), url: 'https://nationalbank.kz/ru/news/bazovaya-stavka' },
+          { title: t('early-repayment.sources.nbk'), url: 'https://nationalbank.kz/ru/news/grafik-prinyatiya-resheniy-po-bazovoy-stavke' },
         ]}
       />
 

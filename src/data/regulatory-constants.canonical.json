@@ -1509,7 +1509,7 @@
       "key": "mfo_gesv_max_rate",
       "value": 46,
       "unit": "percent",
-      "law": "Закон РК О микрофинансовой деятельности (ГЭСВ ≤ 46% годовых для МФО)",
+      "law": "Совместное пост. АРРФР № 84 и НБ РК № 51 от 28–29.04.2026, п. 1: ГЭСВ ≤ 46% по микрокредитам",
       "year": "2026",
       "change_frequency": "occasional",
       "status": "current",
@@ -1520,13 +1520,18 @@
       "used_by": [
         "MicroloanCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2600038605",
+      "verify_note": "calkcheck 2026-10-26: норма — совместное пост. АРРФР № 84 / НБ РК № 51, п. 1 (46% по микрокредитам, кроме PDL); калькулятор рассрочки раньше выводил номинал вместо ГЭСВ.",
+      "reverified": "2026-10-26",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "pdl_max_daily_rate",
       "value": 0.3,
       "unit": "percent",
-      "law": "Закон РК О микрофинансовой деятельности (ставка PDL ≤ 0.3%/день с 2026)",
+      "law": "Совместное пост. АРРФР № 84 и НБ РК № 51 от 28–29.04.2026, п. 1 (ред. № 101/79 от 30.06.2026): менее 0,3% в день, ГЭСВ ≤ 179%",
       "year": "2026",
       "change_frequency": "occasional",
       "status": "current",
@@ -1537,7 +1542,12 @@
       "used_by": [
         "MicroloanCalculator"
       ],
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "source_url": "https://adilet.zan.kz/rus/docs/V2600038605",
+      "verify_note": "calkcheck 2026-10-26: норма — не Закон о МФД, а совместное пост. АРРФР № 84 / НБ РК № 51 (рег. № 38605) в ред. № 101/79 с 01.07.2026: по PDL «менее 0,3% в день, но не более 179%»; на коротких сроках связывает 179% (14 дн. → ~0,287%/день). Калькулятор: ГЭСВ теперь IRR (S/A)^(365/T)−1 и предупреждение о превышении.",
+      "reverified": "2026-10-26",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "pdl_max_loan_amount",

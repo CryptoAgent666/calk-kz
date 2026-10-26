@@ -36,7 +36,32 @@ const PDL_OVERPAYMENT_CAP_FACTOR = 0.5;
 const PDL_CAP_MAX_TERM_DAYS = 45;
 const PDL_CAP_MAX_AMOUNT_MRP = 45;
 
-type LoanType = 'online' | 'shortterm' | 'installment';
+/** Предельная ГЭСВ (совместное пост. АРРФР № 84 и НБ РК № 51 от 2026 г. в ред. № 101/79,
+ *  п. 1): по PDL (≤45 к.д. и ≤45 МРП) — менее 0,3% в день и не более 179%, по остальным
+ *  микрокредитам — 46%. */
+const PDL_GESV_CAP = 179;
+const PDL_DAILY_RATE_LIMIT = 0.3;
+const MICROCREDIT_GESV_CAP = 46;
+
+/** ГЭСВ как IRR по датам потоков: Σ CF / (1 + ГЭСВ)^(дней/365) = 0. Для займа одним платежом
+ *  через T дней — (К возврату / Сумма)^(365/T) − 1. Прежняя формула (1 + d)^365 − 1 не зависела
+ *  от срока и комиссии: 100 000 ₸ на 15 дней под 0,25% давали 148,8% вместо 144,9%. */
+const gesvSinglePayment = (amount: number, totalPayment: number, days: number) =>
+  (Math.pow(totalPayment / amount, 365 / days) - 1) * 100;
+
+/** Рассрочка: месячная IRR i из (Сумма − комиссия) = Σ Платёж / (1+i)^k, ГЭСВ = (1+i)^12 − 1.
+ *  До 26.10.2026 вместо ГЭСВ выводилась номинальная ставка (38,4% вместо 45,9%). */
+const gesvAnnuity = (net: number, payment: number, months: number) => {
+  let lo = 0, hi = 1;
+  for (let k = 0; k < 100; k++) {
+    const mid = (lo + hi) / 2;
+    const pv = mid === 0 ? payment * months : payment * (1 - Math.pow(1 + mid, -months)) / mid;
+    if (pv > net) lo = mid; else hi = mid;
+  }
+  return (Math.pow(1 + (lo + hi) / 2, 12) - 1) * 100;
+};
+
+type LoanType = 'online' | 'installment';
 type TermUnit = 'days' | 'months';
 
 interface CalculationResults {
@@ -55,25 +80,16 @@ const LOAN_TYPES = {
     maxAmount: 194625, // 45 МРП — лимит PDL с 2026
     maxTerm: 45,
     termUnit: 'days' as TermUnit,
-    typicalRate: { min: 0.1, max: 0.3 }, // с 2026 не выше 0.3%/день
+    typicalRate: { min: 0.1, max: 0.29 }, // менее 0,3% в день и ГЭСВ ≤ 179%
     rateLabel: 'microloan.loanTypes.online.rateLabel'
-  },
-  shortterm: {
-    name: 'microloan.loanTypes.shortterm.name',
-    description: 'microloan.loanTypes.shortterm.description',
-    maxAmount: 194625,
-    maxTerm: 45,
-    termUnit: 'days' as TermUnit,
-    typicalRate: { min: 0.1, max: 0.3 },
-    rateLabel: 'microloan.loanTypes.shortterm.rateLabel'
   },
   installment: {
     name: 'microloan.loanTypes.installment.name',
     description: 'microloan.loanTypes.installment.description',
     maxAmount: INSTALLMENT_MAX_MRP * MRP_2026, // 1100 МРП = 4 757 500 ₸
-    maxTerm: 12,
+    maxTerm: 36,
     termUnit: 'months' as TermUnit,
-    typicalRate: { min: 15, max: 46 }, // регулярные МФО — ГЭСВ не выше 46%
+    typicalRate: { min: 15, max: 38 }, // номинал 38,4% при ежемесячном платеже = ГЭСВ 46%
     rateLabel: 'microloan.loanTypes.installment.rateLabel'
   }
 };
@@ -192,7 +208,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
           totalInterest = Math.min(totalInterest, Math.max(0, maxExtraPayments - loanCommission));
         }
 
-        effectiveRate = (Math.pow(1 + dailyRate / 100, 365) - 1) * 100;
+        effectiveRate = gesvSinglePayment(loanAmount, loanAmount + totalInterest + loanCommission, loanTerm);
 
         let balance = loanAmount;
         const dailyPrincipal = loanAmount / loanTerm;
@@ -212,7 +228,6 @@ ${t('microloan.export.calculator')}: Calk.kz`;
         const annualRate = loanRate;
         const monthlyRate = annualRate / 100 / 12;
         dailyRate = annualRate / 365;
-        effectiveRate = annualRate;
 
         if (monthlyRate > 0) {
           monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, loanTerm)) /
@@ -222,6 +237,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
         }
 
         totalInterest = monthlyPayment * loanTerm - loanAmount;
+        effectiveRate = gesvAnnuity(loanAmount - loanCommission, monthlyPayment, loanTerm);
 
         let balance = loanAmount;
         for (let i = 1; i <= loanTerm; i++) {
@@ -287,6 +303,12 @@ ${t('microloan.export.calculator')}: Calk.kz`;
 
   const warning = getOverpaymentWarning();
 
+  // Условия выше законного предела ГЭСВ — такой договор МФО заключать не вправе.
+  const isPdl = currentLoanType.termUnit === 'days';
+  const aboveCap = !!results && (isPdl
+    ? results.effectiveRate > PDL_GESV_CAP || results.dailyRate >= PDL_DAILY_RATE_LIMIT
+    : results.effectiveRate > MICROCREDIT_GESV_CAP);
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
@@ -303,7 +325,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('microloan.loanTypeTitle')}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {(Object.keys(LOAN_TYPES) as LoanType[]).map((type) => (
             <button
               key={type}
@@ -407,6 +429,13 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                   {formatNumber(results.totalPayment)}
                 </div>
               </div>
+
+              {aboveCap && (
+                <div className="rounded-lg p-4 flex items-start space-x-3 bg-red-50 text-red-800">
+                  <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">{t(isPdl ? 'microloan.warnings.aboveCapPdl' : 'microloan.warnings.aboveCap')}</span>
+                </div>
+              )}
 
               {warning && (
                 <div className={`rounded-lg p-4 flex items-start space-x-3 ${
@@ -556,37 +585,37 @@ ${t('microloan.export.calculator')}: Calk.kz`;
           </div>
 
           <div className="border border-green-200 rounded-lg p-4">
-            <h3 className="font-semibold text-green-900 mb-3">{t('microloan.popularMFO.crediton.name')}</h3>
+            <h3 className="font-semibold text-green-900 mb-3">{t('microloan.popularMFO.pdl.name')}</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>{t('microloan.popularMFO.amount')}:</span>
-                <span className="font-medium">{t('microloan.popularMFO.crediton.amount')}</span>
+                <span className="font-medium">{t('microloan.popularMFO.pdl.amount')}</span>
               </div>
               <div className="flex justify-between">
                 <span>{t('microloan.popularMFO.term')}:</span>
-                <span className="font-medium">{t('microloan.popularMFO.crediton.term')}</span>
+                <span className="font-medium">{t('microloan.popularMFO.pdl.term')}</span>
               </div>
               <div className="flex justify-between">
                 <span>{t('microloan.popularMFO.rate')}:</span>
-                <span className="font-medium text-green-700">{t('microloan.popularMFO.crediton.rate')}</span>
+                <span className="font-medium text-green-700">{t('microloan.popularMFO.pdl.rate')}</span>
               </div>
             </div>
           </div>
 
           <div className="border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-3">{t('microloan.popularMFO.kredit7.name')}</h3>
+            <h3 className="font-semibold text-blue-900 mb-3">{t('microloan.popularMFO.installment.name')}</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>{t('microloan.popularMFO.amount')}:</span>
-                <span className="font-medium">{t('microloan.popularMFO.kredit7.amount')}</span>
+                <span className="font-medium">{t('microloan.popularMFO.installment.amount')}</span>
               </div>
               <div className="flex justify-between">
                 <span>{t('microloan.popularMFO.term')}:</span>
-                <span className="font-medium">{t('microloan.popularMFO.kredit7.term')}</span>
+                <span className="font-medium">{t('microloan.popularMFO.installment.term')}</span>
               </div>
               <div className="flex justify-between">
                 <span>{t('microloan.popularMFO.rate')}:</span>
-                <span className="font-medium text-blue-700">{t('microloan.popularMFO.kredit7.rate')}</span>
+                <span className="font-medium text-blue-700">{t('microloan.popularMFO.installment.rate')}</span>
               </div>
             </div>
           </div>
