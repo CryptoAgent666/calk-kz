@@ -436,7 +436,7 @@ export default function KaskoCalculator() {
             <div className="bg-gray-50 rounded-lg p-4 flex justify-between items-center">
               <div>
                 <div className="text-sm text-gray-600">{t('kasko.percentOfValue')}</div>
-                <div className="text-lg font-bold text-gray-900">{results.percentOfValue}%</div>
+                <div className="text-lg font-bold text-gray-900">{String(results.percentOfValue).replace('.', ',')}%</div>
               </div>
               <Percent className="w-8 h-8 text-gray-400" />
             </div>
@@ -472,7 +472,7 @@ export default function KaskoCalculator() {
                   <>
                     <TrendingUp className="w-3 h-3 mr-1" />
                     {t('kasko.kaskoMoreExpensive', {
-                      times: (results.finalPremium / results.ogpoReference).toFixed(1),
+                      times: (results.finalPremium / results.ogpoReference).toFixed(1).replace('.', ','),
                     })}
                   </>
                 ) : (
