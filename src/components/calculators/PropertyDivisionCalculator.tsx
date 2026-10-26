@@ -94,7 +94,10 @@ export default function PropertyDivisionCalculator() {
       courtFee,
       lawyerFee,
       notaryFee,
-      totalLegal: courtFee + lawyerFee + notaryFee,
+      // Соглашение у нотариуса (КоБС ст. 37 п. 2) и суд (п. 3) — альтернативы, не складываются.
+      // Раньше «итого» = суд + юрист + нотариус (~723 250 ₸ по умолчанию).
+      totalLegal: courtFee + lawyerFee,
+      deviation: hasChildren && childrenWith !== 'both',
     };
   }, [apartmentMarriage, carMarriage, landMarriage, depositsMarriage, businessValue, luxuryItems,
       mortgageDebt, consumerLoans, apartmentPreMarriage, depositsPreMarriage, hasChildren, childrenWith]);
@@ -185,20 +188,26 @@ export default function PropertyDivisionCalculator() {
             <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
               <div className="flex items-center gap-1 mb-1">
                 <Users className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-900">{t('property-division.husband')} ({results.husbandShare}%)</span>
+                <span className="text-sm font-medium text-blue-900">{t('property-division.husbandShareLabel')} ({results.husbandShare}%)</span>
               </div>
               <div className="text-xl font-bold text-blue-700">{formatNumber(results.husbandGets)}</div>
-              <div className="text-xs text-blue-700 mt-1">− {t('property-division.debtsShort')}: {formatNumber(results.husbandDebts)}</div>
+              <div className="text-xs text-blue-700 mt-1">{t('property-division.debtsIncluded')}: {formatNumber(results.husbandDebts)}</div>
             </div>
             <div className="bg-pink-50 rounded-lg p-4 border border-pink-200">
               <div className="flex items-center gap-1 mb-1">
                 <Users className="w-4 h-4 text-pink-600" />
-                <span className="text-sm font-medium text-pink-900">{t('property-division.wife')} ({results.wifeShare}%)</span>
+                <span className="text-sm font-medium text-pink-900">{t('property-division.wifeShareLabel')} ({results.wifeShare}%)</span>
               </div>
               <div className="text-xl font-bold text-pink-700">{formatNumber(results.wifeGets)}</div>
-              <div className="text-xs text-pink-700 mt-1">− {t('property-division.debtsShort')}: {formatNumber(results.wifeDebts)}</div>
+              <div className="text-xs text-pink-700 mt-1">{t('property-division.debtsIncluded')}: {formatNumber(results.wifeDebts)}</div>
             </div>
           </div>
+
+          {results.deviation && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900">
+              {t('property-division.deviationNote')}
+            </div>
+          )}
 
           {results.personalAssets > 0 && (
             <div className="bg-gray-50 rounded-lg p-4 text-sm">
@@ -212,8 +221,8 @@ export default function PropertyDivisionCalculator() {
             <div className="text-sm space-y-1">
               <div className="flex justify-between"><span>{t('property-division.courtFee')} (1%)</span><span>{formatNumber(results.courtFee)}</span></div>
               <div className="flex justify-between"><span>{t('property-division.lawyer')}</span><span>~{formatNumber(results.lawyerFee)}</span></div>
-              <div className="flex justify-between"><span>{t('property-division.notary')}</span><span>{formatNumber(results.notaryFee)}</span></div>
-              <div className="flex justify-between border-t border-amber-300 pt-1 font-semibold"><span>{t('property-division.total')}</span><span>~{formatNumber(results.totalLegal)}</span></div>
+              <div className="flex justify-between border-t border-amber-300 pt-1 font-semibold"><span>{t('property-division.totalCourt')}</span><span>~{formatNumber(results.totalLegal)}</span></div>
+              <div className="flex justify-between pt-2"><span>{t('property-division.orAgreement')}</span><span className="font-semibold">{formatNumber(results.notaryFee)}</span></div>
             </div>
           </div>
 
@@ -230,9 +239,10 @@ export default function PropertyDivisionCalculator() {
             title: t('property-division.title'),
             sections: [{ title: t('property-division.resultsTitle'), data: [
               { label: t('property-division.totalNetAssets'), value: formatNumber(results.netAssets) },
-              { label: `${t('property-division.husband')} (${results.husbandShare}%)`, value: formatNumber(results.husbandGets) },
-              { label: `${t('property-division.wife')} (${results.wifeShare}%)`, value: formatNumber(results.wifeGets) },
-              { label: t('property-division.legalCosts'), value: formatNumber(results.totalLegal) },
+              { label: `${t('property-division.husbandShareLabel')} (${results.husbandShare}%)`, value: formatNumber(results.husbandGets) },
+              { label: `${t('property-division.wifeShareLabel')} (${results.wifeShare}%)`, value: formatNumber(results.wifeGets) },
+              { label: t('property-division.totalCourt'), value: formatNumber(results.totalLegal) },
+              { label: t('property-division.orAgreement'), value: formatNumber(results.notaryFee) },
             ]}],
             footer: 'Calk.kz'
           }}
