@@ -14,35 +14,47 @@ import { pluralize } from '../../utils/pluralize';
 type PetType = 'dog' | 'cat';
 type DogSize = 'small' | 'medium' | 'large' | 'giant';
 
-// AVMA formula:
-// Dog 1y = 15 human years, 2y = +9, then depends on size:
-//   Small (до 9 кг): +4/year
-//   Medium (10-22 кг): +5/year
-//   Large (23-40 кг): +6/year
-//   Giant (40+ кг): +7/year
-// Cat 1y = 15, 2y = +9, then +4/year
+// Таблица AAHA / Zoetis 2019 «My pet's physiological age» (собаки — по Dog Owner's Home Veterinary
+// Handbook, прил. B; кошки — по AAFP-AAHA Feline Life Stage Guidelines). Между целыми годами —
+// линейная интерполяция, после конца таблицы — последний годовой шаг.
+// Размеры: ≤9 кг / 9,5–23 кг / 23–41 кг / >41 кг.
+const DOG_TABLE: Record<DogSize, number[]> = {
+  //       1   2   3   4   5   6   7   8   9  10  11  12  13  14   15   16   17   18   19   20
+  small:  [15, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72,  76,  80,  84,  88,  92,  96],
+  medium: [15, 24, 28, 33, 37, 42, 47, 51, 56, 60, 65, 69, 74, 78,  83,  87,  92,  96, 101, 105],
+  large:  [15, 24, 30, 35, 40, 45, 50, 55, 61, 66, 72, 77, 82, 88,  93,  99, 104, 109, 115, 120],
+  giant:  [15, 24, 32, 37, 42, 49, 56, 64, 71, 78, 86, 93, 101, 108, 115, 123],
+};
+
+function fromTable(table: number[], years: number): number {
+  // table[0] — 1 год; до года — линейно от 0
+  if (years <= 1) return years * table[0];
+  const last = table.length;
+  if (years >= last) return table[last - 1] + (years - last) * (table[last - 1] - table[last - 2]);
+  const lo = Math.floor(years);
+  return table[lo - 1] + (years - lo) * (table[lo] - table[lo - 1]);
+}
 
 function dogAge(years: number, size: DogSize): number {
-  const perYear = { small: 4, medium: 5, large: 6, giant: 7 }[size];
-  if (years <= 1) return years * 15;
-  if (years <= 2) return 15 + (years - 1) * 9;
-  return 24 + (years - 2) * perYear;
+  return fromTable(DOG_TABLE[size], years);
 }
 
 function catAge(years: number): number {
-  if (years <= 1) return years * 15;
+  // Кошка: 6 мес — 10, 1 год — 15, 2 — 24, дальше +4 за год
+  if (years <= 0.5) return years * 20;
+  if (years <= 1) return 10 + (years - 0.5) * 10;
   if (years <= 2) return 15 + (years - 1) * 9;
   return 24 + (years - 2) * 4;
 }
 
-// Life stage categorization
-function getLifeStage(humanAge: number, type: 'dog' | 'cat'): string {
-  if (humanAge < 15) return 'baby';
-  if (humanAge < 25) return 'young';
-  if (humanAge < 45) return 'adult';
-  if (humanAge < 65) return 'mature';
-  if (humanAge < 80) return 'senior';
-  return 'geriatric';
+// Стадия жизни — по возрасту питомца относительно ожидаемой продолжительности жизни (AAHA:
+// пожилой — последние 25% жизни).
+function getLifeStage(years: number, lifespan: number): 'puppy' | 'junior' | 'adult' | 'mature' | 'senior' {
+  if (years < 1) return 'puppy';
+  if (years < 2) return 'junior';
+  if (years < lifespan * 0.5) return 'adult';
+  if (years < lifespan * 0.75) return 'mature';
+  return 'senior';
 }
 
 // Typical life expectancy
@@ -64,8 +76,8 @@ export default function PetAgeCalculator() {
     if (totalYears <= 0) return null;
 
     const humanAge = type === 'dog' ? dogAge(totalYears, size) : catAge(totalYears);
-    const stage = getLifeStage(humanAge, type);
     const lifespan = lifeExpectancy(type, type === 'dog' ? size : undefined);
+    const stage = getLifeStage(totalYears, lifespan);
     const humanLifespan = type === 'dog' ? dogAge(lifespan, size) : catAge(lifespan);
     const progress = Math.min((totalYears / lifespan) * 100, 100);
 
@@ -74,8 +86,9 @@ export default function PetAgeCalculator() {
       stage,
       lifespan,
       humanLifespan: Math.round(humanLifespan),
-      progress: progress.toFixed(1),
-      totalYears: totalYears.toFixed(1),
+      progress: progress.toFixed(1).replace('.', ','),
+      totalYears: totalYears.toFixed(1).replace('.', ','),
+      totalYearsNum: totalYears,
     };
   }, [type, years, months, size]);
 
@@ -168,7 +181,7 @@ export default function PetAgeCalculator() {
               title: t('pet-age.title'),
               subtitle: type === 'dog' ? t('pet-age.dog') : t('pet-age.cat'),
               sections: [{ title: t('pet-age.results'), data: [
-                { label: t('pet-age.animalAge'), value: `${results.totalYears} ${pluralize(i18n.language, results.totalYears, 'год', 'года', 'лет')}` },
+                { label: t('pet-age.animalAge'), value: `${results.totalYears} ${pluralize(i18n.language, results.totalYearsNum, 'год', 'года', 'лет')}` },
                 { label: t('pet-age.humanYears'), value: `${results.humanAge} ${pluralize(i18n.language, results.humanAge, 'год', 'года', 'лет')}` },
                 { label: t('pet-age.stage'), value: t(`pet-age.stages.${results.stage}`) },
               ]}],

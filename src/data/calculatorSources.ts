@@ -317,7 +317,8 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'time-to-words': [],
   'age': [],
   'pet-age': [
-    { title: 'AVMA — Pet Age', url: 'https://www.avma.org/' },
+    { title: 'AAHA — Canine Life Stage Guidelines', url: 'https://www.aaha.org/resources/life-stage-canine-2019/' },
+    { title: 'AAFP-AAHA — Feline Life Stage Guidelines', url: 'https://www.aaha.org/resources/2021-aaha-aafp-feline-life-stage-guidelines/' },
   ],
   'roman-numerals': [],
   'unit-converter': [],

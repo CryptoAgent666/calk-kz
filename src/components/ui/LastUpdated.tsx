@@ -126,7 +126,7 @@ const LAST_UPDATED: Record<string, string> = {
   'number-to-words': '2026-04-19',
   'time-to-words': '2026-04-19',
   'age': '2026-10-06', // calkcheck 06.10 б7: пенсия женщин по графику ст. 207 СК (61 → 63 к 2031)
-  'pet-age': '2026-04-19',
+  'pet-age': '2026-10-27',
   'roman-numerals': '2026-04-19',
   'unit-converter': '2026-04-19',
   'timezone': '2026-04-19',
