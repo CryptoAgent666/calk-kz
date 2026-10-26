@@ -23,16 +23,16 @@ export default function WaterIntakeCalculator() {
     const w = parseFloat(weight) || 0;
     if (w <= 0) return null;
 
-    // Базовая норма: 30-35 мл на кг
-    let baseMl = w * 32;
+    // Базовая норма: 32 мл на кг — практическое правило (официальные нормы EFSA/IOM — в литрах в сутки)
+    const baseMl = w * 32;
 
-    // Активность: +500 мл / час лёгкой, +1000 мл / час интенсивной
+    // Активность: +500 мл в день при умеренной, +1000 мл при высокой
     const activityBonus = activity === 'low' ? 0 : activity === 'moderate' ? 500 : 1000;
     // Жаркий климат: +500-700 мл
     const climateBonus = climate === 'hot' ? 600 : 0;
-    // Беременность: +300 мл
+    // Беременность: +300 мл (EFSA 2010)
     const pregnancyBonus = isPregnant ? 300 : 0;
-    // Кормление: +700 мл
+    // Кормление: +700 мл (EFSA 2010)
     const breastfeedingBonus = isBreastfeeding ? 700 : 0;
 
     const totalMl = baseMl + activityBonus + climateBonus + pregnancyBonus + breastfeedingBonus;
@@ -191,22 +191,15 @@ export default function WaterIntakeCalculator() {
             title: 'EFSA Panel on Dietetic Products — Scientific Opinion on Dietary Reference Values for water (2010)',
             url: 'https://www.efsa.europa.eu/en/efsajournal/pub/1459',
             description: i18n.language === 'kk'
-              ? 'European Food Safety Authority. Су тұтынудың еуропалық референстік мәндері — 30–35 мл/кг коэффициентін калибрлеу үшін пайдаланылды.'
-              : 'European Food Safety Authority. Европейские референсные значения потребления воды, использовались для калибровки коэффициента 30-35 мл/кг.',
+              ? 'European Food Safety Authority. Жалпы су тұтынудың еуропалық референстік мәндері: ерлерге тәулігіне 2,5 л, әйелдерге 2,0 л; жүктілікте +300 мл, емізуде +700 мл.'
+              : 'European Food Safety Authority. Европейские референсные значения общего потребления воды: 2,5 л в сутки для мужчин и 2,0 л для женщин; +300 мл при беременности и +700 мл при кормлении.',
           },
           {
-            title: 'WHO — Drinking water requirements',
-            url: 'https://www.who.int/teams/environment-climate-change-and-health/water-sanitation-and-health/water-safety-and-quality/drinking-water',
+            title: 'IOM — Dietary Reference Intakes for Water, Potassium, Sodium, Chloride, and Sulfate (2005)',
+            url: 'https://nap.nationalacademies.org/catalog/10925/dietary-reference-intakes-for-water-potassium-sodium-chloride-and-sulfate',
             description: i18n.language === 'kk'
-              ? 'Дүниежүзілік денсаулық сақтау ұйымы. Ауыз су тұтыну бойынша ұсынымдар, ыстық климат пен дене белсенділігіне арналған түзетулер.'
-              : 'World Health Organization. Рекомендации по потреблению питьевой воды, поправки для жаркого климата и физической активности.',
-          },
-          {
-            title: 'NASEM — Nutrition During Pregnancy and Lactation',
-            url: 'https://nap.nationalacademies.org/catalog/24960/nutrition-during-pregnancy-and-lactation-exploring-new-evidence-proceedings-of',
-            description: i18n.language === 'kk'
-              ? 'National Academies. Жүктілік (+300 мл) және емізу (+700 мл) кезіндегі суға қосымша қажеттілік.'
-              : 'National Academies. Дополнительная потребность в воде при беременности (+300 мл) и грудном вскармливании (+700 мл).',
+              ? 'National Academies. Жалпы судың жеткілікті тұтынуы: ерлерге 3,7 л, әйелдерге 2,7 л тәулігіне (тағаммен бірге); оның шамамен 80%-ы — сусындардан.'
+              : 'National Academies. Адекватное потребление общей воды: 3,7 л в сутки мужчинам и 2,7 л женщинам (вместе с едой); около 80% приходится на напитки.',
           },
         ]}
       />
