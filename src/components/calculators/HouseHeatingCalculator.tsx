@@ -26,9 +26,13 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 const HEAT = {
   // теплота сгорания (кВт·ч на единицу), КПД, единица, дефолт-тариф (₸/ед.)
   coal:     { kwhPerUnit: 5.0, eff: 0.70, unit: 'kg', price: 20 },   // экибастузский рабочий ~5 кВт·ч/кг; 20 000 ₸/т
-  gas:      { kwhPerUnit: 9.3, eff: 0.92, unit: 'm3', price: 32 },   // природный газ; средняя розница РК ~32 ₸/м³
-  electric: { kwhPerUnit: 1.0, eff: 0.99, unit: 'kwh', price: 35 },  // электрокотёл; ~35 ₸/кВт·ч с НДС
-  heatpump: { kwhPerUnit: 1.0, eff: 3.0,  unit: 'kwh', price: 35 },  // тепловой насос: eff = COP ≈ 3
+  // Газ: среднее по филиалам QazaqGaz Aimaq с 01.10.2026 — 44,91 ₸/м³ (Алматы 62,75, Атырау 17,90); было 32.
+  gas:      { kwhPerUnit: 9.3, eff: 0.92, unit: 'm3', price: 45 },
+  // Электроотопление — 1,5–2 тыс. кВт·ч в месяц, почти всё по 3-му уровню дифференцированного тарифа:
+  // средняя цена ~41 ₸ в Астане и ~50 ₸ в Алматы (на 3 проживающих); было 35 — ставка 1-го уровня.
+  electric: { kwhPerUnit: 1.0, eff: 0.99, unit: 'kwh', price: 45 },
+  // Тепловой насос: сезонный COP при морозах до −30 °C — около 2,5, а не паспортные 3–4.
+  heatpump: { kwhPerUnit: 1.0, eff: 2.5,  unit: 'kwh', price: 45 },
 } as const;
 
 type Fuel = keyof typeof HEAT;
@@ -38,12 +42,20 @@ const FUELS: Fuel[] = ['gas', 'coal', 'heatpump', 'electric'];
 const INSULATION = { good: 80, medium: 120, poor: 180 } as const;
 type Insulation = keyof typeof INSULATION;
 
+// Климатический район (нормы потребления тепла, приказ Минпромстроя от 17.02.2026, по пересказу zakon.kz):
+// для 2-этажных домов I район (Астана, север и центр) 0,1333–0,1859 Гкал/м² за сезон, II (Алматы, запад)
+// 0,0898–0,1332, III (юг) до 0,0897. Нормы INSULATION откалиброваны под II район; I — ×1,4, III — ×0,75.
+// До 26.10.2026 теплопотребность не зависела от климата: Шымкент и Астана считались одинаково.
+const CLIMATE = { cold: 1.4, moderate: 1.0, warm: 0.75 } as const;
+type Climate = keyof typeof CLIMATE;
+
 export default function HouseHeatingCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [area, setArea] = useState<string>('100');
   const [insulation, setInsulation] = useState<Insulation>('medium');
+  const [climate, setClimate] = useState<Climate>('moderate');
   const [prices, setPrices] = useState<Record<Fuel, string>>({
-    coal: '20', gas: '32', electric: '35', heatpump: '35',
+    coal: '20', gas: '45', electric: '45', heatpump: '45',
   });
 
   // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
@@ -51,7 +63,7 @@ export default function HouseHeatingCalculator() {
   // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
   const computeResults = (): { fuel: Fuel; cost: number; consumption: number }[] => {
     const a = parseFloat(area) || 0;
-    const demand = a * INSULATION[insulation]; // кВт·ч/сезон
+    const demand = a * INSULATION[insulation] * CLIMATE[climate]; // кВт·ч/сезон
     const rows = FUELS.map((fuel) => {
       const h = HEAT[fuel];
       const price = parseFloat(prices[fuel]) || 0;
@@ -66,13 +78,13 @@ export default function HouseHeatingCalculator() {
   const results = useMemo(
     computeResults,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [area, insulation, prices]
+    [area, insulation, climate, prices]
   );
 
   const nf = (n: number) => n.toLocaleString('ru-KZ');
   const fmt = (n: number) => nf(n) + ' ₸';
   const maxCost = Math.max(...results.map((r) => r.cost), 1);
-  const demandKwh = (parseFloat(area) || 0) * INSULATION[insulation];
+  const demandKwh = (parseFloat(area) || 0) * INSULATION[insulation] * CLIMATE[climate];
 
   const unitLabel = (fuel: Fuel) => t(`house-heating.unit_${HEAT[fuel].unit}`);
 
@@ -81,6 +93,7 @@ export default function HouseHeatingCalculator() {
     const lines = results.map((r) => `- ${t(`house-heating.fuel_${r.fuel}`)}: ${fmt(r.cost)} (${nf(r.consumption)} ${unitLabel(r.fuel)})`);
     return `${t('house-heating.parameters')}:
 - ${t('house-heating.areaLabel')}: ${area} м²
+- ${t('house-heating.climateLabel')}: ${t(`house-heating.climate_${climate}`)}
 - ${t('house-heating.insulationLabel')}: ${t(`house-heating.ins_${insulation}`)}
 - ${t('house-heating.demand')}: ${nf(Math.round(demandKwh))} кВт·ч
 
@@ -129,6 +142,23 @@ ${lines.join('\n')}`;
                 onChange={(e) => setArea(e.target.value)}
                 className="w-full mt-3 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('house-heating.climateLabel')}</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {(['cold', 'moderate', 'warm'] as Climate[]).map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setClimate(c)}
+                    className={`px-3 py-2.5 rounded-lg border text-xs font-medium transition-colors ${
+                      climate === c ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {t(`house-heating.climate_${c}`)}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div>
@@ -256,7 +286,7 @@ ${lines.join('\n')}`;
         ]}
       />
 
-      <LegalDisclaimer type="tax" />
+      <LegalDisclaimer type="construction" />
       <ExpertBlock />
       <EmbedWidget calculatorId="house-heating" calculatorTitle={t('house-heating.heading')} />
       <LastUpdated calculatorId="house-heating" />

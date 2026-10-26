@@ -87,7 +87,11 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'Отбасы банк (hcsbk.kz)', url: 'https://hcsbk.kz/' },
     NBK,
   ],
-  'house-heating': [],
+  'house-heating': [
+    { title: 'АО «QazaqGaz Aimaq»: цены на газ с 01.10.2026', url: 'https://www.aimaq.kz/wp-content/uploads/2026/09/czeny-s-01.10.2026-rus-1.doc' },
+    { title: 'Zakon.kz: нормы потребления тепловой энергии по регионам (приказ Минпромстроя от 17.02.2026)', url: 'https://www.zakon.kz/pravo/6509075-utverzhdeny-normy-potrebleniya-teplovoy-energii-po-regionam-kazakhstana.html' },
+    { title: 'АО «Алатау Жарық Компаниясы» — «Энергосбыт»: тарифы для населения', url: 'https://www.esalmaty.kz/ru/home/tariffs' },
+  ],
   'tax-regime-comparison': [NK_RK, KGD, EGOV],
   'universal-declaration': [NK_RK, KGD, EGOV],
   'ip-simplified': [NK_RK, KGD],
@@ -301,6 +305,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'Комитет по регулированию ЕРР', url: 'https://kremzk.gov.kz/' },
   ],
   'gas': [
+    { title: 'АО «QazaqGaz Aimaq»: цены на газ с 01.10.2026', url: 'https://www.aimaq.kz/wp-content/uploads/2026/09/czeny-s-01.10.2026-rus-1.doc' },
     { title: 'QazaqGaz', url: 'https://qazaqgaz.kz/' },
   ],
 
@@ -454,6 +459,8 @@ const SOURCE_TITLE_KK: Record<string, string> = {
   "АО «Астана-РЭК»: тарифы для физических лиц": "«Астана-РЭК» АҚ: жеке тұлғаларға арналған тарифтер",
   "ТОО «Энергопоток» (Шымкент): тарифы": "«Энергопоток» ЖШС (Шымкент): тарифтер",
   "BES.media: какие кешбэки предлагают банки Казахстана (24.08.2026)": "BES.media: Қазақстан банктері қандай кэшбэк ұсынады (24.08.2026)",
+  "АО «QazaqGaz Aimaq»: цены на газ с 01.10.2026": "«QazaqGaz Aimaq» АҚ: 01.10.2026 бастап газ бағалары",
+  "Zakon.kz: нормы потребления тепловой энергии по регионам (приказ Минпромстроя от 17.02.2026)": "Zakon.kz: өңірлер бойынша жылу энергиясын тұтыну нормалары (ӨҚМ 17.02.2026 бұйрығы)",
   "НК РК ст. 667 п. 3 пп. 7 — госпошлина за номера": "ҚР СК 667-бап 3-т. 7) тт. — нөмірлер үшін мемлекеттік баж",
   "ГОСТ ISO 4000-1-2013 Шины для легковых автомобилей (метрические серии)": "ГОСТ ISO 4000-1-2013 Жеңіл автомобильдерге арналған шиналар (метрлік сериялар)",
   "ГОСТ 4754-97 Шины пневматические для легковых автомобилей": "ГОСТ 4754-97 Жеңіл автомобильдерге арналған пневматикалық шиналар",
