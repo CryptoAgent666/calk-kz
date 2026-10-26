@@ -111,9 +111,11 @@ export default function InheritanceCalculator() {
         };
       });
 
-    // Нотариальные расходы: свидетельство о праве на наследство — фикс. 4 МРП
-    // за каждое свидетельство (Приказ Минюста РК №533, с 01.01.2026; % надбавка отменена).
-    const notaryCost = Math.round(4 * MRP_2026 * totalHeirs);
+    // Нотариальные расходы у частного нотариуса (приказ МЮ № 533, с 01.01.2026): свидетельство о праве на
+    // наследство — 4 МРП каждому (п. 2 пп. 10); при совместно нажитом имуществе пережившему супругу ещё
+    // свидетельство о праве на долю в общем имуществе — 5 МРП (п. 2 пп. 11), раньше его не было в сумме.
+    // У государственного нотариуса — госпошлина 1 МРП за свидетельство (НК ст. 667 п. 1 пп. 7).
+    const notaryCost = Math.round(MRP_2026 * (4 * totalHeirs + (spouseMaritalShare > 0 ? 5 : 0)));
 
     return { estate, spouseMaritalShare, inheritableEstate, shares, activeQueue, totalHeirs, notaryCost };
   }, [estateValue, isMaritalProperty, heirCounts]);
