@@ -375,6 +375,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'ACOG — Methods for Estimating Due Date', url: 'https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date' },
     { title: 'WHO — Antenatal Care Guidelines', url: 'https://www.who.int/publications/i/item/9789241549912' },
     { title: 'NICHD — Pregnancy', url: 'https://www.nichd.nih.gov/health/topics/pregnancy' },
+    { title: 'Правила организации скрининга (приказ МЗ РК)', url: 'https://adilet.zan.kz/rus/docs/V1000006490' },
   ],
   'body-fat': [
     { title: 'U.S. Navy Body Composition (DTIC ADA143890)', url: 'https://apps.dtic.mil/sti/citations/ADA143890' },
@@ -524,6 +525,7 @@ const SOURCE_TITLE_KK: Record<string, string> = {
   "Земельный кодекс РК": "ҚР Жер кодексі",
   "Krisha.kz — рынок недвижимости": "Krisha.kz — жылжымайтын мүлік нарығы",
   "Krisha.kz — оценка квартир": "Krisha.kz — пәтерлерді бағалау",
+  "Правила организации скрининга (приказ МЗ РК)": "Скринингті ұйымдастыру қағидалары (ҚР ДСМ бұйрығы)",
   "Правила организации учебного процесса по кредитной технологии (приказ МОН № 152)": "Кредиттік технология бойынша оқу процесін ұйымдастыру қағидалары (БҒМ № 152 бұйрығы)",
   "Закон РК «О банках и банковской деятельности» № 258-VIII, глава 7": "ҚР «Банктер және банк қызметі туралы» № 258-VIII Заңы, 7-тарау",
   "Фонд «Зекет» ДУМК — расчёт закята": "ҚМДБ «Зекет» қоры — зекетті есептеу",

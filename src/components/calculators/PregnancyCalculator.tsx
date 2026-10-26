@@ -10,6 +10,7 @@ import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { ProgressBar } from '../ui/ChartComponents';
+import { pluralize } from '../../utils/pluralize';
 
 export default function PregnancyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -194,28 +195,31 @@ export default function PregnancyCalculator() {
       return EMPTY_RESULTS;
     }
 
-    const lmpDate = new Date(lastPeriodDate);
-    const today = new Date();
+    // Даты — локальные полночи: new Date('YYYY-MM-DD') разбирается как UTC и до 05:00 по Астане
+    // сдвигал срок на день.
+    const [ly, lm, ld] = lastPeriodDate.split('-').map(Number);
+    const lmpDate = new Date(ly, lm - 1, ld);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const DAY = 1000 * 60 * 60 * 24;
 
-    // Расчет ПДР по правилу Негеле
-    const estimatedDueDate = new Date(lmpDate);
-    estimatedDueDate.setMonth(estimatedDueDate.getMonth() - 3);
-    estimatedDueDate.setDate(estimatedDueDate.getDate() + 7);
+    // ПДР = ЛПМ + 280 дней. Прежняя запись «−3 месяца + 7 дней» не прибавляла год
+    // (ЛПМ 01.09.2026 → 08.06.2026) и переполняла месяц для 29–31 чисел.
+    const estimatedDueDate = new Date(ly, lm - 1, ld + 280);
 
     // Расчет текущей недели беременности
-    const diffTime = today.getTime() - lmpDate.getTime();
-    const daysPregnant = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+    const daysPregnant = Math.max(0, Math.round((today.getTime() - lmpDate.getTime()) / DAY));
     const currentWeek = Math.floor(daysPregnant / 7);
     const currentDay = daysPregnant % 7;
 
-    // Дни до родов
-    const daysRemaining = Math.max(0, Math.floor((estimatedDueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+    // Дни до родов — со знаком: после ПДР показываем, сколько дней прошло
+    const daysRemaining = Math.round((estimatedDueDate.getTime() - today.getTime()) / DAY);
 
-    // Определение триместра
+    // Триместры по ACOG: 1-й — до 13 нед. 6 дн., 2-й — 14+0…27+6, 3-й — с 28+0
     let trimester = 1;
-    if (currentWeek >= 13 && currentWeek < 27) {
+    if (currentWeek >= 14 && currentWeek < 28) {
       trimester = 2;
-    } else if (currentWeek >= 27) {
+    } else if (currentWeek >= 28) {
       trimester = 3;
     }
 
@@ -285,14 +289,12 @@ export default function PregnancyCalculator() {
 
     const weeks = Math.floor(days / 7);
     const remainingDays = days % 7;
+    const w = (n: number) => `${n} ${pluralize(i18n.language, n, t('pregnancy.week'), t('pregnancy.weeks2'), t('pregnancy.weeks'))}`;
+    const d = (n: number) => `${n} ${pluralize(i18n.language, n, t('pregnancy.day'), t('pregnancy.days2'), t('pregnancy.days'))}`;
 
-    if (weeks === 0) {
-      return `${remainingDays} ${remainingDays === 1 ? t('pregnancy.day') : remainingDays < 5 ? t('pregnancy.days2') : t('pregnancy.days')}`;
-    } else if (remainingDays === 0) {
-      return `${weeks} ${weeks === 1 ? t('pregnancy.week') : weeks < 5 ? t('pregnancy.weeks2') : t('pregnancy.weeks')}`;
-    } else {
-      return `${weeks} ${weeks === 1 ? t('pregnancy.week') : weeks < 5 ? t('pregnancy.weeks2') : t('pregnancy.weeks')} ${remainingDays} ${remainingDays === 1 ? t('pregnancy.day') : remainingDays < 5 ? t('pregnancy.days2') : t('pregnancy.days')}`;
-    }
+    if (weeks === 0) return d(remainingDays);
+    if (remainingDays === 0) return w(weeks);
+    return `${w(weeks)} ${d(remainingDays)}`;
   };
 
   return (
@@ -422,7 +424,7 @@ export default function PregnancyCalculator() {
                 <div className="flex justify-between items-center py-3 bg-blue-50 rounded-lg px-4">
                   <span className="font-medium text-blue-900">{t('pregnancy.currentWeekLabel')}</span>
                   <span className="text-xl font-bold text-blue-700">
-                    {results.currentWeek} {t('pregnancy.weeks')} {results.currentDay} {t('pregnancy.days')}
+                    {results.currentWeek} {pluralize(i18n.language, results.currentWeek, t('pregnancy.week'), t('pregnancy.weeks2'), t('pregnancy.weeks'))} {results.currentDay} {pluralize(i18n.language, results.currentDay, t('pregnancy.day'), t('pregnancy.days2'), t('pregnancy.days'))}
                   </span>
                 </div>
 
