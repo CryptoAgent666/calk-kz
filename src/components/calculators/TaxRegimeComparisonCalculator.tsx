@@ -36,8 +36,11 @@ export default function TaxRegimeComparisonCalculator() {
 
   const [monthlyRevenue, setMonthlyRevenue] = useState<string>('1000000');
   const [monthlyExpenses, setMonthlyExpenses] = useState<string>('400000');
-  const [hasEmployees, setHasEmployees] = useState(false);
-  const [isRural, setIsRural] = useState(false);
+  // Число работников влияет на соцналог ИП на ОУР (+1 МРП за каждого, ст. 557 п. 3); ставку упрощёнки
+  // маслихат может менять в пределах 2–6% (ст. 726). Раньше здесь были флажки «есть работники» и
+  // «сельская местность», которые в расчёт не входили.
+  const [employees, setEmployees] = useState<string>('0');
+  const [simplifiedRatePct, setSimplifiedRatePct] = useState<string>('4');
 
   const results = useMemo((): RegimeResult[] => {
     const revenue = parseFloat(monthlyRevenue) || 0;
@@ -52,33 +55,39 @@ export default function TaxRegimeComparisonCalculator() {
     // ОПВ 10% 8 500 + ОПВР 3,5% 2 975 + СО 5% 4 250 + ВОСМС фикс 5% × 1,4 МЗП 5 950 = 21 675 ₸/мес.
     // ООСМС — отчисления работодателя за наёмных работников, «за себя» не платится.
     // ИП, родившиеся до 01.01.1975, ОПВР не платят (18 700 ₸) — это оговорено в infoNote.
-    const baseSocialMonthly = Math.round(calculateIpSelfPayments2026(MZP_2026).total); // 21 675
+    const selfPayments = calculateIpSelfPayments2026(MZP_2026);
+    const baseSocialMonthly = Math.round(selfPayments.total); // 21 675
+    const staff = Math.max(0, Math.floor(parseFloat(employees) || 0));
+    const simplifiedRate = (parseFloat(simplifiedRatePct) || 4) / 100;
 
     // 1. Упрощёнка (СНР на основе упрощённой декларации)
     const simplifiedLimit = 600_000 * MRP; // 600 000 МРП/год = ~2.595 млрд ₸ — годовой лимит дохода упрощёнки (НК РК 2026, № 214-VIII); налоговый период — полугодие
     const simplifiedAvailable = annualRevenue <= simplifiedLimit;
-    const simplifiedTax = Math.round(revenue * 0.04); // 4% от дохода (ИПН, с 01.01.2026; соцналог отменён)
+    const simplifiedTax = Math.round(revenue * simplifiedRate); // 4% от дохода (2–6% по решению маслихата), соцналога нет (ст. 555 п. 2)
     const simplifiedSocial = baseSocialMonthly;
     const simplifiedTotal = simplifiedTax + simplifiedSocial;
 
     // 2. ОУР (Общеустановленный режим)
-    const ourTaxBase = profit;
-    // Прогрессивный ИПН: 10% до 8500 МРП/год, 15% сверх
-    const annualThreshold = 8_500 * MRP;
-    const monthlyThreshold = annualThreshold / 12;
+    // Облагаемый доход ИП на ОУР = прибыль − вычет соцплатежей (ОПВ, ВОСМС; ст. 402) − базовый вычет
+    // 30 МРП (ст. 403) — ст. 411 п. 2. Шкала ИП — ст. 363 пп. 4: 10% до 230 000 МРП в год, 15% сверх
+    // (не 8 500 МРП — это шкала пп. 1 для доходов физлица). Соцналог за себя 2 МРП + 1 МРП за каждого
+    // работника (ст. 557 п. 3); на упрощёнке его нет.
+    const ourTaxBase = Math.max(0, profit - selfPayments.opv - selfPayments.vosms - 30 * MRP);
+    const monthlyThreshold = (230_000 * MRP) / 12;
     let ourIPN: number;
     if (ourTaxBase <= monthlyThreshold) {
       ourIPN = Math.round(ourTaxBase * 0.10);
     } else {
       ourIPN = Math.round(monthlyThreshold * 0.10 + (ourTaxBase - monthlyThreshold) * 0.15);
     }
-    const ourSocial = baseSocialMonthly;
+    const ourSocialTax = (2 + staff) * MRP;
+    const ourSocial = baseSocialMonthly + ourSocialTax;
     const ourTotal = ourIPN + ourSocial;
 
     // 3. Розничный налог — с 01.01.2026 УПРАЗДНЁН как отдельный СНР и слит с упрощённой декларацией.
     // Ставка 4% сохранена, но теперь это та же упрощёнка. Показываем для справки/совместимости,
     // помечаем как недоступный отдельный режим (новый НК РК № 214-VIII от 18.07.2025).
-    const retailTax = Math.round(revenue * 0.04);
+    const retailTax = Math.round(revenue * simplifiedRate);
     const retailSocial = baseSocialMonthly;
     const retailTotal = retailTax + retailSocial;
 
@@ -110,7 +119,7 @@ export default function TaxRegimeComparisonCalculator() {
         mergedNote: t('tax-regime.retailMerged'),
       },
     ];
-  }, [monthlyRevenue, monthlyExpenses, hasEmployees, isRural, t]);
+  }, [monthlyRevenue, monthlyExpenses, employees, simplifiedRatePct, t]);
 
   const bestRegime = useMemo(() => {
     const available = results.filter((r) => r.available);
@@ -241,25 +250,38 @@ export default function TaxRegimeComparisonCalculator() {
             </div>
 
             {/* Toggles */}
-            <div className="space-y-3">
-              <label className="flex items-center space-x-3 cursor-pointer">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="taxRegimeEmployees" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('tax-regime.employeesLabel')}
+                </label>
                 <input
-                  type="checkbox"
-                  checked={hasEmployees}
-                  onChange={(e) => setHasEmployees(e.target.checked)}
-                  className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  id="taxRegimeEmployees"
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={employees}
+                  onChange={(e) => setEmployees(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
-                <span className="text-sm text-gray-700">{t('tax-regime.hasEmployees')}</span>
-              </label>
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isRural}
-                  onChange={(e) => setIsRural(e.target.checked)}
-                  className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                />
-                <span className="text-sm text-gray-700">{t('tax-regime.isRural')}</span>
-              </label>
+                <p className="text-xs text-gray-500 mt-1">{t('tax-regime.employeesHint')}</p>
+              </div>
+              <div>
+                <label htmlFor="taxRegimeRate" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('tax-regime.simplifiedRateLabel')}
+                </label>
+                <select
+                  id="taxRegimeRate"
+                  value={simplifiedRatePct}
+                  onChange={(e) => setSimplifiedRatePct(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                >
+                  {['2', '3', '4', '5', '6'].map((r) => (
+                    <option key={r} value={r}>{r === '4' ? `4% — ${t('tax-regime.baseRateOption')}` : `${r}%`}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">{t('tax-regime.simplifiedRateHint')}</p>
+              </div>
             </div>
 
             {/* Reference rates */}
