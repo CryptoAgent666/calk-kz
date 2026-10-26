@@ -7437,7 +7437,7 @@
     },
     {
       "key": "cpi_cumulative_index_by_year_table",
-      "value": "2015:100.0; 2016:114.6; 2017:122.8; 2018:130.8; 2019:137.8; 2020:147.2; 2021:159.5; 2022:185.7; 2023:213.5; 2024:231.7; 2025:252.6; 2026:281.9",
+      "value": "2015:100.0; 2016:114.6; 2017:123.1; 2018:130.5; 2019:137.4; 2020:146.7; 2021:158.5; 2022:182.2; 2023:208.7; 2024:226.8; 2025:252.7; 2026:277.9",
       "unit": "index (base 2015=100)",
       "law": "БНС АСПиР РК (stat.gov.kz) — индекс потребительских цен",
       "year": "2026",
@@ -7449,7 +7449,11 @@
       ],
       "note": "CPI_DATA (lines 16-29) is the core engine of the entire calculator (cpiRatio = cpiTarget/cpiSource). First sweep extracted the MRP reference",
       "origin": "diff_sweep_2026-06-11",
-      "audit_status": "clean"
+      "audit_status": "clean",
+      "verify_note": "calkcheck 2026-10-26: значение реестра отставало от кода и БНС (2022: 185,7, 2026: 281,9); приведено к CPI_DATA InflationCalculator.tsx — среднегодовые индексы БНС, 2026 — прогноз +10% (середина 9–11%). Агент сверял с xlsx БНС /api/iblock/element/1548.",
+      "reverified": "2026-10-26",
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-secondary"
     },
     {
       "key": "inheritance_notary_flat_fee_other_mrp",

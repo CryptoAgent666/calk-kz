@@ -20,6 +20,11 @@ interface Card {
   bonusNoteKey?: string;
 }
 
+// Ориентиры по обзору BES.media от 24.08.2026 (сверка 26.10.2026): у Kaspi постоянной ставки нет;
+// Halyk Bonus — до 1% на POS Halyk (у партнёров Halyk Club — до 30%), лимит от 30 000;
+// Forte — повышенный кэшбэк только в 2 выбранных категориях из 10, всего до 30 000 в месяц
+// (было 100 000 — это лимит ForteSolo); БЦК #bccpay — до 10% в выбранных категориях, лимит 20 000
+// (было 50 000). Jusan Bank в 2025 году переименован в Alatau City Bank, условий «Jusan Bonus» нет — карта убрана.
 const CARDS: Card[] = [
   { id: 'kaspiGold', name: 'Kaspi Gold', annualFee: 0,
     cashback: { grocery: 0, restaurant: 0, fuel: 0, online: 0, other: 0 },
@@ -28,17 +33,14 @@ const CARDS: Card[] = [
     cashback: { grocery: 0, restaurant: 0, fuel: 0, online: 0, other: 0 },
     maxMonthly: 0, bonusNoteKey: 'cashback.bonusNotes.kaspiRed' },
   { id: 'halykBank', name: 'Halyk Bonus', annualFee: 3000,
-    cashback: { grocery: 5, restaurant: 10, fuel: 3, online: 3, other: 1 },
-    maxMonthly: 30000 },
-  { id: 'jusanBonus', name: 'Jusan Bonus', annualFee: 0,
-    cashback: { grocery: 4, restaurant: 7, fuel: 3, online: 5, other: 1 },
-    maxMonthly: 25000 },
+    cashback: { grocery: 1, restaurant: 1, fuel: 1, online: 1, other: 1 },
+    maxMonthly: 30000, bonusNoteKey: 'cashback.bonusNotes.halyk' },
   { id: 'forteBank', name: 'ForteBank Platinum', annualFee: 18000,
     cashback: { grocery: 5, restaurant: 10, fuel: 5, online: 5, other: 2 },
-    maxMonthly: 100000 },
+    maxMonthly: 30000, bonusNoteKey: 'cashback.bonusNotes.forte' },
   { id: 'bankCC', name: 'БЦК / BCC Visa Platinum', annualFee: 15000,
     cashback: { grocery: 4, restaurant: 8, fuel: 3, online: 4, other: 1 },
-    maxMonthly: 50000 },
+    maxMonthly: 20000, bonusNoteKey: 'cashback.bonusNotes.bcc' },
 ];
 
 export default function CashbackCalculator() {

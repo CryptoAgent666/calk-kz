@@ -177,7 +177,10 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   ],
   'break-even': [],
   'margin-markup': [],
-  'cashback': [NBK],
+  'cashback': [
+    { title: 'BES.media: какие кешбэки предлагают банки Казахстана (24.08.2026)', url: 'https://bes.media/news/do-30-no-ne-na-vse-kakie-keshbeki-predlagayut-banki-kazahstana/' },
+    NBK,
+  ],
   'debt-burden': [
     { title: 'Нормативы НБ РК о коэффициенте долговой нагрузки (пост. № 52)', url: 'https://adilet.zan.kz/rus/docs/V2500036722' },
     NBK,

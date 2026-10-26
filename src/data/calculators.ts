@@ -430,7 +430,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'cashback',
         title: 'Калькулятор кэшбэка',
-        description: 'Сравнение кэшбэка по картам Kaspi, Halyk, Jusan, Forte, БЦК',
+        description: 'Сравнение кэшбэка по картам Kaspi, Halyk, Forte, БЦК',
         category: 'finance',
         icon: 'CreditCard',
         component: React.lazy(() => import('../components/calculators/CashbackCalculator'))
