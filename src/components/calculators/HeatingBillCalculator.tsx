@@ -629,7 +629,9 @@ export default function HeatingBillCalculator() {
         ]}
         sources={[
           { title: i18n.language === 'kk' ? '«Алматы жылу желілері» — тарифтер' : 'Алматинские тепловые сети — тарифы', url: 'https://alts.kz/tarify/' },
-          { title: i18n.language === 'kk' ? '«Астана-Теплотранзит» — тарифтер' : 'Астана-Теплотранзит — тарифы', url: 'https://a-tranzit.kz/tarif-i-tarifnaya-smeta' },
+          { title: i18n.language === 'kk' ? '«Астана-Теплотранзит» — тарифтер' : 'Астана-Теплотранзит — тарифы', url: 'https://a-tranzit.kz/' },
+          { title: i18n.language === 'kk' ? '«Теплотранзит Қарағанды» — тарифтер' : 'Теплотранзит Караганда — тарифы', url: 'https://teplotranzit.kz/' },
+          { title: i18n.language === 'kk' ? '«Қуатжылуорталық-3» (Шымкент) — тарифтер' : 'Қуатжылуорталық-3 (Шымкент) — тарифы', url: 'http://kzho.kz/tariffs' },
         ]}
       />
 

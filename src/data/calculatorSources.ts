@@ -90,7 +90,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'house-heating': [
     { title: 'АО «QazaqGaz Aimaq»: цены на газ с 01.10.2026', url: 'https://www.aimaq.kz/wp-content/uploads/2026/09/czeny-s-01.10.2026-rus-1.doc' },
     { title: 'Zakon.kz: нормы потребления тепловой энергии по регионам (приказ Минпромстроя от 17.02.2026)', url: 'https://www.zakon.kz/pravo/6509075-utverzhdeny-normy-potrebleniya-teplovoy-energii-po-regionam-kazakhstana.html' },
-    { title: 'АО «Алатау Жарық Компаниясы» — «Энергосбыт»: тарифы для населения', url: 'https://www.esalmaty.kz/ru/home/tariffs' },
+    { title: 'АО «Алатау Жарық Компаниясы» — «Энергосбыт»: тарифы для населения', url: 'https://www.esalmaty.kz/ru/home-tariffs' },
   ],
   'tax-regime-comparison': [NK_RK, KGD, EGOV],
   'universal-declaration': [NK_RK, KGD, EGOV],
@@ -290,7 +290,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 
   // === КОММУНАЛЬНЫЕ ===
   'electricity': [
-    { title: 'АО «Алатау Жарық Компаниясы» — «Энергосбыт»: тарифы для населения', url: 'https://www.esalmaty.kz/ru/home/tariffs' },
+    { title: 'АО «Алатау Жарық Компаниясы» — «Энергосбыт»: тарифы для населения', url: 'https://www.esalmaty.kz/ru/home-tariffs' },
     { title: 'АО «Астана-РЭК»: тарифы для физических лиц', url: 'https://astrec.kz/abonentam/tarify-dlia-fizicheskih-lits' },
     { title: 'ТОО «Энергопоток» (Шымкент): тарифы', url: 'https://energopotok.kz/' },
     { title: 'Комитет по регулированию естественных монополий МНЭ РК', url: 'https://kremzk.gov.kz/' },

@@ -283,6 +283,8 @@ ${lines.join('\n')}`;
         sources={[
           { title: i18n.language === 'kk' ? 'Отын жылу шығару — анықтама' : 'Теплота сгорания топлива — справочник', url: 'https://thermalinfo.ru/eto-interesno/udelnaya-teplota-sgoraniya-topliva-i-goryuchih-materialov' },
           { title: i18n.language === 'kk' ? 'Тұрғындарға тарифтер (газ/электр)' : 'Тарифы для населения (газ/электро)', url: 'https://www.esalmaty.kz/ru/home-tariffs' },
+          { title: i18n.language === 'kk' ? '«QazaqGaz Aimaq» АҚ: 01.10.2026 бастап газ бағалары' : 'АО «QazaqGaz Aimaq»: цены на газ с 01.10.2026', url: 'https://www.aimaq.kz/wp-content/uploads/2026/09/czeny-s-01.10.2026-rus-1.doc' },
+          { title: i18n.language === 'kk' ? 'Zakon.kz: жылу энергиясын тұтыну нормалары (ӨҚМ, 17.02.2026)' : 'Zakon.kz: нормы потребления тепловой энергии (Минпромстрой, 17.02.2026)', url: 'https://www.zakon.kz/pravo/6509075-utverzhdeny-normy-potrebleniya-teplovoy-energii-po-regionam-kazakhstana.html' },
         ]}
       />
 

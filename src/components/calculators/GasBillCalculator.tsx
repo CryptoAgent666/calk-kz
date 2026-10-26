@@ -550,6 +550,7 @@ export default function GasBillCalculator() {
           { question: t('gas.faq.q5'), answer: t('gas.faq.a5') }
         ]}
         sources={[
+          { title: i18n.language === 'kk' ? '«QazaqGaz Aimaq» АҚ: 01.10.2026 бастап газ бағалары' : 'АО «QazaqGaz Aimaq»: цены на газ с 01.10.2026', url: 'https://www.aimaq.kz/wp-content/uploads/2026/09/czeny-s-01.10.2026-rus-1.doc' },
           { title: i18n.language === 'kk' ? 'QazaqGaz (бұрынғы ҚазТрансГаз)' : 'QazaqGaz (бывш. КазТрансГаз)', url: 'https://qazaqgaz.kz/ru/' },
           { title: i18n.language === 'kk' ? 'ҚР ҰЭМ Табиғи монополияларды реттеу комитеті — газ тарифтері' : 'Комитет по регулированию естественных монополий МНЭ РК — тарифы на газ', url: 'https://kremzk.gov.kz/' },
         ]}

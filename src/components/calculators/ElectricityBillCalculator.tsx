@@ -11,6 +11,7 @@ import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { getSources } from '../../data/calculatorSources';
 
 /** Пороги уровня — на ОДНОГО проживающего; для квартиры умножаются на число проживающих. */
 interface TariffTier {
@@ -478,11 +479,7 @@ export default function ElectricityBillCalculator() {
           { question: t('electricity.faq.q4'), answer: t('electricity.faq.a4') },
           { question: t('electricity.faq.q5'), answer: t('electricity.faq.a5') }
         ]}
-        sources={[
-          { title: i18n.language === 'kk' ? 'ҚР ҰЭМ Табиғи монополияларды реттеу комитеті — тарифтер' : 'Комитет по регулированию естественных монополий МНЭ РК — тарифы', url: 'https://kremzk.gov.kz/' },
-          { title: i18n.language === 'kk' ? 'KEGOC — Қазақстан энергетикасы' : 'KEGOC — Энергетика Казахстана', url: 'https://www.kegoc.kz/' },
-          { title: 'АО "Самрук-Энерго"', url: 'https://www.samruk-energy.kz/' },
-        ]}
+        sources={getSources('electricity')}
       />
 
       {/* Диаграмма */}
