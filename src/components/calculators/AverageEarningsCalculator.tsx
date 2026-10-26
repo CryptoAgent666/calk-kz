@@ -34,8 +34,8 @@ export default function AverageEarningsCalculator() {
   const [yearlyBonus, setYearlyBonus] = useState<string>('100000');
   const [allowances, setAllowances] = useState<string>('0');
   const [totalPayments, setTotalPayments] = useState<string>('3600000');
-  const [workedDays, setWorkedDays] = useState<string>('246');
-  const [workedHours, setWorkedHours] = useState<string>('1968');
+  const [workedDays, setWorkedDays] = useState<string>('247');
+  const [workedHours, setWorkedHours] = useState<string>('1976');
 
   const MZP_2026 = 85000;
 
@@ -50,7 +50,7 @@ export default function AverageEarningsCalculator() {
       const bonus = parseFloat(yearlyBonus) || 0;
       const allow = parseFloat(allowances) || 0;
       totalPay = (salary + allow) * months + (bonus * months / 12);
-      // Рабочих дней в месяце — по производственному календарю (246/12 = 20,5),
+      // Рабочих дней в месяце — по производственному календарю (247/12 ≈ 20,58),
       // а не «примерно 21»: тем же числом считают отпускные и выходное пособие.
       days = months * AVG_WORKING_DAYS_PER_MONTH;
       hours = days * 8;
