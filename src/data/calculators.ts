@@ -846,7 +846,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'currency-converter',
         title: 'Универсальный конвертер валют',
-        description: 'Конвертация валют с актуальными и историческими курсами',
+        description: 'Конвертация валют по официальным курсам НБРК на текущую дату',
         category: 'converters',
         icon: 'DollarSign',
         component: React.lazy(() => import('../components/calculators/CurrencyConverter'))

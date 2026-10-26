@@ -74,10 +74,6 @@ export default function CurrencyConverter() {
       reverseRate,
       isValidConversion: true
     });
-
-    if (exchangeRate > 0) {
-      addToHistory(inputAmount, convertedAmount, exchangeRate);
-    }
   };
 
   const addToHistory = (inputAmount: number, convertedAmount: number, rate: number) => {
@@ -116,6 +112,19 @@ export default function CurrencyConverter() {
   useEffect(() => {
     calculateConversion();
   }, [amount, fromCurrency, toCurrency, rates]);
+
+  // В историю — только итог по загруженным курсам, когда ввод утих на 1,2 с: раньше туда
+  // попадала конвертация по запасным курсам при загрузке и каждое нажатие клавиши.
+  useEffect(() => {
+    if (loading || !results.isValidConversion || results.exchangeRate <= 0) return;
+    const timer = setTimeout(() => {
+      addToHistory(parseFloat(amount) || 0, results.convertedAmount, results.exchangeRate);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [results, loading]);
+
+  const formatRate = (r: number) =>
+    r.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: r < 0.01 ? 6 : 4 });
 
   const formatNumber = (num: number, currency: string) => {
     const currencyInfo = currencies.find(c => c.code === currency);
@@ -168,11 +177,27 @@ ${t('currency-converter.exportSource')}`;
     </>
   );
 
+  // Заголовок одинаков в обоих состояниях: пререндер снимается при loading=true,
+  // и без него в статическом HTML не было H1.
+  const header = (
+    <div className="mb-8">
+      <div className="flex items-center space-x-3 mb-4">
+        <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+          <DollarSign className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">{t('currency-converter.heading')}</h1>
+          <p className="text-gray-600">{t('currency-converter.subtitle')}</p>
+        </div>
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto">
+        {header}
         <div className="space-y-6 animate-pulse">
-          <div className="h-8 w-64 bg-gray-200 rounded" />
           <QuickAnswer calculatorId="currency-converter" />
           <div className="grid lg:grid-cols-2 gap-8">
             <div className="h-[520px] bg-white rounded-xl border border-gray-100 shadow-sm" />
@@ -189,17 +214,7 @@ ${t('currency-converter.exportSource')}`;
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
-            <DollarSign className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('currency-converter.heading')}</h1>
-            <p className="text-gray-600">{t('currency-converter.subtitle')}</p>
-          </div>
-        </div>
-      </div>
+      {header}
 
       {error && (
         <div className="mb-8 bg-amber-50 border border-amber-200 rounded-xl p-6">
@@ -350,14 +365,14 @@ ${t('currency-converter.exportSource')}`;
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">{t('currency-converter.exchangeRate')}</span>
                   <span className="font-semibold text-gray-900">
-                    1 {fromCurrency} = {results.exchangeRate.toFixed(4)} {toCurrency}
+                    1 {fromCurrency} = {formatRate(results.exchangeRate)} {toCurrency}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">{t('currency-converter.reverseRate')}</span>
                   <span className="font-semibold text-gray-900">
-                    1 {toCurrency} = {results.reverseRate.toFixed(4)} {fromCurrency}
+                    1 {toCurrency} = {formatRate(results.reverseRate)} {fromCurrency}
                   </span>
                 </div>
               </div>
@@ -423,7 +438,7 @@ ${t('currency-converter.exportSource')}`;
                   </span>
                 </div>
                 <div className="text-xs text-gray-600">
-                  {t('currency-converter.rate')} 1 {item.fromCurrency} = {item.rate.toFixed(4)} {item.toCurrency}
+                  {t('currency-converter.rate')} 1 {item.fromCurrency} = {formatRate(item.rate)} {item.toCurrency}
                 </div>
               </div>
             ))}
@@ -445,7 +460,6 @@ ${t('currency-converter.exportSource')}`;
               <tr className="border-b border-gray-200">
                 <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">{t('currency-converter.tableHeaders.currency')}</th>
                 <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('currency-converter.tableHeaders.rateToTenge')}</th>
-                <th className="text-center py-3 px-4 text-sm font-medium text-gray-700">{t('currency-converter.tableHeaders.change')}</th>
               </tr>
             </thead>
             <tbody>
@@ -463,10 +477,7 @@ ${t('currency-converter.exportSource')}`;
                       </div>
                     </td>
                     <td className="py-3 px-4 text-center font-semibold">
-                      {rate > 0 ? rate.toFixed(2) + ' ₸' : '—'}
-                    </td>
-                    <td className="py-3 px-4 text-center text-sm text-gray-500">
-                      —
+                      {rate > 0 ? formatRate(rate) + ' ₸' : '—'}
                     </td>
                   </tr>
                 );
@@ -592,18 +603,18 @@ ${t('currency-converter.exportSource')}`;
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Конвертация валюты',
+              title: t('currency-converter.heading'),
               subtitle: `${fromCurrency} → ${toCurrency}`,
               sections: [
                 {
-                  title: 'Результат',
+                  title: t('currency-converter.exchangeRate'),
                   data: [
-                    { label: 'Исходная сумма', value: `${amount} ${fromCurrency}` },
-                    { label: 'Результат', value: `${results.convertedAmount.toLocaleString(NUMBER_LOCALE)} ${toCurrency}` },
+                    { label: fromCurrency, value: `${amount} ${fromCurrency}` },
+                    { label: toCurrency, value: `${results.convertedAmount.toLocaleString(NUMBER_LOCALE)} ${toCurrency}` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: 'calk.kz'
             }}
             filename="currency-conversion"
           />
@@ -615,7 +626,7 @@ ${t('currency-converter.exportSource')}`;
       <ExpertBlock />
       <EmbedWidget
         calculatorId="currency-converter"
-        calculatorTitle="Конвертер валют"
+        calculatorTitle={t('currency-converter.heading')}
       />
       <LastUpdated calculatorId="currency-converter" />
     </div>

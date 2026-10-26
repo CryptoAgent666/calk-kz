@@ -121,7 +121,7 @@ const LAST_UPDATED: Record<string, string> = {
   'gas': '2026-10-26', // calkcheck 26.10 б17: Атырау с 01.10.2026, IX группа
 
   // === КОНВЕРТЕРЫ ===
-  'currency-converter': '2026-10-06', // calkcheck 06.10 б6: примеры по курсу НБРК 05.10, контент в пререндере
+  'currency-converter': '2026-10-27',
   'time-converter': '2026-04-19',
   'number-to-words': '2026-04-19',
   'time-to-words': '2026-04-19',
