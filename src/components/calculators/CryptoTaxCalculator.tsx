@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bitcoin, Calculator, TrendingUp, Info, AlertTriangle, FileText, Shield } from 'lucide-react';
+import { Bitcoin, Calculator, TrendingUp, AlertTriangle, FileText, Shield } from 'lucide-react';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExpertBlock } from '../ui/ExpertBlock';
@@ -28,11 +28,13 @@ export default function CryptoTaxCalculator() {
   const [buyPrice, setBuyPrice] = useState<string>('1000000');
   const [sellPrice, setSellPrice] = useState<string>('1500000');
   const [transactions, setTransactions] = useState<string>('1');
-  const [aifcLicensed, setAifcLicensed] = useState<boolean>(true);
 
   const computeResults = () => {
-    const buy = parseFloat(buyPrice) || 0;
-    const sell = parseFloat(sellPrice) || 0;
+    // Майнинг разрешён только ИП и юрлицам (Закон о цифровых активах, ст. 1 пп. 7, ст. 8 п. 5) —
+    // физлицу без ИП налог не считаем, а показываем предупреждение.
+    const miningNotAllowed = operation === 'mining' && payer === 'individual';
+    const buy = miningNotAllowed ? 0 : parseFloat(buyPrice) || 0;
+    const sell = miningNotAllowed ? 0 : parseFloat(sellPrice) || 0;
     const txCount = Math.max(1, parseInt(transactions) || 1);
 
     // Для майнинга и стейкинга "прибыль" = sellPrice (вся полученная сумма)
@@ -93,7 +95,6 @@ export default function CryptoTaxCalculator() {
             { label: t('crypto-tax.buyPrice'), value: formatCurrency(parseFloat(buyPrice) || 0) },
             { label: t('crypto-tax.sellPrice'), value: formatCurrency(parseFloat(sellPrice) || 0) },
             { label: t('crypto-tax.transactions'), value: transactions },
-            { label: t('crypto-tax.aifc'), value: aifcLicensed ? t('crypto-tax.yes') : t('crypto-tax.no') },
           ],
         },
         {
@@ -257,21 +258,16 @@ export default function CryptoTaxCalculator() {
               <p className="text-xs text-gray-500 mt-1">{t('crypto-tax.transactionsHint')}</p>
             </div>
 
-            <label className="flex items-center space-x-3 cursor-pointer bg-orange-50 rounded-lg p-3 border border-orange-100">
-              <input
-                type="checkbox"
-                checked={aifcLicensed}
-                onChange={(e) => setAifcLicensed(e.target.checked)}
-                className="w-4 h-4 text-orange-600 rounded"
-              />
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-900">
-                  <Shield className="w-4 h-4 inline mr-1" />
-                  {t('crypto-tax.aifc')}
-                </div>
-                <div className="text-xs text-gray-600">{t('crypto-tax.aifcHint')}</div>
+            {/* Льгота МФЦА (Конституционный закон о МФЦА, ст. 6 п. 3) — закрытый перечень финансовых услуг,
+                биржа цифровых активов исключена прямо; на торговлю криптой не распространяется. Раньше здесь был
+                флажок «Резидент МФЦА — 0% КПН», который в расчёт не входил. */}
+            <div className="bg-orange-50 rounded-lg p-3 border border-orange-100">
+              <div className="text-sm font-medium text-gray-900">
+                <Shield className="w-4 h-4 inline mr-1" />
+                {t('crypto-tax.aifc')}
               </div>
-            </label>
+              <div className="text-xs text-gray-600 mt-1">{t('crypto-tax.aifcHint')}</div>
+            </div>
           </div>
         </div>
 
@@ -325,17 +321,10 @@ export default function CryptoTaxCalculator() {
               </div>
             </div>
 
-            {aifcLicensed && (
-              <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
-                <Info className="w-4 h-4 inline mr-1" />
-                {t('crypto-tax.aifcNote')}
-              </div>
-            )}
-
-            {!aifcLicensed && (
+            {operation === 'mining' && payer === 'individual' && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
                 <AlertTriangle className="w-4 h-4 inline mr-1" />
-                {t('crypto-tax.nonAifcWarning')}
+                {t('crypto-tax.miningIndividualWarning')}
               </div>
             )}
           </div>
