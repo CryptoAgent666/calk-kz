@@ -91,6 +91,12 @@ export default function FarmLandTaxCalculator() {
   const [landArea, setLandArea] = useState<string>('100');
   const [bonityScore, setBonityScore] = useState<string>('40');
   const [zone, setZone] = useState<SoilZone>('steppe');
+  // Физлицо (не ИП) по своей земле платит не земельный налог, а налог на имущество физлиц: 20 ₸ за 0,01 га
+  // до 0,5 га и 100 ₸ за 0,01 га сверх (НК ст. 599 пп. 2, ст. 602 п. 4); его считает налоговый орган.
+  // Раньше страница считала всех по ст. 576: ЛПХ 2 га → 241 ₸ вместо 16 000 ₸.
+  const [payer, setPayer] = useState<'legal' | 'individual'>('legal');
+  // Неиспользование по назначению после предписания — ставки ст. 576 × 40 (ст. 581 п. 5).
+  const [unused, setUnused] = useState<boolean>(false);
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и
@@ -103,16 +109,23 @@ export default function FarmLandTaxCalculator() {
     const rateSteppe = getRatePerHectare('steppe', score);
     const rateDesert = getRatePerHectare('desert', score);
 
+    const multiplier = unused ? 40 : 1;
+    const individualTax = area > 0
+      ? Math.min(area, 0.5) * 100 * 20 + Math.max(0, area - 0.5) * 100 * 100
+      : 0;
+
     return {
       area,
       score,
       isOver100: score > 100,
-      ratePerHectare,
-      rateSteppe,
-      rateDesert,
-      totalTax: area > 0 ? ratePerHectare * area : 0
+      ratePerHectare: ratePerHectare * multiplier,
+      rateSteppe: rateSteppe * multiplier,
+      rateDesert: rateDesert * multiplier,
+      multiplier,
+      individual: payer === 'individual',
+      totalTax: payer === 'individual' ? individualTax : area > 0 ? ratePerHectare * multiplier * area : 0
     };
-  }, [landArea, bonityScore, zone]);
+  }, [landArea, bonityScore, zone, payer, unused]);
 
   const formatTenge = (num: number) =>
     num.toLocaleString('ru-KZ', { maximumFractionDigits: 2 }) + ' ₸';
@@ -159,6 +172,26 @@ export default function FarmLandTaxCalculator() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('farm-land-tax.inputs.title')}</h2>
 
           <div className="space-y-6">
+            {/* Payer type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('farm-land-tax.inputs.payerLabel')}</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {(['legal', 'individual'] as const).map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setPayer(p)}
+                    className={`p-3 rounded-lg border-2 text-sm text-left ${payer === p ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600'}`}
+                  >
+                    {t(`farm-land-tax.inputs.payer_${p}`)}
+                  </button>
+                ))}
+              </div>
+              {payer === 'individual' && (
+                <p className="text-xs text-gray-600 mt-2">{t('farm-land-tax.inputs.individualNote')}</p>
+              )}
+            </div>
+
             {/* Land Area */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -236,6 +269,13 @@ export default function FarmLandTaxCalculator() {
               <p className="text-xs text-gray-500 mt-2">{t('farm-land-tax.inputs.zoneHelp')}</p>
             </div>
 
+            {payer === 'legal' && (
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" checked={unused} onChange={(e) => setUnused(e.target.checked)} className="h-4 w-4 mt-0.5" />
+                <span className="text-sm text-gray-700">{t('farm-land-tax.inputs.unusedLabel')}</span>
+              </label>
+            )}
+
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <div className="flex items-start space-x-2">
                 <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -267,6 +307,7 @@ export default function FarmLandTaxCalculator() {
             </div>
 
             {/* Tax Calculation */}
+            {!results.individual && (
             <div className="space-y-4">
               <div className="flex justify-between items-center py-3 bg-blue-50 rounded-lg px-3">
                 <span className="font-semibold text-blue-900">{t('farm-land-tax.results.ratePerHectare')}</span>
@@ -274,6 +315,7 @@ export default function FarmLandTaxCalculator() {
               </div>
               <p className="text-xs text-gray-500">{t('farm-land-tax.results.rateSource')}</p>
             </div>
+            )}
 
             {/* Total Tax */}
             <div className="bg-gradient-to-r from-green-50 to-lime-50 rounded-lg p-6">
@@ -285,7 +327,9 @@ export default function FarmLandTaxCalculator() {
                 </div>
               </div>
               <div className="text-sm text-gray-600">
-                {formatTenge(results.ratePerHectare)} × {results.area.toLocaleString('ru-KZ')} {t('farm-land-tax.inputs.hectare')}
+                {results.individual
+                  ? t('farm-land-tax.results.individualFormula')
+                  : `${formatTenge(results.ratePerHectare)} × ${results.area.toLocaleString('ru-KZ')} ${t('farm-land-tax.inputs.hectare')}${results.multiplier > 1 ? ` (${t('farm-land-tax.results.x40')})` : ''}`}
               </div>
             </div>
 
