@@ -361,7 +361,7 @@ export default function AgeCalculator() {
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('age.lifePercentTitle')}</h2>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-600">{t('age.lifePercentHint')}</span>
-                  <span className="text-2xl font-bold text-purple-700">{results.lifePercent.toFixed(1)}%</span>
+                  <span className="text-2xl font-bold text-purple-700">{results.lifePercent.toFixed(1).replace('.', ',')}%</span>
                 </div>
                 <div className="w-full bg-white rounded-full h-3 overflow-hidden">
                   <div
@@ -393,7 +393,7 @@ export default function AgeCalculator() {
                     { label: t('age.leapYearsLived'), value: String(results.leapYearsLived) },
                     { label: t('age.daysUntilBirthday'), value: String(results.daysUntilNextBirthday) },
                     { label: t('age.retirementDate'), value: formatDate(results.retirementDate) },
-                    { label: t('age.lifePercentTitle'), value: `${results.lifePercent.toFixed(1)}%` }
+                    { label: t('age.lifePercentTitle'), value: `${results.lifePercent.toFixed(1).replace('.', ',')}%` }
                   ]
                 }
               ],
@@ -419,7 +419,7 @@ export default function AgeCalculator() {
           { question: t('age.faq.q5'), answer: t('age.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР зейнеткерлік жасы' : 'Пенсионный возраст РК', url: 'https://www.enbek.gov.kz/' },
+          { title: i18n.language === 'kk' ? 'ҚР Әлеуметтік кодексі, 207-бап — зейнетақы жасы' : 'Социальный кодекс РК, ст. 207 — пенсионный возраст', url: 'https://adilet.zan.kz/rus/docs/K2300000224' },
           { title: i18n.language === 'kk' ? 'Григориан күнтізбесі' : 'Григорианский календарь', url: 'https://ru.wikipedia.org/wiki/Григорианский_календарь' }
         ]}
       />
