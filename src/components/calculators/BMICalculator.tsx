@@ -145,16 +145,12 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
     let weightDifference = 0;
     if (weightKg < normalMinWeight) {
       weightDifference = normalMinWeight - weightKg; // Нужно набрать
-    } else if (weightKg > normalMaxWeight) {
+    } else if (bmi >= 25) {
       weightDifference = weightKg - normalMaxWeight; // Нужно сбросить
     }
 
-    let ageAdjustedCategory = categoryInfo.category;
-    if (ageYears > 65) {
-      if (bmi >= 22 && bmi < 27) {
-        ageAdjustedCategory = t('bmi.ageAdjustedNormal');
-      }
-    }
+    // Отдельной «возрастной нормы» ИМТ после 65 лет нет ни у ВОЗ, ни в протоколе МЗ РК — категория одна
+    const ageAdjustedCategory = categoryInfo.category;
 
     const recommendations = [];
 
@@ -417,7 +413,14 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                   </div>
                   <div className="text-sm text-gray-600 mb-2">{results.categoryDescription}</div>
                   <div className="text-sm text-gray-700">{results.healthRisk}</div>
+                  <div className="text-xs text-gray-500 mt-2">{t('bmi.asianNote')}</div>
                 </div>
+
+                {parseInt(age) > 0 && parseInt(age) < 18 && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+                    {t('bmi.childNote')}
+                  </div>
+                )}
 
                 {parseInt(age) > 65 && results.ageAdjustedCategory !== results.category && (
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -568,8 +571,8 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
       <MedicalDisclaimer
         sources={[
           {
-            title: 'WHO — A healthy lifestyle: BMI classification',
-            url: 'https://www.who.int/europe/news-room/fact-sheets/item/a-healthy-lifestyle---who-recommendations',
+            title: 'WHO — Obesity and overweight (fact sheet)',
+            url: 'https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight',
             description: i18n.language === 'kk'
               ? 'Дүниежүзілік денсаулық сақтау ұйымы. Ересектердегі салмақ тапшылығын, қалыпты салмақты, артық салмақты және семіздікті жіктеуге арналған ресми ДМИ ауқымдары.'
               : 'World Health Organization. Официальные диапазоны ИМТ для классификации недостатка веса, нормы, избыточного веса и ожирения у взрослых.',
@@ -641,7 +644,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                   title: 'Параметры',
                   data: [
                     { label: 'Вес', value: `${weight} кг` },
-                    { label: 'Рост', value: `${height} см` },
+                    { label: 'Рост', value: `${height} ${heightUnit === 'cm' ? 'см' : 'м'}` },
                   ]
                 },
                 {
