@@ -35,17 +35,17 @@ export default function HajjCalculator() {
   const [pkg, setPkg] = useState<Package>('standard');
   const [persons, setPersons] = useState<string>('1');
   // Курс НБРК на 24.09.2026 — 445,65 ₸/$; поле редактируемое.
-  const [usdRate, setUsdRate] = useState<string>('446');
+  const [usdRate, setUsdRate] = useState<string>('451'); // курс НБРК на 27.10.2026 — 451,05 ₸
   const [addKurban, setAddKurban] = useState<boolean>(true);
   const [addSouvenirs, setAddSouvenirs] = useState<string>('300'); // USD на сувениры/еду
 
   const results = useMemo(() => {
     const p = parseFloat(persons) || 1;
-    const rate = parseFloat(usdRate) || 446;
+    const rate = parseFloat(usdRate) || 451;
     const basePriceUSD = PRICES[tripType][pkg];
 
     // Дополнительно
-    const kurbanUSD = tripType === 'hajj' && addKurban ? 150 : 0; // Курбан в Мекке
+    const kurbanUSD = tripType === 'hajj' && addKurban ? 190 : 0; // Курбан в Мекке: ~720 SAR (Adahi, вторичные данные 2026)
     const souvenirsUSD = parseFloat(addSouvenirs) || 0;
     // Виза включена в тур (для КЗ граждан Саудия упростила)
     // Страховка ≈ $30
@@ -55,7 +55,7 @@ export default function HajjCalculator() {
     const totalUSD = perPersonUSD * p;
     const totalKZT = totalUSD * rate;
 
-    // Срок ожидания хаджа — 1-5 лет в КЗ (по квоте 5000/год)
+    // Хадж — по квоте ДУМК (2026: 4000 мест, распределяют туроператоры); умра — круглый год, кроме сезона хаджа
     const waitYears = tripType === 'hajj' ? t('hajj.waitHajjValue') : t('hajj.waitUmraValue');
     // Длительность поездки
     const duration = tripType === 'hajj' ? t('hajj.durationHajjValue') : t('hajj.durationUmraValue');

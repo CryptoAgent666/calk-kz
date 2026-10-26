@@ -342,7 +342,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     { title: 'ГК РК (Особенная часть), раздел 6 — наследственное право', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
   ],
   'hajj': [
-    { title: 'Хадж-комитет ДУМК', url: 'https://hajj.kz/' },
+    { title: 'Духовное управление мусульман Казахстана', url: 'https://www.muftyat.kz/' },
   ],
   'islamic-mortgage': [
     { title: 'Al Hilal Islamic Bank', url: 'https://www.alhilalbank.kz/' },
