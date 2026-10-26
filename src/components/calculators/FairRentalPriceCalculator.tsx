@@ -84,8 +84,10 @@ export default function FairRentalPriceCalculator() {
     const low = Math.round(monthly * 0.9);
     const high = Math.round(monthly * 1.1);
     const yearly = monthly * 12;
-    const dailyMin = Math.round((monthly * 4) / 30);
-    const dailyMax = Math.round((monthly * 6) / 30);
+    // Посуточно: медианы krisha.kz (октябрь 2026) — 1,6–2,5 месячной ставки в пересчёте на сутки
+    // (Алматы, 2-комн: 22 000 ₸ против 350 000 / 30). Прежние ×4–6 завышали суточную цену в 2–3 раза.
+    const dailyMin = Math.round((monthly * 1.6) / 30);
+    const dailyMax = Math.round((monthly * 2.3) / 30);
 
     const priceNum = parseFloat(apartmentPrice.replace(/\s/g, '')) || 0;
     let paybackYears = 0;
