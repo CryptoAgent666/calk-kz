@@ -8825,9 +8825,9 @@
     },
     {
       "key": "kdif_payout_working_days",
-      "value": 35,
+      "value": 20,
       "unit": "working_days",
-      "law": "Закон об обязательном гарантировании депозитов",
+      "law": "Закон об обязательном гарантировании депозитов, ст. 21 п. 1 (в ред. Закона № 259-VIII от 16.01.2026): 15 рабочих дней на объявление + не более 5 до начала выплаты",
       "year": "2026",
       "change_frequency": "rare",
       "aliases": [
@@ -8839,8 +8839,11 @@
       ],
       "audit_status": "clean",
       "source_url": "https://kdif.kz/",
-      "verify_note": "Начало выплат в течение 35 рабочих дней после лишения лицензии.",
-      "reverified": "2026-07-11"
+      "verify_note": "calkcheck б16 2026-10-26: 35 → 20 рабочих дней (ст. 21 п. 1); при отсрочке по ст. 23 — позже.",
+      "reverified": "2026-07-11",
+      "official_value": 20,
+      "verified_date": "2026-10-26",
+      "verify_method": "calkcheck-primary"
     },
     {
       "key": "alcohol_widmark_r_male",
