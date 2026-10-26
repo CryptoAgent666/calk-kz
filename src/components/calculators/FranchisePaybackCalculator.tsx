@@ -16,6 +16,9 @@ interface FranchisePreset {
 }
 
 const DEPOSIT_RATE = 15; // % годовых — ориентир для сравнения
+// Порог обязательной постановки на учёт по НДС — 10 000 МРП оборота за год (НК ст. 99 п. 4);
+// на упрощёнке (спецрежим) на учёт по НДС не ставят (ст. 99 п. 3 пп. 4).
+const VAT_THRESHOLD = 10_000 * 4325;
 
 interface MoneyInputProps { label: string; value: string; onChange: (v: string) => void; suffix: string; step?: string; hint?: string; }
 
@@ -44,14 +47,14 @@ export default function FranchisePaybackCalculator() {
   const { t } = useTranslation('calculators');
 
   const presets: FranchisePreset[] = [
-    { id: 'caffeine', labelKey: 'franchise-payback.presetCaffeine', paushal: 5_000_000, equipment: 15_000_000, training: 1_500_000, startStock: 2_000_000, royalty: 5, marketingFee: 2, revenue: 7_000_000, opex: 4_200_000 },
-    { id: 'dodo', labelKey: 'franchise-payback.presetDodo', paushal: 8_000_000, equipment: 20_000_000, training: 2_000_000, startStock: 3_000_000, royalty: 5, marketingFee: 2, revenue: 12_000_000, opex: 7_500_000 },
-    { id: 'magnum', labelKey: 'franchise-payback.presetMagnum', paushal: 3_000_000, equipment: 10_000_000, training: 800_000, startStock: 5_000_000, royalty: 3, marketingFee: 1, revenue: 8_000_000, opex: 5_500_000 },
-    { id: 'education', labelKey: 'franchise-payback.presetEducation', paushal: 5_000_000, equipment: 8_000_000, training: 1_200_000, startStock: 500_000, royalty: 7, marketingFee: 2, revenue: 4_500_000, opex: 2_500_000 },
+    { id: 'coffee', labelKey: 'franchise-payback.presetCoffee', paushal: 5_000_000, equipment: 15_000_000, training: 1_500_000, startStock: 2_000_000, royalty: 5, marketingFee: 2, revenue: 7_000_000, opex: 5_000_000 },
+    { id: 'pizza', labelKey: 'franchise-payback.presetPizza', paushal: 8_000_000, equipment: 20_000_000, training: 2_000_000, startStock: 3_000_000, royalty: 5, marketingFee: 2, revenue: 12_000_000, opex: 9_000_000 },
+    { id: 'grocery', labelKey: 'franchise-payback.presetGrocery', paushal: 3_000_000, equipment: 10_000_000, training: 800_000, startStock: 5_000_000, royalty: 3, marketingFee: 1, revenue: 8_000_000, opex: 6_800_000 },
+    { id: 'education', labelKey: 'franchise-payback.presetEducation', paushal: 5_000_000, equipment: 8_000_000, training: 1_200_000, startStock: 500_000, royalty: 7, marketingFee: 2, revenue: 4_500_000, opex: 3_000_000 },
     { id: 'custom', labelKey: 'franchise-payback.presetCustom', paushal: 0, equipment: 0, training: 0, startStock: 0, royalty: 0, marketingFee: 0, revenue: 0, opex: 0 },
   ];
 
-  const [preset, setPreset] = useState<string>('caffeine');
+  const [preset, setPreset] = useState<string>('coffee');
   const [paushal, setPaushal] = useState<string>('5000000');
   const [equipment, setEquipment] = useState<string>('15000000');
   const [training, setTraining] = useState<string>('1500000');
@@ -59,7 +62,7 @@ export default function FranchisePaybackCalculator() {
   const [revenue, setRevenue] = useState<string>('7000000');
   const [royalty, setRoyalty] = useState<string>('5');
   const [marketingFee, setMarketingFee] = useState<string>('2');
-  const [opex, setOpex] = useState<string>('4200000');
+  const [opex, setOpex] = useState<string>('5000000');
   const [taxMode, setTaxMode] = useState<'simple' | 'general'>('simple');
 
   // Применяем пресет при его выборе
@@ -94,7 +97,7 @@ export default function FranchisePaybackCalculator() {
     const marketingAmount = (rev * mkt) / 100;
     const feesTotal = royaltyAmount + marketingAmount;
     const grossProfit = rev - op - feesTotal;
-    // Упрощёнка 4% с оборота; ОУР ~20% с прибыли (упрощённо)
+    // Упрощёнка 4% с оборота; ОУР — ТОО, КПН 20% с прибыли (упрощённо)
     const taxAmount = taxMode === 'simple' ? rev * 0.04 : Math.max(0, grossProfit) * 0.2;
     const monthlyProfit = grossProfit - taxAmount;
     const yearlyProfit = monthlyProfit * 12;
@@ -115,6 +118,8 @@ export default function FranchisePaybackCalculator() {
       roi: Number(roi.toFixed(1)),
       margin: Number(margin.toFixed(1)),
       depositYearly: Math.round(depositYearly),
+      vatRequired: taxMode === 'general' && rev * 12 > VAT_THRESHOLD,
+      yearlyRevenue: Math.round(rev * 12),
     };
   };
 
@@ -129,7 +134,9 @@ export default function FranchisePaybackCalculator() {
   const getRating = (): { key: string; color: string; bg: string; border: string } => {
     if (results.paybackMonths <= 0 || results.monthlyProfit <= 0)
       return { key: 'franchise-payback.ratingLoss', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200' };
-    if (results.paybackMonths < 18)
+    if (results.paybackMonths < 12)
+      return { key: 'franchise-payback.ratingSuspicious', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200' };
+    if (results.paybackMonths <= 30)
       return { key: 'franchise-payback.ratingExcellent', color: 'text-green-700', bg: 'bg-green-50', border: 'border-green-200' };
     if (results.paybackMonths <= 36)
       return { key: 'franchise-payback.ratingNormal', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200' };
@@ -138,13 +145,14 @@ export default function FranchisePaybackCalculator() {
 
   const rating = getRating();
 
-  const paybackYears = results.paybackMonths > 0 ? (results.paybackMonths / 12).toFixed(1) : '—';
+  const dec = (n: number) => String(n).replace('.', ',');
+  const paybackYears = results.paybackMonths > 0 ? (results.paybackMonths / 12).toFixed(1).replace('.', ',') : '—';
 
   const generateExportData = () => {
     if (results.startup === 0) return null;
     return {
       title: t('franchise-payback.exportTitle'),
-      subtitle: `${t('franchise-payback.paybackMonths')}: ${results.paybackMonths} ${t('franchise-payback.months')} (~${paybackYears} ${t('franchise-payback.years')})`,
+      subtitle: `${t('franchise-payback.paybackMonths')}: ${dec(results.paybackMonths)} ${t('franchise-payback.months')} (~${paybackYears} ${t('franchise-payback.years')})`,
       sections: [
         {
           title: t('franchise-payback.parameters'),
@@ -167,9 +175,9 @@ export default function FranchisePaybackCalculator() {
             { label: t('franchise-payback.taxAmount'), value: formatCurrency(results.taxAmount) },
             { label: t('franchise-payback.monthlyProfit'), value: formatCurrency(results.monthlyProfit) },
             { label: t('franchise-payback.yearlyProfit'), value: formatCurrency(results.yearlyProfit) },
-            { label: t('franchise-payback.paybackMonths'), value: `${results.paybackMonths} ${t('franchise-payback.months')} (~${paybackYears} ${t('franchise-payback.years')})` },
-            { label: 'ROI', value: `${results.roi}%` },
-            { label: t('franchise-payback.margin'), value: `${results.margin}%` },
+            { label: t('franchise-payback.paybackMonths'), value: `${dec(results.paybackMonths)} ${t('franchise-payback.months')} (~${paybackYears} ${t('franchise-payback.years')})` },
+            { label: 'ROI', value: `${dec(results.roi)}%` },
+            { label: t('franchise-payback.margin'), value: `${dec(results.margin)}%` },
             { label: t('franchise-payback.depositCompare'), value: `${formatCurrency(results.depositYearly)} (${DEPOSIT_RATE}%)` },
           ],
         },
@@ -335,7 +343,7 @@ export default function FranchisePaybackCalculator() {
                 <div className="flex items-center space-x-2">
                   <PiggyBank className="w-6 h-6 text-violet-600" />
                   <span className="text-2xl font-bold text-violet-700">
-                    {results.paybackMonths > 0 ? `${results.paybackMonths} ${t('franchise-payback.months')}` : '—'}
+                    {results.paybackMonths > 0 ? `${dec(results.paybackMonths)} ${t('franchise-payback.months')}` : '—'}
                   </span>
                 </div>
               </div>
@@ -388,12 +396,18 @@ export default function FranchisePaybackCalculator() {
               </div>
               <div className="text-base font-bold text-gray-900">{formatCurrency(results.taxAmount)}</div>
             </div>
+            {results.vatRequired && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 flex gap-2">
+                <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <span>{t('franchise-payback.vatWarning', { revenue: formatCurrency(results.yearlyRevenue) })}</span>
+              </div>
+            )}
 
             {/* Monthly profit */}
             <div className="bg-blue-50 rounded-lg p-4 flex justify-between items-center">
               <div>
                 <div className="text-sm text-blue-600">{t('franchise-payback.monthlyProfit')}</div>
-                <div className="text-xs text-blue-500">{t('franchise-payback.margin')}: {results.margin}%</div>
+                <div className="text-xs text-blue-500">{t('franchise-payback.margin')}: {dec(results.margin)}%</div>
               </div>
               <span className="text-xl font-bold text-blue-700">{formatCurrency(results.monthlyProfit)}</span>
             </div>
@@ -406,7 +420,7 @@ export default function FranchisePaybackCalculator() {
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-green-700">ROI</span>
-                <span className="font-bold text-green-800">{results.roi}%</span>
+                <span className="font-bold text-green-800">{dec(results.roi)}%</span>
               </div>
             </div>
 

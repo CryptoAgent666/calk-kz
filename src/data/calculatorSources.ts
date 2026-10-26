@@ -193,6 +193,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'cash-flow-gap': [],
   'franchise-payback': [
     { title: 'ГК РК (Особенная часть), глава 45 — комплексная предпринимательская лицензия (франчайзинг)', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
+    NK_RK,
   ],
 
   // === СОЦИАЛЬНЫЕ / ТРУДОВЫЕ ===
