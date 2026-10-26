@@ -184,7 +184,7 @@ ${results.comparisonResults.map((scenario, index) =>
    Экономия: ${formatNumber(scenario.savings)}`
 ).join('\n\n')}
 
-${results.bestScenario ? `Лучший вариант: ${results.bestScenario.name} (экономия ${formatNumber(results.bestScenario.savings)})` : ''}`;
+${results.bestScenario ? `${t('discount.bestOption')}: ${results.bestScenario.name} (${formatNumber(results.bestScenario.finalPrice)})` : ''}`;
         }
         break;
     }
@@ -301,10 +301,12 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
       };
     });
 
-    // Найти лучший вариант (максимальная экономия)
-    const bestScenario = comparisonResults.length > 0
-      ? comparisonResults.reduce((best, current) => 
-          current.savings > best.savings ? current : best
+    // Лучший вариант — самая низкая итоговая цена, а не самая большая скидка в тенге:
+    // 100 000 − 30% = 70 000 дороже, чем 60 000 − 10% = 54 000.
+    const priced = comparisonResults.filter(r => r.originalPrice > 0);
+    const bestScenario = priced.length > 0
+      ? priced.reduce((best, current) =>
+          current.finalPrice < best.finalPrice ? current : best
         )
       : null;
 
@@ -316,11 +318,14 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
   };
 
   const addCascadeDiscount = () => {
-    const newId = (cascadeDiscounts.length + 1).toString();
+    // id — максимум + 1: после удаления средней строки length + 1 давал дубль.
+    const nextNum = Math.max(0, ...cascadeDiscounts.map(d => parseInt(d.id) || 0)) + 1;
+    const newId = nextNum.toString();
     const getDiscountLabel = () => {
-      if (newId === '2') return t('discount.secondDiscountLabel');
-      if (newId === '3') return t('discount.thirdDiscountLabel');
-      if (newId === '4') return t('discount.fourthDiscountLabel');
+      const position = cascadeDiscounts.length + 1;
+      if (position === 2) return t('discount.secondDiscountLabel');
+      if (position === 3) return t('discount.thirdDiscountLabel');
+      if (position === 4) return t('discount.fourthDiscountLabel');
       return t('discount.additionalDiscountLabel');
     };
     setCascadeDiscounts([...cascadeDiscounts, {
@@ -345,7 +350,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
   };
 
   const addCompareScenario = () => {
-    const newId = (compareScenarios.length + 1).toString();
+    const newId = (Math.max(0, ...compareScenarios.map(sc => parseInt(sc.id) || 0)) + 1).toString();
     setCompareScenarios([...compareScenarios, {
       id: newId,
       name: `${t('discount.optionN')} ${newId}`,
@@ -774,7 +779,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
 
                     <div className="flex flex-col sm:flex-row sm:justify-between py-2 border-b border-gray-100 space-y-1 sm:space-y-0">
                       <span className="text-sm text-gray-600">{t('discount.discountSize')}</span>
-                      <span className="font-semibold text-orange-600 text-sm">{discountPercent}%</span>
+                      <span className="font-semibold text-orange-600 text-sm">{Math.min(100, Math.max(0, parseFloat(discountPercent) || 0))}%</span>
                     </div>
 
                     <div className="flex flex-col sm:flex-row sm:justify-between py-2 space-y-1 sm:space-y-0">
@@ -886,7 +891,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
                         </div>
                       </div>
                       <div className="text-xs sm:text-sm text-gray-600 break-all">
-                        {t('discount.maximumSavings')}: {formatNumber(results.bestScenario.savings)}
+                        {t('discount.finalPrice')}: {formatNumber(results.bestScenario.finalPrice)} · {t('discount.savings')}: {formatNumber(results.bestScenario.savings)}
                       </div>
                     </div>
                   )}
@@ -1267,7 +1272,7 @@ ${results.bestScenario ? `Лучший вариант: ${results.bestScenario.na
           { question: t('discount.faq.q5'), answer: t('discount.faq.a5') }
         ]}
         sources={[
-          { title: i18n.language === 'kk' ? 'ҚР тұтынушылар құқықтары' : 'Права потребителей РК', url: 'https://adilet.zan.kz/rus/docs/Z010000221_' },
+          { title: i18n.language === 'kk' ? '«Тұтынушылардың құқықтарын қорғау туралы» ҚР Заңы' : 'Закон РК «О защите прав потребителей»', url: 'https://adilet.zan.kz/rus/docs/Z100000274_' },
           { title: i18n.language === 'kk' ? 'Kaspi.kz — баға салыстыру' : 'Kaspi.kz — сравнение цен', url: 'https://kaspi.kz/' },
         ]}
       />
