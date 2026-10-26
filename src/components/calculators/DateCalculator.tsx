@@ -8,6 +8,23 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { pluralize } from '../../utils/pluralize';
+
+// Даты — локальные полночи: new Date('YYYY-MM-DD') разбирается как UTC.
+const parseLocal = (s: string) => {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+const daysInMonth = (y: number, m: number) => new Date(y, m + 1, 0).getDate();
+// Месяцы и годы — с концом месяца, как в ГК РК (ст. 174 п. 3): если в последнем месяце срока
+// нет такого числа, срок истекает в его последний день. 31.01 + 1 мес = 28.02, а не 03.03.
+const addMonthsClamped = (d: Date, months: number) => {
+  const total = d.getFullYear() * 12 + d.getMonth() + months;
+  const y = Math.floor(total / 12);
+  const m = total - y * 12;
+  return new Date(y, m, Math.min(d.getDate(), daysInMonth(y, m)));
+};
+const DAY_MS = 1000 * 60 * 60 * 24;
 
 interface DateCalculation {
   startDate: Date;
@@ -54,9 +71,20 @@ export default function DateCalculator() {
     monthsDifference: 0,
     yearsDifference: 0,
     diffDescription: '',
+    exactDays: 0,
 
     warnings: [] as string[]
   });
+
+  // Склонения: в ru «1 день / 2 дня / 5 дней», в kk форма одна
+  const unit = (n: number, key: 'days' | 'weeks' | 'months' | 'years') => {
+    const forms: Record<string, [string, string, string]> = {
+      days: ['день', 'дня', 'дней'], weeks: ['неделя', 'недели', 'недель'],
+      months: ['месяц', 'месяца', 'месяцев'], years: ['год', 'года', 'лет'],
+    };
+    const word = i18n.language === 'kk' ? t(`date-calculator.${key}Text`) : pluralize('ru', n, ...forms[key]);
+    return `${n.toLocaleString(NUMBER_LOCALE)} ${word}`;
+  };
 
   const MONTHS_RU_GENITIVE = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
   const monthNames = [
@@ -90,12 +118,12 @@ export default function DateCalculator() {
         resultDate: '', resultDateFormatted: '', totalDaysChanged: 0,
         dayOfWeek: '', isWeekend: false, monthName: '', yearInfo: '',
         daysDifference: 0, weeksDifference: 0, monthsDifference: 0, yearsDifference: 0,
-        diffDescription: '', warnings: []
+        diffDescription: '', exactDays: 0, warnings: []
       });
       return;
     }
 
-    const baseDate = new Date(startDate);
+    const baseDate = parseLocal(startDate);
     const yearsToAdd = parseInt(years) || 0;
     const monthsToAdd = parseInt(months) || 0;
     const daysToAdd = parseInt(days) || 0;
@@ -109,26 +137,15 @@ export default function DateCalculator() {
     }
 
     const originalDate = new Date(baseDate);
-    const resultDate = new Date(baseDate);
-
     const multiplier = operation === 'add' ? 1 : -1;
 
-    if (yearsToAdd !== 0) {
-      resultDate.setFullYear(resultDate.getFullYear() + (yearsToAdd * multiplier));
-    }
-
-    if (monthsToAdd !== 0) {
-      resultDate.setMonth(resultDate.getMonth() + (monthsToAdd * multiplier));
-    }
-
-    if (daysToAdd !== 0) {
-      resultDate.setDate(resultDate.getDate() + (daysToAdd * multiplier));
-    }
+    const shifted = addMonthsClamped(baseDate, (yearsToAdd * 12 + monthsToAdd) * multiplier);
+    const resultDate = new Date(shifted.getFullYear(), shifted.getMonth(), shifted.getDate() + daysToAdd * multiplier);
 
     const timeDifference = resultDate.getTime() - originalDate.getTime();
-    const totalDaysChanged = Math.round(timeDifference / (1000 * 60 * 60 * 24));
+    const totalDaysChanged = Math.round(timeDifference / DAY_MS);
 
-    const resultDateISO = resultDate.toISOString().split('T')[0];
+    const resultDateISO = toIsoDateLocal(resultDate);
     const dayOfWeek = dayNames[resultDate.getDay()];
     const isWeekend = resultDate.getDay() === 0 || resultDate.getDay() === 6;
     // По-русски после числа — родительный падеж («27 сентября»), в ключах i18n — именительный.
@@ -143,16 +160,14 @@ export default function DateCalculator() {
 
     const warnings = [];
 
-    if (monthsToAdd !== 0 || yearsToAdd !== 0) {
-      const startMonth = originalDate.getMonth();
-      const endMonth = resultDate.getMonth();
-      const startYear = originalDate.getFullYear();
-      const endYear = resultDate.getFullYear();
-
-      if (isLeapYear(startYear) || isLeapYear(endYear)) {
-        if ((startMonth <= 1 && endMonth >= 1) || (startMonth >= 1 && endMonth <= 1)) {
-          warnings.push(t('date-calculator.leapYearDay'));
-        }
+    // Предупреждение — если между датами есть 29 февраля
+    const [from, to] = originalDate <= resultDate ? [originalDate, resultDate] : [resultDate, originalDate];
+    for (let y = from.getFullYear(); y <= to.getFullYear(); y++) {
+      if (!isLeapYear(y)) continue;
+      const feb29 = new Date(y, 1, 29);
+      if (feb29 > from && feb29 <= to) {
+        warnings.push(t('date-calculator.leapYearDay'));
+        break;
       }
     }
 
@@ -177,6 +192,7 @@ export default function DateCalculator() {
       monthsDifference: 0,
       yearsDifference: 0,
       diffDescription: '',
+      exactDays: 0,
       warnings
     });
   };
@@ -194,8 +210,8 @@ export default function DateCalculator() {
       return;
     }
 
-    const date1 = new Date(startDate);
-    const date2 = new Date(endDateForDiff);
+    const date1 = parseLocal(startDate);
+    const date2 = parseLocal(endDateForDiff);
 
     if (isNaN(date1.getTime()) || isNaN(date2.getTime())) {
       return;
@@ -204,20 +220,15 @@ export default function DateCalculator() {
     const [earlierDate, laterDate] = date1 <= date2 ? [date1, date2] : [date2, date1];
 
     const timeDifference = laterDate.getTime() - earlierDate.getTime();
-    const daysDifference = Math.round(timeDifference / (1000 * 60 * 60 * 24));
+    const daysDifference = Math.round(timeDifference / DAY_MS);
     const weeksDifference = Math.floor(daysDifference / 7);
 
-    let yearsDifference = laterDate.getFullYear() - earlierDate.getFullYear();
-    let monthsDifference = laterDate.getMonth() - earlierDate.getMonth();
-
-    if (laterDate.getDate() < earlierDate.getDate()) {
-      monthsDifference--;
-    }
-
-    if (monthsDifference < 0) {
-      yearsDifference--;
-      monthsDifference += 12;
-    }
+    // Полные месяцы — по тем же правилам конца месяца, остаток — в днях
+    let totalMonths = (laterDate.getFullYear() - earlierDate.getFullYear()) * 12 + (laterDate.getMonth() - earlierDate.getMonth());
+    if (addMonthsClamped(earlierDate, totalMonths) > laterDate) totalMonths--;
+    const yearsDifference = Math.floor(totalMonths / 12);
+    const monthsDifference = totalMonths - yearsDifference * 12;
+    const exactDays = Math.round((laterDate.getTime() - addMonthsClamped(earlierDate, totalMonths).getTime()) / DAY_MS);
 
     const diffDescription = `${t('date-calculator.from')} ${date1.toLocaleDateString('ru-RU')} ${t('date-calculator.to')} ${date2.toLocaleDateString('ru-RU')}`;
 
@@ -227,15 +238,16 @@ export default function DateCalculator() {
       weeksDifference,
       monthsDifference,
       yearsDifference,
-      diffDescription
+      diffDescription,
+      exactDays
     }));
   };
 
   const addToHistory = () => {
     if (results.resultDate && startDate) {
       const calculation: DateCalculation = {
-        startDate: new Date(startDate),
-        endDate: new Date(results.resultDate),
+        startDate: parseLocal(startDate),
+        endDate: parseLocal(results.resultDate),
         operation,
         period: {
           years: parseInt(years) || 0,
@@ -278,7 +290,7 @@ export default function DateCalculator() {
       resultDate: '', resultDateFormatted: '', totalDaysChanged: 0,
       dayOfWeek: '', isWeekend: false, monthName: '', yearInfo: '',
       daysDifference: 0, weeksDifference: 0, monthsDifference: 0, yearsDifference: 0,
-      diffDescription: '', warnings: []
+      diffDescription: '', exactDays: 0, warnings: []
     });
   };
 
@@ -297,7 +309,7 @@ export default function DateCalculator() {
       ].filter(Boolean).join(' ');
 
       content = `${operation === 'add' ? t('date-calculator.add') : t('date-calculator.subtract')} ${periodStr}\n`;
-      content += `${t('date-calculator.startDate')}: ${new Date(startDate).toLocaleDateString('ru-RU')}\n`;
+      content += `${t('date-calculator.startDate')}: ${parseLocal(startDate).toLocaleDateString('ru-RU')}\n`;
       content += `${t('date-calculator.result')}: ${results.resultDateFormatted}\n`;
       content += `${t('date-calculator.totalChange')}: ${results.totalDaysChanged} ${t('date-calculator.daysText')}`;
     }
@@ -327,7 +339,7 @@ export default function DateCalculator() {
         ].filter(Boolean).join(' ');
 
         content += `${operation === 'add' ? t('date-calculator.addingPeriod') : t('date-calculator.subtractingPeriod')}:\n`;
-        content += `${t('date-calculator.startDate')}: ${new Date(startDate).toLocaleDateString('ru-RU')}\n`;
+        content += `${t('date-calculator.startDate')}: ${parseLocal(startDate).toLocaleDateString('ru-RU')}\n`;
         content += `${t('date-calculator.period')}: ${periodStr}\n`;
         content += `${t('date-calculator.result')}: ${results.resultDateFormatted}\n`;
         content += `${t('date-calculator.totalChange')}: ${results.totalDaysChanged} ${t('date-calculator.daysText')}\n`;
@@ -701,7 +713,7 @@ export default function DateCalculator() {
                       <div className="flex items-center space-x-2">
                         <Calculator className="w-6 h-6 text-green-600" />
                         <span className="text-lg sm:text-xl lg:text-2xl font-bold text-green-700">
-                          {results.daysDifference.toLocaleString(NUMBER_LOCALE)} {t('date-calculator.daysText')}
+                          {unit(results.daysDifference, 'days')}
                         </span>
                       </div>
                     </div>
@@ -714,7 +726,7 @@ export default function DateCalculator() {
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100 space-y-1 sm:space-y-0">
                       <span className="text-gray-600">{t('date-calculator.inWeeks')}</span>
                       <span className="font-semibold text-gray-900">
-                        {results.weeksDifference} {t('date-calculator.weeksText')} {results.daysDifference % 7} {t('date-calculator.daysText')}
+                        {unit(results.weeksDifference, 'weeks')} {unit(results.daysDifference % 7, 'days')}
                       </span>
                     </div>
 
@@ -722,8 +734,9 @@ export default function DateCalculator() {
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100 space-y-1 sm:space-y-0">
                         <span className="text-gray-600">{t('date-calculator.exactDifference')}</span>
                         <span className="font-semibold text-gray-900">
-                          {results.yearsDifference > 0 && `${results.yearsDifference} ${t('date-calculator.yearsText')} `}
-                          {results.monthsDifference > 0 && `${results.monthsDifference} ${t('date-calculator.monthsText')}`}
+                          {results.yearsDifference > 0 && `${unit(results.yearsDifference, 'years')} `}
+                          {results.monthsDifference > 0 && `${unit(results.monthsDifference, 'months')} `}
+                          {results.exactDays > 0 && unit(results.exactDays, 'days')}
                         </span>
                       </div>
                     )}
@@ -758,7 +771,7 @@ export default function DateCalculator() {
                       </div>
                     </div>
                     <div className="text-sm text-gray-600">
-                      {operation === 'add' ? t('date-calculator.added') : t('date-calculator.subtracted')}: {results.totalDaysChanged} {t('date-calculator.daysText')}
+                      {operation === 'add' ? t('date-calculator.added') : t('date-calculator.subtracted')}: {unit(results.totalDaysChanged, 'days')}
                     </div>
                   </div>
 
@@ -1010,7 +1023,7 @@ export default function DateCalculator() {
         ]}
         sources={[
           { title: i18n.language === 'kk' ? 'ҚР өндірістік күнтізбесі' : 'Производственный календарь РК', url: 'https://egov.kz/' },
-          { title: i18n.language === 'kk' ? 'ҚР Еңбек кодексі — мереке күндері' : 'Трудовой кодекс РК — праздники', url: 'https://online.zakon.kz/document/?doc_id=38910832' },
+          { title: i18n.language === 'kk' ? 'ҚР Азаматтық кодексі — мерзімдерді есептеу (172–176-баптар)' : 'Гражданский кодекс РК — исчисление сроков (ст. 172–176)', url: 'https://adilet.zan.kz/rus/docs/K940001000_' },
         ]}
       />
 
