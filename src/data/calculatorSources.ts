@@ -190,7 +190,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
     NBK,
   ],
   'inflation': [STAT, NBK],
-  'cash-flow-gap': [],
+  'cash-flow-gap': [NK_RK],
   'franchise-payback': [
     { title: 'ГК РК (Особенная часть), глава 45 — комплексная предпринимательская лицензия (франчайзинг)', url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
     NK_RK,

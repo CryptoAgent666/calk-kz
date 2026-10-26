@@ -29,7 +29,6 @@ export default function CashFlowGapCalculator() {
   const [dso, setDso] = useState<string>('45');
   const [dpo, setDpo] = useState<string>('15');
   const [dio, setDio] = useState<string>('20');
-  const [growth, setGrowth] = useState<string>('0');
 
   const EMPTY_RESULTS = {
     cashCycle: 0,
@@ -83,7 +82,7 @@ export default function CashFlowGapCalculator() {
   const results = useMemo(
     computeResults,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [monthlyRevenue, monthlyExpenses, dso, dpo, dio, growth]
+    [monthlyRevenue, monthlyExpenses, dso, dpo, dio]
   );
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
@@ -120,7 +119,7 @@ DIO: ${dio} ${t('cash-flow-gap.days')}
 
 ${t('cash-flow-gap.resultsTitle')}:
 ─────────────────────────────
-${t('cash-flow-gap.cashCycle')}: ${results.cashCycle} ${t('cash-flow-gap.days')}
+${t('cash-flow-gap.cashCycle')}: ${daysText(results.cashCycle)}
 ${t('cash-flow-gap.gapSize')}: ${formatCurrency(results.gapSize)}
 ${t('cash-flow-gap.recommended')}: ${formatCurrency(results.recommended)}
 ${t('cash-flow-gap.dailyRevenue')}: ${formatCurrency(results.dailyRevenue)}
@@ -260,23 +259,6 @@ calk.kz`;
               <p className="text-xs text-gray-500 mt-2">{t('cash-flow-gap.dioHint')}</p>
             </div>
 
-            {/* Growth */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <TrendingUp className="w-4 h-4 inline mr-1" />
-                {t('cash-flow-gap.growth')}
-              </label>
-              <RangeSlider
-                value={parseFloat(growth) || 0}
-                onChange={(v) => setGrowth(String(v))}
-                min={0}
-                max={50}
-                step={1}
-                formatValue={(v) => `${v} ${t('cash-flow-gap.percent')}`}
-                color="#f59e0b"
-              />
-              <p className="text-xs text-gray-500 mt-2">{t('cash-flow-gap.growthHint')}</p>
-            </div>
           </div>
         </div>
 
@@ -316,7 +298,7 @@ calk.kz`;
                     cycleIsPositive ? 'text-orange-700' : 'text-green-700'
                   }`}
                 >
-                  {results.cashCycle} {t('cash-flow-gap.days')}
+                  {daysText(results.cashCycle)}
                 </span>
               </div>
               <div
@@ -326,7 +308,9 @@ calk.kz`;
               >
                 {cycleIsPositive
                   ? t('cash-flow-gap.positiveCycle')
-                  : t('cash-flow-gap.negativeCycle')}
+                  : results.cashCycle === 0
+                    ? t('cash-flow-gap.zeroCycle')
+                    : t('cash-flow-gap.negativeCycle')}
               </div>
             </div>
 

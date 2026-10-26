@@ -74,7 +74,7 @@ const LAST_UPDATED: Record<string, string> = {
   'cashback': '2026-10-26', // calkcheck 26.10 б17: условия банков по BES.media 24.08.2026
   'debt-burden': '2026-10-26', // calkcheck 26.10 б17: КДН ≠ КДД, исключения п. 20
   'inflation': '2026-10-26', // calkcheck 26.10 б17: цель НБРК, ЕАЭС по ЕЭК, сентябрь 9,3%
-  'cash-flow-gap': '2026-10-06', // calkcheck 06.10 б6: резерв = 30 дней расходов + разрыв, отсрочка ст. 133 НК
+  'cash-flow-gap': '2026-10-27',
   'franchise-payback': '2026-10-27',
 
   // === СОЦИАЛЬНЫЕ/ТРУДОВЫЕ ===
