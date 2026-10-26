@@ -456,7 +456,7 @@ export default function FranchisePaybackCalculator() {
       <ExpertBlock />
 
       {/* Embed widget */}
-      <EmbedWidget />
+      <EmbedWidget calculatorId="franchise-payback" calculatorTitle={t('franchise-payback.heading')} />
       <LastUpdated calculatorId="franchise-payback" />
     </div>
   );

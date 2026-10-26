@@ -514,7 +514,7 @@ calk.kz`;
 
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
-      <EmbedWidget />
+      <EmbedWidget calculatorId="business-roi" calculatorTitle={t('business-roi.heading')} />
       <LastUpdated calculatorId="business-roi" />
     </div>
   );

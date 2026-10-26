@@ -506,7 +506,7 @@ calk.kz`;
       <ExpertBlock />
 
       {/* Embed widget */}
-      <EmbedWidget />
+      <EmbedWidget calculatorId="property-sale-tax" calculatorTitle={t('property-sale-tax.heading')} />
       <LastUpdated calculatorId="property-sale-tax" />
     </div>
   );

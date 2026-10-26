@@ -545,7 +545,7 @@ calk.kz`;
       <ExpertBlock />
 
       {/* Embed widget */}
-      <EmbedWidget />
+      <EmbedWidget calculatorId="rental-income-tax" calculatorTitle={t('rental-income-tax.heading')} />
       <LastUpdated calculatorId="rental-income-tax" />
     </div>
   );

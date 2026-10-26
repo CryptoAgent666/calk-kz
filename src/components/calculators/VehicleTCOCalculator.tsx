@@ -648,7 +648,7 @@ calk.kz`;
 
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
-      <EmbedWidget />
+      <EmbedWidget calculatorId="vehicle-tco" calculatorTitle={t('vehicle-tco.heading')} />
       <LastUpdated calculatorId="vehicle-tco" />
     </div>
   );

@@ -382,7 +382,7 @@ calk.kz`;
       <ExpertBlock />
 
       {/* Embed widget */}
-      <EmbedWidget />
+      <EmbedWidget calculatorId="fuel-cost" calculatorTitle={t('fuel-cost.heading')} />
       <LastUpdated calculatorId="fuel-cost" />
     </div>
   );

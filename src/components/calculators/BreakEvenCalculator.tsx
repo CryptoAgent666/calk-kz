@@ -437,7 +437,7 @@ calk.kz`;
       <ExpertBlock />
 
       {/* Embed widget */}
-      <EmbedWidget />
+      <EmbedWidget calculatorId="break-even" calculatorTitle={t('break-even.heading')} />
       <LastUpdated calculatorId="break-even" />
     </div>
   );

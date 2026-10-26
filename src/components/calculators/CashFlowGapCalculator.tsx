@@ -475,7 +475,7 @@ calk.kz`;
 
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
-      <EmbedWidget />
+      <EmbedWidget calculatorId="cash-flow-gap" calculatorTitle={t('cash-flow-gap.heading')} />
       <LastUpdated calculatorId="cash-flow-gap" />
     </div>
   );

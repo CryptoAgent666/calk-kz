@@ -426,7 +426,7 @@ calk.kz`;
       <ExpertBlock />
 
       {/* Embed widget */}
-      <EmbedWidget />
+      <EmbedWidget calculatorId="corporate-income-tax" calculatorTitle={t('corporate-income-tax.heading')} />
       <LastUpdated calculatorId="corporate-income-tax" />
     </div>
   );

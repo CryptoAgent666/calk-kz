@@ -356,7 +356,7 @@ calk.kz`;
 
       <LegalDisclaimer type="finance" />
       <ExpertBlock />
-      <EmbedWidget />
+      <EmbedWidget calculatorId="car-market-value" calculatorTitle={t('car-market-value.heading')} />
       <LastUpdated calculatorId="car-market-value" />
     </div>
   );
