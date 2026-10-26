@@ -489,23 +489,23 @@ ${t('microloan.export.calculator')}: Calk.kz`;
               {/* Экспорт результатов */}
               <ExportButtons
                 data={{
-                  title: 'Расчёт микрозайма',
+                  title: t('microloan.export.title'),
                   subtitle: t(currentLoanType.name),
                   sections: [
                     {
-                      title: 'Параметры',
+                      title: t('microloan.export.parameters'),
                       data: [
-                        { label: 'Сумма займа', value: `${parseFloat(amount).toLocaleString(NUMBER_LOCALE)} ₸` },
-                        { label: 'Ставка', value: `${rate}%` },
-                        { label: 'Срок', value: `${term} ${currentLoanType.termUnit === 'days' ? 'дней' : 'мес.'}` },
+                        { label: t('microloan.export.loanAmount'), value: `${parseFloat(amount).toLocaleString(NUMBER_LOCALE)} ₸` },
+                        { label: t('microloan.export.interestRate'), value: `${rate}%` },
+                        { label: t('microloan.export.term'), value: `${term} ${currentLoanType.termUnit === 'days' ? t('microloan.units.days') : t('microloan.units.monthsShort')}` },
                       ]
                     },
                     {
-                      title: 'Результаты',
+                      title: t('microloan.export.results'),
                       data: [
-                        { label: 'К возврату', value: `${results.totalPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
-                        { label: 'Переплата', value: `${results.totalInterest.toLocaleString(NUMBER_LOCALE)} ₸` },
-                        { label: 'Эффективная ставка', value: `${results.effectiveRate.toFixed(1)}%` },
+                        { label: t('microloan.export.totalPayment'), value: `${results.totalPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
+                        { label: t('microloan.export.overpayment'), value: `${results.totalInterest.toLocaleString(NUMBER_LOCALE)} ₸` },
+                        { label: t('microloan.export.effectiveRate'), value: `${results.effectiveRate.toFixed(1)}%` },
                       ]
                     }
                   ],

@@ -298,14 +298,14 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
                   value={loanAmount}
                   onChange={(e) => setLoanAmount(Number(e.target.value) || 0)}
                   className="px-2 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="Сумма"
+                  placeholder={i18n.language === 'kk' ? 'Сома' : 'Сумма'}
                 />
                 <input
                   type="number"
                   value={interestRate}
                   onChange={(e) => setInterestRate(Number(e.target.value) || 0)}
                   className="px-2 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="Ставка"
+                  placeholder={i18n.language === 'kk' ? 'Мөлшерлеме' : 'Ставка'}
                   step="0.1"
                 />
                 <input
@@ -313,7 +313,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
                   value={loanTerm}
                   onChange={(e) => setLoanTerm(Number(e.target.value) || 0)}
                   className="px-2 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="Срок"
+                  placeholder={i18n.language === 'kk' ? 'Мерзім' : 'Срок'}
                 />
               </div>
             </div>
@@ -327,7 +327,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
               <button
                 onClick={() => setShowCharts(!showCharts)}
                 className={`p-2 rounded-lg transition-colors ${showCharts ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}`}
-                title={showCharts ? 'Скрыть диаграммы' : 'Показать диаграммы'}
+                title={i18n.language === 'kk' ? (showCharts ? 'Диаграммаларды жасыру' : 'Диаграммаларды көрсету') : (showCharts ? 'Скрыть диаграммы' : 'Показать диаграммы')}
               >
                 <BarChart3 className="w-5 h-5" />
               </button>
@@ -403,7 +403,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
                   <div className="text-right">
                     <span className="text-gray-900 block">{formatNumber(payment.payment)}</span>
                     <span className="text-xs text-gray-500">
-                      ОД: {formatNumber(payment.principal)} | %: {formatNumber(payment.interest)}
+                      {i18n.language === 'kk' ? 'Негізгі қарыз' : 'ОД'}: {formatNumber(payment.principal)} | %: {formatNumber(payment.interest)}
                     </span>
                   </div>
                 </div>
