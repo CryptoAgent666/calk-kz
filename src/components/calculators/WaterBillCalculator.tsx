@@ -14,14 +14,13 @@ import { TaxPieChart } from '../ui/ChartComponents';
 
 /**
  * Тарифы для населения (1 группа потребителей), ₸/м³ с НДС 16% — сверено
- * 24.09.2026 по сайтам водоканалов и приказам ДКРЕМ:
- * - Алматы («Алматы Су», almatysu.kz): вода 76,56, водоотведение 47,50 — единый
- *   тариф; дифференцированные ступени утверждены, но приостановлены с 01.09.2025
- *   по 31.12.2026 (отчёт компании за 1-е полугодие 2026).
+ * 26.10.2026 по сайтам водоканалов и приказам ДКРЕМ (актуальные значения — у cityTariffs):
+ * - Алматы («Алматы Су», almatysu.kz): с 01.10.2026 — 178,06 и 119,46, единый тариф;
+ *   до этого 76,56 и 47,50.
  * - Астана («Астана су арнасы», astanasu.kz): 119,36 и 127,41 с 01.04.2026
  *   (приказ ДКРЕМ № 21-ОД от 25.06.2026 — до 31.12.2026).
  * - Шымкент («Водные ресурсы – Маркетинг», wrm.kz): 111,44 и 62,41
- *   (приказ ДКРЕМ № 33 от 26.06.2026 — до 31.12.2026).
+ *   (приказ ДКРЕМ № 75 от 02.10.2026 — 10.10–31.12.2026, с 01.01.2027 — 126,44 и 73,25).
  * Прежние ступени 103/123,6/154,49/205,99 и 89,40…178,80 ₸ не совпадали ни с
  * одним действующим приказом, водоотведение в Астане было занижено в 2,6 раза.
  */
@@ -30,6 +29,8 @@ interface CityTariff {
   nameKey: string;
   waterRate: number;
   sewerageRate: number;
+  /** Плата без прибора учёта, ₸ на человека в месяц (с НДС), где её публикует водоканал. */
+  noMeter?: { water: number; sewerage: number };
 }
 
 export default function WaterBillCalculator() {
@@ -37,6 +38,7 @@ export default function WaterBillCalculator() {
   const [city, setCity] = useState<string>('almaty');
   const [waterConsumption, setWaterConsumption] = useState<string>('5');
   const [residentsCount, setResidentsCount] = useState<string>('1');
+  const [hasMeter, setHasMeter] = useState<boolean>(true);
   // «Другой город»: единого справочника нет — тариф берут из квитанции.
   const [customWaterRate, setCustomWaterRate] = useState<string>('100');
   const [customSewerageRate, setCustomSewerageRate] = useState<string>('60');
@@ -54,9 +56,15 @@ export default function WaterBillCalculator() {
   };
 
   const cityTariffs: CityTariff[] = [
-    { id: 'almaty', nameKey: 'calculators:water.cityAlmaty', waterRate: 76.56, sewerageRate: 47.50 },
+    // Тарифы 1-й группы (население) с НДС 16%, сверка 26.10.2026:
+    // Алматы — ГКП «Алматы Су», с 01.10.2026: 178,06 / 119,46 ₸/м³ (было 76,56 / 47,50), без счётчика
+    //   2 670,90 + 1 791,85 ₸ на человека (almatysu.kz/tarify.html);
+    // Астана — ГКП «Астана су арнасы», 01.07–31.12.2026: 119,36 / 127,41 (astanasu.kz);
+    // Шымкент — ТОО «Водные ресурсы – Маркетинг», приказ ДКРЕМ № 75 от 02.10.2026, 10.10–31.12.2026:
+    //   111,44 / 62,41, без счётчика 542,38 + 303,73 ₸ на человека (норма 4,867 м³); с 01.01.2027 — 126,44 / 73,25.
+    { id: 'almaty', nameKey: 'calculators:water.cityAlmaty', waterRate: 178.06, sewerageRate: 119.46, noMeter: { water: 2670.90, sewerage: 1791.85 } },
     { id: 'astana', nameKey: 'calculators:water.cityAstana', waterRate: 119.36, sewerageRate: 127.41 },
-    { id: 'shymkent', nameKey: 'calculators:water.cityShymkent', waterRate: 111.44, sewerageRate: 62.41 },
+    { id: 'shymkent', nameKey: 'calculators:water.cityShymkent', waterRate: 111.44, sewerageRate: 62.41, noMeter: { water: 542.38, sewerage: 303.73 } },
     {
       id: 'other',
       nameKey: 'calculators:water.otherRegions',
@@ -77,9 +85,11 @@ export default function WaterBillCalculator() {
     if (!selectedCity) return EMPTY_RESULTS;
 
     const consumptionPerPerson = totalConsumption / residents;
-    const coldWaterAmount = totalConsumption * selectedCity.waterRate;
-
-    const sewerageAmount = totalConsumption * selectedCity.sewerageRate;
+    // Без счётчика водоканал берёт фиксированную плату на человека, объём не важен.
+    const byNorm = !hasMeter && !!selectedCity.noMeter;
+    // Строки округляются до суммирования: раньше 383 + 238 показывались с итогом 620.
+    const coldWaterAmount = Math.round(byNorm ? residents * selectedCity.noMeter!.water : totalConsumption * selectedCity.waterRate);
+    const sewerageAmount = Math.round(byNorm ? residents * selectedCity.noMeter!.sewerage : totalConsumption * selectedCity.sewerageRate);
 
     const totalAmount = coldWaterAmount + sewerageAmount;
     const averageRate = totalAmount / totalConsumption;
@@ -110,7 +120,7 @@ export default function WaterBillCalculator() {
   const results = useMemo(
     calculateWaterBill,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [city, waterConsumption, residentsCount, customWaterRate, customSewerageRate]
+    [city, waterConsumption, residentsCount, hasMeter, customWaterRate, customSewerageRate]
   );
 
   const formatNumber = (num: number) => {
@@ -118,7 +128,7 @@ export default function WaterBillCalculator() {
   };
 
   const formatRate = (rate: number) => {
-    return rate.toFixed(2) + ' ₸/м³';
+    return rate.toFixed(2).replace('.', ',') + ' ₸/м³';
   };
 
   const selectedCityData = cityTariffs.find(c => c.id === city);
@@ -202,6 +212,21 @@ export default function WaterBillCalculator() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
               />
             </div>
+
+            {selectedCityData?.noMeter && (
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={!hasMeter}
+                  onChange={(e) => setHasMeter(!e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">
+                  <span className="font-medium">{t('water.noMeterLabel')}</span>
+                  <br /><span className="text-gray-500">{t('water.noMeterHint', { water: selectedCityData.noMeter.water.toFixed(2).replace('.', ','), sewerage: selectedCityData.noMeter.sewerage.toFixed(2).replace('.', ',') })}</span>
+                </span>
+              </label>
+            )}
 
             {city === 'other' ? (
               <div className="bg-blue-50 rounded-lg p-4 space-y-3">
