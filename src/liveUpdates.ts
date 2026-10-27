@@ -76,6 +76,51 @@ async function fetchRemoteJson(url: string): Promise<any | null> {
   }
 }
 
+type Updater = typeof import('@capgo/capacitor-updater').CapacitorUpdater;
+
+/** Версии наших бандлов — timestamp YYYYMMDDHHmmss; у вшитого плагин пишет «builtin»/версию стора. */
+const isBundleVersion = (v: string) => /^\d{14}$/.test(v);
+
+/**
+ * Удаляет лишние копии и, если среди скачанных есть бандл новее текущего, применяет его
+ * (set() перезагружает webview — код после него не выполняется). true — применение запущено.
+ */
+async function applyDownloaded(updater: Updater, currentVersion: string): Promise<boolean> {
+  const [{ bundles }, { bundle: active }] = await Promise.all([updater.list(), updater.current()]);
+  const ready = bundles
+    .filter((b) => (b.status === 'pending' || b.status === 'success')
+      && isBundleVersion(b.version) && b.version > currentVersion)
+    .sort((a, b) => (a.version < b.version ? 1 : -1))[0];
+
+  let removed = 0;
+  for (const b of bundles) {
+    if (b.id === active.id || b.id === ready?.id || b.status === 'downloading') continue;
+    try {
+      await updater.delete({ id: b.id });
+      removed++;
+    } catch {
+      /* ignore */
+    }
+  }
+  if (removed) log('удалены лишние копии', removed);
+
+  if (!ready) return false;
+  log('применяю скачанный ранее', ready.version);
+  try {
+    await updater.set(ready);
+    return true;
+  } catch (e) {
+    // Битый бандл не должен ломать обновление на каждом запуске — удаляем и качаем заново.
+    log('set не прошёл, удаляю бандл', e);
+    try {
+      await updater.delete({ id: ready.id });
+    } catch {
+      /* ignore */
+    }
+    return false;
+  }
+}
+
 export async function initLiveUpdates(): Promise<void> {
   // Только в нативном приложении; на сайте ничего не делаем и плагин не грузим.
   if (!Capacitor.isNativePlatform()) return;
@@ -101,12 +146,18 @@ export async function initLiveUpdates(): Promise<void> {
   }
 
   try {
-    const [local, manifest] = await Promise.all([
-      fetchLocalJson(LOCAL_VERSION_URL),
-      fetchRemoteJson(MANIFEST_URL),
-    ]);
-
+    const local = await fetchLocalJson(LOCAL_VERSION_URL);
     const currentVersion = String(local?.version ?? '0');
+
+    // Скачанный в прошлый раз, но не применённый бандл — применяем сразу, на старте,
+    // до сетевого запроса (без сети он ждёт до 10 с, а перезагрузка посреди работы хуже).
+    // Применение ждёт `resume`, а между визитами система выгружает процесс: каждый
+    // запуск холодный, `resume` не наступает, и бандл качался заново. Так до 27.10.2026
+    // 63% событий Android и 37% iOS шли со вшитого бандла 1.6, а на диске копилось
+    // по 65 МБ за каждый запуск (плагин чистит копии только при обновлении из стора).
+    if (await applyDownloaded(CapacitorUpdater, currentVersion)) return;
+
+    const manifest = await fetchRemoteJson(MANIFEST_URL);
     const nextVersion = manifest?.version ? String(manifest.version) : '';
     const nextUrl = manifest?.url ? String(manifest.url) : '';
     log('бандл', { current: currentVersion, latest: nextVersion || null });
@@ -119,7 +170,8 @@ export async function initLiveUpdates(): Promise<void> {
     log('скачан', { version: nextVersion, id: bundle.id });
 
     // Применяем НЕ во время активного использования, а при следующем возврате
-    // приложения из фона (set() перезагружает webview в новый бандл).
+    // приложения из фона (set() перезагружает webview в новый бандл). Если процесс
+    // выгрузят раньше — применит applyDownloaded() при следующем запуске.
     const { App } = await import('@capacitor/app');
     const handle = await App.addListener('resume', async () => {
       try {

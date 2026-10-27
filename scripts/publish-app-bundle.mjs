@@ -10,8 +10,8 @@
  * Запуск: npm run publish:app   (после build:prerender)
  *
  * Приложение (src/liveUpdates.ts) на старте читает latest.json и, если версия
- * новее вшитой/применённой, скачивает zip и применяет при следующем резюме —
- * без релиза в App Store / Google Play.
+ * новее вшитой/применённой, скачивает zip и применяет при следующем резюме или,
+ * если процесс выгрузили раньше, на следующем запуске — без релиза в App Store / Google Play.
  */
 import fs from 'fs';
 import path from 'path';
