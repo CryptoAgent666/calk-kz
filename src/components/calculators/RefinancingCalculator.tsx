@@ -634,7 +634,7 @@ ${t('refinancing.export.calculator')}: Calk.kz`;
       <ExpertBlock />
       <EmbedWidget
         calculatorId="refinancing"
-        calculatorTitle="Калькулятор рефинансирования"
+        calculatorTitle={t('refinancing.title')}
       />
       <LastUpdated calculatorId="refinancing" />
     </div>

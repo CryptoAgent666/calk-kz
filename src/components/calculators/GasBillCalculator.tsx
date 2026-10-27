@@ -382,7 +382,7 @@ export default function GasBillCalculator() {
             {results.monthlyAmount > 0 && (
               <ExportButtons
                 data={{
-                  title: 'Расчёт оплаты за газ',
+                  title: t('gas.exportDoc.title'),
                   subtitle: selectedCityData ? t(selectedCityData.nameKey) : '',
                   sections: [
                     {
@@ -560,7 +560,7 @@ export default function GasBillCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="gas"
-        calculatorTitle="Калькулятор газа"
+        calculatorTitle={t('gas.heading')}
       />
       <LastUpdated calculatorId="gas" />
     </div>

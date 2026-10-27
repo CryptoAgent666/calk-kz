@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { pluralize } from '../../utils/pluralize';
 
 export default function AlimonyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -472,7 +473,7 @@ ${t('alimony.exportAlimonyCalc')}
                 <div>400 000 - 70 225 = 329 775 ₸</div>
               </div>
               <div>
-                <div className="font-medium text-teal-700">{t('alimony.alimonyPercentage')} (33.33%):</div>
+                <div className="font-medium text-teal-700">{t('alimony.alimonyPercentage')} (33,33%):</div>
                 <div className="text-lg font-bold text-teal-600">≈ 109 925 ₸</div>
               </div>
             </div>
@@ -588,19 +589,19 @@ ${t('alimony.exportAlimonyCalc')}
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт алиментов',
-              subtitle: `${childrenCount} ${childrenCount === 1 ? 'ребёнок' : 'детей'}`,
+              title: t('alimony.exportDoc.title'),
+              subtitle: `${childrenCount} ${i18n.language === 'kk' ? 'бала' : pluralize('ru', childrenCount, 'ребёнок', 'ребёнка', 'детей')}`,
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Доход', value: `${results.netIncome.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Процент', value: `${(results.alimonyRate * 100).toFixed(0)}%` },
-                    { label: 'Ежемесячные алименты', value: `${results.alimonyAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('alimony.exportDoc.income'), value: `${results.netIncome.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('alimony.exportDoc.percent'), value: `${results.alimonyRate.toLocaleString(NUMBER_LOCALE)}%` }, // alimonyRate уже в процентах (25, 33,33, 50): ×100 давал «2500%»
+                    { label: t('alimony.exportDoc.monthly'), value: `${results.alimonyAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="alimony-calculation"
           />
@@ -612,7 +613,7 @@ ${t('alimony.exportAlimonyCalc')}
       <ExpertBlock />
       <EmbedWidget
         calculatorId="alimony"
-        calculatorTitle="Калькулятор алиментов"
+        calculatorTitle={t('alimony.heading')}
       />
       <LastUpdated calculatorId="alimony" />
     </div>

@@ -542,26 +542,26 @@ export default function NotaryServicesCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт нотариальных услуг',
-              subtitle: serviceType,
+              title: t('notary.exportDoc.title'),
+              subtitle: notaryServices[serviceType as keyof typeof notaryServices]?.name ?? '',
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('common:exportDoc.parameters'),
                   data: [
-                    { label: 'Услуга', value: serviceType },
-                    { label: 'Стоимость объекта', value: `${parseFloat(propertyValue || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('notary.exportDoc.service'), value: notaryServices[serviceType as keyof typeof notaryServices]?.name ?? '' },
+                    { label: t('notary.exportDoc.propertyValue'), value: `${parseFloat(propertyValue || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Госпошлина', value: `${results.stateFee.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Технические услуги', value: `${results.technicalServiceFee.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Итого', value: `${results.totalCost.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('common:exportDoc.stateFee'), value: `${results.stateFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('notary.exportDoc.technical'), value: `${results.technicalServiceFee.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('common:exportDoc.total'), value: `${results.totalCost.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="notary-services-calculation"
           />
@@ -589,7 +589,7 @@ export default function NotaryServicesCalculator() {
       {/* Виджет для встраивания */}
       <EmbedWidget
         calculatorId="notary"
-        calculatorTitle="Калькулятор нотариальных услуг"
+        calculatorTitle={t('notary.heading')}
       />
       <LastUpdated calculatorId="notary" />
     </div>

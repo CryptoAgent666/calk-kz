@@ -799,7 +799,7 @@ ${totalsText}`;
       <ExpertBlock />
       <EmbedWidget
         calculatorId="salary"
-        calculatorTitle="Калькулятор зарплаты"
+        calculatorTitle={t('salary.heading')}
       />
       <LastUpdated calculatorId="salary" />
     </div>

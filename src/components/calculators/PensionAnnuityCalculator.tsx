@@ -860,26 +860,26 @@ export default function PensionAnnuityCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт пенсионного аннуитета',
-              subtitle: `${gender === 'male' ? 'Мужчина' : 'Женщина'}, ${age} лет`,
+              title: t('pension-annuity.exportDoc.title'),
+              subtitle: `${gender === 'male' ? t('common:exportDoc.man') : t('common:exportDoc.woman')}, ${age} ${pluralize(i18n.language, Number(age) || 0, 'год', 'года', 'лет')}`,
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('common:exportDoc.parameters'),
                   data: [
-                    { label: 'Возраст', value: `${age} лет` },
-                    { label: 'Накопления', value: `${parseFloat(currentAccumulations || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Страховая компания', value: insuranceCompany },
+                    { label: t('common:exportDoc.age'), value: `${age} ${pluralize(i18n.language, Number(age) || 0, 'год', 'года', 'лет')}` },
+                    { label: t('pension-annuity.exportDoc.accumulations'), value: `${parseFloat(currentAccumulations || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('pension-annuity.exportDoc.insurer'), value: selectedCompany?.name ?? '' },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Ежемесячная выплата', value: `${results.monthlyAnnuityPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Годовая выплата', value: `${(results.monthlyAnnuityPayment * 12).toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('pension-annuity.exportDoc.monthly'), value: `${results.monthlyAnnuityPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('pension-annuity.exportDoc.yearly'), value: `${(results.monthlyAnnuityPayment * 12).toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="pension-annuity-calculation"
           />
@@ -909,7 +909,7 @@ export default function PensionAnnuityCalculator() {
       {/* Виджет для встраивания */}
       <EmbedWidget
         calculatorId="pension-annuity"
-        calculatorTitle="Калькулятор пенсионного аннуитета"
+        calculatorTitle={t('pension-annuity.title')}
       />
       <LastUpdated calculatorId="pension-annuity" />
     </div>

@@ -790,7 +790,7 @@ export default function LuxuryTaxCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="luxury-tax"
-        calculatorTitle="Калькулятор налога на роскошь"
+        calculatorTitle={t('luxury-tax.title')}
       />
       <LastUpdated calculatorId="luxury-tax" />
     </div>

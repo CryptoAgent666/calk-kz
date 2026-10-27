@@ -312,7 +312,7 @@ export default function BrickCalculator() {
               title: t('brick.title'),
               subtitle: t(`brick.types.${brickType}`),
               sections: [{ title: t('brick.resultsTitle'), data: [
-                { label: t('brick.brickCount'), value: `${results.brickCount} шт.` },
+                { label: t('brick.brickCount'), value: `${results.brickCount} ${t('common:exportDoc.pcs')}` },
                 ...(glue ? [
                   { label: t('brick.glue'), value: t('brick.glueAmount', { kg: results.glueKg.toLocaleString(NUMBER_LOCALE), bags: results.glueBags }) },
                 ] : [

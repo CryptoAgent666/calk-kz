@@ -107,7 +107,8 @@ export default function PenaltyCalculator() {
       totalPenalty: Math.round(totalPenalty),
       totalToPay: Math.round(totalToPay),
       effectivePenaltyRate: Number(effectivePenaltyRate.toFixed(2)),
-      dailyPenaltyRate: Number(dailyPenaltyRate.toFixed(4))
+      // В процентах и без округления: доля 0,000539 → toFixed(4) давала 0,0005 → «0,0500%» вместо 0,0539%
+      dailyPenaltyRate: rate
     };
   };
 
@@ -329,7 +330,7 @@ export default function PenaltyCalculator() {
                   <h3 className="font-medium text-yellow-900 mb-2">{t('penalty.additionalInfo')}</h3>
                   <div className="text-sm text-yellow-800 space-y-1">
                     <div>{t('penalty.effectivePenaltyRate')} <strong>{results.effectivePenaltyRate}%</strong> {t('penalty.ofDebtAmount')}</div>
-                    <div>{t('penalty.dailyRate')} <strong>{(results.dailyPenaltyRate * 100).toFixed(4)}%</strong> {t('penalty.ofDebtAmount')}</div>
+                    <div>{t('penalty.dailyRate')} <strong>{results.dailyPenaltyRate.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 4 })}%</strong> {t('penalty.ofDebtAmount')}</div>
                     {results.effectivePenaltyRate > 50 && (
                       <div className="text-red-600 font-medium">
                         {t('penalty.penaltyExceeds50')}
@@ -446,10 +447,10 @@ export default function PenaltyCalculator() {
                 <tr key={type.id} className="border-b border-gray-100">
                   <td className="py-3 px-4 text-sm text-gray-900">{type.name}</td>
                   <td className="py-3 px-4 text-center text-sm font-semibold text-red-600">
-                    {type.rate}%
+                    {parseFloat(type.rate).toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 4 })}%
                   </td>
                   <td className="py-3 px-4 text-center text-sm text-gray-900">
-                    {(parseFloat(type.rate) * 30).toFixed(1)}%
+                    {(parseFloat(type.rate) * 30).toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 2 })}%
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-600">
                     {type.id === 'tax' && t('penalty.taxCodeRK')}
@@ -609,20 +610,20 @@ export default function PenaltyCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт пени',
-              subtitle: `${daysOverdue} дней просрочки`,
+              title: t('penalty.exportDoc.title'),
+              subtitle: `${t('penalty.exportDoc.overdueDays')}: ${daysOverdue}`,
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Сумма долга', value: `${(parseFloat(debtAmount) || 0).toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Дней просрочки', value: daysOverdue },
-                    { label: 'Пеня', value: `${results.totalPenalty.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Итого к оплате', value: `${results.totalToPay.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('penalty.exportDoc.debt'), value: `${(parseFloat(debtAmount) || 0).toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('penalty.exportDoc.overdueDays'), value: daysOverdue },
+                    { label: t('penalty.exportDoc.penalty'), value: `${results.totalPenalty.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('penalty.exportDoc.totalToPay'), value: `${results.totalToPay.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="penalty-calculation"
           />
@@ -635,7 +636,7 @@ export default function PenaltyCalculator() {
       {/* Виджет для встраивания */}
       <EmbedWidget
         calculatorId="penalty"
-        calculatorTitle="Калькулятор пеней"
+        calculatorTitle={t('penalty.heading')}
       />
       <LastUpdated calculatorId="penalty" />
     </div>

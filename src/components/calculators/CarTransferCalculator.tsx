@@ -34,6 +34,8 @@ export default function CarTransferCalculator() {
 
   // Константы 2026
   const MRP_2026 = 4325;
+  // Год расчёта: возраст авто для ОГПО (ст. 19 п. 9). Обновлять вместе с МРП при переходе на 2027.
+  const CURRENT_YEAR = 2026;
   const REGISTRATION_FEE_MRP = 0.25;
   const CERTIFICATE_FEE_MRP = 1.25;
   const PLATES_FEE_MRP = 2.8;
@@ -79,7 +81,8 @@ export default function CarTransferCalculator() {
     const years = parseInt(ownershipYears) || 0;
     const months = parseInt(ownershipMonths) || 0;
     const age = parseInt(buyerAge) || 30;
-    const experience = parseInt(buyerExperience) || 2;
+    // Стаж 0 — законное значение (новичок, коэффициент «менее 2 лет»): `|| 2` превращал его в 2
+    const experience = Number.isNaN(parseInt(buyerExperience)) ? 2 : parseInt(buyerExperience);
 
     // Регистрационные расходы
     const registrationFee = Math.round(REGISTRATION_FEE_MRP * MRP_2026);
@@ -103,7 +106,7 @@ export default function CarTransferCalculator() {
     const vehicleTypeCoef = OGPO_VEHICLE_TYPES.find((v) => v.id === 'passenger-car')!.coefficient;
 
     // Срок эксплуатации (ст. 19 п. 9): старше 7 лет — ×1,1. Раньше не учитывался.
-    const carAge = Math.max(0, 2026 - (parseInt(carYear) || 2026));
+    const carAge = Math.max(0, CURRENT_YEAR - (parseInt(carYear) || CURRENT_YEAR));
     const exploitationCoef = carAge > OGPO_EXPLOITATION_THRESHOLD_YEARS ? OGPO_EXPLOITATION_OVER_7Y_COEFF : 1;
     const ogpoFee = Math.round(
       OGPO_BASE_PREMIUM_MRP * MRP_2026 * regionCoef(region) * vehicleTypeCoef * ageExpCoef * exploitationCoef
@@ -325,7 +328,7 @@ export default function CarTransferCalculator() {
               </label>
               <RangeSlider
                 ariaLabel={t('car-transfer.buyerExperience')}
-                value={parseInt(buyerExperience) || 2}
+                value={Number.isNaN(parseInt(buyerExperience)) ? 2 : parseInt(buyerExperience)}
                 onChange={(v) => setBuyerExperience(String(v))}
                 min={0}
                 max={50}

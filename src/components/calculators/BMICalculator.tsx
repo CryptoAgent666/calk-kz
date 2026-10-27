@@ -637,26 +637,26 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Индекс массы тела',
+              title: t('bmi.title'),
               subtitle: results.category,
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('common:exportDoc.parameters'),
                   data: [
-                    { label: 'Вес', value: `${weight} кг` },
-                    { label: 'Рост', value: `${height} ${heightUnit === 'cm' ? 'см' : 'м'}` },
+                    { label: t('common:exportDoc.weight'), value: `${weight} ${t('common:exportDoc.kg')}` },
+                    { label: t('common:exportDoc.height'), value: `${height} ${heightUnit === 'cm' ? t('common:exportDoc.cm') : t('common:exportDoc.m')}` },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'ИМТ', value: results.bmi.toFixed(1) },
-                    { label: 'Категория', value: results.category },
-                    { label: 'Норма веса', value: `${results.normalWeightRange.min} - ${results.normalWeightRange.max} кг` },
+                    { label: t('bmi.exportDoc.bmi'), value: results.bmi.toFixed(1) },
+                    { label: t('bmi.exportDoc.category'), value: results.category },
+                    { label: t('bmi.exportDoc.normalWeight'), value: `${results.normalWeightRange.min} - ${results.normalWeightRange.max} ${t('common:exportDoc.kg')}` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="bmi-calculation"
           />
@@ -667,7 +667,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
       <ExpertBlock />
       <EmbedWidget
         calculatorId="bmi"
-        calculatorTitle="Калькулятор ИМТ"
+        calculatorTitle={t('bmi.heading')}
       />
       <LastUpdated calculatorId="bmi" />
     </div>

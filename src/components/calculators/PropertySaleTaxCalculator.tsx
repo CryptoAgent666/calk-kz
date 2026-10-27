@@ -54,12 +54,9 @@ export default function PropertySaleTaxCalculator() {
   const [registeredBefore2026, setRegisteredBefore2026] = useState<boolean>(false);
 
   // Срок декларации о доходах и имуществе (ФНО 270.00) — 15 сентября следующего года
-  // (ст. 418 п. 1 НК РК); ФНО 240.00 с 01.01.2025 упразднена.
-  const getDeclarationDeadline = (): string => {
-    const now = new Date();
-    const nextYear = now.getFullYear() + 1;
-    return `15.09.${nextYear}`;
-  };
+  // (ст. 418 п. 1 НК РК); ФНО 240.00 с 01.01.2025 упразднена. Текстом, а не «15.09.{год+1}»
+  // от new Date(): с 1 января статика расходилась бы с клиентом, а год продажи не вводится.
+  const getDeclarationDeadline = (): string => t('property-sale-tax.deadlineText');
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
   // useState(нули) + useEffect: пререндер сохраняет страницу уже с числами, и

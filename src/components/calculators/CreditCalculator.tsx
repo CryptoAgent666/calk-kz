@@ -643,7 +643,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
       <ExpertBlock />
       <EmbedWidget
         calculatorId="credit"
-        calculatorTitle="Кредитный калькулятор"
+        calculatorTitle={t('credit.heading')}
       />
       <LastUpdated calculatorId="credit" />
     </div>

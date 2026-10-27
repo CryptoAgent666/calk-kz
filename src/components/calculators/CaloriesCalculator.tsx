@@ -588,30 +588,30 @@ export default function CaloriesCalculator() {
         <div className="mt-6">
           <ExportButtons
             data={{
-              title: 'Расчёт калорий',
-              subtitle: `Цель: ${goal === 'maintain' ? 'Поддержание' : goal === 'lose' ? 'Похудение' : 'Набор массы'}`,
+              title: t('calories.exportDoc.title'),
+              subtitle: `${t('calories.exportDoc.goal')}: ${t(`calories.exportDoc.${goal}`)}`,
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('common:exportDoc.parameters'),
                   data: [
-                    { label: 'Возраст', value: `${age} ${pluralize(i18n.language, parseInt(age) || 0, 'год', 'года', 'лет')}` },
-                    { label: 'Вес', value: `${weight} кг` },
-                    { label: 'Рост', value: `${height} см` },
-                    { label: 'Пол', value: gender === 'male' ? 'Мужской' : 'Женский' },
+                    { label: t('common:exportDoc.age'), value: `${age} ${pluralize(i18n.language, parseInt(age) || 0, 'год', 'года', 'лет')}` },
+                    { label: t('common:exportDoc.weight'), value: `${weight} ${t('common:exportDoc.kg')}` },
+                    { label: t('common:exportDoc.height'), value: `${height} ${t('common:exportDoc.cm')}` },
+                    { label: t('common:exportDoc.sex'), value: gender === 'male' ? t('common:exportDoc.male') : t('common:exportDoc.female') },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Базовый метаболизм', value: `${results.bmr} ккал` },
-                    { label: 'Целевые калории', value: `${results.targetCalories} ккал` },
-                    { label: 'Белки', value: `${results.macros.protein.grams} г` },
-                    { label: 'Жиры', value: `${results.macros.fats.grams} г` },
-                    { label: 'Углеводы', value: `${results.macros.carbs.grams} г` },
+                    { label: t('calories.exportDoc.bmr'), value: `${results.bmr} ккал` },
+                    { label: t('calories.exportDoc.target'), value: `${results.targetCalories} ккал` },
+                    { label: t('calories.exportDoc.protein'), value: `${results.macros.protein.grams} ${t('common:exportDoc.g')}` },
+                    { label: t('calories.exportDoc.fats'), value: `${results.macros.fats.grams} ${t('common:exportDoc.g')}` },
+                    { label: t('calories.exportDoc.carbs'), value: `${results.macros.carbs.grams} ${t('common:exportDoc.g')}` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="calories-calculation"
           />
@@ -681,7 +681,7 @@ export default function CaloriesCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="calories"
-        calculatorTitle="Калькулятор калорий"
+        calculatorTitle={t('calories.heading')}
       />
       <LastUpdated calculatorId="calories" />
     </div>

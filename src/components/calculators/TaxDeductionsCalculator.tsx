@@ -537,7 +537,7 @@ export default function TaxDeductionsCalculator() {
                   ],
                 },
               ],
-              footer: 'calk.kz — Калькуляторы Казахстана',
+              footer: t('common:buttons.calculatedOn'),
             }}
             filename="tax-deductions-calculation"
           />

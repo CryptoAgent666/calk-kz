@@ -481,7 +481,7 @@ export default function VehicleTaxCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="vehicle-tax"
-        calculatorTitle="Калькулятор налога на транспорт"
+        calculatorTitle={t('vehicle-tax.heading')}
       />
       <LastUpdated calculatorId="vehicle-tax" />
     </div>

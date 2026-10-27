@@ -722,7 +722,7 @@ export default function IPSimplifiedCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="ip-simplified"
-        calculatorTitle="Калькулятор ИП на упрощёнке"
+        calculatorTitle={t('ip-simplified.title')}
       />
       <LastUpdated calculatorId="ip-simplified" />
     </div>

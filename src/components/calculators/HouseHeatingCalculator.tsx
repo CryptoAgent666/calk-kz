@@ -258,7 +258,7 @@ ${lines.join('\n')}`;
                   title: t('house-heating.export.results'),
                   data: [
                     { label: t('house-heating.areaLabel'), value: `${area} м²` },
-                    { label: t('house-heating.demand'), value: `${nf(Math.round(demandKwh))} кВт·ч` },
+                    { label: t('house-heating.demand'), value: `${nf(Math.round(demandKwh))} ${t('common:exportDoc.kwh')}` },
                     ...results.map((r) => ({ label: t(`house-heating.fuel_${r.fuel}`), value: fmt(r.cost) })),
                   ],
                 },

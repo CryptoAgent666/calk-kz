@@ -196,10 +196,10 @@ export default function DivorceCalculator() {
             subtitle: mode === 'zags' ? t('divorce.throughZags') : t('divorce.throughCourt'),
             sections: [{ title: t('divorce.resultsTitle'), data: [
               { label: t('divorce.totalCost'), value: formatNumber(results.total) },
-              { label: t('divorce.timeline'), value: `~${results.timelineMonths} мес` },
-              { label: t('divorce.procedure'), value: mode === 'zags' ? 'ЗАГС' : 'Суд' },
+              { label: t('divorce.timeline'), value: `~${results.timelineMonths} ${t('common:exportDoc.monthsShort')}` },
+              { label: t('divorce.procedure'), value: mode === 'zags' ? t('divorce.throughZags') : t('divorce.throughCourt') },
             ]}],
-            footer: 'Calk.kz'
+            footer: t('common:buttons.calculatedOn')
           }}
           filename="divorce"
         />

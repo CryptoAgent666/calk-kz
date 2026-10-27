@@ -592,21 +592,21 @@ export default function PregnancyCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Калькулятор беременности',
-              subtitle: `${results.currentWeek} неделя`,
+              title: t('pregnancy.title'),
+              subtitle: t('pregnancy.exportDoc.week', { week: results.currentWeek }),
               sections: [
                 {
-                  title: 'Данные',
+                  title: t('common:exportDoc.data'),
                   data: [
-                    { label: 'Последняя менструация', value: lastPeriodDate },
-                    { label: 'Предполагаемая дата родов', value: results.estimatedDueDate },
-                    { label: 'Текущая неделя', value: `${results.currentWeek} неделя, ${results.currentDay} день` },
-                    { label: 'Триместр', value: `${results.trimester}` },
-                    { label: 'Дней до родов', value: `${results.daysRemaining}` },
+                    { label: t('pregnancy.exportDoc.lmp'), value: lastPeriodDate },
+                    { label: t('pregnancy.exportDoc.edd'), value: results.estimatedDueDate },
+                    { label: t('pregnancy.exportDoc.currentWeek'), value: t('pregnancy.exportDoc.weekDay', { week: results.currentWeek, day: results.currentDay }) },
+                    { label: t('pregnancy.exportDoc.trimester'), value: `${results.trimester}` },
+                    { label: t('pregnancy.exportDoc.daysToBirth'), value: `${results.daysRemaining}` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="pregnancy-calculation"
           />
@@ -679,7 +679,7 @@ export default function PregnancyCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="pregnancy"
-        calculatorTitle="Калькулятор беременности"
+        calculatorTitle={t('pregnancy.title')}
       />
       <LastUpdated calculatorId="pregnancy" />
     </div>

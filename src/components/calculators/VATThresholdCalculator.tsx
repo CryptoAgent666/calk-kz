@@ -697,19 +697,19 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт порога НДС',
-              subtitle: results.isExceeded ? 'Порог превышен' : 'Порог не превышен',
+              title: t('vat-threshold.exportDoc.title'),
+              subtitle: results.isExceeded ? t('vat-threshold.exportDoc.exceeded') : t('vat-threshold.exportDoc.notExceeded'),
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Общий оборот', value: `${results.currentTotal.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Порог НДС', value: `${results.thresholdAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'До порога', value: `${results.remainingToThreshold.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vat-threshold.exportDoc.turnover'), value: `${results.currentTotal.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vat-threshold.exportDoc.threshold'), value: `${results.thresholdAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vat-threshold.exportDoc.remaining'), value: `${results.remainingToThreshold.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="vat-threshold-calculation"
           />
@@ -738,7 +738,7 @@ ${t('vat-threshold.yearEndProjection')}: ${formatNumber(results.projectedYearEnd
       <ExpertBlock />
       <EmbedWidget
         calculatorId="vat-threshold"
-        calculatorTitle="Калькулятор порога НДС"
+        calculatorTitle={t('vat-threshold.title')}
       />
       <LastUpdated calculatorId="vat-threshold" />
     </div>

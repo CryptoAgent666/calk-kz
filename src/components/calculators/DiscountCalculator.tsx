@@ -1240,20 +1240,20 @@ ${results.bestScenario ? `${t('discount.bestOption')}: ${results.bestScenario.na
           />
           <ExportButtons
             data={{
-              title: 'Расчёт скидки',
-              subtitle: `Скидка ${discountPercentValue}%`,
+              title: t('discount.exportDoc.title'),
+              subtitle: `${t('discount.exportDoc.discount')} ${discountPercentValue}%`,
               sections: [
                 {
-                  title: 'Расчёт',
+                  title: t('common:exportDoc.calculation'),
                   data: [
-                    { label: 'Первоначальная цена', value: formatNumber(originalPriceValue) },
-                    { label: 'Скидка', value: `${discountPercentValue}%` },
-                    { label: 'Сумма скидки', value: formatNumber(results.discountAmount) },
-                    { label: 'Итоговая цена', value: formatNumber(results.finalPrice) },
+                    { label: t('discount.exportDoc.originalPrice'), value: formatNumber(originalPriceValue) },
+                    { label: t('discount.exportDoc.discount'), value: `${discountPercentValue}%` },
+                    { label: t('discount.exportDoc.discountAmount'), value: formatNumber(results.discountAmount) },
+                    { label: t('discount.exportDoc.finalPrice'), value: formatNumber(results.finalPrice) },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="discount-calculation"
           />
@@ -1281,7 +1281,7 @@ ${results.bestScenario ? `${t('discount.bestOption')}: ${results.bestScenario.na
       <ExpertBlock />
       <EmbedWidget
         calculatorId="discount"
-        calculatorTitle="Калькулятор скидок"
+        calculatorTitle={t('discount.heading')}
       />
       <LastUpdated calculatorId="discount" />
     </div>

@@ -495,20 +495,20 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт пенсии',
-              subtitle: `Год рождения: ${birthYear}`,
+              title: t('pension.exportDoc.title'),
+              subtitle: `${t('pension.exportDoc.birthYear')}: ${birthYear}`,
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Базовая пенсия', value: `${results.basePension.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Солидарная', value: `${results.solidarityPension.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Накопительная', value: `${results.accumulativePension.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Итого', value: `${results.totalMonthlyPension.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('pension.exportDoc.base'), value: `${results.basePension.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('pension.exportDoc.solidarity'), value: `${results.solidarityPension.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('pension.exportDoc.accumulative'), value: `${results.accumulativePension.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('common:exportDoc.total'), value: `${results.totalMonthlyPension.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="pension-calculation"
           />
@@ -521,7 +521,7 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
       {/* Виджет для встраивания */}
       <EmbedWidget
         calculatorId="pension"
-        calculatorTitle="Пенсионный калькулятор"
+        calculatorTitle={t('pension.title')}
       />
       <LastUpdated calculatorId="pension" />
     </div>

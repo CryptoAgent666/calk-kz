@@ -499,18 +499,18 @@ export default function ElectricityBillCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт за электроэнергию',
-              subtitle: `${city}`,
+              title: t('electricity.exportDoc.title'),
+              subtitle: selectedCityData ? t(selectedCityData.nameKey) : '',
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Потребление', value: `${consumption} кВт·ч` },
-                    { label: 'К оплате', value: `${results.totalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('electricity.exportDoc.consumption'), value: `${consumption} ${t('common:exportDoc.kwh')}` },
+                    { label: t('electricity.exportDoc.toPay'), value: `${results.totalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="electricity-bill-calculation"
           />
@@ -521,7 +521,7 @@ export default function ElectricityBillCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="electricity"
-        calculatorTitle="Калькулятор электроэнергии"
+        calculatorTitle={t('electricity.heading')}
       />
       <LastUpdated calculatorId="electricity" />
     </div>

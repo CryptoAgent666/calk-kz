@@ -624,19 +624,19 @@ export default function PropertyTaxCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт налога на имущество',
-              subtitle: propertyType,
+              title: t('property-tax.exportDoc.title'),
+              subtitle: selectedPropertyType ? t(selectedPropertyType.nameKey) : '',
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Тип имущества', value: propertyType },
-                    { label: 'Оценочная стоимость', value: `${results.taxBase?.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Годовой налог', value: `${results.finalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('property-tax.exportDoc.type'), value: selectedPropertyType ? t(selectedPropertyType.nameKey) : '' },
+                    { label: t('property-tax.exportDoc.assessed'), value: `${results.taxBase?.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('property-tax.exportDoc.annual'), value: `${results.finalAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="property-tax-calculation"
           />
@@ -649,7 +649,7 @@ export default function PropertyTaxCalculator() {
       {/* Виджет для встраивания */}
       <EmbedWidget
         calculatorId="property-tax"
-        calculatorTitle="Калькулятор налога на имущество"
+        calculatorTitle={t('property-tax.heading')}
       />
       <LastUpdated calculatorId="property-tax" />
     </div>

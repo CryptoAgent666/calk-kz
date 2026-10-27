@@ -936,19 +936,19 @@ ${t('vat.export.formula')}: ${results.formula}`;
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт НДС',
-              subtitle: `Ставка ${vatRate}%`,
+              title: t('vat.title'),
+              subtitle: `${t('vat.exportDoc.rate')} ${vatRate}%`,
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Сумма без НДС', value: `${results.amountWithoutVat.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'НДС', value: `${results.vatAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Сумма с НДС', value: `${results.amountWithVat.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vat.exportDoc.withoutVat'), value: `${results.amountWithoutVat.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vat.exportDoc.vat'), value: `${results.vatAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('vat.exportDoc.withVat'), value: `${results.amountWithVat.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="vat-calculation"
           />
@@ -960,7 +960,7 @@ ${t('vat.export.formula')}: ${results.formula}`;
       <ExpertBlock />
       <EmbedWidget
         calculatorId="vat"
-        calculatorTitle="Калькулятор НДС"
+        calculatorTitle={t('vat.title')}
       />
       <LastUpdated calculatorId="vat" />
     </div>

@@ -439,19 +439,19 @@ export default function UnemploymentBenefitCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт пособия по безработице',
-              subtitle: `Стаж ${workExperienceMonths || 0} мес.`,
+              title: t('unemployment.exportDoc.title'),
+              subtitle: `${t('unemployment.exportDoc.experience')} ${workExperienceMonths || 0} ${t('common:exportDoc.monthsShort')}`,
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Ежемесячное пособие', value: `${results.monthlyBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Период выплат', value: `${results.paymentPeriodMonths} мес.` },
-                    { label: 'Общая сумма', value: `${results.totalBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('unemployment.exportDoc.monthly'), value: `${results.monthlyBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('unemployment.exportDoc.period'), value: `${results.paymentPeriodMonths} ${t('common:exportDoc.monthsShort')}` },
+                    { label: t('unemployment.exportDoc.totalSum'), value: `${results.totalBenefit.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="unemployment-benefit-calculation"
           />
@@ -464,7 +464,7 @@ export default function UnemploymentBenefitCalculator() {
       {/* Виджет для встраивания */}
       <EmbedWidget
         calculatorId="unemployment"
-        calculatorTitle="Калькулятор пособия по безработице"
+        calculatorTitle={t('unemployment.title')}
       />
       <LastUpdated calculatorId="unemployment" />
     </div>

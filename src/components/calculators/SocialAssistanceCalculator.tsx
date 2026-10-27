@@ -540,25 +540,25 @@ export default function SocialAssistanceCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт социальной помощи',
-              subtitle: results.isEligible ? 'Имеете право на АСП' : 'Не имеете права',
+              title: t('social-assistance.exportDoc.title'),
+              subtitle: results.isEligible ? t('social-assistance.exportDoc.eligible') : t('social-assistance.exportDoc.notEligible'),
               sections: [
                 {
-                  title: 'Параметры',
+                  title: t('common:exportDoc.parameters'),
                   data: [
-                    { label: 'Доход на человека', value: `${results.averageMonthlyIncomePerPerson.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Черта бедности', value: `${results.povertyThreshold.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Членов семьи', value: familyMembers },
+                    { label: t('social-assistance.exportDoc.incomePerPerson'), value: `${results.averageMonthlyIncomePerPerson.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('social-assistance.exportDoc.povertyLine'), value: `${results.povertyThreshold.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('social-assistance.exportDoc.familyMembers'), value: familyMembers },
                   ]
                 },
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Размер АСП', value: `${results.aspAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('social-assistance.exportDoc.aspAmount'), value: `${results.aspAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="social-assistance-calculation"
           />
@@ -585,7 +585,7 @@ export default function SocialAssistanceCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="social-assistance"
-        calculatorTitle="Калькулятор АСП"
+        calculatorTitle={t('social-assistance.title')}
       />
       <LastUpdated calculatorId="social-assistance" />
     </div>

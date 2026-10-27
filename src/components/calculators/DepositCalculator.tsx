@@ -591,7 +591,7 @@ ${results.capitalizationBonus > 0 ? `- ${t('deposit.additionalIncome')}: ${forma
       <ExpertBlock />
       <EmbedWidget
         calculatorId="deposit"
-        calculatorTitle="Депозитный калькулятор"
+        calculatorTitle={t('deposit.heading')}
       />
       <LastUpdated calculatorId="deposit" />
     </div>

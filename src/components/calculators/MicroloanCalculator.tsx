@@ -509,7 +509,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                       ]
                     }
                   ],
-                  footer: 'Расчёт выполнен на calk.kz'
+                  footer: t('common:buttons.calculatedOn')
                 }}
                 filename="microloan-calculation"
               />
@@ -840,7 +840,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
       <ExpertBlock />
       <EmbedWidget
         calculatorId="microloan"
-        calculatorTitle="Калькулятор микрокредита"
+        calculatorTitle={t('microloan.title')}
       />
       <LastUpdated calculatorId="microloan" />
     </div>

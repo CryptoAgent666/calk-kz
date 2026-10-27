@@ -424,19 +424,19 @@ export default function CourtFeeCalculator() {
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Расчёт госпошлины',
-              subtitle: claimType === 'property' ? 'Имущественный иск' : 'Неимущественный иск',
+              title: t('court-fee.exportDoc.title'),
+              subtitle: claimType === 'property' ? t('court-fee.exportDoc.propertyClaim') : t('court-fee.exportDoc.nonPropertyClaim'),
               sections: [
                 {
-                  title: 'Результаты',
+                  title: t('common:exportDoc.results'),
                   data: [
-                    { label: 'Тип дела', value: claimType === 'property' ? 'Имущественный' : 'Неимущественный' },
-                    { label: 'Сумма иска', value: `${parseFloat(claimAmount || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: 'Госпошлина', value: `${results.feeAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('court-fee.exportDoc.caseType'), value: claimType === 'property' ? t('court-fee.exportDoc.property') : t('court-fee.exportDoc.nonProperty') },
+                    { label: t('court-fee.exportDoc.claimAmount'), value: `${parseFloat(claimAmount || '0').toLocaleString(NUMBER_LOCALE)} ₸` },
+                    { label: t('common:exportDoc.stateFee'), value: `${results.feeAmount.toLocaleString(NUMBER_LOCALE)} ₸` },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('common:buttons.calculatedOn')
             }}
             filename="court-fee-calculation"
           />
@@ -448,7 +448,7 @@ export default function CourtFeeCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="court-fee"
-        calculatorTitle="Калькулятор госпошлины"
+        calculatorTitle={t('court-fee.heading')}
       />
       <LastUpdated calculatorId="court-fee" />
     </div>
