@@ -12,7 +12,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { NUMBER_LOCALE, formatShortDate } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatShortDate, formatFixed } from '../../utils/localeFormat';
 
 interface ConversionHistory {
   id: string;
@@ -144,8 +144,8 @@ export default function CurrencyConverter() {
 ${t('currency-converter.exportOriginalAmount')} ${formatNumber(parseFloat(amount) || 0, fromCurrency)}
 ${t('currency-converter.exportConvertedAmount')} ${formatNumber(results.convertedAmount, toCurrency)}
 
-${t('currency-converter.exportRate')} 1 ${fromCurrency} = ${results.exchangeRate.toFixed(4)} ${toCurrency}
-${t('currency-converter.exportReverseRate')} 1 ${toCurrency} = ${results.reverseRate.toFixed(4)} ${fromCurrency}
+${t('currency-converter.exportRate')} 1 ${fromCurrency} = ${formatFixed(results.exchangeRate, 4)} ${toCurrency}
+${t('currency-converter.exportReverseRate')} 1 ${toCurrency} = ${formatFixed(results.reverseRate, 4)} ${fromCurrency}
 
 ${t('currency-converter.exportCalculationTime')} ${new Date().toLocaleString('ru-RU')}
 ${t('currency-converter.exportSource')}`;
@@ -514,7 +514,7 @@ ${t('currency-converter.exportSource')}`;
               {t('currency-converter.popularPairs.usdKztDesc')}
             </p>
             <div className="text-lg font-bold text-blue-600 mt-2">
-              1 USD = {getRate('USD', 'KZT').toFixed(2)} ₸
+              1 USD = {formatFixed(getRate('USD', 'KZT'), 2)} ₸
             </div>
           </div>
 
@@ -527,7 +527,7 @@ ${t('currency-converter.exportSource')}`;
               {t('currency-converter.popularPairs.eurKztDesc')}
             </p>
             <div className="text-lg font-bold text-teal-600 mt-2">
-              1 EUR = {getRate('EUR', 'KZT').toFixed(2)} ₸
+              1 EUR = {formatFixed(getRate('EUR', 'KZT'), 2)} ₸
             </div>
           </div>
 
@@ -540,7 +540,7 @@ ${t('currency-converter.exportSource')}`;
               {t('currency-converter.popularPairs.rubKztDesc')}
             </p>
             <div className="text-lg font-bold text-red-600 mt-2">
-              1 RUB = {getRate('RUB', 'KZT').toFixed(2)} ₸
+              1 RUB = {formatFixed(getRate('RUB', 'KZT'), 2)} ₸
             </div>
           </div>
         </div>

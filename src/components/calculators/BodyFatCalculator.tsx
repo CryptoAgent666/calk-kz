@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 // Морские формулы U.S. Navy
 function navyBodyFat(gender: 'male' | 'female', height: number, neck: number, waist: number, hip: number): number {
@@ -72,10 +73,10 @@ export default function BodyFatCalculator() {
     const category = getCategory(bf, gender);
 
     return {
-      bf: bf.toFixed(1),
+      bf: formatFixed(bf, 1),
       bfNumber: bf,
-      fatMass: fatMass.toFixed(1),
-      leanMass: leanMass.toFixed(1),
+      fatMass: formatFixed(fatMass, 1),
+      leanMass: formatFixed(leanMass, 1),
       category: category.key,
       color: category.color,
     };

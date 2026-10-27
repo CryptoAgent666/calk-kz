@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { pluralize } from '../../utils/pluralize';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type WorkType = 'weekend' | 'holiday' | 'night' | 'overtime';
 
@@ -115,7 +116,7 @@ export default function OvertimeCalculator() {
                       <div className="text-sm font-medium">{t(`overtime.types.${wt}`)}</div>
                       <div className="text-xs text-gray-500">{t(`overtime.typesHint.${wt}`)}</div>
                     </div>
-                    <div className="text-lg font-bold text-red-600">×{MULTIPLIERS[wt]}</div>
+                    <div className="text-lg font-bold text-red-600">×{MULTIPLIERS[wt].toLocaleString(NUMBER_LOCALE)}</div>
                   </div>
                 </button>
               ))}
@@ -151,7 +152,7 @@ export default function OvertimeCalculator() {
           <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
             <div className="flex justify-between"><span>{t('overtime.hourlyRate')}</span><span className="font-semibold">{formatNumber(results.hourlyRate)}</span></div>
             <div className="flex justify-between"><span>{t('overtime.regularPay')}</span><span className="font-semibold">{formatNumber(results.regularPay)}</span></div>
-            <div className="flex justify-between"><span>{t('overtime.multiplier')}</span><span className="font-semibold">×{results.multiplier}</span></div>
+            <div className="flex justify-between"><span>{t('overtime.multiplier')}</span><span className="font-semibold">×{results.multiplier.toLocaleString(NUMBER_LOCALE)}</span></div>
           </div>
 
           {takeTimeOff && results.daysOff > 0 && (

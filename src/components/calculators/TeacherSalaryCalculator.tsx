@@ -10,6 +10,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 // БДО (базовый должностной оклад) 2026 = 17 697 ₸ (Постановление Правительства РК № 1193 от 31.12.2015; не индексировался с 2016)
 const BDO_2026 = 17_697;
@@ -208,7 +209,7 @@ export default function TeacherSalaryCalculator() {
             { label: t('teacher-salary.pedCategory'), value: t(`teacher-salary.categories.${pedCategory}`) },
             { label: t('teacher-salary.experience'), value: `${experience} ${t('teacher-salary.years')}` },
             { label: t('teacher-salary.hoursPerWeek'), value: `${hoursPerWeek} ${t('teacher-salary.hours')}` },
-            { label: t('teacher-salary.coefficient'), value: String(results.coeff) },
+            { label: t('teacher-salary.coefficient'), value: formatFixed(results.coeff, 2) },
             { label: t('teacher-salary.correctionFactor'), value: '2,0' },
           ],
         },
@@ -437,7 +438,7 @@ export default function TeacherSalaryCalculator() {
                   {t(`teacher-salary.qualCategories.${qualCategory}`)}, {experience} {t('teacher-salary.years')}
                 </div>
               </div>
-              <span className="text-2xl font-bold text-blue-700">{results.coeff}</span>
+              <span className="text-2xl font-bold text-blue-700">{formatFixed(results.coeff, 2)}</span>
             </div>
 
             {/* Formula reminder */}
@@ -552,7 +553,7 @@ export default function TeacherSalaryCalculator() {
                           : ''
                       }`}
                     >
-                      {c.toFixed(2)}
+                      {formatFixed(c, 2)}
                     </td>
                   ))}
                 </tr>

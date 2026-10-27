@@ -12,7 +12,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 /**
  * ИПН с дивидендов 2026 (новый НК РК от 18.07.2025 № 214-VIII).
@@ -99,7 +99,7 @@ export default function DividendTaxCalculator() {
 ${t('dividend-tax.results')}:
 - ${t('dividend-tax.taxLabel')}: ${formatNumber(results.tax)}
 - ${t('dividend-tax.netLabel')}: ${formatNumber(results.net)}
-- ${t('dividend-tax.effectiveRate')}: ${results.effectiveRate.toFixed(2)}%`;
+- ${t('dividend-tax.effectiveRate')}: ${formatFixed(results.effectiveRate, 2)}%`;
   };
 
   return (
@@ -234,7 +234,7 @@ ${t('dividend-tax.results')}:
 
             <div className="flex justify-between items-center py-2">
               <span className="text-gray-600">{t('dividend-tax.effectiveRate')}</span>
-              <span className="font-semibold text-gray-900">{results.effectiveRate.toFixed(2)}%</span>
+              <span className="font-semibold text-gray-900">{formatFixed(results.effectiveRate, 2)}%</span>
             </div>
 
             <div className="mt-2 rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
@@ -281,7 +281,7 @@ ${t('dividend-tax.results')}:
                     { label: t('dividend-tax.statusLabel'), value: t(`dividend-tax.${status}`) },
                     { label: t('dividend-tax.taxLabel'), value: formatNumber(results.tax) },
                     { label: t('dividend-tax.netLabel'), value: formatNumber(results.net) },
-                    { label: t('dividend-tax.effectiveRate'), value: `${results.effectiveRate.toFixed(2)}%` },
+                    { label: t('dividend-tax.effectiveRate'), value: `${formatFixed(results.effectiveRate, 2)}%` },
                   ],
                 },
               ],

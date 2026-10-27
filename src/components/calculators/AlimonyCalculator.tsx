@@ -158,10 +158,10 @@ ${results.standardDeduction > 0 ? `- ${t('alimony.standardDeduction')}: ${format
 - ${t('alimony.netIncome')}: ${formatNumber(results.netIncome)}
 
 ${t('alimony.exportAlimonyCalc')}
-- ${t('alimony.exportAlimonyRate')}: ${results.alimonyRate}% (${getAlimonyRateText(childrenCount)})
+- ${t('alimony.exportAlimonyRate')}: ${results.alimonyRate.toLocaleString(NUMBER_LOCALE)}% (${getAlimonyRateText(childrenCount)})
 - ${t('alimony.exportAlimonySum')}: ${formatNumber(results.alimonyAmount)}
 - ${t('alimony.exportRemainsToParent')}: ${formatNumber(results.remainingIncome)}
-- ${t('alimony.exportEffectiveRate')}: ${results.effectiveAlimonyRate}%`;
+- ${t('alimony.exportEffectiveRate')}: ${results.effectiveAlimonyRate.toLocaleString(NUMBER_LOCALE)}%`;
   };
 
   return (
@@ -327,7 +327,7 @@ ${t('alimony.exportAlimonyCalc')}
                 </div>
               </div>
               <div className="text-sm text-gray-600">
-                {results.alimonyRate}% {t('alimony.ofNetIncome')} ({results.effectiveAlimonyRate}% {t('alimony.ofGrossIncome')})
+                {results.alimonyRate.toLocaleString(NUMBER_LOCALE)}% {t('alimony.ofNetIncome')} ({results.effectiveAlimonyRate.toLocaleString(NUMBER_LOCALE)}% {t('alimony.ofGrossIncome')})
               </div>
             </div>
 
@@ -381,7 +381,7 @@ ${t('alimony.exportAlimonyCalc')}
 
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-3 bg-pink-50 rounded-lg px-3">
-                  <span className="font-semibold text-pink-900">{t('alimony.alimonyAmount')} ({results.alimonyRate}%)</span>
+                  <span className="font-semibold text-pink-900">{t('alimony.alimonyAmount')} ({results.alimonyRate.toLocaleString(NUMBER_LOCALE)}%)</span>
                   <span className="text-lg font-bold text-pink-700">{formatNumber(results.alimonyAmount)}</span>
                 </div>
 

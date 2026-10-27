@@ -11,7 +11,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 type RollSize = '0.53x10' | '0.53x15' | '1.06x10' | '1.06x25';
 const ROLLS: Record<RollSize, { width: number; length: number; noteKey?: string }> = {
@@ -69,10 +69,10 @@ export default function WallpaperCalculator() {
     const glueBags = Math.ceil(rollsNeeded / (roll.width > 1 ? 2.5 : 4));
 
     return {
-      perimeter: perimeter.toFixed(2),
-      wallArea: wallArea.toFixed(2),
+      perimeter: formatFixed(perimeter, 2),
+      wallArea: formatFixed(wallArea, 2),
       stripsNeeded,
-      stripLength: stripLength.toFixed(2),
+      stripLength: formatFixed(stripLength, 2),
       stripsPerRoll,
       rollsNeeded,
       totalCost: Math.round(totalCost),
@@ -119,7 +119,7 @@ export default function WallpaperCalculator() {
             <select value={rollSize} onChange={e => setRollSize(e.target.value as RollSize)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg">
               {(Object.keys(ROLLS) as RollSize[]).map(r => (
-                <option key={r} value={r}>{ROLLS[r].width} × {ROLLS[r].length} м{ROLLS[r].noteKey ? ` (${t(ROLLS[r].noteKey)})` : ''}</option>
+                <option key={r} value={r}>{ROLLS[r].width.toLocaleString(NUMBER_LOCALE)} × {ROLLS[r].length.toLocaleString(NUMBER_LOCALE)} м{ROLLS[r].noteKey ? ` (${t(ROLLS[r].noteKey)})` : ''}</option>
               ))}
             </select>
           </div>

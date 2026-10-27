@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { MedicalDisclaimer } from '../ui/MedicalDisclaimer';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { formatFixed, NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function BMICalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -79,13 +80,13 @@ export default function BMICalculator() {
 - ${t('bmi.gender')}: ${gender === 'male' ? t('bmi.male') : t('bmi.female')}
 
 ${t('bmi.results')}:
-- ${t('bmi.yourBMI')}: ${results.bmi}
+- ${t('bmi.yourBMI')}: ${results.bmi.toLocaleString(NUMBER_LOCALE)}
 - ${t('bmi.category')}: ${results.category}
 - ${t('bmi.categoryDescription')}: ${results.categoryDescription}
 - ${t('bmi.healthRisk')}: ${results.healthRisk}
 
 ${t('bmi.normalWeightRange')}
-${results.normalWeightRange.min} - ${results.normalWeightRange.max} ${t('bmi.weightUnit')}
+${results.normalWeightRange.min.toLocaleString(NUMBER_LOCALE)} - ${results.normalWeightRange.max.toLocaleString(NUMBER_LOCALE)} ${t('bmi.weightUnit')}
 
 ${t('bmi.recommendations')}
 ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
@@ -208,7 +209,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
   );
 
   const formatWeight = (weight: number) => {
-    return weight.toFixed(1) + ' ' + t('bmi.weightUnit');
+    return formatFixed(weight, 1) + ' ' + t('bmi.weightUnit');
   };
 
   const getBMIColor = (bmi: number) => {
@@ -388,12 +389,12 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                   <div className="flex items-center space-x-2">
                     <Target className="w-6 h-6 text-gray-600" />
                     <span className={`text-2xl sm:text-3xl font-bold ${getBMIColor(results.bmi)}`}>
-                      {results.bmi}
+                      {results.bmi.toLocaleString(NUMBER_LOCALE)}
                     </span>
                   </div>
                 </div>
                 <div className="text-xs sm:text-sm text-gray-600">
-                  {weight} {t('bmi.weightUnit')} ÷ ({heightUnit === 'cm' ? (parseFloat(height) / 100).toFixed(2) : height} {t('bmi.heightUnitM')})² = {results.bmi}
+                  {weight} {t('bmi.weightUnit')} ÷ ({heightUnit === 'cm' ? formatFixed(parseFloat(height) / 100, 2) : height} {t('bmi.heightUnitM')})² = {results.bmi.toLocaleString(NUMBER_LOCALE)}
                 </div>
               </div>
 
@@ -494,8 +495,8 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                 }`}>
                   <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm font-medium">
                     {category.min === 0
-                      ? `${t('common:lessThan')} ${category.max}`
-                      : category.max !== Infinity ? `${category.min} - ${category.max}` : `${category.min}+`}
+                      ? `${t('common:lessThan')} ${category.max.toLocaleString(NUMBER_LOCALE)}`
+                      : category.max !== Infinity ? `${category.min.toLocaleString(NUMBER_LOCALE)} - ${category.max.toLocaleString(NUMBER_LOCALE)}` : `${category.min.toLocaleString(NUMBER_LOCALE)}+`}
                   </td>
                   <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-900">
                     {category.category}
@@ -625,7 +626,7 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
           <TaxPieChart
             data={[
               { name: i18n.language === 'kk' ? 'Ағымдағы салмақ' : 'Текущий вес', value: parseFloat(weight) || 0 },
-              { name: 'Норма (макс.)', value: results.normalWeightRange.max },
+              { name: i18n.language === 'kk' ? 'Қалыпты салмақ (ең көбі)' : 'Норма (макс.)', value: results.normalWeightRange.max },
             ]}
             title={i18n.language === 'kk' ? 'Салмақты салыстыру' : 'Сравнение веса'}
           />
@@ -650,9 +651,9 @@ ${results.recommendations.map(rec => `• ${rec}`).join('\n')}`;
                 {
                   title: t('common:exportDoc.results'),
                   data: [
-                    { label: t('bmi.exportDoc.bmi'), value: results.bmi.toFixed(1) },
+                    { label: t('bmi.exportDoc.bmi'), value: formatFixed(results.bmi, 1) },
                     { label: t('bmi.exportDoc.category'), value: results.category },
-                    { label: t('bmi.exportDoc.normalWeight'), value: `${results.normalWeightRange.min} - ${results.normalWeightRange.max} ${t('common:exportDoc.kg')}` },
+                    { label: t('bmi.exportDoc.normalWeight'), value: `${results.normalWeightRange.min.toLocaleString(NUMBER_LOCALE)} - ${results.normalWeightRange.max.toLocaleString(NUMBER_LOCALE)} ${t('common:exportDoc.kg')}` },
                   ]
                 }
               ],

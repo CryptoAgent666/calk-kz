@@ -216,7 +216,7 @@ ${t('casino-winnings-tax.calculationResults')}
 - ${t('casino-winnings-tax.taxableBase')}: ${formatNumber(results.taxableBase)}
 - ${t('casino-winnings-tax.tax')} ${formatNumber(results.taxAmount)}
 - ${t('casino-winnings-tax.netAmount')} ${formatNumber(results.netAmount)}
-- ${t('casino-winnings-tax.effectiveRate')} ${results.effectiveRate}%`;
+- ${t('casino-winnings-tax.effectiveRate')} ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%`;
     }
 
     if (!winningAmount || parseFloat(winningAmount) <= 0) return '';
@@ -237,7 +237,7 @@ ${t('casino-winnings-tax.calculationResults')}
 - ${t('casino-winnings-tax.taxableBase')}: ${formatNumber(results.taxableBase)}
 - ${t('casino-winnings-tax.tax')} ${formatNumber(results.taxAmount)}
 - ${t('casino-winnings-tax.netAmount')} ${formatNumber(results.netAmount)}
-- ${t('casino-winnings-tax.effectiveRate')} ${results.effectiveRate}%
+- ${t('casino-winnings-tax.effectiveRate')} ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
 
 ${t('casino-winnings-tax.taxationStatus')}: ${results.isTaxable ? t('casino-winnings-tax.taxable') : t('casino-winnings-tax.notTaxableStatus')}
 ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarationRequiredShort')}` : ''}`;
@@ -474,7 +474,7 @@ ${results.requiresSelfDeclaration ? `\n⚠️ ${t('casino-winnings-tax.declarati
               <div className="bg-white/20 rounded-lg p-3 mt-4">
                 <div className="flex justify-between items-center text-sm">
                   <span>{t('casino-winnings-tax.effectiveRate')}</span>
-                  <span className="font-bold">{results.effectiveRate}%</span>
+                  <span className="font-bold">{results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</span>
                 </div>
               </div>
             </div>

@@ -13,7 +13,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 interface VATItem {
   id: string;
@@ -104,7 +104,7 @@ export default function VATCalculator() {
 ${t('vat.bulk.totalWithoutVat')}: ${formatNumber(bulkResults.totalWithoutVat)}
 ${t('vat.bulk.totalVat')}: ${formatNumber(bulkResults.totalVat)}
 ${t('vat.bulk.totalWithVat')}: ${formatNumber(bulkResults.totalWithVat)}
-${t('vat.bulk.averageRate')}: ${bulkResults.averageVatRate.toFixed(2)}%`;
+${t('vat.bulk.averageRate')}: ${formatFixed(bulkResults.averageVatRate, 2)}%`;
     } else if (results.formula) {
       content += `${calculationType === 'add' ? t('vat.types.add.name') : t('vat.types.extract.name')}
 
@@ -708,9 +708,9 @@ ${t('vat.export.formula')}: ${results.formula}`;
                     <h4 className="text-sm font-medium text-blue-900 mb-2">{t('vat.bulk.statistics')}</h4>
                     <div className="text-sm text-blue-800 space-y-1">
                       <div>{t('vat.bulk.itemCount')}: <strong>{bulkResults.itemCount}</strong></div>
-                      <div>{t('vat.bulk.averageRate')}: <strong>{bulkResults.averageVatRate.toFixed(2)}%</strong></div>
+                      <div>{t('vat.bulk.averageRate')}: <strong>{formatFixed(bulkResults.averageVatRate, 2)}%</strong></div>
                       <div>{t('vat.bulk.vatShare')}: <strong>
-                        {((bulkResults.totalVat / bulkResults.totalWithVat) * 100).toFixed(1)}%
+                        {formatFixed((bulkResults.totalVat / bulkResults.totalWithVat) * 100, 1)}%
                       </strong></div>
                     </div>
                   </div>

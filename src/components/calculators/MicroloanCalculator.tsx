@@ -14,7 +14,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 // МРП 2026 (Закон о республиканском бюджете). Лимиты микрофинансирования
 // заданы в МРП, поэтому держим множитель, а не плоские тенге.
@@ -168,8 +168,8 @@ ${t('microloan.export.parameters')}:
 ${t('microloan.export.results')}:
 - ${t('microloan.export.totalPayment')}: ${formatNumber(results.totalPayment)}
 - ${t('microloan.export.overpayment')}: ${formatNumber(results.totalInterest)}
-- ${t('microloan.export.dailyRate')}: ${results.dailyRate.toFixed(3)}%
-- ${t('microloan.export.effectiveRate')}: ${results.effectiveRate.toFixed(1)}%
+- ${t('microloan.export.dailyRate')}: ${formatFixed(results.dailyRate, 3)}%
+- ${t('microloan.export.effectiveRate')}: ${formatFixed(results.effectiveRate, 1)}%
 ${results.monthlyPayment > 0 ? `- ${t('microloan.export.monthlyPayment')}: ${formatNumber(results.monthlyPayment)}` : ''}
 
 ${t('microloan.export.important')}:
@@ -463,7 +463,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
 
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">{t('microloan.results.dailyRate')}</span>
-                  <span className="font-semibold text-gray-900">{results.dailyRate.toFixed(3)}%</span>
+                  <span className="font-semibold text-gray-900">{formatFixed(results.dailyRate, 3)}%</span>
                 </div>
 
                 <div className="flex justify-between items-center py-2">
@@ -472,7 +472,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                     <Info className="w-4 h-4 text-gray-400" />
                   </span>
                   <span className={`font-semibold ${results.effectiveRate > 100 ? 'text-red-600' : 'text-gray-900'}`}>
-                    {results.effectiveRate.toFixed(1)}%
+                    {formatFixed(results.effectiveRate, 1)}%
                   </span>
                 </div>
               </div>
@@ -505,7 +505,7 @@ ${t('microloan.export.calculator')}: Calk.kz`;
                       data: [
                         { label: t('microloan.export.totalPayment'), value: `${results.totalPayment.toLocaleString(NUMBER_LOCALE)} ₸` },
                         { label: t('microloan.export.overpayment'), value: `${results.totalInterest.toLocaleString(NUMBER_LOCALE)} ₸` },
-                        { label: t('microloan.export.effectiveRate'), value: `${results.effectiveRate.toFixed(1)}%` },
+                        { label: t('microloan.export.effectiveRate'), value: `${formatFixed(results.effectiveRate, 1)}%` },
                       ]
                     }
                   ],

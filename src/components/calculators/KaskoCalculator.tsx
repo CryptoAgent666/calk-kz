@@ -24,6 +24,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type Region = 'almaty-astana' | 'shymkent-karaganda' | 'other';
 type Coverage = 'full' | 'partial' | 'theft-only';
@@ -312,7 +313,7 @@ export default function KaskoCalculator() {
                     }`}
                   >
                     <span className="text-sm font-medium">{r.label}</span>
-                    <span className="text-xs">×{r.coeff}</span>
+                    <span className="text-xs">×{r.coeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </button>
                 ))}
               </div>
@@ -362,7 +363,7 @@ export default function KaskoCalculator() {
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium">{c.label}</span>
-                      <span className="text-xs">×{c.coeff}</span>
+                      <span className="text-xs">×{c.coeff.toLocaleString(NUMBER_LOCALE)}</span>
                     </div>
                     <div className="text-xs text-gray-500 mt-1">{c.hint}</div>
                   </button>
@@ -388,7 +389,7 @@ export default function KaskoCalculator() {
                     }`}
                   >
                     <div className="text-sm font-medium">{d.label}</div>
-                    <div className="text-xs text-gray-500">×{d.coeff}</div>
+                    <div className="text-xs text-gray-500">×{d.coeff.toLocaleString(NUMBER_LOCALE)}</div>
                   </button>
                 ))}
               </div>
@@ -506,7 +507,7 @@ export default function KaskoCalculator() {
                           : 'text-gray-900'
                       }
                     >
-                      ×{c.value}
+                      ×{c.value.toLocaleString(NUMBER_LOCALE)}
                     </span>
                   </div>
                 ))}
@@ -563,7 +564,7 @@ export default function KaskoCalculator() {
                   data: [
                     { label: t('kasko.annualPremium'), value: formatCurrency(results.finalPremium) },
                     { label: t('kasko.monthlyEquivalent'), value: formatCurrency(results.monthlyPremium) },
-                    { label: t('kasko.percentOfValue'), value: `${results.percentOfValue}%` },
+                    { label: t('kasko.percentOfValue'), value: `${results.percentOfValue.toLocaleString(NUMBER_LOCALE)}%` },
                     { label: t('kasko.maxPayout'), value: formatCurrency(results.maxPayout) },
                   ],
                 },

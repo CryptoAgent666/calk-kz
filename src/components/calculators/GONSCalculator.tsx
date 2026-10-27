@@ -11,7 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 // Та же модель, что и у основного расчёта ниже: вознаграждение банка на среднегодовой остаток,
 // госпремия = ставка × фактический остаток вклада (взносы, вознаграждение банка и прошлые
@@ -180,7 +180,7 @@ export default function GONSCalculator() {
   };
 
   const formatPercent = (num: number) => {
-    return num.toFixed(1) + '%';
+    return formatFixed(num, 1) + '%';
   };
 
   const childCategories = [

@@ -11,6 +11,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { formatFixed } from '../../utils/localeFormat';
 
 export default function EarlyRepaymentCalculator() {
   const { t } = useTranslation('calculators');
@@ -94,7 +95,7 @@ export default function EarlyRepaymentCalculator() {
           data: [
             { label: t('early-repayment.results.interestSaved'), value: formatNumber(results.interestSaved) },
             { label: t('early-repayment.results.timeSaved'), value: `${results.timeSavedMonths} ${t('early-repayment.monthsShort')}` },
-            { label: t('early-repayment.results.savingsPercentage'), value: `${results.savingsPercentage.toFixed(1)}%` },
+            { label: t('early-repayment.results.savingsPercentage'), value: `${formatFixed(results.savingsPercentage, 1)}%` },
           ]
         }
       ],
@@ -392,7 +393,7 @@ export default function EarlyRepaymentCalculator() {
                   {formatNumber(results.interestSaved)}
                 </div>
                 <div className="text-sm text-green-600 mt-1">
-                  {results.savingsPercentage.toFixed(1)}% {t('early-repayment.results.ofTotalInterest')}
+                  {formatFixed(results.savingsPercentage, 1)}% {t('early-repayment.results.ofTotalInterest')}
                 </div>
               </div>
 

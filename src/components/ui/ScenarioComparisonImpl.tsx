@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { formatFixed } from '../../utils/localeFormat';
 
 interface ScenarioData {
   id: string;
@@ -98,7 +99,7 @@ export function ScenarioComparison({
     const diff = value - baseValue;
     if (Math.abs(diff) < 0.01) return null;
 
-    const percentage = baseValue !== 0 ? ((diff / baseValue) * 100).toFixed(1) : '∞';
+    const percentage = baseValue !== 0 ? formatFixed((diff / baseValue) * 100, 1) : '∞';
     const isPositive = diff > 0;
     const isBetter = field.higherIsBetter ? isPositive : !isPositive;
 

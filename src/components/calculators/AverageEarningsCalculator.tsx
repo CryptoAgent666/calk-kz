@@ -12,6 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 // Командировки здесь нет: за дни командировки сохраняется зарплата за рабочие
 // дни (ТК ст. 127 п. 1), а не средний заработок.
@@ -26,7 +27,7 @@ const PURPOSES: Purpose[] = ['vacation', 'sickLeave', 'dismissal', 'maternity'];
 const PERIOD_MONTHS = 12;
 
 export default function AverageEarningsCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [purpose, setPurpose] = useState<Purpose>('vacation');
   const [mode, setMode] = useState<'simple' | 'detailed'>('simple');
   const [monthlySalary, setMonthlySalary] = useState<string>('300000');
@@ -75,7 +76,7 @@ export default function AverageEarningsCalculator() {
       totalPay: Math.round(totalPay),
       months,
       days,
-      vsMzp: avgMonth > 0 ? (avgMonth / MZP_2026).toFixed(1) : '0',
+      vsMzp: avgMonth > 0 ? formatFixed(avgMonth / MZP_2026, 1) : '0',
     };
   }, [mode, monthlySalary, workMonths, yearlyBonus, allowances, totalPayments, workedDays, workedHours]);
 
@@ -168,7 +169,7 @@ export default function AverageEarningsCalculator() {
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
             <div className="text-sm text-gray-600 mb-1">{t('average-earnings.avgMonth')}</div>
             <div className="text-3xl font-bold text-blue-700">{formatNumber(results.avgMonth)}</div>
-            <div className="text-xs text-gray-500 mt-1">≈ {results.vsMzp} × МЗП (2026)</div>
+            <div className="text-xs text-gray-500 mt-1">≈ {results.vsMzp} × {i18n.language === 'kk' ? 'ЕТЖ' : 'МЗП'} (2026)</div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

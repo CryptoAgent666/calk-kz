@@ -8,6 +8,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { formatFixed } from '../../utils/localeFormat';
 
 interface MonthlyNorm {
   month: string;
@@ -249,7 +250,7 @@ export default function HeatingBillCalculator() {
   };
 
   const formatNorm = (norm: number) => {
-    return norm.toFixed(4) + ' Гкал/м²';
+    return formatFixed(norm, 4) + ' Гкал/м²';
   };
 
   const selectedCityData = cityHeatingData.find(c => c.id === city);
@@ -404,7 +405,7 @@ export default function HeatingBillCalculator() {
                   {!results.byReading && selectedCityData && (
                     <div>{t('heating.monthlyNorm')}: <strong>{formatNorm(results.norm)}</strong></div>
                   )}
-                  <div>{t('heating.consumption')}: <strong>{results.consumption.toFixed(4)} Гкал</strong></div>
+                  <div>{t('heating.consumption')}: <strong>{formatFixed(results.consumption, 4)} Гкал</strong></div>
                 </div>
               </div>
             )}
@@ -452,7 +453,7 @@ export default function HeatingBillCalculator() {
 
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">{t('heating.heatConsumption')}</span>
-                <span className="font-semibold text-gray-900">{results.consumption.toFixed(4)} Гкал</span>
+                <span className="font-semibold text-gray-900">{formatFixed(results.consumption, 4)} Гкал</span>
               </div>
             </div>
 

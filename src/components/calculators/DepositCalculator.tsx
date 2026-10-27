@@ -13,7 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 import { pluralize } from '../../utils/pluralize';
 
 export default function DepositCalculator() {
@@ -116,7 +116,7 @@ export default function DepositCalculator() {
   };
 
   const formatPercent = (num: number) => {
-    return num.toFixed(2) + '%';
+    return formatFixed(num, 2) + '%';
   };
 
   const getCapitalizationPeriodText = () => {

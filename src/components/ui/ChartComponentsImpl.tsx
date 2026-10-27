@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatFixed } from '../../utils/localeFormat';
 import {
   PieChart,
   Pie,
@@ -55,7 +56,7 @@ export function TaxPieChart({
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const item = payload[0].payload;
-      const percentage = ((item.value / total) * 100).toFixed(1);
+      const percentage = formatFixed((item.value / total) * 100, 1);
       return (
         <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
           <p className="font-medium text-gray-900">{item.name}</p>

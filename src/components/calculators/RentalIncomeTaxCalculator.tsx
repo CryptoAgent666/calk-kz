@@ -12,6 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { pluralize } from '../../utils/pluralize';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type PropertyType = 'residential' | 'commercial';
 type TaxRegime = 'individual' | 'patent' | 'simplified';
@@ -199,7 +200,7 @@ ${t('rental-income-tax.incomeTax')}: ${formatCurrency(results.incomeTax)}
 ${t('rental-income-tax.socialPayments')}: ${formatCurrency(results.socialPayments)}
 ${t('rental-income-tax.totalTax')}: ${formatCurrency(results.totalTax)}
 ${t('rental-income-tax.netIncome')}: ${formatCurrency(results.netIncome)}
-${t('rental-income-tax.effectiveRate')}: ${results.effectiveRate}%
+${t('rental-income-tax.effectiveRate')}: ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
 ─────────────────────────────
 calk.kz`;
   };
@@ -381,7 +382,7 @@ calk.kz`;
                 <span className="text-2xl font-bold text-blue-700">{formatCurrency(results.totalTax)}</span>
               </div>
               <div className="text-sm text-gray-600">
-                {t('rental-income-tax.regime.' + selectedRegime)} · {t('rental-income-tax.effectiveRate')}: {results.effectiveRate}%
+                {t('rental-income-tax.regime.' + selectedRegime)} · {t('rental-income-tax.effectiveRate')}: {results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
               </div>
             </div>
 
@@ -506,7 +507,7 @@ calk.kz`;
                       <td className="py-3 px-2 text-right text-gray-700">{formatCurrency(row.socialPayments)}</td>
                       <td className="py-3 px-2 text-right font-semibold text-gray-900">{formatCurrency(row.totalTax)}</td>
                       <td className="py-3 px-2 text-right text-green-700">{formatCurrency(row.netIncome)}</td>
-                      <td className="py-3 px-2 text-right text-gray-700">{row.effectiveRate}%</td>
+                      <td className="py-3 px-2 text-right text-gray-700">{row.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</td>
                     </tr>
                   );
                 })}

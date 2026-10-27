@@ -10,7 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { QuickAnswer } from '../ui/QuickAnswer';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 // Накопленный ИПЦ (база 2015 = 100) по ОФИЦИАЛЬНЫМ СРЕДНЕГОДОВЫМ индексам БНС
 // (stat.gov.kz, таблица «ИПЦ по основным группам», ряд «янв–дек к янв–дек пред. года»):
@@ -151,7 +151,7 @@ export default function InflationCalculator() {
           { label: t('inflation.result.equivalentAmount'), value: formatCurrency(results.adjustedAmount) },
           { label: t('inflation.result.purchasingPowerLoss'), value: formatPercent(results.purchasingPowerLoss) },
           { label: t('inflation.result.averageAnnualInflation'), value: formatPercent(results.averageAnnualInflation) },
-          { label: t('inflation.result.cpiRatio'), value: results.cpiRatio.toFixed(3) }
+          { label: t('inflation.result.cpiRatio'), value: formatFixed(results.cpiRatio, 3) }
         ]
       }
     ],
@@ -313,7 +313,7 @@ export default function InflationCalculator() {
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">{t('inflation.result.cpiRatio')}</p>
                 <p className="text-lg font-semibold text-gray-900">
-                  {results.cpiRatio.toFixed(3)}
+                  {formatFixed(results.cpiRatio, 3)}
                 </p>
               </div>
               <p className="text-xs text-gray-500 mt-1">
@@ -363,7 +363,7 @@ export default function InflationCalculator() {
                     <tr key={year} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-2 pr-4 font-medium text-gray-900">{year}</td>
                       <td className="py-2 pr-4 text-right text-gray-700">{MRP_DATA[year]} \u20B8</td>
-                      <td className="py-2 text-right text-gray-700">{CPI_DATA[year].toFixed(1)}</td>
+                      <td className="py-2 text-right text-gray-700">{formatFixed(CPI_DATA[year], 1)}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -377,7 +377,7 @@ export default function PropertyTaxCalculator() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
               >
                 {wallMaterials.map((m) => (
-                  <option key={m.id} value={m.id}>{t(m.nameKey)} — ×{m.kMat}</option>
+                  <option key={m.id} value={m.id}>{t(m.nameKey)} — ×{m.kMat.toLocaleString(NUMBER_LOCALE)}</option>
                 ))}
               </select>
               <p className="text-xs text-gray-500 mt-2">{t('property-tax.wallMaterialHint')}</p>
@@ -502,7 +502,7 @@ export default function PropertyTaxCalculator() {
                 </span>
               </div>
               <div className="text-xs text-blue-700">
-                {t('property-tax.wear')}: {results.wearPercent}% • {t('property-tax.wearCoeff')}: {results.wearCoeff} • {t('property-tax.zoneCoeff')}: {results.zoneCoeff}
+                {t('property-tax.wear')}: {results.wearPercent}% • {t('property-tax.wearCoeff')}: {results.wearCoeff.toLocaleString(NUMBER_LOCALE)} • {t('property-tax.zoneCoeff')}: {results.zoneCoeff}
               </div>
               {results.wearExceeded && (
                 <div className="text-xs text-blue-700 mt-1">{t('property-tax.wearExceededNote')}</div>
@@ -522,7 +522,7 @@ export default function PropertyTaxCalculator() {
 
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">{t('property-tax.taxRate')}</span>
-                <span className="font-semibold text-gray-900">{results.taxRate}%</span>
+                <span className="font-semibold text-gray-900">{results.taxRate.toLocaleString(NUMBER_LOCALE)}%</span>
               </div>
 
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -585,7 +585,7 @@ export default function PropertyTaxCalculator() {
                       : `${t('property-tax.over')} ${formatNumber(rate.min)}${rate.max !== Infinity ? ` ${t('property-tax.upTo')} ${formatNumber(rate.max)}` : ''}`}
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-900 text-right font-semibold">
-                    {rate.base > 0 ? `${formatNumber(rate.base)} + ` : ''}{rate.rate}%
+                    {rate.base > 0 ? `${formatNumber(rate.base)} + ` : ''}{rate.rate.toLocaleString(NUMBER_LOCALE)}%
                   </td>
                 </tr>
               ))}

@@ -9,6 +9,7 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
+import { formatFixed } from '../../utils/localeFormat';
 
 interface Subject {
   id: number;
@@ -54,7 +55,7 @@ function gradeToLetter(score: number): string {
 }
 
 // GPA в другие системы (США 4.0, традиционная 5-балльная, Великобритания)
-function gpaToUS(gpa: number): string { return gpa.toFixed(2); } // US 4.0
+function gpaToUS(gpa: number): string { return formatFixed(gpa, 2); } // US 4.0
 function gpaToRussia5(gpa: number): string {
   // По границам традиционных оценок приказа № 152: A- 3,67 — «5», C+ 2,33 — «4», D 1,0 — «3»
   if (gpa >= 3.67) return '5';
@@ -116,10 +117,10 @@ export default function GPACalculator() {
     const avgScore = totalScore / totalCredits;
 
     return {
-      weightedGPA: weightedGPA.toFixed(2),
+      weightedGPA: formatFixed(weightedGPA, 2),
       weightedGPANum: weightedGPA,
       totalCredits,
-      avgScore: avgScore.toFixed(1),
+      avgScore: formatFixed(avgScore, 1),
       classification: gpaToClassification(weightedGPA),
       letter: gradeToLetter(avgScore),
       russia5: gpaToRussia5(weightedGPA),
@@ -163,7 +164,7 @@ export default function GPACalculator() {
               <input type="number" min="1" max="10" value={s.credits} onChange={e => updateSubject(s.id, 'credits', e.target.value)}
                 className="col-span-2 px-2 py-2 border border-gray-300 rounded text-sm text-center" />
               <div className="col-span-1 text-sm text-gray-700 text-center">
-                {hasScore ? `${gpa.toFixed(2)} (${letter})` : ''}
+                {hasScore ? `${formatFixed(gpa, 2)} (${letter})` : ''}
               </div>
               <button onClick={() => removeSubject(s.id)} className="col-span-1 text-red-500 hover:text-red-700">
                 <X className="w-4 h-4" />
@@ -190,7 +191,7 @@ export default function GPACalculator() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <div className="bg-gray-50 rounded-lg p-3 text-center">
-                <div className="text-xs text-gray-600">🇺🇸 US GPA (4.0)</div>
+                <div className="text-xs text-gray-600">🇺🇸 US GPA (4,0)</div>
                 <div className="text-xl font-bold">{gpaToUS(results.weightedGPANum)}</div>
               </div>
               <div className="bg-gray-50 rounded-lg p-3 text-center">

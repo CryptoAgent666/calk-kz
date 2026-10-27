@@ -10,6 +10,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 const MRP_2026 = 4325;
 const MZP_2026 = 85000;
@@ -149,7 +150,7 @@ export default function SecondJobCalculator() {
           <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg p-6 border border-cyan-200">
             <div className="text-sm text-gray-600">{t('second-job.totalNet')}</div>
             <div className="text-3xl font-bold text-cyan-700">{formatNumber(results.totalNet)}</div>
-            <div className="text-xs text-gray-500 mt-1">{t('second-job.effectiveRate')}: {results.effectiveRate.toFixed(2)}%</div>
+            <div className="text-xs text-gray-500 mt-1">{t('second-job.effectiveRate')}: {formatFixed(results.effectiveRate, 2)}%</div>
           </div>
 
           <div className="space-y-3">

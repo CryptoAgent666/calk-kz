@@ -9,6 +9,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 // Базовая аренда за м² (2026) — источники: krisha.kz, olx.kz, 2gis
 interface CityRates {
@@ -124,8 +125,8 @@ export default function FairRentalPriceCalculator() {
           { label: t('fair-rental-price.daily'), value: `${formatCurrency(result.dailyMin)} — ${formatCurrency(result.dailyMax)}` },
           ...(result.paybackYears > 0
             ? [
-                { label: t('fair-rental-price.payback'), value: result.paybackYears.toFixed(1) + ' ' + t('fair-rental-price.years') },
-                { label: t('fair-rental-price.yield'), value: result.yieldPercent.toFixed(2) + '%' },
+                { label: t('fair-rental-price.payback'), value: formatFixed(result.paybackYears, 1) + ' ' + t('fair-rental-price.years') },
+                { label: t('fair-rental-price.yield'), value: formatFixed(result.yieldPercent, 2) + '%' },
               ]
             : []),
         ],
@@ -363,13 +364,13 @@ export default function FairRentalPriceCalculator() {
             <div className="bg-teal-50 rounded-lg p-4">
               <div className="text-sm text-teal-800 mb-1">{t('fair-rental-price.payback')}</div>
               <div className="text-3xl font-bold text-teal-700">
-                {result.paybackYears.toFixed(1)} <span className="text-lg">{t('fair-rental-price.years')}</span>
+                {formatFixed(result.paybackYears, 1)} <span className="text-lg">{t('fair-rental-price.years')}</span>
               </div>
             </div>
             <div className="bg-cyan-50 rounded-lg p-4">
               <div className="text-sm text-cyan-800 mb-1">{t('fair-rental-price.yield')}</div>
               <div className="text-3xl font-bold text-cyan-700">
-                {result.yieldPercent.toFixed(2)}<span className="text-lg">%</span>
+                {formatFixed(result.yieldPercent, 2)}<span className="text-lg">%</span>
               </div>
               <div className="text-xs text-cyan-700 mt-1">{t('fair-rental-price.yieldNote')}</div>
             </div>

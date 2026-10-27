@@ -12,7 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 export default function SeverancePayCalculator() {
   const { t } = useTranslation('calculators');
@@ -473,7 +473,7 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                     <span className="text-lg font-bold text-orange-900">{formatNumber(results.averageDailyPay)}</span>
                   </div>
                   <p className="text-xs text-orange-700 mt-1">
-                    {formatNumber(parseFloat(monthlyIncome) || 0)} / {AVG_WORKING_DAYS_PER_MONTH.toFixed(1)} {t('severance-pay.workingDays')}
+                    {formatNumber(parseFloat(monthlyIncome) || 0)} / {formatFixed(AVG_WORKING_DAYS_PER_MONTH, 1)} {t('severance-pay.workingDays')}
                   </p>
                 </div>
 

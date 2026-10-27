@@ -8,6 +8,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 // Расчёт параметров шины
 function calcTire(width: number, profile: number, rim: number) {
@@ -140,9 +141,9 @@ export default function TireSizeCalculator() {
         {
           title: t('tire-size.comparison'),
           data: [
-            { label: t('tire-size.diameterDiff'), value: `${comparison.diameterDiff > 0 ? '+' : ''}${comparison.diameterDiff.toFixed(1)} ${t('tire-size.mm')}` },
-            { label: t('tire-size.clearanceDiff'), value: `${comparison.clearanceDiff > 0 ? '+' : ''}${comparison.clearanceDiff.toFixed(1)} ${t('tire-size.mm')}` },
-            { label: t('tire-size.speedoError'), value: `${comparison.speedoError > 0 ? '+' : ''}${comparison.speedoError.toFixed(2)}%` },
+            { label: t('tire-size.diameterDiff'), value: `${comparison.diameterDiff > 0 ? '+' : ''}${formatFixed(comparison.diameterDiff, 1)} ${t('tire-size.mm')}` },
+            { label: t('tire-size.clearanceDiff'), value: `${comparison.clearanceDiff > 0 ? '+' : ''}${formatFixed(comparison.clearanceDiff, 1)} ${t('tire-size.mm')}` },
+            { label: t('tire-size.speedoError'), value: `${comparison.speedoError > 0 ? '+' : ''}${formatFixed(comparison.speedoError, 2)}%` },
           ],
         },
       ],

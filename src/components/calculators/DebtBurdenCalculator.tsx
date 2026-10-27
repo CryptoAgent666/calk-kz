@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { ProgressBar } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 interface CreditEntry {
   id: number;
@@ -133,7 +134,7 @@ ${creditLines || '-'}
 
 ${t('debt-burden.totalObligations')}: ${formatNumber(totalPayments)} ${t('debt-burden.currency')}
 ${t('debt-burden.freeIncome')}: ${formatNumber(freeIncome)} ${t('debt-burden.currency')}
-DTI: ${dti.toFixed(1)}%
+DTI: ${formatFixed(dti, 1)}%
 ${t('debt-burden.status')}: ${t(`debt-burden.zones.${zone}.title`)}
 
 ${t('debt-burden.calculatedOn')} calk.kz`;
@@ -299,7 +300,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
                     <div className="flex items-center space-x-2">
                       <Calculator className="w-6 h-6 text-gray-600" />
                       <span className={`text-3xl sm:text-4xl font-bold ${getZoneColor(zone)}`}>
-                        {dti.toFixed(1)}%
+                        {formatFixed(dti, 1)}%
                       </span>
                     </div>
                   </div>
@@ -315,7 +316,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
                     max={100}
                     color={getProgressColor(zone)}
                     label={t('debt-burden.dtiLevel')}
-                    formatValue={(v) => `${v.toFixed(1)}%`}
+                    formatValue={(v) => `${formatFixed(v, 1)}%`}
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
                     <span>0%</span>
@@ -401,7 +402,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-700">{t('debt-burden.newDtiLabel')}</span>
                         <span className={`text-lg font-bold ${getZoneColor(newZone)}`}>
-                          {newDti.toFixed(1)}%
+                          {formatFixed(newDti, 1)}%
                         </span>
                       </div>
                       <p className={`text-xs mt-1 ${getZoneColor(newZone)}`}>
@@ -426,7 +427,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
           <ExportButtons
             data={{
               title: t('debt-burden.exportTitle'),
-              subtitle: `DTI: ${dti.toFixed(1)}%`,
+              subtitle: `DTI: ${formatFixed(dti, 1)}%`,
               sections: [
                 {
                   title: t('debt-burden.incomeLabel'),
@@ -446,7 +447,7 @@ ${t('debt-burden.calculatedOn')} calk.kz`;
                 {
                   title: t('debt-burden.resultsTitle'),
                   data: [
-                    { label: 'DTI', value: `${dti.toFixed(1)}%` },
+                    { label: 'DTI', value: `${formatFixed(dti, 1)}%` },
                     { label: t('debt-burden.totalObligations'), value: `${formatNumber(totalPayments)} ${t('debt-burden.currency')}` },
                     { label: t('debt-burden.freeIncome'), value: `${formatNumber(freeIncome)} ${t('debt-burden.currency')}` },
                     { label: t('debt-burden.status'), value: t(`debt-burden.zones.${zone}.title`) }

@@ -324,10 +324,10 @@ export default function InsuranceCalculator() {
                 >
                   <div className="font-medium">{territory.name}</div>
                   <div className="text-sm text-gray-600">
-                    {t('insurance-premium.coefficient')}: {territory.coefficient}
+                    {t('insurance-premium.coefficient')}: {territory.coefficient.toLocaleString(NUMBER_LOCALE)}
                   </div>
                   <div className="text-xs text-gray-500">
-                    {territory.registrationCoeff} × {territory.correctionCoeff}
+                    {territory.registrationCoeff.toLocaleString(NUMBER_LOCALE)} × {territory.correctionCoeff.toLocaleString(NUMBER_LOCALE)}
                   </div>
                 </button>
               ))}
@@ -355,7 +355,7 @@ export default function InsuranceCalculator() {
                           : t('insurance-premium.settlementOther')}
                       </div>
                       <div className="text-sm text-gray-600">
-                        {t('insurance-premium.coefficient')}: {option === 'city' ? 1 : OGPO_OTHER_SETTLEMENT_COEFF}
+                        {t('insurance-premium.coefficient')}: {(option === 'city' ? 1 : OGPO_OTHER_SETTLEMENT_COEFF).toLocaleString(NUMBER_LOCALE)}
                       </div>
                     </button>
                   ))}
@@ -392,7 +392,7 @@ export default function InsuranceCalculator() {
                     >
                       <div className="font-medium">{type.name}</div>
                       <div className="text-sm text-gray-600">
-                        {t('insurance-premium.coefficient')}: {type.coefficient}
+                        {t('insurance-premium.coefficient')}: {type.coefficient.toLocaleString(NUMBER_LOCALE)}
                       </div>
                     </button>
                   ))}
@@ -591,42 +591,42 @@ export default function InsuranceCalculator() {
                   </div>
                   <div className="flex justify-between">
                     <span>{t('insurance-premium.registrationCoefficient')}</span>
-                    <span>×{results.registrationCoeff}</span>
+                    <span>×{results.registrationCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('insurance-premium.correctionCoefficient')}</span>
-                    <span>×{results.correctionCoeff}</span>
+                    <span>×{results.correctionCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between text-gray-500">
                     <span>{t('insurance-premium.territoryCoefficient')}</span>
-                    <span>×{results.territoryCoeff}</span>
+                    <span>×{results.territoryCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   {results.settlementCoeff !== 1 && (
                     <div className="flex justify-between">
                       <span>{t('insurance-premium.settlementCoefficient')}</span>
-                      <span>×{results.settlementCoeff}</span>
+                      <span>×{results.settlementCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span>{t('insurance-premium.vehicleTypeCoefficient')}</span>
-                    <span>×{results.vehicleTypeCoeff}</span>
+                    <span>×{results.vehicleTypeCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('insurance-premium.ageExperienceCoefficient')}</span>
-                    <span>×{results.ageExperienceCoeff}</span>
+                    <span>×{results.ageExperienceCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('insurance-premium.exploitationCoefficient')}</span>
-                    <span>×{results.exploitationCoeff}</span>
+                    <span>×{results.exploitationCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('insurance-premium.bonusMalusCoefficient')}</span>
-                    <span>×{results.bonusMalusCoeff}</span>
+                    <span>×{results.bonusMalusCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                   </div>
                   {results.benefitCoeff < 1 && (
                     <div className="flex justify-between">
                       <span>{t('insurance-premium.benefitCoefficient')}</span>
-                      <span>×{results.benefitCoeff}</span>
+                      <span>×{results.benefitCoeff.toLocaleString(NUMBER_LOCALE)}</span>
                     </div>
                   )}
                 </div>

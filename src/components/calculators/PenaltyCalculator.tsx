@@ -11,7 +11,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { TaxPieChart } from '../ui/ChartComponents';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, decimalComma } from '../../utils/localeFormat';
 
 export default function PenaltyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -292,7 +292,7 @@ export default function PenaltyCalculator() {
                   <div className="text-sm text-gray-700 space-y-1">
                     <div>{t('penalty.debtAmountLabel')} <strong>{formatNumber(parseFloat(debtAmount) || 0)}</strong></div>
                     <div>{t('penalty.daysOverdueLabel')} <strong>{daysOverdue} {t('penalty.days')}</strong></div>
-                    <div>{t('penalty.penaltyRateLabel')} <strong>{penaltyRate}{t('penalty.perDay')}</strong></div>
+                    <div>{t('penalty.penaltyRateLabel')} <strong>{decimalComma(penaltyRate)}{t('penalty.perDay')}</strong></div>
                   </div>
                 </div>
 
@@ -329,7 +329,7 @@ export default function PenaltyCalculator() {
                 <div className="bg-yellow-50 rounded-lg p-4">
                   <h3 className="font-medium text-yellow-900 mb-2">{t('penalty.additionalInfo')}</h3>
                   <div className="text-sm text-yellow-800 space-y-1">
-                    <div>{t('penalty.effectivePenaltyRate')} <strong>{results.effectivePenaltyRate}%</strong> {t('penalty.ofDebtAmount')}</div>
+                    <div>{t('penalty.effectivePenaltyRate')} <strong>{results.effectivePenaltyRate.toLocaleString(NUMBER_LOCALE)}%</strong> {t('penalty.ofDebtAmount')}</div>
                     <div>{t('penalty.dailyRate')} <strong>{results.dailyPenaltyRate.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 4 })}%</strong> {t('penalty.ofDebtAmount')}</div>
                     {results.effectivePenaltyRate > 50 && (
                       <div className="text-red-600 font-medium">
@@ -342,7 +342,7 @@ export default function PenaltyCalculator() {
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="text-sm font-medium text-gray-700 mb-2">{t('penalty.formula')}</h4>
                   <div className="font-mono text-sm text-gray-900 bg-white p-3 rounded border">
-                    {formatNumber(parseFloat(debtAmount) || 0)} × {penaltyRate}% ÷ 100 × {daysOverdue} {t('penalty.days')} = {formatNumber(results.totalPenalty)}
+                    {formatNumber(parseFloat(debtAmount) || 0)} × {decimalComma(penaltyRate)} ÷ 100 × {daysOverdue} {t('penalty.days')} = {formatNumber(results.totalPenalty)}
                   </div>
                 </div>
               </>
@@ -364,9 +364,9 @@ export default function PenaltyCalculator() {
             <div className="text-sm text-gray-700 space-y-2">
               <div><strong>{t('penalty.taxDebtIPNLabel')}</strong> 100 000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 30 {t('penalty.days')}</div>
-              <div><strong>{t('penalty.rateLabel')}</strong> 0.0539{t('penalty.perDay')}</div>
+              <div><strong>{t('penalty.rateLabel')}</strong> 0,0539{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 100 000 × 0.0539% × 30 = 1 617 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 100 000 × 0,0539% × 30 = 1 617 ₸</div>
                 <div><strong>{t('penalty.toPayLabel')}</strong> 101 617 ₸</div>
               </div>
             </div>
@@ -377,9 +377,9 @@ export default function PenaltyCalculator() {
             <div className="text-sm text-gray-700 space-y-2">
               <div><strong>{t('penalty.electricityDebt')}</strong> 25 000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 45 {t('penalty.days')}</div>
-              <div><strong>{t('penalty.rateLabel')}</strong> 0.05{t('penalty.perDay')}</div>
+              <div><strong>{t('penalty.rateLabel')}</strong> 0,05{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 25 000 × 0.05% × 45 = 562 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 25 000 × 0,05% × 45 = 562 ₸</div>
                 <div><strong>{t('penalty.toPayLabel')}</strong> 25 562 ₸</div>
               </div>
             </div>
@@ -390,9 +390,9 @@ export default function PenaltyCalculator() {
             <div className="text-sm text-gray-700 space-y-2">
               <div><strong>{t('penalty.contractDebt')}</strong> 500 000 ₸</div>
               <div><strong>{t('penalty.overdueLabel')}</strong> 15 {t('penalty.days')}</div>
-              <div><strong>{t('penalty.rateLabel')}</strong> 0.1{t('penalty.perDay')}</div>
+              <div><strong>{t('penalty.rateLabel')}</strong> 0,1{t('penalty.perDay')}</div>
               <div className="border-t pt-2">
-                <div><strong>{t('penalty.penaltyLabel')}</strong> 500 000 × 0.1% × 15 = 7 500 ₸</div>
+                <div><strong>{t('penalty.penaltyLabel')}</strong> 500 000 × 0,1% × 15 = 7 500 ₸</div>
                 <div><strong>{t('penalty.toPayLabel')}</strong> 507 500 ₸</div>
               </div>
             </div>

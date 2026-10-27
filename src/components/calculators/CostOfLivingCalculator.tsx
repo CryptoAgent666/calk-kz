@@ -10,6 +10,7 @@ import { ComparisonBarChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 // Средние расходы по городам Казахстана (₸/месяц). Аренда — медианы объявлений krisha.kz
 // (сентябрь–октябрь 2026); продукты — расходы на продовольственные товары на душу по БНС
@@ -70,7 +71,7 @@ export default function CostOfLivingCalculator() {
   const result2 = useMemo(() => getTotal(c2, rentType, members), [c2, rentType, members]);
 
   const diff = result1.total - result2.total;
-  const diffPercent = result2.total > 0 ? ((diff / result2.total) * 100).toFixed(1) : '0';
+  const diffPercent = result2.total > 0 ? Math.abs((diff / result2.total) * 100) : 0;
 
   const formatCurrency = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
 
@@ -191,7 +192,7 @@ export default function CostOfLivingCalculator() {
           </div>
           {diff !== 0 ? (
             <div className={`text-2xl font-bold ${diff > 0 ? 'text-red-700' : 'text-green-700'}`}>
-              {t(diff > 0 ? 'cost-living.diffMore' : 'cost-living.diffLess', { city: t(c1.labelKey), pct: Math.abs(Number(diffPercent)) })}
+              {t(diff > 0 ? 'cost-living.diffMore' : 'cost-living.diffLess', { city: t(c1.labelKey), pct: formatFixed(diffPercent, 1) })}
             </div>
           ) : (
             <div className="text-2xl font-bold text-gray-700">{t('cost-living.equal')}</div>

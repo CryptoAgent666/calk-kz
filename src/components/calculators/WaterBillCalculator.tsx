@@ -11,6 +11,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 /**
  * Тарифы для населения (1 группа потребителей), ₸/м³ с НДС 16% — сверено
@@ -288,7 +289,7 @@ export default function WaterBillCalculator() {
                 <h3 className="font-medium text-gray-900 mb-2">{t('water.consumptionIndicators')}</h3>
                 <div className="text-sm text-gray-700 space-y-1">
                   <div>{t('water.totalConsumption')}: <strong>{waterConsumption} м³</strong></div>
-                  <div>{t('water.consumptionPerPerson')}: <strong>{results.consumptionPerPerson} м³</strong></div>
+                  <div>{t('water.consumptionPerPerson')}: <strong>{results.consumptionPerPerson.toLocaleString(NUMBER_LOCALE)} м³</strong></div>
                   <div>{t('water.numberOfResidents')}: <strong>{residentsCount} {t('water.people')}</strong></div>
                 </div>
               </div>

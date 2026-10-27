@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { decimalComma } from '../../utils/localeFormat';
 
 interface RangeSliderProps {
   value: number;
@@ -47,12 +48,13 @@ export function RangeSlider({
   step = 1,
   label,
   ariaLabel,
-  formatValue = (v) => v.toString(),
+  formatValue: formatRaw = (v) => v.toString(),
   showMinMax = true,
   showValue = true,
   color = '#0ea5e9',
   disabled = false
 }: RangeSliderProps) {
+  const formatValue = (v: number) => decimalComma(formatRaw(v));
   const safeValue = useMemo(() => {
     const numericValue = Number.isFinite(value) ? value : min;
     return Math.min(Math.max(numericValue, min), max);
@@ -144,9 +146,10 @@ export function DualRangeSlider({
   max,
   step = 1,
   label,
-  formatValue = (v) => v.toString(),
+  formatValue: formatRaw = (v) => v.toString(),
   color = '#0ea5e9'
 }: DualRangeSliderProps) {
+  const formatValue = (v: number) => decimalComma(formatRaw(v));
   const minPercentage = ((minValue - min) / (max - min)) * 100;
   const maxPercentage = ((maxValue - min) / (max - min)) * 100;
 

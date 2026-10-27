@@ -95,7 +95,7 @@ export default function HouseHeatingCalculator() {
 - ${t('house-heating.areaLabel')}: ${area} м²
 - ${t('house-heating.climateLabel')}: ${t(`house-heating.climate_${climate}`)}
 - ${t('house-heating.insulationLabel')}: ${t(`house-heating.ins_${insulation}`)}
-- ${t('house-heating.demand')}: ${nf(Math.round(demandKwh))} кВт·ч
+- ${t('house-heating.demand')}: ${nf(Math.round(demandKwh))} ${t('common:exportDoc.kwh')}
 
 ${t('house-heating.results')} (${t('house-heating.perSeason')}):
 ${lines.join('\n')}`;

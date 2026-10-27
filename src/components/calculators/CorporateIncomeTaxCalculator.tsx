@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type ActivityType = 'standard' | 'agricultural' | 'social';
 
@@ -111,7 +112,7 @@ ${t('corporate-income-tax.taxableIncome')}: ${formatCurrency(results.taxableInco
 ${t('corporate-income-tax.mainTax')} (${results.rate}%): ${formatCurrency(results.mainTax)}
 ${t('corporate-income-tax.withholdingTax')} (${WITHHOLDING_RATE}%): ${formatCurrency(results.withholdingTax)}
 ${t('corporate-income-tax.totalTax')}: ${formatCurrency(results.totalTax)}
-${t('corporate-income-tax.effectiveRate')}: ${results.effectiveRate}%
+${t('corporate-income-tax.effectiveRate')}: ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
 ${t('corporate-income-tax.monthlyAdvance')}: ${formatCurrency(results.monthlyAdvance)}
 ${t('corporate-income-tax.netProfit')}: ${formatCurrency(results.netProfit)}
 ─────────────────────────────
@@ -330,7 +331,7 @@ calk.kz`;
                 </div>
               </div>
               <div className="text-sm text-gray-600">
-                {t('corporate-income-tax.effectiveRate')}: {results.effectiveRate}%
+                {t('corporate-income-tax.effectiveRate')}: {results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
               </div>
             </div>
 

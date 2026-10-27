@@ -13,6 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { getSources } from '../../data/calculatorSources';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type TaxRegime = 'simplified' | 'general' | 'self-employed';
 type PeriodYears = 1 | 3 | 5;
@@ -183,7 +184,7 @@ ${t('business-roi.grossProfit')}: ${formatCurrency(results.grossProfit)}
 ${t('business-roi.netProfit')}: ${formatCurrency(results.netMonthlyProfit)}
 ${t('business-roi.yearlyProfit')}: ${formatCurrency(results.yearlyProfit)}
 ${t('business-roi.payback')}: ${formatPayback(results.paybackMonths)}
-${t('business-roi.roi')}: ${results.roiPercent}%
+${t('business-roi.roi')}: ${results.roiPercent.toLocaleString(NUMBER_LOCALE)}%
 ${t('business-roi.npv')}: ${formatCurrency(results.npv)}
 ${t('business-roi.breakEven')}: ${results.breakEvenClients} ${t('business-roi.clientsMonth')}
 ─────────────────────────────
@@ -415,7 +416,7 @@ calk.kz`;
                 <div className="text-sm text-blue-600">
                   {t('business-roi.roi')} ({period} {yearsLabel(period)})
                 </div>
-                <div className="text-2xl font-bold text-blue-700">{results.roiPercent}%</div>
+                <div className="text-2xl font-bold text-blue-700">{results.roiPercent.toLocaleString(NUMBER_LOCALE)}%</div>
                 {period > 1 && (
                   <div className="text-xs text-blue-600 mt-1">{t('business-roi.roiAnnual', { rate: String(results.roiAnnual).replace('.', ',') })}</div>
                 )}

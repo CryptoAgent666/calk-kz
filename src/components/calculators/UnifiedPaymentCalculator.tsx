@@ -12,7 +12,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 export default function UnifiedPaymentCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -75,15 +75,15 @@ export default function UnifiedPaymentCalculator() {
 - ${t('unified-payment.grossSalary')}: ${formatNumber(gross)}
 
 ${t('unified-payment.results')}:
-- ${t('unified-payment.epTotal')} (${(EP_RATE * 100).toFixed(1)}%): ${formatNumber(results.epTotal)}
+- ${t('unified-payment.epTotal')} (${formatFixed(EP_RATE * 100, 1)}%): ${formatNumber(results.epTotal)}
 
 ${t('unified-payment.breakdown')}:
-- ${t('unified-payment.opv')} (${(OPV_SHARE * 100).toFixed(1)}%): ${formatNumber(results.opv)}
-- ${t('unified-payment.vosms')} (${(VOSMS_SHARE * 100).toFixed(1)}%): ${formatNumber(results.vosms)}
-- ${t('unified-payment.ipn')} (${(IPN_SHARE * 100).toFixed(1)}%): ${formatNumber(results.ipn)}
-- ${t('unified-payment.opvr')} (${(OPVR_SHARE * 100).toFixed(1)}%): ${formatNumber(results.opvr)}
-- ${t('unified-payment.oosms')} (${(OOSMS_SHARE * 100).toFixed(1)}%): ${formatNumber(results.oosms)}
-- ${t('unified-payment.so')} (${(SO_SHARE * 100).toFixed(1)}%): ${formatNumber(results.so)}
+- ${t('unified-payment.opv')} (${formatFixed(OPV_SHARE * 100, 1)}%): ${formatNumber(results.opv)}
+- ${t('unified-payment.vosms')} (${formatFixed(VOSMS_SHARE * 100, 1)}%): ${formatNumber(results.vosms)}
+- ${t('unified-payment.ipn')} (${formatFixed(IPN_SHARE * 100, 1)}%): ${formatNumber(results.ipn)}
+- ${t('unified-payment.opvr')} (${formatFixed(OPVR_SHARE * 100, 1)}%): ${formatNumber(results.opvr)}
+- ${t('unified-payment.oosms')} (${formatFixed(OOSMS_SHARE * 100, 1)}%): ${formatNumber(results.oosms)}
+- ${t('unified-payment.so')} (${formatFixed(SO_SHARE * 100, 1)}%): ${formatNumber(results.so)}
 
 - ${t('unified-payment.employerCost')}: ${formatNumber(results.employerCost)}
 - ${t('unified-payment.employeeNet')}: ${formatNumber(results.employeeNet)}`;
@@ -156,12 +156,12 @@ ${t('unified-payment.breakdown')}:
               <div className="text-xs text-indigo-800 space-y-1">
                 <div><strong>{t('unified-payment.epRateLabel')}</strong> 24,8%</div>
                 <div className="mt-2"><strong>{t('unified-payment.distributionLabel')}</strong></div>
-                <div>• {t('unified-payment.opv')} — 40.3%</div>
-                <div>• {t('unified-payment.vosms')} — 8.1%</div>
-                <div>• {t('unified-payment.ipn')} — 7.3%</div>
-                <div>• {t('unified-payment.opvr')} — 14.1%</div>
-                <div>• {t('unified-payment.oosms')} — 12.1%</div>
-                <div>• {t('unified-payment.so')} — 18.1%</div>
+                <div>• {t('unified-payment.opv')} — 40,3%</div>
+                <div>• {t('unified-payment.vosms')} — 8,1%</div>
+                <div>• {t('unified-payment.ipn')} — 7,3%</div>
+                <div>• {t('unified-payment.opvr')} — 14,1%</div>
+                <div>• {t('unified-payment.oosms')} — 12,1%</div>
+                <div>• {t('unified-payment.so')} — 18,1%</div>
               </div>
             </div>
 
@@ -207,7 +207,7 @@ ${t('unified-payment.breakdown')}:
                   <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
                   <span className="text-gray-600">
                     {t(`unified-payment.${item.key}`)}
-                    <span className="text-xs text-gray-400 ml-1">({(item.share * 100).toFixed(1)}%)</span>
+                    <span className="text-xs text-gray-400 ml-1">({formatFixed(item.share * 100, 1)}%)</span>
                   </span>
                 </div>
                 <span className="font-semibold text-gray-900">{formatNumber(item.value)}</span>

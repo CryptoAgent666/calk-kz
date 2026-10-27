@@ -278,8 +278,8 @@ export default function UnemploymentBenefitCalculator() {
                   <h3 className="font-semibold text-blue-900 mb-2">{t('unemployment.calculationParameters')}</h3>
                   <div className="text-sm text-blue-800 space-y-1">
                     <div>{t('unemployment.averageMonthlyIncome')}: {formatNumber(results.averageMonthlyIncome)}</div>
-                    <div>{t('unemployment.replacementCoefficient')}: {results.incomeReplacementCoef} (45%)</div>
-                    <div>{t('unemployment.experienceCoefficient')}: {results.experienceCoef}</div>
+                    <div>{t('unemployment.replacementCoefficient')}: {results.incomeReplacementCoef.toLocaleString(NUMBER_LOCALE)} (45%)</div>
+                    <div>{t('unemployment.experienceCoefficient')}: {results.experienceCoef.toLocaleString(NUMBER_LOCALE)}</div>
                   </div>
                 </div>
 
@@ -341,13 +341,13 @@ export default function UnemploymentBenefitCalculator() {
             <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('unemployment.experienceCoefficients')}</h3>
             <div className="space-y-2">
               {[
-                ['sixMonthsToYear', '0.7'],
-                ['oneToTwoYears', '0.75'],
-                ['twoToThreeYears', '0.85'],
-                ['threeToFourYears', '0.9'],
-                ['fourToFiveYears', '0.95'],
-                ['fiveToSixYears', '1.0'],
-                ['sixPlusYears', '1.02–1.3'],
+                ['sixMonthsToYear', '0,7'],
+                ['oneToTwoYears', '0,75'],
+                ['twoToThreeYears', '0,85'],
+                ['threeToFourYears', '0,9'],
+                ['fourToFiveYears', '0,95'],
+                ['fiveToSixYears', '1,0'],
+                ['sixPlusYears', '1,02–1,3'],
               ].map(([k, v], i, arr) => (
                 <div key={k} className={`flex justify-between text-sm py-2 px-3 rounded ${i === arr.length - 1 ? 'bg-green-50 border border-green-200' : 'bg-gray-50'}`}>
                   <span className={i === arr.length - 1 ? 'text-green-800' : 'text-gray-700'}>{t(`unemployment.${k}`)}</span>

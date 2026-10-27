@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { useMounted } from '../../hooks/useMounted';
 import type { BarChartProps, LineChartProps, PieChartProps } from './ChartComponentsImpl';
+import { formatFixed } from '../../utils/localeFormat';
 
 
 // Цветовая палитра
@@ -100,7 +101,7 @@ export function ProgressBar({
         <div className="flex justify-between mb-1">
           <span className="text-sm text-gray-600">{label}</span>
           {showPercentage && (
-            <span className="text-sm font-medium text-gray-800">{percentage.toFixed(1)}%</span>
+            <span className="text-sm font-medium text-gray-800">{formatFixed(percentage, 1)}%</span>
           )}
         </div>
       )}

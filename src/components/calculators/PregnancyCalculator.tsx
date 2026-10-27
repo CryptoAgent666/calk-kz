@@ -11,6 +11,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { ProgressBar } from '../ui/ChartComponents';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function PregnancyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -371,7 +372,7 @@ export default function PregnancyCalculator() {
                   <div>
                     <div className="flex justify-between text-sm text-gray-600 mb-1">
                       <span>{t('pregnancy.pregnancyProgress')}</span>
-                      <span>{results.progressPercentage}%</span>
+                      <span>{results.progressPercentage.toLocaleString(NUMBER_LOCALE)}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div

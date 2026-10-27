@@ -11,7 +11,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 // Доли считаются простыми дробями, чтобы аул и радд давали точные 3/8, 16/27 и т. п.
 type Frac = [number, number];
@@ -1130,7 +1130,7 @@ export default function IslamicInheritanceCalculator() {
                   title: t('islamic-inheritance.distributionTitle'),
                   data: results.heirs.map(heir => ({
                     label: heir.name,
-                    value: `${heir.amount.toLocaleString(NUMBER_LOCALE)} ₸ (${heir.percentage.toFixed(1)}%)`
+                    value: `${heir.amount.toLocaleString(NUMBER_LOCALE)} ₸ (${formatFixed(heir.percentage, 1)}%)`
                   }))
                 }
               ],

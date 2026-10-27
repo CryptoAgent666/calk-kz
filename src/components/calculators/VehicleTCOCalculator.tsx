@@ -12,6 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 import {
   OGPO_BASE_PREMIUM_MRP,
   OGPO_EXPLOITATION_OVER_7Y_COEFF,
@@ -264,7 +265,7 @@ ${t('vehicle-tco.resultsTitle')}:
 ${t('vehicle-tco.tco')}: ${formatCurrency(results.totalTCO)}
 ${t('vehicle-tco.yearlyCost')}: ${formatCurrency(results.yearlyTCO)}
 ${t('vehicle-tco.monthlyCost')}: ${formatCurrency(results.monthlyTCO)}
-${t('vehicle-tco.costPerKm')}: ${results.costPerKm} ₸/${t('vehicle-tco.km')}
+${t('vehicle-tco.costPerKm')}: ${results.costPerKm.toLocaleString(NUMBER_LOCALE)} ₸/${t('vehicle-tco.km')}
 ${t('vehicle-tco.residualValue')}: ${formatCurrency(results.residualValue)}
 
 ${t('vehicle-tco.breakdown')}:
@@ -516,7 +517,7 @@ calk.kz`;
               <div className="bg-gray-50 rounded-lg p-4 flex justify-between items-center">
                 <div>
                   <div className="text-sm text-gray-600">{t('vehicle-tco.costPerKm')}</div>
-                  <div className="text-lg font-bold text-gray-900">{results.costPerKm} ₸/{t('vehicle-tco.km')}</div>
+                  <div className="text-lg font-bold text-gray-900">{results.costPerKm.toLocaleString(NUMBER_LOCALE)} ₸/{t('vehicle-tco.km')}</div>
                 </div>
                 <Car className="w-8 h-8 text-gray-400" />
               </div>

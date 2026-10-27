@@ -21,7 +21,7 @@ import {
   type SalaryRow,
   type SalaryResult,
   type SalaryTotals, type Disability } from '../../utils/salary2026';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 // Константы и формула расчёта (МЗП, МРП, пол СО 1 МЗП по ст. 245 СК, вычеты ст. 403/404 НК)
 // живут в utils/salary2026.ts — одна функция считает и одиночный расчёт, и таблицу сотрудников.
@@ -141,8 +141,8 @@ ${t('salary.employerContributions')}:
 - ${t('salary.totalLaborCost')}: ${formatNumber(results.totalLaborCost)}
 
 ${t('salary.effectiveTaxRate')}:
-- ${t('salary.employeeDeductions')}: ${results.effectiveEmployeeTaxRate}%
-- ${t('salary.employerSurcharge')}: ${results.effectiveEmployerRate}%`;
+- ${t('salary.employeeDeductions')}: ${results.effectiveEmployeeTaxRate.toLocaleString(NUMBER_LOCALE)}%
+- ${t('salary.employerSurcharge')}: ${results.effectiveEmployerRate.toLocaleString(NUMBER_LOCALE)}%`;
   };
 
   const moneyLines = (gross: number, line: MoneyLine) => [
@@ -410,7 +410,7 @@ ${totalsText}`;
 
             <div className="text-center p-3 bg-gray-50 rounded">
               <div className="text-sm text-gray-600">{t('salary.effectiveTaxRate')}</div>
-              <div className="text-lg font-bold text-gray-900">{results.effectiveEmployeeTaxRate}%</div>
+              <div className="text-lg font-bold text-gray-900">{results.effectiveEmployeeTaxRate.toLocaleString(NUMBER_LOCALE)}%</div>
             </div>
           </div>
         </div>
@@ -461,7 +461,7 @@ ${totalsText}`;
 
             <div className="text-center p-3 bg-gray-50 rounded">
               <div className="text-sm text-gray-600">{t('salary.employerSurcharge')}</div>
-              <div className="text-lg font-bold text-gray-900">{results.effectiveEmployerRate}%</div>
+              <div className="text-lg font-bold text-gray-900">{results.effectiveEmployerRate.toLocaleString(NUMBER_LOCALE)}%</div>
             </div>
           </div>
         </div>
@@ -477,7 +477,7 @@ ${totalsText}`;
               <span className="text-lg font-semibold text-gray-900">{t('salary.employee')}</span>
             </div>
             <div className="text-2xl font-bold text-red-600 mb-1">{formatNumber(results.totalEmployeeDeductions)}</div>
-            <div className="text-sm text-gray-600">{results.effectiveEmployeeTaxRate}% {t('salary.ofSalary')}</div>
+            <div className="text-sm text-gray-600">{results.effectiveEmployeeTaxRate.toLocaleString(NUMBER_LOCALE)}% {t('salary.ofSalary')}</div>
           </div>
 
           <div className="text-center p-6 bg-orange-50 rounded-lg">
@@ -486,7 +486,7 @@ ${totalsText}`;
               <span className="text-lg font-semibold text-gray-900">{t('salary.employer')}</span>
             </div>
             <div className="text-2xl font-bold text-orange-600 mb-1">{formatNumber(results.totalEmployerContributions)}</div>
-            <div className="text-sm text-gray-600">{results.effectiveEmployerRate}% {t('salary.ofSalary')}</div>
+            <div className="text-sm text-gray-600">{results.effectiveEmployerRate.toLocaleString(NUMBER_LOCALE)}% {t('salary.ofSalary')}</div>
           </div>
 
           <div className="text-center p-6 bg-blue-50 rounded-lg">
@@ -498,7 +498,7 @@ ${totalsText}`;
               {formatNumber(results.totalEmployeeDeductions + results.totalEmployerContributions)}
             </div>
             <div className="text-sm text-gray-600">
-              {(results.effectiveEmployeeTaxRate + results.effectiveEmployerRate).toFixed(1)}% {t('salary.ofSalary')}
+              {formatFixed(results.effectiveEmployeeTaxRate + results.effectiveEmployerRate, 1)}% {t('salary.ofSalary')}
             </div>
           </div>
         </div>

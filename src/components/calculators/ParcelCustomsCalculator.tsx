@@ -11,7 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
-import { NUMBER_LOCALE, formatShortDate } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatShortDate, formatFixed } from '../../utils/localeFormat';
 import { fetchNbrkRates } from '../../utils/nbrkRates';
 
 const VALUE_LIMIT_EUR = 200;
@@ -578,7 +578,7 @@ export default function ParcelCustomsCalculator() {
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <span className="text-gray-600">{t('parcel-customs.excessWeight')}</span>
                   <span className="font-semibold text-red-600">
-                    {results.weightExcess.toFixed(1)} {t('parcel-customs.kg')}
+                    {formatFixed(results.weightExcess, 1)} {t('parcel-customs.kg')}
                   </span>
                 </div>
               )}
@@ -645,7 +645,7 @@ export default function ParcelCustomsCalculator() {
             {/* Effective Duty Rate */}
             {results.effectiveDutyRate > 0 && (
               <div className="text-center text-gray-600 text-sm">
-                {t('parcel-customs.effectiveRate')}: {results.effectiveDutyRate}%
+                {t('parcel-customs.effectiveRate')}: {results.effectiveDutyRate.toLocaleString(NUMBER_LOCALE)}%
               </div>
             )}
 

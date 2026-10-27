@@ -121,7 +121,7 @@ export default function BankruptcyCalculator() {
           <RangeSlider label={t('bankruptcy.monthlyExpenses')} value={parseFloat(monthlyExpenses) || 0}
             onChange={v => setMonthlyExpenses(String(v))} min={0} max={2000000} step={10000} formatValue={formatNumber} />
           <RangeSlider label={t('bankruptcy.overdueMonths')} value={parseFloat(overdueMonths) || 0}
-            onChange={v => setOverdueMonths(String(v))} min={0} max={60} step={1} formatValue={v => `${v} мес`} />
+            onChange={v => setOverdueMonths(String(v))} min={0} max={60} step={1} formatValue={v => `${v} ${t('common:exportDoc.monthsShort')}`} />
 
           <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
             <input type="checkbox" checked={hasProperty} onChange={e => setHasProperty(e.target.checked)} className="h-4 w-4" />

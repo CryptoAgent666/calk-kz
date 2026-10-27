@@ -11,6 +11,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface FuelType {
   id: string;
@@ -118,7 +119,7 @@ ${t('fuel-cost.pricePerLiter')}: ${fuelPrice} ₸
 
 ${t('fuel-cost.resultsTitle')}:
 ─────────────────────────────
-${t('fuel-cost.fuelNeeded')}: ${results.fuelNeeded} ${t('fuel-cost.liters')}
+${t('fuel-cost.fuelNeeded')}: ${results.fuelNeeded.toLocaleString(NUMBER_LOCALE)} ${t('fuel-cost.liters')}
 ${t('fuel-cost.tripCost')}: ${formatCurrency(results.tripCost)}
 ${t('fuel-cost.costPerKm')}: ${results.costPerKm.toLocaleString('ru-KZ')} ₸/${t('fuel-cost.km')}
 ${t('fuel-cost.monthlyCost')} (22 ${t('fuel-cost.workDays')}): ${formatCurrency(results.monthlyCost)}
@@ -309,7 +310,7 @@ calk.kz`;
             <div className="bg-gray-50 rounded-lg p-4 flex justify-between items-center">
               <div>
                 <div className="text-sm text-gray-600">{t('fuel-cost.fuelNeeded')}</div>
-                <div className="text-lg font-bold text-gray-900">{results.fuelNeeded} {t('fuel-cost.liters')}</div>
+                <div className="text-lg font-bold text-gray-900">{results.fuelNeeded.toLocaleString(NUMBER_LOCALE)} {t('fuel-cost.liters')}</div>
               </div>
               <Fuel className="w-8 h-8 text-gray-400" />
             </div>

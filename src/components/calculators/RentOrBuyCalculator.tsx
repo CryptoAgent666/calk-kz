@@ -13,7 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart, TrendLineChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { pluralize } from '../../utils/pluralize';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 export default function RentOrBuyCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -238,7 +238,7 @@ export default function RentOrBuyCalculator() {
   };
 
   const formatPercent = (num: number) => {
-    return num.toFixed(1) + '%';
+    return formatFixed(num, 1) + '%';
   };
 
   const renderComparisonChart = () => {

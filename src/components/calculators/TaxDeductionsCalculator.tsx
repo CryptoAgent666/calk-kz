@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 // other882 — родители/опекуны/усыновители ребёнка с инвалидностью, приёмные родители, участники ВОВ
 // и приравненные, ветераны боевых действий: вычет 882 МРП есть, а освобождения от взносов нет.
@@ -95,7 +96,7 @@ export default function TaxDeductionsCalculator() {
   );
 
   const formatNumber = (num: number) => num.toLocaleString('ru-KZ') + ' ₸';
-  const formatPercent = (num: number) => num.toFixed(2) + '%';
+  const formatPercent = (num: number) => formatFixed(num, 2) + '%';
 
   const cancelledDeductions: string[] = [
     t('tax-deductions.cancelled.item1'),

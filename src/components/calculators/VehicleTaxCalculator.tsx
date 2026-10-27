@@ -383,7 +383,7 @@ export default function VehicleTaxCalculator() {
               {carTaxRates.map((rate, index) => (
                 <div key={index} className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
                   <span className="text-gray-700">{t(rate.descriptionKey)}</span>
-                  <span className="font-medium">{rate.rate} МРП</span>
+                  <span className="font-medium">{rate.rate.toLocaleString(NUMBER_LOCALE)} {i18n.language === 'kk' ? 'АЕК' : 'МРП'}</span>
                 </div>
               ))}
             </div>
@@ -395,7 +395,7 @@ export default function VehicleTaxCalculator() {
               {truckTaxRates.map((rate, index) => (
                 <div key={index} className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
                   <span className="text-gray-700">{t(rate.descriptionKey)}</span>
-                  <span className="font-medium">{rate.rate} МРП</span>
+                  <span className="font-medium">{rate.rate.toLocaleString(NUMBER_LOCALE)} {i18n.language === 'kk' ? 'АЕК' : 'МРП'}</span>
                 </div>
               ))}
             </div>
@@ -407,7 +407,7 @@ export default function VehicleTaxCalculator() {
               {busTaxRates.map((rate, index) => (
                 <div key={index} className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">
                   <span className="text-gray-700">{t(rate.descriptionKey)}</span>
-                  <span className="font-medium">{rate.rate} МРП</span>
+                  <span className="font-medium">{rate.rate.toLocaleString(NUMBER_LOCALE)} {i18n.language === 'kk' ? 'АЕК' : 'МРП'}</span>
                 </div>
               ))}
             </div>

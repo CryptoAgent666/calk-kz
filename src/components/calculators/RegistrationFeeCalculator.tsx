@@ -144,7 +144,7 @@ export default function RegistrationFeeCalculator() {
   );
 
   const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount} ${t('registration-fee.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
+    return `${mrpAmount.toLocaleString(NUMBER_LOCALE)} ${t('registration-fee.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
   const selectedVehicleType = vehicleTypes.find(type => type.id === vehicleType);

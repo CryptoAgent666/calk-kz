@@ -22,6 +22,26 @@ export const toUiLang = (language: string | undefined): UiLang => (language === 
 /** Локаль для чисел на обоих языках. */
 export const NUMBER_LOCALE = 'ru-KZ';
 
+/**
+ * Замена toFixed() для вывода: «14,1», «× 1,025», «1 234,56».
+ * Округление то же, что у toFixed; −0 после округления выводится как «0».
+ */
+export function formatFixed(value: number, digits: number): string {
+  const rounded = Number(value.toFixed(digits));
+  return (rounded === 0 ? 0 : rounded).toLocaleString(NUMBER_LOCALE, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  });
+}
+
+/**
+ * Десятичная запятая в готовой подписи: «2.7 м» → «2,7 м». Для подписей ползунков,
+ * которые компоненты собирают шаблоном `${v} м` из сырого числа.
+ */
+export function decimalComma(text: string): string {
+  return text.replace(/(\d)\.(\d)/g, '$1,$2');
+}
+
 const MONTHS_RU_GENITIVE = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
   'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 const MONTHS_RU_NOMINATIVE = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь',

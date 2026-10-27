@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
 import { getSources } from '../../data/calculatorSources';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type OperationType = 'trade' | 'mining' | 'staking' | 'swap';
 type PayerType = 'individual' | 'ip' | 'too';
@@ -103,7 +104,7 @@ export default function CryptoTaxCalculator() {
             { label: t('crypto-tax.totalGain'), value: formatCurrency(results.totalGain) },
             { label: t('crypto-tax.taxAmount'), value: formatCurrency(results.taxAmount) },
             { label: t('crypto-tax.taxRate'), value: `${results.taxRate}%` },
-            { label: t('crypto-tax.effectiveRate'), value: `${results.effectiveRate}%` },
+            { label: t('crypto-tax.effectiveRate'), value: `${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%` },
             { label: t('crypto-tax.netProfit'), value: formatCurrency(results.netProfit) },
             { label: t('crypto-tax.reportForm'), value: reportForm },
             { label: t('crypto-tax.deadline'), value: reportDeadline },
@@ -301,7 +302,7 @@ export default function CryptoTaxCalculator() {
 
             <div className="bg-blue-50 rounded-lg p-4 flex justify-between items-center">
               <span className="text-sm text-blue-700">{t('crypto-tax.effectiveRate')}</span>
-              <span className="text-lg font-bold text-blue-700">{results.effectiveRate}%</span>
+              <span className="text-lg font-bold text-blue-700">{results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</span>
             </div>
 
             <div className="bg-purple-50 rounded-lg p-4">

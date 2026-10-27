@@ -12,7 +12,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart } from '../ui/ChartComponents';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 interface DiscountCalculation {
   originalPrice: number;
@@ -134,54 +134,54 @@ export default function DiscountCalculator() {
     switch (calculationType) {
       case 'single':
         if (results.finalPrice > 0) {
-          content = `Расчет одиночной скидки:
-Первоначальная цена: ${formatNumber(parseFloat(originalPrice) || 0)}
-Размер скидки: ${discountPercent}%
-Сумма скидки: ${formatNumber(results.discountAmount)}
-Итоговая цена: ${formatNumber(results.finalPrice)}
-Экономия: ${formatNumber(results.savings)}`;
+          content = `${t('discount.share.single')}:
+${t('discount.originalPriceLabel')}: ${formatNumber(parseFloat(originalPrice) || 0)}
+${t('discount.discountSize')}: ${normalizePercentInput(discountPercent).toLocaleString(NUMBER_LOCALE)}%
+${t('discount.discountAmount')}: ${formatNumber(results.discountAmount)}
+${t('discount.exportDoc.finalPrice')}: ${formatNumber(results.finalPrice)}
+${t('discount.savings')}: ${formatNumber(results.savings)}`;
         }
         break;
         
       case 'cascade':
         if (results.cascadeSteps.length > 0) {
-          content = `Расчет каскадных скидок:
-Первоначальная цена: ${formatNumber(parseFloat(cascadeOriginalPrice) || 0)}
+          content = `${t('discount.share.cascade')}:
+${t('discount.originalPriceLabel')}: ${formatNumber(parseFloat(cascadeOriginalPrice) || 0)}
 
-Этапы применения скидок:
+${t('discount.applyingSteps')}:
 ${results.cascadeSteps.map((step, index) => 
-  `${index + 1}. ${step.description}: ${step.discountPercent}%
-   Цена до: ${formatNumber(step.priceBefore)}
-   Скидка: ${formatNumber(step.discountAmount)}
-   Цена после: ${formatNumber(step.priceAfter)}`
+  `${index + 1}. ${step.description}: ${step.discountPercent.toLocaleString(NUMBER_LOCALE)}%
+   ${t('discount.priceBeforeDiscount')}: ${formatNumber(step.priceBefore)}
+   ${t('discount.discount')}: ${formatNumber(step.discountAmount)}
+   ${t('discount.priceAfterDiscount')}: ${formatNumber(step.priceAfter)}`
 ).join('\n\n')}
 
-Итого:
-Общая экономия: ${formatNumber(results.totalCascadeDiscount)}
-Эффективная скидка: ${results.effectiveDiscountPercent.toFixed(1)}%
-Итоговая цена: ${formatNumber(results.finalPrice)}`;
+${t('common:exportDoc.total')}:
+${t('discount.totalSavings')}: ${formatNumber(results.totalCascadeDiscount)}
+${t('discount.effectiveDiscount')}: ${formatFixed(results.effectiveDiscountPercent, 1)}%
+${t('discount.exportDoc.finalPrice')}: ${formatNumber(results.finalPrice)}`;
         }
         break;
         
       case 'reverse':
         if (results.calculatedDiscountPercent > 0) {
-          content = `Обратный расчет скидки:
-Первоначальная цена: ${formatNumber(parseFloat(reverseOriginalPrice) || 0)}
-Итоговая цена: ${formatNumber(parseFloat(reverseFinalPrice) || 0)}
-Рассчитанная скидка: ${results.calculatedDiscountPercent.toFixed(2)}%
-Сумма экономии: ${formatNumber(results.discountAmount)}`;
+          content = `${t('discount.share.reverse')}:
+${t('discount.originalPriceLabel')}: ${formatNumber(parseFloat(reverseOriginalPrice) || 0)}
+${t('discount.exportDoc.finalPrice')}: ${formatNumber(parseFloat(reverseFinalPrice) || 0)}
+${t('discount.share.calculatedDiscount')}: ${formatFixed(results.calculatedDiscountPercent, 2)}%
+${t('discount.savings')}: ${formatNumber(results.discountAmount)}`;
         }
         break;
         
       case 'compare':
         if (results.comparisonResults.length > 0) {
-          content = `Сравнение вариантов скидок:
+          content = `${t('discount.share.compare')}:
 
 ${results.comparisonResults.map((scenario, index) => 
   `${scenario.name}:
-   Цена: ${formatNumber(scenario.originalPrice)} → ${formatNumber(scenario.finalPrice)}
-   Скидка: ${scenario.discountPercent}%
-   Экономия: ${formatNumber(scenario.savings)}`
+   ${t('discount.price')}: ${formatNumber(scenario.originalPrice)} → ${formatNumber(scenario.finalPrice)}
+   ${t('discount.discount')}: ${scenario.discountPercent.toLocaleString(NUMBER_LOCALE)}%
+   ${t('discount.savings')}: ${formatNumber(scenario.savings)}`
 ).join('\n\n')}
 
 ${results.bestScenario ? `${t('discount.bestOption')}: ${results.bestScenario.name} (${formatNumber(results.bestScenario.finalPrice)})` : ''}`;

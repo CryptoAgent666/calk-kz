@@ -14,6 +14,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
+import { formatFixed } from '../../utils/localeFormat';
 
 export default function CreditCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -61,7 +62,7 @@ ${t('credit.exportResults')}
 - ${t('credit.exportMonthlyPayment')} ${formatNumber(results.monthlyPayment)}
 - ${t('credit.exportTotalPayment')} ${formatNumber(results.totalPayment)}
 - ${t('credit.exportOverpayment')} ${formatNumber(results.totalInterest)}
-- ${t('credit.exportOverpaymentPercent')} ${((results.totalInterest / (loanAmount || 1)) * 100).toFixed(1)}%
+- ${t('credit.exportOverpaymentPercent')} ${formatFixed((results.totalInterest / (loanAmount || 1)) * 100, 1)}%
 
 ${t('credit.exportSchedule')}
 ${results.payments.slice(0, 12).map(p =>
@@ -157,11 +158,11 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
           { label: t('credit.monthlyPayment'), value: formatNumber(results.monthlyPayment) },
           { label: t('credit.totalPayment'), value: formatNumber(results.totalPayment) },
           { label: t('credit.totalInterest'), value: formatNumber(results.totalInterest) },
-          { label: t('credit.overPaymentPercent'), value: `${((results.totalInterest / (loanAmount || 1)) * 100).toFixed(1)}%` },
+          { label: t('credit.overPaymentPercent'), value: `${formatFixed((results.totalInterest / (loanAmount || 1)) * 100, 1)}%` },
         ]
       }
     ],
-    footer: 'calk.kz — Калькуляторы Казахстана'
+    footer: t('common:buttons.calculatedOn')
   };
 
   // FAQ данные
@@ -212,7 +213,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
     { key: 'monthlyPayment', label: t('credit.scenarios.monthlyPayment'), format: formatNumber, highlight: true },
     { key: 'totalPayment', label: t('credit.scenarios.totalPayment'), format: formatNumber },
     { key: 'totalInterest', label: t('credit.scenarios.overpayment'), format: formatNumber, higherIsBetter: false },
-    { key: 'overpaymentPercent', label: t('credit.scenarios.overpaymentPercent'), format: (v: number) => `${v.toFixed(1)}%`, higherIsBetter: false },
+    { key: 'overpaymentPercent', label: t('credit.scenarios.overpaymentPercent'), format: (v: number) => `${formatFixed(v, 1)}%`, higherIsBetter: false },
   ];
 
   const calculateScenarioResults = (params: Record<string, number | string>) => {
@@ -385,7 +386,7 @@ ${results.payments.length > 12 ? `${t('credit.andMore')} ${results.payments.leng
               <div className="bg-gray-50 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-gray-700 mb-2">{t('credit.overPaymentPercent')}</h3>
                 <div className="text-lg sm:text-xl font-bold text-gray-900">
-                  {((results.totalInterest / loanAmount) * 100).toFixed(1)}%
+                  {formatFixed((results.totalInterest / loanAmount) * 100, 1)}%
                 </div>
               </div>
             )}

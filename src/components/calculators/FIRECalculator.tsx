@@ -12,6 +12,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
+import { formatFixed } from '../../utils/localeFormat';
 
 type FIREType = 'lean' | 'regular' | 'fat';
 const WITHDRAWAL_RATE: Record<FIREType, number> = {
@@ -78,18 +79,18 @@ export default function FIRECalculator() {
       }
       return {
         monthlySaving: Math.round(save * mult),
-        years: (m / 12).toFixed(1),
-        ageAtFIRE: (age + m / 12).toFixed(1),
+        years: Number((m / 12).toFixed(1)),
+        ageAtFIRE: Number((age + m / 12).toFixed(1)),
       };
     });
 
     return {
       fireNumber: Math.round(fireNumber),
-      years: years.toFixed(1),
-      ageAtFIRE: ageAtFIRE.toFixed(0),
+      years: Number(years.toFixed(1)),
+      ageAtFIRE: Math.round(ageAtFIRE),
       balance: Math.round(balance),
       achieved,
-      progress: progress.toFixed(1),
+      progress: Number(progress.toFixed(1)),
       scenarios,
       withdrawalMonthly: Math.round(fireNumber * wr / 12),
       realReturn: (ret * 100).toFixed(1).replace('.', ','),
@@ -164,7 +165,7 @@ export default function FIRECalculator() {
                 </div>
                 {results.achieved ? (
                   <>
-                    <div className="text-3xl font-bold text-orange-700">{results.years.replace('.', ',')} {yWord(parseFloat(results.years))}</div>
+                    <div className="text-3xl font-bold text-orange-700">{formatFixed(results.years, 1)} {yWord(results.years)}</div>
                     <div className="text-sm text-orange-800">{t('fire.atAge')}: {results.ageAtFIRE} {ageWord(results.ageAtFIRE)}</div>
                   </>
                 ) : (
@@ -175,7 +176,7 @@ export default function FIRECalculator() {
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="flex justify-between mb-2 text-sm">
                   <span>{t('fire.progress')}</span>
-                  <span className="font-semibold">{results.progress}%</span>
+                  <span className="font-semibold">{formatFixed(results.progress, 1)}%</span>
                 </div>
                 <div className="w-full bg-white rounded-full h-3">
                   <div className="bg-orange-500 h-3 rounded-full" style={{ width: `${results.progress}%` }} />
@@ -194,7 +195,7 @@ export default function FIRECalculator() {
                   {results.scenarios.map((s, idx) => (
                     <div key={idx} className="bg-gray-50 rounded p-2 flex justify-between">
                       <span>{t('fire.saving')}: {formatNumber(s.monthlySaving)}</span>
-                      <span className="font-semibold">{s.years} {yWord(parseFloat(s.years))} ({s.ageAtFIRE} {ageWord(s.ageAtFIRE)})</span>
+                      <span className="font-semibold">{formatFixed(s.years, 1)} {yWord(s.years)} ({formatFixed(s.ageAtFIRE, 1)} {ageWord(s.ageAtFIRE)})</span>
                     </div>
                   ))}
                 </div>
@@ -211,8 +212,8 @@ export default function FIRECalculator() {
               title: t('fire.title'),
               subtitle: t(`fire.types.${fireType}`),
               sections: [{ title: t('fire.resultsTitle'), data: [
-                { label: t('fire.fireNumber'), value: formatNumber(results.fireNumber) },
-                { label: t('fire.timeToFire'), value: `${results.years} ${yWord(parseFloat(results.years))}` },
+                { label: t('fire.fireNumber', { mult: results.multiplier }), value: formatNumber(results.fireNumber) },
+                { label: t('fire.timeToFire'), value: `${formatFixed(results.years, 1)} ${yWord(results.years)}` },
                 { label: t('fire.atAge'), value: `${results.ageAtFIRE} ${ageWord(results.ageAtFIRE)}` },
                 { label: t('fire.monthlyFromCapital'), value: formatNumber(results.withdrawalMonthly) },
               ]}],

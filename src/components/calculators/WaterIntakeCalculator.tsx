@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed } from '../../utils/localeFormat';
 
 export default function WaterIntakeCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -38,14 +39,14 @@ export default function WaterIntakeCalculator() {
     const totalMl = baseMl + activityBonus + climateBonus + pregnancyBonus + breastfeedingBonus;
     const liters = totalMl / 1000;
     const glasses = Math.round(totalMl / 250); // стакан 250 мл
-    const bottles = (totalMl / 500).toFixed(1); // бутылка 0.5л
+    const bottles = formatFixed(totalMl / 500, 1); // бутылка 0.5л
 
     // График по часам (08:00-22:00, 8 приёмов)
     const hourly = Math.round(totalMl / 8);
 
     return {
       totalMl: Math.round(totalMl),
-      liters: liters.toFixed(2),
+      liters: formatFixed(liters, 2),
       glasses,
       bottles,
       hourly,
@@ -136,7 +137,7 @@ export default function WaterIntakeCalculator() {
                 <div className="bg-cyan-50 rounded-lg p-4 text-center">
                   <div className="text-3xl">🍼</div>
                   <div className="text-xl font-bold text-cyan-700">{results.bottles}</div>
-                  <div className="text-xs text-gray-600">{t('water-intake.bottles')} (0.5 л)</div>
+                  <div className="text-xs text-gray-600">{t('water-intake.bottles')} (0,5 л)</div>
                 </div>
               </div>
 
@@ -185,7 +186,7 @@ export default function WaterIntakeCalculator() {
             url: 'https://nap.nationalacademies.org/catalog/10925/dietary-reference-intakes-for-water-potassium-sodium-chloride-and-sulfate',
             description: i18n.language === 'kk'
               ? 'National Academies Press. Тәуліктік су қажеттілігі туралы негізгі жарияланым: сұйықтықты жалпы тұтыну ерлер үшін 3,7 л, әйелдер үшін 2,7 л. Калькулятордың базалық нормаларының дереккөзі.'
-              : 'National Academies Press. Базовая публикация о суточной потребности в воде: 3.7 л для мужчин и 2.7 л для женщин общего потребления жидкости. Источник базовых норм калькулятора.',
+              : 'National Academies Press. Базовая публикация о суточной потребности в воде: 3,7 л для мужчин и 2,7 л для женщин общего потребления жидкости. Источник базовых норм калькулятора.',
           },
           {
             title: 'EFSA Panel on Dietetic Products — Scientific Opinion on Dietary Reference Values for water (2010)',

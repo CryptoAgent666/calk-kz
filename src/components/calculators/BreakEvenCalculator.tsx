@@ -20,6 +20,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type TaxRate = 0 | 4 | 10;
 
@@ -170,10 +171,10 @@ ${t('break-even.taxRate')}: ${taxRate}%
 ${t('break-even.resultsTitle')}:
 ─────────────────────────────
 ${t('break-even.contributionMargin')}: ${formatCurrency(results.contributionMargin)}
-${t('break-even.marginPercent')}: ${results.marginPercent}%
+${t('break-even.marginPercent')}: ${results.marginPercent.toLocaleString(NUMBER_LOCALE)}%
 ${t('break-even.breakEvenUnits')}: ${results.breakEvenUnits} ${t('break-even.unit')}
 ${t('break-even.breakEvenRevenue')}: ${formatCurrency(results.breakEvenRevenue)}
-${t('break-even.safetyMargin')}: ${results.safetyMargin}%
+${t('break-even.safetyMargin')}: ${results.safetyMargin.toLocaleString(NUMBER_LOCALE)}%
 ${t('break-even.monthlyProfit')}: ${formatCurrency(results.monthlyProfit)}
 ─────────────────────────────
 calk.kz`;
@@ -319,7 +320,7 @@ calk.kz`;
               </div>
               <div className="text-right">
                 <div className="text-sm text-gray-600">{t('break-even.marginPercent')}</div>
-                <div className="text-lg font-bold text-gray-900">{results.marginPercent}%</div>
+                <div className="text-lg font-bold text-gray-900">{results.marginPercent.toLocaleString(NUMBER_LOCALE)}%</div>
               </div>
             </div>
 
@@ -335,7 +336,7 @@ calk.kz`;
                 <span className={`text-xl font-bold ${
                   results.safetyMargin >= 30 ? 'text-emerald-700' : results.safetyMargin >= 10 ? 'text-sky-700' : 'text-rose-700'
                 }`}>
-                  {results.valid ? `${results.safetyMargin}%` : '—'}
+                  {results.valid ? `${results.safetyMargin.toLocaleString(NUMBER_LOCALE)}%` : '—'}
                 </span>
               </div>
             </div>

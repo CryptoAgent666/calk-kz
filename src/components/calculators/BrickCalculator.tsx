@@ -10,7 +10,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 type BrickType = 'single' | 'oneAndHalf' | 'double' | 'block' | 'gasBlock';
 
@@ -170,10 +170,10 @@ export default function BrickCalculator() {
     const wallWeight = volume * density;
 
     return {
-      wallArea: wallArea.toFixed(2),
-      volume: volume.toFixed(3),
+      wallArea: formatFixed(wallArea, 2),
+      volume: formatFixed(volume, 3),
       brickCount,
-      mortarVolume: mortarVolume.toFixed(3),
+      mortarVolume: formatFixed(mortarVolume, 3),
       cementKg: Math.round(cementKg),
       sandKg: Math.round(sandKg),
       cementBags: Math.ceil(cementKg / 50),
@@ -298,7 +298,7 @@ export default function BrickCalculator() {
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-900">
-                💡 {t('brick.wallWeight')}: {(results.wallWeight / 1000).toFixed(1)} т ({t('brick.foundationNote')})
+                💡 {t('brick.wallWeight')}: {formatFixed(results.wallWeight / 1000, 1)} т ({t('brick.foundationNote')})
               </div>
             </>
           )}

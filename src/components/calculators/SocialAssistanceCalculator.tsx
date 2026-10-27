@@ -104,7 +104,7 @@ export default function SocialAssistanceCalculator() {
   };
 
   const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount} ${t('social-assistance.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
+    return `${mrpAmount.toLocaleString(NUMBER_LOCALE)} ${t('social-assistance.mrp')} (${formatNumber(mrpAmount * MRP_2026)})`;
   };
 
 

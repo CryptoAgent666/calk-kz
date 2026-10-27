@@ -10,6 +10,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type CalcMode = 'markup' | 'margin' | 'price';
 type TaxMode = 'none' | 'simplified' | 'gain' | 'corporate';
@@ -147,8 +148,8 @@ export default function MarginMarkupCalculator() {
         data: [
           { label: t('margin-markup.sellingPrice'), value: formatCurrency(results.sellingPrice) },
           { label: t('margin-markup.profitPerUnit'), value: formatCurrency(results.profitPerUnit) },
-          { label: t('margin-markup.markup'), value: `${results.markupPct}%` },
-          { label: t('margin-markup.margin'), value: `${results.marginPct}%` },
+          { label: t('margin-markup.markup'), value: `${results.markupPct.toLocaleString(NUMBER_LOCALE)}%` },
+          { label: t('margin-markup.margin'), value: `${results.marginPct.toLocaleString(NUMBER_LOCALE)}%` },
           { label: t('margin-markup.monthlyRevenue'), value: formatCurrency(results.monthlyRevenue) },
           { label: t('margin-markup.monthlyProfit'), value: formatCurrency(results.monthlyProfit) },
           ...(tax !== 'none'
@@ -423,11 +424,11 @@ export default function MarginMarkupCalculator() {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="text-sm text-gray-600">{t('margin-markup.markup')}</div>
-                <div className="text-2xl font-bold text-gray-900">{results.markupPct}%</div>
+                <div className="text-2xl font-bold text-gray-900">{results.markupPct.toLocaleString(NUMBER_LOCALE)}%</div>
               </div>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="text-sm text-gray-600">{t('margin-markup.margin')}</div>
-                <div className="text-2xl font-bold text-gray-900">{results.marginPct}%</div>
+                <div className="text-2xl font-bold text-gray-900">{results.marginPct.toLocaleString(NUMBER_LOCALE)}%</div>
               </div>
             </div>
 
@@ -486,7 +487,7 @@ export default function MarginMarkupCalculator() {
                 <tr key={row.markup} className="border-b border-gray-100 hover:bg-lime-50/40 transition-colors">
                   <td className="py-2 px-3 font-semibold text-lime-700">{row.markup}%</td>
                   <td className="text-right py-2 px-3 text-gray-900">{formatCurrency(row.price)}</td>
-                  <td className="text-right py-2 px-3 text-gray-700">{row.margin}%</td>
+                  <td className="text-right py-2 px-3 text-gray-700">{row.margin.toLocaleString(NUMBER_LOCALE)}%</td>
                   <td className="text-right py-2 px-3 text-emerald-700 font-medium">{formatCurrency(row.profit)}</td>
                 </tr>
               ))}

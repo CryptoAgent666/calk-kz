@@ -11,7 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { QuickAnswer } from '../ui/QuickAnswer';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 export default function LuxuryTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -407,7 +407,7 @@ export default function LuxuryTaxCalculator() {
                     </div>
                   </div>
                   <div className="text-sm text-gray-600 mt-1">
-                    {t('luxury-tax.results.effectiveRate')}: {results.effectiveRate}% {t('luxury-tax.results.ofValue')}
+                    {t('luxury-tax.results.effectiveRate')}: {results.effectiveRate.toLocaleString(NUMBER_LOCALE)}% {t('luxury-tax.results.ofValue')}
                   </div>
                 </div>
 
@@ -609,7 +609,7 @@ export default function LuxuryTaxCalculator() {
                 <div>{t('luxury-tax.examples.threshold')}: {formatMRP(YACHT_AIRCRAFT_THRESHOLD_MRP)}</div>
                 {/* Превышение считаем, а не хардкодим: зашитые 25.6 млн были
                     посчитаны от МРП 2025 г. и разошлись с порогом на экране. */}
-                <div>{t('luxury-tax.examples.excess')}: {((120_000_000 - YACHT_AIRCRAFT_THRESHOLD) / 1_000_000).toFixed(1)} {t('luxury-tax.examples.millionTenge')}</div>
+                <div>{t('luxury-tax.examples.excess')}: {formatFixed((120_000_000 - YACHT_AIRCRAFT_THRESHOLD) / 1_000_000, 1)} {t('luxury-tax.examples.millionTenge')}</div>
               </div>
               <div>
                 <div className="font-medium text-gray-700">{t('luxury-tax.examples.calculation')}:</div>

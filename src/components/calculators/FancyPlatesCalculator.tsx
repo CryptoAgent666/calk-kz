@@ -9,6 +9,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 const MRP_2026 = 4_325;
 
@@ -66,7 +67,7 @@ export default function FancyPlatesCalculator() {
         title: t('fancy-plates.resultsTitle'),
         data: [
           { label: t('fancy-plates.category'), value: t(selected.labelKey) },
-          { label: t('fancy-plates.feeInMRP'), value: `${results.mrp} ${mrpUnit}` },
+          { label: t('fancy-plates.feeInMRP'), value: `${results.mrp.toLocaleString(NUMBER_LOCALE)} ${mrpUnit}` },
           { label: t('fancy-plates.feeInTenge'), value: formatCurrency(results.pricePerPlate) },
           { label: t('fancy-plates.quantity'), value: String(results.qty) },
           { label: t('fancy-plates.total'), value: formatCurrency(results.total) },
@@ -123,7 +124,7 @@ export default function FancyPlatesCalculator() {
                     <div className="text-xs text-gray-500">{t(cat.descKey)}</div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-3">
-                    <div className="text-sm font-bold text-amber-700">{cat.mrp} {mrpUnit}</div>
+                    <div className="text-sm font-bold text-amber-700">{cat.mrp.toLocaleString(NUMBER_LOCALE)} {mrpUnit}</div>
                     <div className="text-xs text-gray-500 font-mono">{cat.example}</div>
                   </div>
                 </div>
@@ -168,7 +169,7 @@ export default function FancyPlatesCalculator() {
                   <div className="text-sm text-amber-600">{t('fancy-plates.feeInMRP')}</div>
                   <div className="text-xs text-amber-500">{`1 ${mrpUnit} = `}{formatCurrency(MRP_2026)}</div>
                 </div>
-                <span className="text-2xl font-bold text-amber-700">{results.mrp} {mrpUnit}</span>
+                <span className="text-2xl font-bold text-amber-700">{results.mrp.toLocaleString(NUMBER_LOCALE)} {mrpUnit}</span>
               </div>
 
               {/* Price per plate */}
@@ -222,7 +223,7 @@ export default function FancyPlatesCalculator() {
                 >
                   <td className="py-2 px-2">{t(cat.labelKey)}</td>
                   <td className="py-2 px-2 font-mono text-gray-500">{cat.example}</td>
-                  <td className="py-2 px-2 text-right font-medium">{cat.mrp}</td>
+                  <td className="py-2 px-2 text-right font-medium">{cat.mrp.toLocaleString(NUMBER_LOCALE)}</td>
                   <td className="py-2 px-2 text-right">{formatCurrency(cat.mrp * MRP_2026)}</td>
                 </tr>
               ))}

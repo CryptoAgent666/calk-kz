@@ -10,6 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { formatFixed, NUMBER_LOCALE } from '../../utils/localeFormat';
 
 // Базовые цены за м² по городам и зонам (₸, 2026)
 interface CityPrices {
@@ -152,7 +153,7 @@ export default function ApartmentValuationCalculator() {
           { label: t('apartment-valuation.estimated'), value: fmt(result.estimated) },
           { label: t('apartment-valuation.priceRange'), value: `${fmt(result.lower)} — ${fmt(result.upper)}` },
           { label: t('apartment-valuation.pricePerM2'), value: fmt(result.pricePerM2) + '/м²' },
-          { label: t('apartment-valuation.diffFromAvg'), value: `${result.diffFromAvg > 0 ? '+' : ''}${result.diffFromAvg}%` },
+          { label: t('apartment-valuation.diffFromAvg'), value: `${result.diffFromAvg > 0 ? '+' : ''}${result.diffFromAvg.toLocaleString(NUMBER_LOCALE)}%` },
           { label: t('apartment-valuation.sellRecommended'), value: fmt(result.sellRecommended) },
           { label: t('apartment-valuation.buyRecommended'), value: fmt(result.buyRecommended) },
         ],
@@ -400,7 +401,7 @@ export default function ApartmentValuationCalculator() {
             <div className={`rounded-lg p-4 ${result.diffFromAvg > 0 ? 'bg-green-50' : result.diffFromAvg < 0 ? 'bg-amber-50' : 'bg-gray-50'}`}>
               <div className="text-sm text-gray-600 mb-1">{t('apartment-valuation.diffFromAvg')}</div>
               <div className={`text-lg font-bold ${result.diffFromAvg > 0 ? 'text-green-700' : result.diffFromAvg < 0 ? 'text-amber-700' : 'text-gray-700'}`}>
-                {result.diffFromAvg > 0 ? '+' : ''}{result.diffFromAvg}%
+                {result.diffFromAvg > 0 ? '+' : ''}{result.diffFromAvg.toLocaleString(NUMBER_LOCALE)}%
               </div>
               <div className="text-xs text-gray-500 mt-1">
                 {t('apartment-valuation.avgForZone')}: {fmt(result.avgZoneValue)}
@@ -411,17 +412,17 @@ export default function ApartmentValuationCalculator() {
             <div className="bg-white border border-gray-200 rounded-lg p-4">
               <h3 className="text-sm font-medium text-gray-900 mb-3">{t('apartment-valuation.coefBreakdown')}</h3>
               <div className="space-y-1.5 text-sm">
-                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.material')}</span><span className="font-medium">× {result.coefs.material.toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.floorCoef')}</span><span className="font-medium">× {result.coefs.floor.toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.yearCoef')}</span><span className="font-medium">× {result.coefs.year.toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.condition')}</span><span className="font-medium">× {result.coefs.condition.toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.ceiling')}</span><span className="font-medium">× {result.coefs.ceiling.toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.bathroom')}</span><span className="font-medium">× {result.coefs.bathroom.toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.balcony')}</span><span className="font-medium">× {result.coefs.balcony.toFixed(3)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.material')}</span><span className="font-medium">× {formatFixed(result.coefs.material, 2)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.floorCoef')}</span><span className="font-medium">× {formatFixed(result.coefs.floor, 2)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.yearCoef')}</span><span className="font-medium">× {formatFixed(result.coefs.year, 2)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.condition')}</span><span className="font-medium">× {formatFixed(result.coefs.condition, 2)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.ceiling')}</span><span className="font-medium">× {formatFixed(result.coefs.ceiling, 2)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.bathroom')}</span><span className="font-medium">× {formatFixed(result.coefs.bathroom, 2)}</span></div>
+                <div className="flex justify-between"><span className="text-gray-600">{t('apartment-valuation.balcony')}</span><span className="font-medium">× {formatFixed(result.coefs.balcony, 3)}</span></div>
                 {(result.extras.parkingAdd > 0 || result.extras.storageAdd > 0) && (
                   <div className="flex justify-between border-t pt-1.5"><span className="text-gray-600">{t('apartment-valuation.extrasTotal')}</span><span className="font-medium">+ {fmt(result.extras.parkingAdd + result.extras.storageAdd)}</span></div>
                 )}
-                <div className="flex justify-between border-t pt-1.5 font-semibold text-rose-700"><span>{t('apartment-valuation.totalCoef')}</span><span>× {result.coefs.total.toFixed(3)}</span></div>
+                <div className="flex justify-between border-t pt-1.5 font-semibold text-rose-700"><span>{t('apartment-valuation.totalCoef')}</span><span>× {formatFixed(result.coefs.total, 3)}</span></div>
               </div>
             </div>
 

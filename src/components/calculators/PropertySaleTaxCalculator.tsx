@@ -11,6 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface PropertyType {
   id: string;
@@ -169,7 +170,7 @@ ${t('property-sale-tax.taxStatus')}: ${results.isTaxable ? t('property-sale-tax.
 ${t('property-sale-tax.reason')}: ${results.reasonKey ? t(results.reasonKey) : '—'}
 ${t('property-sale-tax.taxAmount')}: ${formatCurrency(results.tax)}
 ${t('property-sale-tax.netProfit')}: ${formatCurrency(results.netProfit)}
-${t('property-sale-tax.effectiveRate')}: ${results.effectiveRate}%
+${t('property-sale-tax.effectiveRate')}: ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
 ${t('property-sale-tax.declarationDeadline')}: ${results.declarationDeadline}
 ─────────────────────────────
 calk.kz`;
@@ -431,7 +432,7 @@ calk.kz`;
                 <div className="text-sm text-gray-600">{t('property-sale-tax.effectiveRate')}</div>
                 <div className="text-xs text-gray-500">{t('property-sale-tax.effectiveRateHint')}</div>
               </div>
-              <span className="text-lg font-bold text-gray-900">{results.effectiveRate}%</span>
+              <span className="text-lg font-bold text-gray-900">{results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</span>
             </div>
 
             {/* Declaration deadline */}

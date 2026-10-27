@@ -11,6 +11,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { formatFixed } from '../../utils/localeFormat';
 
 /**
  * Пороги минимальной достаточности (ПМД) ЕНПФ и доступный излишек на
@@ -131,7 +132,7 @@ ${t('enpf-threshold.results')}:
                 min={1000000}
                 max={50000000}
                 step={500000}
-                formatValue={(v) => `${(v / 1000000).toFixed(1)} млн ₸`}
+                formatValue={(v) => `${formatFixed(v / 1000000, 1)} млн ₸`}
                 color="#14b8a6"
               />
               <input

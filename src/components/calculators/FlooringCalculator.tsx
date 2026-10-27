@@ -10,7 +10,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 type Material = 'laminate' | 'parquet' | 'tile' | 'linoleum' | 'vinyl';
 
@@ -72,16 +72,16 @@ export default function FlooringCalculator() {
     const skirtingPrice = skirtingPacks * 1200;
 
     return {
-      area: area.toFixed(2),
-      withReserve: withReserve.toFixed(2),
+      area: formatFixed(area, 2),
+      withReserve: formatFixed(withReserve, 2),
       totalReserve,
       packs,
-      actualArea: actualArea.toFixed(2),
+      actualArea: formatFixed(actualArea, 2),
       totalCost: Math.round(totalCost),
       needsUnderlay,
-      underlayArea: underlayArea.toFixed(2),
+      underlayArea: formatFixed(underlayArea, 2),
       underlayPrice: Math.round(underlayPrice),
-      perimeter: perimeter.toFixed(2),
+      perimeter: formatFixed(perimeter, 2),
       skirtingLength,
       skirtingPacks,
       skirtingPrice: Math.round(skirtingPrice),

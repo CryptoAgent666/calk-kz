@@ -11,7 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 type Insulation = 'mineralWool' | 'foam' | 'xps' | 'pir' | 'ecowool';
 
@@ -93,16 +93,16 @@ export default function InsulationCalculator() {
 
     return {
       requiredR,
-      addR: addR.toFixed(2),
+      addR: formatFixed(addR, 2),
       thicknessCm: standardThicknessCm,
-      volume: volume.toFixed(2),
+      volume: formatFixed(volume, 2),
       materialCost: Math.round(materialCost),
       heatLossWithout: Math.round(heatLossWithout),
       heatLossWith: Math.round(heatLossWith),
       costWithout: Math.round(costWithout),
       costWith: Math.round(costWith),
       savingsPerYear: Math.round(savingsPerYear),
-      payback: payback.toFixed(1),
+      payback: Number(payback.toFixed(1)),
       savingsPercent: heatLossWithout > 0 ? ((heatLossWithout - heatLossWith) / heatLossWithout * 100).toFixed(0) : '0',
     };
   }, [insulation, region, area, currentR]);
@@ -131,7 +131,7 @@ export default function InsulationCalculator() {
                 <button key={m} onClick={() => setInsulation(m)}
                   className={`w-full p-3 rounded-lg border text-left ${insulation === m ? 'bg-cyan-50 border-cyan-500' : 'bg-white border-gray-300'}`}>
                   <div className="text-sm font-medium">{t(`insulation.materials.${m}`)}</div>
-                  <div className="text-xs text-gray-500">λ = {INSULATIONS[m].lambda} Вт/(м·К) • ~{INSULATIONS[m].pricePerM3.toLocaleString(NUMBER_LOCALE)} ₸/м³</div>
+                  <div className="text-xs text-gray-500">λ = {INSULATIONS[m].lambda.toLocaleString(NUMBER_LOCALE)} Вт/(м·К) • ~{INSULATIONS[m].pricePerM3.toLocaleString(NUMBER_LOCALE)} ₸/м³</div>
                 </button>
               ))}
             </div>
@@ -144,7 +144,7 @@ export default function InsulationCalculator() {
                 <button key={r} onClick={() => setRegion(r)}
                   className={`p-3 rounded-lg border text-sm ${region === r ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-white border-gray-300'}`}>
                   <div className="font-medium">{t(`insulation.regions.${r}`)}</div>
-                  <div className="text-xs opacity-75">R={REGION_R[r]}</div>
+                  <div className="text-xs opacity-75">R={REGION_R[r].toLocaleString(NUMBER_LOCALE)}</div>
                 </button>
               ))}
             </div>
@@ -194,7 +194,7 @@ export default function InsulationCalculator() {
                 <div className="text-sm text-green-800">({results.savingsPercent}% {t('insulation.less')})</div>
                 <div className="mt-3 pt-3 border-t border-green-300">
                   <div className="text-sm text-green-900">{t('insulation.payback')}:</div>
-                  <div className="text-2xl font-bold text-green-700">{results.payback} {t('insulation.years')}</div>
+                  <div className="text-2xl font-bold text-green-700">{formatFixed(results.payback, 1)} {t('insulation.years')}</div>
                 </div>
               </div>
             </>
@@ -212,7 +212,7 @@ export default function InsulationCalculator() {
                 { label: t('insulation.thickness'), value: `${results.thicknessCm} см` },
                 { label: t('insulation.materialCost'), value: `${results.materialCost.toLocaleString(NUMBER_LOCALE)} ₸` },
                 { label: t('insulation.savings'), value: `${results.savingsPerYear.toLocaleString(NUMBER_LOCALE)} ${t('insulation.perYear')}` },
-                { label: t('insulation.payback'), value: `${results.payback} ${pluralize(i18n.language, parseFloat(results.payback as any), 'год', 'года', 'лет')}` },
+                { label: t('insulation.payback'), value: `${formatFixed(results.payback, 1)} ${pluralize(i18n.language, results.payback, 'год', 'года', 'лет')}` },
               ]}],
               footer: 'Calk.kz'
             }}

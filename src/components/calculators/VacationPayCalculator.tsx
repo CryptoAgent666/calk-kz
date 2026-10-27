@@ -15,7 +15,9 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function VacationPayCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
+  const mrp = i18n.language === 'kk' ? 'АЕК' : 'МРП';
+  const mzp = i18n.language === 'kk' ? 'ЕТЖ' : 'МЗП';
 
   const [monthlyIncome, setMonthlyIncome] = useState<string>('250000');
   const [workMonths, setWorkMonths] = useState<number>(12);
@@ -262,12 +264,12 @@ export default function VacationPayCalculator() {
             <div className="bg-emerald-50 rounded-lg p-4">
               <h3 className="text-sm font-medium text-emerald-900 mb-2">{t('vacation-pay.currentRates')}</h3>
               <div className="text-xs text-emerald-800 space-y-1">
-                <div>• {t('vacation-pay.opvRate')}: 10% ({t('vacation-pay.maxBase')} 50 МЗП)</div>
-                <div>• {t('vacation-pay.vosmsRate')}: 2% ({t('vacation-pay.maxBase')} 20 МЗП)</div>
+                <div>• {t('vacation-pay.opvRate')}: 10% ({t('vacation-pay.maxBase')} 50 {mzp})</div>
+                <div>• {t('vacation-pay.vosmsRate')}: 2% ({t('vacation-pay.maxBase')} 20 {mzp})</div>
                 <div>• {t('vacation-pay.ipnRate')}: 10%</div>
-                <div>• {t('vacation-pay.standardDeductionInfo')}: 30 МРП ({formatNumber(STANDARD_DEDUCTION)})</div>
-                <div>• МРП 2026: {formatNumber(MRP)}</div>
-                <div>• МЗП 2026: {formatNumber(MZP)}</div>
+                <div>• {t('vacation-pay.standardDeductionInfo')}: 30 {mrp} ({formatNumber(STANDARD_DEDUCTION)})</div>
+                <div>• {mrp} 2026: {formatNumber(MRP)}</div>
+                <div>• {mzp} 2026: {formatNumber(MZP)}</div>
               </div>
             </div>
           </div>
@@ -304,7 +306,7 @@ export default function VacationPayCalculator() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="opacity-90">{t('vacation-pay.effectiveRate')}:</span>
-                    <span className="font-semibold">{results.effectiveRate}%</span>
+                    <span className="font-semibold">{results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</span>
                   </div>
                 </div>
               </>
@@ -329,7 +331,7 @@ export default function VacationPayCalculator() {
                       <span className="ml-1 text-xs text-gray-400">{t('vacation-pay.approx')}</span>
                     )}
                   </span>
-                  <span className="font-semibold text-gray-900">{results.paidWorkingDays}</span>
+                  <span className="font-semibold text-gray-900">{results.paidWorkingDays.toLocaleString(NUMBER_LOCALE)}</span>
                 </div>
 
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -387,7 +389,7 @@ export default function VacationPayCalculator() {
 
                 <div className="text-center p-3 bg-gray-50 rounded">
                   <div className="text-sm text-gray-600">{t('vacation-pay.effectiveRate')}</div>
-                  <div className="text-lg font-bold text-gray-900">{results.effectiveRate}%</div>
+                  <div className="text-lg font-bold text-gray-900">{results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</div>
                 </div>
               </div>
             </div>

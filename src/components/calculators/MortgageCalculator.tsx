@@ -12,6 +12,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { pluralize } from '../../utils/pluralize';
+import { formatFixed, NUMBER_LOCALE } from '../../utils/localeFormat';
 
 interface MortgageProgram {
   id: string;
@@ -313,7 +314,7 @@ export default function MortgageCalculator() {
   };
 
   const formatPercent = (num: number) => {
-    return num.toFixed(2) + '%';
+    return formatFixed(num, 2) + '%';
   };
 
   // Синхронный расчёт: значения готовы уже на ПЕРВОМ рендере, поэтому
@@ -574,7 +575,7 @@ export default function MortgageCalculator() {
                     <div>• {t('mortgage.insuranceYearly')}: {selectedProgramData.additionalFees.yearlyInsurance}% {t('mortgage.perYearOfLoan')}</div>
                   )}
                   {selectedProgramData?.additionalFees.monthlyInsurance && (
-                    <div>• {t('mortgage.insuranceMonthly')}: {selectedProgramData.additionalFees.monthlyInsurance}% {t('mortgage.perMonthOfBalance')}</div>
+                    <div>• {t('mortgage.insuranceMonthly')}: {selectedProgramData.additionalFees.monthlyInsurance.toLocaleString(NUMBER_LOCALE)}% {t('mortgage.perMonthOfBalance')}</div>
                   )}
                 </div>
               </div>

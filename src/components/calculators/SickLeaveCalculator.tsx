@@ -12,7 +12,7 @@ import { TaxPieChart } from '../ui/ChartComponents';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 import {
   AVG_WORKING_DAYS_PER_MONTH,
   MAX_WORKING_DAYS_IN_MONTH,
@@ -181,7 +181,7 @@ ${t('sick-leave.deductions')}:
 • ${t('sick-leave.ipn')} (10%): ${formatNumber(results.ipn)}
 • ${t('sick-leave.vosms')} (2%): ${formatNumber(results.vosms)}
 • ${t('sick-leave.totalDeductions')}: ${formatNumber(results.totalDeductions)}
-• ${t('sick-leave.effectiveRate')}: ${results.effectiveRate}%
+• ${t('sick-leave.effectiveRate')}: ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
 
 ${t('sick-leave.finalPayment')}:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -447,7 +447,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                         <span className="text-red-600">{formatNumber(results.totalDeductions)}</span>
                       </div>
                       <div className="text-xs text-gray-500 text-right">
-                        {t('sick-leave.effectiveRateLabel')}: {results.effectiveRate}%
+                        {t('sick-leave.effectiveRateLabel')}: {results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
                       </div>
                     </div>
                   </div>
@@ -555,7 +555,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-gray-600">{t('sick-leave.netPayment')}</span>
                       <span className="font-semibold text-green-600">
-                        {((results.netBenefit / results.grossBenefit) * 100).toFixed(1)}%
+                        {formatFixed((results.netBenefit / results.grossBenefit) * 100, 1)}%
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -569,7 +569,7 @@ ${t('sick-leave.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-gray-600">{t('sick-leave.deductionsLabel')}</span>
-                      <span className="font-semibold text-red-600">{results.effectiveRate}%</span>
+                      <span className="font-semibold text-red-600">{results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div

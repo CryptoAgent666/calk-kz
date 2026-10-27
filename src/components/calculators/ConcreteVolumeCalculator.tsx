@@ -12,6 +12,7 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 import { ExportButtons } from '../ui/ExportButtons';
 import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
+import { formatFixed } from '../../utils/localeFormat';
 
 type Shape = 'slab' | 'column' | 'foundation' | 'stairs';
 
@@ -87,8 +88,8 @@ export default function ConcreteVolumeCalculator() {
     const cementBags = Math.ceil(cement / 50);
 
     return {
-      volume: volume.toFixed(3),
-      volumeWithReserve: volumeWithReserve.toFixed(3),
+      volume: formatFixed(volume, 3),
+      volumeWithReserve: formatFixed(volumeWithReserve, 3),
       cement: Math.round(cement),
       cementBags,
       sand: Math.round(sand),

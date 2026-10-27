@@ -12,6 +12,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { pluralize } from '../../utils/pluralize';
+import { formatFixed } from '../../utils/localeFormat';
 
 // Исламские операции — глава 7 Закона о банках № 258-VIII (ст. 33–44): их ведут исламские банки
 // и банки с универсальной лицензией («исламские окна», ст. 34).
@@ -106,7 +107,7 @@ export default function IslamicMortgageCalculator() {
       overpayment: Math.round(overpayment),
       markupCoefficient: markupCoefficient.toFixed(0),
       totalWithDown: Math.round(totalToPay + downAmount),
-      effectiveRate: effectiveRate.toFixed(2),
+      effectiveRate: formatFixed(effectiveRate, 2),
       conventionalRate,
       convMonthly: Math.round(convMonthly),
       convOverpayment: Math.round(convOverpayment),

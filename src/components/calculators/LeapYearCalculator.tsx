@@ -7,6 +7,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { ExportButtons } from '../ui/ExportButtons';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function LeapYearCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -540,7 +541,7 @@ export default function LeapYearCalculator() {
                         <div className="text-sm text-gray-600">{t('leap-year.totalYears')}</div>
                       </div>
                       <div>
-                        <div className="text-2xl font-bold text-teal-700">{results.frequency}%</div>
+                        <div className="text-2xl font-bold text-teal-700">{results.frequency.toLocaleString(NUMBER_LOCALE)}%</div>
                         <div className="text-sm text-gray-600">{t('leap-year.frequency')}</div>
                       </div>
                     </div>

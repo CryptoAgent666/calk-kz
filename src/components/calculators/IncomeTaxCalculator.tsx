@@ -14,6 +14,7 @@ import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { SOCIAL_DEDUCTION_ANNUAL, type SocialDeduction } from '../../utils/salary2026';
+import { formatFixed, NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function IncomeTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -138,11 +139,11 @@ export default function IncomeTaxCalculator() {
           { label: t('income-tax.ipn'), value: formatNumber(results.incomeTax) },
           { label: t('income-tax.totalDeductions'), value: formatNumber(results.totalDeductions) },
           { label: t('income-tax.netSalary'), value: formatNumber(results.netSalary) },
-          { label: t('income-tax.effectiveRate'), value: `${results.effectiveRate}%` },
+          { label: t('income-tax.effectiveRate'), value: `${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%` },
         ]
       }
     ],
-    footer: 'calk.kz — Калькуляторы Казахстана'
+    footer: t('common:buttons.calculatedOn')
   };
 
   // FAQ данные
@@ -193,7 +194,7 @@ export default function IncomeTaxCalculator() {
     { key: 'incomeTax', label: t('income-tax.chart.ipn'), format: formatNumber },
     { key: 'totalDeductions', label: t('income-tax.scenarios.totalDeductions'), format: formatNumber },
     { key: 'netSalary', label: t('income-tax.chart.netSalary'), format: formatNumber, highlight: true, higherIsBetter: true },
-    { key: 'effectiveRate', label: t('income-tax.scenarios.effectiveRate'), format: (v: number) => `${v.toFixed(2)}%`, higherIsBetter: false },
+    { key: 'effectiveRate', label: t('income-tax.scenarios.effectiveRate'), format: (v: number) => `${formatFixed(v, 2)}%`, higherIsBetter: false },
   ];
 
   const calculateScenarioResults = (params: Record<string, number | string>) => {
@@ -225,7 +226,7 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
 - ${t('income-tax.ipn')}: ${formatNumber(results.incomeTax)}${results.hasNinetyPercentReduction ? ' ' + t('income-tax.withBenefit') : ''}
 - ${t('income-tax.totalDeductions')}: ${formatNumber(results.totalDeductions)}
 - ${t('income-tax.netSalary')}: ${formatNumber(results.netSalary)}
-- ${t('income-tax.effectiveRate')}: ${results.effectiveRate}%`;
+- ${t('income-tax.effectiveRate')}: ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%`;
   };
 
   return (
@@ -348,7 +349,7 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
               <button
                 onClick={() => setShowCharts(!showCharts)}
                 className={`p-2 rounded-lg transition-colors ${showCharts ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
-                title={showCharts ? 'Скрыть диаграмму' : 'Показать диаграмму'}
+                title={i18n.language === 'kk' ? (showCharts ? 'Диаграмманы жасыру' : 'Диаграмманы көрсету') : (showCharts ? 'Скрыть диаграмму' : 'Показать диаграмму')}
               >
                 <BarChart3 className="w-5 h-5" />
               </button>
@@ -431,7 +432,7 @@ ${results.standardDeduction > 0 ? `- ${t('income-tax.standardDeduction')}: ${for
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="p-4 bg-gray-50 rounded-lg text-center">
                 <h3 className="text-sm font-medium text-gray-700 mb-1">{t('income-tax.effectiveRate')}</h3>
-                <div className="text-xl font-bold text-gray-900">{results.effectiveRate}%</div>
+                <div className="text-xl font-bold text-gray-900">{results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%</div>
               </div>
               <div className="p-4 bg-blue-50 rounded-lg text-center">
                 <h3 className="text-sm font-medium text-blue-700 mb-1">{t('income-tax.taxableIncome')}</h3>

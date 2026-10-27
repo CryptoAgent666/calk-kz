@@ -10,7 +10,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
 import { TaxPieChart } from '../ui/ChartComponents';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 import { getSources } from '../../data/calculatorSources';
 
 /** Пороги уровня — на ОДНОГО проживающего; для квартиры умножаются на число проживающих. */
@@ -192,7 +192,7 @@ export default function ElectricityBillCalculator() {
   };
 
   const formatRate = (rate: number) => {
-    return rate.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) + ' ₸/кВт·ч';
+    return rate.toLocaleString('ru-KZ', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) + ` ₸/${t('common:exportDoc.kwh')}`;
   };
 
   const selectedCityData = cityTariffs.find(c => c.id === city);
@@ -249,7 +249,7 @@ export default function ElectricityBillCalculator() {
                 min={0}
                 max={1000}
                 step={10}
-                formatValue={(v) => `${v} кВт·ч`}
+                formatValue={(v) => `${v} ${t('common:exportDoc.kwh')}`}
                 color="#eab308"
               />
               <div className="relative mt-3">
@@ -263,7 +263,7 @@ export default function ElectricityBillCalculator() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">кВт·ч</span>
+                  <span className="text-gray-500 text-sm">{t('common:exportDoc.kwh')}</span>
                 </div>
               </div>
             </div>
@@ -346,7 +346,7 @@ export default function ElectricityBillCalculator() {
               </div>
               {consumption && parseFloat(consumption) > 0 && (
                 <div className="text-sm text-gray-600">
-                  {t('electricity.averageTariff')}: {formatRate(results.averageRate)} {t('electricity.for')} {consumption} кВт·ч
+                  {t('electricity.averageTariff')}: {formatRate(results.averageRate)} {t('electricity.for')} {consumption} {t('common:exportDoc.kwh')}
                 </div>
               )}
             </div>
@@ -363,7 +363,7 @@ export default function ElectricityBillCalculator() {
                             {t('electricity.level')} {item.tier}: {item.label}
                           </div>
                           <div className="text-sm text-gray-600">
-                            {item.consumption.toFixed(1)} кВт·ч × {formatRate(item.rate)}
+                            {formatFixed(item.consumption, 1)} {t('common:exportDoc.kwh')} × {formatRate(item.rate)}
                           </div>
                         </div>
                         <div className="text-right">

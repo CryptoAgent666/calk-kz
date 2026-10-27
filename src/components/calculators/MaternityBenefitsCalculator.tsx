@@ -11,7 +11,7 @@ import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { FAQSection, MethodologySection } from '../ui/FAQSection';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, formatFixed } from '../../utils/localeFormat';
 
 // Продолжительность отпуска по беременности и родам, ст. 99 ТК РК (дни / 30 = коэффициент):
 //   обычные — 126 (70+56); осложнённые/оперативные или 2+ детей — 140 (+14);
@@ -127,7 +127,7 @@ export default function MaternityBenefitsCalculator() {
   };
 
   const formatMRP = (mrpAmount: number) => {
-    return `${mrpAmount} ${t('maternity-benefits.mrp')} (${formatNumber(mrpAmount * MRP)})`;
+    return `${mrpAmount.toLocaleString(NUMBER_LOCALE)} ${t('maternity-benefits.mrp')} (${formatNumber(mrpAmount * MRP)})`;
   };
 
   return (
@@ -222,7 +222,7 @@ export default function MaternityBenefitsCalculator() {
                     >
                       <div className="text-sm font-medium">{t(`maternity-benefits.birthType.${bt}`)}</div>
                       <div className="text-xs text-gray-500">
-                        {BIRTH_DAYS[bt]} {t('maternity-benefits.daysShort')} · ×{(BIRTH_DAYS[bt] / 30).toFixed((BIRTH_DAYS[bt] * 10) % 30 === 0 ? 1 : 3)}
+                        {BIRTH_DAYS[bt]} {t('maternity-benefits.daysShort')} · ×{formatFixed(BIRTH_DAYS[bt] / 30, (BIRTH_DAYS[bt] * 10) % 30 === 0 ? 1 : 3)}
                       </div>
                     </button>
                   ))}
@@ -367,7 +367,7 @@ export default function MaternityBenefitsCalculator() {
                   <span>{t('maternity-benefits.maternityLumpSum')}</span>
                 </h3>
                 <p className="text-xs text-gray-500 mb-3">
-                  {t(`maternity-benefits.birthType.${birthType}`)}: {maternityDays} {t('maternity-benefits.daysShort')} (×{MATERNITY_COEFFICIENT.toFixed(MATERNITY_COEFFICIENT % 1 === 0 || (MATERNITY_COEFFICIENT * 10) % 1 === 0 ? 1 : 3)})
+                  {t(`maternity-benefits.birthType.${birthType}`)}: {maternityDays} {t('maternity-benefits.daysShort')} (×{formatFixed(MATERNITY_COEFFICIENT, MATERNITY_COEFFICIENT % 1 === 0 || (MATERNITY_COEFFICIENT * 10) % 1 === 0 ? 1 : 3)})
                 </p>
 
                 <div className="space-y-2">

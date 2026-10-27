@@ -8,6 +8,7 @@ import { EmbedWidget } from '../ui/EmbedWidget';
 import { RangeSlider } from '../ui/RangeSlider';
 import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, ComparisonBarChart } from '../ui/ChartComponents';
+import { formatFixed } from '../../utils/localeFormat';
 
 interface CityGasData {
   id: string;
@@ -330,7 +331,7 @@ export default function GasBillCalculator() {
                       : 'text-green-600'
                   }`}>
                     {parseFloat(gasConsumption) > results.averageConsumption ? '+' : ''}
-                    {((parseFloat(gasConsumption) / results.averageConsumption - 1) * 100).toFixed(1)}%
+                    {formatFixed((parseFloat(gasConsumption) / results.averageConsumption - 1) * 100, 1)}%
                   </span>
                 </div>
               </div>
@@ -420,7 +421,7 @@ export default function GasBillCalculator() {
           }))}
           dataKeys={[
             { key: 'tariff', name: 'Тариф (₸/м³)', color: '#f97316' },
-            { key: 'avgBill', name: 'Средний счёт (₸)', color: '#3b82f6' }
+            { key: 'avgBill', name: i18n.language === 'kk' ? 'Орташа шот (₸)' : 'Средний счёт (₸)', color: '#3b82f6' }
           ]}
           title={i18n.language === 'kk' ? 'Қалалар бойынша тарифтерді салыстыру' : 'Сравнение тарифов по городам'}
           height={300}

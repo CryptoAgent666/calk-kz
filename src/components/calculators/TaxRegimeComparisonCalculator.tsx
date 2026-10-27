@@ -11,6 +11,7 @@ import { ComparisonBarChart } from '../ui/ChartComponents';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { MZP_2026, calculateIpSelfPayments2026 } from '../../utils/ipSelfPayments2026';
+import { formatFixed } from '../../utils/localeFormat';
 
 const MRP = 4_325;
 
@@ -154,7 +155,7 @@ export default function TaxRegimeComparisonCalculator() {
             { label: t('tax-regime.taxAmount'), value: formatCurrency(r.tax) },
             { label: t('tax-regime.socialPayments'), value: formatCurrency(r.socialPayments) },
             { label: t('tax-regime.totalPayments'), value: formatCurrency(r.total) },
-            { label: t('tax-regime.effectiveRate'), value: r.effectiveRate.toFixed(1) + '%' },
+            { label: t('tax-regime.effectiveRate'), value: formatFixed(r.effectiveRate, 1) + '%' },
           ],
         })),
       ],
@@ -205,7 +206,7 @@ export default function TaxRegimeComparisonCalculator() {
                 min={100000}
                 max={10000000}
                 step={100000}
-                formatValue={(v) => `${(v / 1000000).toFixed(1)} ${t('tax-regime.mln')}`}
+                formatValue={(v) => `${formatFixed(v / 1000000, 1)} ${t('tax-regime.mln')}`}
                 color="#6366f1"
               />
               <div className="relative mt-3">
@@ -233,7 +234,7 @@ export default function TaxRegimeComparisonCalculator() {
                 min={0}
                 max={parseFloat(monthlyRevenue) || 5000000}
                 step={50000}
-                formatValue={(v) => `${(v / 1000000).toFixed(1)} ${t('tax-regime.mln')}`}
+                formatValue={(v) => `${formatFixed(v / 1000000, 1)} ${t('tax-regime.mln')}`}
                 color="#6366f1"
               />
               <div className="relative mt-3">
@@ -316,7 +317,7 @@ export default function TaxRegimeComparisonCalculator() {
                     {t(`tax-regime.regimes.${bestRegime.regimeKey}`)}
                   </div>
                   <div className="text-sm text-green-600">
-                    {formatCurrency(bestRegime.total)}/{t('tax-regime.month')} ({bestRegime.effectiveRate.toFixed(1)}%)
+                    {formatCurrency(bestRegime.total)}/{t('tax-regime.month')} ({formatFixed(bestRegime.effectiveRate, 1)}%)
                   </div>
                 </div>
               )}
@@ -358,7 +359,7 @@ export default function TaxRegimeComparisonCalculator() {
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-bold text-gray-900">{formatCurrency(r.total)}</div>
-                      <div className="text-xs text-gray-500">{r.effectiveRate.toFixed(1)}% {t('tax-regime.ofRevenue')}</div>
+                      <div className="text-xs text-gray-500">{formatFixed(r.effectiveRate, 1)}% {t('tax-regime.ofRevenue')}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
