@@ -46,13 +46,14 @@ function fromRoman(s: string): number {
   return toRoman(total) === upper ? total : 0;
 }
 
+// Подписи — ключи i18n: «Текущий год» по-русски висел и на казахской странице и устаревал с 2027
 const EXAMPLES: { n: number; label: string }[] = [
-  { n: 2026, label: 'Текущий год' },
-  { n: 1999, label: '1999' },
-  { n: 2000, label: 'Миллениум' },
-  { n: 500, label: 'D' },
-  { n: 100, label: 'C' },
-  { n: 50, label: 'L' },
+  { n: 2026, label: 'y2026' },
+  { n: 1994, label: 'n1994' },
+  { n: 2000, label: 'millennium' },
+  { n: 3999, label: 'max' },
+  { n: 444, label: 'subtractive' },
+  { n: 21, label: 'century' },
 ];
 
 export default function RomanNumeralsCalculator() {
@@ -64,8 +65,9 @@ export default function RomanNumeralsCalculator() {
 
   const result = useMemo(() => {
     if (mode === 'toRoman') {
-      const n = parseInt(arabicInput);
-      if (isNaN(n) || n < 1 || n > 3999) return { value: '', error: t('roman-numerals.errorRange') };
+      // Только целые: parseInt молча превращал «12.7» в XII, а «1e3» — в I
+      const n = Number(arabicInput.trim());
+      if (!Number.isInteger(n) || n < 1 || n > 3999) return { value: '', error: t('roman-numerals.errorRange') };
       return { value: toRoman(n), error: '' };
     } else {
       const n = fromRoman(romanInput);
@@ -148,7 +150,7 @@ export default function RomanNumeralsCalculator() {
                 onClick={() => { setMode('toRoman'); setArabicInput(String(ex.n)); }}
                 className="p-2 bg-gray-50 hover:bg-amber-50 rounded-lg text-sm text-left">
                 <div className="font-mono font-semibold">{ex.n} = {toRoman(ex.n)}</div>
-                <div className="text-xs text-gray-500">{ex.label}</div>
+                <div className="text-xs text-gray-500">{t(`roman-numerals.exampleLabels.${ex.label}`)}</div>
               </button>
             ))}
           </div>
@@ -159,7 +161,8 @@ export default function RomanNumeralsCalculator() {
           <div className="grid grid-cols-4 gap-2 text-sm font-mono text-blue-900">
             <div>I = 1</div><div>V = 5</div><div>X = 10</div><div>L = 50</div>
             <div>C = 100</div><div>D = 500</div><div>M = 1000</div>
-            <div>IV = 4</div>
+            <div>IV = 4</div><div>IX = 9</div><div>XL = 40</div><div>XC = 90</div>
+            <div>CD = 400</div><div>CM = 900</div>
           </div>
         </div>
       </div>

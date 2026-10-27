@@ -102,6 +102,7 @@ async function primeRouteChunk(): Promise<void> {
 const VOLATILE_IDS = new Set([
   'date-calculator', 'currency-converter', 'password-generator', 'qr-code-generator',
   'age', 'statute-limitations',
+  'leap-year', // текущий год, диапазон и «последнее 29 февраля» — от new Date(): после 1 января статика ≠ клиенту
 ]);
 
 function routeCalculatorId(): string | null {

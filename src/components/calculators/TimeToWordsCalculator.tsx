@@ -21,6 +21,20 @@ const RU_HOUR_GENITIVE: Record<number, string> = {
   7: 'седьмого', 8: 'восьмого', 9: 'девятого', 10: 'десятого', 11: 'одиннадцатого', 12: 'двенадцатого'
 };
 
+// Часть суток для 12-часового формата: «два часа дня», «час ночи».
+const RU_PERIOD = (h: number) => (h < 4 ? 'ночи' : h < 12 ? 'утра' : h < 17 ? 'дня' : 'вечера');
+// «таңғы сағат алты», «кешкі сағат жеті» — определение ставится перед «сағат».
+const KK_PERIOD = (h: number) => (h < 4 ? 'түнгі' : h < 12 ? 'таңғы' : h < 17 ? 'күндізгі' : 'кешкі');
+// «сағат үштен он минут өтті» (исходный падеж), «сағат төртке он бес минут қалды» (барыс)
+const KK_HOUR_ABLATIVE: Record<number, string> = {
+  1: 'бірден', 2: 'екіден', 3: 'үштен', 4: 'төрттен', 5: 'бестен', 6: 'алтыдан',
+  7: 'жетіден', 8: 'сегізден', 9: 'тоғыздан', 10: 'оннан', 11: 'он бірден', 12: 'он екіден'
+};
+const KK_HOUR_DATIVE: Record<number, string> = {
+  1: 'бірге', 2: 'екіге', 3: 'үшке', 4: 'төртке', 5: 'беске', 6: 'алтыға',
+  7: 'жетіге', 8: 'сегізге', 9: 'тоғызға', 10: 'онға', 11: 'он бірге', 12: 'он екіге'
+};
+
 interface ConversionHistory {
   id: string;
   time: string;
@@ -62,7 +76,7 @@ export default function TimeToWordsCalculator() {
         minute: ['минута', 'минуты', 'минут'],
         second: ['секунда', 'секунды', 'секунд']
       },
-      periods: { am: 'утра', pm: 'вечера', noon: 'полдень', midnight: 'полночь' }
+      periods: { noon: 'полдень', midnight: 'полночь' }
     },
     kz: {
       hours: {
@@ -83,7 +97,7 @@ export default function TimeToWordsCalculator() {
         minute: 'минут',
         second: 'секунд'
       },
-      periods: { am: 'таңертең', pm: 'кешкі', noon: 'түс', midnight: 'түн жарымы' }
+      periods: { noon: 'талтүс', midnight: 'түн жарымы' }
     },
     en: {
       hours: {
@@ -104,7 +118,7 @@ export default function TimeToWordsCalculator() {
         minute: ['minute', 'minutes'],
         second: ['second', 'seconds']
       },
-      periods: { am: 'AM', pm: 'PM', noon: 'noon', midnight: 'midnight' }
+      periods: { noon: 'noon', midnight: 'midnight' }
     }
   };
 
@@ -193,143 +207,92 @@ export default function TimeToWordsCalculator() {
     }
 
     const dict = timeNumbers[language];
+    const is12h = timeFormat === '12h';
+    // Разговорные обороты — по 12-часовому циферблату: «половина третьего» в 14:30.
+    const hour12 = hours % 12 || 12;
+    const nextHour12 = (hours + 1) % 12 || 12;
+    const nextHour24 = (hours + 1) % 24;
+    const minutesWord = convertMinutesToWords(minutes, language);
 
-    // Формальный стиль (24-часовой формат)
+    // Официальный стиль: 24 часа — как в документах («четырнадцать часов тридцать минут»),
+    // 12 часов — с частью суток («два часа тридцать минут дня»).
     let formal = '';
     let colloquial = '';
 
     if (language === 'ru') {
-      // Русский язык
-      const hoursWord = dict.hours[hours];
-      const minutesWord = convertMinutesToWords(minutes, language);
-      const hoursForm = getWordFormRu(hours, dict.forms.hour);
-      const minutesForm = getWordFormRu(minutes, dict.forms.minute);
-
-      formal = `${hoursWord} ${hoursForm}`;
-      if (minutes > 0) {
-        formal += ` ${minutesWord} ${minutesForm}`;
-      }
+      const minutesPart = minutes > 0 ? ` ${minutesWord} ${getWordFormRu(minutes, dict.forms.minute)}` : '';
+      // «час дня», а не «один час дня»
+      const hour12Phrase = hour12 === 1 ? 'час' : `${dict.hours[hour12]} ${getWordFormRu(hour12, dict.forms.hour)}`;
+      formal = is12h
+        ? `${hour12Phrase}${minutesPart} ${RU_PERIOD(hours)}`
+        : `${dict.hours[hours]} ${getWordFormRu(hours, dict.forms.hour)}${minutesPart}`;
       if (includeSeconds && seconds > 0) {
-        const secondsWord = dict.minutes[seconds] || convertMinutesToWords(seconds, language);
-        const secondsForm = getWordFormRu(seconds, dict.forms.second);
-        formal += ` ${secondsWord} ${secondsForm}`;
+        formal += ` ${convertMinutesToWords(seconds, language)} ${getWordFormRu(seconds, dict.forms.second)}`;
       }
 
-      // Разговорный стиль
-      if (timeFormat === '12h') {
-        const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-        const period = hours < 12 ? dict.periods.am : dict.periods.pm;
-
-        if (hours === 0 && minutes === 0) {
-          colloquial = dict.periods.midnight;
-        } else if (hours === 12 && minutes === 0) {
-          colloquial = dict.periods.noon;
-        } else {
-          const hour12Word = dict.hours[hour12];
-          colloquial = `${hour12Word} ${getWordFormRu(hour12, dict.forms.hour)}`;
-          if (minutes > 0) {
-            colloquial += ` ${minutesWord} ${minutesForm}`;
-          }
-          colloquial += ` ${period}`;
-        }
+      const period = (h: number) => (is12h ? ` ${RU_PERIOD(h)}` : '');
+      if (minutes === 0 && (hours === 0 || hours === 12)) {
+        colloquial = hours === 0 ? dict.periods.midnight : dict.periods.noon;
+      } else if (minutes === 0) {
+        colloquial = is12h ? `${hour12Phrase}${period(hours)}` : `${dict.hours[hours]} ${getWordFormRu(hours, dict.forms.hour)} ровно`;
+      } else if (minutes === 15) {
+        colloquial = `четверть ${RU_HOUR_GENITIVE[nextHour12]}${period(hours)}`;
+      } else if (minutes === 30) {
+        colloquial = `половина ${RU_HOUR_GENITIVE[nextHour12]}${period(hours)}`;
+      } else if (minutes === 45) {
+        colloquial = `без четверти ${nextHour12 === 1 ? 'час' : dict.hours[nextHour12]}${period(nextHour24)}`;
       } else {
-        // Разговорные варианты для 24-часового
-        // «половина третьего» в 14:30: следующий час по 12-часовому циферблату,
-        // порядковое в родительном; «без четверти» — количественное («без четверти три»)
-        const nextHour12 = (hours + 1) % 12 || 12;
-        if (minutes === 0) {
-          colloquial = `${hoursWord} ${getWordFormRu(hours, dict.forms.hour)} ровно`;
-        } else if (minutes === 15) {
-          colloquial = `четверть ${RU_HOUR_GENITIVE[nextHour12]}`;
-        } else if (minutes === 30) {
-          colloquial = `половина ${RU_HOUR_GENITIVE[nextHour12]}`;
-        } else if (minutes === 45) {
-          colloquial = `без четверти ${nextHour12 === 1 ? 'час' : dict.hours[nextHour12]}`;
-        } else {
-          colloquial = formal;
-        }
+        colloquial = is12h ? `${hour12Phrase}${minutesPart}${period(hours)}` : formal;
       }
     } else if (language === 'kz') {
-      // Казахский язык
-      const hoursWord = dict.hours[hours];
-      const minutesWord = convertMinutesToWords(minutes, language);
-
-      formal = `${hoursWord} ${dict.forms.hour}`;
-      if (minutes > 0) {
-        formal += ` ${minutesWord} ${dict.forms.minute}`;
-      }
+      const minutesPart = minutes > 0 ? ` ${minutesWord} ${dict.forms.minute}` : '';
+      formal = is12h
+        ? `${KK_PERIOD(hours)} ${dict.forms.hour} ${dict.hours[hour12]}${minutesPart}`
+        : `${dict.hours[hours]} ${dict.forms.hour}${minutesPart}`;
       if (includeSeconds && seconds > 0) {
-        const secondsWord = convertMinutesToWords(seconds, language);
-        formal += ` ${secondsWord} ${dict.forms.second}`;
+        formal += ` ${convertMinutesToWords(seconds, language)} ${dict.forms.second}`;
       }
 
-      // Разговорный стиль (казахский обычно более формальный)
-      if (timeFormat === '12h') {
-        const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-        const period = hours < 12 ? dict.periods.am : dict.periods.pm;
-
-        if (hours === 0 && minutes === 0) {
-          colloquial = dict.periods.midnight;
-        } else if (hours === 12 && minutes === 0) {
-          colloquial = dict.periods.noon;
-        } else {
-          const hour12Word = dict.hours[hour12];
-          colloquial = `${period} ${hour12Word} ${dict.forms.hour}`;
-          if (minutes > 0) {
-            colloquial += ` ${minutesWord} ${dict.forms.minute}`;
-          }
-        }
+      const prefix = (h: number) => (is12h ? `${KK_PERIOD(h)} ${dict.forms.hour}` : dict.forms.hour);
+      if (minutes === 0 && (hours === 0 || hours === 12)) {
+        colloquial = hours === 0 ? dict.periods.midnight : dict.periods.noon;
+      } else if (minutes === 0) {
+        colloquial = `${prefix(hours)} ${dict.hours[hour12]}`;
+      } else if (minutes === 30) {
+        colloquial = `${prefix(hours)} ${dict.hours[hour12]} жарым`;
+      } else if (minutes < 40) {
+        colloquial = `${prefix(hours)} ${KK_HOUR_ABLATIVE[hour12]} ${minutesWord} ${dict.forms.minute} өтті`;
       } else {
-        colloquial = formal;
+        colloquial = `${prefix(nextHour24)} ${KK_HOUR_DATIVE[nextHour12]} ${convertMinutesToWords(60 - minutes, language)} ${dict.forms.minute} қалды`;
       }
     } else {
-      // Английский язык
-      const hoursWord = dict.hours[hours];
-      const minutesWord = convertMinutesToWords(minutes, language);
-      const hoursForm = getWordFormEn(hours, dict.forms.hour);
-      const minutesForm = getWordFormEn(minutes, dict.forms.minute);
-
-      formal = `${hoursWord} ${hoursForm}`;
-      if (minutes > 0) {
-        formal += ` ${minutesWord} ${minutesForm}`;
-      }
+      // «fourteen thirty», «nine oh five», «fourteen hundred»; 12 часов — «two thirty PM»
+      const ampm = hours < 12 ? 'AM' : 'PM';
+      const minutesSpoken = minutes === 0 ? '' : ` ${minutes < 10 ? 'oh ' : ''}${minutesWord}`;
+      // 24 часа — как в армии и авиации: «zero nine fifteen», «zero one hundred»
+      const hours24Spoken = hours === 0 ? 'zero' : hours < 10 ? `zero ${dict.hours[hours]}` : dict.hours[hours];
+      formal = is12h
+        ? `${dict.hours[hour12]}${minutesSpoken} ${ampm}`
+        : `${hours24Spoken}${minutes === 0 ? ' hundred' : minutesSpoken}`;
       if (includeSeconds && seconds > 0) {
-        const secondsWord = convertMinutesToWords(seconds, language);
-        const secondsForm = getWordFormEn(seconds, dict.forms.second);
-        formal += ` ${secondsWord} ${secondsForm}`;
+        formal += ` and ${convertMinutesToWords(seconds, language)} ${getWordFormEn(seconds, dict.forms.second)}`;
       }
 
-      // Разговорный стиль
-      if (timeFormat === '12h') {
-        const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-        const period = hours < 12 ? dict.periods.am : dict.periods.pm;
-
-        if (hours === 0 && minutes === 0) {
-          colloquial = dict.periods.midnight;
-        } else if (hours === 12 && minutes === 0) {
-          colloquial = dict.periods.noon;
-        } else {
-          const hour12Word = dict.hours[hour12];
-          colloquial = `${hour12Word} ${getWordFormEn(hour12, dict.forms.hour)}`;
-          if (minutes > 0) {
-            colloquial += ` ${minutesWord} ${minutesForm}`;
-          }
-          colloquial += ` ${period}`;
-        }
+      const period = (h: number) => (is12h
+        ? ` ${h < 4 ? 'at night' : h < 12 ? 'in the morning' : h < 17 ? 'in the afternoon' : 'in the evening'}`
+        : '');
+      if (minutes === 0 && (hours === 0 || hours === 12)) {
+        colloquial = hours === 0 ? dict.periods.midnight : dict.periods.noon;
+      } else if (minutes === 0) {
+        colloquial = `${dict.hours[hour12]} o'clock${period(hours)}`;
+      } else if (minutes === 15) {
+        colloquial = `quarter past ${dict.hours[hour12]}${period(hours)}`;
+      } else if (minutes === 30) {
+        colloquial = `half past ${dict.hours[hour12]}${period(hours)}`;
+      } else if (minutes === 45) {
+        colloquial = `quarter to ${dict.hours[nextHour12]}${period(nextHour24)}`;
       } else {
-        // Разговорные варианты
-        if (minutes === 0) {
-          colloquial = `${hoursWord} o'clock`;
-        } else if (minutes === 15) {
-          colloquial = `quarter past ${hoursWord}`;
-        } else if (minutes === 30) {
-          colloquial = `half past ${hoursWord}`;
-        } else if (minutes === 45) {
-          const nextHour = hours === 23 ? 0 : hours + 1;
-          colloquial = `quarter to ${dict.hours[nextHour]}`;
-        } else {
-          colloquial = formal;
-        }
+        colloquial = `${dict.hours[hour12]}${minutesSpoken}${period(hours)}`;
       }
     }
 

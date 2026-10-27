@@ -853,8 +853,8 @@ export const calculatorCategories: CalculatorCategory[] = [
       },
       {
         id: 'time-converter',
-        title: 'Конвертация единиц времени',
-        description: 'Преобразование между днями, неделями, месяцами, годами и другими единицами времени',
+        title: 'Конвертер времени',
+        description: 'Перевод секунд, минут, часов, дней, недель, месяцев и лет, время между двумя отметками, AM/PM',
         category: 'converters',
         icon: 'Clock',
         component: React.lazy(() => import('../components/calculators/TimeConverter'))

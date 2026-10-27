@@ -8,6 +8,7 @@ import { LastUpdated } from '../ui/LastUpdated';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { useMounted } from '../../hooks/useMounted';
+import { formatDayMonth, toUiLang, type UiLang } from '../../utils/localeFormat';
 
 interface TimezoneInfo {
   id: string;
@@ -42,15 +43,32 @@ function formatTime(date: Date, tz: string): string {
   return date.toLocaleTimeString('ru-RU', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
-function formatDate(date: Date, tz: string): string {
-  return date.toLocaleDateString('ru-RU', { timeZone: tz, weekday: 'short', day: '2-digit', month: 'short' });
+const WEEKDAYS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAYS: Record<UiLang, string[]> = {
+  ru: ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+  kk: ['жексенбі', 'дүйсенбі', 'сейсенбі', 'сәрсенбі', 'бейсенбі', 'жұма', 'сенбі'],
+};
+
+// Дата в поясе города своими массивами: 'kk-KZ' в Intl зависит от ICU браузера
+// (см. utils/localeFormat), а 'ru-RU' на казахской странице давал «вт, 27 окт.».
+function formatDate(date: Date, tz: string, lang: UiLang): string {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(date);
+  const get = (type: string) => parts.find(p => p.type === type)?.value ?? '';
+  const weekday = WEEKDAYS[lang][WEEKDAYS_EN.indexOf(get('weekday'))];
+  return `${weekday}, ${formatDayMonth(`${get('year')}-${get('month')}-${get('day')}`, lang)}`;
 }
 
+// Смещение в минутах: у Дели UTC+5:30, Math.round по часам давал «UTC+6».
 function getOffset(tz: string, now: Date): string {
   const utc = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
   const target = new Date(now.toLocaleString('en-US', { timeZone: tz }));
-  const diffHours = Math.round((target.getTime() - utc.getTime()) / (60 * 60 * 1000));
-  return `UTC${diffHours >= 0 ? '+' : ''}${diffHours}`;
+  const diffMin = Math.round((target.getTime() - utc.getTime()) / 60000);
+  const sign = diffMin < 0 ? '−' : '+';
+  const h = Math.floor(Math.abs(diffMin) / 60);
+  const m = Math.abs(diffMin) % 60;
+  return `UTC${sign}${h}${m ? ':' + String(m).padStart(2, '0') : ''}`;
 }
 
 export default function TimezoneCalculator() {
@@ -61,7 +79,6 @@ export default function TimezoneCalculator() {
   const mounted = useMounted();
   const [now, setNow] = useState(new Date());
   const [selected, setSelected] = useState<string[]>(['almaty', 'moscow', 'london', 'newyork']);
-  const [baseTz, setBaseTz] = useState<string>('almaty');
   const [customTime, setCustomTime] = useState<string>('');
 
   useEffect(() => {
@@ -71,11 +88,9 @@ export default function TimezoneCalculator() {
 
   const displayDate = useMemo(() => {
     if (!customTime) return now;
-    try {
-      return new Date(customTime);
-    } catch {
-      return now;
-    }
+    // Введённое время — по Казахстану (UTC+5), а не по часовому поясу браузера.
+    const d = new Date(`${customTime}:00+05:00`);
+    return Number.isNaN(d.getTime()) ? now : d;
   }, [customTime, now]);
 
   const toggleTimezone = (id: string) => {
@@ -126,7 +141,7 @@ export default function TimezoneCalculator() {
                 </div>
               </div>
               <div className="text-3xl font-bold text-sky-700 font-mono">{mounted ? formatTime(displayDate, tz.tz) : '--:--:--'}</div>
-              <div className="text-sm text-gray-600">{mounted ? formatDate(displayDate, tz.tz) : '\u00a0'}</div>
+              <div className="text-sm text-gray-600">{mounted ? formatDate(displayDate, tz.tz, toUiLang(i18n.language)) : '\u00a0'}</div>
             </div>
           );
         })}

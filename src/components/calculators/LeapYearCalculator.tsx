@@ -57,12 +57,13 @@ export default function LeapYearCalculator() {
     return next;
   };
 
+  // Нулевого года нет: для 1–4 года н. э. предыдущего високосного в календаре нет → 0 («—»)
   const findPreviousLeapYear = (year: number): number => {
     let prev = year - 1;
     while (!isLeapYear(prev) && prev > year - 8) {
       prev--;
     }
-    return prev;
+    return prev >= 1 ? prev : 0;
   };
 
   const getExplanation = (year: number): string => {
@@ -105,8 +106,9 @@ export default function LeapYearCalculator() {
   };
 
   const calculateRange = () => {
-    const start = parseInt(rangeStart) || 0;
-    const end = parseInt(rangeEnd) || 0;
+    // Годы 1–9999: без верхней границы диапазон 1…999 999 999 вешал вкладку
+    const start = Math.min(parseInt(rangeStart) || 0, 9999);
+    const end = Math.min(parseInt(rangeEnd) || 0, 9999);
 
     if (start === 0 || end === 0 || start > end) {
       return EMPTY_RANGE_RESULTS;
@@ -465,10 +467,10 @@ export default function LeapYearCalculator() {
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
                     <span className="text-gray-600">{t('leap-year.previousLeapYear')}</span>
                     <button
-                      onClick={() => setInputYear(results.previousLeapYear.toString())}
+                      onClick={() => results.previousLeapYear && setInputYear(results.previousLeapYear.toString())}
                       className="font-semibold text-blue-600 hover:text-blue-800 transition-colors"
                     >
-                      {results.previousLeapYear}
+                      {results.previousLeapYear || '—'}
                     </button>
                   </div>
 
@@ -774,22 +776,22 @@ export default function LeapYearCalculator() {
       </div>
 
       {/* Экспорт результатов */}
-      {inputYear && results.isLeapYear !== undefined && (
+      {results.year > 0 && (
         <div className="mt-8">
           <ExportButtons
             data={{
-              title: 'Проверка високосного года',
-              subtitle: `Год ${inputYear}`,
+              title: t('leap-year.title'),
+              subtitle: t('leap-year.export.subtitle', { year: results.year }),
               sections: [
                 {
-                  title: 'Результат',
+                  title: t('leap-year.export.result'),
                   data: [
-                    { label: 'Год', value: inputYear },
-                    { label: 'Високосный', value: results.isLeapYear ? 'Да (366 дней)' : 'Нет (365 дней)' },
+                    { label: t('leap-year.export.year'), value: String(results.year) },
+                    { label: t('leap-year.export.isLeap'), value: results.isLeapYear ? t('leap-year.export.yes') : t('leap-year.export.no') },
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('leap-year.export.footer')
             }}
             filename="leap-year-check"
           />
@@ -814,7 +816,7 @@ export default function LeapYearCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="leap-year"
-        calculatorTitle="Калькулятор високосного года"
+        calculatorTitle={t('leap-year.title')}
       />
       <LastUpdated calculatorId="leap-year" />
     </div>

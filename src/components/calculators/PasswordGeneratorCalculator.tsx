@@ -14,8 +14,29 @@ const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
 const DIGITS = '0123456789';
 const SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-const SIMILAR = 'il1Lo0O';
+const SIMILAR = 'iIl1Lo0O';
 
+/** Равномерное случайное число 0…max-1 без смещения остатка (отбрасываем «хвост» диапазона). */
+function randomIndex(max: number): number {
+  const limit = Math.floor(0x100000000 / max) * max;
+  const buf = new Uint32Array(1);
+  do {
+    crypto.getRandomValues(buf);
+  } while (buf[0] >= limit);
+  return buf[0] % max;
+}
+
+function charsets(useUpper: boolean, useLower: boolean, useDigits: boolean, useSymbols: boolean, excludeSimilar: boolean): string[] {
+  const sets: string[] = [];
+  if (useUpper) sets.push(UPPER);
+  if (useLower) sets.push(LOWER);
+  if (useDigits) sets.push(DIGITS);
+  if (useSymbols) sets.push(SYMBOLS);
+  return sets.map(set => (excludeSimilar ? set.split('').filter(c => !SIMILAR.includes(c)).join('') : set));
+}
+
+// В пароле есть хотя бы по одному символу каждого выбранного набора: иначе в 14,5% паролей
+// из 16 символов не было цифры, и сайты с обязательной цифрой их отклоняли.
 function generatePassword(
   length: number,
   useUpper: boolean,
@@ -24,21 +45,19 @@ function generatePassword(
   useSymbols: boolean,
   excludeSimilar: boolean
 ): string {
-  let chars = '';
-  if (useUpper) chars += UPPER;
-  if (useLower) chars += LOWER;
-  if (useDigits) chars += DIGITS;
-  if (useSymbols) chars += SYMBOLS;
-  if (excludeSimilar) chars = chars.split('').filter(c => !SIMILAR.includes(c)).join('');
+  const sets = charsets(useUpper, useLower, useDigits, useSymbols, excludeSimilar);
+  const chars = sets.join('');
   if (!chars) return '';
 
-  const arr = new Uint32Array(length);
-  crypto.getRandomValues(arr);
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars[arr[i] % chars.length];
+  const result: string[] = [];
+  if (length >= sets.length) sets.forEach(set => result.push(set[randomIndex(set.length)]));
+  while (result.length < length) result.push(chars[randomIndex(chars.length)]);
+  // Перемешивание Фишера — Йетса, чтобы обязательные символы не стояли в начале
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = randomIndex(i + 1);
+    [result[i], result[j]] = [result[j], result[i]];
   }
-  return result;
+  return result.join('');
 }
 
 interface StrengthInfo {
@@ -51,35 +70,29 @@ interface StrengthInfo {
   bar: string;
 }
 
-function calculateStrength(pw: string): StrengthInfo {
-  let score = 0;
-  if (pw.length >= 8) score += 1;
-  if (pw.length >= 12) score += 1;
-  if (pw.length >= 16) score += 1;
-  if (/[a-z]/.test(pw)) score += 1;
-  if (/[A-Z]/.test(pw)) score += 1;
-  if (/[0-9]/.test(pw)) score += 1;
-  if (/[^a-zA-Z0-9]/.test(pw)) score += 1;
+/** Энтропия случайного пароля, бит: длина × log2(размер алфавита генератора). */
+function passwordEntropy(length: number, alphabetSize: number): number {
+  return alphabetSize > 1 ? length * Math.log2(alphabetSize) : 0;
+}
 
-  if (score <= 2) return { score, label: 'weak', bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', icon: 'text-red-600', bar: 'bg-red-500' };
-  if (score <= 4) return { score, label: 'medium', bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', icon: 'text-amber-600', bar: 'bg-amber-500' };
-  if (score <= 6) return { score, label: 'strong', bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', icon: 'text-green-600', bar: 'bg-green-500' };
+// Метка — по той же энтропии, что и время взлома: раньше 4 символа были «Средним» при «мгновенно»
+function calculateStrength(bits: number): StrengthInfo {
+  const score = Math.min(bits / 100, 1);
+  if (bits < 40) return { score, label: 'weak', bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', icon: 'text-red-600', bar: 'bg-red-500' };
+  if (bits < 60) return { score, label: 'medium', bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-900', icon: 'text-amber-600', bar: 'bg-amber-500' };
+  if (bits < 80) return { score, label: 'strong', bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', icon: 'text-green-600', bar: 'bg-green-500' };
   return { score, label: 'veryStrong', bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-900', icon: 'text-emerald-600', bar: 'bg-emerald-500' };
 }
 
-function estimateCrackTime(pw: string, lang: string): string {
-  let charset = 0;
-  if (/[a-z]/.test(pw)) charset += 26;
-  if (/[A-Z]/.test(pw)) charset += 26;
-  if (/[0-9]/.test(pw)) charset += 10;
-  if (/[^a-zA-Z0-9]/.test(pw)) charset += 32;
-  if (charset === 0) return '—';
+// Офлайн-перебор быстрого хеша на одной видеокарте: RTX 4090 по hashcat — MD5 164 млрд/с,
+// NTLM 288 млрд/с. Берём 100 млрд/с; в среднем пароль находится за половину перебора.
+const GUESSES_PER_SECOND = 1e11;
 
-  const combinations = Math.pow(charset, pw.length);
-  // Предположим 10 млрд попыток/сек (modern GPU)
-  const seconds = combinations / 10_000_000_000;
+function estimateCrackTime(bits: number, lang: string): string {
+  if (bits <= 0) return '—';
+  const seconds = Math.pow(2, bits - 1) / GUESSES_PER_SECOND;
   const kk = lang === 'kk';
-  const unit = (n: number, one: string, few: string, many: string) => `${n} ${pluralize(lang, n, one, few, many)}`;
+  const unit = (n: number, one: string, few: string, many: string) => `${n.toLocaleString(NUMBER_LOCALE)} ${pluralize(lang, n, one, few, many)}`;
 
   if (seconds < 1) return kk ? 'лезде' : 'мгновенно';
   if (seconds < 60) {
@@ -98,12 +111,11 @@ function estimateCrackTime(pw: string, lang: string): string {
   }
   if (seconds < 31536000 * 1e6) {
     // до миллиона лет — целым числом («16 000 лет»), иначе выходило «0 млн лет»
-    const n = Math.round(seconds / 31536000);
-    return `${n.toLocaleString(NUMBER_LOCALE)} ${pluralize(lang, n, 'год', 'года', 'лет')}`;
+    return unit(Math.round(seconds / 31536000), 'год', 'года', 'лет');
   }
   if (seconds < 31536000 * 1e9) {
     const n = parseFloat((seconds / 31536000 / 1e6).toFixed(1));
-    return `${n} млн ${pluralize(lang, n, 'год', 'года', 'лет')}`;
+    return `${n.toLocaleString(NUMBER_LOCALE)} млн ${pluralize(lang, n, 'год', 'года', 'лет')}`;
   }
   return kk ? 'миллиардтаған жыл' : 'миллиарды лет';
 }
@@ -131,12 +143,18 @@ export default function PasswordGeneratorCalculator() {
   };
 
   useEffect(() => {
+    // Не генерируем при пререндере: иначе один и тот же «случайный» пароль попадал в статический HTML
+    if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return;
     regenerate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [length, useUpper, useLower, useDigits, useSymbols, excludeSimilar, count]);
 
-  const strength = useMemo(() => calculateStrength(password), [password]);
-  const crackTime = useMemo(() => estimateCrackTime(password, i18n.language), [password, i18n.language]);
+  const bits = useMemo(
+    () => passwordEntropy(length, charsets(useUpper, useLower, useDigits, useSymbols, excludeSimilar).join('').length),
+    [length, useUpper, useLower, useDigits, useSymbols, excludeSimilar]
+  );
+  const strength = useMemo(() => calculateStrength(bits), [bits]);
+  const crackTime = useMemo(() => estimateCrackTime(bits, i18n.language), [bits, i18n.language]);
 
   const handleCopy = async (pw: string) => {
     await navigator.clipboard.writeText(pw);
@@ -177,11 +195,12 @@ export default function PasswordGeneratorCalculator() {
               <ShieldCheck className={`w-5 h-5 ${strength.icon}`} />
               <span className={`font-semibold ${strength.text}`}>{t(`password-gen.strength.${strength.label}`)}</span>
             </div>
-            <span className="text-sm text-gray-600">{t('password-gen.crackTime')}: {crackTime}</span>
+            <span className="text-sm text-gray-600">{t('password-gen.entropy', { bits: Math.round(bits) })} · {t('password-gen.crackTime')}: {crackTime}</span>
           </div>
           <div className="w-full bg-white rounded-full h-2">
-            <div className={`${strength.bar} h-2 rounded-full`} style={{ width: `${(strength.score / 7) * 100}%` }} />
+            <div className={`${strength.bar} h-2 rounded-full`} style={{ width: `${strength.score * 100}%` }} />
           </div>
+          <p className="text-xs text-gray-500 mt-2">{t('password-gen.crackNote')}</p>
         </div>
 
         <div className="space-y-4">
@@ -213,7 +232,7 @@ export default function PasswordGeneratorCalculator() {
 
           <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
             <input type="checkbox" checked={excludeSimilar} onChange={e => setExcludeSimilar(e.target.checked)} className="h-4 w-4" />
-            <span className="text-sm">{t('password-gen.excludeSimilar')} (i, l, 1, L, o, 0, O)</span>
+            <span className="text-sm">{t('password-gen.excludeSimilar')}</span>
           </label>
 
           <div>

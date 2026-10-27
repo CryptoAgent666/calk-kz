@@ -66,6 +66,10 @@ export default function PercentageCalculator() {
     if (!Number.isFinite(value)) {
       return '—';
     }
+    // 1 от 300 000 = 0,000333%: при округлении до 2 знаков выходило «0%»
+    if (value !== 0 && Math.abs(value) < 10 ** -digits) {
+      return value.toLocaleString(locale, { maximumSignificantDigits: 3 });
+    }
     return value.toLocaleString(locale, { maximumFractionDigits: digits });
   };
 
@@ -113,7 +117,8 @@ export default function PercentageCalculator() {
   const percentChangeError = changeFromNumber === 0 && hasValue(changeFrom) ? t('percentage.validation.zeroBase') : null;
   const percentChangeValid = changeFromNumber !== null && changeToNumber !== null && changeFromNumber !== 0;
   const changeAmount = percentChangeValid ? changeToNumber - changeFromNumber : 0;
-  const changePercent = percentChangeValid ? (changeAmount / changeFromNumber) * 100 : 0;
+  // Делим на модуль базы: −100 → −50 — это рост на 50%, а не «Рост, −50%»
+  const changePercent = percentChangeValid ? (changeAmount / Math.abs(changeFromNumber)) * 100 : 0;
   const changeDirection: 'up' | 'down' | 'equal' =
     changeAmount > 0 ? 'up' : changeAmount < 0 ? 'down' : 'equal';
 

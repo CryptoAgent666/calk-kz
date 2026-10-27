@@ -312,7 +312,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 
   // === КОНВЕРТЕРЫ ===
   'currency-converter': [NBK, { title: 'KASE — Казахстанская фондовая биржа', url: 'https://kase.kz/' }],
-  'time-converter': [],
+  'time-converter': [TK_RK],
   'number-to-words': [],
   'time-to-words': [],
   'age': [],
@@ -322,8 +322,12 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   ],
   'roman-numerals': [],
   'unit-converter': [],
-  'timezone': [],
-  'password-generator': [],
+  'timezone': [
+    { title: 'Постановление Правительства РК от 23.11.2000 № 1749 «О порядке исчисления времени»', url: 'https://adilet.zan.kz/rus/docs/P000001749_' },
+  ],
+  'password-generator': [
+    { title: 'NIST SP 800-63B-4 — Digital Identity Guidelines: Authentication (2025)', url: 'https://pages.nist.gov/800-63-4/sp800-63b.html' },
+  ],
   'qr-code-generator': [],
 
   // === РЕЛИГИОЗНЫЕ ===
@@ -433,6 +437,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
 // KK titles for source labels (RU key -> KK). Registered proper nouns (Отбасы банк, Алматы Су,
 // Астана Су Арнасы, Оператор РОП) intentionally omitted -> fall back to their RU/original name.
 const SOURCE_TITLE_KK: Record<string, string> = {
+  "Постановление Правительства РК от 23.11.2000 № 1749 «О порядке исчисления времени»": "ҚР Үкіметінің 23.11.2000 № 1749 «Қазақстан Республикасы аумағында уақыт есептеу тәртібі туралы» қаулысы",
   "Налоговый кодекс РК (adilet.zan.kz)": "ҚР Салық кодексі (adilet.zan.kz)",
   "Трудовой кодекс РК (adilet.zan.kz)": "ҚР Еңбек кодексі (adilet.zan.kz)",
   "НК РК, ст. 366 пп. 2 — необлагаемые суточные (6 МРП по РК, 8 МРП за рубежом)": "ҚР СК, 366-бап 2) тармақша — салық салынбайтын тәуліктік (ҚР бойынша 6 АЕК, шетелде 8 АЕК)",

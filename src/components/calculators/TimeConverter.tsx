@@ -1,1146 +1,298 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Clock, Calculator, Languages, Copy, Download, RotateCcw, Info, AlertTriangle, Target, BarChart3 } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Clock } from 'lucide-react';
 import { FAQSection } from '../ui/FAQSection';
 import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { EmbedWidget } from '../ui/EmbedWidget';
-import { RangeSlider } from '../ui/RangeSlider';
-import { ExportButtons } from '../ui/ExportButtons';
+import { QuickAnswer } from '../ui/QuickAnswer';
+import { getSources } from '../../data/calculatorSources';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
-interface TimeConversionResult {
-  words: string;
-  formal: string;
-  colloquial: string;
-  description: string;
-}
+type Mode = 'units' | 'hm' | 'interval' | 'ampm';
 
-interface ConversionHistory {
-  id: string;
-  time: string;
-  language: string;
-  format: string;
-  result: string;
-  timestamp: Date;
-}
+// Секунд в единице. Месяц и год — средние по григорианскому календарю:
+// год 365,2425 сут. (97 високосных за 400 лет), месяц = год / 12 ≈ 30,44 сут.
+const UNIT_SECONDS = {
+  second: 1,
+  minute: 60,
+  hour: 3600,
+  day: 86400,
+  week: 604800,
+  month: 2629746,
+  year: 31556952,
+} as const;
+type Unit = keyof typeof UNIT_SECONDS;
+const UNITS = Object.keys(UNIT_SECONDS) as Unit[];
+
+const fmt = (x: number): string => {
+  if (x === 0) return '0';
+  return Math.abs(x) >= 1
+    ? x.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 4 })
+    : x.toLocaleString(NUMBER_LOCALE, { maximumSignificantDigits: 4 });
+};
+
+const parseNum = (s: string): number => parseFloat(s.replace(',', '.'));
+
+const toMinutes = (hhmm: string): number | null => {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(hhmm);
+  if (!m) return null;
+  const h = Number(m[1]);
+  const min = Number(m[2]);
+  return h < 24 && min < 60 ? h * 60 + min : null;
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
 
 export default function TimeConverter() {
-  const { t, i18n } = useTranslation('calculators');
-  const [inputTime, setInputTime] = useState<string>('14:30');
-  const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
-  const [timeFormat, setTimeFormat] = useState<'24h' | '12h'>('24h');
-  const [includeSeconds, setIncludeSeconds] = useState<boolean>(false);
-  const [style, setStyle] = useState<'formal' | 'colloquial' | 'both'>('formal');
-  const [history, setHistory] = useState<ConversionHistory[]>([]);
+  const { t } = useTranslation('calculators');
+  const [mode, setMode] = useState<Mode>('units');
 
-  // Словари числительных для времени
-  const timeNumbers = {
-    ru: {
-      hours: {
-        0: 'ноль', 1: 'один', 2: 'два', 3: 'три', 4: 'четыре', 5: 'пять', 6: 'шесть',
-        7: 'семь', 8: 'восемь', 9: 'девять', 10: 'десять', 11: 'одиннадцать', 12: 'двенадцать',
-        13: 'тринадцать', 14: 'четырнадцать', 15: 'пятнадцать', 16: 'шестнадцать',
-        17: 'семнадцать', 18: 'восемнадцать', 19: 'девятнадцать', 20: 'двадцать',
-        21: 'двадцать один', 22: 'двадцать два', 23: 'двадцать три'
-      },
-      minutes: {
-        0: 'ноль', 1: 'одна', 2: 'две', 3: 'три', 4: 'четыре', 5: 'пять', 6: 'шесть',
-        7: 'семь', 8: 'восемь', 9: 'девять', 10: 'десять', 11: 'одиннадцать', 12: 'двенадцать',
-        13: 'тринадцать', 14: 'четырнадцать', 15: 'пятнадцать', 16: 'шестнадцать',
-        17: 'семнадцать', 18: 'восемнадцать', 19: 'девятнадцать', 20: 'двадцать',
-        30: 'тридцать', 40: 'сорок', 50: 'пятьдесят'
-      },
-      forms: {
-        hour: ['час', 'часа', 'часов'],
-        minute: ['минута', 'минуты', 'минут'],
-        second: ['секунда', 'секунды', 'секунд']
-      },
-      periods: { am: 'утра', pm: 'вечера', noon: 'полдень', midnight: 'полночь' }
-    },
-    kz: {
-      hours: {
-        0: 'нөл', 1: 'бір', 2: 'екі', 3: 'үш', 4: 'төрт', 5: 'бес', 6: 'алты',
-        7: 'жеті', 8: 'сегіз', 9: 'тоғыз', 10: 'он', 11: 'он бір', 12: 'он екі',
-        13: 'он үш', 14: 'он төрт', 15: 'он бес', 16: 'он алты', 17: 'он жеті',
-        18: 'он сегіз', 19: 'он тоғыз', 20: 'жиырма', 21: 'жиырма бір',
-        22: 'жиырма екі', 23: 'жиырма үш'
-      },
-      minutes: {
-        0: 'нөл', 1: 'бір', 2: 'екі', 3: 'үш', 4: 'төрт', 5: 'бес', 6: 'алты',
-        7: 'жеті', 8: 'сегіз', 9: 'тоғыз', 10: 'он', 11: 'он бір', 12: 'он екі',
-        13: 'он үш', 14: 'он төрт', 15: 'он бес', 16: 'он алты', 17: 'он жеті',
-        18: 'он сегіз', 19: 'он тоғыз', 20: 'жиырма', 30: 'отыз', 40: 'қырық', 50: 'елу'
-      },
-      forms: {
-        hour: 'сағат',
-        minute: 'минут',
-        second: 'секунд'
-      },
-      periods: { am: 'таңертең', pm: 'кешкі', noon: 'түс', midnight: 'түн жарысы' }
-    },
-    en: {
-      hours: {
-        0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six',
-        7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten', 11: 'eleven', 12: 'twelve',
-        13: 'thirteen', 14: 'fourteen', 15: 'fifteen', 16: 'sixteen', 17: 'seventeen',
-        18: 'eighteen', 19: 'nineteen', 20: 'twenty', 21: 'twenty-one',
-        22: 'twenty-two', 23: 'twenty-three'
-      },
-      minutes: {
-        0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six',
-        7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten', 11: 'eleven', 12: 'twelve',
-        13: 'thirteen', 14: 'fourteen', 15: 'fifteen', 16: 'sixteen', 17: 'seventeen',
-        18: 'eighteen', 19: 'nineteen', 20: 'twenty', 30: 'thirty', 40: 'forty', 50: 'fifty'
-      },
-      forms: {
-        hour: ['hour', 'hours'],
-        minute: ['minute', 'minutes'],
-        second: ['second', 'seconds']
-      },
-      periods: { am: 'AM', pm: 'PM', noon: 'noon', midnight: 'midnight' }
-    }
+  const [value, setValue] = useState<string>('45');
+  const [unit, setUnit] = useState<Unit>('day');
+
+  const [hmHours, setHmHours] = useState<string>('1');
+  const [hmMinutes, setHmMinutes] = useState<string>('20');
+
+  const [start, setStart] = useState<string>('08:00');
+  const [end, setEnd] = useState<string>('18:00');
+  const [breakMin, setBreakMin] = useState<string>('60');
+
+  const [time24, setTime24] = useState<string>('23:00');
+
+  const abbr = {
+    d: t('time-converter.abbr.d'),
+    h: t('time-converter.abbr.h'),
+    m: t('time-converter.abbr.m'),
+    s: t('time-converter.abbr.s'),
   };
 
-  // Функция для получения правильной формы слова (русский)
-  const getWordFormRu = (number: number, forms: string[]): string => {
-    const absNumber = Math.abs(number);
-    const lastDigit = absNumber % 10;
-    const lastTwoDigits = absNumber % 100;
-
-    if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
-      return forms[2]; // множественное число
-    }
-
-    if (lastDigit === 1) {
-      return forms[0]; // единственное число
-    } else if (lastDigit >= 2 && lastDigit <= 4) {
-      return forms[1]; // 2-4
-    } else {
-      return forms[2]; // 5-9, 0
-    }
+  // «666 дн. 16 ч», «1 ч 40 мин» — только точные единицы (без месяцев и лет).
+  const breakdown = (totalSeconds: number): string => {
+    let rest = Math.round(Math.abs(totalSeconds));
+    const d = Math.floor(rest / 86400); rest -= d * 86400;
+    const h = Math.floor(rest / 3600); rest -= h * 3600;
+    const m = Math.floor(rest / 60); rest -= m * 60;
+    const out: string[] = [];
+    if (d) out.push(`${d.toLocaleString(NUMBER_LOCALE)} ${abbr.d}`);
+    if (h) out.push(`${h} ${abbr.h}`);
+    if (m) out.push(`${m} ${abbr.m}`);
+    if (rest) out.push(`${rest} ${abbr.s}`);
+    return out.join(' ') || `0 ${abbr.s}`;
   };
 
-  // Функция для получения правильной формы слова (английский)
-  const getWordFormEn = (number: number, forms: string[]): string => {
-    return number === 1 ? forms[0] : forms[1];
-  };
+  const unitsResult = useMemo(() => {
+    const n = parseNum(value);
+    if (!Number.isFinite(n) || n < 0) return null;
+    const seconds = n * UNIT_SECONDS[unit];
+    return { seconds, rows: UNITS.map(u => ({ unit: u, value: seconds / UNIT_SECONDS[u] })) };
+  }, [value, unit]);
 
-  // Преобразование числа в слова для минут
-  const convertMinutesToWords = (minutes: number, lang: 'ru' | 'kz' | 'en'): string => {
-    const dict = timeNumbers[lang];
+  const hmResult = useMemo(() => {
+    const h = parseNum(hmHours || '0');
+    const m = parseNum(hmMinutes || '0');
+    if (!Number.isFinite(h) || !Number.isFinite(m) || h < 0 || m < 0) return null;
+    const minutes = h * 60 + m;
+    return { minutes, hours: minutes / 60, seconds: minutes * 60 };
+  }, [hmHours, hmMinutes]);
 
-    if (minutes === 0) {
-      return dict.minutes[0];
-    }
+  const intervalResult = useMemo(() => {
+    const s = toMinutes(start);
+    const e = toMinutes(end);
+    if (s === null || e === null) return null;
+    const overnight = e < s;
+    const gross = (overnight ? e + 1440 : e) - s;
+    const br = Math.max(0, Math.round(parseNum(breakMin || '0') || 0));
+    const net = Math.max(0, gross - br);
+    return { gross, net, overnight, hasBreak: br > 0 };
+  }, [start, end, breakMin]);
 
-    if (minutes <= 20 || [30, 40, 50].includes(minutes)) {
-      return dict.minutes[minutes] || '';
-    }
+  const ampmResult = useMemo(() => {
+    const total = toMinutes(time24);
+    if (total === null) return null;
+    const h = Math.floor(total / 60);
+    const m = total % 60;
+    return `${h % 12 || 12}:${pad(m)} ${h < 12 ? 'AM' : 'PM'}`;
+  }, [time24]);
 
-    // Для чисел больше 20 (составные)
-    const tens = Math.floor(minutes / 10) * 10;
-    const ones = minutes % 10;
+  const hm = (minutes: number) => `${Math.floor(minutes / 60)} ${abbr.h} ${pad(minutes % 60)} ${abbr.m}`;
 
-    if (lang === 'en') {
-      return ones === 0 ? dict.minutes[tens] : `${dict.minutes[tens]}-${dict.minutes[ones]}`;
-    } else if (lang === 'ru') {
-      const tensWord = dict.minutes[tens] || '';
-      const onesWord = ones === 0 ? '' : dict.minutes[ones] || '';
-      return `${tensWord}${onesWord ? ' ' + onesWord : ''}`;
-    } else { // kazakh
-      const tensWord = dict.minutes[tens] || '';
-      const onesWord = ones === 0 ? '' : dict.minutes[ones] || '';
-      return `${tensWord}${onesWord ? ' ' + onesWord : ''}`;
-    }
-  };
-
-  // Основная функция преобразования времени
-  const convertTimeToWords = (): TimeConversionResult => {
-    if (!inputTime) {
-      return { words: '', formal: '', colloquial: '', description: '' };
-    }
-
-    // Парсинг времени
-    const timeMatch = inputTime.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
-    if (!timeMatch) {
-      return {
-        words: t('time-converter.errors.invalidFormat'),
-        formal: '',
-        colloquial: '',
-        description: t('time-converter.errors.useFormat')
-      };
-    }
-
-    let hours = parseInt(timeMatch[1]);
-    const minutes = parseInt(timeMatch[2]);
-    const seconds = timeMatch[3] ? parseInt(timeMatch[3]) : 0;
-
-    // Валидация
-    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || (timeMatch[3] && (seconds < 0 || seconds > 59))) {
-      return {
-        words: t('time-converter.errors.invalidTime'),
-        formal: '',
-        colloquial: '',
-        description: t('time-converter.errors.checkTime')
-      };
-    }
-
-    const dict = timeNumbers[language];
-
-    // Формальный стиль (24-часовой формат)
-    let formal = '';
-    let colloquial = '';
-
-    if (language === 'ru') {
-      // Русский язык
-      const hoursWord = dict.hours[hours];
-      const minutesWord = convertMinutesToWords(minutes, language);
-      const hoursForm = getWordFormRu(hours, dict.forms.hour);
-      const minutesForm = getWordFormRu(minutes, dict.forms.minute);
-
-      formal = `${hoursWord} ${hoursForm}`;
-      if (minutes > 0) {
-        formal += ` ${minutesWord} ${minutesForm}`;
-      }
-      if (includeSeconds && seconds > 0) {
-        const secondsWord = dict.minutes[seconds] || convertMinutesToWords(seconds, language);
-        const secondsForm = getWordFormRu(seconds, dict.forms.second);
-        formal += ` ${secondsWord} ${secondsForm}`;
-      }
-
-      // Разговорный стиль
-      if (timeFormat === '12h') {
-        const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-        const period = hours < 12 ? dict.periods.am : dict.periods.pm;
-
-        if (hours === 0 && minutes === 0) {
-          colloquial = dict.periods.midnight;
-        } else if (hours === 12 && minutes === 0) {
-          colloquial = dict.periods.noon;
-        } else {
-          const hour12Word = dict.hours[hour12];
-          colloquial = `${hour12Word} ${getWordFormRu(hour12, dict.forms.hour)}`;
-          if (minutes > 0) {
-            colloquial += ` ${minutesWord} ${minutesForm}`;
-          }
-          colloquial += ` ${period}`;
-        }
-      } else {
-        // Разговорные варианты для 24-часового
-        if (minutes === 0) {
-          colloquial = `${hoursWord} ${hours === 1 ? 'час ровно' : 'часов ровно'}`;
-        } else if (minutes === 15) {
-          colloquial = `четверть ${hours + 1 <= 23 ? dict.hours[hours + 1] : 'первого'}`;
-        } else if (minutes === 30) {
-          colloquial = `половина ${hours + 1 <= 23 ? dict.hours[hours + 1] : 'первого'}`;
-        } else if (minutes === 45) {
-          colloquial = `без четверти ${hours + 1 <= 23 ? dict.hours[hours + 1] : 'час'}`;
-        } else {
-          colloquial = formal;
-        }
-      }
-    } else if (language === 'kz') {
-      // Казахский язык
-      const hoursWord = dict.hours[hours];
-      const minutesWord = convertMinutesToWords(minutes, language);
-
-      formal = `${hoursWord} ${dict.forms.hour}`;
-      if (minutes > 0) {
-        formal += ` ${minutesWord} ${dict.forms.minute}`;
-      }
-      if (includeSeconds && seconds > 0) {
-        const secondsWord = convertMinutesToWords(seconds, language);
-        formal += ` ${secondsWord} ${dict.forms.second}`;
-      }
-
-      // Разговорный стиль (казахский обычно более формальный)
-      if (timeFormat === '12h') {
-        const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-        const period = hours < 12 ? dict.periods.am : dict.periods.pm;
-
-        if (hours === 0 && minutes === 0) {
-          colloquial = dict.periods.midnight;
-        } else if (hours === 12 && minutes === 0) {
-          colloquial = dict.periods.noon;
-        } else {
-          const hour12Word = dict.hours[hour12];
-          colloquial = `${period} ${hour12Word} ${dict.forms.hour}`;
-          if (minutes > 0) {
-            colloquial += ` ${minutesWord} ${dict.forms.minute}`;
-          }
-        }
-      } else {
-        colloquial = formal;
-      }
-    } else {
-      // Английский язык
-      const hoursWord = dict.hours[hours];
-      const minutesWord = convertMinutesToWords(minutes, language);
-      const hoursForm = getWordFormEn(hours, dict.forms.hour);
-      const minutesForm = getWordFormEn(minutes, dict.forms.minute);
-
-      formal = `${hoursWord} ${hoursForm}`;
-      if (minutes > 0) {
-        formal += ` ${minutesWord} ${minutesForm}`;
-      }
-      if (includeSeconds && seconds > 0) {
-        const secondsWord = convertMinutesToWords(seconds, language);
-        const secondsForm = getWordFormEn(seconds, dict.forms.second);
-        formal += ` ${secondsWord} ${secondsForm}`;
-      }
-
-      // Разговорный стиль
-      if (timeFormat === '12h') {
-        const hour12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-        const period = hours < 12 ? dict.periods.am : dict.periods.pm;
-
-        if (hours === 0 && minutes === 0) {
-          colloquial = dict.periods.midnight;
-        } else if (hours === 12 && minutes === 0) {
-          colloquial = dict.periods.noon;
-        } else {
-          const hour12Word = dict.hours[hour12];
-          colloquial = `${hour12Word} ${getWordFormEn(hour12, dict.forms.hour)}`;
-          if (minutes > 0) {
-            colloquial += ` ${minutesWord} ${minutesForm}`;
-          }
-          colloquial += ` ${period}`;
-        }
-      } else {
-        // Разговорные варианты
-        if (minutes === 0) {
-          colloquial = `${hoursWord} o'clock`;
-        } else if (minutes === 15) {
-          colloquial = `quarter past ${hoursWord}`;
-        } else if (minutes === 30) {
-          colloquial = `half past ${hoursWord}`;
-        } else if (minutes === 45) {
-          const nextHour = hours === 23 ? 0 : hours + 1;
-          colloquial = `quarter to ${dict.hours[nextHour]}`;
-        } else {
-          colloquial = formal;
-        }
-      }
-    }
-
-    const words = style === 'formal' ? formal : style === 'colloquial' ? colloquial : formal;
-    const languageName = language === 'ru' ? t('time-converter.languages.russian') :
-                         language === 'kz' ? t('time-converter.languages.kazakh') :
-                         t('time-converter.languages.english');
-    // Не склеиваем предлог с названием языка пословно: выходило
-    // «Время 14:30 на Русский Язык», в KK — «Уақыт 14:30 тілінде Орыс Тіл».
-    const description = t('time-converter.descriptionTemplate', { time: inputTime, language: languageName });
-
-    return { words, formal, colloquial, description };
-  };
-
-  const addToHistory = (result: TimeConversionResult) => {
-    if (result.words && inputTime) {
-      const newEntry: ConversionHistory = {
-        id: Date.now().toString() + '-' + Math.random().toString(36).slice(2, 8),
-        time: inputTime,
-        language,
-        format: timeFormat,
-        result: result.words,
-        timestamp: new Date()
-      };
-
-      setHistory(prev => [newEntry, ...prev.slice(0, 9)]);
-    }
-  };
-
-  const setQuickTime = (time: string) => {
-    setInputTime(time);
-  };
-
-  const setCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-
-    if (includeSeconds) {
-      setInputTime(`${hours}:${minutes}:${seconds}`);
-    } else {
-      setInputTime(`${hours}:${minutes}`);
-    }
-  };
-
-  const clearAll = () => {
-    setInputTime('');
-  };
-
-  const copyResult = () => {
-    if (results.words) {
-      navigator.clipboard.writeText(results.words);
-    }
-  };
-
-  const downloadResult = () => {
-    if (results.words) {
-      const languageName = language === 'ru' ? t('time-converter.languages.russian') :
-                           language === 'kz' ? t('time-converter.languages.kazakh') :
-                           t('time-converter.languages.english');
-      const formatName = timeFormat === '24h' ? t('time-converter.formats.24hour') :
-                                                t('time-converter.formats.12hour');
-      const styleName = style === 'formal' ? t('time-converter.styles.formal') :
-                        style === 'colloquial' ? t('time-converter.styles.colloquial') :
-                        t('time-converter.styles.both');
-
-      let content = `${t('time-converter.downloadFile.title')}\n\n`;
-      content += `${t('time-converter.downloadFile.originalTime')}: ${inputTime}\n`;
-      content += `${t('time-converter.downloadFile.language')}: ${languageName}\n`;
-      content += `${t('time-converter.downloadFile.format')}: ${formatName}\n`;
-      content += `${t('time-converter.downloadFile.style')}: ${styleName}\n\n`;
-
-      if (style === 'both') {
-        content += `${t('time-converter.styles.formal')}: ${results.formal}\n`;
-        content += `${t('time-converter.styles.colloquial')}: ${results.colloquial}\n`;
-      } else {
-        content += `${t('time-converter.downloadFile.result')}: ${results.words}\n`;
-      }
-
-      content += `\n${t('time-converter.downloadFile.createdAt')}: ${new Date().toLocaleString('ru-RU')}`;
-
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'время_прописью.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  };
-
-  // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
-  // текстом, и первый клиентский рендер обязан выдать тот же текст — иначе
-  // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
-  const results = useMemo(
-    convertTimeToWords,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [inputTime, language, timeFormat, includeSeconds, style, i18n.language]
-  );
-
-  // Побочный эффект (накопление истории) остаётся в useEffect — в useMemo ему не место.
-  useEffect(() => {
-    if ((window as unknown as { __PRERENDER__?: boolean }).__PRERENDER__) return; // история не должна попадать в статику
-    // У ошибочного результата formal пустой — в историю попадают только удачные преобразования.
-    if (results.words && results.formal) {
-      addToHistory(results);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [results]);
-
-  const languages = [
-    { id: 'ru', name: t('time-converter.languages.russian'), flag: '🇷🇺' },
-    { id: 'kz', name: t('time-converter.languages.kazakhName'), flag: '🇰🇿' },
-    { id: 'en', name: t('time-converter.languages.englishName'), flag: '🇺🇸' }
-  ];
-
-  const timeFormats = [
-    { id: '24h', name: t('time-converter.formats.24hour'), description: t('time-converter.formats.24hourDesc') },
-    { id: '12h', name: t('time-converter.formats.12hour'), description: t('time-converter.formats.12hourDesc') }
-  ];
-
-  const styles = [
-    { id: 'formal', name: t('time-converter.styles.formal'), description: t('time-converter.styles.formalDesc') },
-    { id: 'colloquial', name: t('time-converter.styles.colloquial'), description: t('time-converter.styles.colloquialDesc') },
-    { id: 'both', name: t('time-converter.styles.both'), description: t('time-converter.styles.bothDesc') }
-  ];
+  const modes: Mode[] = ['units', 'hm', 'interval', 'ampm'];
+  const inputClass = 'w-full px-3 py-2 border border-gray-300 rounded-lg';
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-            <Clock className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('time-converter.title')}</h1>
-            <p className="text-gray-600">{t('time-converter.description')}</p>
-          </div>
+    <div className="max-w-4xl mx-auto">
+      <QuickAnswer calculatorId="time-converter" />
+      <div className="mb-8 flex items-center space-x-3">
+        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+          <Clock className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">{t('time-converter.title')}</h1>
+          <p className="text-gray-600">{t('time-converter.subtitle')}</p>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Input Section */}
-        <div className="space-y-8">
-          {/* Main Input */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('time-converter.timeParameters')}</h2>
-
-            <div className="space-y-6">
-              {/* Time Input */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label htmlFor="inputTime" className="block text-sm font-medium text-gray-700">
-                    {t('time-converter.timeToConvert')}
-                  </label>
-                  <button
-                    onClick={setCurrentTime}
-                    className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    {t('time-converter.currentTime')}
-                  </button>
-                </div>
-                <input
-                  type="time"
-                  id="inputTime"
-                  value={inputTime}
-                  onChange={(e) => setInputTime(e.target.value)}
-                  step={includeSeconds ? "1" : "60"}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  {t('time-converter.formatLabel')}: {includeSeconds ? t('time-converter.formatHMS') : t('time-converter.formatHM')}
-                </p>
-              </div>
-
-              {/* Language Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  {t('time-converter.languageSelection')}
-                </label>
-                <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.id}
-                      onClick={() => setLanguage(lang.id as 'ru' | 'kz' | 'en')}
-                      className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${
-                        language === lang.id
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                      }`}
-                    >
-                      <div className="text-sm sm:text-lg mb-1">{lang.flag}</div>
-                      <div className="text-xs sm:text-sm font-medium truncate">{lang.name}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Time Format */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  {t('time-converter.timeFormat')}
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {timeFormats.map((format) => (
-                    <button
-                      key={format.id}
-                      onClick={() => setTimeFormat(format.id as '24h' | '12h')}
-                      className={`p-3 rounded-lg border-2 transition-all text-left min-w-0 ${
-                        timeFormat === format.id
-                          ? 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                      }`}
-                    >
-                      <div className="font-medium mb-1 text-sm sm:text-base">{format.name}</div>
-                      <div className="text-xs text-gray-600">{format.description}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Style Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  {t('time-converter.styleSelection')}
-                </label>
-                <div className="space-y-2">
-                  {styles.map((styleOption) => (
-                    <label key={styleOption.id} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="style"
-                        value={styleOption.id}
-                        checked={style === styleOption.id}
-                        onChange={(e) => setStyle(e.target.value as 'formal' | 'colloquial' | 'both')}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                      />
-                      <div className="ml-3">
-                        <div className="text-sm font-medium text-gray-900">{styleOption.name}</div>
-                        <div className="text-xs text-gray-600">{styleOption.description}</div>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Additional Options */}
-              <div className="border-t pt-4">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="includeSeconds"
-                    checked={includeSeconds}
-                    onChange={(e) => setIncludeSeconds(e.target.checked)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="includeSeconds" className="ml-2 block text-sm text-gray-700">
-                    {t('time-converter.includeSeconds')}
-                  </label>
-                </div>
-              </div>
-
-              {/* Quick Time Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  {t('time-converter.quickSelection')}
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {['09:00', '12:00', '15:30', '18:45', '20:15', '00:00', '23:59', '12:30'].map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setQuickTime(time)}
-                      className="p-2 text-xs sm:text-sm bg-gray-100 text-gray-700 rounded hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex space-x-3">
-                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full">
-                  <button
-                    onClick={clearAll}
-                  >
-                    <RotateCcw className="w-4 h-4" />
-                    <span>{t('time-converter.clear')}</span>
-                  </button>
-
-                  <button
-                    onClick={copyResult}
-                    disabled={!results.words}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                      results.words
-                        ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }`}
-                  >
-                    <Copy className="w-4 h-4" />
-                    <span>{t('time-converter.copy')}</span>
-                  </button>
-
-                  <button
-                    onClick={downloadResult}
-                    disabled={!results.words}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                      results.words
-                        ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }`}
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>{t('time-converter.download')}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {modes.map(m => (
+            <button key={m} onClick={() => setMode(m)}
+              className={`p-3 rounded-lg border text-sm ${mode === m ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'}`}>
+              {t(`time-converter.modes.${m}`)}
+            </button>
+          ))}
         </div>
 
-        {/* Results Section */}
-        <div className="space-y-6">
-          {/* Main Result */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('time-converter.conversionResult')}</h2>
-
-            {results.words ? (
-              <div className="space-y-6">
-                {/* Main Display */}
-                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-6 border border-blue-200">
-                  <div className="flex items-start space-x-3 mb-4">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Clock className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        {t('time-converter.timeInWords')}
-                      </h3>
-                      <div className="text-blue-900 font-medium text-lg leading-relaxed">
-                        {results.words}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="text-sm text-gray-600 border-t border-blue-200 pt-3">
-                    {results.description} • {t('time-converter.formatLabel')}: {timeFormat === '24h' ? t('time-converter.formats.24hour') : t('time-converter.formats.12hour')}
-                  </div>
-                </div>
-
-                {/* Both Styles Display */}
-                {style === 'both' && (
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                      <h4 className="text-sm font-medium text-green-900 mb-2">{t('time-converter.styles.formalStyle')}</h4>
-                      <div className="text-green-800 font-medium">{results.formal}</div>
-                    </div>
-
-                    <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
-                      <h4 className="text-sm font-medium text-teal-900 mb-2">{t('time-converter.styles.colloquialStyle')}</h4>
-                      <div className="text-teal-800 font-medium">{results.colloquial}</div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Original Time Display */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-700">{t('time-converter.originalTime')}:</span>
-                    <span className="text-lg font-bold text-gray-900 font-mono">{inputTime}</span>
-                  </div>
-                </div>
-
-                {/* Examples in Other Languages */}
-                {inputTime && (
-                  <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-3">
-                      {t('time-converter.sameTimeOtherLanguages')}
-                    </h4>
-                    <div className="space-y-2">
-                      {languages.filter(l => l.id !== language).map((lang) => {
-                        // Быстрый пересчет для других языков
-                        const currentLang = language;
-                        // Временно меняем язык для получения результата
-                        const timeMatch = inputTime.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
-                        if (!timeMatch) return null;
-
-                        const hours = parseInt(timeMatch[1]);
-                        const minutes = parseInt(timeMatch[2]);
-                        const seconds = timeMatch[3] ? parseInt(timeMatch[3]) : 0;
-
-                        const dict = timeNumbers[lang.id as keyof typeof timeNumbers];
-                        let otherLangResult = '';
-
-                        try {
-                          if (lang.id === 'ru') {
-                            const hoursWord = dict.hours[hours];
-                            const minutesWord = convertMinutesToWords(minutes, lang.id as 'ru' | 'kz' | 'en');
-                            const hoursForm = getWordFormRu(hours, dict.forms.hour);
-                            const minutesForm = getWordFormRu(minutes, dict.forms.minute);
-
-                            otherLangResult = `${hoursWord} ${hoursForm}`;
-                            if (minutes > 0) {
-                              otherLangResult += ` ${minutesWord} ${minutesForm}`;
-                            }
-                          } else if (lang.id === 'kz') {
-                            const hoursWord = dict.hours[hours];
-                            const minutesWord = convertMinutesToWords(minutes, lang.id as 'ru' | 'kz' | 'en');
-
-                            otherLangResult = `${hoursWord} ${dict.forms.hour}`;
-                            if (minutes > 0) {
-                              otherLangResult += ` ${minutesWord} ${dict.forms.minute}`;
-                            }
-                          } else {
-                            const hoursWord = dict.hours[hours];
-                            const minutesWord = convertMinutesToWords(minutes, lang.id as 'ru' | 'kz' | 'en');
-                            const hoursForm = getWordFormEn(hours, dict.forms.hour);
-                            const minutesForm = getWordFormEn(minutes, dict.forms.minute);
-
-                            otherLangResult = `${hoursWord} ${hoursForm}`;
-                            if (minutes > 0) {
-                              otherLangResult += ` ${minutesWord} ${minutesForm}`;
-                            }
-                          }
-                        } catch (error) {
-                          otherLangResult = t('time-converter.errors.conversionError');
-                        }
-
-                        return (
-                          <div key={lang.id} className="flex items-center space-x-3 py-2 px-3 bg-gray-50 rounded">
-                            <span className="text-lg">{lang.flag}</span>
-                            <div className="flex-1">
-                              <div className="text-sm font-medium text-gray-900">{lang.name}:</div>
-                              <div className="text-sm text-gray-700">{otherLangResult}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+        {mode === 'units' && (
+          <div className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.value')}</label>
+                <input type="number" min="0" step="any" value={value} onChange={e => setValue(e.target.value)} className={inputClass} />
               </div>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                {t('time-converter.enterTimePrompt')}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.unit')}</label>
+                <select value={unit} onChange={e => setUnit(e.target.value as Unit)} className={inputClass}>
+                  {UNITS.map(u => <option key={u} value={u}>{t(`time-converter.units.${u}`)}</option>)}
+                </select>
               </div>
+            </div>
+            {unitsResult && (
+              <>
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <div className="text-sm text-gray-600 mb-1">{t('time-converter.breakdown')}</div>
+                  <div className="text-2xl font-bold text-blue-700">{breakdown(unitsResult.seconds)}</div>
+                </div>
+                <div className="divide-y divide-gray-100 border border-gray-100 rounded-lg">
+                  {unitsResult.rows.map(r => (
+                    <div key={r.unit} className={`flex justify-between px-4 py-2 ${r.unit === unit ? 'bg-blue-50 font-semibold' : ''}`}>
+                      <span className="text-gray-700">{t(`time-converter.units.${r.unit}`)}</span>
+                      <span className="font-mono text-gray-900">{fmt(r.value)}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500">{t('time-converter.avgNote')}</p>
+              </>
             )}
           </div>
+        )}
 
-          {/* History */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">{t('time-converter.history')}</h2>
-              {history.length > 0 && (
-                <button
-                  onClick={() => setHistory([])}
-                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  {t('time-converter.clearHistory')}
-                </button>
-              )}
-            </div>
-
-            {history.length > 0 ? (
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {history.map((item) => (
-                  <div key={item.id} className="p-3 bg-gray-50 rounded-lg min-w-0">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-sm font-medium text-gray-900 break-words">{item.time}</span>
-                      <span className="text-xs text-gray-500">
-                        {item.timestamp.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-700 leading-relaxed">{item.result}</div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {languages.find(l => l.id === item.language)?.name} • {item.format}
-                    </div>
-                  </div>
-                ))}
+        {mode === 'hm' && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.hm.hours')}</label>
+                <input type="number" min="0" step="any" value={hmHours} onChange={e => setHmHours(e.target.value)} className={inputClass} />
               </div>
-            ) : (
-              <div className="text-center py-6 text-gray-500">
-                <Languages className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                <div className="text-sm">{t('time-converter.historyEmpty')}</div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.hm.minutes')}</label>
+                <input type="number" min="0" step="any" value={hmMinutes} onChange={e => setHmMinutes(e.target.value)} className={inputClass} />
+              </div>
+            </div>
+            {hmResult && (
+              <div className="grid md:grid-cols-3 gap-3">
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <div className="text-sm text-gray-600">{t('time-converter.hm.totalMinutes')}</div>
+                  <div className="text-2xl font-bold text-blue-700">{fmt(hmResult.minutes)} {abbr.m}</div>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <div className="text-sm text-gray-600">{t('time-converter.hm.decimalHours')}</div>
+                  <div className="text-2xl font-bold text-blue-700">{fmt(hmResult.hours)} {abbr.h}</div>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <div className="text-sm text-gray-600">{t('time-converter.hm.totalSeconds')}</div>
+                  <div className="text-2xl font-bold text-blue-700">{fmt(hmResult.seconds)} {abbr.s}</div>
+                </div>
               </div>
             )}
+            <p className="text-xs text-gray-500">{t('time-converter.hm.tip')}</p>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Examples Section */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('time-converter.examples.title')}</h2>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-              <span className="text-xl">🇷🇺</span>
-              <span>{t('time-converter.languages.russian')}</span>
-            </h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="font-mono text-blue-600">14:30</div>
-                <div className="text-gray-600 mt-1"><strong>{t('time-converter.examples.formally')}:</strong> четырнадцать часов тридцать минут</div>
-                <div className="text-gray-600"><strong>{t('time-converter.examples.colloquially')}:</strong> половина третьего</div>
+        {mode === 'interval' && (
+          <div className="space-y-4">
+            <div className="grid md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.interval.start')}</label>
+                <input type="time" value={start} onChange={e => setStart(e.target.value)} className={inputClass} />
               </div>
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="font-mono text-blue-600">09:15</div>
-                <div className="text-gray-600 mt-1"><strong>{t('time-converter.examples.formally')}:</strong> девять часов пятнадцать минут</div>
-                <div className="text-gray-600"><strong>{t('time-converter.examples.colloquially')}:</strong> четверть десятого</div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.interval.end')}</label>
+                <input type="time" value={end} onChange={e => setEnd(e.target.value)} className={inputClass} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.interval.break')}</label>
+                <input type="number" min="0" step="5" value={breakMin} onChange={e => setBreakMin(e.target.value)} className={inputClass} />
               </div>
             </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-              <span className="text-xl">🇰🇿</span>
-              <span>{t('time-converter.languages.kazakhName')}</span>
-            </h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="font-mono text-green-600">16:45</div>
-                <div className="text-gray-600 mt-1">он алты сағат қырық бес минут</div>
+            {intervalResult && (
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 space-y-1">
+                <div className="text-sm text-gray-600">{t('time-converter.interval.net')}</div>
+                <div className="text-2xl font-bold text-blue-700">
+                  {hm(intervalResult.net)} <span className="text-base font-normal text-gray-600">
+                    ({fmt(intervalResult.net)} {abbr.m} = {fmt(intervalResult.net / 60)} {abbr.h})
+                  </span>
+                </div>
+                {intervalResult.hasBreak && (
+                  <div className="text-sm text-gray-600">{t('time-converter.interval.gross')}: {hm(intervalResult.gross)}</div>
+                )}
+                {intervalResult.overnight && (
+                  <div className="text-sm text-blue-700">{t('time-converter.interval.overnight')}</div>
+                )}
               </div>
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="font-mono text-green-600">08:00</div>
-                <div className="text-gray-600 mt-1">сегіз сағат</div>
+            )}
+            <p className="text-xs text-gray-500">{t('time-converter.interval.tip')}</p>
+          </div>
+        )}
+
+        {mode === 'ampm' && (
+          <div className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-3 items-end">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('time-converter.ampm.input')}</label>
+                <input type="time" value={time24} onChange={e => setTime24(e.target.value)} className={inputClass} />
+              </div>
+              <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                <div className="text-sm text-gray-600">{t('time-converter.ampm.result')}</div>
+                <div className="text-2xl font-bold text-blue-700">{ampmResult ?? '—'}</div>
               </div>
             </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-              <span className="text-xl">🇺🇸</span>
-              <span>{t('time-converter.languages.englishName')}</span>
-            </h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="font-mono text-teal-600">21:00</div>
-                <div className="text-gray-600 mt-1"><strong>{t('time-converter.examples.formal')}:</strong> twenty-one hours</div>
-                <div className="text-gray-600"><strong>{t('time-converter.examples.casual')}:</strong> nine o'clock PM</div>
-              </div>
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="font-mono text-teal-600">12:30</div>
-                <div className="text-gray-600 mt-1"><strong>{t('time-converter.examples.formal')}:</strong> twelve hours thirty minutes</div>
-                <div className="text-gray-600"><strong>{t('time-converter.examples.casual')}:</strong> half past twelve</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Language Rules */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('time-converter.rules.title')}</h2>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-3">🇷🇺 {t('time-converter.languages.russian')}</h3>
-            <div className="text-sm text-blue-800 space-y-2">
-              <p><strong>{t('time-converter.rules.features')}:</strong></p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>{t('time-converter.rules.russian.feature1')}</li>
-                <li>{t('time-converter.rules.russian.feature2')}</li>
-                <li>{t('time-converter.rules.russian.feature3')}</li>
-                <li>{t('time-converter.rules.russian.feature4')}</li>
-              </ul>
-              <p className="text-xs text-blue-700 mt-2">
-                {t('time-converter.rules.russian.example')}
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-green-50 rounded-lg p-4">
-            <h3 className="font-semibold text-green-900 mb-3">🇰🇿 {t('time-converter.languages.kazakhName')}</h3>
-            <div className="text-sm text-green-800 space-y-2">
-              <p><strong>{t('time-converter.rules.featuresKz')}:</strong></p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>{t('time-converter.rules.kazakh.feature1')}</li>
-                <li>{t('time-converter.rules.kazakh.feature2')}</li>
-                <li>{t('time-converter.rules.kazakh.feature3')}</li>
-                <li>{t('time-converter.rules.kazakh.feature4')}</li>
-              </ul>
-              <p className="text-xs text-green-700 mt-2">
-                {t('time-converter.rules.kazakh.example')}
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-teal-50 rounded-lg p-4">
-            <h3 className="font-semibold text-teal-900 mb-3">🇺🇸 {t('time-converter.languages.englishName')}</h3>
-            <div className="text-sm text-teal-800 space-y-2">
-              <p><strong>{t('time-converter.rules.features')}:</strong></p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>{t('time-converter.rules.english.feature1')}</li>
-                <li>{t('time-converter.rules.english.feature2')}</li>
-                <li>{t('time-converter.rules.english.feature3')}</li>
-                <li>{t('time-converter.rules.english.feature4')}</li>
-              </ul>
-              <p className="text-xs text-teal-700 mt-2">
-                {t('time-converter.rules.english.example')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Usage Guidelines */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('time-converter.guidelines.title')}</h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('time-converter.guidelines.practicalTips')}</h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.tip1')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.tip2')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.tip3')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.tip4')}</span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('time-converter.guidelines.applications')}</h3>
-            <div className="space-y-2 text-sm text-gray-700">
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.app1')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.app2')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.app3')}</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                <span>{t('time-converter.guidelines.app4')}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <div className="flex items-start space-x-2">
-            <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-sm font-medium text-blue-900 mb-1">
-                {t('time-converter.guidelines.culturalTitle')}
-              </h3>
-              <p className="text-blue-800 text-sm">
-                {t('time-converter.guidelines.culturalText')}
-              </p>
+              <h3 className="font-semibold text-gray-900 mb-2">{t('time-converter.ampm.table')}</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1 text-sm font-mono">
+                {[12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].flatMap(h => [
+                  <div key={`am${h}`} className="text-gray-700">{h} AM = {pad(h % 12)}:00</div>,
+                  <div key={`pm${h}`} className="text-gray-700">{h} PM = {pad((h % 12) + 12)}:00</div>,
+                ])}
+              </div>
             </div>
+            <p className="text-xs text-gray-500">{t('time-converter.ampm.note')}</p>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Time Format Reference */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('time-converter.reference.title')}</h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('time-converter.reference.format24')}</h3>
-            <div className="space-y-1 text-sm text-gray-700">
-              <div className="flex justify-between py-1">
-                <span>00:00 → </span>
-                <span className="font-medium">{t('time-converter.reference.midnight')}</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>06:00 → </span>
-                <span className="font-medium">{t('time-converter.reference.sixAM')}</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>12:00 → </span>
-                <span className="font-medium">{t('time-converter.reference.noon')}</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>18:00 → </span>
-                <span className="font-medium">{t('time-converter.reference.sixPM')}</span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-3">{t('time-converter.reference.colloquialRussian')}</h3>
-            <div className="space-y-1 text-sm text-gray-700">
-              <div className="flex justify-between py-1">
-                <span>XX:15 → </span>
-                <span className="font-medium">{t('time-converter.reference.quarter')}</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>XX:30 → </span>
-                <span className="font-medium">{t('time-converter.reference.half')}</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>XX:45 → </span>
-                <span className="font-medium">{t('time-converter.reference.quarterTo')}</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span>XX:00 → </span>
-                <span className="font-medium">{t('time-converter.reference.exactly')}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-amber-50 rounded-lg">
-          <div className="flex items-start space-x-2">
-            <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-medium text-amber-900 mb-1">
-                {t('time-converter.reference.importantTitle')}
-              </h3>
-              <div className="text-amber-800 text-sm space-y-1">
-                <p>• {t('time-converter.reference.important1')}</p>
-                <p>• {t('time-converter.reference.important2')}</p>
-                <p>• {t('time-converter.reference.important3')}</p>
-                <p>• {t('time-converter.reference.important4')}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('time-converter.reference.title')}</h2>
+        <ul className="space-y-1 text-sm text-gray-700 list-disc pl-5">
+          <li>{t('time-converter.reference.r1')}</li>
+          <li>{t('time-converter.reference.r2')}</li>
+          <li>{t('time-converter.reference.r3')}</li>
+          <li>{t('time-converter.reference.r4')}</li>
+        </ul>
       </div>
 
-      {/* Cultural Context */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('time-converter.cultural.title')}</h2>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-red-50 rounded-lg">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">📻</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('time-converter.cultural.radioTV')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('time-converter.cultural.radioTVText')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-green-50 rounded-lg">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🎓</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('time-converter.cultural.education')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('time-converter.cultural.educationText')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-blue-50 rounded-lg">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🤖</span>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">{t('time-converter.cultural.automation')}</h3>
-            <p className="text-gray-600 text-sm">
-              {t('time-converter.cultural.automationText')}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Экспорт результатов */}
-      {results && results.words && (
-        <div className="mt-8">
-          <ExportButtons
-            data={{
-              title: t('time-converter.title'),
-              subtitle: t('time-converter.description'),
-              sections: [
-                {
-                  title: 'Результат',
-                  data: [
-                    { label: 'Время', value: results.words },
-                    { label: 'Формальное', value: results.formal || '' },
-                  ]
-                }
-              ],
-              footer: 'Расчёт выполнен на calk.kz'
-            }}
-            filename="time-converter-result"
-          />
-        </div>
-      )}
-
-      {/* FAQ */}
+      <ExpertBlock />
       <FAQSection
         items={[
           { question: t('time-converter.faq.q1'), answer: t('time-converter.faq.a1') },
           { question: t('time-converter.faq.q2'), answer: t('time-converter.faq.a2') },
           { question: t('time-converter.faq.q3'), answer: t('time-converter.faq.a3') },
           { question: t('time-converter.faq.q4'), answer: t('time-converter.faq.a4') },
-          { question: t('time-converter.faq.q5'), answer: t('time-converter.faq.a5') }
+          { question: t('time-converter.faq.q5'), answer: t('time-converter.faq.a5') },
         ]}
-        sources={[
-          { title: i18n.language === 'kk' ? 'Уақытты айту ережелері' : 'Правила произношения времени', url: 'https://gramota.ru/' },
-        ]}
+        sources={getSources('time-converter')}
       />
-
-      {/* Виджет для встраивания */}
-      <ExpertBlock />
-      <EmbedWidget
-        calculatorId="time-converter"
-        calculatorTitle="Конвертер времени в слова"
-      />
+      <EmbedWidget calculatorId="time-converter" calculatorTitle={t('time-converter.title')} />
       <LastUpdated calculatorId="time-converter" />
     </div>
   );

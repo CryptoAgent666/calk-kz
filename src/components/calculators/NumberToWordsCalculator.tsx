@@ -14,6 +14,37 @@ interface ConversionResult {
   description: string;
 }
 
+type Lang = 'ru' | 'kz' | 'en';
+type Gender = 'male' | 'female' | 'neuter';
+type CurrencyId = 'kzt' | 'usd' | 'rub' | 'eur';
+
+// Род денежных единиц в русском: «один тенге», «одна копейка», «двадцать один цент»
+const CURRENCY_GENDER_RU: Record<CurrencyId, { main: Gender; minor: Gender }> = {
+  kzt: { main: 'male', minor: 'male' },
+  usd: { main: 'male', minor: 'male' },
+  rub: { main: 'male', minor: 'female' },
+  eur: { main: 'male', minor: 'male' },
+};
+
+// Знаменатели десятичных дробей до 6 знаков: «семь десятых», «четырнадцать сотых»
+const RU_FRACTION_NAMES = [
+  ['десятая', 'десятых'], ['сотая', 'сотых'], ['тысячная', 'тысячных'],
+  ['десятитысячная', 'десятитысячных'], ['стотысячная', 'стотысячных'], ['миллионная', 'миллионных'],
+];
+// Казахский: знаменатель в исходном падеже перед числителем — «қырық екі бүтін оннан жеті»
+const KZ_FRACTION_NAMES = ['оннан', 'жүзден', 'мыңнан', 'он мыңнан', 'жүз мыңнан', 'миллионнан'];
+// Английский: после «point» цифры читаются по одной — «three point one four»
+const EN_DIGITS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+const MAX_NUMBER = 1e15;
+
+/** «1 234 567,89», «-0.5» → знак, целая и дробная часть строками; иначе null. */
+function parseNumberInput(raw: string): { negative: boolean; intStr: string; fracStr: string } | null {
+  const normalized = raw.replace(/[\s\u00a0\u202f']/g, '').replace(',', '.');
+  const m = /^(-?)(\d*)(?:\.(\d+))?$/.exec(normalized);
+  if (!m || (!m[2] && !m[3])) return null;
+  return { negative: m[1] === '-', intStr: m[2] || '0', fracStr: m[3] || '' };
+}
+
 interface ConversionHistory {
   id: string;
   number: string;
@@ -26,11 +57,10 @@ interface ConversionHistory {
 export default function NumberToWordsCalculator() {
   const { t, i18n } = useTranslation('calculators');
   const [inputNumber, setInputNumber] = useState<string>('123456');
-  const [language, setLanguage] = useState<'ru' | 'kz' | 'en'>('ru');
+  const [language, setLanguage] = useState<Lang>(i18n.language === 'kk' ? 'kz' : 'ru');
   const [format, setFormat] = useState<'number' | 'currency'>('number');
   const [currency, setCurrency] = useState<'kzt' | 'usd' | 'rub' | 'eur'>('kzt');
   const [gender, setGender] = useState<'male' | 'female' | 'neuter'>('male');
-  const [case_, setCase] = useState<'nominative' | 'genitive' | 'dative'>('nominative');
   const [history, setHistory] = useState<ConversionHistory[]>([]);
 
   // Результат считается СИНХРОННО (useMemo ниже), а не через
@@ -212,40 +242,19 @@ export default function NumberToWordsCalculator() {
     if (remainder >= 10 && remainder < 20) {
       if (result) result += ' ';
       result += enNumbers.teens[remainder - 10];
-    } else {
-      if (tens > 0) {
-        if (result) result += ' ';
-        result += enNumbers.tens[tens];
-      }
-      if (ones > 0) {
-        if (result) result += ' ';
-        result += enNumbers.ones[ones];
-      }
+    } else if (tens > 0 || ones > 0) {
+      if (result) result += ' ';
+      result += tens > 0 ? enNumbers.tens[tens] + (ones > 0 ? '-' + enNumbers.ones[ones] : '') : enNumbers.ones[ones];
     }
 
     return result;
   };
 
-  // Основная функция преобразования числа в слова
-  const numberToWords = (num: number, lang: 'ru' | 'kz' | 'en'): string => {
-    if (num === 0) {
-      switch (lang) {
-        case 'ru': return 'ноль';
-        case 'kz': return 'нөл';
-        case 'en': return 'zero';
-        default: return 'ноль';
-      }
-    }
-
-    if (num < 0) {
-      const negative = lang === 'ru' ? 'минус' : lang === 'kz' ? 'минус' : 'negative';
-      return negative + ' ' + numberToWords(Math.abs(num), lang);
-    }
-
-    if (num >= 1000000000000000) {
-      return lang === 'ru' ? 'число слишком большое' :
-             lang === 'kz' ? 'сан тым үлкен' :
-             'number too large';
+  // Целое неотрицательное число словами; g — род последней группы (русский)
+  const numberToWords = (num: number, lang: Lang, g: Gender = 'male'): string => {
+    if (num === 0) return lang === 'ru' ? 'ноль' : lang === 'kz' ? 'нөл' : 'zero';
+    if (num >= MAX_NUMBER) {
+      return lang === 'ru' ? 'число слишком большое' : lang === 'kz' ? 'сан тым үлкен' : 'number too large';
     }
 
     const scales = lang === 'ru' ? ruNumbers.scales :
@@ -255,50 +264,25 @@ export default function NumberToWordsCalculator() {
     let result = '';
     let remaining = Math.floor(num);
 
-    for (let i = scales.length - 1; i >= 0; i--) {
+    for (let i = scales.length - 1; i >= 1; i--) {
       const scale = scales[i];
-      const scaleValue = typeof scale.power === 'number' ? scale.power : 1;
-
-      if (remaining >= scaleValue && scaleValue > 0) {
+      const scaleValue = scale.power;
+      if (remaining >= scaleValue) {
         const count = Math.floor(remaining / scaleValue);
-        let countWords = '';
-
-        if (lang === 'ru') {
-          // Для тысяч используем женский род
-          const genderForScale = i === 1 ? 'female' : 'male';
-          countWords = convertHundredsRu(count, genderForScale);
-        } else if (lang === 'kz') {
-          countWords = convertHundredsKz(count);
-        } else {
-          countWords = convertHundredsEn(count);
-        }
-
+        // тысяча — женского рода: «одна тысяча», «две тысячи»
+        const countWords = lang === 'ru' ? convertHundredsRu(count, i === 1 ? 'female' : 'male') :
+                           lang === 'kz' ? convertHundredsKz(count) : convertHundredsEn(count);
         if (result) result += ' ';
         result += countWords;
-
-        if (lang === 'ru' && typeof scale.name === 'object') {
-          const scaleName = getWordForm(count, scale.name);
-          if (scaleName) result += ' ' + scaleName;
-        } else if (lang === 'kz' || lang === 'en') {
-          const scaleName = typeof scale.name === 'string' ? scale.name : '';
-          if (scaleName) result += ' ' + scaleName;
-        }
-
+        const scaleName = typeof scale.name === 'object' ? getWordForm(count, scale.name) : scale.name;
+        if (scaleName) result += ' ' + scaleName;
         remaining %= scaleValue;
       }
     }
 
-    // Добавляем остаток (единицы, десятки, сотни)
     if (remaining > 0) {
-      let remainderWords = '';
-      if (lang === 'ru') {
-        remainderWords = convertHundredsRu(remaining, gender);
-      } else if (lang === 'kz') {
-        remainderWords = convertHundredsKz(remaining);
-      } else {
-        remainderWords = convertHundredsEn(remaining);
-      }
-
+      const remainderWords = lang === 'ru' ? convertHundredsRu(remaining, g) :
+                             lang === 'kz' ? convertHundredsKz(remaining) : convertHundredsEn(remaining);
       if (result) result += ' ';
       result += remainderWords;
     }
@@ -306,116 +290,80 @@ export default function NumberToWordsCalculator() {
     return result.trim();
   };
 
-  // Преобразование дробной части
-  const convertFraction = (fraction: string, lang: 'ru' | 'kz' | 'en'): string => {
-    if (!fraction || fraction === '0') return '';
+  const minusWord = (lang: Lang) => (lang === 'en' ? 'minus' : 'минус');
 
-    const fractionNum = parseInt(fraction.padEnd(2, '0').substring(0, 2));
-
-    if (fractionNum === 0) return '';
-
-    switch (lang) {
-      case 'ru':
-        if (fraction.length === 1) {
-          return numberToWords(fractionNum, lang) + ' ' + getWordForm(fractionNum, ['десятая', 'десятых', 'десятых']);
-        } else {
-          return numberToWords(fractionNum, lang) + ' ' + getWordForm(fractionNum, ['сотая', 'сотых', 'сотых']);
-        }
-      case 'kz':
-        if (fraction.length === 1) {
-          return numberToWords(fractionNum, lang) + ' ондық';
-        } else {
-          return numberToWords(fractionNum, lang) + ' жүздік';
-        }
-      case 'en':
-        if (fraction.length === 1) {
-          return numberToWords(fractionNum, lang) + (fractionNum === 1 ? ' tenth' : ' tenths');
-        } else {
-          return numberToWords(fractionNum, lang) + (fractionNum === 1 ? ' hundredth' : ' hundredths');
-        }
-      default:
-        return '';
+  // Число с дробью: «сорок две целых семь десятых», «қырық екі бүтін оннан жеті», «forty-two point seven»
+  const convertNumber = (raw: string, lang: Lang): { words: string; rounded: boolean } | null => {
+    const parsed = parseNumberInput(raw);
+    if (!parsed) return null;
+    let intNum = Number(parsed.intStr);
+    let frac = parsed.fracStr;
+    let rounded = false;
+    if (frac.length > 6) {
+      const r = Math.round(Number('0.' + frac) * 1e6);
+      rounded = true;
+      if (r >= 1e6) { intNum += 1; frac = ''; } else { frac = String(r).padStart(6, '0').replace(/0+$/, ''); }
     }
+    const fracNum = frac ? Number(frac) : 0;
+    let words: string;
+    if (intNum >= MAX_NUMBER) {
+      words = numberToWords(intNum, lang);
+    } else if (!fracNum) {
+      words = numberToWords(intNum, lang, gender);
+    } else if (lang === 'ru') {
+      const [one, many] = RU_FRACTION_NAMES[frac.length - 1];
+      words = `${numberToWords(intNum, 'ru', 'female')} ${getWordForm(intNum, ['целая', 'целых', 'целых'])} ` +
+        `${numberToWords(fracNum, 'ru', 'female')} ${getWordForm(fracNum, [one, many, many])}`;
+    } else if (lang === 'kz') {
+      words = `${numberToWords(intNum, 'kz')} бүтін ${KZ_FRACTION_NAMES[frac.length - 1]} ${numberToWords(fracNum, 'kz')}`;
+    } else {
+      words = `${numberToWords(intNum, 'en')} point ${frac.split('').map(d => EN_DIGITS[Number(d)]).join(' ')}`;
+    }
+    if (parsed.negative && (intNum > 0 || fracNum > 0) && intNum < MAX_NUMBER) words = `${minusWord(lang)} ${words}`;
+    return { words, rounded };
   };
 
-  // Конвертация валюты
-  const convertCurrency = (num: number, curr: 'kzt' | 'usd' | 'rub' | 'eur', lang: 'ru' | 'kz' | 'en'): string => {
-    const currencyData = currencies[curr][lang];
-    const major = Math.floor(num);
-    const minor = Math.round((num - major) * currencyData.ratio);
+  // Сумма: копейки/тиыны округляются до 2 знаков с переносом (1,999 → два тенге)
+  const convertCurrency = (raw: string, curr: CurrencyId, lang: Lang): string | null => {
+    const parsed = parseNumberInput(raw);
+    if (!parsed) return null;
+    let major = Number(parsed.intStr);
+    const frac3 = (parsed.fracStr + '000').slice(0, 3);
+    let minor = Number(frac3.slice(0, 2)) + (Number(frac3[2]) >= 5 ? 1 : 0);
+    if (minor === 100) { major += 1; minor = 0; }
+    if (major >= MAX_NUMBER) return numberToWords(major, lang);
 
-    let result = '';
-
-    if (major > 0) {
-      result += numberToWords(major, lang);
-      result += ' ' + getWordForm(major, currencyData.main);
-    }
-
-    if (minor > 0) {
-      if (result) result += ' ';
-      result += numberToWords(minor, lang);
-      result += ' ' + getWordForm(minor, currencyData.minor);
-    }
-
-    if (major === 0 && minor === 0) {
-      return `${numberToWords(0, lang)} ${currencyData.main[2]}`;
-    }
-
-    return result;
+    const data = currencies[curr][lang];
+    const g = CURRENCY_GENDER_RU[curr];
+    const form = (n: number, forms: string[]) => (lang === 'en' ? (n === 1 ? forms[0] : forms[1]) : getWordForm(n, forms));
+    const parts: string[] = [];
+    if (major > 0 || minor === 0) parts.push(`${numberToWords(major, lang, g.main)} ${form(major, data.main)}`);
+    if (minor > 0) parts.push(`${numberToWords(minor, lang, g.minor)} ${form(minor, data.minor)}`);
+    const words = parts.join(' ');
+    return parsed.negative && (major > 0 || minor > 0) ? `${minusWord(lang)} ${words}` : words;
   };
+
+  const convertValue = (raw: string, lang: Lang): string | null => (
+    format === 'currency' ? convertCurrency(raw, currency, lang) : convertNumber(raw, lang)?.words ?? null
+  );
 
   // Основная функция конвертации (чистая: запись в историю — отдельным useEffect)
   const computeConversion = (): ConversionResult => {
-    const num = parseFloat(inputNumber.replace(',', '.')) || 0;
-
-    if (inputNumber === '') {
+    if (inputNumber.trim() === '') {
       return EMPTY_RESULTS;
     }
 
-    try {
-      let words = '';
-      let currencyText = '';
-      let description = '';
-
-      if (format === 'currency') {
-        currencyText = convertCurrency(num, currency, language);
-        words = currencyText;
-        description = t('number-to-words.currencyRecordDescription', { number: inputNumber });
-      } else {
-        const [integerPart, fractionPart] = inputNumber.split(/[.,]/);
-        const integerNum = parseInt(integerPart) || 0;
-
-        // Целая часть
-        const integerWords = numberToWords(integerNum, language);
-
-        // Дробная часть
-        const fractionWords = fractionPart ? convertFraction(fractionPart, language) : '';
-
-        if (fractionWords) {
-          const wholeWord = language === 'ru' ? (integerNum === 1 ? 'целая' : 'целых') :
-                           language === 'kz' ? 'бүтін' :
-                           'point';
-          words = `${integerWords} ${wholeWord} ${fractionWords}`;
-        } else {
-          words = integerWords;
-        }
-
-        description = t('number-to-words.numberRecordDescription', { number: inputNumber });
-      }
-
-      return {
-        words: words || (language === 'ru' ? 'ошибка конвертации' : language === 'kz' ? 'түрлендіру қатесі' : 'conversion error'),
-        currency: currencyText,
-        description
-      };
-
-    } catch (error) {
-      return {
-        words: language === 'ru' ? 'ошибка при конвертации' : language === 'kz' ? 'түрлендіру қатесі' : 'conversion error',
-        currency: '',
-        description: t('number-to-words.conversionFailed')
-      };
+    if (format === 'currency') {
+      const words = convertCurrency(inputNumber, currency, language);
+      if (words === null) return { words: t('number-to-words.invalidInput'), currency: '', description: '' };
+      return { words, currency: words, description: t('number-to-words.currencyRecordDescription', { number: inputNumber }) };
     }
+
+    const converted = convertNumber(inputNumber, language);
+    if (!converted) return { words: t('number-to-words.invalidInput'), currency: '', description: '' };
+    const description = t('number-to-words.numberRecordDescription', { number: inputNumber }) +
+      (converted.rounded ? ` • ${t('number-to-words.roundedTo6')}` : '');
+    return { words: converted.words, currency: '', description };
   };
 
   const addToHistory = (number: string, result: string) => {
@@ -472,7 +420,7 @@ export default function NumberToWordsCalculator() {
   const results = useMemo(
     computeConversion,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [inputNumber, language, format, currency, gender, case_, i18n.language]
+    [inputNumber, language, format, currency, gender, i18n.language]
   );
 
   // Запись в историю — побочный эффект (Date.now/Math.random внутри
@@ -483,7 +431,7 @@ export default function NumberToWordsCalculator() {
       addToHistory(inputNumber, results.words);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputNumber, language, format, currency, gender, case_]);
+  }, [inputNumber, language, format, currency, gender]);
 
   const languages = [
     { id: 'ru', name: t('number-to-words.russianLanguage'), flag: '🇷🇺' },
@@ -629,8 +577,8 @@ export default function NumberToWordsCalculator() {
                   {t('number-to-words.quickSelect')}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {/* Год берём текущий, а не хардкод «2024» — иначе пример протухает (аудит 08.2026). */}
-                  {['4', '15', '100', '1000', String(new Date().getFullYear()), '12345', '1000000', '3.14'].map((number) => (
+                  {/* Без текущего года: new Date() при рендере расходится с пререндером после Нового года. */}
+                  {['4', '21', '100', '1000', '12345', '1000000', '42.7', '3.14'].map((number) => (
                     <button
                       key={number}
                       onClick={() => setQuickNumber(number)}
@@ -769,31 +717,7 @@ export default function NumberToWordsCalculator() {
                     </h4>
                     <div className="space-y-2">
                       {languages.filter(l => l.id !== language).map((lang) => {
-                        // Быстрый перерасчет для других языков
-                        const num = parseFloat(inputNumber.replace(',', '.')) || 0;
-                        let otherLangResult = '';
-
-                        try {
-                          if (format === 'currency') {
-                            otherLangResult = convertCurrency(num, currency, lang.id as 'ru' | 'kz' | 'en');
-                          } else {
-                            const [integerPart, fractionPart] = inputNumber.split(/[.,]/);
-                            const integerNum = parseInt(integerPart) || 0;
-                            const integerWords = numberToWords(integerNum, lang.id as 'ru' | 'kz' | 'en');
-                            const fractionWords = fractionPart ? convertFraction(fractionPart, lang.id as 'ru' | 'kz' | 'en') : '';
-
-                            if (fractionWords) {
-                              const wholeWord = lang.id === 'ru' ? (integerNum === 1 ? 'целая' : 'целых') :
-                                               lang.id === 'kz' ? 'бүтін' :
-                                               'point';
-                              otherLangResult = `${integerWords} ${wholeWord} ${fractionWords}`;
-                            } else {
-                              otherLangResult = integerWords;
-                            }
-                          }
-                        } catch (error) {
-                          otherLangResult = 'ошибка конвертации';
-                        }
+                        const otherLangResult = convertValue(inputNumber, lang.id as Lang) ?? '';
 
                         return (
                           <div key={lang.id} className="flex items-center space-x-3 py-2 px-3 bg-gray-50 rounded">
@@ -1133,7 +1057,7 @@ export default function NumberToWordsCalculator() {
                   ]
                 }
               ],
-              footer: 'Расчёт выполнен на calk.kz'
+              footer: t('number-to-words.exportFooter')
             }}
             filename="number-to-words-result"
           />
@@ -1160,7 +1084,7 @@ export default function NumberToWordsCalculator() {
       <ExpertBlock />
       <EmbedWidget
         calculatorId="number-to-words"
-        calculatorTitle="Числа прописью"
+        calculatorTitle={t('number-to-words.title')}
       />
       <LastUpdated calculatorId="number-to-words" />
     </div>

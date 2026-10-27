@@ -11,8 +11,13 @@ import { QuickAnswer } from '../ui/QuickAnswer';
 
 type QRType = 'text' | 'url' | 'phone' | 'email' | 'wifi' | 'vcard';
 
+// Wi-Fi (синтаксис MECARD, ZXing): \ ; , " : экранируются обратной косой чертой
+const escWifi = (s: string) => s.replace(/([\\;,":])/g, '\\$1');
+// vCard 3.0 (RFC 2426, п. 4): в текстовых значениях экранируются \ ; , и перевод строки
+const escVcard = (s: string) => s.replace(/([\\;,])/g, '\\$1').replace(/\r?\n/g, '\\n');
+
 export default function QRCodeGeneratorCalculator() {
-  const { t } = useTranslation('calculators');
+  const { t, i18n } = useTranslation('calculators');
   const [type, setType] = useState<QRType>('url');
   const [text, setText] = useState<string>('https://calk.kz/');
   const [phone, setPhone] = useState<string>('+77001234567');
@@ -21,13 +26,15 @@ export default function QRCodeGeneratorCalculator() {
   const [wifiSSID, setWifiSSID] = useState<string>('MyNetwork');
   const [wifiPass, setWifiPass] = useState<string>('password123');
   const [wifiType, setWifiType] = useState<'WPA' | 'WEP' | 'nopass'>('WPA');
-  const [vcName, setVcName] = useState<string>('Иван Иванов');
+  const [wifiHidden, setWifiHidden] = useState<boolean>(false);
+  const [vcName, setVcName] = useState<string>(i18n.language === 'kk' ? 'Айгүл Серікова' : 'Иван Иванов');
   const [vcPhone, setVcPhone] = useState<string>('+77001234567');
   const [vcEmail, setVcEmail] = useState<string>('ivan@example.com');
   const [size, setSize] = useState<number>(300);
   const [color, setColor] = useState<string>('000000');
   const [bgColor, setBgColor] = useState<string>('ffffff');
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
+  const [tooLong, setTooLong] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
   const qrData = useMemo(() => {
@@ -36,22 +43,30 @@ export default function QRCodeGeneratorCalculator() {
       case 'text':
         return text;
       case 'phone':
-        return `tel:${phone}`;
+        // RFC 3966: пробелы в номере недопустимы
+        return `tel:${phone.replace(/\s/g, '')}`;
       case 'email':
         return `mailto:${email}${emailSubject ? `?subject=${encodeURIComponent(emailSubject)}` : ''}`;
       case 'wifi':
-        return `WIFI:T:${wifiType};S:${wifiSSID};P:${wifiPass};;`;
-      case 'vcard':
-        return `BEGIN:VCARD\nVERSION:3.0\nFN:${vcName}\nTEL:${vcPhone}\nEMAIL:${vcEmail}\nEND:VCARD`;
+        return `WIFI:T:${wifiType};S:${escWifi(wifiSSID)};${wifiType === 'nopass' ? '' : `P:${escWifi(wifiPass)};`}${wifiHidden ? 'H:true;' : ''};`;
+      case 'vcard': {
+        // N (фамилия;имя) обязателен в vCard 3.0 наравне с FN; строки — через CRLF
+        const parts = vcName.trim().split(/\s+/);
+        const given = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0] || '';
+        const family = parts.length > 1 ? parts[parts.length - 1] : '';
+        return ['BEGIN:VCARD', 'VERSION:3.0', `N:${escVcard(family)};${escVcard(given)};;;`, `FN:${escVcard(vcName.trim())}`,
+          `TEL:${vcPhone.replace(/\s/g, '')}`, `EMAIL:${vcEmail}`, 'END:VCARD'].join('\r\n');
+      }
       default:
         return '';
     }
-  }, [type, text, phone, email, emailSubject, wifiSSID, wifiPass, wifiType, vcName, vcPhone, vcEmail]);
+  }, [type, text, phone, email, emailSubject, wifiSSID, wifiPass, wifiType, wifiHidden, vcName, vcPhone, vcEmail]);
 
   // Локальная генерация QR через библиотеку qrcode — полностью офлайн, никаких внешних запросов
   useEffect(() => {
     if (!qrData) {
       setQrDataUrl('');
+      setTooLong(false);
       return;
     }
     let cancelled = false;
@@ -65,10 +80,11 @@ export default function QRCodeGeneratorCalculator() {
       },
     })
       .then((url) => {
-        if (!cancelled) setQrDataUrl(url);
+        if (!cancelled) { setQrDataUrl(url); setTooLong(false); }
       })
       .catch(() => {
-        if (!cancelled) setQrDataUrl('');
+        // Единственная ошибка библиотеки на строке — не влезает в QR версии 40 (уровень M — 2 331 байт)
+        if (!cancelled) { setQrDataUrl(''); setTooLong(true); }
       });
     return () => {
       cancelled = true;
@@ -184,11 +200,13 @@ export default function QRCodeGeneratorCalculator() {
                 <input type="text" value={wifiSSID} onChange={e => setWifiSSID(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('qr-code.password')}</label>
-                <input type="text" value={wifiPass} onChange={e => setWifiPass(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-              </div>
+              {wifiType !== 'nopass' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('qr-code.password')}</label>
+                  <input type="text" value={wifiPass} onChange={e => setWifiPass(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{t('qr-code.encryption')}</label>
                 <select value={wifiType} onChange={e => setWifiType(e.target.value as any)}
@@ -198,6 +216,10 @@ export default function QRCodeGeneratorCalculator() {
                   <option value="nopass">{t('qr-code.nopass')}</option>
                 </select>
               </div>
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input type="checkbox" checked={wifiHidden} onChange={e => setWifiHidden(e.target.checked)} />
+                {t('qr-code.hiddenNetwork')}
+              </label>
             </>
           )}
 
@@ -248,6 +270,9 @@ export default function QRCodeGeneratorCalculator() {
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 flex flex-col items-center">
           <h2 className="text-xl font-semibold self-start">{t('qr-code.result')}</h2>
+          {tooLong && (
+            <div className="bg-red-50 rounded-lg p-3 text-sm text-red-700 self-stretch">{t('qr-code.tooLong')}</div>
+          )}
           {qrDataUrl && (
             <>
               <div className="p-4 bg-white rounded-lg border-2 border-gray-200">

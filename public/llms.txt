@@ -135,7 +135,7 @@ Calk.kz — платформа с онлайн-калькуляторами, о�
 
 ### Конвертеры и преобразователи
 - /calculator/currency-converter/ — Универсальный конвертер валют
-- /calculator/time-converter/ — Конвертация единиц времени
+- /calculator/time-converter/ — Конвертер времени
 - /calculator/number-to-words/ — Калькулятор записи чисел прописью
 - /calculator/time-to-words/ — Калькулятор преобразования времени прописью
 - /calculator/age/ — Калькулятор точного возраста

@@ -7,12 +7,14 @@ import { ExpertBlock } from '../ui/ExpertBlock';
 import { LastUpdated } from '../ui/LastUpdated';
 import { getSources } from '../../data/calculatorSources';
 import { QuickAnswer } from '../ui/QuickAnswer';
+import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 type Category = 'length' | 'weight' | 'volume' | 'temperature' | 'area' | 'speed';
 
 type UnitMap = Record<string, number>;
 
-// Все множители относительно базовой единицы категории
+// Все множители относительно базовой единицы категории. Точные по определениям:
+// международный ярд 0,9144 м и фунт 0,45359237 кг (1959), галлон США = 231 куб. дюйм.
 const UNITS: Record<Category, { units: UnitMap; base: string }> = {
   length: {
     base: 'meter',
@@ -20,11 +22,11 @@ const UNITS: Record<Category, { units: UnitMap; base: string }> = {
   },
   weight: {
     base: 'kilogram',
-    units: { milligram: 0.000001, gram: 0.001, kilogram: 1, ton: 1000, pound: 0.453592, ounce: 0.0283495 }
+    units: { milligram: 0.000001, gram: 0.001, kilogram: 1, ton: 1000, pound: 0.45359237, ounce: 0.028349523125, troyounce: 0.0311034768 }
   },
   volume: {
     base: 'liter',
-    units: { milliliter: 0.001, liter: 1, cubicmeter: 1000, gallon: 3.78541, cup: 0.24, fluidounce: 0.0295735 }
+    units: { milliliter: 0.001, liter: 1, cubicmeter: 1000, gallon: 3.785411784, cup: 0.24, fluidounce: 0.0295735295625 }
   },
   temperature: {
     base: 'celsius',
@@ -32,11 +34,11 @@ const UNITS: Record<Category, { units: UnitMap; base: string }> = {
   },
   area: {
     base: 'squaremeter',
-    units: { squaremeter: 1, squarekilometer: 1000000, hectare: 10000, acre: 4046.86, squarefoot: 0.092903 }
+    units: { squaremeter: 1, squarekilometer: 1000000, hectare: 10000, acre: 4046.8564224, squarefoot: 0.09290304 }
   },
   speed: {
     base: 'kmh',
-    units: { kmh: 1, mph: 1.60934, ms: 3.6, knot: 1.852 }
+    units: { kmh: 1, mph: 1.609344, ms: 3.6, knot: 1.852 }
   }
 };
 
@@ -72,9 +74,11 @@ export default function UnitConverterCalculator() {
   };
 
   const result = useMemo(() => {
-    const n = parseFloat(value);
+    const n = parseFloat(value.replace(',', '.'));
     if (isNaN(n)) return '';
     if (category === 'temperature') {
+      // Ниже абсолютного нуля температуры не бывает
+      if (convertTemp(n, fromUnit, 'kelvin') < 0) return 'belowZero';
       return convertTemp(n, fromUnit, toUnit);
     }
     const fromMult = UNITS[category].units[fromUnit] || 1;
@@ -94,12 +98,17 @@ export default function UnitConverterCalculator() {
     { id: 'area', icon: '📐' }, { id: 'speed', icon: '🚀' },
   ];
 
-  const formatResult = (r: number | string) => {
-    if (typeof r === 'string') return r;
-    if (Math.abs(r) < 0.0001) return r.toExponential(4);
-    if (Math.abs(r) > 1e9) return r.toExponential(4);
-    return r.toLocaleString('ru-KZ', { maximumFractionDigits: 6 });
+  // 0 → «0» (а не «0.0000e+0»), мелкие — значащими цифрами с запятой, огромные — «1,5 × 10^18»
+  const formatResult = (r: number) => {
+    if (r === 0) return '0';
+    if (Math.abs(r) >= 1e15) {
+      const [m, e] = r.toExponential(4).split('e');
+      return `${Number(m).toLocaleString(NUMBER_LOCALE)} × 10^${Number(e)}`;
+    }
+    if (Math.abs(r) < 0.0001) return r.toLocaleString(NUMBER_LOCALE, { maximumSignificantDigits: 6 });
+    return r.toLocaleString(NUMBER_LOCALE, { maximumFractionDigits: 6 });
   };
+  const inputNumber = parseFloat(value.replace(',', '.'));
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -148,7 +157,7 @@ export default function UnitConverterCalculator() {
           <div className="md:col-span-5">
             <label className="block text-sm font-medium text-gray-700 mb-2">{t('unit-converter.to')}</label>
             <div className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-teal-50 mb-2 min-h-[42px] flex items-center font-semibold">
-              {typeof result === 'number' ? formatResult(result) : ''}
+              {typeof result === 'number' ? formatResult(result) : result === 'belowZero' ? '—' : ''}
             </div>
             <select value={toUnit} onChange={e => setToUnit(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg">
@@ -161,10 +170,14 @@ export default function UnitConverterCalculator() {
 
         <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-6 border border-teal-200 text-center">
           <div className="text-sm text-gray-600 mb-1">{t('unit-converter.result')}</div>
-          <div className="text-3xl font-bold text-teal-700">
-            {value} {t(`unit-converter.units.${fromUnit}`)} = <br className="md:hidden" />
-            {typeof result === 'number' ? formatResult(result) : ''} {t(`unit-converter.units.${toUnit}`)}
-          </div>
+          {result === 'belowZero' ? (
+            <div className="text-lg font-semibold text-red-600">{t('unit-converter.belowAbsoluteZero')}</div>
+          ) : (
+            <div className="text-3xl font-bold text-teal-700">
+              {isNaN(inputNumber) ? value : formatResult(inputNumber)} {t(`unit-converter.units.${fromUnit}`)} = <br className="md:hidden" />
+              {typeof result === 'number' ? formatResult(result) : ''} {t(`unit-converter.units.${toUnit}`)}
+            </div>
+          )}
         </div>
       </div>
 
