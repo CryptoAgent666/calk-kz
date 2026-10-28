@@ -86,21 +86,28 @@ const isBundleVersion = (v: string) => /^\d{14}$/.test(v);
  * (set() перезагружает webview — код после него не выполняется). true — применение запущено.
  */
 async function applyDownloaded(updater: Updater, currentVersion: string): Promise<boolean> {
-  const [{ bundles }, { bundle: active }] = await Promise.all([updater.list(), updater.current()]);
+  // raw: реестр плагина, а не папки на диске. У идущей или оборванной загрузки папки ещё нет,
+  // и обычный list() её не показывает.
+  const [{ bundles }, { bundle: active }] = await Promise.all([updater.list({ raw: true }), updater.current()]);
   const ready = bundles
-    .filter((b) => (b.status === 'pending' || b.status === 'success')
+    .filter((b) => b.id !== active.id && (b.status === 'pending' || b.status === 'success')
       && isBundleVersion(b.version) && b.version > currentVersion)
     .sort((a, b) => (a.version < b.version ? 1 : -1))[0];
 
+  // Незавершённые загрузки тоже удаляем. Код идёт один раз на процесс (webview перезагружает
+  // только set(), а он не вызывается, пока что-то качается), так что запись `downloading` здесь —
+  // от убитого процесса, и она не доедет: на Android конец загрузки ловит наблюдатель активити,
+  // и zip, докачанный уже без него, так и лежит нераспакованным в files/. delete() заодно
+  // отменяет задачу загрузки (WorkManager, по тегу версии) — до нового download() той же версии.
   let removed = 0;
   for (const b of bundles) {
-    if (b.id === active.id || b.id === ready?.id || b.status === 'downloading') continue;
+    if (b.id === active.id || b.id === ready?.id) continue;
     try {
       await updater.delete({ id: b.id });
-      removed++;
     } catch {
-      /* ignore */
+      /* запись без файлов на диске плагин удаляет, но отвечает ошибкой */
     }
+    removed++;
   }
   if (removed) log('удалены лишние копии', removed);
 
