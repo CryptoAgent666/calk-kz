@@ -258,6 +258,7 @@ export const CALCULATOR_SOURCES: Record<string, CalculatorSource[]> = {
   'divorce': [
     FAMILY_CODE,
     { title: 'eGov — расторжение брака', url: 'https://egov.kz/cms/ru/services/pass012_mki' },
+    { title: 'Приказ № 175/НҚ — размер оплаты услуг регистрации актов гражданского состояния', url: 'https://adilet.zan.kz/rus/docs/V2300032755' },
   ],
   'property-division': [FAMILY_CODE, GK_RK],
   'statute-limitations': [GK_RK],
