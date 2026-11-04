@@ -45,9 +45,12 @@ export default function SocialAssistanceCalculator() {
   const calculateASP = () => {
     const totalIncome = parseFloat(quarterlyIncome) || 0;
     const members = parseInt(familyMembers) || 0;
-    const children = parseInt(childrenAge1to6) || 0;
+    // Детей 1–6 лет не больше, чем членов семьи
+    const children = Math.min(parseInt(childrenAge1to6) || 0, members);
 
-    if (totalIncome <= 0 || members <= 0) {
+    // Нулевой доход — законный случай: помощь = вся черта бедности × членов семьи (ст. 126 п. 1).
+    // Раньше доход 0 давал «Нет права», а доход 1 ₸ — 195 819 ₸.
+    if (totalIncome < 0 || members <= 0) {
       return EMPTY_RESULTS;
     }
 

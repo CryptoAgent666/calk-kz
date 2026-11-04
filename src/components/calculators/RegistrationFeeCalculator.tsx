@@ -14,7 +14,7 @@ import { NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function RegistrationFeeCalculator() {
   const { t, i18n } = useTranslation('calculators');
-  const [vehicleType, setVehicleType] = useState<'car' | 'electric' | 'truck' | 'bus'>('car');
+  const [vehicleType, setVehicleType] = useState<'car' | 'electric' | 'truck' | 'tractor' | 'bus'>('car');
   const [manufactureYear, setManufactureYear] = useState<string>('2020');
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
@@ -37,11 +37,13 @@ export default function RegistrationFeeCalculator() {
 
   // Ставки сбора за первичную регистрацию (в МРП), НК РК ст. 615 п. 3, строки 4.1–4.4 таблицы:
   // 4.1 — М1 с электродвигателем: 0,25 / 25 / 250; 4.2 — прочие М1: 0,25 / 50 / 500;
-  // 4.3 — М2, М3, N1–N3 (автобусы и грузовые, кроме седельных тягачей): 0,25 / 240 / 350 / 2 500.
+  // 4.3 — М2, М3, N1–N3 (автобусы и грузовые, кроме седельных тягачей): 0,25 / 240 / 350 / 2 500;
+  // 4.4 — N3 седельные тягачи: 0,25 / 240 / 350 (от 3 до 7 лет) / 2 500 (от 7 лет). Раньше тягачи
+  // считались по строке 4.3: тягач 2021 г.в. — 2 500 МРП вместо 350.
   // Возраст — разница лет (2026 − год выпуска): 0–1 → «до 2 лет», 2 → «от 2 до 3», 3+ → «от 3 лет»
   // (в 2026 году 2023 г.в. и старше — 500 МРП; так считают ЦОН и КГД). Раньше группа «2–3 года»
   // захватывала разницу 3, и авто 2023 г.в. считалось по 50 МРП вместо 500 (216 250 ₸ вместо 2 162 500).
-  const ratesByType: Record<'car' | 'electric' | 'truck' | 'bus', { maxAge: number; rate: number; description: string }[]> = {
+  const ratesByType: Record<'car' | 'electric' | 'truck' | 'tractor' | 'bus', { maxAge: number; rate: number; description: string }[]> = {
     car: [
       { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
       { maxAge: 2, rate: 50, description: t('registration-fee.from2To3Years') },
@@ -57,6 +59,12 @@ export default function RegistrationFeeCalculator() {
       { maxAge: 2, rate: 240, description: t('registration-fee.from2To3Years') },
       { maxAge: 4, rate: 350, description: t('registration-fee.from3To5Years') },
       { maxAge: Infinity, rate: 2500, description: t('registration-fee.over5Years') }
+    ],
+    tractor: [
+      { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
+      { maxAge: 2, rate: 240, description: t('registration-fee.from2To3Years') },
+      { maxAge: 6, rate: 350, description: t('registration-fee.from3To7Years') },
+      { maxAge: Infinity, rate: 2500, description: t('registration-fee.over7Years') }
     ],
     bus: [
       { maxAge: 1, rate: 0.25, description: t('registration-fee.upTo2Years') },
@@ -76,6 +84,7 @@ export default function RegistrationFeeCalculator() {
     { id: 'car', name: t('registration-fee.passengerCar'), icon: '🚗' },
     { id: 'electric', name: t('registration-fee.electricCar'), icon: '⚡' },
     { id: 'truck', name: t('registration-fee.truckCar'), icon: '🚛' },
+    { id: 'tractor', name: t('registration-fee.tractor'), icon: '🚚' },
     { id: 'bus', name: t('registration-fee.bus'), icon: '🚌' }
   ];
 
@@ -175,7 +184,7 @@ export default function RegistrationFeeCalculator() {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 {t('registration-fee.vehicleType')}
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {vehicleTypes.map((type) => (
                   <button
                     key={type.id}
@@ -386,12 +395,12 @@ export default function RegistrationFeeCalculator() {
           <ExportButtons
             data={{
               title: t('registration-fee.export.title'),
-              subtitle: vehicleType === 'car' ? t('registration-fee.vehicleTypes.car') : vehicleType === 'electric' ? t('registration-fee.vehicleTypes.electric') : vehicleType === 'truck' ? t('registration-fee.vehicleTypes.truck') : t('registration-fee.vehicleTypes.bus'),
+              subtitle: t(`registration-fee.vehicleTypes.${vehicleType}`),
               sections: [
                 {
                   title: t('registration-fee.export.parameters'),
                   data: [
-                    { label: t('registration-fee.export.vehicleType'), value: vehicleType },
+                    { label: t('registration-fee.export.vehicleType'), value: t(`registration-fee.vehicleTypes.${vehicleType}`) },
                     { label: t('registration-fee.export.manufactureYear'), value: manufactureYear },
                   ]
                 },

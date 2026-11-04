@@ -27,24 +27,35 @@ export default function MaternityBenefitsCalculator() {
   const [averageIncomeForChildcare, setAverageIncomeForChildcare] = useState<string>('300000');
   const [childNumber, setChildNumber] = useState<number>(1);
   const [birthType, setBirthType] = useState<BirthType>('normal');
+  // Сколько детей родилось одновременно. При двойне и тройне пособие на рождение и выплата по уходу
+  // назначаются на каждого ребёнка (Соцкодекс ст. 79 п. 2, ст. 84 п. 1, ст. 81 п. 5), отпуск — как
+  // при осложнённых родах (ТК ст. 99). Раньше «2+ детей» меняло только число дней.
+  const [babies, setBabies] = useState<number>(1);
 
   // Константы на 2026 год
   const MZP = 85000; // МЗП
   const MRP = 4325;  // МРП
   const MAX_INCOME_FOR_CALCULATION = 7 * MZP; // 595,000 тенге
   const OPV_RATE = 0.10;
-  const maternityDays = BIRTH_DAYS[birthType];
+  const effectiveBirthType: BirthType = babies > 1
+    ? (birthType === 'normal' ? 'complicated' : birthType === 'zone' ? 'zoneComplicated' : birthType)
+    : birthType;
+  const maternityDays = BIRTH_DAYS[effectiveBirthType];
   const MATERNITY_COEFFICIENT = maternityDays / 30; // напр. 126/30 = 4.2
   const CHILDCARE_RATE = 0.4;
 
   // Пособия для неработающих (в МРП)
-  const birthBenefitMRP = childNumber <= 3 ? 38 : 63;
   const monthlyChildcareBenefitMRP = {
     1: 5.76,
     2: 6.81,
     3: 7.85,
     4: 8.90
   };
+  // Номера детей по счёту: при двойне третьим и четвёртым — 3 и 4
+  const childOrders = Array.from({ length: babies }, (_, k) => childNumber + k);
+  const birthBenefitMRP = childOrders.reduce((sum, n) => sum + (n <= 3 ? 38 : 63), 0);
+  const childcareMRP = childOrders.reduce(
+    (sum, n) => sum + monthlyChildcareBenefitMRP[Math.min(n, 4) as 1 | 2 | 3 | 4], 0);
 
   const calculateBenefits = () => {
     if (isEmployed) {
@@ -66,8 +77,10 @@ export default function MaternityBenefitsCalculator() {
       // Ежемесячная выплата по уходу за ребенком — Социальный кодекс ст. 85 п. 1: доход × 0,40;
       // п. 2: не менее пособия по уходу для неработающих (ст. 82) с ОПВ сверху, не более 40 % от 7 МЗП
       // (потолок реализован обрезкой дохода до 7 МЗП выше).
-      const childcareFloorGross = (monthlyChildcareBenefitMRP[Math.min(childNumber, 4) as 1 | 2 | 3 | 4] * MRP) / (1 - OPV_RATE);
-      const grossChildcareBenefit = Math.max(childcareIncome * CHILDCARE_RATE, childcareFloorGross);
+      // На каждого ребёнка — своя выплата со своим минимумом по номеру ребёнка (ст. 84 п. 1).
+      const grossChildcareBenefit = childOrders.reduce((sum, n) => sum + Math.max(
+        childcareIncome * CHILDCARE_RATE,
+        (monthlyChildcareBenefitMRP[Math.min(n, 4) as 1 | 2 | 3 | 4] * MRP) / (1 - OPV_RATE)), 0);
       const childcareOPV = grossChildcareBenefit * OPV_RATE;
       const netChildcareBenefit = grossChildcareBenefit - childcareOPV;
 
@@ -92,8 +105,7 @@ export default function MaternityBenefitsCalculator() {
     } else {
       // Расчет для неработающих
       const birthBenefit = birthBenefitMRP * MRP;
-      const monthlyRate = monthlyChildcareBenefitMRP[Math.min(childNumber, 4) as keyof typeof monthlyChildcareBenefitMRP] || 8.90;
-      const monthlyChildcareBenefit = monthlyRate * MRP;
+      const monthlyChildcareBenefit = childcareMRP * MRP;
 
       // Общая сумма за первый год (единовременная + 18 месяцев ежемесячной)
       const totalFirstYearBenefits = birthBenefit + (monthlyChildcareBenefit * 18);
@@ -118,7 +130,7 @@ export default function MaternityBenefitsCalculator() {
   const results = useMemo(
     calculateBenefits,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isEmployed, averageIncomeForMaternity, averageIncomeForChildcare, childNumber, birthType]
+    [isEmployed, averageIncomeForMaternity, averageIncomeForChildcare, childNumber, birthType, babies]
   );
 
   const formatNumber = (num: number) => {
@@ -282,6 +294,7 @@ export default function MaternityBenefitsCalculator() {
                 <p className="text-xs text-gray-500 mt-1">
                   {t('maternity-benefits.incomeWithContributions')}
                 </p>
+                <p className="text-xs text-gray-500 mt-1">{t('maternity-benefits.income24Hint')}</p>
               </div>
 
               <div>
@@ -300,6 +313,29 @@ export default function MaternityBenefitsCalculator() {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <span className="block text-sm font-medium text-gray-700 mb-2">{t('maternity-benefits.babiesLabel')}</span>
+                <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t('maternity-benefits.babiesLabel')}>
+                  {[1, 2, 3].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      role="radio"
+                      aria-checked={babies === n}
+                      onClick={() => setBabies(n)}
+                      className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                        babies === n
+                          ? 'border-pink-500 bg-pink-50 text-pink-700'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      {t(`maternity-benefits.babies${n}`)}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{t('maternity-benefits.babiesHint')}</p>
               </div>
 
               <div className="bg-blue-50 rounded-lg p-4">
@@ -339,6 +375,29 @@ export default function MaternityBenefitsCalculator() {
                 </div>
               </div>
 
+              <div>
+                <span className="block text-sm font-medium text-gray-700 mb-2">{t('maternity-benefits.babiesLabel')}</span>
+                <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={t('maternity-benefits.babiesLabel')}>
+                  {[1, 2, 3].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      role="radio"
+                      aria-checked={babies === n}
+                      onClick={() => setBabies(n)}
+                      className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
+                        babies === n
+                          ? 'border-pink-500 bg-pink-50 text-pink-700'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      }`}
+                    >
+                      {t(`maternity-benefits.babies${n}`)}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{t('maternity-benefits.babiesHint')}</p>
+              </div>
+
               <div className="bg-teal-50 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-teal-900 mb-2">{t('maternity-benefits.stateBenefits')}</h3>
                 <div className="space-y-1 text-xs text-teal-800">
@@ -367,7 +426,7 @@ export default function MaternityBenefitsCalculator() {
                   <span>{t('maternity-benefits.maternityLumpSum')}</span>
                 </h3>
                 <p className="text-xs text-gray-500 mb-3">
-                  {t(`maternity-benefits.birthType.${birthType}`)}: {maternityDays} {t('maternity-benefits.daysShort')} (×{formatFixed(MATERNITY_COEFFICIENT, MATERNITY_COEFFICIENT % 1 === 0 || (MATERNITY_COEFFICIENT * 10) % 1 === 0 ? 1 : 3)})
+                  {t(`maternity-benefits.birthType.${effectiveBirthType}`)}: {maternityDays} {t('maternity-benefits.daysShort')} (×{formatFixed(MATERNITY_COEFFICIENT, MATERNITY_COEFFICIENT % 1 === 0 || (MATERNITY_COEFFICIENT * 10) % 1 === 0 ? 1 : 3)})
                 </p>
 
                 <div className="space-y-2">
@@ -444,7 +503,7 @@ export default function MaternityBenefitsCalculator() {
                   <span className="font-bold text-green-600">{formatNumber(results.birthBenefit)}</span>
                 </div>
                 <div className="text-xs text-gray-500">
-                  {formatMRP(childNumber <= 3 ? 38 : 63)}
+                  {formatMRP(birthBenefitMRP)}
                 </div>
               </div>
 
@@ -460,7 +519,7 @@ export default function MaternityBenefitsCalculator() {
                   <span className="font-bold text-green-600">{formatNumber(results.monthlyChildcareBenefit)}</span>
                 </div>
                 <div className="text-xs text-gray-500">
-                  {formatMRP(monthlyChildcareBenefitMRP[Math.min(childNumber, 4) as keyof typeof monthlyChildcareBenefitMRP] || 8.90)}
+                  {formatMRP(Math.round(childcareMRP * 100) / 100)}
                 </div>
               </div>
             </div>

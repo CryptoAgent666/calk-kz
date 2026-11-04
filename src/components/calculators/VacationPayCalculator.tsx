@@ -84,7 +84,9 @@ export default function VacationPayCalculator() {
       ? Math.min(STANDARD_DEDUCTION, grossVacationPay - opv - vosms)
       : 0;
 
-    const taxableIncome = Math.max(0, grossVacationPay - opv - vosms - standardDeduction);
+    // Нерезидент: ИПН «без осуществления налоговых вычетов» (НК ст. 692 п. 1, 3) — ни ОПВ/ВОСМС,
+    // ни базового вычета, как в utils/salary2026. Раньше ОПВ и ВОСМС вычитались и у нерезидента.
+    const taxableIncome = isResident ? Math.max(0, grossVacationPay - opv - vosms - standardDeduction) : grossVacationPay;
     const ipn = taxableIncome * IPN_RATE;
 
     const totalDeductions = opv + vosms + ipn;

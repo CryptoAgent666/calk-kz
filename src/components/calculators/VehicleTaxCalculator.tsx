@@ -20,7 +20,6 @@ export default function VehicleTaxCalculator() {
   const [cargoCapacity, setCargoCapacity] = useState<string>('5');
   const [seatingCapacity, setSeatingCapacity] = useState<string>('30');
   const [vehicleAge, setVehicleAge] = useState<string>('5');
-  const [applyAgeDiscount, setApplyAgeDiscount] = useState<boolean>(false);
 
   const MRP_2026 = 4325;
 
@@ -92,10 +91,12 @@ export default function VehicleTaxCalculator() {
 
     // НК РК ст. 565 п. 8: только для ЛЕГКОВЫХ — свыше 10 до 20 лет эксплуатации ×0,7, свыше 20 лет ×0,5.
     // Раньше коэффициент включался уже при 10 годах и применялся также к грузовым и автобусам.
+    // Коэффициент обязателен, а не по выбору: до 04.11.2026 он применялся только при галочке
+    // «Применить скидку» (по умолчанию выключенной), и машине 15 лет налог показывался без ×0,7.
     let ageDiscountPercent = 0;
     let discountAmount = 0;
 
-    if (applyAgeDiscount && vehicleAge && vehicleType === 'car') {
+    if (vehicleAge && vehicleType === 'car') {
       const age = parseInt(vehicleAge);
       if (age > 20) {
         ageDiscountPercent = 50; // коэффициент 0.5
@@ -125,7 +126,7 @@ export default function VehicleTaxCalculator() {
   const results = useMemo(
     computeVehicleTax,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [vehicleType, engineVolume, cargoCapacity, seatingCapacity, vehicleAge, applyAgeDiscount, i18n.language]
+    [vehicleType, engineVolume, cargoCapacity, seatingCapacity, vehicleAge, i18n.language]
   );
 
   const formatNumber = (num: number) => {
@@ -271,21 +272,8 @@ export default function VehicleTaxCalculator() {
               </div>
             )}
 
+            {vehicleType === 'car' && (
             <div className="border-t pt-6">
-              <div className="flex items-center mb-3">
-                <input
-                  type="checkbox"
-                  id="applyAgeDiscount"
-                  checked={applyAgeDiscount}
-                  onChange={(e) => setApplyAgeDiscount(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="applyAgeDiscount" className="ml-2 block text-sm text-gray-700">
-                  {t('vehicle-tax.applyAgeDiscount')}
-                </label>
-              </div>
-
-              {applyAgeDiscount && (
                 <div>
                   <label htmlFor="vehicleAge" className="block text-sm font-medium text-gray-700 mb-2">
                     {t('vehicle-tax.vehicleAge')}
@@ -307,8 +295,8 @@ export default function VehicleTaxCalculator() {
                     {t('vehicle-tax.ageDiscountNote')}
                   </p>
                 </div>
-              )}
             </div>
+            )}
           </div>
         </div>
 

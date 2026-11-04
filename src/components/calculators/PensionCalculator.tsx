@@ -12,7 +12,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { NUMBER_LOCALE, decimalComma } from '../../utils/localeFormat';
 import { pluralizeRu } from '../../utils/pluralize';
 
 export default function PensionCalculator() {
@@ -37,6 +37,7 @@ export default function PensionCalculator() {
     basePension: 0,
     solidarityPension: 0,
     accumulativePension: 0,
+    enpfLumpSum: 0,
     totalMonthlyPension: 0,
     retirementAge: { men: 63, women: 61 },
     yearsToRetirement: 0,
@@ -70,12 +71,14 @@ export default function PensionCalculator() {
     const age = CURRENT_YEAR - year;
     const totalWorkExperience = experienceBefore + experienceAfter;
 
-    // Пенсионный возраст в РК (Социальный кодекс, ст. 207 п. 1) на текущий 2026 год:
-    // мужчины — 63, женщины — 61 (61 до 2027 г. включительно, затем +0,5 года ежегодно:
-    // 61,5 — 2028, 62 — 2029, 62,5 — 2030, 63 — 2031). Для будущей даты выхода по году
-    // рождения график считает AgeCalculator.
+    // Пенсионный возраст в РК (Социальный кодекс, ст. 207 п. 1): мужчины — 63; женщины — 61 до
+    // 2027 г. включительно, затем 61,5 — 2028, 62 — 2029, 62,5 — 2030, 63 — с 2031. Женщине нужен
+    // возраст, который действует в году, когда она его достигает. Месяц рождения неизвестен —
+    // считаем по первому полугодию (при рождении во втором полугодии бывает на 0,5 года больше).
+    // Раньше было 61 для всех: женщине 1975 г. р. показывало 10 лет до пенсии вместо 12.
     const retirementAgeMen = 63;
-    const retirementAgeWomen = 61;
+    const womenAgeInYear = (y: number) => (y <= 2027 ? 61 : y >= 2031 ? 63 : 61 + (y - 2027) * 0.5);
+    const retirementAgeWomen = [61, 61.5, 62, 62.5, 63].find(a => womenAgeInYear(year + Math.floor(a)) <= a) ?? 63;
 
     // 1. Базовая государственная пенсия (ст. 206 п. 1): при стаже 10 лет и меньше или без стажа —
     // 70% ПМ, +2% за каждый полный год сверх 10, максимум 118% ПМ (60 004 ₸ при ПМ 50 851 ₸).
@@ -89,9 +92,10 @@ export default function PensionCalculator() {
     // (25 лет мужчинам, 20 женщинам), не более 75%, и не ниже минимальной пенсии (п. 5);
     // при меньшем стаже (от 6 месяцев) — доля от полной пропорционально стажу (п. 6–7).
     // Раньше: норма 25 лет для всех, без потолка 55 МРП и без доведения до минимальной пенсии.
+    // Пустое поле дохода — тоже минимальная пенсия (п. 5), а не 0.
     let solidarityPension = 0;
     const stakeNorm = gender === 'female' ? 20 : 25;
-    if (experienceBefore >= 0.5 && incomeBefore > 0) {
+    if (experienceBefore >= 0.5) {
       const income = Math.min(incomeBefore, SOLIDARITY_INCOME_CAP);
       const fullRate = Math.min(0.6 + 0.01 * Math.max(0, Math.floor(experienceBefore - stakeNorm)), 0.75);
       const fullPension = Math.max(income * fullRate, MIN_PENSION);
@@ -115,9 +119,14 @@ export default function PensionCalculator() {
       estimatedAccumulationsAtRetirement += futureContributionsWithReturn;
     }
 
-    // Ежемесячная выплата из ЕНПФ по графику первого года (Методика к ПП № 521).
-    const accumulativePension = estimatedAccumulationsAtRetirement <= 12 * MIN_PENSION
-      ? estimatedAccumulationsAtRetirement / 12 // единовременная выплата, показана помесячно условно
+    // Ежемесячная выплата из ЕНПФ по графику первого года (Методика к ПП № 521). Накопления не больше
+    // 12 минимальных пенсий (828 588 ₸) выплачиваются единовременно — в месячную пенсию они не входят.
+    // Раньше сумма ÷ 12 шла в пенсию: 800 000 ₸ давали 66 667 ₸ в месяц, а 900 000 ₸ — 35 596 ₸.
+    const enpfLumpSum = estimatedAccumulationsAtRetirement > 0 && estimatedAccumulationsAtRetirement <= 12 * MIN_PENSION
+      ? estimatedAccumulationsAtRetirement
+      : 0;
+    const accumulativePension = enpfLumpSum > 0 || estimatedAccumulationsAtRetirement <= 0
+      ? 0
       : Math.max(estimatedAccumulationsAtRetirement * ENPF_PAYOUT_RATE_FIRST_YEAR / 12, 0.7 * PM);
 
     const totalMonthlyPension = basePension + solidarityPension + accumulativePension;
@@ -128,6 +137,7 @@ export default function PensionCalculator() {
       basePension: Math.round(basePension),
       solidarityPension: Math.round(solidarityPension),
       accumulativePension: Math.round(accumulativePension),
+      enpfLumpSum: Math.round(enpfLumpSum),
       totalMonthlyPension: Math.round(totalMonthlyPension),
       retirementAge: { men: retirementAgeMen, women: retirementAgeWomen },
       yearsToRetirement: Math.max(yearsToRetirement, 0),
@@ -163,11 +173,11 @@ ${t('pension.pensionComponents')}:
 - ${t('pension.basePension')}: ${formatNumber(results.basePension)}
 - ${t('pension.solidarityPension')}: ${formatNumber(results.solidarityPension)}
 - ${t('pension.accumulativePension')}: ${formatNumber(results.accumulativePension)}
-
+${results.enpfLumpSum > 0 ? `- ${t('pension.enpfLumpSum', { amount: formatNumber(results.enpfLumpSum) })}\n` : ''}
 ${t('pension.result')}:
 - ${t('pension.totalPensionSize')}: ${formatNumber(results.totalMonthlyPension)} ${t('pension.perMonth')}
-- ${t('pension.retirementAge')}: ${results.retirementAge.men} ${yearsWord(results.retirementAge.men)} (${t('pension.men')}) / ${results.retirementAge.women} ${yearsWord(results.retirementAge.women)} (${t('pension.women')})
-- ${t('pension.untilRetirement')}: ${results.yearsToRetirement} ${yearsWord(results.yearsToRetirement)}
+- ${t('pension.retirementAge')}: ${results.retirementAge.men} ${yearsWord(results.retirementAge.men)} (${t('pension.men')}) / ${decimalComma(String(results.retirementAge.women))} ${yearsWord(results.retirementAge.women)} (${t('pension.women')})
+- ${t('pension.untilRetirement')}: ${decimalComma(String(results.yearsToRetirement))} ${yearsWord(results.yearsToRetirement)}
 ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccumulationsAtRetirement')}: ${formatNumber(results.estimatedAccumulationsAtRetirement)}` : ''}`;
   };
 
@@ -354,8 +364,8 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                 <div className="text-sm text-blue-800 space-y-1">
                   <div>{t('pension.age')}: {results.age} {yearsWord(results.age)}</div>
                   <div>{t('pension.totalWorkExperience')}: {results.totalWorkExperience} {yearsWord(results.totalWorkExperience)}</div>
-                  <div>{t('pension.untilRetirement')}: {results.yearsToRetirement} {yearsWord(results.yearsToRetirement)}</div>
-                  <div>{t('pension.retirementAge')}: {results.retirementAge.men} {yearsWord(results.retirementAge.men)} ({t('pension.men')}) / {results.retirementAge.women} {yearsWord(results.retirementAge.women)} ({t('pension.women')})</div>
+                  <div>{t('pension.untilRetirement')}: {decimalComma(String(results.yearsToRetirement))} {yearsWord(results.yearsToRetirement)}</div>
+                  <div>{t('pension.retirementAge')}: {results.retirementAge.men} {yearsWord(results.retirementAge.men)} ({t('pension.men')}) / {decimalComma(String(results.retirementAge.women))} {yearsWord(results.retirementAge.women)} ({t('pension.women')})</div>
                 </div>
               </div>
 
@@ -386,6 +396,9 @@ ${results.estimatedAccumulationsAtRetirement > 0 ? `- ${t('pension.estimatedAccu
                   </div>
                   <span className="font-semibold text-gray-900">{formatNumber(results.accumulativePension)}</span>
                 </div>
+                {results.enpfLumpSum > 0 && (
+                  <p className="text-sm text-teal-800">{t('pension.enpfLumpSum', { amount: formatNumber(results.enpfLumpSum) })}</p>
+                )}
               </div>
 
               {/* Total */}

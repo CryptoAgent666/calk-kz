@@ -148,10 +148,12 @@ export default function CustomsClearanceCalculator() {
       + (customsValueKZT >= EXCISE_LUXURY_THRESHOLD_MRP * MRP_2026 ? customsValueKZT * EXCISE_LUXURY_RATE : 0);
 
     // Фиксированный таможенный сбор за декларирование: 6 МРП за декларацию
-    // (не процент от стоимости). В базу импортного НДС сбор не входит.
+    // (не процент от стоимости). Сбор входит в базу импортного НДС: НК ст. 466 п. 1 включает
+    // «суммы налогов и таможенных платежей», а таможенные платежи — это и сборы (Кодекс о таможенном
+    // регулировании ст. 3 пп. 26). С 13.09 по 04.11.2026 сбор из базы был ошибочно исключён.
     const customsFee = CUSTOMS_FEE_MRP * MRP_2026;
 
-    const taxBase = customsValueKZT + customsDuty + excise;
+    const taxBase = customsValueKZT + customsDuty + excise + customsFee;
     const vat = taxBase * vatRate;
 
     const totalPayments = customsFee + customsDuty + excise + vat;

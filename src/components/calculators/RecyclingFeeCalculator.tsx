@@ -81,7 +81,8 @@ export default function RecyclingFeeCalculator() {
       hasInput = mass > 0;
       const found = !hasInput
         ? undefined
-        : isTractorUnit && mass > 12 && mass <= 50
+        // «седельные тягачи от 12 тонн до 50 тонн» (прил. 4 Методики) — 12 т включительно
+        : isTractorUnit && mass >= 12 && mass <= 50
           ? tractorUnitBand
           : truckBands.find(b => mass <= b.max);
       if (found) {

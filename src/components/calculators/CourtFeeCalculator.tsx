@@ -43,9 +43,12 @@ export default function CourtFeeCalculator() {
     // НК РК ст.665/668 (с 01.01.2026): админ. иски по АППК (спор с госорганом) —
     // 0,3 МРП физлица / 5 МРП юрлица (ведомость re-verify 2026-06-27, sud.gov.kz).
     administrative: { individual: 0.3, legal: 5 },
-    // НК РК ст.665 (с 01.01.2026): банкротство — 0,3 МРП судебное банкротство
-    // гражданина (физлицо) / 0,5 МРП реабилитация (юрлицо). Прежние 50/100 ошибочны.
-    bankruptcy: { individual: 0.3, legal: 0.5 },
+    // НК РК ст.665 п. 1 (с 01.01.2026): ставка зависит от должника, а не от заявителя —
+    // банкротство или реабилитация юрлица 0,5 МРП (пп. 13), восстановление платёжеспособности
+    // или судебное банкротство гражданина 0,3 МРП (пп. 14). Раньше выбирали по заявителю:
+    // физлицо-кредитор против ТОО получал 0,3 вместо 0,5 МРП. Прежние 50/100 тоже ошибочны.
+    bankruptcyLegal: { individual: 0.5, legal: 0.5 },
+    bankruptcyCitizen: { individual: 0.3, legal: 0.3 },
     // НК РК ст.665: корпоративные споры — неимущественный иск, 0,5 МРП
     // (физ- и юрлица). Прежние 0/15 МРП ошибочны. (Обжалование арбитражных
     // решений из таблицы убрано — отдельного тарифа в новом НК нет.)
@@ -252,6 +255,7 @@ export default function CourtFeeCalculator() {
                     </option>
                   ))}
                 </select>
+                <p className="text-xs text-gray-500 mt-1">{t('court-fee.nonPropertyHint')}</p>
               </div>
             )}
 
@@ -363,7 +367,7 @@ export default function CourtFeeCalculator() {
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4 mt-6">{t('court-fee.nonPropertyClaimsExamples')}</h3>
             <div className="space-y-2 max-h-48 overflow-y-auto">
-              {Object.keys(nonPropertyFees).slice(0, 8).map((key) => {
+              {Object.keys(nonPropertyFees).map((key) => {
                 const value = nonPropertyFees[key as keyof typeof nonPropertyFees];
                 return (
                   <div key={key} className="flex justify-between text-sm py-2 px-3 bg-gray-50 rounded">

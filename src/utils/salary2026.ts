@@ -44,6 +44,8 @@ export interface SalaryInput {
   isSpecialCategory: boolean;
   socialDeduction: SocialDeduction;
   disability?: Disability;
+  /** Родился до 01.01.1975: ОПВР за него не платятся (Соцкодекс ст. 248 п. 6 пп. 6). */
+  bornBefore1975?: boolean;
 }
 
 export interface SalaryResult {
@@ -76,7 +78,7 @@ export const EMPTY_SALARY_RESULT: SalaryResult = {
   effectiveEmployeeTaxRate: 0, effectiveEmployerRate: 0
 };
 
-export function calculateSalary2026({ gross, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability = 'none' }: SalaryInput): SalaryResult {
+export function calculateSalary2026({ gross, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability = 'none', bornBefore1975 = false }: SalaryInput): SalaryResult {
   if (gross <= 0) {
     return { ...EMPTY_SALARY_RESULT };
   }
@@ -133,7 +135,9 @@ export function calculateSalary2026({ gross, isResident, isPrimaryJob, isSpecial
 
   // База ОПВР — не ниже 1 МЗП и не выше 50 МЗП (Соцкодекс ст. 251 п. 2).
   const opvrBase = Math.min(Math.max(gross, MZP), OPV_MAX_BASE);
-  const opvr = pensionExempt ? 0 : opvrBase * OPVR_RATE;
+  // ОПВР не платятся и за родившихся до 01.01.1975 (ст. 248 п. 6 пп. 6). Раньше начислялись всем:
+  // при 300 000 ₸ за работника 1970 г. р. лишние 10 500 ₸ в месяц.
+  const opvr = pensionExempt || bornBefore1975 ? 0 : opvrBase * OPVR_RATE;
 
   const totalEmployerContributions = sn + so + oosms + opvr;
   const netSalary = gross - totalEmployeeDeductions;
@@ -174,6 +178,7 @@ export interface SalaryRow {
   isSpecialCategory: boolean;
   socialDeduction: SocialDeduction;
   disability?: Disability;
+  bornBefore1975?: boolean;
 }
 
 export type SalaryTotals = Pick<SalaryResult,

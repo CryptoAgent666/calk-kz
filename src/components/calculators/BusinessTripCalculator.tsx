@@ -131,8 +131,13 @@ export default function BusinessTripCalculator() {
       ? PERDIEM_TAX_FREE_MRP.domestic
       : PERDIEM_TAX_FREE_MRP.foreign) * MRP_2026; // per day
     const taxFreeDays = Math.min(n, PERDIEM_TAX_FREE_MAX_DAYS);
-    const overLimit = Math.max(0, dailyPerDay - dailyTaxFreeLimit) * taxFreeDays
-      + dailyPerDay * Math.max(0, n - PERDIEM_TAX_FREE_MAX_DAYS);
+    // Госучреждение за рубежом платит по нормам ПП № 256 — такие компенсации доходом не являются
+    // (ст. 366 пп. 3), лимит 8 МРП и 40 дней к ним не применяется. Раньше их облагали как у частной
+    // компании: 7 дней в ОАЭ давали ОПВ 3 878, ВОСМС 776 и ИПН 3 413 ₸ вместо нуля.
+    const overLimit = tripType === 'foreign' && budgetFunded
+      ? 0
+      : Math.max(0, dailyPerDay - dailyTaxFreeLimit) * taxFreeDays
+        + dailyPerDay * Math.max(0, n - PERDIEM_TAX_FREE_MAX_DAYS);
     // Сверхнормативные суточные — доход работника: с них ОПВ 10% и ВОСМС 2%, которые
     // уменьшают базу ИПН (НК ст. 402). Базовый вычет считаем уже использованным на зарплате.
     // Раньше ИПН брали со всей суммы превышения, без взносов.
@@ -189,29 +194,36 @@ export default function BusinessTripCalculator() {
             </div>
           </div>
 
+          {/* Кто платит — и по РК, и за рубежом: у госучреждения компенсации по нормам ПП № 256
+              доходом не являются (НК ст. 366 пп. 3), у частной компании — суточные сверх 6 / 8 МРП. */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.fundingSource')}</label>
+            <div className="flex gap-2">
+              <button onClick={() => setBudgetFunded(true)}
+                className={`flex-1 p-3 rounded-lg border text-sm ${budgetFunded ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>
+                {t('business-trip.budgetFunded')}
+              </button>
+              <button onClick={() => setBudgetFunded(false)}
+                className={`flex-1 p-3 rounded-lg border text-sm ${!budgetFunded ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>
+                {t('business-trip.privateCompany')}
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              {tripType === 'domestic'
+                ? (budgetFunded
+                  ? t('business-trip.budgetPerDiemHint', {
+                      mrp: BUDGET_DOMESTIC_PERDIEM_MRP,
+                      sum: formatNumber(BUDGET_DOMESTIC_PERDIEM_MRP * MRP_2026),
+                    })
+                  : t('business-trip.privatePerDiemHint', { mrp: PERDIEM_TAX_FREE_MRP.domestic }))
+                : (budgetFunded
+                  ? t('business-trip.budgetForeignHint')
+                  : t('business-trip.privateForeignHint', { mrp: PERDIEM_TAX_FREE_MRP.foreign }))}
+            </p>
+          </div>
+
           {tripType === 'domestic' ? (
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('business-trip.fundingSource')}</label>
-                <div className="flex gap-2">
-                  <button onClick={() => setBudgetFunded(true)}
-                    className={`flex-1 p-3 rounded-lg border text-sm ${budgetFunded ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>
-                    {t('business-trip.budgetFunded')}
-                  </button>
-                  <button onClick={() => setBudgetFunded(false)}
-                    className={`flex-1 p-3 rounded-lg border text-sm ${!budgetFunded ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>
-                    {t('business-trip.privateCompany')}
-                  </button>
-                </div>
-                <p className="mt-2 text-xs text-gray-500">
-                  {budgetFunded
-                    ? t('business-trip.budgetPerDiemHint', {
-                        mrp: BUDGET_DOMESTIC_PERDIEM_MRP,
-                        sum: formatNumber(BUDGET_DOMESTIC_PERDIEM_MRP * MRP_2026),
-                      })
-                    : t('business-trip.privatePerDiemHint', { mrp: PERDIEM_TAX_FREE_MRP.domestic })}
-                </p>
-              </div>
 
               {!budgetFunded && (
                 <InputField

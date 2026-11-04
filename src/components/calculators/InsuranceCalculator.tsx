@@ -731,13 +731,14 @@ export default function InsuranceCalculator() {
           <ExportButtons
             data={{
               title: t('insurance-premium.export.title'),
-              subtitle: `${t('insurance-premium.export.region')}: ${region}`,
+              // В выгрузку — названия, а не id (раньше шли «astana-city», «passenger-car», «3first»)
+              subtitle: `${t('insurance-premium.export.region')}: ${territoryCoefficients.find(r => r.id === region)?.name ?? region}`,
               sections: [
                 {
                   title: t('insurance-premium.export.parameters'),
                   data: [
-                    { label: t('insurance-premium.export.region'), value: region },
-                    { label: t('insurance-premium.export.vehicleType'), value: vehicleType },
+                    { label: t('insurance-premium.export.region'), value: territoryCoefficients.find(r => r.id === region)?.name ?? region },
+                    { label: t('insurance-premium.export.vehicleType'), value: vehicleTypeCoefficients.find(v => v.id === vehicleType)?.name ?? vehicleType },
                     { label: t('insurance-premium.export.manufactureYear'), value: manufactureYear },
                   ]
                 },
@@ -745,7 +746,7 @@ export default function InsuranceCalculator() {
                   title: t('insurance-premium.export.results'),
                   data: [
                     { label: t('insurance-premium.export.premium'), value: `${results.finalPremium.toLocaleString(NUMBER_LOCALE)} ₸` },
-                    { label: t('insurance-premium.export.bonusMalusClass'), value: bonusMalusClass },
+                    { label: t('insurance-premium.export.bonusMalusClass'), value: bonusMalusClasses.find(b => b.class === bonusMalusClass)?.description ?? bonusMalusClass },
                   ]
                 }
               ],

@@ -66,6 +66,7 @@ export default function SalaryCalculator() {
   const [isSpecialCategory, setIsSpecialCategory] = useState<boolean>(false);
   const [socialDeduction, setSocialDeduction] = useState<SocialDeduction>('none');
   const [disability, setDisability] = useState<Disability>('none');
+  const [bornBefore1975, setBornBefore1975] = useState<boolean>(false);
 
   // Режим «несколько сотрудников»: строки таблицы + текстовое быстрое заполнение.
   // Резидентство — общий флаг на всю таблицу (isResident выше).
@@ -77,15 +78,15 @@ export default function SalaryCalculator() {
   // числами, и первый клиентский рендер обязан выдать те же числа — иначе
   // гидратация падает (#418/#425). См. эталонный рефакторинг BMICalculator.
   const results = useMemo(
-    () => calculateSalary2026({ gross: parseFloat(grossSalary) || 0, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability }),
-    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability]
+    () => calculateSalary2026({ gross: parseFloat(grossSalary) || 0, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability, bornBefore1975 }),
+    [grossSalary, isResident, isPrimaryJob, isSpecialCategory, socialDeduction, disability, bornBefore1975]
   );
 
   const multiRows = useMemo(
     () => rows.map((row, idx) => {
       const gross = parseFloat(row.gross) || 0;
       const result = calculateSalary2026({
-        gross, isResident, isPrimaryJob: row.isPrimaryJob, isSpecialCategory: row.isSpecialCategory, socialDeduction: row.socialDeduction, disability: row.disability,
+        gross, isResident, isPrimaryJob: row.isPrimaryJob, isSpecialCategory: row.isSpecialCategory, socialDeduction: row.socialDeduction, disability: row.disability, bornBefore1975: row.bornBefore1975,
       });
       return { row, idx, gross, result };
     }),
@@ -124,6 +125,7 @@ export default function SalaryCalculator() {
 - ${t('salary.isResident')}: ${isResident ? t('common.yes') : t('common.no')}
 - ${t('salary.isPrimaryJob')}: ${isPrimaryJob ? t('common.yes') : t('common.no')}
 - ${t('salary.isSpecialCategory')}: ${isSpecialCategory ? t('common.yes') : t('common.no')}
+- ${t('salary.bornBefore1975')}: ${bornBefore1975 ? t('common.yes') : t('common.no')}
 
 ${t('salary.employeeDeductions')}:
 - ${t('salary.opv')}: ${formatNumber(results.opv)}
@@ -301,6 +303,19 @@ ${totalsText}`;
                 />
                 <label htmlFor="isSpecialCategory" className="ml-2 block text-sm text-gray-700">
                   {t('salary.isSpecialCategory')}
+                </label>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="bornBefore1975"
+                  checked={bornBefore1975}
+                  onChange={(e) => setBornBefore1975(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="bornBefore1975" className="ml-2 block text-sm text-gray-700">
+                  {t('salary.bornBefore1975')}
                 </label>
               </div>
 
@@ -553,6 +568,7 @@ ${totalsText}`;
                 <th className="py-2 pr-2 text-left font-medium">{t('salary.multi.colGross')}</th>
                 <th className="py-2 px-2 text-center font-medium">{t('salary.multi.colPrimary')}</th>
                 <th className="py-2 px-2 text-center font-medium">{t('salary.multi.colSpecial')}</th>
+                <th className="py-2 px-2 text-center font-medium">{t('salary.multi.colBorn1975')}</th>
                 <th className="py-2 pr-2 text-left font-medium">{t('salary.multi.colSocial')}</th>
                 {MONEY_COLUMNS.map((c) => (
                   <th key={c.key} className="py-2 px-2 text-right font-medium whitespace-nowrap">{t(`salary.multi.${c.label}`)}</th>
@@ -603,6 +619,15 @@ ${totalsText}`;
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                   </td>
+                  <td className="py-2 px-2 text-center">
+                    <input
+                      type="checkbox"
+                      checked={!!row.bornBefore1975}
+                      onChange={(e) => updateRow(row.id, { bornBefore1975: e.target.checked })}
+                      aria-label={`${t('salary.bornBefore1975')} ${idx + 1}`}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                  </td>
                   <td className="py-2 pr-2">
                     <select
                       value={row.socialDeduction}
@@ -643,7 +668,7 @@ ${totalsText}`;
                   <span className="block text-xs font-normal text-gray-500">{t('salary.multi.employeesCount', { count: totals.count })}</span>
                 </td>
                 <td className="py-3 pr-2 whitespace-nowrap tabular-nums">{fmtCell(totals.gross)}</td>
-                <td colSpan={3} />
+                <td colSpan={4} />
                 {MONEY_COLUMNS.map((c) => (
                   <td key={c.key} className={`py-3 px-2 text-right whitespace-nowrap tabular-nums ${c.strong ? STRONG_CLASS[c.strong] : ''}`}>
                     {fmtCell(totals[c.key])}
