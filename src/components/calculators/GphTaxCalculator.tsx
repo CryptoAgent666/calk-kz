@@ -57,14 +57,14 @@ export default function GphTaxCalculator() {
     const so = Math.min(gross - opv, SO_BASE_CAP) * SO_RATE;
     const taxable = Math.max(0, gross - opv - vosms - so - (useDeduction ? DEDUCTION_30MRP : 0));
     const ipn = taxable * IPN_RATE;
-    const total = opv + vosms + so + ipn;
+    // Итог — сумма уже округлённых строк, иначе «Всего удержано» расходилось со строками на 1 ₸
+    // (123 457 ₸: строки 20 371, итог 20 370).
+    const rounded = { opv: Math.round(opv), vosms: Math.round(vosms), so: Math.round(so), ipn: Math.round(ipn) };
+    const total = rounded.opv + rounded.vosms + rounded.so + rounded.ipn;
     return {
-      opv: Math.round(opv),
-      vosms: Math.round(vosms),
-      so: Math.round(so),
-      ipn: Math.round(ipn),
-      total: Math.round(total),
-      net: Math.round(gross - total),
+      ...rounded,
+      total,
+      net: Math.round(gross) - total,
     };
   };
 

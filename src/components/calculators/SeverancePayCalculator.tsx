@@ -102,7 +102,8 @@ export default function SeverancePayCalculator() {
 
     const standardDeduction = (isResident && isPrimaryJob) ? Math.min(STANDARD_DEDUCTION, Math.max(0, grossTotal - opv - vosms)) : 0;
 
-    const taxableIncome = Math.max(0, grossTotal - opv - vosms - standardDeduction);
+    // Нерезидент: ИПН «без осуществления налоговых вычетов» (НК ст. 692 п. 3), как в utils/salary2026 и отпускных.
+    const taxableIncome = isResident ? Math.max(0, grossTotal - opv - vosms - standardDeduction) : grossTotal;
     // ИПН 10%, с превышения 8500 МРП/год — 15%. Порог годовой: разовая выплата
     // сравнивается с ним без учёта прочих доходов за год (оценка снизу).
     const ipn = taxableIncome <= IPN_ANNUAL_THRESHOLD
@@ -277,11 +278,13 @@ ${t('severance-pay.calculationDate')}: ${new Date().toLocaleDateString('ru-KZ')}
               <input
                 type="number"
                 value={usedVacationDays}
-                onChange={(e) => setUsedVacationDays(Math.max(0, Math.min(100, parseInt(e.target.value) || 0)))}
+                // Предел — дни, заработанные за стаж (стаж до 360 мес.); раньше было 100, и при стаже 10 лет
+                // 216 использованных дней обрезались до 100 — компенсация выходила за 140 «неиспользованных» дней.
+                onChange={(e) => setUsedVacationDays(Math.max(0, Math.min(results.earnedVacationDays || 720, parseInt(e.target.value) || 0)))}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                 placeholder={t('severance-pay.usedVacationDaysPlaceholder')}
                 min="0"
-                max="100"
+                max={results.earnedVacationDays || 720}
               />
               <p className="text-xs text-gray-500 mt-1">{t('severance-pay.usedVacationDaysHint')}</p>
             </div>

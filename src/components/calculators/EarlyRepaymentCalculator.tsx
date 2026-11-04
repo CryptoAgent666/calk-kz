@@ -637,7 +637,9 @@ export default function EarlyRepaymentCalculator() {
         ]}
         sources={[
           { title: t('early-repayment.sources.civilCode'), url: 'https://adilet.zan.kz/rus/docs/K990000409_' },
-          { title: t('early-repayment.sources.nbk'), url: 'https://nationalbank.kz/ru/news/grafik-prinyatiya-resheniy-po-bazovoy-stavke' },
+          // Запрет комиссий и неустойки за досрочное погашение — Закон № 258-VIII ст. 53 п. 7; страница графика
+          // решений НБРК по базовой ставке к теме не относилась.
+          { title: t('early-repayment.sources.bankLaw'), url: 'https://adilet.zan.kz/rus/docs/Z2600000258' },
         ]}
       />
 

@@ -23,6 +23,10 @@ const MRP_2026 = 4325;
 const ZAGS_DIVORCE_FEE_NET = 6900;
 const VAT_RATE = 0.16;
 const ZAGS_DIVORCE_FEE = Math.round(ZAGS_DIVORCE_FEE_NET * (1 + VAT_RATE));
+/** Регистрация развода по заявлению одного супруга, если второй признан судом безвестно отсутствующим,
+ *  недееспособным или ограниченно дееспособным, осуждён на 3+ года или в международном розыске 3+ года
+ *  (КоБС ст. 17 п. 2) — 345 ₸ без НДС по тому же приказу № 175/НҚ (п. 3 пп. 2), с НДС 16% — 400 ₸. */
+const ZAGS_DIVORCE_FEE_ONE_SPOUSE = Math.round(345 * (1 + VAT_RATE));
 /** Госпошлина с имущественного иска физлица — 1% цены иска, не более 10 000 МРП (ст. 665 п. 1 пп. 1). */
 const PROPERTY_FEE_CAP = 10000 * MRP_2026;
 
@@ -34,6 +38,8 @@ export default function DivorceCalculator() {
   const mrpUnit = i18n.language === 'kk' ? 'АЕК' : 'МРП';
   const [mode, setMode] = useState<Mode>('zags');
   const [mutualConsent, setMutualConsent] = useState<boolean>(true);
+  // Случаи ст. 17 п. 2 КоБС: ЗАГС независимо от детей и согласия. Раньше калькулятор отправлял в суд.
+  const [spouseSpecialCase, setSpouseSpecialCase] = useState<boolean>(false);
   const [hasChildren, setHasChildren] = useState<boolean>(false);
   const [hasPropertyDispute, setHasPropertyDispute] = useState<boolean>(false);
   const [propertyValue, setPropertyValue] = useState<string>('0');
@@ -42,9 +48,10 @@ export default function DivorceCalculator() {
 
   // Определяем режим автоматически
   const suggestedMode: Mode = useMemo(() => {
+    if (spouseSpecialCase) return 'zags';
     if (hasChildren || !mutualConsent || hasPropertyDispute) return 'court';
     return 'zags';
-  }, [hasChildren, mutualConsent, hasPropertyDispute]);
+  }, [hasChildren, mutualConsent, hasPropertyDispute, spouseSpecialCase]);
 
   // Если включить чекбоксы — переключиться на суд автоматически
   React.useEffect(() => {
@@ -58,7 +65,7 @@ export default function DivorceCalculator() {
     // в ст. 665 нет (прежний «мин 0,5 МРП» был выдуман)
     // Нотариус (по желанию) — 5-10 МРП
     // Юрист (по желанию) — от 100 000 ₸
-    const divorceFee = mode === 'zags' ? ZAGS_DIVORCE_FEE : 0.3 * MRP_2026;
+    const divorceFee = mode === 'zags' ? (spouseSpecialCase ? ZAGS_DIVORCE_FEE_ONE_SPOUSE : ZAGS_DIVORCE_FEE) : 0.3 * MRP_2026;
     const propValue = parseFloat(propertyValue) || 0;
     const propertyFee = hasPropertyDispute ? Math.min(propValue * 0.01, PROPERTY_FEE_CAP) : 0;
     // Истец по иску о взыскании алиментов ОСВОБОЖДЁН от госпошлины (пп.4 ст.616 НК РК);
@@ -80,7 +87,7 @@ export default function DivorceCalculator() {
       total: Math.round(total),
       timelineMonths,
     };
-  }, [mode, hasPropertyDispute, propertyValue, needAlimony, lawyerServices, hasChildren]);
+  }, [mode, hasPropertyDispute, propertyValue, needAlimony, lawyerServices, hasChildren, spouseSpecialCase]);
 
   const formatNumber = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 
@@ -106,6 +113,10 @@ export default function DivorceCalculator() {
             <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
               <input type="checkbox" checked={mutualConsent} onChange={e => setMutualConsent(e.target.checked)} className="h-4 w-4" />
               <span className="text-sm font-medium">{t('divorce.mutualConsent')}</span>
+            </label>
+            <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
+              <input type="checkbox" checked={spouseSpecialCase} onChange={e => setSpouseSpecialCase(e.target.checked)} className="h-4 w-4" />
+              <span className="text-sm font-medium">{t('divorce.spouseSpecialCase')}</span>
             </label>
             <label className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg cursor-pointer">
               <input type="checkbox" checked={hasChildren} onChange={e => setHasChildren(e.target.checked)} className="h-4 w-4" />

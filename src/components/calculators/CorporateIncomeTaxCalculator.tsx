@@ -34,6 +34,8 @@ export default function CorporateIncomeTaxCalculator() {
   ];
 
   const WITHHOLDING_RATE = 15; // у источника при выплате нерезиденту (ст. 357 п. 1, ст. 682 НК РК)
+  const MRP_2026 = 4325;
+  const DIVIDEND_THRESHOLD_MRP = 230000; // порог шкалы для владельца ≥ 25% (ст. 682 п. 1 пп. 6), МРП на 1 января
   // Авансовые платежи не платят компании с совокупным годовым доходом за позапрошлый год
   // не больше 600 000 МРП (ст. 348 п. 1 пп. 1 НК РК 2026); порог «КПН > 100 МРП» — из старого НК.
   // МРП берётся тоже позапрошлого года: для авансов 2026 — 3 692 ₸ (2024), порог 2 215 200 000 ₸.
@@ -48,6 +50,9 @@ export default function CorporateIncomeTaxCalculator() {
   const [hasDividends, setHasDividends] = useState<boolean>(false);
   const [dividends, setDividends] = useState<string>('0');
   const [royalties, setRoyalties] = useState<string>('0');
+  // Нерезидент прямо или косвенно владеет не менее 25% капитала — дивиденды по шкале 5% / 15% с порогом
+  // 230 000 МРП (НК ст. 682 п. 1 пп. 6), иначе 15%.
+  const [owns25, setOwns25] = useState<boolean>(false);
 
   // Синхронный расчёт (не useState+useEffect): пререндер сохраняет страницу с
   // числами, и первый клиентский рендер обязан выдать те же числа — иначе
@@ -57,18 +62,26 @@ export default function CorporateIncomeTaxCalculator() {
     const deduct = parseFloat(deductions) || 0;
     const losses = parseFloat(pastLosses) || 0;
     const divs = hasDividends ? (parseFloat(dividends) || 0) : 0;
-    const roy = parseFloat(royalties) || 0;
+    // Роялти облагаются у источника только при выплате нерезиденту: у юрлица-резидента у источника
+    // облагаются лишь выигрыши и вознаграждение (ст. 351 п. 1). Раньше поле стояло вне блока и 15% брались всегда.
+    const roy = hasDividends ? (parseFloat(royalties) || 0) : 0;
 
     const activityOption = activities.find((a) => a.id === activity) || activities[0];
     const rate = activityOption.rate;
 
     const taxableIncome = Math.max(0, income - deduct - losses);
     const mainTax = Math.round((taxableIncome * rate) / 100);
-    const withholdingTax = Math.round(((divs + roy) * WITHHOLDING_RATE) / 100);
+    const divThreshold = DIVIDEND_THRESHOLD_MRP * MRP_2026;
+    const dividendTax = owns25
+      ? Math.min(divs, divThreshold) * 0.05 + Math.max(0, divs - divThreshold) * 0.15
+      : (divs * WITHHOLDING_RATE) / 100;
+    const withholdingTax = Math.round(dividendTax + (roy * WITHHOLDING_RATE) / 100);
     const totalTax = mainTax + withholdingTax;
     const effectiveRate = income > 0 ? (totalTax / income) * 100 : 0;
     const monthlyAdvance = income > ADVANCE_EXEMPT_INCOME_MRP * MRP_ADVANCE_BASE_YEAR ? Math.round(mainTax / 12) : 0;
-    const netProfit = taxableIncome - mainTax;
+    // Чистая прибыль — доход минус расходы минус КПН. Перенос убытков прошлых лет уменьшает только базу КПН
+    // (ст. 339, 345), расходом текущего года не является. Раньше: 50 − 30 − убытки 10 млн → 8 млн вместо 18 млн.
+    const netProfit = income - deduct - mainTax;
 
     return {
       taxableIncome: Math.round(taxableIncome),
@@ -85,7 +98,7 @@ export default function CorporateIncomeTaxCalculator() {
   const results = useMemo(
     computeResults,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [grossIncome, deductions, pastLosses, activity, hasDividends, dividends, royalties]
+    [grossIncome, deductions, pastLosses, activity, hasDividends, dividends, royalties, owns25]
   );
 
   const formatCurrency = (num: number) => {
@@ -110,7 +123,7 @@ ${t('corporate-income-tax.resultsTitle')}
 ─────────────────────────────
 ${t('corporate-income-tax.taxableIncome')}: ${formatCurrency(results.taxableIncome)}
 ${t('corporate-income-tax.mainTax')} (${results.rate}%): ${formatCurrency(results.mainTax)}
-${t('corporate-income-tax.withholdingTax')} (${WITHHOLDING_RATE}%): ${formatCurrency(results.withholdingTax)}
+${t('corporate-income-tax.withholdingTax')}: ${formatCurrency(results.withholdingTax)}
 ${t('corporate-income-tax.totalTax')}: ${formatCurrency(results.totalTax)}
 ${t('corporate-income-tax.effectiveRate')}: ${results.effectiveRate.toLocaleString(NUMBER_LOCALE)}%
 ${t('corporate-income-tax.monthlyAdvance')}: ${formatCurrency(results.monthlyAdvance)}
@@ -276,6 +289,7 @@ calk.kz`;
                 </span>
               </label>
               {hasDividends && (
+                <>
                 <div className="relative">
                   <input
                     type="number"
@@ -288,10 +302,21 @@ calk.kz`;
                     <span className="text-gray-500 text-sm">₸</span>
                   </div>
                 </div>
+                <label className="flex items-center space-x-3 mt-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={owns25}
+                    onChange={(e) => setOwns25(e.target.checked)}
+                    className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
+                  />
+                  <span className="text-sm text-indigo-900">{t('corporate-income-tax.owns25')}</span>
+                </label>
+                </>
               )}
             </div>
 
-            {/* Royalties */}
+            {/* Royalties — налог у источника только при выплате нерезиденту */}
+            {hasDividends && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('corporate-income-tax.royalties')}
@@ -310,6 +335,7 @@ calk.kz`;
               </div>
               <p className="text-xs text-gray-500 mt-1">{t('corporate-income-tax.royaltiesHint')}</p>
             </div>
+            )}
           </div>
         </div>
 
@@ -360,7 +386,7 @@ calk.kz`;
               <div className="bg-amber-50 rounded-lg p-4 flex justify-between items-center">
                 <div>
                   <div className="text-sm text-amber-700">
-                    {t('corporate-income-tax.withholdingTax')} ({WITHHOLDING_RATE}%)
+                    {t('corporate-income-tax.withholdingTax')}
                   </div>
                   <div className="text-lg font-bold text-amber-900">{formatCurrency(results.withholdingTax)}</div>
                 </div>

@@ -50,7 +50,9 @@ export default function AverageEarningsCalculator() {
       const salary = parseFloat(monthlySalary) || 0;
       const bonus = parseFloat(yearlyBonus) || 0;
       const allow = parseFloat(allowances) || 0;
-      totalPay = (salary + allow) * months + (bonus * months / 12);
+      // Надбавки вводятся суммой «за период» — прибавляются один раз. Раньше умножались на число месяцев:
+      // 120 000 за период при 12 месяцах давали +1,44 млн.
+      totalPay = salary * months + allow + (bonus * months / 12);
       // Рабочих дней в месяце — по производственному календарю (247/12 ≈ 20,58),
       // а не «примерно 21»: тем же числом считают отпускные и выходное пособие.
       days = months * AVG_WORKING_DAYS_PER_MONTH;
@@ -61,7 +63,12 @@ export default function AverageEarningsCalculator() {
       hours = parseFloat(workedHours) || 0;
     }
 
-    const avgMonth = months > 0 ? totalPay / months : 0;
+    // Декретные (ГФСС): доход за последние 12 месяцев делится на 12 независимо от перерывов (п. 40 правил
+    // ГФСС) и не выше 7 МЗП (п. 47). Раньше цель расчёта на число не влияла: 6 месяцев по 300 000 ₸ давали
+    // 300 000 вместо 150 000, а 1 млн в месяц — 1 млн вместо предела 595 000.
+    const avgMonth = purpose === 'maternity'
+      ? Math.min(totalPay / PERIOD_MONTHS, 7 * MZP_2026)
+      : (months > 0 ? totalPay / months : 0);
     const avgDay = days > 0 ? totalPay / days : 0;
     const avgHour = hours > 0 ? totalPay / hours : 0;
     const avgWeek = avgDay * 5;
@@ -78,7 +85,7 @@ export default function AverageEarningsCalculator() {
       days,
       vsMzp: avgMonth > 0 ? formatFixed(avgMonth / MZP_2026, 1) : '0',
     };
-  }, [mode, monthlySalary, workMonths, yearlyBonus, allowances, totalPayments, workedDays, workedHours]);
+  }, [purpose, mode, monthlySalary, workMonths, yearlyBonus, allowances, totalPayments, workedDays, workedHours]);
 
   const formatNumber = (n: number) => n.toLocaleString('ru-KZ') + ' ₸';
 

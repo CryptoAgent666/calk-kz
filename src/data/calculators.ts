@@ -606,7 +606,7 @@ export const calculatorCategories: CalculatorCategory[] = [
       {
         id: 'overtime',
         title: 'Калькулятор сверхурочных и ночных',
-        description: 'Сверхурочные ×1.5/×2, выходные ×2, ночные +0.5 (ТК РК ст. 108-109)',
+        description: 'Сверхурочные, работа в выходные, праздники и ночью — не ниже ×1,5 (ТК РК ст. 108–110)',
         category: 'social',
         icon: 'Clock',
         component: React.lazy(() => import('../components/calculators/OvertimeCalculator'))

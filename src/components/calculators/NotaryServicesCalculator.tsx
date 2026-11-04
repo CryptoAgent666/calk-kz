@@ -18,6 +18,9 @@ export default function NotaryServicesCalculator() {
   const [partyTypes, setPartyTypes] = useState<'both-individuals' | 'mixed' | 'both-legal'>('both-individuals');
   const [areRelated, setAreRelated] = useState<boolean>(false);
   const [location, setLocation] = useState<'city' | 'rural'>('city');
+  // Покупка в городе за счёт ипотечного жилищного займа — 4 МРП (приказ № 533, п. 2 пп. 1, абзац
+  // девятый в ред. приказа № 195 от 26.02.2026). Раньше такой ставки не было: 12 МРП вместо 4.
+  const [isMortgage, setIsMortgage] = useState<boolean>(false);
   const [propertyValue, setPropertyValue] = useState<string>('15000000');
 
   // Результаты считаются СИНХРОННО (useMemo ниже), а не через
@@ -40,6 +43,7 @@ export default function NotaryServicesCalculator() {
   // (≤30 / >30 МРП); для юрлица — флэт 17. В СЕЛЕ все ставки флэтовые (тиров по стоимости нет):
   // родственники 1.5, прочие физлица 2.7, юрлицо 3. Сверено по notariat.kz + Нотар. палата Астаны.
   const REAL_ESTATE_VALUE_THRESHOLD_MRP = 30;
+  const MORTGAGE_CITY_MRP = 4;
   const REAL_ESTATE_TARIFF_MRP = {
     city: {
       upTo30: { related: 3, individuals: 8, legal: 17 },
@@ -154,6 +158,7 @@ export default function NotaryServicesCalculator() {
           ? REAL_ESTATE_TARIFF_MRP.city.upTo30
           : REAL_ESTATE_TARIFF_MRP.city.over30;
         rateMrp = pickRate(cityTier);
+        if (isMortgage) rateMrp = Math.min(rateMrp, MORTGAGE_CITY_MRP);
       }
 
       const fee = Math.round(rateMrp * MRP_2026);
@@ -204,7 +209,7 @@ export default function NotaryServicesCalculator() {
   const results = useMemo(
     calculateNotaryCost,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [serviceType, partyTypes, areRelated, location, propertyValue, t, i18n.language]
+    [serviceType, partyTypes, areRelated, location, propertyValue, isMortgage, t, i18n.language]
   );
 
   const formatNumber = (num: number) => {
@@ -328,6 +333,21 @@ export default function NotaryServicesCalculator() {
                 {t('notary.related')}
               </label>
             </div>
+
+            {serviceType === 'apartment-sale' && location === 'city' && (
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="isMortgage"
+                  checked={isMortgage}
+                  onChange={(e) => setIsMortgage(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="isMortgage" className="ml-2 block text-sm text-gray-700">
+                  {t('notary.mortgage')}
+                </label>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">

@@ -60,7 +60,9 @@ export default function IncomeTaxCalculator() {
 
     const standardDeduction = (resident && primary) ? STANDARD_DEDUCTION : 0;
 
-    let taxableIncome = gross - opv - vosms - standardDeduction;
+    // Нерезидент: ИПН «без осуществления налоговых вычетов» (НК ст. 692 п. 3) — ни ОПВ/ВОСМС, ни базового
+    // вычета, как в utils/salary2026. Раньше 250 000 ₸ нерезидента давали ИПН 22 000 вместо 25 000 ₸.
+    let taxableIncome = resident ? gross - opv - vosms - standardDeduction : gross;
     taxableIncome = Math.max(0, taxableIncome);
     // Социальный вычет — годовой лимит, берётся до исчерпания (как в salary2026): в месяц —
     // не больше облагаемого дохода, поэтому первые месяцы ИПН = 0.

@@ -235,6 +235,7 @@ export default function UnemploymentBenefitCalculator() {
               <p className="text-xs text-gray-500 mt-1">
                 {t('unemployment.includesContributions')}
               </p>
+              <p className="text-xs text-gray-500 mt-1">{t('unemployment.so2024Hint')}</p>
             </div>
 
             <div className="bg-blue-50 rounded-lg p-4">

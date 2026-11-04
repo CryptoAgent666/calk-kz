@@ -25,7 +25,8 @@ export default function CourtFeeCalculator() {
     feeRate: 0,
     maxAmount: 0,
     isMaxReached: false,
-    feeDescription: ''
+    feeDescription: '',
+    notApplicable: false
   };
 
   const MRP_2026 = 4325;
@@ -85,16 +86,21 @@ export default function CourtFeeCalculator() {
         feeRate: rate * 100,
         maxAmount,
         isMaxReached,
-        feeDescription: `${rate * 100}% ${t('court-fee.ofClaimAmount')}`
+        feeDescription: `${rate * 100}% ${t('court-fee.ofClaimAmount')}`,
+        notApplicable: false
       };
     } else {
+      // Иск о расторжении брака подаёт супруг-физлицо; для юрлица вариант не «освобождение», а неприменим
+      if (nonPropertyClaimType === 'divorce' && claimantType !== 'individual') {
+        return { ...EMPTY_RESULTS, feeDescription: t('court-fee.notApplicableLegal'), notApplicable: true };
+      }
       const feeInfo = nonPropertyFees[nonPropertyClaimType as keyof typeof nonPropertyFees];
       const feeInMRP = claimantType === 'individual' ? feeInfo.individual : feeInfo.legal;
 
       if (feeInMRP === 0) {
         return {
           feeAmount: 0, feeRate: 0, maxAmount: 0,
-          isMaxReached: false, feeDescription: t('court-fee.exemption')
+          isMaxReached: false, feeDescription: t('court-fee.exemption'), notApplicable: false
         };
       } else {
         return {
@@ -102,7 +108,8 @@ export default function CourtFeeCalculator() {
           feeRate: 0,
           maxAmount: 0,
           isMaxReached: false,
-          feeDescription: `${feeInMRP.toLocaleString(NUMBER_LOCALE)} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}`
+          feeDescription: `${feeInMRP.toLocaleString(NUMBER_LOCALE)} ${i18n.language === 'kk' ? 'АЕК' : 'МРП'}`,
+          notApplicable: false
         };
       }
     }
@@ -321,7 +328,11 @@ export default function CourtFeeCalculator() {
               </div>
             )}
 
-            {results.feeAmount === 0 && nonPropertyClaimType && (
+            {results.notApplicable && (
+              <p className="text-sm text-gray-600">{results.feeDescription}</p>
+            )}
+
+            {results.feeAmount === 0 && nonPropertyClaimType && !results.notApplicable && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div className="flex items-start space-x-2">
                   <Info className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />

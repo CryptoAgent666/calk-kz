@@ -10,6 +10,7 @@ import { LegalDisclaimer } from '../ui/LegalDisclaimer';
 import { LastUpdated } from '../ui/LastUpdated';
 import { QuickAnswer } from '../ui/QuickAnswer';
 import { CalculatorExamples } from '../ui/CalculatorExamples';
+import { parseIsoDate } from '../../utils/workingTime';
 
 /**
  * Трудовой стаж: суммирование периодов работы по кадровой методике —
@@ -19,8 +20,9 @@ import { CalculatorExamples } from '../ui/CalculatorExamples';
 interface Period { from: string; to: string }
 
 function diffPeriod(fromS: string, toS: string): { y: number; m: number; d: number } | null {
-  const from = new Date(fromS);
-  const to = new Date(toS);
+  // Локальная дата, а не полночь UTC: западнее Гринвича new Date('YYYY-MM-DD') съезжал на день назад
+  const from = parseIsoDate(fromS) ?? new Date(NaN);
+  const to = parseIsoDate(toS) ?? new Date(NaN);
   if (isNaN(from.getTime()) || isNaN(to.getTime()) || from > to) return null;
   // включительно: +1 день (день увольнения входит в стаж)
   const end = new Date(to);
@@ -45,7 +47,7 @@ export default function WorkExperienceCalculator() {
     // трудовой стаж считается по объединению интервалов, а не по их сумме.
     // Раньше 2020–2023 + 2022–2026 давали «7 л. 11 мес.» вместо честных 6,5 лет.
     const intervals = periods
-      .map((p) => ({ from: new Date(p.from), to: new Date(p.to) }))
+      .map((p) => ({ from: parseIsoDate(p.from) ?? new Date(NaN), to: parseIsoDate(p.to) ?? new Date(NaN) }))
       .filter((iv) => !isNaN(+iv.from) && !isNaN(+iv.to) && iv.to >= iv.from)
       .sort((a, b) => +a.from - +b.from);
     const valid = intervals.length;

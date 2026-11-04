@@ -52,6 +52,8 @@ export default function IPSimplifiedCalculator() {
   // если первый клиентский рендер отдаёт нули — гидратация падает (#418/#425).
   const EMPTY_RESULTS = {
     totalTax: 0,
+    secondHalfTax: 0,
+    hasEmployeeReduction: false,
     ipnTax: 0,
     socialTax: 0,
 
@@ -82,6 +84,7 @@ export default function IPSimplifiedCalculator() {
   const OPV_MAX_BASE = 50 * MZP; // 4,250,000 тенге
   const SO_MAX_BASE = 7 * MZP; // 595,000 тенге
   const VOSMS_FIXED = 5950; // Фиксированная сумма
+  const EMPLOYEE_REDUCTION_THRESHOLD = 24_000 * MRP; // 103 800 000 ₸ — с этого дохода с начала года налог уменьшается на ФОТ (ст. 724 п. 1)
   const SIMPLIFIED_LIMIT_YEAR = 600_000 * MRP; // 600 000 МРП/год — годовой лимит дохода упрощёнки (НК РК 2026, № 214-VIII); налоговый период — полугодие
 
   // Платежи за сотрудников. Из зарплаты ИП удерживает ИПН, ОПВ и ВОСМС, за свой
@@ -143,8 +146,21 @@ export default function IPSimplifiedCalculator() {
     }
 
     // 1. Расчет налога с дохода (раз в полгода).
-    // С 2026 ставка 4% от дохода — это ИПН; социальный налог на упрощёнке отменён.
-    const totalTax = income * ((parseFloat(taxRatePct) || 4) / 100);
+    // С 2026 ставка 4% от дохода — это ИПН; социальный налог упрощенцы не платят (ст. 722 п. 4).
+    // НК ст. 724 п. 1 ч. 2: объект уменьшается на расходы по доходам работников начиная с месяца, в котором доход
+    // с начала года нарастающим итогом превысил 24 000 МРП (103 800 000 ₸). Доход по месяцам считаем равномерным,
+    // второе полугодие — с тем же доходом. Раньше налог всегда был «доход × 4%», при любом ФОТ.
+    const rate = (parseFloat(taxRatePct) || 4) / 100;
+    const employeeCount = Math.floor(parseFloat(numberOfEmployees) || 0);
+    const monthlyPayroll = hasEmployees && employeeCount > 0 ? (parseFloat(totalEmployeeSalaries) || 0) : 0;
+    const reducedMonths = (half: 0 | 1) => {
+      let n = 0;
+      for (let m = 1; m <= 6; m++) if ((income / 6) * (half * 6 + m) > EMPLOYEE_REDUCTION_THRESHOLD) n++;
+      return n;
+    };
+    const totalTax = Math.max(0, income - monthlyPayroll * reducedMonths(0)) * rate;
+    const secondHalfTax = Math.max(0, income - monthlyPayroll * reducedMonths(1)) * rate;
+    const hasEmployeeReduction = monthlyPayroll > 0 && reducedMonths(1) > 0;
     const ipnTax = totalTax;
     const socialTax = 0;
 
@@ -167,7 +183,7 @@ export default function IPSimplifiedCalculator() {
 
     // 4. Общие расчеты
     const semiannualTotalTax = ipnTax + socialTax;
-    const yearlyTotalPayments = (semiannualTotalTax * 2) + totalYearlySelf + yearlyEmployerContributions;
+    const yearlyTotalPayments = semiannualTotalTax + secondHalfTax + totalYearlySelf + yearlyEmployerContributions;
 
     // 5. Проекции
     const yearlyPensionContributions = (opvSelf + opvrSelf) * 12;
@@ -175,6 +191,8 @@ export default function IPSimplifiedCalculator() {
 
     return {
       totalTax: Math.round(totalTax),
+      secondHalfTax: Math.round(secondHalfTax),
+      hasEmployeeReduction,
       ipnTax: Math.round(ipnTax),
       socialTax: Math.round(socialTax),
 
@@ -439,6 +457,11 @@ export default function IPSimplifiedCalculator() {
                 <span className="text-gray-600">{t('ip-simplified.totalTax')}</span>
                 <span className="font-semibold text-gray-900">{formatNumber(results.totalTax)}</span>
               </div>
+              {results.hasEmployeeReduction && (
+                <p className="text-xs text-gray-600">
+                  {t('ip-simplified.employeeReductionNote', { first: formatNumber(results.totalTax), second: formatNumber(results.secondHalfTax) })}
+                </p>
+              )}
 
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">{t('ip-simplified.ipnTax')}</span>

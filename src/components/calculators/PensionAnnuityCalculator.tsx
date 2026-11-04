@@ -13,7 +13,7 @@ import { ExportButtons } from '../ui/ExportButtons';
 import { TaxPieChart, TrendLineChart, ComparisonBarChart } from '../ui/ChartComponents';
 import { ScenarioComparison } from '../ui/ScenarioComparison';
 import { pluralize } from '../../utils/pluralize';
-import { NUMBER_LOCALE } from '../../utils/localeFormat';
+import { decimalComma, NUMBER_LOCALE } from '../../utils/localeFormat';
 
 export default function PensionAnnuityCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -47,7 +47,10 @@ export default function PensionAnnuityCalculator() {
     breakEvenAge: 0,
 
     // Дополнительная информация
+    breakEvenWithinLife: false,
     retirementAge: 0,
+    startAge: 0,
+    isAgeEligible: false,
     annuityFactor: 0
   };
 
@@ -92,16 +95,25 @@ export default function PensionAnnuityCalculator() {
     return { monthlyFirstYear, years, total };
   };
 
-  // Пенсионный возраст по гендеру (РК 2026)
-  // Мужчины: 63 (с 2023)
-  // Женщины: поэтапное повышение до 63 (в 2026 — 61 год)
-  const getRetirementAge = (_birthYear: number, gender: 'male' | 'female') => {
-    if (gender === 'male') {
-      return 63;
-    } else {
-      return 61; // 2026 год — переходный период
-    }
-  };
+  // Возраст, который действует в году, когда человек его достигает. Месяц рождения неизвестен —
+  // считаем по первому полугодию (как в PensionCalculator).
+  const ageBySchedule = (birthYear: number, steps: number[], requiredInYear: (y: number) => number) =>
+    steps.find(a => requiredInYear(birthYear + Math.floor(a)) <= a) ?? steps[steps.length - 1];
+
+  // Пенсионный возраст — с него ЕНПФ начинает выплаты (СК ст. 220 п. 1 пп. 1, ст. 207 п. 1): мужчины 63;
+  // женщины 61 до 2027 г., затем по полгода в год до 63 в 2031. Раньше для женщин было 61 при любом годе рождения.
+  const getRetirementAge = (birthYear: number, gender: 'male' | 'female') => (gender === 'male'
+    ? 63
+    : ageBySchedule(birthYear, [61, 61.5, 62, 62.5, 63], y => (y <= 2027 ? 61 : y >= 2031 ? 63 : 61 + (y - 2027) * 0.5)));
+
+  // Первая выплата по аннуитету — не ранее 55 лет у мужчин, у женщин 53 до 2027 г., затем по полгода
+  // в год до 55 в 2031 (СК ст. 226 п. 12). Раньше выплата считалась сразу с текущего возраста.
+  const getAnnuityStartAge = (birthYear: number, gender: 'male' | 'female') => (gender === 'male'
+    ? 55
+    : ageBySchedule(birthYear, [53, 53.5, 54, 54.5, 55], y => (y <= 2027 ? 53 : y >= 2031 ? 55 : 53 + (y - 2027) * 0.5)));
+  // Договор пенсионного аннуитета — с 45 лет (СК ст. 220 п. 1 пп. 4)
+  const ANNUITY_MIN_CONTRACT_AGE = 45;
+  const DISCOUNT_RATE_YEAR = 0.03;
 
   // Ориентировочный возраст дожития. ЭТО ПРИБЛИЖЕНИЕ, а не актуарная таблица:
   // отталкивается от средней продолжительности жизни в РК и слегка растёт с
@@ -187,15 +199,18 @@ export default function PensionAnnuityCalculator() {
     const birthYear = CURRENT_YEAR - currentAge;
     const retirementAge = getRetirementAge(birthYear, gender);
 
-    // Ожидаемая продолжительность жизни
-    const lifeExpectancy = getLifeExpectancy(currentAge, gender);
+    // Выплаты начинаются с max(текущий возраст, возраст по ст. 226 п. 12); до этого премия «работает» под 3%.
+    const startAge = Math.max(currentAge, getAnnuityStartAge(birthYear, gender));
+    const deferralYears = startAge - currentAge;
+    const deferralDiscount = Math.pow(1 + DISCOUNT_RATE_YEAR, -deferralYears);
+    const startLifeExpectancy = getLifeExpectancy(startAge, gender);
+    // Приведённая на сегодня стоимость 1 ₸ ежемесячной выплаты, начиная со startAge
+    const annuityFactor = calculateAnnuityFactor(startAge, gender) * deferralDiscount;
 
-    // Расчет аннуитетного фактора
-    const annuityFactor = calculateAnnuityFactor(currentAge, gender);
-
-    // Проверка достаточности: выплата не ниже 70 % ПМ (СК ст. 225 п. 2)
+    // Проверка достаточности: выплата не ниже 70 % ПМ (СК ст. 225 п. 2) и возраст от 45 лет (ст. 220 п. 1 пп. 4)
+    const isAgeEligible = currentAge >= ANNUITY_MIN_CONTRACT_AGE;
     const sufficientAmount = Math.round(MIN_ANNUITY_PAYMENT_SHARE_OF_PM * PM_2026 * annuityFactor);
-    const isSufficientForAnnuity = accumulations >= sufficientAmount;
+    const isSufficientForAnnuity = isAgeEligible && accumulations >= sufficientAmount;
     const shortfall = Math.max(0, sufficientAmount - accumulations);
 
 
@@ -205,12 +220,14 @@ export default function PensionAnnuityCalculator() {
       monthlyAnnuityPayment = accumulations / annuityFactor;
     }
 
-    // Общие выплаты за всю жизнь (теоретические)
-    const remainingLifeMonths = Math.max(0, (lifeExpectancy - currentAge) * 12);
+    // Общие выплаты за всю жизнь (теоретические) — с начала выплат до ожидаемого возраста дожития
+    const remainingLifeMonths = Math.max(0, (startLifeExpectancy - startAge) * 12);
     const totalPayoutsLifetime = monthlyAnnuityPayment * remainingLifeMonths;
 
-    // Сравнение с ЕНПФ (стандартная выплата в течение 19 лет)
-    const enpf = simulateEnpf(accumulations);
+    // Сравнение с ЕНПФ: выплаты по графику ЕНПФ начинаются с пенсионного возраста, до него счёт растёт
+    // по той же допущенной доходности 6%. Раньше считалось, что ЕНПФ платит с текущего возраста.
+    const enpfYearsToStart = Math.max(0, retirementAge - currentAge);
+    const enpf = simulateEnpf(accumulations * Math.pow(1 + ENPF_ASSUMED_RETURN, enpfYearsToStart));
     const enpfPayoutPeriod = enpf.years;           // лет до исчерпания при допущении доходности
     const enpfMonthlyPayment = enpf.monthlyFirstYear; // выплата первого года (далее +5 %/год)
     const enpfTotalPayouts = enpf.total;
@@ -219,15 +236,18 @@ export default function PensionAnnuityCalculator() {
     const annuityAdvantage = totalPayoutsLifetime - enpfTotalPayouts;
     const isAnnuityBetter = annuityAdvantage > 0;
 
-    // Точка безубыточности (когда аннуитет станет выгоднее)
-    const breakEvenAge = currentAge + enpfPayoutPeriod;
+    // Возраст, к которому аннуитет выплатит столько же, сколько ЕНПФ за всё время. Раньше здесь стоял
+    // возраст исчерпания счёта в ЕНПФ (текущий + годы выплат) — это другая величина: «после 72 лет»
+    // при фактическом пересечении около 85 лет.
+    const breakEvenAge = monthlyAnnuityPayment > 0 ? startAge + enpfTotalPayouts / (monthlyAnnuityPayment * 12) : 0;
+    const breakEvenWithinLife = breakEvenAge > 0 && breakEvenAge <= startLifeExpectancy;
 
     return {
       sufficientAmount,
       isSufficientForAnnuity,
       shortfall: Math.round(shortfall),
       monthlyAnnuityPayment: Math.round(monthlyAnnuityPayment),
-      lifeExpectancy: Number(lifeExpectancy.toFixed(1)),
+      lifeExpectancy: Number(startLifeExpectancy.toFixed(1)),
       totalPayoutsLifetime: Math.round(totalPayoutsLifetime),
       enpfMonthlyPayment: Math.round(enpfMonthlyPayment),
       enpfPayoutPeriod,
@@ -235,7 +255,10 @@ export default function PensionAnnuityCalculator() {
       annuityAdvantage: Math.round(annuityAdvantage),
       isAnnuityBetter,
       breakEvenAge: Math.round(breakEvenAge),
+      breakEvenWithinLife,
       retirementAge,
+      startAge,
+      isAgeEligible,
       annuityFactor: Number(annuityFactor.toFixed(2))
     };
   };
@@ -460,7 +483,9 @@ export default function PensionAnnuityCalculator() {
               <div className="text-sm text-gray-600 break-words">
                 {results.isSufficientForAnnuity
                   ? t('pension-annuity.results.eligibility.sufficientMessage')
-                  : t('pension-annuity.results.eligibility.insufficientMessage', { amount: formatNumber(results.shortfall) })
+                  : !results.isAgeEligible
+                    ? t('pension-annuity.results.eligibility.ageMessage')
+                    : t('pension-annuity.results.eligibility.insufficientMessage', { amount: formatNumber(results.shortfall) })
                 }
               </div>
             </div>
@@ -475,6 +500,11 @@ export default function PensionAnnuityCalculator() {
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">{t('pension-annuity.results.sufficientAmount')}</span>
                 <span className="font-semibold text-gray-900">{formatNumber(results.sufficientAmount)}</span>
+              </div>
+
+              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="text-gray-600">{t('pension-annuity.results.payoutStart')}</span>
+                <span className="font-semibold text-gray-900 text-right">{t('pension-annuity.results.payoutStartValue', { annuity: decimalComma(String(results.startAge)), enpf: decimalComma(String(results.retirementAge)) })}</span>
               </div>
 
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -596,7 +626,9 @@ export default function PensionAnnuityCalculator() {
                   }`}>
                     {results.isAnnuityBetter
                       ? t('pension-annuity.comparison.advantage.annuityBetterMessage', { amount: formatNumber(Math.abs(results.annuityAdvantage)) })
-                      : t('pension-annuity.comparison.advantage.enpfBetterMessage', { amount: formatNumber(Math.abs(results.annuityAdvantage)), age: results.breakEvenAge })
+                      : results.breakEvenWithinLife
+                        ? t('pension-annuity.comparison.advantage.enpfBetterMessage', { amount: formatNumber(Math.abs(results.annuityAdvantage)), age: results.breakEvenAge })
+                        : t('pension-annuity.comparison.advantage.enpfBetterNoCatchUp', { amount: formatNumber(Math.abs(results.annuityAdvantage)), life: results.lifeExpectancy.toLocaleString(NUMBER_LOCALE) })
                     }
                   </p>
                 </div>

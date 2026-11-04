@@ -418,7 +418,9 @@ export default function LuxuryTaxCalculator() {
                     <div>
                       <h3 className="font-medium text-amber-900">{t('luxury-tax.results.paymentDeadline')}</h3>
                       <p className="text-amber-800 text-sm">
-                        {t('luxury-tax.results.paymentDeadlineText')}
+                        {/* Срок зависит от вида платежа: налог на имущество — до 1 октября (ст. 604), акциз — ст. 549 п. 6.
+                            Раньше всем показывалось «до 1 апреля» (срок транспортного налога). */}
+                        {t(assetType === 'property' ? 'luxury-tax.results.paymentDeadlineProperty' : 'luxury-tax.results.paymentDeadlineExcise')}
                       </p>
                     </div>
                   </div>

@@ -32,7 +32,9 @@ const RATE_LOW = 0.05;
 const RATE_HIGH = 0.15;
 const RATE_NONRESIDENT = 0.15;
 
-type ResidencyStatus = 'resident' | 'nonresident';
+// nonresident25 — нерезидент, прямо или косвенно владеющий не менее 25% капитала: шкала 5% / 15% с порогом
+// 230 000 МРП, как у резидента (НК ст. 682 п. 1 пп. 6). Раньше любой нерезидент платил 15% со всей суммы.
+type ResidencyStatus = 'resident' | 'nonresident25' | 'nonresident';
 
 export default function DividendTaxCalculator() {
   const { t, i18n } = useTranslation('calculators');
@@ -159,8 +161,8 @@ ${t('dividend-tax.results')}:
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('dividend-tax.statusLabel')}
               </label>
-              <div className="grid grid-cols-2 gap-2">
-                {(['resident', 'nonresident'] as ResidencyStatus[]).map((s) => (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {(['resident', 'nonresident25', 'nonresident'] as ResidencyStatus[]).map((s) => (
                   <button
                     key={s}
                     onClick={() => setStatus(s)}
@@ -218,7 +220,7 @@ ${t('dividend-tax.results')}:
               <span className="font-semibold text-red-600">−{formatNumber(results.tax)}</span>
             </div>
 
-            {status === 'resident' && results.overThreshold && (
+            {status !== 'nonresident' && results.overThreshold && (
               <>
                 <h3 className="text-sm font-semibold text-gray-700 pt-2">{t('dividend-tax.breakdown')}</h3>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">

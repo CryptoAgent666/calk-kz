@@ -24,9 +24,10 @@ const DUTY_RATE_WEIGHT = 2; // не менее 2 EUR/кг превышения �
 // Договору о ТК ЕАЭС — на 26.10.2026 дата не подтверждена, тексты страницы подают режим как вводимый.
 const ECOM_DUTY_RATE_VALUE = 0.05; // 5% от полной таможенной стоимости сверх порога
 const ECOM_DUTY_MIN_EUR_PER_KG = 1; // не менее 1 EUR/кг; весовой лимит 31 кг отменён
-// Сверх 200 € по товарам электронной торговли дополнительно взимается НДС по национальной ставке —
-// в РК 16% (ст. 503 НК РК) от таможенной стоимости с пошлиной.
-const ECOM_VAT_RATE = 0.16;
+// Импортного НДС с получателя в режиме e-commerce нет: «При уплате таможенной пошлины в отношении товаров
+// электронной торговли таможенные платежи, указанные в подпунктах 1)–4) пункта 1 статьи 74» (в т. ч. НДС
+// при ввозе) «не уплачиваются» (КТР ст. 392-8 п. 16); НДС с продаж маркетплейсов платит иностранная
+// компания (НК ст. 826–827). До 04.11.2026 здесь начислялось 16% НДС получателю сверх 200 €.
 // Курсы НБРК на 07.10.2026 (nationalbank.kz/rss) — для пререндера и на случай, если
 // /api/nbrk-rates.php недоступен; после загрузки страницы подставляется курс дня.
 const DEFAULT_RATES_DATE = '2026-10-07';
@@ -38,7 +39,8 @@ type ShipmentType = 'standard' | 'ecommerce';
 export default function ParcelCustomsCalculator() {
   const { t } = useTranslation('calculators');
 
-  const [shipmentType, setShipmentType] = useState<ShipmentType>('ecommerce');
+  // По умолчанию — действующий режим (Решение Совета ЕЭК № 107): глава 45-1 КТР ещё не вступила в силу.
+  const [shipmentType, setShipmentType] = useState<ShipmentType>('standard');
   const [itemValue, setItemValue] = useState<string>('300');
   const [currency, setCurrency] = useState<'EUR' | 'USD' | 'KZT'>('EUR');
   const [eurRate, setEurRate] = useState<number>(DEFAULT_EUR_RATE);
@@ -114,7 +116,9 @@ export default function ParcelCustomsCalculator() {
       deliveryEur = delivery;
     }
 
-    const totalValueEur = valueInEur + deliveryEur;
+    // В обычном режиме доставка в стоимость не входит: «В стоимость товаров для личного пользования не
+    // включаются расходы по их перевозке и страхованию» (КТР ст. 350 п. 1). В e-commerce — итог по чеку.
+    const totalValueEur = shipmentType === 'ecommerce' ? valueInEur + deliveryEur : valueInEur;
 
     const isValueExceeded = totalValueEur > VALUE_LIMIT_EUR;
     // Весовой лимит применяется только в классическом режиме; для e-commerce он отменён
@@ -139,7 +143,7 @@ export default function ParcelCustomsCalculator() {
     const totalDutyKzt = totalDutyEur * eurRate;
     const isDutyFree = totalDutyEur === 0;
     // Личные посылки (физлицо → физлицо) облагаются единым платежом без отдельного НДС
-    const vatEur = shipmentType === 'ecommerce' && isValueExceeded ? (totalValueEur + totalDutyEur) * ECOM_VAT_RATE : 0;
+    const vatEur = 0;
     const vatKzt = vatEur * eurRate;
 
     const valueInKzt = totalValueEur * eurRate;
@@ -484,7 +488,7 @@ export default function ParcelCustomsCalculator() {
 
             {/* Info about limits */}
             <div className="bg-amber-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-amber-900 mb-2">{t('parcel-customs.currentLimits')}</h3>
+              <h3 className="text-sm font-medium text-amber-900 mb-2">{shipmentType === 'ecommerce' ? t('parcel-customs.ecomLimitsTitle') : t('parcel-customs.currentLimits')}</h3>
               {shipmentType === 'ecommerce' ? (
                 <ul className="text-sm text-amber-800 space-y-1">
                   <li>{t('parcel-customs.limitValueLine', { limit: VALUE_LIMIT_EUR })}</li>
