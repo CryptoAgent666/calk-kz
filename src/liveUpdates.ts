@@ -1,4 +1,5 @@
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { emitOta } from './telemetry';
 
 /**
  * Over-the-air (OTA) обновление веб-части нативного (Capacitor) приложения.
@@ -100,6 +101,7 @@ async function applyDownloaded(updater: Updater, currentVersion: string): Promis
   // и zip, докачанный уже без него, так и лежит нераспакованным в files/. delete() заодно
   // отменяет задачу загрузки (WorkManager, по тегу версии) — до нового download() той же версии.
   let removed = 0;
+  let abandoned = 0;
   for (const b of bundles) {
     if (b.id === active.id || b.id === ready?.id) continue;
     try {
@@ -108,8 +110,12 @@ async function applyDownloaded(updater: Updater, currentVersion: string): Promis
       /* запись без файлов на диске плагин удаляет, но отвечает ошибкой */
     }
     removed++;
+    if (b.status === 'downloading') abandoned++;
   }
   if (removed) log('удалены лишние копии', removed);
+  // Загрузка, которую оборвал конец сессии. Если такие идут у одних и тех же установок
+  // запуск за запуском — им zip не докачать никогда, и нужно продолжать загрузку, а не удалять.
+  if (abandoned) emitOta('ota_download_abandoned', { platform: Capacitor.getPlatform(), code: String(abandoned) });
 
   if (!ready) return false;
   log('применяю скачанный ранее', ready.version);
@@ -125,6 +131,22 @@ async function applyDownloaded(updater: Updater, currentVersion: string): Promis
       /* ignore */
     }
     return false;
+  }
+}
+
+const LAST_BUNDLE_KEY = 'calk_ota_last_bundle';
+
+/** Бандл сменился с прошлого запуска — OTA применён (или пришёл новый бинарь из стора,
+ *  или плагин откатил бандл: тогда target старше code). Считаем уже в новом бандле,
+ *  а не перед set(): перезагрузка webview может оборвать отправку. */
+function noteBundleChange(currentVersion: string): void {
+  try {
+    const prev = localStorage.getItem(LAST_BUNDLE_KEY);
+    if (prev === currentVersion) return;
+    localStorage.setItem(LAST_BUNDLE_KEY, currentVersion);
+    if (prev) emitOta('ota_applied', { platform: Capacitor.getPlatform(), target: currentVersion, code: prev });
+  } catch {
+    /* хранилище недоступно — без события */
   }
 }
 
@@ -155,6 +177,7 @@ export async function initLiveUpdates(): Promise<void> {
   try {
     const local = await fetchLocalJson(LOCAL_VERSION_URL);
     const currentVersion = String(local?.version ?? '0');
+    noteBundleChange(currentVersion);
 
     // Скачанный в прошлый раз, но не применённый бандл — применяем сразу, на старте,
     // до сетевого запроса (без сети он ждёт до 10 с, а перезагрузка посреди работы хуже).
@@ -173,7 +196,20 @@ export async function initLiveUpdates(): Promise<void> {
     // Версии — сортируемые timestamp одинаковой длины → лексикографическое сравнение корректно.
     if (nextVersion <= currentVersion) return;
 
-    const bundle = await CapacitorUpdater.download({ url: nextUrl, version: nextVersion });
+    const platform = Capacitor.getPlatform();
+    emitOta('ota_download_started', { platform, target: nextVersion });
+    const started = Date.now();
+    let bundle: Awaited<ReturnType<Updater['download']>>;
+    try {
+      bundle = await CapacitorUpdater.download({ url: nextUrl, version: nextVersion });
+    } catch (e) {
+      emitOta('ota_download_failed', {
+        platform, target: nextVersion, ms: Date.now() - started,
+        code: e instanceof Error ? e.message : String(e),
+      });
+      throw e;
+    }
+    emitOta('ota_downloaded', { platform, target: nextVersion, ms: Date.now() - started });
     log('скачан', { version: nextVersion, id: bundle.id });
 
     // Применяем НЕ во время активного использования, а при следующем возврате
