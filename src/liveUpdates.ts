@@ -33,8 +33,6 @@ import { emitOta } from './telemetry';
  */
 
 const MANIFEST_URL = 'https://calk.kz/app-updates/latest.json';
-// Относительный URL — читается из АКТИВНОГО бандла (вшитого или уже применённого OTA).
-const LOCAL_VERSION_URL = 'build-version.json';
 
 /** Диагностика в консоль: Android — adb logcat -s Capacitor/Console:*,
  *  iOS — Safari → Разработка → устройство. Без следа «OTA не едет», «манифест
@@ -42,17 +40,6 @@ const LOCAL_VERSION_URL = 'build-version.json';
 function log(what: string, detail?: unknown): void {
   const tail = detail === undefined ? '' : `: ${detail instanceof Error ? detail.message : JSON.stringify(detail)}`;
   console.info(`[ota] ${what} (${Capacitor.getPlatform()})${tail}`);
-}
-
-/** Локальный файл активного бандла — тут перехват локальным сервером и нужен. */
-async function fetchLocalJson(url: string): Promise<any | null> {
-  try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
 }
 
 /** Сетевой JSON нативным клиентом: не перехватывается webview и не подчиняется CORS. */
@@ -175,8 +162,16 @@ export async function initLiveUpdates(): Promise<void> {
   }
 
   try {
-    const local = await fetchLocalJson(LOCAL_VERSION_URL);
-    const currentVersion = String(local?.version ?? '0');
+    // Версия зашита в сам JS активного бандла (vite define из того же build-version.json).
+    // До 23.11.2026 её читали относительным fetch('build-version.json'): если приложение
+    // стартовало не на «/», путь превращался в /calculator/…/build-version.json, локальный
+    // сервер отдавал index.html, разбор падал → версия «0» → манифест «новее» → тот же
+    // бандл на 11,8 МБ качался и применялся заново (у одной установки 5 раз за 17 минут).
+    const currentVersion = __BUILD_VERSION__;
+    if (!isBundleVersion(currentVersion)) {
+      log('версия бандла не распознана, обновление пропущено', currentVersion);
+      return;
+    }
     noteBundleChange(currentVersion);
 
     // Скачанный в прошлый раз, но не применённый бандл — применяем сразу, на старте,
