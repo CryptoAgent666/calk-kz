@@ -207,9 +207,18 @@ export async function initLiveUpdates(): Promise<void> {
     emitOta('ota_downloaded', { platform, target: nextVersion, ms: Date.now() - started });
     log('скачан', { version: nextVersion, id: bundle.id });
 
-    // Применяем НЕ во время активного использования, а при следующем возврате
-    // приложения из фона (set() перезагружает webview в новый бандл). Если процесс
-    // выгрузят раньше — применит applyDownloaded() при следующем запуске.
+    // Скачанный бандл применяет applyDownloaded() на следующем холодном старте.
+    //
+    // На Android — только так. `resume` там — это onResume активити: он приходит и когда
+    // закрывают полноэкранную рекламу или окно оплаты Google Play, и set() перезагружал
+    // webview посреди работы — пропадали введённый расчёт и предложение «Убрать рекламу»,
+    // которое показывается как раз после рекламы. По телеметрии 25.09–23.11.2026 так было
+    // после 31–34% закрытых интерстишелов (на iOS — 0 из 207).
+    if (platform === 'android') return;
+
+    // На iOS `resume` приходит только при настоящем возврате из фона (willEnterForeground),
+    // а процесс живёт долго и без этого остался бы на старом бандле: применяем при
+    // возврате (set() перезагружает webview в новый бандл).
     const { App } = await import('@capacitor/app');
     const handle = await App.addListener('resume', async () => {
       try {

@@ -9,7 +9,7 @@
 | Кусок | Что делает |
 |---|---|
 | `scripts/generate-build-version.mjs` | при сборке пишет `public/build-version.json` = версия бандла (`YYYYMMDDHHmmss`). Несёт каждый бандл (вшитый и OTA). |
-| `src/liveUpdates.ts` | на старте приложения (native-only): `notifyAppReady()` → читает свой `build-version.json` и серверный `…/app-updates/latest.json` → если сервер новее, качает zip и применяет при следующем резюме. На вебе — no-op (плагин даже не грузится). |
+| `src/liveUpdates.ts` | на старте приложения (native-only): `notifyAppReady()` → читает свой `build-version.json` и серверный `…/app-updates/latest.json` → если сервер новее, качает zip; скачанный бандл применяется на следующем холодном старте, на iOS — ещё и при возврате из фона (на Android `resume` приходит и после закрытия рекламы или окна оплаты, поэтому там только холодный старт). На вебе — no-op (плагин даже не грузится). |
 | `scripts/publish-app-bundle.mjs` (`npm run publish:app`) | зипует `dist/`, пишет `latest.json`, заливает `bundle-<version>.zip` + `latest.json` в `calk.kz/app-updates/` по FTP (`.env.deploy`). |
 | `capacitor.config.ts` → `CapacitorUpdater` | `autoUpdate: false` (управляем из кода), `resetWhenUpdate: true` (релиз из стора сбрасывает на свежий вшитый бандл). |
 | `@capgo/capacitor-updater` | нативная механика download/set/rollback. |
@@ -40,7 +40,7 @@ npm run build:prerender         # собрать свежий веб-бандл
 npm run publish:app             # опубликовать тот же бандл как OTA для приложений
 ```
 
-Приложения подхватят новый бандл при следующем запуске/возврате из фона.
+Приложения скачают новый бандл при запуске и применят его на следующем холодном старте (iOS — ещё и при возврате из фона).
 
 ## Проверка
 
