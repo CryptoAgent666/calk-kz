@@ -12,6 +12,7 @@ import {
 import { useRemoveAdsPrice } from '../../hooks/useRemoveAdsPrice';
 import { useMounted } from '../../hooks/useMounted';
 import { openRemoveAdsOffer } from '../../utils/removeAdsOffer';
+import { readBarGeometry } from '../../utils/barGeometry';
 
 const DISMISS_KEY = 'calk_removeads_bar_dismissed';
 const VARIANT_KEY = 'calk_removeads_bar_variant';
@@ -63,6 +64,7 @@ export function RemoveAdsBar() {
 
   // Воронка: один показ оффера при первом появлении плашки в сессии.
   const shownRef = useRef(false);
+  const barRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (shownRef.current || !mounted) return;
     if (isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return;
@@ -71,7 +73,12 @@ export function RemoveAdsBar() {
     // такой «показ» раздувал знаменатель воронки.
     if (priceState.status !== 'ready') return;
     shownRef.current = true;
-    emitIap('paywall_shown', { platform: Capacitor.getPlatform(), placement: 'bar', variant });
+    // code — версия системы и WebView, размеры вьюпорта и посадка плашки одной строкой:
+    // по ним видно на живых устройствах, не уехала ли плашка под баннер (utils/barGeometry).
+    emitIap('paywall_shown', {
+      platform: Capacitor.getPlatform(), placement: 'bar', variant,
+      code: readBarGeometry(barRef.current),
+    });
   }, [mounted, adFree, dismissed, priceState.status, variant]);
 
   if (!mounted || isScreenshotMode() || !purchasesAvailable() || adFree || dismissed) return null;
@@ -89,6 +96,7 @@ export function RemoveAdsBar() {
 
   return (
     <div
+      ref={barRef}
       className="calk-slide-up fixed left-0 right-0 z-40 flex items-center justify-between gap-2 bg-blue-600 px-3 py-2 text-white shadow-lg"
       // Посадка над нативным AdMob-баннером. SizeChanged в admob@8 НЕ приходит
       // (сим-QA calk-usa 26.08.2026), поэтому --admob-banner-height обычно пуст:

@@ -30,6 +30,8 @@ export type IapPlacement = 'bar' | 'toast' | 'menu' | 'offer';
  *  длинное сообщение об ошибке ужимаем до кода сами. */
 export interface IapEventDetail {
   platform?: string;
+  /** Код ошибки покупки; у paywall_shown с плашки — снимок устройства и посадки
+   *  плашки (формат в utils/barGeometry.ts). */
   code?: string;
   placement?: IapPlacement;
   /** Вариант текста плашки (price / coffee) — чтобы сравнивать, что продаёт. */
